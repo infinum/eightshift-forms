@@ -1,0 +1,222 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"X-Generator: babel-plugin-makepot\n"
+
+#: src/blocks/components/label/components/label-options.js:11
+msgid "Label Settings"
+msgstr ""
+
+#: src/blocks/components/label/components/label-options.js:14
+#: src/blocks/custom/radio-item/components/radio-item-options.js:30
+#: src/blocks/custom/select-option/components/select-option-options.js:24
+msgid "Label"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:25
+msgid "Button Settings"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:28
+#: src/blocks/custom/checkbox/components/checkbox-options.js:30
+#: src/blocks/custom/input/components/input-options.js:32
+#: src/blocks/custom/radio/components/radio-options.js:30
+#: src/blocks/custom/select/components/select-options.js:21
+#: src/blocks/custom/textarea/components/textarea-options.js:34
+msgid "Name"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:36
+#: src/blocks/custom/checkbox/components/checkbox-options.js:38
+#: src/blocks/custom/input/components/input-options.js:40
+#: src/blocks/custom/radio-item/components/radio-item-options.js:38
+#: src/blocks/custom/select-option/components/select-option-options.js:32
+#: src/blocks/custom/textarea/components/textarea-options.js:42
+msgid "Value"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:44
+#: src/blocks/custom/input/components/input-options.js:56
+msgid "Type"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:47
+msgid "Button"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:48
+msgid "Submit"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:49
+msgid "Reset"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:57
+#: src/blocks/custom/checkbox/components/checkbox-options.js:46
+#: src/blocks/custom/form/components/form-options.js:50
+#: src/blocks/custom/input/components/input-options.js:81
+#: src/blocks/custom/radio-item/components/radio-item-options.js:46
+#: src/blocks/custom/textarea/components/textarea-options.js:74
+msgid "Classes"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:65
+#: src/blocks/custom/checkbox/components/checkbox-options.js:54
+#: src/blocks/custom/form/components/form-options.js:58
+#: src/blocks/custom/input/components/input-options.js:89
+#: src/blocks/custom/radio-item/components/radio-item-options.js:54
+#: src/blocks/custom/textarea/components/textarea-options.js:82
+msgid "ID"
+msgstr ""
+
+#: src/blocks/custom/button/components/button-options.js:73
+#: src/blocks/custom/checkbox/components/checkbox-options.js:70
+#: src/blocks/custom/input/components/input-options.js:97
+#: src/blocks/custom/radio-item/components/radio-item-options.js:70
+#: src/blocks/custom/select-option/components/select-option-options.js:48
+#: src/blocks/custom/select/components/select-options.js:29
+#: src/blocks/custom/textarea/components/textarea-options.js:90
+msgid "Disabled"
+msgstr ""
+
+#: src/blocks/custom/checkbox/components/checkbox-options.js:27
+msgid "Checkbox Settings"
+msgstr ""
+
+#: src/blocks/custom/checkbox/components/checkbox-options.js:62
+#: src/blocks/custom/radio-item/components/radio-item-options.js:62
+msgid "Checked"
+msgstr ""
+
+#: src/blocks/custom/checkbox/components/checkbox-options.js:78
+#: src/blocks/custom/input/components/input-options.js:105
+#: src/blocks/custom/radio-item/components/radio-item-options.js:78
+#: src/blocks/custom/textarea/components/textarea-options.js:98
+msgid "Readonly"
+msgstr ""
+
+#: src/blocks/custom/form/components/form-options.js:23
+msgid "Form Settings"
+msgstr ""
+
+#: src/blocks/custom/form/components/form-options.js:26
+msgid "Action"
+msgstr ""
+
+#: src/blocks/custom/form/components/form-options.js:34
+msgid "Method"
+msgstr ""
+
+#: src/blocks/custom/form/components/form-options.js:42
+msgid "Target"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:29
+msgid "Input Settings"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:48
+#: src/blocks/custom/textarea/components/textarea-options.js:50
+msgid "Placeholder"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:59
+msgid "Text"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:60
+msgid "Url"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:61
+msgid "Email"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:62
+msgid "Number"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:63
+msgid "Password"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:64
+msgid "Color"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:65
+msgid "Date"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:66
+msgid "Date Time Local"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:67
+msgid "Image"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:68
+msgid "Month"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:69
+msgid "Range"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:70
+msgid "Search"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:71
+msgid "Tel"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:72
+msgid "Time"
+msgstr ""
+
+#: src/blocks/custom/input/components/input-options.js:73
+msgid "Week"
+msgstr ""
+
+#: src/blocks/custom/radio-item/components/radio-item-options.js:27
+msgid "Radio Item Settings"
+msgstr ""
+
+#: src/blocks/custom/radio/components/radio-options.js:26
+msgid "Radio Settings"
+msgstr ""
+
+#: src/blocks/custom/select-option/components/select-option-options.js:21
+msgid "Select Option Settings"
+msgstr ""
+
+#: src/blocks/custom/select-option/components/select-option-options.js:40
+msgid "Selected"
+msgstr ""
+
+#: src/blocks/custom/select/components/select-options.js:17
+msgid "Select Settings"
+msgstr ""
+
+#: src/blocks/custom/textarea/components/textarea-options.js:31
+msgid "Textarea Settings"
+msgstr ""
+
+#: src/blocks/custom/textarea/components/textarea-options.js:58
+msgid "Rows"
+msgstr ""
+
+#: src/blocks/custom/textarea/components/textarea-options.js:66
+msgid "Columns"
+msgstr ""
+
+#: src/blocks/wrapper/components/wrapper-options.js:24
+msgid "Field"
+msgstr ""
+
+#: src/blocks/wrapper/components/wrapper-options.js:27
+msgid "Width"
+msgstr ""

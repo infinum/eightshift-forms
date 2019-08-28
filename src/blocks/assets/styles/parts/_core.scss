@@ -1,0 +1,45 @@
+/* stylelint-disable-line selector-no-type */
+
+*,
+*::after,
+*::before {
+  @include box-sizing;
+}
+
+html {
+  font-size: $base-font-size;
+}
+
+body {
+  @include font-smoothing;
+  font-family: $base-font-family;
+  color: $base-text-color;
+  background-color: $base-background-color;
+  position: relative;
+
+  &.overflow-hidden,
+  &.no-scroll {
+    overflow: hidden;
+  }
+
+  &.is-animating {
+    background-color: $base-mina-color;
+  }
+}
+
+.page-transition-container {
+  position: relative;
+}
+
+.main-content {
+  overflow-x: hidden;
+  padding-top: 50 + map-get-deep($globals, header-height, mobile);
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  background-color: $base-white-color;
+
+  @include media(tablet up) {
+    padding-top: 75 + map-get-deep($globals, header-height, tablet);
+  }
+}

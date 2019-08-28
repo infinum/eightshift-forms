@@ -1,0 +1,23 @@
+$field: (
+  vertical-spacing: 25px,
+  horizontal-spacing: $base-gutter-size,
+);
+
+.field {
+  $this: &;
+  position: relative;
+  padding: {
+    left: map-get-strict($field, horizontal-spacing);
+    right: map-get-strict($field, horizontal-spacing);
+    bottom: map-get-strict($field, vertical-spacing);
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: none;
+  }
+
+  &__width {
+    @include flex-grid-width-modifiers;
+  }
+}

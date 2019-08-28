@@ -1,0 +1,24 @@
+/*
+Some default variables are defined in eightshift-frontend-libs as defaults.
+If you want to override it just define it with new value here.
+
+All variables are available here:
+https://github.com/infinum/eightshift-frontend-libs/blob/develop/scss/_core.scss
+*/
+
+//Base
+$base-font-family: 'Tiempos', Georgia;
+$secondary-font-family: 'GTHaptik', Helvetica, Arial;
+
+$base-container-size: 1290px;
+$base-header-container-size: 1230px;
+$base-footer-container-size: 1200px;
+
+$base-font-size: 18px;
+
+$globals: (
+  header-height: (
+    mobile: 66px,
+    tablet: 90px,
+  ),
+);

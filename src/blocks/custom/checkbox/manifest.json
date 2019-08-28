@@ -1,0 +1,41 @@
+{
+  "blockName": "checkbox",
+  "title": "Checkbox",
+  "description" : "Checkbox field",
+  "category": "common",
+  "icon": {
+    "src": "media-document"
+  },
+  "keywords": [
+    "Checkbox"
+  ],
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "classes": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "isChecked": {
+      "type": "bool",
+      "defaul": false
+    },
+    "isDisabled": {
+      "type": "bool",
+      "defaul": false
+    },
+    "isReadOnly": {
+      "type": "bool",
+      "defaul": false
+    }
+  }
+}

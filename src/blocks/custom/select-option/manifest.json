@@ -1,0 +1,33 @@
+{
+  "blockName": "select-option",
+  "title": "Select Option",
+  "description" : "Select Option field",
+  "category": "common",
+  "icon": {
+    "src": "media-document"
+  },
+  "keywords": [
+    "Select",
+    "Option"
+  ],
+  "hasWrapper": false,
+  "parent": [
+    "eightshiftforms/select"
+  ],
+  "attributes": {
+    "value": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "isSelected": {
+      "type": "bool",
+      "defaul": false
+    },
+    "isDisabled": {
+      "type": "bool",
+      "defaul": false
+    }
+  }
+}

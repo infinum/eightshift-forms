@@ -1,0 +1,46 @@
+{
+  "blockName": "textarea",
+  "title": "Textarea",
+  "description" : "Textarea field",
+  "category": "common",
+  "icon": {
+    "src": "media-document"
+  },
+  "keywords": [
+    "Textarea"
+  ],
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "classes": {
+      "type": "string"
+    },
+    "placeholder": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "rows": {
+      "type": "string"
+    },
+    "cols": {
+      "type": "string"
+    },
+    "isDisabled": {
+      "type": "bool",
+      "defaul": false
+    },
+    "isReadOnly": {
+      "type": "bool",
+      "defaul": false
+    }
+  }
+}

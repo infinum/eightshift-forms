@@ -1,0 +1,11 @@
+{
+  "attributes": {
+    "id": {
+      "type": "string"
+    },
+    "styleContentWidth": {
+      "type": "string",
+      "default": "12"
+    }
+  }
+}

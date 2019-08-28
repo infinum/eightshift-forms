@@ -1,0 +1,9 @@
+// This is a main entrypoint for project style for theme area only that are not related to blocks.
+
+// Vendors - node modules
+@import 'normalize-scss';
+@include normalize(); // stylelint-disable-line at-rule-empty-line-before
+
+// Style for Logged in admin bar.
+// @import 'admin/admin-bar';
+
