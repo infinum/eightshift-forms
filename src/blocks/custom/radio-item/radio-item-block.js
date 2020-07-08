@@ -4,10 +4,11 @@ import { InspectorControls } from '@wordpress/editor';
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
-import { ButtonEditor } from './components/button-editor';
-import { ButtonOptions } from './components/button-options';
+import { LabelOptions } from '../../components/label/components/label-options';
+import { RadioItemEditor } from './components/radio-item-editor';
+import { RadioItemOptions } from './components/radio-item-options';
 
-export const Button = (props) => {
+export const RadioItem = (props) => {
   const {
     attributes,
   } = props;
@@ -17,12 +18,12 @@ export const Button = (props) => {
   return (
     <Fragment>
       <InspectorControls>
-        <ButtonOptions
+        <RadioItemOptions
           attributes={attributes}
           actions={actions}
         />
       </InspectorControls>
-      <ButtonEditor
+      <RadioItemEditor
         attributes={attributes}
         actions={actions}
       />

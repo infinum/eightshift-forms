@@ -4,12 +4,16 @@ import { InspectorControls } from '@wordpress/editor';
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
-import { ButtonEditor } from './components/button-editor';
-import { ButtonOptions } from './components/button-options';
+import { LabelOptions } from '../../components/label/components/label-options';
+import { CheckboxEditor } from './components/checkbox-editor';
+import { CheckboxOptions } from './components/checkbox-options';
 
-export const Button = (props) => {
+export const Checkbox = (props) => {
   const {
     attributes,
+    attributes: {
+      label,
+    },
   } = props;
 
   const actions = getActions(props, manifest);
@@ -17,12 +21,16 @@ export const Button = (props) => {
   return (
     <Fragment>
       <InspectorControls>
-        <ButtonOptions
+        <LabelOptions
+          label={label}
+          onChangeLabel={actions.onChangeLabel}
+        />
+        <CheckboxOptions
           attributes={attributes}
           actions={actions}
         />
       </InspectorControls>
-      <ButtonEditor
+      <CheckboxEditor
         attributes={attributes}
         actions={actions}
       />

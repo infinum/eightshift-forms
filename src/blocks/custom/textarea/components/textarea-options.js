@@ -1,28 +1,34 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
-export const ButtonOptions = (props) => {
+export const TextareaOptions = (props) => {
   const {
     attributes: {
       name,
       value,
       id,
+      placeholder,
       classes,
-      type,
+      rows,
+      cols,
       isDisabled,
+      isReadOnly,
     },
     actions: {
       onChangeName,
       onChangeValue,
       onChangeId,
+      onChangePlaceholder,
       onChangeClasses,
-      onChangeType,
+      onChangeRows,
+      onChangeCols,
       onChangeIsDisabled,
+      onChangeIsReadOnly,
     },
   } = props;
 
   return (
-    <PanelBody title={__('Button Settings', 'eightshift-forms')}>
+    <PanelBody title={__('Textarea Settings', 'eightshift-forms')}>
       {onChangeName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
@@ -39,16 +45,27 @@ export const ButtonOptions = (props) => {
         />
       }
 
-      {onChangeType &&
-        <SelectControl
-          label={__('Type', 'eightshift-forms')}
-          value={type}
-          options={[
-            { label: __('Button', 'infinum'), value: 'button' },
-            { label: __('Submit', 'infinum'), value: 'submit' },
-            { label: __('Reset', 'infinum'), value: 'reset' },
-          ]}
-          onChange={onChangeType}
+      {onChangePlaceholder &&
+        <TextControl
+          label={__('Placeholder', 'eightshift-forms')}
+          value={placeholder}
+          onChange={onChangePlaceholder}
+        />
+      }
+
+      {onChangeRows &&
+        <TextControl
+          label={__('Rows', 'eightshift-forms')}
+          value={rows}
+          onChange={onChangeRows}
+        />
+      }
+
+      {onChangeCols &&
+        <TextControl
+          label={__('Columns', 'eightshift-forms')}
+          value={cols}
+          onChange={onChangeCols}
         />
       }
 
@@ -73,6 +90,14 @@ export const ButtonOptions = (props) => {
           label={__('Disabled', 'eightshift-forms')}
           checked={isDisabled}
           onChange={onChangeIsDisabled}
+        />
+      }
+
+      {onChangeIsReadOnly &&
+        <ToggleControl
+          label={__('Readonly', 'eightshift-forms')}
+          checked={isReadOnly}
+          onChange={onChangeIsReadOnly}
         />
       }
     </PanelBody>

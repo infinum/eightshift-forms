@@ -1,21 +1,20 @@
 {
-  "blockName": "button",
-  "title": "Button",
-  "description" : "Button field",
+  "blockName": "input",
+  "title": "Input",
+  "description" : "Input field",
   "category": "common",
   "icon": {
     "src": "media-document"
   },
   "keywords": [
-    "button"
+    "Input"
   ],
   "attributes": {
     "name": {
       "type": "string"
     },
     "value": {
-      "type": "string",
-      "default": "Submit"
+      "type": "string"
     },
     "id": {
       "type": "string"
@@ -23,11 +22,21 @@
     "classes": {
       "type": "string"
     },
+    "placeholder": {
+      "type": "string"
+    },
     "type": {
       "type": "string",
-      "default": "button"
+      "default": "text"
+    },
+    "label": {
+      "type": "string"
     },
     "isDisabled": {
+      "type": "bool",
+      "defaul": false
+    },
+    "isReadOnly": {
       "type": "bool",
       "defaul": false
     }

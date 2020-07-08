@@ -17,7 +17,8 @@ use Eightshift_Libs\Core\Main as Lib_Core;
 use Eightshift_Libs\Manifest as Lib_Manifest;
 use Eightshift_Libs\Enqueue as Lib_Enqueue;
 use Eightshift_Libs\I18n as Lib_I18n;
-use Eightshift_Libs\Blocks as Lib_Blocks;
+use Eightshift_Forms\Admin;
+use Eightshift_Forms\Blocks;
 
 /**
  * The main start class.
@@ -67,8 +68,13 @@ class Main extends Lib_Core {
       Lib_Enqueue\Enqueue_Theme::class => [ Lib_Manifest\Manifest::class ],
       Lib_Enqueue\Enqueue_Blocks::class => [ Lib_Manifest\Manifest::class ],
 
+      // Admin
+      Admin\Forms::class,
+      Admin\Content::class,
+
       // Blocks.
-      Lib_Blocks\Blocks::class => [ Config::class ],
+      // Blocks\Enqueue::class => [ Lib_Manifest\Manifest::class ],
+      Blocks\Blocks::class => [ Config::class ],
     ];
   }
 }

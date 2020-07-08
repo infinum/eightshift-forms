@@ -1,28 +1,30 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
-export const ButtonOptions = (props) => {
+export const CheckboxOptions = (props) => {
   const {
     attributes: {
       name,
       value,
       id,
       classes,
-      type,
+      isChecked,
       isDisabled,
+      isReadOnly,
     },
     actions: {
       onChangeName,
       onChangeValue,
       onChangeId,
       onChangeClasses,
-      onChangeType,
+      onChangeIsChecked,
       onChangeIsDisabled,
+      onChangeIsReadOnly,
     },
   } = props;
 
   return (
-    <PanelBody title={__('Button Settings', 'eightshift-forms')}>
+    <PanelBody title={__('Checkbox Settings', 'eightshift-forms')}>
       {onChangeName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
@@ -36,19 +38,6 @@ export const ButtonOptions = (props) => {
           label={__('Value', 'eightshift-forms')}
           value={value}
           onChange={onChangeValue}
-        />
-      }
-
-      {onChangeType &&
-        <SelectControl
-          label={__('Type', 'eightshift-forms')}
-          value={type}
-          options={[
-            { label: __('Button', 'infinum'), value: 'button' },
-            { label: __('Submit', 'infinum'), value: 'submit' },
-            { label: __('Reset', 'infinum'), value: 'reset' },
-          ]}
-          onChange={onChangeType}
         />
       }
 
@@ -68,11 +57,27 @@ export const ButtonOptions = (props) => {
         />
       }
 
+      {onChangeIsChecked &&
+        <ToggleControl
+          label={__('Checked', 'eightshift-forms')}
+          checked={isChecked}
+          onChange={onChangeIsChecked}
+        />
+      }
+
       {onChangeIsDisabled &&
         <ToggleControl
           label={__('Disabled', 'eightshift-forms')}
           checked={isDisabled}
           onChange={onChangeIsDisabled}
+        />
+      }
+
+      {onChangeIsReadOnly &&
+        <ToggleControl
+          label={__('Readonly', 'eightshift-forms')}
+          checked={isReadOnly}
+          onChange={onChangeIsReadOnly}
         />
       }
     </PanelBody>

@@ -4,10 +4,10 @@ import { InspectorControls } from '@wordpress/editor';
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
-import { ButtonEditor } from './components/button-editor';
-import { ButtonOptions } from './components/button-options';
+import { SelectOptionEditor } from './components/select-option-editor';
+import { SelectOptionOptions } from './components/select-option-options';
 
-export const Button = (props) => {
+export const SelectOption = (props) => {
   const {
     attributes,
   } = props;
@@ -17,12 +17,12 @@ export const Button = (props) => {
   return (
     <Fragment>
       <InspectorControls>
-        <ButtonOptions
+        <SelectOptionOptions
           attributes={attributes}
           actions={actions}
         />
       </InspectorControls>
-      <ButtonEditor
+      <SelectOptionEditor
         attributes={attributes}
         actions={actions}
       />

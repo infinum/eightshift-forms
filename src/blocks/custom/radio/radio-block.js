@@ -4,12 +4,17 @@ import { InspectorControls } from '@wordpress/editor';
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
-import { ButtonEditor } from './components/button-editor';
-import { ButtonOptions } from './components/button-options';
+import { LabelOptions } from '../../components/label/components/label-options';
+import { RadioOptions } from './components/radio-options';
+import { RadioEditor } from './components/radio-editor';
 
-export const Button = (props) => {
+export const Radio = (props) => {
   const {
     attributes,
+    attributes: {
+      label,
+    },
+    clientId,
   } = props;
 
   const actions = getActions(props, manifest);
@@ -17,12 +22,17 @@ export const Button = (props) => {
   return (
     <Fragment>
       <InspectorControls>
-        <ButtonOptions
+        <LabelOptions
+          label={label}
+          onChangeLabel={actions.onChangeLabel}
+        />
+        <RadioOptions
           attributes={attributes}
           actions={actions}
+          clientId={clientId}
         />
       </InspectorControls>
-      <ButtonEditor
+      <RadioEditor
         attributes={attributes}
         actions={actions}
       />

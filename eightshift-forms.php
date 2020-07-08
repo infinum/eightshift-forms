@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Eightshift forms
+ * Plugin Name: Eightshift forms (new)
  * Plugin URI:
  * Description: Eightshift form builder plugin.
  * Author: Team Eightshift
