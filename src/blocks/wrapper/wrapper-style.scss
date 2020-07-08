@@ -1,23 +1,78 @@
-$field: (
-  vertical-spacing: 25px,
-  horizontal-spacing: $base-gutter-size,
+$wrapper: (
+  background-colors: global-settings(colors),
+  spacing: $base-section-spacing,
+  containers: $base-container-sizes,
+  container-spacing: $base-gutter-sizes,
 );
 
-.field {
+.wrapper {
   $this: &;
-  position: relative;
-  padding: {
-    left: map-get-strict($field, horizontal-spacing);
-    right: map-get-strict($field, horizontal-spacing);
-    bottom: map-get-strict($field, vertical-spacing);
+
+  &__bg-color {
+    @include modifiers-deep($wrapper, background-colors, background-color);
   }
 
-  &:focus {
-    box-shadow: none;
-    outline: none;
+  &__spacing-top {
+    @include responsive-selectors {
+      @include modifiers-range($wrapper, spacing, padding-top);
+    }
   }
 
-  &__width {
-    @include flex-grid-width-modifiers;
+  &__spacing-bottom {
+    @include responsive-selectors {
+      @include modifiers-range($wrapper, spacing, padding-bottom);
+    }
+  }
+
+  &__hide-block {
+    @include responsive-visibility-selectors {
+      display: none;
+    }
+  }
+
+  // Container Div.
+  &__container {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+  }
+
+  &__container-width {
+    @include responsive-selectors {
+      @include modifiers-deep($wrapper, containers, max-width);
+    }
+  }
+
+  &__container-spacing {
+    @include responsive-selectors {
+      @include modifiers-deep($wrapper, container-spacing, padding-left);
+      @include modifiers-deep($wrapper, container-spacing, padding-right);
+    }
+  }
+
+  // Inner Container Div.
+  &__inner {
+    @include flex-grid-width;
+  }
+
+  &__inner-content-width {
+    @include responsive-selectors {
+      @include flex-grid-width-modifiers;
+    }
+  }
+
+  // Content Offset.
+  &__inner-offset {
+    @include responsive-selectors {
+      &--content-spacing {
+        padding-left: calc-grid-width(4);
+        margin: 0;
+      }
+
+      &--center {
+        margin: 0 auto;
+        padding: 0;
+      }
+    }
   }
 }

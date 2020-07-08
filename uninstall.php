@@ -7,6 +7,8 @@
  * @package Eightshift_Forms
  */
 
+declare( strict_types=1 );
+
 if ( ! current_user_can( 'activate_plugins' ) ) {
   return;
 }

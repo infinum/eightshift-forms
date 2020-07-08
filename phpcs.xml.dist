@@ -1,13 +1,23 @@
 <?xml version="1.0"?>
-<ruleset name="Eightshift_Forms plugin.">
-  <description>This is Eightshift_Forms plugin used for contact forms.</description>
+<ruleset name="Eightshift Boilerplate ruleset">
+  <description>Ruleset for the Eightshift Boilerplate.</description>
+
+  <rule ref="Infinum" />
+
+  <exclude-pattern>*/tests/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+  <!-- Additional arguments. -->
+  <arg value="sp"/>
+  <arg name="basepath" value="."/>
+  <arg name="parallel" value="8"/>
+  <arg name="cache"/>
+  <arg name="extensions" value="php"/>
 
   <file>.</file>
 
-  <rule ref="Infinum"/>
-
-  <exclude-pattern>*/vendor/*</exclude-pattern>
-  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
   <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
     <severity>0</severity>
@@ -17,15 +27,11 @@
     <severity>0</severity>
   </rule>
 
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+    <severity>0</severity>
+  </rule>
+
   <rule ref="WordPress.WP.GlobalVariablesOverride.OverrideProhibited">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.objectFound">
     <severity>0</severity>
   </rule>
 </ruleset>

@@ -1,35 +1,40 @@
 {
   "blockName": "button",
   "title": "Button",
-  "description" : "Button field",
-  "category": "common",
+  "description" : "Button block with custom settings.",
+  "category": "eightshift",
   "icon": {
-    "src": "media-document"
+    "src": "editor-removeformatting"
   },
   "keywords": [
-    "button"
+    "button",
+    "btn",
+    "link"
   ],
+  "example": {
+    "button": {
+      "title": "Button Title",
+      "url": "https://fakeurl.com/",
+      "styleSize": "default",
+      "styleColor": "primary",
+      "styleSizeWidth": "default",
+      "id": "custom ID"
+    }
+  },
   "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "value": {
-      "type": "string",
-      "default": "Submit"
-    },
-    "id": {
-      "type": "string"
-    },
-    "classes": {
-      "type": "string"
-    },
-    "type": {
-      "type": "string",
-      "default": "button"
-    },
-    "isDisabled": {
-      "type": "bool",
-      "defaul": false
+    "button": {
+      "type": "object",
+      "default": {
+        "title": "",
+        "url": "",
+        "styleSize": "default",
+        "styleColor": "primary",
+        "styleSizeWidth": "default",
+        "id": ""
+      },
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

@@ -3,9 +3,104 @@
     "id": {
       "type": "string"
     },
-    "styleContentWidth": {
+    "styleBackgroundColor": {
       "type": "string",
-      "default": "12"
+      "default": "white"
+    },
+    "hasWrapper": {
+      "type": "bool",
+      "default": true
+    },
+
+    "styleContentWidth": {
+      "type": "object",
+      "default": {
+        "large": 12,
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleContentOffset": {
+      "type": "object",
+      "default": {
+        "large": "center",
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleContainerWidth": {
+      "type": "object",
+      "default": {
+        "large": "default",
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleContainerSpacing": {
+      "type": "object",
+      "default": {
+        "large": "default",
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleSpacingTop": {
+      "type": "object",
+      "default": {
+        "large": "",
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleSpacingBottom": {
+      "type": "object",
+      "default": {
+        "large": 40,
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+
+    "styleHideBlock": {
+      "type": "object",
+      "default": {
+        "large": false,
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

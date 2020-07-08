@@ -1,37 +1,18 @@
-import { __ } from '@wordpress/i18n';
+import React from 'react'; // eslint-disable-line no-unused-vars
+import { ButtonEditor as ButtonEditorComponent } from '../../../components/button/components/button-editor';
 
-export const ButtonEditor = (props) => {
+export const ButtonEditor = ({ attributes }) => {
   const {
-    attributes: {
-      blockClass,
-      name,
-      value,
-      id,
-      classes,
-      type,
-      isDisabled,
-    },
-  } = props;
+    blockClass,
+    button,
+  } = attributes;
+
+  const buttonObject = (typeof button === 'undefined') || button;
 
   return (
-    <div className={`${blockClass}`}>
-      {type==='button' ?
-        <button
-          name={name}
-          id={id}
-          className={`${blockClass}__button ${classes}`}
-          disabled={isDisabled}
-        >
-          {value}
-        </button> :
-        <input
-          name={name}
-          id={id}
-          className={`${blockClass}__button ${classes}`}
-          value={value}
-          type={type}
-          disabled={isDisabled}
-        /> }
-    </div>
+    <ButtonEditorComponent
+      blockClass={blockClass}
+      button={buttonObject}
+    />
   );
 };

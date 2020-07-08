@@ -1,80 +1,37 @@
+import React from 'react'; // eslint-disable-line no-unused-vars
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { ButtonOptions as ButtonOptionsComponent } from '../../../components/button/components/button-options';
 
-export const ButtonOptions = (props) => {
+export const ButtonOptions = ({ attributes, actions }) => {
   const {
-    attributes: {
-      name,
-      value,
-      id,
-      classes,
-      type,
-      isDisabled,
-    },
-    actions: {
-      onChangeName,
-      onChangeValue,
-      onChangeId,
-      onChangeClasses,
-      onChangeType,
-      onChangeIsDisabled,
-    },
-  } = props;
+    button,
+  } = attributes;
+
+  const {
+    onChangeButtonTitle,
+    onChangeButtonUrl,
+    onChangeButtonStyleSize,
+    onChangeButtonStyleColor,
+    onChangeButtonStyleSizeWidth,
+    onChangeButtonId,
+  } = actions;
+
+  const buttonObject = (typeof button === 'undefined') || button;
 
   return (
-    <PanelBody title={__('Button Settings', 'eightshift-forms')}>
-      {onChangeName &&
-        <TextControl
-          label={__('Name', 'eightshift-forms')}
-          value={name}
-          onChange={onChangeName}
-        />
-      }
+    <PanelBody title={__('Button Details', 'eightshift-forms')}>
 
-      {onChangeValue &&
-        <TextControl
-          label={__('Value', 'eightshift-forms')}
-          value={value}
-          onChange={onChangeValue}
-        />
-      }
+      <ButtonOptionsComponent
+        button={buttonObject}
+        onChangeTitle={onChangeButtonTitle}
+        onChangeUrl={onChangeButtonUrl}
+        onChangeStyleSize={onChangeButtonStyleSize}
+        onChangeStyleColor={onChangeButtonStyleColor}
+        onChangeStyleSizeWidth={onChangeButtonStyleSizeWidth}
+        onChangeId={onChangeButtonId}
+      />
 
-      {onChangeType &&
-        <SelectControl
-          label={__('Type', 'eightshift-forms')}
-          value={type}
-          options={[
-            { label: __('Button', 'infinum'), value: 'button' },
-            { label: __('Submit', 'infinum'), value: 'submit' },
-            { label: __('Reset', 'infinum'), value: 'reset' },
-          ]}
-          onChange={onChangeType}
-        />
-      }
-
-      {onChangeClasses &&
-        <TextControl
-          label={__('Classes', 'eightshift-forms')}
-          value={classes}
-          onChange={onChangeClasses}
-        />
-      }
-
-      {onChangeId &&
-        <TextControl
-          label={__('ID', 'eightshift-forms')}
-          value={id}
-          onChange={onChangeId}
-        />
-      }
-
-      {onChangeIsDisabled &&
-        <ToggleControl
-          label={__('Disabled', 'eightshift-forms')}
-          checked={isDisabled}
-          onChange={onChangeIsDisabled}
-        />
-      }
     </PanelBody>
   );
 };
