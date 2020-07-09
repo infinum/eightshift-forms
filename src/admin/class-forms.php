@@ -64,7 +64,7 @@ class Forms implements Service {
   public function register_post_type() {
 
     $template = [
-      ['eightshiftforms/form', []],
+      ['eightshift-forms/form', []],
     ];
 
     $args = array(
