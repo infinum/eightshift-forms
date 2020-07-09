@@ -16,8 +16,6 @@ use Eightshift_Libs\Core\Config as Lib_Config;
 
 /**
  * The project config class.
- *
- * @since 4.0.0
  */
 class Config extends Lib_Config {
 
@@ -25,8 +23,6 @@ class Config extends Lib_Config {
    * Method that returns project name.
    *
    * Generally used for naming assets handlers, languages, etc.
-   *
-   * @since 4.0.0 Added in the project
    */
   public static function get_project_name() : string {
     return 'eightshift-forms';
@@ -36,8 +32,6 @@ class Config extends Lib_Config {
    * Method that returns project version.
    *
    * Generally used for versioning asset handlers while enqueueing them.
-   *
-   * @since 4.0.0 Added in the project
    */
   public static function get_project_version() : string {
     return '1.0.0';
@@ -49,8 +43,6 @@ class Config extends Lib_Config {
    * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
    *
    * @return string Full path to asset.
-   *
-   * @since 4.0.0 Added in the project
    */
   public static function get_project_prefix() : string {
     return 'ef';
@@ -64,8 +56,6 @@ class Config extends Lib_Config {
    * @param string $path Additional path to add to project path.
    *
    * @return string
-   *
-   * @since 4.0.0 Added in the project
    */
   public static function get_project_path( string $path = '' ) : string {
     return rtrim( plugin_dir_path( __DIR__ ), '/' ) . $path;

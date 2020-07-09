@@ -19,8 +19,6 @@ class Blocks extends Lib_Blocks {
   /**
    * Register all the hooks
    *
-   * @since 1.0.0
-   *
    * @return void
    */
   public function register() {
@@ -44,39 +42,4 @@ class Blocks extends Lib_Blocks {
 
     return $allowed_block_types;
   }
-
-  /**
-   * Get global blocks settings variable name to store the cached data into.
-   *
-   * @return string
-   *
-   * @since 1.0.0
-   */
-  // protected function get_blocks_settings_variable_name() : string {
-  //   return 'ES_FORMS_BLOCKS_SETTINGS';
-  // }
-
-
-  /**
-   * Get wrapper settings variable name to store the cached data into.
-   *
-   * @return string
-   *
-   * @since 1.0.0
-   */
-  // protected function get_wrapper_variable_name() : string {
-  //   return 'ES_FORMS_WRAPPER';
-  // }
-
-
-  /**
-   * Get global blocks variable name to store the cached data into.
-   *
-   * @return string
-   *
-   * @since 1.0.0
-   */
-  // protected function get_blocks_variable_name() : string {
-  //   return 'ES_FORMS_BLOCKS';
-  // }
 }

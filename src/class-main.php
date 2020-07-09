@@ -5,7 +5,6 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @since   1.0.0
  * @package Eightshift_Forms\Core
  */
 
@@ -28,15 +27,11 @@ use Eightshift_Forms\Blocks;
  *
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
- *
- * @since 1.0.0
  */
 class Main extends Lib_Core {
 
   /**
    * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
-   *
-   * @since 2.0.0
    */
   public function get_default_register_action_hook() : string {
     return 'plugins_loaded';
@@ -48,8 +43,6 @@ class Main extends Lib_Core {
    * A list of classes which contain hooks.
    *
    * @return array<string> Array of fully qualified class names.
-   *
-   * @since 1.0.0
    */
   protected function get_service_classes() : array {
     return [
