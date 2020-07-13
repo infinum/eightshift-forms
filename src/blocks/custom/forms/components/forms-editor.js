@@ -1,22 +1,34 @@
 import { __ } from '@wordpress/i18n';
-import { InnerBlocks } from '@wordpress/editor';
+import { Fragment } from '@wordpress/element';
+import { Placeholder } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 export const FormsEditor = (props) => {
   const {
     attributes: {
-      blockClass,
-      classes,
-      id,
-      allowedBlocks,
+      blockFullName,
+      selectedFormId,
     },
+    attributes,
   } = props;
 
+  const isFormSelected = selectedFormId && selectedFormId !== '0';
+
   return (
-    <forms className={`${blockClass} ${classes}`} id={id}>
-      <InnerBlocks
-        allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
-        templateLock={false}
-      />
-    </forms>
+    <Fragment>
+      {!isFormSelected &&
+        <Placeholder
+          icon="media-document"
+          label={__('Please select form from dropdown in the sidebar.', 'eightshift-forms')}
+        />
+      }
+      {isFormSelected &&
+        <ServerSideRender
+          block={blockFullName}
+          attributes={attributes}
+          urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
+        />
+      }
+    </Fragment>
   );
 };
