@@ -79,6 +79,7 @@ class Forms implements Service {
       'can_export'         => true,
       'capability_type'    => 'page',
       'rest_base'          => static::REST_API_ENDPOINT_SLUG,
+      'template_lock'      => 'all',
       'template'           => $template,
     );
 

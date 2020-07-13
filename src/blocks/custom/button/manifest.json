@@ -29,7 +29,7 @@
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }

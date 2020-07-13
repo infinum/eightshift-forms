@@ -12,7 +12,7 @@
   ],
   "hasWrapper": false,
   "parent": [
-    "eightshiftforms/select"
+    "eightshift-forms/select"
   ],
   "attributes": {
     "value": {

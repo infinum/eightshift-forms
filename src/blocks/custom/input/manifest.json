@@ -34,11 +34,11 @@
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     },
     "isReadOnly": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }

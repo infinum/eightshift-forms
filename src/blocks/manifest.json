@@ -30,6 +30,11 @@
         "name": "White",
         "slug": "white",
         "color": "#FFFFFF"
+      },
+      {
+        "name": "Sea",
+        "slug": "sea",
+        "color": "#F5F5F5"
       }
     ]
   }

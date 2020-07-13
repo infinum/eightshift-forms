@@ -2,7 +2,6 @@
 /**
  * Blocks class used to define configurations for blocks.
  *
- * @since   1.0.0
  * @package Eightshift_Forms\Blocks
  */
 
@@ -37,6 +36,7 @@ class Blocks extends Lib_Blocks {
    */
   public function get_all_allowed_forms_blocks( $allowed_block_types, object $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {
+      error_log(print_r($this->get_all_blocks_list(), true));
       return $this->get_all_blocks_list();
     }
 

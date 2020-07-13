@@ -9,8 +9,6 @@
  * Text Domain: eightshift-forms
  *
  * @package Eightshift_Forms
- *
- * @since 1.0.0
  */
 
 declare( strict_types=1 );
@@ -19,8 +17,6 @@ namespace Eightshift_Forms;
 
 /**
  * If this file is called directly, abort.
- *
- * @since 1.0.0
  */
 if ( ! \defined( 'WPINC' ) ) {
   die;
@@ -28,15 +24,11 @@ if ( ! \defined( 'WPINC' ) ) {
 
 /**
  * Include the autoloader so we can dynamically include the rest of the classes.
- *
- * @since 1.0.0
  */
 require __DIR__ . '/vendor/autoload.php';
 
 /**
  * The code that runs during plugin activation.
- *
- * @since 1.0.0
  */
 register_activation_hook(
   __FILE__,
@@ -47,8 +39,6 @@ register_activation_hook(
 
 /**
  * The code that runs during plugin deactivation.
- *
- * @since 1.0.0
  */
 register_deactivation_hook(
   __FILE__,
@@ -63,7 +53,5 @@ register_deactivation_hook(
  * Since everything within the theme is registered via hooks,
  * then kicking off the theme from this point in the file does
  * not affect the page life cycle.
- *
- * @since 1.0.0
  */
 ( new Core\Main() )->register();

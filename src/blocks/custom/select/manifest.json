@@ -17,7 +17,7 @@
         "type": "string"
       },
       "default": [
-        "eightshiftforms/select-option"
+        "eightshift-forms/select-option"
       ]
     },
     "label": {
@@ -28,7 +28,7 @@
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }

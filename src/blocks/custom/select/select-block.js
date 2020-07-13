@@ -14,8 +14,11 @@ export const Select = (props) => {
     attributes: {
       label,
     },
+    isSelected,
     clientId,
   } = props;
+
+  console.log(props);
 
   const actions = getActions(props, manifest);
 
@@ -32,10 +35,7 @@ export const Select = (props) => {
           clientId={clientId}
         />
       </InspectorControls>
-      <SelectEditor
-        attributes={attributes}
-        actions={actions}
-      />
+      <SelectEditor {...props} />
     </Fragment>
   );
 };

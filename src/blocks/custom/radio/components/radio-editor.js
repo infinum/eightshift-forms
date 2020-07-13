@@ -21,6 +21,7 @@ export const RadioEditor = (props) => {
       <div className={`${blockClass}__content-wrap`}>
         <InnerBlocks
           allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
+          templateLock={false}
         />
       </div>
     </div>

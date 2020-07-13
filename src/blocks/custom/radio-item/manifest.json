@@ -11,7 +11,7 @@
   ],
   "hasWrapper": false,
   "parent": [
-    "eightshiftforms/radio"
+    "eightshift-forms/radio"
   ],
   "attributes": {
     "name": {
@@ -31,15 +31,15 @@
     },
     "isChecked": {
       "type": "bool",
-      "defaul": false
+      "default": false
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     },
     "isReadOnly": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }
