@@ -36,9 +36,10 @@ class Blocks extends Lib_Blocks {
    */
   public function get_all_allowed_forms_blocks( $allowed_block_types, object $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {
-      error_log(print_r($this->get_all_blocks_list(), true));
       return $this->get_all_blocks_list();
     }
+
+    $allowed_block_types[] = "{$this->config->get_project_name()}/forms";
 
     return $allowed_block_types;
   }
