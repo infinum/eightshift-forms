@@ -10,6 +10,7 @@
     "Select"
   ],
   "hasInnerBlocks": true,
+  "hasWrapper": false,
   "attributes": {
     "allowedBlocks": {
       "type": "array",

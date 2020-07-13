@@ -9,6 +9,7 @@
   "keywords": [
     "Textarea"
   ],
+  "hasWrapper": false,
   "attributes": {
     "name": {
       "type": "string"

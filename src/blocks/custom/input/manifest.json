@@ -9,6 +9,7 @@
   "keywords": [
     "Input"
   ],
+  "hasWrapper": false,
   "attributes": {
     "name": {
       "type": "string"

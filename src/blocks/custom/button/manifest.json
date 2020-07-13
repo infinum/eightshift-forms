@@ -9,6 +9,7 @@
   "keywords": [
     "button"
   ],
+  "hasWrapper": false,
   "attributes": {
     "name": {
       "type": "string"

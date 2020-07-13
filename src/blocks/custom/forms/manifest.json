@@ -1,7 +1,7 @@
 {
   "blockName": "forms",
-  "title": "Forms",
-  "description" : "Forms",
+  "title": "Form Select",
+  "description" : "Select which form you wish to display.",
   "category": "common",
   "icon": {
     "src": "media-document"
@@ -9,29 +9,11 @@
   "keywords": [
     "Forms"
   ],
-  "hasInnerBlocks": true,
-  "hasWrapper": false,
+  "hasWrapper": true,
   "attributes": {
-    "allowedBlocks": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "action": {
-      "type": "string"
-    },
-    "method": {
-      "type": "string"
-    },
-    "target": {
-      "type": "string"
-    },
-    "id": {
-      "type": "string"
-    },
-    "classes": {
-      "type": "string"
+    "selectedFormId": {
+      "type": "string",
+      "default": "0"
     }
   }
 }
