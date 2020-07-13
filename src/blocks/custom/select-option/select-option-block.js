@@ -23,7 +23,7 @@ export const SelectOption = (props) => {
         />
       </InspectorControls>
       <SelectOptionEditor
-        attributes={attributes}
+        {...props}
         actions={actions}
       />
     </Fragment>

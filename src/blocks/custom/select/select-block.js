@@ -18,8 +18,6 @@ export const Select = (props) => {
     clientId,
   } = props;
 
-  console.log(props);
-
   const actions = getActions(props, manifest);
 
   return (

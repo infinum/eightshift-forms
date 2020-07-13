@@ -34,12 +34,6 @@ export const SelectEditor = (props) => {
 
   const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
 
-  console.log('is select selected: ', {
-    isSelected,
-    hasSelectedInnerBlock: hasSelectedInnerBlock(props),
-    isBlockOrChildrenSelected,
-  });
-  
   return (
     <div className={`${blockClass}`}>
       <LabelEditor
