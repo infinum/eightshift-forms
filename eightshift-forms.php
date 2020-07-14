@@ -48,10 +48,10 @@ register_deactivation_hook(
 );
 
 /**
- * Begins execution of the theme.
+ * Begins execution of the plugin.
  *
- * Since everything within the theme is registered via hooks,
- * then kicking off the theme from this point in the file does
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
 ( new Core\Main() )->register();
