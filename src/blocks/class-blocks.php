@@ -43,4 +43,15 @@ class Blocks extends Lib_Blocks {
 
     return $allowed_block_types;
   }
+
+  /**
+   * Create custom category to assign all custom blocks.
+   * This category will show on all blocks list in "Add Block" button.
+   *
+   * @param array $categories Array of all blocks categories.
+   * @return array
+   */
+  public function get_custom_category( $categories ) {
+    return $categories;
+  }
 }
