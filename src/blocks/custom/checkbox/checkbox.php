@@ -6,14 +6,15 @@
 
 namespace Eightshift_Forms\Blocks;
 
-$block_class = isset( $attributes['blockClass'] ) ? $attributes['blockClass'] : '';
-$name        = isset( $attributes['name'] ) ? $attributes['name'] : '';
-$value       = isset( $attributes['value'] ) ? $attributes['value'] : '';
-$id          = isset( $attributes['id'] ) ? $attributes['id'] : '';
-$classes     = isset( $attributes['classes'] )  ? $attributes['classes'] : '';
-$is_checked  = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
-$is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$block_class = $attributes['blockClass'] ?? '';
+$name        = $attributes['name'] ?? '';
+$value       = $attributes['value'] ?? '';
+$description = $attributes['description'] ?? '';
+$id          = $attributes['id'] ?? '';
+$classes     = $attributes['classes'] ?? '';
+$is_checked  = $attributes['isChecked'] ?? 'checked';
+$is_disabled = $attributes['isDisabled'] ?? 'disabled';
+$is_readOnly = $attributes['isReadOnly'] ?? 'readonly';
 
 ?>
 
@@ -39,5 +40,8 @@ $is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ?
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_readOnly ); ?>
     />
+    <p class="<?php echo esc_attr( "{$block_class}__description" ); ?>">
+      <?php echo esc_html( $description ); ?>
+    </p>
   </div>
 </div>

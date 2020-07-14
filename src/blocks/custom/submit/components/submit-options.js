@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 
-export const ButtonOptions = (props) => {
+export const SubmitOptions = (props) => {
   const {
     attributes: {
       name,
@@ -22,7 +22,7 @@ export const ButtonOptions = (props) => {
   } = props;
 
   return (
-    <PanelBody title={__('Button Settings', 'eightshift-forms')}>
+    <PanelBody title={__('Submit Settings', 'eightshift-forms')}>
       {onChangeName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
@@ -44,7 +44,7 @@ export const ButtonOptions = (props) => {
           label={__('Type', 'eightshift-forms')}
           value={type}
           options={[
-            { label: __('Button', 'infinum'), value: 'button' },
+            { label: __('Submit', 'infinum'), value: 'submit' },
             { label: __('Submit', 'infinum'), value: 'submit' },
             { label: __('Reset', 'infinum'), value: 'reset' },
           ]}

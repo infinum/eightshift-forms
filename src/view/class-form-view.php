@@ -14,12 +14,7 @@ namespace Eightshift_Forms\View;
  */
 class Form_View {
 
-  /**
-   * Returns an array of tags for wp_kses(). Less strict than the usual wp_kses_post().
-   */
-  public static function allowed_tags(): array {
-    $allowed_tags = wp_kses_allowed_html( 'post' );
-
+  public static function extra_allowed_tags(): array {
     $allowed_tags['form'] = [
       'class'          => 1,
       'id'             => 1,
@@ -36,5 +31,12 @@ class Form_View {
     ];
 
     return $allowed_tags;
+  }
+
+  /**
+   * Returns an array of tags for wp_kses(). Less strict than the usual wp_kses_post().
+   */
+  public static function allowed_tags(): array {
+    return array_merge( wp_kses_allowed_html( 'post' ), self::extra_allowed_tags() );
   }
 }

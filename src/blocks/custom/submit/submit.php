@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for the Button Block view.
+ * Template for the Submit Block view.
  * @package Eightshift_Forms\Blocks.
  */
 
@@ -10,7 +10,7 @@ $name        = isset( $attributes['name'] ) ? $attributes['name'] : '';
 $value       = isset( $attributes['value'] ) ? $attributes['value'] : '';
 $id          = isset( $attributes['id'] ) ? $attributes['id'] : '';
 $classes     = isset( $attributes['classes'] )  ? $attributes['classes'] : '';
-$type        = isset( $attributes['type'] )  ? $attributes['type'] : 'button';
+$type        = isset( $attributes['type'] )  ? $attributes['type'] : 'submit';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 
 ?>
@@ -29,7 +29,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
     <input
       name="<?php echo esc_attr( $name ); ?>"
       id="<?php echo esc_attr( $id ); ?>"
-      class="<?php echo esc_attr( "{$classes} {$block_class}__button" ); ?>"
+      class="<?php echo esc_attr( "{$classes} {$block_class}__input" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="<?php echo esc_attr( $type ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>

@@ -9,7 +9,7 @@
   "keywords": [
     "Forms"
   ],
-  "hasWrapper": true,
+  "hasWrapper": false,
   "attributes": {
     "selectedFormId": {
       "type": "string",

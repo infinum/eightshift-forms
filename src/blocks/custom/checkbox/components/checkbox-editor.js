@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-
+import { RichText } from '@wordpress/block-editor';
 import { LabelEditor } from '../../../components/label/components/label-editor';
 
 export const CheckboxEditor = (props) => {
@@ -9,11 +9,15 @@ export const CheckboxEditor = (props) => {
       label,
       name,
       value,
+      description,
       id,
       classes,
       isChecked,
       isDisabled,
       isReadOnly,
+    },
+    actions: {
+      onChangeDescription,
     },
   } = props;
 
@@ -34,6 +38,12 @@ export const CheckboxEditor = (props) => {
           checked={isChecked}
           disabled={isDisabled}
           readOnly={isReadOnly}
+        />
+        <RichText
+          className={`${blockClass}__description`}
+          placeholder={__('Add your description', 'eightshift-forms')}
+          onChange={onChangeDescription}
+          value={description}
         />
       </div>
     </div>

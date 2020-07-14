@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 
-export const ButtonEditor = (props) => {
+export const SubmitEditor = (props) => {
   const {
     attributes: {
       blockClass,
@@ -15,19 +15,19 @@ export const ButtonEditor = (props) => {
 
   return (
     <div className={`${blockClass}`}>
-      {type==='button' ?
-        <button
+      {type==='submit' ?
+        <submit
           name={name}
           id={id}
-          className={`${blockClass}__button ${classes}`}
+          className={`${blockClass}__submit ${classes}`}
           disabled={isDisabled}
         >
           {value}
-        </button> :
+        </submit> :
         <input
           name={name}
           id={id}
-          className={`${blockClass}__button ${classes}`}
+          className={`${blockClass}__submit ${classes}`}
           value={value}
           type={type}
           disabled={isDisabled}

@@ -1,13 +1,13 @@
 {
-  "blockName": "button",
-  "title": "Button",
-  "description" : "Button field",
+  "blockName": "submit",
+  "title": "Submit",
+  "description" : "Submit field",
   "category": "common",
   "icon": {
     "src": "media-document"
   },
   "keywords": [
-    "button"
+    "submit"
   ],
   "hasWrapper": false,
   "attributes": {
@@ -26,7 +26,7 @@
     },
     "type": {
       "type": "string",
-      "default": "button"
+      "default": "submit"
     },
     "isDisabled": {
       "type": "bool",

@@ -4,10 +4,10 @@ import { InspectorControls } from '@wordpress/editor';
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
-import { ButtonEditor } from './components/button-editor';
-import { ButtonOptions } from './components/button-options';
+import { SubmitEditor } from './components/submit-editor';
+import { SubmitOptions } from './components/submit-options';
 
-export const Button = (props) => {
+export const Submit = (props) => {
   const {
     attributes,
   } = props;
@@ -17,12 +17,12 @@ export const Button = (props) => {
   return (
     <Fragment>
       <InspectorControls>
-        <ButtonOptions
+        <SubmitOptions
           attributes={attributes}
           actions={actions}
         />
       </InspectorControls>
-      <ButtonEditor
+      <SubmitEditor
         attributes={attributes}
         actions={actions}
       />

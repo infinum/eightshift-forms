@@ -1,4 +1,5 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
+import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
 import { withSelect } from '@wordpress/data';
 
@@ -14,7 +15,6 @@ export const PostSelect = withSelect((select, props) => {
     taxonomy = '',
     taxonomySlug = '',
   } = props;
-
   const query = {
     per_page: -1, // eslint-disable-line camelcase
     orderby: 'date',
@@ -61,12 +61,17 @@ export const PostSelect = withSelect((select, props) => {
 
   // Because of the lifecycle this might be called before posts is set. In that case we need to make sure posts is set before we map it.
   // there's probably a better solution to do this /shrug.
-  const postValues = posts ? posts.map((post) => {
-    return {
-      value: post.id, // This is required for SelectControl
-      label: post.title.raw,
-    };
-  }) : [];
+  const postValues = posts ? [
+    {
+      value: 0,
+      label: __('Select form', 'eightshift-forms'),
+    },
+    ...posts.map((post) => {
+      return {
+        value: post.id, // This is required for SelectControl
+        label: post.title.raw,
+      };
+    })] : [];
 
   return (
     <SelectControl
