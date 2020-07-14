@@ -15,19 +15,19 @@ export const SubmitEditor = (props) => {
 
   return (
     <div className={`${blockClass}`}>
-      {type==='submit' ?
-        <submit
+      {type === 'button' ?
+        <button
           name={name}
           id={id}
-          className={`${blockClass}__submit ${classes}`}
+          className={`${blockClass}__button ${classes}`}
           disabled={isDisabled}
         >
           {value}
-        </submit> :
+        </button> :
         <input
           name={name}
           id={id}
-          className={`${blockClass}__submit ${classes}`}
+          className={`${blockClass}__input ${classes}`}
           value={value}
           type={type}
           disabled={isDisabled}
