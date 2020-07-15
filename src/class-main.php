@@ -57,7 +57,6 @@ class Main extends Lib_Core {
       Lib_I18n\I18n::class => [ Config::class ],
 
       // Enqueue.
-      Lib_Enqueue\Enqueue_Admin::class => [ Lib_Manifest\Manifest::class ],
       Lib_Enqueue\Enqueue_Theme::class => [ Lib_Manifest\Manifest::class ],
       Lib_Enqueue\Enqueue_Blocks::class => [ Lib_Manifest\Manifest::class ],
 
@@ -66,7 +65,6 @@ class Main extends Lib_Core {
       Admin\Content::class,
 
       // Blocks.
-      // Blocks\Enqueue::class => [ Lib_Manifest\Manifest::class ],
       Blocks\Blocks::class => [ Config::class ],
     ];
   }
