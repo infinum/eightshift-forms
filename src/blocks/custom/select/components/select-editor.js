@@ -49,8 +49,8 @@ export const SelectEditor = (props) => {
         }
         {isBlockOrChildrenSelected &&
           <div className={`${blockClass}__editor`}>
-            <h2>{__('Add select options', 'd66')}</h2>
-            <p>{__('Unselect this block to render it', 'd66')}</p>
+            <h2>{__('Add select options', 'eightshift-forms')}</h2>
+            <p>{__('Unselect this block to render it', 'eightshift-forms')}</p>
             <InnerBlocks
               allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
               templateLock={false}
