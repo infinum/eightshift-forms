@@ -31,7 +31,7 @@ export const SubmitEditor = (props) => {
           value={value}
           type={type}
           disabled={isDisabled}
-        /> }
+        />}
     </div>
   );
 };
