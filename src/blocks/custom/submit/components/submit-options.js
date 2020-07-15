@@ -45,7 +45,7 @@ export const SubmitOptions = (props) => {
           value={type}
           options={[
             { label: __('Submit', 'infinum'), value: 'submit' },
-            { label: __('Submit', 'infinum'), value: 'submit' },
+            { label: __('Button', 'infinum'), value: 'button' },
             { label: __('Reset', 'infinum'), value: 'reset' },
           ]}
           onChange={onChangeType}
