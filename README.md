@@ -1,19 +1,29 @@
-# Infinum WordPress Plugin Boilerplate
+<p align="center">
+  <img alt="Eightshift Boilerplate Plugin" src="https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/package/logo.svg?raw=true&sanitize=true" />
+</p>
 
-This repository contains all the tools you need to start building a modern WordPress plugin, using all the latest front end development tools.
+# Eightshift Forms Plugin
 
-## Getting started
+This is a form builder plugin by Eightshift.
 
-To be added...
+## :rocket: Quick start
 
-## Credits
+Clone the project + build to get started:
 
-Infinum WordPress Boilerplate is maintained and sponsored by
-[Infinum](https://www.infinum.co).
+1. `git clone git@github.com:infinum/eightshift-forms.git`
+2. `composer install`
+3. `npm install`
+4. `npm start`
 
-<img src="https://infinum.co/infinum.png" width="264">
+**For more details about this and all other eightshift-boilerplate based plugins follow [this link](https://infinum.github.io/eightshift-docs).**
 
-## License
+## :mailbox: Who do I talk to?
 
-Infinum WordPress Boilerplate is Copyright © 2019 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms-plugin/issues) on github and we will do our best to give you a timely answer.
 
+Eightshift WordPress Boilerplate Plugin is maintained and sponsored by
+[Eightshift](https://eightshift.com) and [Infinum](https://infinum.co).
+
+## :scroll: License
+
+WordPress Boilerplate Plugin is Copyright ©2020 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.

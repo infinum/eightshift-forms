@@ -1,11 +1,25 @@
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/editor';
-
+import ServerSideRender from '@wordpress/server-side-render';
 import { LabelEditor } from '../../../components/label/components/label-editor';
+
+const hasSelectedInnerBlock = (props) => {
+  const select = wp.data.select('core/editor');
+  const selected = select.getBlockSelectionStart();
+  const inner = select.getBlock(props.clientId).innerBlocks ? select.getBlock(props.clientId).innerBlocks : [];
+  for (let i = 0; i < inner.length; i++) {
+    if (inner[i].clientId === selected || inner[i].innerBlocks.length && hasSelectedInnerBlock(inner[i])) {
+      return true;
+    }
+  }
+  return false;
+};
 
 export const SelectEditor = (props) => {
   const {
+    attributes,
     attributes: {
+      blockFullName,
       blockClass,
       label,
       allowedBlocks,
@@ -14,7 +28,10 @@ export const SelectEditor = (props) => {
       classes,
       isDisabled,
     },
+    isSelected,
   } = props;
+
+  const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
 
   return (
     <div className={`${blockClass}`}>
@@ -23,16 +40,23 @@ export const SelectEditor = (props) => {
         label={label}
       />
       <div className={`${blockClass}__content-wrap`}>
-        <select
-          name={name}
-          disabled={isDisabled}
-          id={id}
-          className={`${blockClass}__select ${classes}`}
-        >
-          <InnerBlocks
-            allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
+        {!isBlockOrChildrenSelected &&
+          <ServerSideRender
+            block={blockFullName}
+            attributes={attributes}
+            urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
           />
-        </select>
+        }
+        {isBlockOrChildrenSelected &&
+          <div className={`${blockClass}__editor`}>
+            <h2>{__('Add select options', 'eightshift-forms')}</h2>
+            <p>{__('Unselect this block to render it', 'eightshift-forms')}</p>
+            <InnerBlocks
+              allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
+              templateLock={false}
+            />
+          </div>
+        }
       </div>
     </div>
   );

@@ -1,0 +1,36 @@
+{
+  "blockName": "submit",
+  "title": "Submit",
+  "description" : "Submit field",
+  "category": "common",
+  "icon": {
+    "src": "media-document"
+  },
+  "keywords": [
+    "submit"
+  ],
+  "hasWrapper": false,
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string",
+      "default": "Submit"
+    },
+    "id": {
+      "type": "string"
+    },
+    "classes": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "default": "submit"
+    },
+    "isDisabled": {
+      "type": "bool",
+      "default": false
+    }
+  }
+}

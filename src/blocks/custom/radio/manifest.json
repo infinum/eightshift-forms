@@ -10,6 +10,7 @@
     "Radio"
   ],
   "hasInnerBlocks": true,
+  "hasWrapper": false,
   "attributes": {
     "allowedBlocks": {
       "type": "array",
@@ -17,7 +18,7 @@
         "type": "string"
       },
       "default": [
-        "eightshiftforms/radio-item"
+        "eightshift-forms/radio-item"
       ]
     },
     "label": {

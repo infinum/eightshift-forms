@@ -2,7 +2,6 @@
 /**
  * Enqueue class used to define all script and style enqueues for Gutenberg blocks.
  *
- * @since   1.0.0
  * @package Eightshift_Forms\Blocks
  */
 
@@ -13,8 +12,6 @@ use Eightshift_Libs\Assets\Manifest_Data;
 
 /**
  * Enqueue class.
- *
- * @since 1.0.0
  */
 class Enqueue extends Lib_Enqueue {
 
@@ -22,8 +19,6 @@ class Enqueue extends Lib_Enqueue {
    * Instance variable of manifest data.
    *
    * @var object
-   *
-   * @since 1.0.0 Init.
    */
   protected $manifest;
 
@@ -31,8 +26,6 @@ class Enqueue extends Lib_Enqueue {
    * Create a new admin instance that injects manifest data for use in assets registration.
    *
    * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
-   *
-   * @since 1.0.0 Init.
    */
   public function __construct( Manifest_Data $manifest ) {
     $this->manifest = $manifest;
@@ -43,8 +36,6 @@ class Enqueue extends Lib_Enqueue {
    * Using this manifest you are able to provide project specific implementation of assets locations.
    *
    * @return array
-   *
-   * @since 1.0.0
    */
   public function get_project_manifest() : array {
     return $this->manifest->get_decoded_manifest_data();
@@ -54,8 +45,6 @@ class Enqueue extends Lib_Enqueue {
    * Get project name used in enqueue methods for scripts and styles.
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   protected function get_project_name() : string {
     return ES_FORMS_PLUGIN_NAME;
@@ -65,8 +54,6 @@ class Enqueue extends Lib_Enqueue {
    * Get project version used in enqueue methods for scripts and styles.
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   protected function get_project_version() : string {
     return ES_FORMS_PLUGIN_VERSION;
@@ -76,8 +63,6 @@ class Enqueue extends Lib_Enqueue {
    * Get block editor only script key from project manifest.json
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   public function get_block_editor_script_key() : string {
     return 'esFromsApplicationBlocksEditor.js';
@@ -87,8 +72,6 @@ class Enqueue extends Lib_Enqueue {
    * Get block editor only style key from project manifest.json
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   public function get_block_editor_style_key() : string {
     return 'esFromsApplicationBlocksEditor.css';
@@ -98,8 +81,6 @@ class Enqueue extends Lib_Enqueue {
    * Get block editor and frontend style key from project manifest.json
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   public function get_block_style_key() : string {
     return 'esFromsApplicationBlocks.css';
@@ -109,8 +90,6 @@ class Enqueue extends Lib_Enqueue {
    * Get block frontend only script key from project manifest.json
    *
    * @return string
-   *
-   * @since 1.0.0
    */
   public function get_block_script_key() : string {
     return 'esFromsApplicationBlocks.js';

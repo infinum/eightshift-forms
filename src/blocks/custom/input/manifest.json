@@ -9,6 +9,7 @@
   "keywords": [
     "Input"
   ],
+  "hasWrapper": false,
   "attributes": {
     "name": {
       "type": "string"
@@ -34,11 +35,11 @@
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     },
     "isReadOnly": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }

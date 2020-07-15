@@ -1,0 +1,19 @@
+{
+  "blockName": "forms",
+  "title": "Form Select",
+  "description" : "Select which form you wish to display.",
+  "category": "common",
+  "icon": {
+    "src": "media-document"
+  },
+  "keywords": [
+    "Forms"
+  ],
+  "hasWrapper": false,
+  "attributes": {
+    "selectedFormId": {
+      "type": "string",
+      "default": "0"
+    }
+  }
+}

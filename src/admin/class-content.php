@@ -2,7 +2,6 @@
 /**
  * The Content specific functionality.
  *
- * @since   1.0.0
  * @package Eightshift_Forms\Admin
  */
 
@@ -17,8 +16,6 @@ class Content implements Service {
 
   /**
    * Register all the hooks
-   *
-   * @since 1.0.0
    */
   public function register() {
     add_action( 'wp_kses_allowed_html', [ $this, 'set_custom_wpkses_post_tags' ], 10, 2 );
@@ -30,8 +27,6 @@ class Content implements Service {
    * @param  array  $tags    Allowed tags array.
    * @param  string $context Context in which the filter is called.
    * @return array           Modified allowed tags array.
-   *
-   * @since 1.0.0
    */
   public function set_custom_wpkses_post_tags( $tags, $context ) {
     $appended_tags = [

@@ -2,7 +2,6 @@
 /**
  * The Forms specific functionality.
  *
- * @since   1.0.0
  * @package Eightshift_Forms\Admin
  */
 
@@ -19,8 +18,6 @@ class Forms implements Service {
    * Post type slug costant.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
   const POST_TYPE_SLUG = 'eightshift-forms';
 
@@ -28,8 +25,6 @@ class Forms implements Service {
    * Browser url slug constant.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
   const URL_SLUG = 'eightshift-forms';
 
@@ -37,8 +32,6 @@ class Forms implements Service {
    * Rest API Endpoint slug costant.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
   const REST_API_ENDPOINT_SLUG = 'eightshift-forms';
 
@@ -46,8 +39,6 @@ class Forms implements Service {
    * Location of menu in sidebar.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
   const MENU_POSITION = 50;
 
@@ -55,15 +46,11 @@ class Forms implements Service {
    * Set menu icon.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
   const MENU_ICON = 'dashicons-media-document';
 
   /**
    * Register all the hooks
-   *
-   * @since 1.0.0
    */
   public function register() {
     add_action( 'init', [ $this, 'register_post_type' ] );
@@ -72,14 +59,12 @@ class Forms implements Service {
   /**
    * Register custom post type
    *
-   * @since 1.0.0
-   *
    * @return void
    */
   public function register_post_type() {
 
     $template = [
-      ['eightshiftforms/form', []],
+      ['eightshift-forms/form', []],
     ];
 
     $args = array(
@@ -94,6 +79,7 @@ class Forms implements Service {
       'can_export'         => true,
       'capability_type'    => 'page',
       'rest_base'          => static::REST_API_ENDPOINT_SLUG,
+      'template_lock'      => 'all',
       'template'           => $template,
     );
 

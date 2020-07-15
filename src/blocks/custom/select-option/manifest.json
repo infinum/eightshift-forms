@@ -12,7 +12,7 @@
   ],
   "hasWrapper": false,
   "parent": [
-    "eightshiftforms/select"
+    "eightshift-forms/select"
   ],
   "attributes": {
     "value": {
@@ -21,13 +21,13 @@
     "label": {
       "type": "string"
     },
-    "isSelected": {
+    "isOptionSelected": {
       "type": "bool",
-      "defaul": false
+      "default": false
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }

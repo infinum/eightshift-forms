@@ -1,8 +1,6 @@
 <?php
 /**
  * Template for the Select Block view.
- *
- * @since 1.0.0
  * @package Eightshift_Forms\Blocks.
  */
 

@@ -5,16 +5,18 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @since 1.0.0
  * @package Eightshift_Forms\Core
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Forms\Core;
 
-use Eightshift_Libs\Core\Main as LibMain;
-
+use Eightshift_Libs\Core\Main as Lib_Core;
+use Eightshift_Libs\Manifest as Lib_Manifest;
+use Eightshift_Libs\Enqueue as Lib_Enqueue;
+use Eightshift_Libs\I18n as Lib_I18n;
 use Eightshift_Forms\Admin;
-use Eightshift_Forms\Assets;
 use Eightshift_Forms\Blocks;
 
 /**
@@ -26,16 +28,12 @@ use Eightshift_Forms\Blocks;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class Main extends LibMain {
+class Main extends Lib_Core {
 
-    /**
-   * Returns Theme/Plugin main action hook that start the whole lib.
-   *
-   * @return string
-   *
-   * @since 1.0.0
+  /**
+   * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
    */
-  public function get_register_action_hook() : string {
+  public function get_default_register_action_hook() : string {
     return 'plugins_loaded';
   }
 
@@ -49,16 +47,25 @@ class Main extends LibMain {
   protected function get_service_classes() : array {
     return [
 
-      // Admin.
+      // Config.
+      Config::class,
+
+      // Manifest.
+      Lib_Manifest\Manifest::class => [ Config::class ],
+
+      // I18n.
+      Lib_I18n\I18n::class => [ Config::class ],
+
+      // Enqueue.
+      Lib_Enqueue\Enqueue_Theme::class => [ Lib_Manifest\Manifest::class ],
+      Lib_Enqueue\Enqueue_Blocks::class => [ Lib_Manifest\Manifest::class ],
+
+      // Admin
       Admin\Forms::class,
       Admin\Content::class,
 
-      // Assets.
-      Assets\Manifest::class,
-
       // Blocks.
-      Blocks\Enqueue::class => [ Assets\Manifest::class ],
-      Blocks\Blocks::class,
+      Blocks\Blocks::class => [ Config::class ],
     ];
   }
 }

@@ -10,6 +10,7 @@
     "Select"
   ],
   "hasInnerBlocks": true,
+  "hasWrapper": false,
   "attributes": {
     "allowedBlocks": {
       "type": "array",
@@ -17,7 +18,7 @@
         "type": "string"
       },
       "default": [
-        "eightshiftforms/select-option"
+        "eightshift-forms/select-option"
       ]
     },
     "label": {
@@ -28,7 +29,7 @@
     },
     "isDisabled": {
       "type": "bool",
-      "defaul": false
+      "default": false
     }
   }
 }
