@@ -56,21 +56,21 @@ export const InputOptions = (props) => {
           label={__('Type', 'eightshift-forms')}
           value={type}
           options={[
-            { label: __('Text', 'infinum'), value: 'text' },
-            { label: __('Url', 'infinum'), value: 'url' },
-            { label: __('Email', 'infinum'), value: 'email' },
-            { label: __('Number', 'infinum'), value: 'nmber' },
-            { label: __('Password', 'infinum'), value: 'password' },
-            { label: __('Color', 'infinum'), value: 'color' },
-            { label: __('Date', 'infinum'), value: 'date' },
-            { label: __('Date Time Local', 'infinum'), value: 'datetime-local' },
-            { label: __('Image', 'infinum'), value: 'image' },
-            { label: __('Month', 'infinum'), value: 'month' },
-            { label: __('Range', 'infinum'), value: 'range' },
-            { label: __('Search', 'infinum'), value: 'search' },
-            { label: __('Tel', 'infinum'), value: 'tel' },
-            { label: __('Time', 'infinum'), value: 'time' },
-            { label: __('Week', 'infinum'), value: 'week' },
+            { label: __('Text', 'eightshift-forms'), value: 'text' },
+            { label: __('Url', 'eightshift-forms'), value: 'url' },
+            { label: __('Email', 'eightshift-forms'), value: 'email' },
+            { label: __('Number', 'eightshift-forms'), value: 'nmber' },
+            { label: __('Password', 'eightshift-forms'), value: 'password' },
+            { label: __('Color', 'eightshift-forms'), value: 'color' },
+            { label: __('Date', 'eightshift-forms'), value: 'date' },
+            { label: __('Date Time Local', 'eightshift-forms'), value: 'datetime-local' },
+            { label: __('Image', 'eightshift-forms'), value: 'image' },
+            { label: __('Month', 'eightshift-forms'), value: 'month' },
+            { label: __('Range', 'eightshift-forms'), value: 'range' },
+            { label: __('Search', 'eightshift-forms'), value: 'search' },
+            { label: __('Tel', 'eightshift-forms'), value: 'tel' },
+            { label: __('Time', 'eightshift-forms'), value: 'time' },
+            { label: __('Week', 'eightshift-forms'), value: 'week' },
           ]}
           onChange={onChangeType}
         />
