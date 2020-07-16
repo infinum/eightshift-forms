@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
 
 export const FormOptions = (props) => {
   const {
@@ -8,7 +8,8 @@ export const FormOptions = (props) => {
       method,
       target,
       id,
-      classes
+      classes,
+      type,
     },
     actions: {
       onChangeAction,
@@ -16,12 +17,29 @@ export const FormOptions = (props) => {
       onChangeTarget,
       onChangeId,
       onChangeClasses,
+      onChangeType,
     },
   } = props;
 
+  console.log('onchange type', onChangeType);
+
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
-      {onChangeAction &&
+      {onChangeType &&
+        <SelectControl
+          label={__('Type', 'eightshift-forms')}
+          value={type}
+          help={__('Choose what will this form do on submit', 'eightshift-forms')}
+          options={[
+            { label: __('Email', 'eightshift-forms'), value: 'email' },
+            { label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' },
+            { label: __('Custom', 'eightshift-forms'), value: 'custom' },
+          ]}
+          onChange={onChangeType}
+        />
+      }
+
+      {onChangeAction && type === 'custom' &&
         <TextControl
           label={__('Action', 'eightshift-forms')}
           value={action}
@@ -29,7 +47,7 @@ export const FormOptions = (props) => {
         />
       }
 
-      {onChangeMethod &&
+      {onChangeMethod && type === 'custom' &&
         <TextControl
           label={__('Method', 'eightshift-forms')}
           value={method}
@@ -37,7 +55,7 @@ export const FormOptions = (props) => {
         />
       }
 
-      {onChangeTarget &&
+      {onChangeTarget && type === 'custom' &&
         <TextControl
           label={__('Target', 'eightshift-forms')}
           value={target}
