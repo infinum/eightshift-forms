@@ -21,7 +21,7 @@ $is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ?
 <div class="<?php echo esc_attr( "{$block_class}" ); ?>">
   <input
     name="<?php echo esc_attr( $name ); ?>"
-    id="<?php echo esc_attr( $id ); ?>"
+    <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
     class="<?php echo esc_attr( "{$classes} {$block_class}__radio" ); ?>"
     value="<?php echo esc_attr( $value ); ?>"
     type="radio"

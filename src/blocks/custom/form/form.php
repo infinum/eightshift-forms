@@ -22,7 +22,7 @@ $action      = isset( $attributes['action'] ) ? $attributes['action'] : '';
   action="<?php echo esc_attr( "{$action}" ); ?>"
   method="<?php echo esc_attr( "{$method}" ); ?>"
   target="<?php echo esc_attr( "{$target}" ); ?>"
-  id="<?php echo esc_attr( "{$id}" ); ?>"
+  <?php ! empty( $id ) ? sprintf('id="%s"', $id ): '' ?>
 >
   <?php echo wp_kses_post( $inner_block_content ); ?>
 </form>

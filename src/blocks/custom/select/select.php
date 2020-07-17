@@ -26,7 +26,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
   ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <select
-      id="<?php echo esc_attr( $id ); ?>"
+      <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
       name="<?php echo esc_attr( $name ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
       class="<?php echo esc_attr( "{$block_class}__select {$classes}" ); ?>"
