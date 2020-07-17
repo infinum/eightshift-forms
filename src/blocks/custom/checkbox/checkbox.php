@@ -32,7 +32,7 @@ $is_readOnly = $attributes['isReadOnly'] ?? 'readonly';
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <input
       name="<?php echo esc_attr( $name ); ?>"
-      <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
+      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
       class="<?php echo esc_attr( "{$classes} {$block_class}__checkbox" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="checkbox"

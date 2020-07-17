@@ -19,7 +19,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
   <?php if ( $type === 'button' ) { ?>
     <button
       name="<?php echo esc_attr( $name ); ?>"
-      <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
+      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
       class="<?php echo esc_attr( "{$classes} {$block_class}__button" ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
     >
@@ -28,7 +28,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
   <?php } else { ?>
     <input
       name="<?php echo esc_attr( $name ); ?>"
-      <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
+      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
       class="<?php echo esc_attr( "{$classes} {$block_class}__input" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="<?php echo esc_attr( $type ); ?>"

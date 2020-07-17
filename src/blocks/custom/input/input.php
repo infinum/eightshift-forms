@@ -33,7 +33,7 @@ $is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ?
     <input
       name="<?php echo esc_attr( $name ); ?>"
       placeholder="<?php echo esc_attr( $placeholder ); ?>"
-      <?php ! empty( $id ) ? sprintf('id="%s"', esc_attr( $id ) ): '' ?>
+      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
       class="<?php echo esc_attr( "{$classes} {$block_class}__input" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="<?php echo esc_attr( $type ); ?>"
