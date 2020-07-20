@@ -44,12 +44,6 @@ class Dynamics_Crm_Route extends Base_Route {
 
     unset($params[self::ENTITY_PARAM]);
     $post_data = $params;
-
-    // $post_data = [
-    //   'pyl_firstname' => $params['name'],
-    //   'pyl_lastname' => $params['name'],
-    //   'pyl_email' => $params['email'],
-    // ];
   
     error_log(print_r([
       'posting' => 'a4',

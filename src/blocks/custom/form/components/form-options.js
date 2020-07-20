@@ -23,6 +23,14 @@ export const FormOptions = (props) => {
     },
   } = props;
 
+  const crmEntities = window.eightshiftForms.dynamicsCrm.availableEntities ?? [];
+  const crmEntitiesAsOptions = crmEntities.map((entity) => {
+    return {
+      label: entity,
+      value: entity,
+    };
+  });
+
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
       {onChangeType &&
@@ -39,11 +47,12 @@ export const FormOptions = (props) => {
         />
       }
 
-      {onChangeDynamicsEntity && type === 'dynamics-crm' &&
-        <TextControl
+      {onChangeDynamicsEntity && type === 'dynamics-crm' && crmEntities &&
+        <SelectControl
           label={__('CRM Entity', 'eightshift-forms')}
           help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
-          value={dynamicsEntity}
+          value={type}
+          options={crmEntitiesAsOptions}
           onChange={onChangeDynamicsEntity}
         />
       }
