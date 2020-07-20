@@ -41,7 +41,7 @@ $is_readOnly = $attributes['isReadOnly'] ?? 'readonly';
       <?php echo esc_attr( $is_readOnly ); ?>
     />
     <p class="<?php echo esc_attr( "{$block_class}__description" ); ?>">
-      <?php echo esc_html( $description ); ?>
+      <?php echo wp_kses_post( $description ); ?>
     </p>
   </div>
 </div>
