@@ -36,6 +36,9 @@
     "type": {
       "type": "string",
       "default": "email"
+    },
+    "dynamicsEntity": {
+      "type": "string"
     }
   }
 }

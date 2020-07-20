@@ -28,6 +28,8 @@ class Form_View {
       'rel' => 1,
       'enctype' => 1,
       'novalidate' => 1,
+      'data-form-type' => 1,
+      'data-dynamics-crm-entity' => 1,
     ];
 
     return $allowed_tags;

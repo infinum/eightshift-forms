@@ -38,6 +38,13 @@ class Config extends Lib_Config {
   }
 
   /**
+   * Method that returns project routes version.
+   */
+  public static function get_project_routes_version() : string {
+    return 'v1';
+  }
+
+  /**
    * Method that returns project prefix.
    *
    * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.

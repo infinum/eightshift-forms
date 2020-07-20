@@ -10,6 +10,7 @@ export const FormOptions = (props) => {
       id,
       classes,
       type,
+      dynamicsEntity,
     },
     actions: {
       onChangeAction,
@@ -18,10 +19,9 @@ export const FormOptions = (props) => {
       onChangeId,
       onChangeClasses,
       onChangeType,
+      onChangeDynamicsEntity,
     },
   } = props;
-
-  console.log('onchange type', onChangeType);
 
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
@@ -36,6 +36,15 @@ export const FormOptions = (props) => {
             { label: __('Custom', 'eightshift-forms'), value: 'custom' },
           ]}
           onChange={onChangeType}
+        />
+      }
+
+      {onChangeDynamicsEntity && type === 'dynamics-crm' &&
+        <TextControl
+          label={__('CRM Entity', 'eightshift-forms')}
+          help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
+          value={dynamicsEntity}
+          onChange={onChangeDynamicsEntity}
         />
       }
 

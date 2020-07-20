@@ -18,6 +18,9 @@ use Eightshift_Libs\Enqueue as Lib_Enqueue;
 use Eightshift_Libs\I18n as Lib_I18n;
 use Eightshift_Forms\Admin;
 use Eightshift_Forms\Blocks;
+use Eightshift_Forms\Rest;
+use Eightshift_Forms\Enqueue;
+use Eightshift_Forms\View;
 
 /**
  * The main start class.
@@ -56,8 +59,11 @@ class Main extends Lib_Core {
       // I18n.
       Lib_I18n\I18n::class => [ Config::class ],
 
+      // Rest
+      Rest\Dynamics_Crm_Route::class => [ Config::class ],
+
       // Enqueue.
-      Lib_Enqueue\Enqueue_Theme::class => [ Lib_Manifest\Manifest::class ],
+      Enqueue\Enqueue_Theme::class => [ Lib_Manifest\Manifest::class, Rest\Dynamics_Crm_Route::class ],
       Lib_Enqueue\Enqueue_Blocks::class => [ Lib_Manifest\Manifest::class ],
 
       // Admin
@@ -66,6 +72,9 @@ class Main extends Lib_Core {
 
       // Blocks.
       Blocks\Blocks::class => [ Config::class ],
+
+      // View
+      View\Post_View_Filter::class,
     ];
   }
 }
