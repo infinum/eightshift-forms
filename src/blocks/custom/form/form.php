@@ -7,6 +7,7 @@
 namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
+use Eightshift_Forms\Core\Config;
 
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 
@@ -38,7 +39,7 @@ $block_classes = Components::classnames([
 >
   <?php echo wp_kses_post( $inner_block_content ); ?>
   
-  <?php if ( $type === 'dynamics-crm' ) { ?>
+  <?php if ( $type === Config::DYNAMICS_CRM_METHOD ) { ?>
     <input type="hidden" name="<?php echo esc_attr( Dynamics_Crm_Route::ENTITY_PARAM ); ?>" value="<?php echo esc_attr( $dynamics_crm_entity ); ?>" />
   <?php } ?>
 </form>

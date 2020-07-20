@@ -19,6 +19,8 @@ use Eightshift_Libs\Core\Config as Lib_Config;
  */
 class Config extends Lib_Config {
 
+  const DYNAMICS_CRM_METHOD = 'dynamics-crm';
+
   /**
    * Method that returns project name.
    *

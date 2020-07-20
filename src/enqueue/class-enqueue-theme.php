@@ -32,9 +32,9 @@ class Enqueue_Theme extends Lib_Enqueue_Theme {
    *
    * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
    */
-  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route ) {
+  public function __construct( Manifest_Data $manifest, Localization_Constants $localization_constants ) {
     $this->manifest = $manifest;
-    $this->dynamics_crm_route = $dynamics_crm_route;
+    $this->localization_constants = $localization_constants;
   }
 
   /**
@@ -43,11 +43,6 @@ class Enqueue_Theme extends Lib_Enqueue_Theme {
    * @return array
    */
   public function get_localizations(): array {
-    return [
-      'eightshiftForms' => [
-        'siteUrl' => get_site_url(),
-        'dynamicsCrmRestUri' => $this->dynamics_crm_route->get_route_uri(),
-      ]
-    ];
+    return $this->localization_constants->get_localizations();
   }
 }

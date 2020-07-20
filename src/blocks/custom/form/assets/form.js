@@ -14,7 +14,7 @@ export class Form {
     this.siteUrl = window.eightshiftForms.siteUrl;
 
     this.restRouteUrls = {
-      dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrmRestUri}`,
+      dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
     };
 
     this.STATE_IS_LOADING = false;
