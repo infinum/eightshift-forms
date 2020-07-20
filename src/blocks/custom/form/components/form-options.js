@@ -23,13 +23,28 @@ export const FormOptions = (props) => {
     },
   } = props;
 
-  const crmEntities = window.eightshiftForms.dynamicsCrm.availableEntities ?? [];
-  const crmEntitiesAsOptions = crmEntities.map((entity) => {
-    return {
-      label: entity,
-      value: entity,
-    };
-  });
+  const formTypes = [
+    { label: __('Email', 'eightshift-forms'), value: 'email' },
+    { label: __('Custom', 'eightshift-forms'), value: 'custom' },
+  ];
+
+  const {
+    isDynamicsCrmUsed,
+    dynamicsCrm = [],
+  } = window.eightshiftForms;
+
+  // All Dynamics CRM config stuff
+  let crmEntitiesAsOptions = [];
+  if (isDynamicsCrmUsed) {
+    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => {
+      return {
+        label: entity,
+        value: entity,
+      };
+    });
+
+    formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
+  }
 
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
@@ -38,16 +53,12 @@ export const FormOptions = (props) => {
           label={__('Type', 'eightshift-forms')}
           value={type}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
-          options={[
-            { label: __('Email', 'eightshift-forms'), value: 'email' },
-            { label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' },
-            { label: __('Custom', 'eightshift-forms'), value: 'custom' },
-          ]}
+          options={formTypes}
           onChange={onChangeType}
         />
       }
 
-      {onChangeDynamicsEntity && type === 'dynamics-crm' && crmEntities &&
+      {onChangeDynamicsEntity && isDynamicsCrmUsed && type === 'dynamics-crm' &&
         <SelectControl
           label={__('CRM Entity', 'eightshift-forms')}
           help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}

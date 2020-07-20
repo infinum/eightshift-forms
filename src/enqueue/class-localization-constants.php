@@ -39,27 +39,29 @@ class Localization_Constants {
     $localization = [
       self::LOCALIZATION_KEY => [
         'siteUrl' => get_site_url(),
+        'isDynamicsCrmUsed' => $this->is_dynamics_crm_used(),
       ]
     ];
 
-    if ( $this->is_form_type_used( Config::DYNAMICS_CRM_METHOD )) {
+    if ( $this->is_dynamics_crm_used() ) {
+      if (! defined( 'DYNAMICS_CRM_AVAILABLE_ENTITIES') || ! is_array( DYNAMICS_CRM_AVAILABLE_ENTITIES )) {
+        $available_entities = [
+          esc_html__('No options found, please set available options in DYNAMICS_CRM_AVAILABLE_ENTITIES constant as array', 'eightshift-forms' ),
+        ];
+      } else {
+        $available_entities = DYNAMICS_CRM_AVAILABLE_ENTITIES;
+      }
+
       $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
         'restUri' => $this->dynamics_crm_route->get_route_uri(),
-        'availableEntities' => DYNAMICS_CRM_AVAILABLE_ENTITIES
+        'availableEntities' => $available_entities,
       ];
     }
 
     return $localization;
   }
 
-  /**
-   * Detects if a specific form type should be used in a project, defined by the EIGHTSHIFT_FORMS_USED_METHODS const
-   * (preferably in wp-config.php)
-   *
-   * @param  string $form_type Form type name.
-   * @return boolean
-   */
-  protected function is_form_type_used( string $form_type ) {
-    return defined( 'EIGHTSHIFT_FORMS_USED_METHODS' ) && isset( array_flip( EIGHTSHIFT_FORMS_USED_METHODS )[ $form_type ] );
+  protected function is_dynamics_crm_used() {
+    return defined( 'DYNAMICS_CRM_USED' ) && DYNAMICS_CRM_USED;
   }
 }
