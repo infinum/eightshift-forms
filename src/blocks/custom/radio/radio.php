@@ -6,7 +6,7 @@
 
 namespace Eightshift_Forms\Blocks;
 
-$block_class = isset( $attributes['blockClass'] ) ? $attributes['blockClass'] : '';
+$block_class = $attributes['blockClass'] ?? '';
 
 ?>
 

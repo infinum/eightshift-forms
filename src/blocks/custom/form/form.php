@@ -11,12 +11,12 @@ use Eightshift_Forms\Core\Config;
 
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 
-$block_class         = isset( $attributes['blockClass'] ) ? $attributes['blockClass'] : '';
-$action              = isset( $attributes['action'] ) ? $attributes['action'] : '';
-$method              = isset( $attributes['method'] ) ? $attributes['method'] : '';
-$target              = isset( $attributes['target'] ) ? $attributes['target'] : '';
-$classes             = isset( $attributes['classes'] ) ? $attributes['classes'] : '';
-$id                  = isset( $attributes['id'] ) ? $attributes['id'] : '';
+$block_class         = $attributes['blockClass'] ?? '';
+$action              = $attributes['action'] ?? '';
+$method              = $attributes['method'] ?? '';
+$target              = $attributes['target'] ?? '';
+$classes             = $attributes['classes'] ?? '';
+$id                  = $attributes['id'] ?? '';
 $type                = $attributes['type'] ?? '';
 $dynamics_crm_entity = $attributes['dynamicsEntity'] ?? '';
 
