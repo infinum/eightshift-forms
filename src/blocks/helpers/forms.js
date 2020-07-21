@@ -17,8 +17,6 @@ const sendGet = async (url, data, options = {
     builtUrl.searchParams.append(key, value);
   });
 
-  console.log('sending to: ', builtUrl);
-
   // Default options are marked with *
   const response = await fetch(builtUrl, options);
   return response.json(); // parses JSON response into native JavaScript objects

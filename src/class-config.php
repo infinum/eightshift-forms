@@ -19,6 +19,11 @@ use Eightshift_Libs\Core\Config as Lib_Config;
  */
 class Config extends Lib_Config {
 
+  /**
+   * Value for the form type when it's submitting to Dynamics CRM.
+   * 
+   * @var string
+   */
   const DYNAMICS_CRM_METHOD = 'dynamics-crm';
 
   /**

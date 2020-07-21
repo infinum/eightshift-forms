@@ -5,7 +5,7 @@
  * Example call:
  * /wp-json/eightshift-forms/v1/dynamics-crm
  *
- * @package D66\Rest
+ * @package Eightshift_Forms\Rest
  */
 
 declare( strict_types=1 );
@@ -45,11 +45,6 @@ class Dynamics_Crm_Route extends Base_Route {
     unset($params[self::ENTITY_PARAM]);
     $post_data = $params;
   
-    error_log(print_r([
-      'posting' => 'a4',
-      $post_data
-    ], true));
-
     $response = $this->test_curl_client_credentials_grant();
 
     /**
@@ -110,8 +105,6 @@ class Dynamics_Crm_Route extends Base_Route {
     if (json_last_error() !== JSON_ERROR_NONE) {
       throw new \Exception('Invalid JSON in body');
     }
-
-    error_log(print_r($json_body, true));
 
     return $json_body;
   }

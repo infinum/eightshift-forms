@@ -61,6 +61,11 @@ class Localization_Constants {
     return $localization;
   }
 
+  /**
+   * Check if project defined usage of Dynamics CRM.
+   *
+   * @return boolean
+   */
   protected function is_dynamics_crm_used() {
     return defined( 'DYNAMICS_CRM_USED' ) && DYNAMICS_CRM_USED;
   }
