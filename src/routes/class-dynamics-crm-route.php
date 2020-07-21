@@ -13,11 +13,16 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Rest;
 
 use SaintSystems\OData\ODataClient;
+use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Integrations\Dynamics_CRM;
+use Eightshift_Libs\Core\Config_Data;
 
 /**
  * Class Dynamics_Crm_Route
  */
 class Dynamics_Crm_Route extends Base_Route {
+  
+  const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
 
   const ENTITY_PARAM = 'dynamics-crm-entity';
 
@@ -27,6 +32,11 @@ class Dynamics_Crm_Route extends Base_Route {
    * @var string
    */
   const ENDPOINT_SLUG = '/dynamics-crm';
+
+  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm) {
+    $this->config = $config;
+    $this->dynamics_crm = $dynamics_crm;
+  }
 
   /**
    * Method that returns rest response
@@ -39,34 +49,51 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    $params = $request->get_query_params();
-    $entity = $params[self::ENTITY_PARAM];
+    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
+      return $this->rest_response_handler( 'dynamics-crm-integration-not-used' );
+    }
 
-    unset($params[self::ENTITY_PARAM]);
-    $post_data = $params;
+    $params = $request->get_query_params();
+
+    if ( !isset( $params[self::ENTITY_PARAM])) {
+      return $this->rest_response_handler( 'missing-entity-key' );
+    }
   
-    $response = $this->test_curl_client_credentials_grant();
+    // We don't want to send thee entity to CRM or it will reject our request.
+    $entity = $params[self::ENTITY_PARAM];
+    unset($params[self::ENTITY_PARAM]);
+  
+    // $oauth2 = new OAuth2_Client(
+    //   DYNAMICS_CRM_AUTH_TOKEN_URL,
+    //   DYNAMICS_CRM_CLIENT_ID,
+    //   DYNAMICS_CRM_CLIENT_SECRET,
+    //   DYNAMICS_CRM_SCOPE
+    // );
+
+    // Now let's try fetching the access token, from transient if set.
+    // try {
+    //   $token = $oauth2->get_token( self::ACCESS_TOKEN_KEY );
+    // } catch ( \Exception $e ) {
+    //   return $this->rest_response_handler_unknown_error($e->getMessage());
+    // }
 
     /**
      * WORKING EXAMPLE
      */
-    $odata_service_url = DYNAMICS_CRM_API_URL;
-    $odata_client = new ODataClient( $odata_service_url, function( $request ) use ($response) {
+    // $odata_service_url = DYNAMICS_CRM_API_URL;
+    // $odata_client = new ODataClient( $odata_service_url, function( $request ) use ($token) {
 
-      // OAuth Bearer Token Authentication.
-      $access_token                      = $response['access_token'];
-      $request->headers['Authorization'] = 'Bearer ' . $access_token;
-    });
+    //   // OAuth Bearer Token Authentication.
+    //   $access_token                      = $token;
+    //   $request->headers['Authorization'] = 'Bearer ' . $access_token;
+    // });
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $leads = $odata_client->from( $entity )->get();
-      $leads = $odata_client->from( $entity )->post($post_data);
+      $leads = $this->dynamics_crm->add_record($entity, $params);
+      // $leads = $odata_client->from( $entity )->post($params);
     } catch ( \Exception $e ) {
-      return \rest_ensure_response( [
-        'code' => 400,
-        'data' => $e->getMessage(),
-      ] );
+      return $this->rest_response_handler_unknown_error($e->getMessage());
     }
 
     return \rest_ensure_response( [
@@ -75,6 +102,28 @@ class Dynamics_Crm_Route extends Base_Route {
       'leads' => $leads,
       'test' => $this->test_odata(),
     ] );
+  }
+
+  /**
+   * Define a list of responses for this route.
+   *
+   * @return array
+   */
+  protected function defined_responses(string $response_key, array $data = []): array {
+    $responses = [
+      'dynamics-crm-integration-not-used' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        'data' => $data,
+      ],
+      'missing-entity-key' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
+        'data' => $data,
+      ],
+    ];
+
+    return $responses[$response_key];
   }
 
   /**

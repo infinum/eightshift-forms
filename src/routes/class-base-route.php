@@ -87,6 +87,40 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     ];
   }
 
+    /**
+   * Response handler for unknown errors
+   *
+   * @param  string $message Message to output.
+   * @param  array  $data    (Optional) data to output
+   * @return void
+   */
+  protected function rest_response_handler_unknown_error( string $message, array $data = [] ) {
+    return \rest_ensure_response( [
+      'code' => 400,
+      'message' => $message,
+      'data' => $data,
+    ] );
+  }
+
+  /**
+   * Ensure correct response for rest using error handler function.
+   *
+   * @param string $status  Status description.
+   * @param array  $data    Optional data.
+   *
+   * @return \WP_Error|array \WP_Error instance with error message and status or array.
+   */
+  protected function rest_response_handler( string $response_key, array $data = [] ) {
+    return \rest_ensure_response( $this->defined_responses( $response_key, $data ) );
+  }
+
+  /**
+   * Define a list of responses for this route.
+   *
+   * @return array
+   */
+  abstract protected function defined_responses(string $response_key): array;
+
   /**
    * Method that returns rest response
    *
