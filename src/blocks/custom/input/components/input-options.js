@@ -12,6 +12,7 @@ export const InputOptions = (props) => {
       type,
       isDisabled,
       isReadOnly,
+      isRequired,
     },
     actions: {
       onChangeName,
@@ -22,6 +23,7 @@ export const InputOptions = (props) => {
       onChangeType,
       onChangeIsDisabled,
       onChangeIsReadOnly,
+      onChangeIsRequired,
     },
   } = props;
 
@@ -105,6 +107,14 @@ export const InputOptions = (props) => {
           label={__('Readonly', 'eightshift-forms')}
           checked={isReadOnly}
           onChange={onChangeIsReadOnly}
+        />
+      }
+
+      {onChangeIsRequired &&
+        <ToggleControl
+          label={__('Required', 'eightshift-forms')}
+          checked={isRequired}
+          onChange={onChangeIsRequired}
         />
       }
     </PanelBody>

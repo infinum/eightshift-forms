@@ -12,9 +12,10 @@ $value       = $attributes['value'] ?? '';
 $description = $attributes['description'] ?? '';
 $id          = $attributes['id'] ?? '';
 $classes     = $attributes['classes'] ?? '';
-$is_checked  = $attributes['isChecked'] ?? 'checked';
-$is_disabled = $attributes['isDisabled'] ?? 'disabled';
-$is_readOnly = $attributes['isReadOnly'] ?? 'readonly';
+$is_checked  = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
+$is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
+$is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$is_required = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 
 ?>
 
@@ -39,6 +40,7 @@ $is_readOnly = $attributes['isReadOnly'] ?? 'readonly';
       <?php echo esc_attr( $is_checked ); ?>
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_readOnly ); ?>
+      <?php echo esc_attr( $is_required ); ?>
     />
     <p class="<?php echo esc_attr( "{$block_class}__description" ); ?>">
       <?php echo wp_kses_post( $description ); ?>

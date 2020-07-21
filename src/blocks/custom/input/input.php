@@ -15,7 +15,7 @@ $classes     = $attributes['classes'] ?? '';
 $type        = $attributes['type'] ?? '';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
-$is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$is_required = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 
 ?>
 
@@ -40,6 +40,7 @@ $is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ?
       type="<?php echo esc_attr( $type ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_readOnly ); ?>
+      <?php echo esc_attr( $is_required ); ?>
     />
   </div>
 </div>

@@ -33,7 +33,8 @@ class Post_View_Filter implements Service {
    * @return array
    */
   public function modify_kses_post_tags( array $allowed_tags ): array {
-    $allowed_tags = array_merge( $allowed_tags, Form_View::extra_allowed_tags() );
+    $allowed_tags = array_merge( $allowed_tags, Form_View::extra_allowed_tags( $allowed_tags ) );
+
     return $allowed_tags;
   }
 }

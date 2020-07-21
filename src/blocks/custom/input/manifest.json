@@ -40,6 +40,10 @@
     "isReadOnly": {
       "type": "bool",
       "default": false
+    },
+    "isRequired": {
+      "type": "bool",
+      "default": false
     }
   }
 }
