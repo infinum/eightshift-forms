@@ -44,7 +44,6 @@ export class Form {
     this.submits.forEach((submit) => {
       submit.disabled = true;
     });
-    console.log('start loading');
   }
 
   endLoading() {
@@ -52,7 +51,6 @@ export class Form {
     this.submits.forEach((submit) => {
       submit.disabled = false;
     });
-    console.log('end loading');
   }
 
   /**

@@ -5,7 +5,7 @@
  * Example call:
  * /wp-json/eightshift-forms/v1/dynamics-crm
  *
- * @package D66\Rest
+ * @package Eightshift_Forms\Rest
  */
 
 declare( strict_types=1 );
@@ -39,7 +39,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     $this->config = $config;
   }
 
-  public function get_route_uri() {
+  /**
+   * Returns the relative route uri.
+   *
+   * @return string
+   */
+  public function get_route_uri(): string {
     return '/wp-json/' . $this->get_namespace() . '/' . $this->get_version() . $this->get_route_name();
   }
 
