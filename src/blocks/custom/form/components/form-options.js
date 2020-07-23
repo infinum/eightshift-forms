@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
 
 export const FormOptions = (props) => {
   const {
@@ -8,7 +8,9 @@ export const FormOptions = (props) => {
       method,
       target,
       id,
-      classes
+      classes,
+      type,
+      dynamicsEntity,
     },
     actions: {
       onChangeAction,
@@ -16,12 +18,57 @@ export const FormOptions = (props) => {
       onChangeTarget,
       onChangeId,
       onChangeClasses,
+      onChangeType,
+      onChangeDynamicsEntity,
     },
   } = props;
 
+  const formTypes = [
+    { label: __('Email', 'eightshift-forms'), value: 'email' },
+    { label: __('Custom', 'eightshift-forms'), value: 'custom' },
+  ];
+
+  const {
+    isDynamicsCrmUsed,
+    dynamicsCrm = [],
+  } = window.eightshiftForms;
+
+  // All Dynamics CRM config stuff
+  let crmEntitiesAsOptions = [];
+  if (isDynamicsCrmUsed) {
+    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => {
+      return {
+        label: entity,
+        value: entity,
+      };
+    });
+
+    formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
+  }
+
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
-      {onChangeAction &&
+      {onChangeType &&
+        <SelectControl
+          label={__('Type', 'eightshift-forms')}
+          value={type}
+          help={__('Choose what will this form do on submit', 'eightshift-forms')}
+          options={formTypes}
+          onChange={onChangeType}
+        />
+      }
+
+      {onChangeDynamicsEntity && isDynamicsCrmUsed && type === 'dynamics-crm' &&
+        <SelectControl
+          label={__('CRM Entity', 'eightshift-forms')}
+          help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
+          value={type}
+          options={crmEntitiesAsOptions}
+          onChange={onChangeDynamicsEntity}
+        />
+      }
+
+      {onChangeAction && type === 'custom' &&
         <TextControl
           label={__('Action', 'eightshift-forms')}
           value={action}
@@ -29,7 +76,7 @@ export const FormOptions = (props) => {
         />
       }
 
-      {onChangeMethod &&
+      {onChangeMethod && type === 'custom' &&
         <TextControl
           label={__('Method', 'eightshift-forms')}
           value={method}
@@ -37,7 +84,7 @@ export const FormOptions = (props) => {
         />
       }
 
-      {onChangeTarget &&
+      {onChangeTarget && type === 'custom' &&
         <TextControl
           label={__('Target', 'eightshift-forms')}
           value={target}

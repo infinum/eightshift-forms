@@ -39,7 +39,7 @@ if ( $has_wrapper ) {
   ]);
 
   ?>
-  <div class="<?php echo esc_attr( $wrapper_class ); ?>" id="<?php echo esc_attr( $id ); ?>">
+  <div class="<?php echo esc_attr( $wrapper_class ); ?>" <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>>
     <div class="<?php echo esc_attr( $wrapper_container_class ); ?>">
       <div class="<?php echo esc_attr( $wrapper_inner_class ); ?>">
         <?php

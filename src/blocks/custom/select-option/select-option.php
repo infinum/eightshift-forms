@@ -6,9 +6,9 @@
 
 namespace Eightshift_Forms\Blocks;
 
-$block_class = isset( $attributes['blockClass'] ) ? $attributes['blockClass'] : '';
-$label       = isset( $attributes['label'] ) ? $attributes['label'] : '';
-$value       = isset( $attributes['value'] ) ? $attributes['value'] : '';
+$block_class = $attributes['blockClass'] ?? '';
+$label       = $attributes['label'] ?? '';
+$value       = $attributes['value'] ?? '';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_selected = isset( $attributes['isSelected'] ) && $attributes['isSelected'] ? 'selected' : '';
 

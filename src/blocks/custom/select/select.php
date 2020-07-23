@@ -6,10 +6,10 @@
 
 namespace Eightshift_Forms\Blocks;
 
-$block_class = isset( $attributes['blockClass'] ) ? $attributes['blockClass'] : '';
-$name        = isset( $attributes['name'] ) ? $attributes['name'] : '';
-$id          = isset( $attributes['id'] ) ? $attributes['id'] : '';
-$classes     = isset( $attributes['classes'] ) ? $attributes['classes'] : '';
+$block_class = $attributes['blockClass'] ?? '';
+$name        = $attributes['name'] ?? '';
+$id          = $attributes['id'] ?? '';
+$classes     = $attributes['classes'] ?? '';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 
 ?>
@@ -26,7 +26,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
   ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <select
-      id="<?php echo esc_attr( $id ); ?>"
+      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
       name="<?php echo esc_attr( $name ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
       class="<?php echo esc_attr( "{$block_class}__select {$classes}" ); ?>"

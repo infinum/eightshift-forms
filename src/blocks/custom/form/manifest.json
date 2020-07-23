@@ -32,6 +32,13 @@
     },
     "classes": {
       "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "default": "email"
+    },
+    "dynamicsEntity": {
+      "type": "string"
     }
   }
 }

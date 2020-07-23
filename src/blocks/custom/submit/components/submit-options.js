@@ -44,9 +44,9 @@ export const SubmitOptions = (props) => {
           label={__('Type', 'eightshift-forms')}
           value={type}
           options={[
-            { label: __('Submit', 'infinum'), value: 'submit' },
-            { label: __('Button', 'infinum'), value: 'button' },
-            { label: __('Reset', 'infinum'), value: 'reset' },
+            { label: __('Submit', 'eightshift-forms'), value: 'submit' },
+            { label: __('Button', 'eightshift-forms'), value: 'button' },
+            { label: __('Reset', 'eightshift-forms'), value: 'reset' },
           ]}
           onChange={onChangeType}
         />

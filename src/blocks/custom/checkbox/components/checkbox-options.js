@@ -11,6 +11,7 @@ export const CheckboxOptions = (props) => {
       isChecked,
       isDisabled,
       isReadOnly,
+      isRequired,
     },
     actions: {
       onChangeName,
@@ -20,6 +21,7 @@ export const CheckboxOptions = (props) => {
       onChangeIsChecked,
       onChangeIsDisabled,
       onChangeIsReadOnly,
+      onChangeIsRequired,
     },
   } = props;
 
@@ -78,6 +80,14 @@ export const CheckboxOptions = (props) => {
           label={__('Readonly', 'eightshift-forms')}
           checked={isReadOnly}
           onChange={onChangeIsReadOnly}
+        />
+      }
+
+      {onChangeIsRequired &&
+        <ToggleControl
+          label={__('Required', 'eightshift-forms')}
+          checked={isRequired}
+          onChange={onChangeIsRequired}
         />
       }
     </PanelBody>
