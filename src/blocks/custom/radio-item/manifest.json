@@ -9,11 +9,14 @@
   "keywords": [
     "Radio Item"
   ],
-  "hasWrapper": false,
   "parent": [
     "eightshift-forms/radio"
   ],
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
     "name": {
       "type": "string"
     },

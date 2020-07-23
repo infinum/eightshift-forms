@@ -9,8 +9,11 @@
   "keywords": [
     "Forms"
   ],
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
     "selectedFormId": {
       "type": "string",
       "default": "0"

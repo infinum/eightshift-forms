@@ -10,11 +10,14 @@
     "Select",
     "Option"
   ],
-  "hasWrapper": false,
   "parent": [
     "eightshift-forms/select"
   ],
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
     "value": {
       "type": "string"
     },

@@ -42,7 +42,7 @@ class Localization_Constants {
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
-          'formSubmitted' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
+          'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
         ]
       ]
     ];

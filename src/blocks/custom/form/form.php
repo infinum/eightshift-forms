@@ -20,8 +20,6 @@ $id                  = $attributes['id'] ?? 'form_' . crc32(microtime(true));
 $type                = $attributes['type'] ?? '';
 $dynamics_crm_entity = $attributes['dynamicsEntity'] ?? '';
 
-error_log(print_r($attributes, true));
-
 $block_classes = Components::classnames([
   $block_class,
   $classes,

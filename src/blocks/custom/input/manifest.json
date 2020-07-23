@@ -9,8 +9,11 @@
   "keywords": [
     "Input"
   ],
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
     "name": {
       "type": "string"
     },

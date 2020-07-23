@@ -10,8 +10,11 @@
     "Radio"
   ],
   "hasInnerBlocks": true,
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
     "allowedBlocks": {
       "type": "array",
       "items": {
