@@ -62,7 +62,7 @@ class Dynamics_CRM {
    * Set OAuth credentials, used when we can't inject it in DI.
    *
    * @param  array $credentials Credentials array.
-   * @return void
+   * @return bool
    */
   public function set_oauth_credentials( array $credentials ): bool {
     $this->oauth2_client->set_credentials($credentials);
@@ -73,7 +73,7 @@ class Dynamics_CRM {
   /**
    * Builds the odata client used for interacting with the CRM
    *
-   * @param  string $access_token
+   * @param  string $access_token OAuth access token for this request.
    * @return object
    */
   protected function build_odata_client(string $access_token): object {
