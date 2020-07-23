@@ -12,7 +12,6 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
-use SaintSystems\OData\ODataClient;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
@@ -33,6 +32,12 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   const ENDPOINT_SLUG = '/dynamics-crm';
 
+  /**
+   * Construct object
+   *
+   * @param Config_Data  $config       Config data obj.
+   * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
+   */
   public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm) {
     $this->config = $config;
     $this->dynamics_crm = $dynamics_crm;
@@ -41,7 +46,7 @@ class Dynamics_Crm_Route extends Base_Route {
   /**
    * Method that returns rest response
    *
-   * @param  \WP_REST_Request $request Data got from enpoint url.
+   * @param  \WP_REST_Request $request Data got from endpoint url.
    *
    * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
    *                                is already an instance, WP_HTTP_Response, otherwise
@@ -64,11 +69,11 @@ class Dynamics_Crm_Route extends Base_Route {
     unset($params[self::ENTITY_PARAM]);
 
     $this->dynamics_crm->set_oauth_credentials([
-      'url' => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-      'client_id' => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
+      'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
+      'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
       'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-      'scope' => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-      'api_url' => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+      'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
+      'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
     ]);
 
     // Retrieve all entities from the "leads" Entity Set.
