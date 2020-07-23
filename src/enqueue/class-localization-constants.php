@@ -40,6 +40,10 @@ class Localization_Constants {
       self::LOCALIZATION_KEY => [
         'siteUrl' => get_site_url(),
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
+        'content' => [
+          'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
+          'formSubmitted' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
+        ]
       ]
     ];
 

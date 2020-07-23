@@ -5,6 +5,8 @@ export class Form {
     DATA_ATTR_FORM_TYPE,
   }) {
     this.form = element;
+    this.formId = element.getAttribute('id');
+    this.spinner = document.querySelector(`[data-parent-form=${this.formId}]`);
     this.submits = this.form.querySelectorAll('input[type="submit"]');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
 
@@ -18,6 +20,8 @@ export class Form {
     };
 
     this.STATE_IS_LOADING = false;
+    this.CLASS_HIDE_FORM = 'hide-form';
+    this.CLASS_HIDE_SPINNER = 'hide-spinner';
   }
 
   init() {
@@ -41,6 +45,9 @@ export class Form {
 
   startLoading() {
     this.STATE_IS_LOADING = true;
+    this.form.classList.add(this.CLASS_HIDE_FORM);
+    this.spinner.classList.remove(this.CLASS_HIDE_SPINNER);
+    
     this.submits.forEach((submit) => {
       submit.disabled = true;
     });
@@ -48,6 +55,8 @@ export class Form {
 
   endLoading() {
     this.STATE_IS_LOADING = false;
+    this.form.classList.remove(this.CLASS_HIDE_FORM);
+    this.spinner.classList.add(this.CLASS_HIDE_SPINNER);
     this.submits.forEach((submit) => {
       submit.disabled = false;
     });
