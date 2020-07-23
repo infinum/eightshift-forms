@@ -62,36 +62,18 @@ class Dynamics_Crm_Route extends Base_Route {
     // We don't want to send thee entity to CRM or it will reject our request.
     $entity = $params[self::ENTITY_PARAM];
     unset($params[self::ENTITY_PARAM]);
-  
-    // $oauth2 = new OAuth2_Client(
-    //   DYNAMICS_CRM_AUTH_TOKEN_URL,
-    //   DYNAMICS_CRM_CLIENT_ID,
-    //   DYNAMICS_CRM_CLIENT_SECRET,
-    //   DYNAMICS_CRM_SCOPE
-    // );
 
-    // Now let's try fetching the access token, from transient if set.
-    // try {
-    //   $token = $oauth2->get_token( self::ACCESS_TOKEN_KEY );
-    // } catch ( \Exception $e ) {
-    //   return $this->rest_response_handler_unknown_error($e->getMessage());
-    // }
-
-    /**
-     * WORKING EXAMPLE
-     */
-    // $odata_service_url = DYNAMICS_CRM_API_URL;
-    // $odata_client = new ODataClient( $odata_service_url, function( $request ) use ($token) {
-
-    //   // OAuth Bearer Token Authentication.
-    //   $access_token                      = $token;
-    //   $request->headers['Authorization'] = 'Bearer ' . $access_token;
-    // });
+    $this->dynamics_crm->set_oauth_credentials([
+      'url' => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
+      'client_id' => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
+      'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
+      'scope' => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
+      'api_url' => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+    ]);
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $leads = $this->dynamics_crm->add_record($entity, $params);
-      // $leads = $odata_client->from( $entity )->post($params);
+      $response = $this->dynamics_crm->add_record($entity, $params);
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error($e->getMessage());
     }
@@ -99,8 +81,6 @@ class Dynamics_Crm_Route extends Base_Route {
     return \rest_ensure_response( [
       'code' => 200,
       'data' => $response,
-      'leads' => $leads,
-      'test' => $this->test_odata(),
     ] );
   }
 
@@ -124,64 +104,5 @@ class Dynamics_Crm_Route extends Base_Route {
     ];
 
     return $responses[$response_key];
-  }
-
-  /**
-   * Tests curl credentials grant.
-   *
-   * @return void
-   */
-  protected function test_curl_client_credentials_grant() {
-    $body = [
-      'grant_type' => 'client_credentials',
-      'client_id' => DYNAMICS_CRM_CLIENT_ID,
-      'client_secret' => DYNAMICS_CRM_CLIENT_SECRET,
-      'scope' => DYNAMICS_CRM_SCOPE
-    ];
-
-    
-    $client = new \GuzzleHttp\Client();
-    $response = $client->get(DYNAMICS_CRM_AUTH_TOKEN_URL, [
-      'form_params' => $body,
-    ]);
-
-    if ($response->getStatusCode() !== 200) {
-      throw new \Exception('Something went wrong, status code: ' . $response->getStatusCode());
-    }
-
-    $json_body = json_decode((string) $response->getBody(), true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      throw new \Exception('Invalid JSON in body');
-    }
-
-    return $json_body;
-  }
-
-  /**
-   * Working test example of fetching stuff using OData.
-   *
-   * @return void
-   */
-  protected function test_odata() {
-    $odataServiceUrl = 'https://services.odata.org/V4/TripPinService';
-
-    $odataClient = new ODataClient( $odataServiceUrl );
-
-    // Retrieve all entities from the "People" Entity Set
-    $people = $odataClient->from( 'People' )->get();
-
-    // Or retrieve a specific entity by the Entity ID/Key
-    // try {
-    // $person = $odataClient->from( 'People' )->find( 'russellwhyte' );
-    // echo "Hello, I am $person->FirstName ";
-    // } catch ( Exception $e ) {
-    // echo $e->getMessage();
-    // }
-
-    // // Want to only select a few properties/columns?
-    // $people = $odataClient->from( 'People' )->select( 'FirstName', 'LastName' )->get();
-
-    return $people;
   }
 }

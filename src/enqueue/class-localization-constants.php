@@ -10,8 +10,8 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Libs\Manifest\Manifest_Data;
-use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Base_Route;
+use Eightshift_Forms\Core\Filters;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
@@ -39,17 +39,18 @@ class Localization_Constants {
     $localization = [
       self::LOCALIZATION_KEY => [
         'siteUrl' => get_site_url(),
-        'isDynamicsCrmUsed' => $this->is_dynamics_crm_used(),
+        'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
       ]
     ];
 
-    if ( $this->is_dynamics_crm_used() ) {
-      if (! defined( 'DYNAMICS_CRM_AVAILABLE_ENTITIES') || ! is_array( DYNAMICS_CRM_AVAILABLE_ENTITIES )) {
+    if ( has_filter( Filters::DYNAMICS_CRM ) ) {
+      $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
+      if ( ! empty( $entities ) ) {
         $available_entities = [
-          esc_html__('No options found, please set available options in DYNAMICS_CRM_AVAILABLE_ENTITIES constant as array', 'eightshift-forms' ),
+          sprintf( esc_html__('No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
         ];
       } else {
-        $available_entities = DYNAMICS_CRM_AVAILABLE_ENTITIES;
+        $available_entities = $entities;
       }
 
       $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
@@ -59,14 +60,5 @@ class Localization_Constants {
     }
 
     return $localization;
-  }
-
-  /**
-   * Check if project defined usage of Dynamics CRM.
-   *
-   * @return boolean
-   */
-  protected function is_dynamics_crm_used() {
-    return defined( 'DYNAMICS_CRM_USED' ) && DYNAMICS_CRM_USED;
   }
 }

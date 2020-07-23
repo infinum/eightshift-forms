@@ -23,9 +23,8 @@ class Dynamics_CRM {
    * Constructs object
    *
    */
-  public function __construct(OAuth2_Client $oauth2_client, string $odata_service_url) {
+  public function __construct(OAuth2_Client $oauth2_client) {
     $this->oauth2_client = $oauth2_client;
-    $this->odata_service_url = $odata_service_url;
   }
 
   /**
@@ -39,13 +38,20 @@ class Dynamics_CRM {
    */
   public function add_record(string $entity, array $data) {
     $odata_client = $this->build_odata_client($this->get_token());
-
-    // Retrieve all entities from the "leads" Entity Set.
-    error_log(print_r([
-      $entity, $data
-    ], true));
     $odata_client->from( $entity )->post( $data );
 
+    return true;
+  }
+
+  /**
+   * Set OAuth credentials, used when we can't inject it in DI.
+   *
+   * @param  array $credentials Credentials array.
+   * @return void
+   */
+  public function set_oauth_credentials( array $credentials ): bool {
+    $this->oauth2_client->set_credentials($credentials);
+    $this->odata_service_url = $credentials['api_url'];
     return true;
   }
 
@@ -71,5 +77,4 @@ class Dynamics_CRM {
   protected function get_token(): string {
     return $this->oauth2_client->get_token( self::ACCESS_TOKEN_KEY );
   }
-
 }

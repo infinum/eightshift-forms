@@ -9,29 +9,14 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Integrations;
 
+use Eightshift_Forms\Core\Filters;
+
 /**
  * OAuth2_Client class which handles access token connections.
  */
 class OAuth2_Client {
 
   const HOUR_IN_SECONDS = '3600';
-
-  /**
-   * Constructs object
-   *
-   * @param string $url           Url to authenticate against.
-   * @param string $client_id     Client ID, used for getting access token.
-   * @param string $client_secret Client secret, used for getting access token.
-   * @param string $scope         Scope for which to request access token.
-   */
-  public function __construct(string $url, string $client_id, string $client_secret, string $scope) {
-    $this->url = $url;
-    $this->client_id = $client_id;
-    $this->client_secret = $client_secret;
-    $this->scope = $scope;
-
-    error_log(print_r(compact('url', 'client_secret', 'scope', 'client_id'), true));
-  }
 
   /**
    * Returns the access token, either from cache or fetches a new one.
@@ -50,6 +35,20 @@ class OAuth2_Client {
     }
 
     return $token;
+  }
+
+  /**
+   * Set credentials, used when we can't set credentials during DI services building.
+   *
+   * @param  array $credentials OAuth2 credentials.
+   * @return bool
+   */
+  public function set_credentials(array $credentials): bool {
+    $this->url = $credentials['url'];
+    $this->client_id = $credentials['client_id'];
+    $this->client_secret = $credentials['client_secret'];
+    $this->scope = $credentials['scope'];
+    return true;
   }
 
   /**

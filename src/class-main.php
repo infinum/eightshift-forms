@@ -43,11 +43,13 @@ class Main extends Lib_Core {
   }
 
   /**
-   * Array of services that will always be registered.
+   * Get the list of services to register.
    *
-   * @return array
+   * A list of classes which contain hooks.
+   *
+   * @return array<string> Array of fully qualified class names.
    */
-  protected function get_all_services(): array {
+  protected function get_service_classes() : array {
     return [
 
       // Config.
@@ -58,6 +60,16 @@ class Main extends Lib_Core {
 
       // I18n.
       Lib_I18n\I18n::class => [ Config::class ],
+
+      // Dynamics CRM
+      Integrations\OAuth2_Client::class,
+      Integrations\Dynamics_CRM::class => [
+        Integrations\OAuth2_Client::class
+      ],
+      Rest\Dynamics_Crm_Route::class => [
+        Config::class,
+        Integrations\Dynamics_CRM::class,
+      ],
 
       // Enqueue.
       Localization_Constants::class => [
@@ -82,55 +94,6 @@ class Main extends Lib_Core {
 
       // View
       View\Post_View_Filter::class,
-
-      // Filters
-      Filters::class,
     ];
-  }
-
-  /**
-   * Array of services that might be registered depending on some condition.
-   * 
-   * @return array
-   */
-  protected function get_optional_services(): array {
-    $services = [];
-
-    error_log(print_r([
-      'what' => 'apply filters',
-      'data' => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-    ], true));
-
-    // Dynamics CRM stuff.
-    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
-      $services[ Integrations\OAuth2_Client::class ] = [
-        apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-        apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
-        apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-        apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-      ];
-      $services[ Integrations\Dynamics_CRM::class ] = [
-        Integrations\OAuth2_Client::class,
-        apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
-      ];
-    }
-
-    $services[Rest\Dynamics_Crm_Route::class] = [
-      Config::class,
-      Integrations\Dynamics_CRM::class,
-    ];
-
-    return $services;
-  }
-
-  /**
-   * Get the list of services to register.
-   *
-   * A list of classes which contain hooks.
-   *
-   * @return array<string> Array of fully qualified class names.
-   */
-  protected function get_service_classes() : array {
-    return array_merge($this->get_all_services(), $this->get_optional_services());
   }
 }
