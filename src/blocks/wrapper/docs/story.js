@@ -3,6 +3,7 @@ import manifest from './../manifest.json';
 import readme from './readme.md';
 import { WrapperOptions } from '../components/wrapper-options';
 import { WrapperResponsiveTabContent } from '../components/wrapper-responsive-tab-content';
+import { WrapperResponsiveTabContentSimple } from '../components/wrapper-responsive-tab-content-simple';
 
 export default {
   title: 'Wrapper|Wrapper',
@@ -13,72 +14,80 @@ export default {
 
 const optionsProps = {
   attributes: {
-    id: 'Wrapper ID',
-    anchor: '#anchor-id',
-    hasWrapper: true,
-    styleBackgroundColor: manifest.attributes.styleBackgroundColor.default,
-    styleContentWidth: manifest.attributes.styleContentWidth,
-    styleContentOffset: manifest.attributes.styleContentOffset,
-    styleContainerWidth: manifest.attributes.styleContainerWidth,
-    styleContainerSpacing: manifest.attributes.styleContainerSpacing,
-    styleSpacingTop: manifest.attributes.styleSpacingTop,
-    styleSpacingBottom: manifest.attributes.styleSpacingBottom,
-    styleHideBlock: manifest.attributes.styleHideBlock,
+    wrapperUse: true,
+    wrapperId: 'Wrapper ID',
+    wrapperBackgroundColor: manifest.attributes.wrapperBackgroundColor.default,
+    wrapperWidth: manifest.attributes.wrapperWidth,
+    wrapperOffset: manifest.attributes.wrapperOffset,
+    wrapperContainerWidth: manifest.attributes.wrapperContainerWidth,
+    wrapperGutter: manifest.attributes.wrapperGutter,
+    wrapperSpacingTop: manifest.attributes.wrapperSpacingTop,
+    wrapperSpacingBottom: manifest.attributes.wrapperSpacingBottom,
+    wrapperHideBlock: manifest.attributes.wrapperHideBlock,
   },
   actions: {
-    onChangeHasWrapper: () => {},
+    onChangeWrapperUse: () => {},
 
-    onChangeStyleContentWidthLarge: () => {},
-    onChangeStyleContentOffsetLarge: () => {},
-    onChangeStyleContainerWidthLarge: () => {},
-    onChangeStyleContainerSpacingLarge: () => {},
-    onChangeStyleSpacingTopLarge: () => {},
-    onChangeStyleSpacingBottomLarge: () => {},
-    onChangeStyleHideBlockLarge: () => {},
+    onChangeWrapperWidthLarge: () => {},
+    onChangeWrapperOffsetLarge: () => {},
+    onChangeWrapperContainerWidthLarge: () => {},
+    onChangeWrapperGutterLarge: () => {},
+    onChangeWrapperSpacingTopLarge: () => {},
+    onChangeWrapperSpacingBottomLarge: () => {},
+    onChangeWrapperHideBlockLarge: () => {},
 
-    onChangeStyleContentWidthDesktop: () => {},
-    onChangeStyleContentOffsetDesktop: () => {},
-    onChangeStyleContainerWidthDesktop: () => {},
-    onChangeStyleContainerSpacingDesktop: () => {},
-    onChangeStyleSpacingTopDesktop: () => {},
-    onChangeStyleSpacingBottomDesktop: () => {},
-    onChangeStyleHideBlockDesktop: () => {},
+    onChangeWrapperWidthDesktop: () => {},
+    onChangeWrapperOffsetDesktop: () => {},
+    onChangeWrapperContainerWidthDesktop: () => {},
+    onChangeWrapperGutterDesktop: () => {},
+    onChangeWrapperSpacingTopDesktop: () => {},
+    onChangeWrapperSpacingBottomDesktop: () => {},
+    onChangeWrapperHideBlockDesktop: () => {},
 
-    onChangeStyleContentWidthTablet: () => {},
-    onChangeStyleContentOffsetTablet: () => {},
-    onChangeStyleContainerWidthTablet: () => {},
-    onChangeStyleContainerSpacingTablet: () => {},
-    onChangeStyleSpacingTopTablet: () => {},
-    onChangeStyleSpacingBottomTablet: () => {},
-    onChangeStyleHideBlockTablet: () => {},
+    onChangeWrapperWidthTablet: () => {},
+    onChangeWrapperOffsetTablet: () => {},
+    onChangeWrapperContainerWidthTablet: () => {},
+    onChangeWrapperGutterTablet: () => {},
+    onChangeWrapperSpacingTopTablet: () => {},
+    onChangeWrapperSpacingBottomTablet: () => {},
+    onChangeWrapperHideBlockTablet: () => {},
 
-    onChangeStyleContentWidthMobile: () => {},
-    onChangeStyleContentOffsetMobile: () => {},
-    onChangeStyleContainerWidthMobile: () => {},
-    onChangeStyleContainerSpacingMobile: () => {},
-    onChangeStyleSpacingTopMobile: () => {},
-    onChangeStyleSpacingBottomMobile: () => {},
-    onChangeStyleHideBlockMobile: () => {},
+    onChangeWrapperWidthMobile: () => {},
+    onChangeWrapperOffsetMobile: () => {},
+    onChangeWrapperContainerWidthMobile: () => {},
+    onChangeWrapperGutterMobile: () => {},
+    onChangeWrapperSpacingTopMobile: () => {},
+    onChangeWrapperSpacingBottomMobile: () => {},
+    onChangeWrapperHideBlockMobile: () => {},
 
-    onChangeStyleBackgroundColor: () => {},
-    onChangeId: () => {},
-    onChangeAnchor: () => {},
+    onChangeWrapperBackgroundColor: () => {},
+    onChangeWrapperId: () => {},
   },
 };
 
 const ResponsiveTabContentProps = {
   type: 'large',
-  contentWidth: manifest.attributes.styleContentWidth.default,
-  contentOffset: manifest.attributes.styleContentOffset.default,
-  containerWidth: manifest.attributes.styleContainerWidth.default,
-  containerSpacing: manifest.attributes.styleContainerSpacing.default,
-  spacingTop: manifest.attributes.styleSpacingBottom.default,
-  spacingBottom: manifest.attributes.styleSpacingBottom.default,
-  hideBlock: manifest.attributes.styleHideBlock.default,
-  onChangeContentWidth: () => {},
-  onChangeContentOffset: () => {},
+  width: manifest.attributes.wrapperWidth.default,
+  offset: manifest.attributes.wrapperOffset.default,
+  containerWidth: manifest.attributes.wrapperContainerWidth.default,
+  gutter: manifest.attributes.wrapperGutter.default,
+  spacingTop: manifest.attributes.wrapperSpacingBottom.default,
+  spacingBottom: manifest.attributes.wrapperSpacingBottom.default,
+  hideBlock: manifest.attributes.wrapperHideBlock.default,
+  onChangeWidth: () => {},
+  onChangeOffset: () => {},
   onChangeContainerWidth: () => {},
-  onChangeContainerSpacing: () => {},
+  onChangeGutter: () => {},
+  onChangeSpacingTop: () => {},
+  onChangeSpacingBottom: () => {},
+  onChangeHideBlock: () => {},
+};
+
+const ResponsiveTabContentSimpleProps = {
+  type: 'large',
+  spacingTop: manifest.attributes.wrapperSpacingBottom.default,
+  spacingBottom: manifest.attributes.wrapperSpacingBottom.default,
+  hideBlock: manifest.attributes.wrapperHideBlock.default,
   onChangeSpacingTop: () => {},
   onChangeSpacingBottom: () => {},
   onChangeHideBlock: () => {},
@@ -91,13 +100,19 @@ export const editor = () => (
 );
 
 export const options = () => (
+  <WrapperOptions
+    {...optionsProps}
+  />
+);
+
+export const responsiveTabContent = () => (
   <WrapperResponsiveTabContent
     {...ResponsiveTabContentProps}
   />
 );
 
-export const responsiveTabContent = () => (
-  <WrapperOptions
-    {...optionsProps}
+export const responsiveTabContentSimple = () => (
+  <WrapperResponsiveTabContentSimple
+    {...ResponsiveTabContentSimpleProps}
   />
 );
