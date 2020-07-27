@@ -2,6 +2,23 @@ import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, SelectControl, BaseControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 
+/**
+ * Custom action which changes the "theme" attribute for this block and all it's innerBlocks.
+ *
+ * @param {string} newTheme New value for theme attribute
+ * @param {function} onChangeTheme Prebuilt action for form block.
+ */
+const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
+  const thisBlock = wp.data.select('core/block-editor').getSelectedBlock();
+  if (thisBlock.innerBlocks) {
+    thisBlock.innerBlocks.forEach((innerBlock) => {
+      innerBlock.attributes.theme = newTheme;
+      wp.data.dispatch('core/block-editor').updateBlock(innerBlock.clientId, innerBlock);
+    });
+  }
+  onChangeTheme(newTheme);
+};
+
 export const FormOptions = (props) => {
   const {
     attributes: {
@@ -45,7 +62,7 @@ export const FormOptions = (props) => {
     dynamicsCrm = [],
   } = window.eightshiftForms;
 
-  const themeAsOptions = hasThemes ? themes.map((theme) => ({ label: theme, value: theme })) : [];
+  const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
   // All Dynamics CRM config stuff
   let crmEntitiesAsOptions = [];
@@ -82,7 +99,9 @@ export const FormOptions = (props) => {
           help={__('Choose your form theme.', 'eightshift-forms')}
           value={theme}
           options={themeAsOptions}
-          onChange={onChangeTheme}
+          onChange={(newTheme) => {
+            updateThemeForAllInnerBlocks(newTheme, onChangeTheme);
+          }}
         />
       }
 

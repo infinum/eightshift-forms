@@ -15,6 +15,7 @@ export const InputEditor = (props) => {
       type,
       isDisabled,
       isReadOnly,
+      theme = '',
     },
   } = props;
 
@@ -25,7 +26,7 @@ export const InputEditor = (props) => {
         label={label}
         id={id}
       />
-      <div className={`${blockClass}__content-wrap`}>
+      <div className={`${blockClass}__content-wrap ${blockClass}__theme--${theme}`}>
         <input
           name={name}
           placeholder={placeholder}

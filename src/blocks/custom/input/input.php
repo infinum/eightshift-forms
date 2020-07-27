@@ -13,6 +13,7 @@ $value        = $attributes['value'] ?? '';
 $input_id     = $attributes['id'] ?? '';
 $placeholder  = $attributes['placeholder'] ?? '';
 $classes      = $attributes['classes'] ?? '';
+$theme        = $attributes['theme'] ?? '';
 $input_type   = $attributes['type'] ?? '';
 $is_disabled  = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_read_only = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
@@ -31,7 +32,7 @@ $is_required  = isset( $attributes['isRequired'] ) && $attributes['isRequired'] 
       )
     );
     ?>
-  <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
+  <div class="<?php echo esc_attr( "{$block_class}__content-wrap {$block_class}__theme--{$theme}" ); ?>">
     <input
       name="<?php echo esc_attr( $name ); ?>"
       placeholder="<?php echo esc_attr( $placeholder ); ?>"
