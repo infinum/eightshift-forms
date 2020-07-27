@@ -37,8 +37,8 @@ class Localization_Constants {
    * @return array
    */
   public function get_localizations(): array {
-    $localization = array(
-      self::LOCALIZATION_KEY => array(
+    $localization = [
+      self::LOCALIZATION_KEY => [
         'siteUrl' => get_site_url(),
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
         'content' => [
@@ -51,17 +51,17 @@ class Localization_Constants {
     if ( has_filter( Filters::DYNAMICS_CRM ) ) {
       $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
       if ( ! empty( $entities ) ) {
-        $available_entities = array(
+        $available_entities = [
           sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-        );
+        ];
       } else {
         $available_entities = $entities;
       }
 
-      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = array(
+      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
         'restUri' => $this->dynamics_crm_route->get_route_uri(),
         'availableEntities' => $available_entities,
-      );
+      ];
     }
 
     return $localization;
