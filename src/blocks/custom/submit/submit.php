@@ -7,17 +7,24 @@
 
 namespace Eightshift_Forms\Blocks;
 
+use Eightshift_Libs\Helpers\Components;
+
 $block_class = $attributes['blockClass'] ?? '';
 $name        = $attributes['name'] ?? '';
 $value       = $attributes['value'] ?? '';
 $submit_id   = $attributes['id'] ?? '';
 $classes     = $attributes['classes'] ?? '';
+$theme       = $attributes['theme'] ?? '';
 $submit_type = isset( $attributes['type'] ) ? $attributes['type'] : 'submit';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 
+$block_classes = Components::classnames([
+  $block_class,
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+]);
 ?>
 
-<div class="<?php echo esc_attr( "{$block_class}" ); ?>">
+<div class="<?php echo esc_attr( $block_classes ); ?>">
   <?php if ( $submit_type === 'button' ) { ?>
     <button
       name="<?php echo esc_attr( $name ); ?>"

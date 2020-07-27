@@ -18,6 +18,10 @@
       "type": "boolean",
       "default": false
     },
+    "wrapperUseShowControl": {
+      "type": "bool",
+      "default": false
+    },
     "value": {
       "type": "string"
     },

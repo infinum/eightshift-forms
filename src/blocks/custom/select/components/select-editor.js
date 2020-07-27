@@ -27,6 +27,7 @@ export const SelectEditor = (props) => {
       id,
       classes,
       isDisabled,
+      theme = '',
     },
     isSelected,
   } = props;
@@ -34,7 +35,7 @@ export const SelectEditor = (props) => {
   const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}

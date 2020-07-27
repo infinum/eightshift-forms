@@ -10,11 +10,12 @@ export const SubmitEditor = (props) => {
       classes,
       type,
       isDisabled,
+      theme = '',
     },
   } = props;
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       {type === 'button' ?
         <button
           name={name}

@@ -14,7 +14,11 @@
     "wrapperUse": {
       "type": "boolean",
       "default": false
-    },  
+    },
+    "wrapperUseShowControl": {
+      "type": "bool",
+      "default": false
+    },
     "allowedBlocks": {
       "type": "array",
       "items": {

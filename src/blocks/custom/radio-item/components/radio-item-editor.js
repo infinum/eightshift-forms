@@ -12,11 +12,12 @@ export const RadioItemEditor = (props) => {
       isChecked,
       isDisabled,
       isReadOnly,
+      theme = '',
     },
   } = props;
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <input
         name={name}
         id={id}
