@@ -53,7 +53,7 @@ class Forms implements Service {
    * Register all the hooks
    */
   public function register() {
-    add_action( 'init', [ $this, 'register_post_type' ] );
+    add_action( 'init', array( $this, 'register_post_type' ) );
   }
 
   /**
@@ -63,12 +63,12 @@ class Forms implements Service {
    */
   public function register_post_type() {
 
-    $template = [
-      ['eightshift-forms/form', []],
-    ];
+    $template = array(
+      array( 'eightshift-forms/form', array() ),
+    );
 
     $args = array(
-      'label'              => esc_html( 'Eightshift Forms', 'eightshift-forms' ),
+      'label'              => esc_html__( 'Eightshift Forms', 'eightshift-forms' ),
       'public'             => true,
       'menu_position'      => static::MENU_POSITION,
       'menu_icon'          => static::MENU_ICON,

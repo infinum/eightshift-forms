@@ -20,7 +20,7 @@ use Eightshift_Libs\Core\Config_Data;
  * Class Dynamics_Crm_Route
  */
 class Dynamics_Crm_Route extends Base_Route {
-  
+
   const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
 
   const ENTITY_PARAM = 'dynamics-crm-entity';
@@ -38,8 +38,8 @@ class Dynamics_Crm_Route extends Base_Route {
    * @param Config_Data  $config       Config data obj.
    * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
    */
-  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm) {
-    $this->config = $config;
+  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm ) {
+    $this->config       = $config;
     $this->dynamics_crm = $dynamics_crm;
   }
 
@@ -60,54 +60,60 @@ class Dynamics_Crm_Route extends Base_Route {
 
     $params = $request->get_query_params();
 
-    if ( !isset( $params[self::ENTITY_PARAM])) {
+    if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
       return $this->rest_response_handler( 'missing-entity-key' );
     }
-  
-    // We don't want to send thee entity to CRM or it will reject our request.
-    $entity = $params[self::ENTITY_PARAM];
-    unset($params[self::ENTITY_PARAM]);
 
-    $this->dynamics_crm->set_oauth_credentials([
-      'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-      'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
-      'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-      'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-      'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
-    ]);
+    // We don't want to send thee entity to CRM or it will reject our request.
+    $entity = $params[ self::ENTITY_PARAM ];
+    unset( $params[ self::ENTITY_PARAM ] );
+
+    $this->dynamics_crm->set_oauth_credentials(
+      array(
+        'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
+        'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
+        'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
+        'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
+        'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+      )
+    );
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->dynamics_crm->add_record($entity, $params);
+      $response = $this->dynamics_crm->add_record( $entity, $params );
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error($e->getMessage());
+      return $this->rest_response_handler_unknown_error( $e->getMessage() );
     }
 
-    return \rest_ensure_response( [
-      'code' => 200,
-      'data' => $response,
-    ] );
+    return \rest_ensure_response(
+      array(
+        'code' => 200,
+        'data' => $response,
+      )
+    );
   }
 
   /**
    * Define a list of responses for this route.
    *
+   * @param  string $response_key Which response to get.
+   * @param  array  $data         (Optional) Data to pass to response handler.
    * @return array
    */
-  protected function defined_responses(string $response_key, array $data = []): array {
-    $responses = [
-      'dynamics-crm-integration-not-used' => [
+  protected function defined_responses( string $response_key, array $data = array() ): array {
+    $responses = array(
+      'dynamics-crm-integration-not-used' => array(
         'code' => 400,
         'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
         'data' => $data,
-      ],
-      'missing-entity-key' => [
+      ),
+      'missing-entity-key' => array(
         'code' => 400,
         'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
         'data' => $data,
-      ],
-    ];
+      ),
+    );
 
-    return $responses[$response_key];
+    return $responses[ $response_key ];
   }
 }

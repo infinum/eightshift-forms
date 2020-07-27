@@ -1,6 +1,7 @@
 <?php
 /**
  * Template for the Radio Block view.
+ *
  * @package Eightshift_Forms\Blocks.
  */
 
@@ -14,12 +15,12 @@ $block_class = $attributes['blockClass'] ?? '';
   <?php
     $this->render_block_view(
       '/components/label/label.php',
-      [
+      array(
         'blockClass' => $attributes['blockClass'] ?? '',
         'label'      => $attributes['label'] ?? '',
-      ]
+      )
     );
-  ?>
+    ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <?php echo wp_kses_post( $inner_block_content ); ?>
   </div>

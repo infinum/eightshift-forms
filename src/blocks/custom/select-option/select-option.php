@@ -1,6 +1,7 @@
 <?php
 /**
  * Template for the Select Option Block view.
+ *
  * @package Eightshift_Forms\Blocks.
  */
 
@@ -12,8 +13,6 @@ $value       = $attributes['value'] ?? '';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_selected = isset( $attributes['isSelected'] ) && $attributes['isSelected'] ? 'selected' : '';
 
-
-var_dump($attributes);
 ?>
 
 <option

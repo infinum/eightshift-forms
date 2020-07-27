@@ -17,7 +17,7 @@ use GuzzleHttp\ClientInterface;
 class Guzzle_Client implements Http_Client {
 
   /**
-   * Constructs object
+   * Constructs object.
    *
    * @param ClientInterface $client DI injected Guzzle client.
    */
@@ -29,7 +29,7 @@ class Guzzle_Client implements Http_Client {
    * Implementation of get request on the Http_Client.
    *
    * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request
+   * @param  array  $parameters (Optional) parameters for the request.
    * @return mixed
    */
   public function get( string $url, array $parameters = array() ) {

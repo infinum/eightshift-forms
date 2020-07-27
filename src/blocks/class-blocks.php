@@ -23,18 +23,18 @@ class Blocks extends Lib_Blocks {
   public function register() {
     parent::register();
 
-    add_filter( 'allowed_block_types', [ $this, 'get_all_allowed_forms_blocks' ], 20, 2 );
+    add_filter( 'allowed_block_types', array( $this, 'get_all_allowed_forms_blocks' ), 20, 2 );
   }
 
   /**
    * Limit block on forms post type to internal plugin blocks
    *
    * @param bool|array $allowed_block_types Array of block type slugs, or boolean to enable/disable all.
-   * @param object $post The post resource data.
+   * @param object     $post The post resource data.
    *
    * @return array
    */
-  public function get_all_allowed_forms_blocks( $allowed_block_types, object $post ) {
+  public function get_all_allowed_forms_blocks( $allowed_block_types, $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {
       return $this->get_all_blocks_list();
     }

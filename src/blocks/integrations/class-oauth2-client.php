@@ -63,11 +63,13 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    * Fetches token from provider using Client Credentials method
    * https://oauth.net/2/grant-types/client-credentials/
    *
-   * @param string $url           Url to authenticate against.
-   * @param string $client_id     Client ID, used for getting access token.
-   * @param string $client_secret Client secret, used for getting access token.
-   * @param string $scope         Scope for which to request access token.
+   * @param  string $url           Url to authenticate against.
+   * @param  string $client_id     Client ID, used for getting access token.
+   * @param  string $client_secret Client secret, used for getting access token.
+   * @param  string $scope         Scope for which to request access token.
    * @return string
+   *
+   * @throws \Exception When bad things happen.
    */
   protected function fetch_token( string $url, string $client_id, string $client_secret, string $scope ) {
     $body = array(
