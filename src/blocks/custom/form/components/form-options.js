@@ -29,13 +29,6 @@ export const FormOptions = (props) => {
     },
   } = props;
 
-  console.log({
-    successMessage,
-    onChangeSuccessMessage,
-    errorMessage,
-    onChangeErrorMessage,
-  });
-
   const richTextClass = `${blockClass}__rich-text`;
 
   const formTypes = [
@@ -77,7 +70,7 @@ export const FormOptions = (props) => {
         <SelectControl
           label={__('CRM Entity', 'eightshift-forms')}
           help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
-          value={type}
+          value={dynamicsEntity}
           options={crmEntitiesAsOptions}
           onChange={onChangeDynamicsEntity}
         />
