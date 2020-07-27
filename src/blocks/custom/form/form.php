@@ -48,5 +48,5 @@ $block_classes = Components::classnames(
 
 </form>
 
-<?php echo wp_kses_post( Components::render( 'spinner', [ 'formId' => $id ], Config::get_project_path() ) ); ?>
+<?php echo wp_kses_post( Components::render( 'spinner', [ 'formId' => $form_id ], Config::get_project_path() ) ); ?>
 
