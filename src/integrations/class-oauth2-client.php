@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations;
 
 use Eightshift_Forms\Integrations\Core\Http_Client;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * OAuth2_Client class which handles access token connections.
@@ -17,6 +18,13 @@ use Eightshift_Forms\Integrations\Core\Http_Client;
 class OAuth2_Client implements OAuth2_Client_Interface {
 
   const HOUR_IN_SECONDS = '3600';
+
+  /**
+   * DI injected Http_Client implementation.
+   *
+   * @var Http_Client
+   */
+  protected $http_client;
 
   /**
    * Constructs object.
@@ -31,7 +39,7 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    * Returns the access token, either from cache or fetches a new one.
    *
    * @param  string $token_key        Token's transient key.
-   * @param  bool   $should_fetch_new Pass true to skip fetching content for transient. Useful for when you want to make sure your access token nis fresh.
+   * @param  bool   $should_fetch_new Pass true to skip fetching content for transient. Useful for when you want to make sure your access token is fresh.
    * @return string
    */
   public function get_token( string $token_key, bool $should_fetch_new = false ): string {
@@ -69,7 +77,8 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    * @param  string $scope         Scope for which to request access token.
    * @return string
    *
-   * @throws \Exception When bad things happen.
+   * @throws ClientException When the request fails.
+   * @throws \Exception      When the response isn't as expected.
    */
   protected function fetch_token( string $url, string $client_id, string $client_secret, string $scope ) {
     $body = array(
@@ -85,10 +94,6 @@ class OAuth2_Client implements OAuth2_Client_Interface {
         'form_params' => $body,
       )
     );
-
-    if ( $response->getStatusCode() !== 200 ) {
-      throw new \Exception( 'Something went wrong, status code: ' . $response->getStatusCode() );
-    }
 
     $json_body = json_decode( (string) $response->getBody(), true );
 

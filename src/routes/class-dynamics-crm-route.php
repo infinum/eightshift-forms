@@ -1,6 +1,6 @@
 <?php
 /**
- * Endpoint for fetching data for highlight card component.
+ * Endpoint for sending data to the dynamics CRM.
  *
  * Example call:
  * /wp-json/eightshift-forms/v1/dynamics-crm
@@ -64,7 +64,7 @@ class Dynamics_Crm_Route extends Base_Route {
       return $this->rest_response_handler( 'missing-entity-key' );
     }
 
-    // We don't want to send thee entity to CRM or it will reject our request.
+    // We don't want to send the entity to CRM or it will reject our request.
     $entity = $params[ self::ENTITY_PARAM ];
     unset( $params[ self::ENTITY_PARAM ] );
 

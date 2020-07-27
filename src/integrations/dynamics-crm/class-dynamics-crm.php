@@ -22,6 +22,13 @@ class Dynamics_CRM {
   const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
 
   /**
+   * OAuth2 client implementation.
+   *
+   * @var OAuth2_Client_Interface
+   */
+  private $oauth2_client;
+
+  /**
    * Constructs object
    *
    * @param OAuth2_Client_Interface $oauth2_client OAuth2 client implementation.
