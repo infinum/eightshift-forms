@@ -15,4 +15,5 @@ namespace Eightshift_Forms\Core;
 class Filters {
 
   const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
+  const GENERAL = 'eightshift_forms/general_info';
 }

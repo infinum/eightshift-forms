@@ -13,6 +13,7 @@ export const FormOptions = (props) => {
       classes,
       type,
       dynamicsEntity,
+      theme,
       successMessage,
       errorMessage,
     },
@@ -24,6 +25,7 @@ export const FormOptions = (props) => {
       onChangeClasses,
       onChangeType,
       onChangeDynamicsEntity,
+      onChangeTheme,
       onChangeSuccessMessage,
       onChangeErrorMessage,
     },
@@ -37,20 +39,18 @@ export const FormOptions = (props) => {
   ];
 
   const {
+    hasThemes,
+    themes = [],
     isDynamicsCrmUsed,
     dynamicsCrm = [],
   } = window.eightshiftForms;
 
+  const themeAsOptions = hasThemes ? themes.map((theme) => ({ label: theme, value: theme })) : [];
+
   // All Dynamics CRM config stuff
   let crmEntitiesAsOptions = [];
   if (isDynamicsCrmUsed) {
-    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => {
-      return {
-        label: entity,
-        value: entity,
-      };
-    });
-
+    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => ({ label: entity, value: entity }));
     formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
   }
 
@@ -73,6 +73,16 @@ export const FormOptions = (props) => {
           value={dynamicsEntity}
           options={crmEntitiesAsOptions}
           onChange={onChangeDynamicsEntity}
+        />
+      }
+
+      {onChangeTheme && hasThemes &&
+        <SelectControl
+          label={__('Theme', 'eightshift-forms')}
+          help={__('Choose your form theme.', 'eightshift-forms')}
+          value={theme}
+          options={themeAsOptions}
+          onChange={onChangeTheme}
         />
       }
 

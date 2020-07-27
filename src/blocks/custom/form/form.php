@@ -19,18 +19,19 @@ $form_target         = $attributes['target'] ?? '';
 $form_classes        = $attributes['classes'] ?? '';
 $form_id             = $attributes['id'] ?? '';
 $form_type           = $attributes['type'] ?? '';
+$form_theme          = $attributes['theme'] ?? '';
 $success_message     = $attributes['successMessage'] ?? '';
 $error_message       = $attributes['errorMessage'] ?? '';
 $dynamics_crm_entity = $attributes['dynamicsEntity'] ?? '';
 
-$block_classes = Components::classnames(
-  array(
-    $block_class,
-    $form_classes,
-    'js-form',
-    "js-form__type--{$form_type}",
-  )
-);
+$block_classes = Components::classnames([
+  $block_class,
+  $form_classes,
+  'js-form',
+  "js-form__type--{$form_type}",
+  ! empty( $form_theme ) ? "{$block_class}__theme--{$form_theme}" : ''
+]);
+
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">

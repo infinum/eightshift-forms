@@ -15,8 +15,8 @@ $component_class = 'spinner';
 $component_classes = Components::classnames([
   $component_class,
   "js-{$component_class}",
-  "{$block_class}__{$component_class}",
-  'hide-spinner'
+  'hide-spinner',
+  ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
 ]);
 
 ?>
