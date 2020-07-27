@@ -1,8 +1,9 @@
-$block-form: (
-);
-
 .block-form {
-  &.hide-form {
-    display: none;
+  position: relative;
+
+  &__form {
+    &.form-submitting {
+      opacity: 0.4;
+    }
   }
 }

@@ -21,6 +21,14 @@
         "type": "string"
       }
     },
+    "successMessage": {
+      "type": "string",
+      "default": "Form successfully submitted"
+    },
+    "errorMessage": {
+      "type": "string",
+      "default": "There was a problem submitting your form"
+    },
     "action": {
       "type": "string"
     },

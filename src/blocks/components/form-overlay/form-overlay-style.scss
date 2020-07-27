@@ -1,0 +1,15 @@
+$form-overlay: (
+  z-index: map-get-strict($base-z-index, overlay),
+);
+
+.form-overlay {
+  @extend %absolute-center;
+
+  z-index: map-get-strict($form-overlay, z-index);
+  width: 100%;
+  height: 100%;
+
+  &.hide-form-overlay {
+    display: none;
+  }
+}

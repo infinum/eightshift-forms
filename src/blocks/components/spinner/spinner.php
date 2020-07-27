@@ -9,7 +9,6 @@ namespace Eightshift_Forms\Blocks;
 use Eightshift_Libs\Helpers\Components;
 
 $block_class = $attributes['blockClass'] ?? '';
-$form_id = $attributes['formId'] ?? '';
 
 $component_class = 'spinner';
 
@@ -26,6 +25,5 @@ $component_classes = Components::classnames([
   class="<?php echo esc_attr( $component_classes ); ?>"
   role="alert"
   aria-live="assertive"
-  data-parent-form="<?php echo esc_attr( $form_id ); ?>"
 >
 </div>

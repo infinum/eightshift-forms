@@ -1,5 +1,12 @@
 $block-form: (
   horizontal-spacing: $base-gutter-size,
+  rich-text: (
+    mobile: (
+      border: 1px solid global-settings(colors, black),
+      border-radius: 5px,
+      padding: 5px,
+    )
+  )
 );
 
 .block-form {
@@ -12,5 +19,9 @@ $block-form: (
       left: -(map-get-strict($block-form, horizontal-spacing));
       right: -(map-get-strict($block-form, horizontal-spacing));
     }
+  }
+
+  &__rich-text {
+    @include responsive($block-form, rich-text);
   }
 }

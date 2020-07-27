@@ -4,10 +4,14 @@ export class Form {
   constructor(element, {
     DATA_ATTR_FORM_TYPE,
   }) {
-    this.form = element;
+    this.formWrapper = element;
+    this.form = element.querySelector('.js-block-form-form');
     this.formId = element.getAttribute('id');
-    this.spinner = document.querySelector(`[data-parent-form=${this.formId}]`);
+    this.spinner = element.querySelector('.js-spinner');
     this.submits = this.form.querySelectorAll('input[type="submit"]');
+    this.formMessageSuccess = this.formWrapper.querySelector('.js-form-message--success');
+    this.formMessageError = this.formWrapper.querySelector('.js-form-message--error');
+    this.overlay = this.formWrapper.querySelector('.js-form-overlay');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
 
     // Get form type from class.
@@ -25,14 +29,14 @@ export class Form {
     };
 
     this.STATE_IS_LOADING = false;
-    this.CLASS_HIDE_FORM = 'hide-form';
+    this.CLASS_FORM_SUBMITTING = 'form-submitting';
     this.CLASS_HIDE_SPINNER = 'hide-spinner';
+    this.CLASS_HIDE_MESSAGE = 'hide-form-message';
+    this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
   }
 
   init() {
-    console.log('Form is: ', this.form);
     this.form.addEventListener('submit', async (e) => {
-      console.log('submitting form');
 
       if (this.formType !== 'custom') {
         e.preventDefault();
@@ -47,28 +51,39 @@ export class Form {
   async submitForm(url, data) {
     this.startLoading();
     const response = await sendForm(url, data);
-    this.endLoading();
+    const isSuccess = response && response.code && response.code === 200;
+    this.endLoading(isSuccess);
   }
 
   startLoading() {
     this.STATE_IS_LOADING = true;
-    this.form.classList.add(this.CLASS_HIDE_FORM);
+    this.form.classList.add(this.CLASS_FORM_SUBMITTING);
     this.spinner.classList.remove(this.CLASS_HIDE_SPINNER);
+    this.overlay.classList.remove(this.CLASS_HIDE_OVERLAY);
     this.spinner.innerHTML = `<p>${this.formAccessibilityStatus.loading}</p>`;
+    [this.formMessageSuccess, this.formMessageError].forEach((msgElem) => msgElem.classList.add(this.CLASS_HIDE_MESSAGE));
     
     this.submits.forEach((submit) => {
       submit.disabled = true;
     });
   }
 
-  endLoading() {
+  endLoading(isSuccess) {
+    const state = isSuccess ? 'success' : 'error';
     this.STATE_IS_LOADING = false;
-    this.form.classList.remove(this.CLASS_HIDE_FORM);
+    this.form.classList.remove(this.CLASS_FORM_SUBMITTING);
     this.spinner.classList.add(this.CLASS_HIDE_SPINNER);
-    this.spinner.innerHTML = `<p>${this.formAccessibilityStatus.success}</p>`;
+    this.overlay.classList.add(this.CLASS_HIDE_OVERLAY);
+    this.spinner.innerHTML = `<p>${this.formAccessibilityStatus[state]}</p>`;
     this.submits.forEach((submit) => {
       submit.disabled = false;
     });
+
+    if (isSuccess) {
+      this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
+    } else {
+      this.formMessageError.classList.remove(this.CLASS_HIDE_MESSAGE);
+    }
   }
 
   /**

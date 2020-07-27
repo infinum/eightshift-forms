@@ -1,9 +1,11 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
+import { PanelBody, TextControl, SelectControl, BaseControl } from '@wordpress/components';
+import { RichText } from '@wordpress/block-editor';
 
 export const FormOptions = (props) => {
   const {
     attributes: {
+      blockClass,
       action,
       method,
       target,
@@ -11,6 +13,8 @@ export const FormOptions = (props) => {
       classes,
       type,
       dynamicsEntity,
+      successMessage,
+      errorMessage,
     },
     actions: {
       onChangeAction,
@@ -20,8 +24,19 @@ export const FormOptions = (props) => {
       onChangeClasses,
       onChangeType,
       onChangeDynamicsEntity,
+      onChangeSuccessMessage,
+      onChangeErrorMessage,
     },
   } = props;
+
+  console.log({
+    successMessage,
+    onChangeSuccessMessage,
+    errorMessage,
+    onChangeErrorMessage,
+  });
+
+  const richTextClass = `${blockClass}__rich-text`;
 
   const formTypes = [
     { label: __('Email', 'eightshift-forms'), value: 'email' },
@@ -66,6 +81,34 @@ export const FormOptions = (props) => {
           options={crmEntitiesAsOptions}
           onChange={onChangeDynamicsEntity}
         />
+      }
+
+      {onChangeSuccessMessage &&
+        <BaseControl
+          label={__('Success message', 'eightshift-forms')}
+          help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
+        >
+          <RichText
+            className={richTextClass}
+            placeholder={__('Add your success message', 'eightshift-forms')}
+            onChange={onChangeSuccessMessage}
+            value={successMessage}
+          />
+        </BaseControl>
+      }
+
+      {onChangeErrorMessage &&
+        <BaseControl
+          label={__('Error message', 'eightshift-forms')}
+          help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
+        >
+          <RichText
+            className={richTextClass}
+            placeholder={__('Add your error message', 'eightshift-forms')}
+            onChange={onChangeErrorMessage}
+            value={errorMessage}
+          />
+        </BaseControl>
       }
 
       {onChangeAction && type === 'custom' &&

@@ -42,7 +42,6 @@ class Form_View {
     $allowed_tags['input']['required']       = 1;
     $allowed_tags['textarea']['required']    = 1;
     $allowed_tags['select']['required']      = 1;
-    $allowed_tags['div']['data-parent-form'] = 1;
 
     return $allowed_tags;
   }

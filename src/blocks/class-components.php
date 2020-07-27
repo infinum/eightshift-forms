@@ -26,7 +26,8 @@ class Components extends Libs_Components {
    *
    * @throws \Exception When we're unable to find the component by $component.
    */
-  public static function render( string $component, array $attributes = [] ) {
-    return Libs_Components::render( $component, $attributes, Config::get_project_path() );
+  public static function render( string $component, array $attributes = [], string $parent_path = '' ) {
+    $parent_path = Config::get_project_path();
+    return Libs_Components::render( $component, $attributes, $parent_path );
   }
 }
