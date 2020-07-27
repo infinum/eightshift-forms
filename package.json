@@ -38,7 +38,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "@eightshift/frontend-libs": "^3.2.2",
+    "@eightshift/frontend-libs": "^3.5.0",
     "@wordpress/server-side-render": "^1.16.0"
   },
   "husky": {
