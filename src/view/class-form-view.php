@@ -14,8 +14,14 @@ namespace Eightshift_Forms\View;
  */
 class Form_View {
 
+  /**
+   * Add extra allowed tags specifically for forms.
+   *
+   * @param  array $allowed_tags Already allowed tags.
+   * @return array
+   */
   public static function extra_allowed_tags( $allowed_tags ): array {
-    $allowed_tags['form'] = [
+    $allowed_tags['form'] = array(
       'class'                    => 1,
       'id'                       => 1,
       'action'                   => 1,
@@ -30,12 +36,12 @@ class Form_View {
       'novalidate'               => 1,
       'data-form-type'           => 1,
       'data-dynamics-crm-entity' => 1,
-    ];
+    );
 
-    // Append additional allowed tags
-    $allowed_tags['input']['required'] = 1;
-    $allowed_tags['textarea']['required'] = 1;
-    $allowed_tags['select']['required'] = 1;
+    // Append additional allowed tags.
+    $allowed_tags['input']['required']       = 1;
+    $allowed_tags['textarea']['required']    = 1;
+    $allowed_tags['select']['required']      = 1;
     $allowed_tags['div']['data-parent-form'] = 1;
 
     return $allowed_tags;

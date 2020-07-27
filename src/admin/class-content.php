@@ -18,7 +18,7 @@ class Content implements Service {
    * Register all the hooks
    */
   public function register() {
-    add_action( 'wp_kses_allowed_html', [ $this, 'set_custom_wpkses_post_tags' ], 10, 2 );
+    add_action( 'wp_kses_allowed_html', array( $this, 'set_custom_wpkses_post_tags' ), 10, 2 );
   }
 
   /**
@@ -29,15 +29,15 @@ class Content implements Service {
    * @return array           Modified allowed tags array.
    */
   public function set_custom_wpkses_post_tags( $tags, $context ) {
-    $appended_tags = [
-      'form' => [
+    $appended_tags = array(
+      'form' => array(
         'action'      => true,
         'method'      => true,
         'target'      => true,
         'id'          => true,
         'class'       => true,
-      ],
-      'input' => [
+      ),
+      'input' => array(
         'name'        => true,
         'value'       => true,
         'type'        => true,
@@ -47,28 +47,28 @@ class Content implements Service {
         'checked'     => true,
         'readonly'    => true,
         'placeholder' => true,
-      ],
-      'button' => [
+      ),
+      'button' => array(
         'name'        => true,
         'value'       => true,
         'type'        => true,
         'id'          => true,
         'class'       => true,
         'disabled'    => true,
-      ],
-      'select' => [
+      ),
+      'select' => array(
         'name'        => true,
         'id'          => true,
         'class'       => true,
         'disabled'    => true,
-      ],
-      'option' => [
+      ),
+      'option' => array(
         'value'       => true,
         'class'       => true,
         'selected'    => true,
         'disabled'    => true,
-      ],
-    ];
+      ),
+    );
 
     $tags = array_merge( $appended_tags, $tags );
 

@@ -24,7 +24,7 @@ if ( ! $wrapper_use || $wrapper_disable ) {
   return;
 }
 
-$id = $attributes['id'] ?? '';
+$wrapper_id = $attributes['id'] ?? '';
 
 $wrapper_main_class = 'wrapper';
 
@@ -49,7 +49,7 @@ $wrapper_inner_class = Components::classnames([
 ]);
 
 ?>
-<div class="<?php echo esc_attr( $wrapper_class ); ?>" id="<?php echo esc_attr( $id ); ?>">
+<div class="<?php echo esc_attr( $wrapper_class ); ?>" id="<?php echo esc_attr( $wrapper_id ); ?>">
   <?php if ( $wrapper_use_simple ) { ?>
     <?php
       $this->render_wrapper_view(

@@ -20,10 +20,11 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
+   * @param Manifest_Data          $manifest               Inject manifest which holds data about assets from manifest.json.
+   * @param Localization_Constants $localization_constants Injected object which holds all localizations shared between editor and frontend.
    */
   public function __construct( Manifest_Data $manifest, Localization_Constants $localization_constants ) {
-    $this->manifest = $manifest;
+    $this->manifest               = $manifest;
     $this->localization_constants = $localization_constants;
   }
 
@@ -33,7 +34,7 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
   public function register() {
     parent::register();
 
-    add_action( 'enqueue_block_editor_assets', [ $this, 'localize_script' ]);
+    add_action( 'enqueue_block_editor_assets', array( $this, 'localize_script' ) );
   }
 
   /**

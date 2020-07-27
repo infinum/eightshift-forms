@@ -23,10 +23,11 @@ class Localization_Constants {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
+   * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
+   * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
    */
   public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route ) {
-    $this->manifest = $manifest;
+    $this->manifest           = $manifest;
     $this->dynamics_crm_route = $dynamics_crm_route;
   }
 
@@ -36,8 +37,8 @@ class Localization_Constants {
    * @return array
    */
   public function get_localizations(): array {
-    $localization = [
-      self::LOCALIZATION_KEY => [
+    $localization = array(
+      self::LOCALIZATION_KEY => array(
         'siteUrl' => get_site_url(),
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
         'content' => [
@@ -50,17 +51,17 @@ class Localization_Constants {
     if ( has_filter( Filters::DYNAMICS_CRM ) ) {
       $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
       if ( ! empty( $entities ) ) {
-        $available_entities = [
-          sprintf( esc_html__('No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-        ];
+        $available_entities = array(
+          sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        );
       } else {
         $available_entities = $entities;
       }
 
-      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
+      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = array(
         'restUri' => $this->dynamics_crm_route->get_route_uri(),
         'availableEntities' => $available_entities,
-      ];
+      );
     }
 
     return $localization;

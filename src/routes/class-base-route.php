@@ -81,45 +81,49 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
    */
   protected function get_callback_arguments() : array {
-    return [
+    return array(
       'methods'  => static::READABLE,
-      'callback' => [ $this, 'route_callback' ],
-    ];
+      'callback' => array( $this, 'route_callback' ),
+    );
   }
 
     /**
-   * Response handler for unknown errors
-   *
-   * @param  string $message Message to output.
-   * @param  array  $data    (Optional) data to output
-   * @return void
-   */
-  protected function rest_response_handler_unknown_error( string $message, array $data = [] ) {
-    return \rest_ensure_response( [
-      'code' => 400,
-      'message' => $message,
-      'data' => $data,
-    ] );
+     * Response handler for unknown errors
+     *
+     * @param  string $message Message to output.
+     * @param  array  $data    (Optional) data to output.
+     * @return mixed
+     */
+  protected function rest_response_handler_unknown_error( string $message, array $data = array() ) {
+    return \rest_ensure_response(
+      array(
+        'code' => 400,
+        'message' => $message,
+        'data' => $data,
+      )
+    );
   }
 
   /**
    * Ensure correct response for rest using error handler function.
    *
-   * @param string $status  Status description.
-   * @param array  $data    Optional data.
+   * @param  string $response_key Which response to get.
+   * @param  array  $data         (Optional) Data to pass to response handler.
    *
    * @return \WP_Error|array \WP_Error instance with error message and status or array.
    */
-  protected function rest_response_handler( string $response_key, array $data = [] ) {
+  protected function rest_response_handler( string $response_key, array $data = array() ) {
     return \rest_ensure_response( $this->defined_responses( $response_key, $data ) );
   }
 
   /**
    * Define a list of responses for this route.
    *
+   * @param  string $response_key Which response to get.
+   * @param  array  $data         (Optional) Data to pass to response handler.
    * @return array
    */
-  abstract protected function defined_responses(string $response_key): array;
+  abstract protected function defined_responses( string $response_key, array $data = array() ): array;
 
   /**
    * Method that returns rest response

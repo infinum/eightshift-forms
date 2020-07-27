@@ -19,26 +19,18 @@ use Eightshift_Libs\Manifest\Manifest_Data;
 class Enqueue_Theme extends Lib_Enqueue_Theme {
 
   /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() {
-    parent::register();
-  }
-
-  /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
+   * @param Manifest_Data          $manifest               Inject manifest which holds data about assets from manifest.json.
+   * @param Localization_Constants $localization_constants Injected object which holds all localizations shared between editor and frontend.
    */
   public function __construct( Manifest_Data $manifest, Localization_Constants $localization_constants ) {
-    $this->manifest = $manifest;
+    $this->manifest               = $manifest;
     $this->localization_constants = $localization_constants;
   }
 
   /**
-   * Get localizations
+   * Get localizations.
    *
    * @return array
    */
