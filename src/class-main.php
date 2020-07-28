@@ -14,15 +14,16 @@ namespace Eightshift_Forms\Core;
 
 use Eightshift_Libs\Core\Main as Lib_Core;
 use Eightshift_Libs\Manifest as Lib_Manifest;
-use Eightshift_Libs\Enqueue as Lib_Enqueue;
 use Eightshift_Libs\I18n as Lib_I18n;
 use Eightshift_Forms\Admin;
 use Eightshift_Forms\Blocks;
-use Eightshift_Forms\Blocks\Enqueue as BlocksEnqueue;
 use Eightshift_Forms\Rest;
 use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
+use Eightshift_Forms\Integrations;
+use Eightshift_Forms\Integrations\Guzzle_Client;
+use GuzzleHttp\Client;
 
 /**
  * The main start class.
@@ -50,43 +51,55 @@ class Main extends Lib_Core {
    * @return array<string> Array of fully qualified class names.
    */
   protected function get_service_classes() : array {
-    return [
+    return array(
 
       // Config.
       Config::class,
 
       // Manifest.
-      Lib_Manifest\Manifest::class => [ Config::class ],
+      Lib_Manifest\Manifest::class => array( Config::class ),
 
       // I18n.
-      Lib_I18n\I18n::class => [ Config::class ],
+      Lib_I18n\I18n::class => array( Config::class ),
 
-      // Rest
-      Rest\Dynamics_Crm_Route::class => [ Config::class ],
+      // Dynamics CRM.
+      Integrations\Core\Guzzle_Client::class => array(
+        Client::class,
+      ),
+      Integrations\OAuth2_Client::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
+      Integrations\Dynamics_CRM::class => array(
+        Integrations\OAuth2_Client::class,
+      ),
+      Rest\Dynamics_Crm_Route::class => array(
+        Config::class,
+        Integrations\Dynamics_CRM::class,
+      ),
 
       // Enqueue.
-      Localization_Constants::class => [
+      Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
-        Rest\Dynamics_Crm_Route::class
-      ],
-      Enqueue\Enqueue_Theme::class => [
-        Lib_Manifest\Manifest::class,
-        Enqueue\Localization_Constants::class,
-      ],
-      Enqueue\Enqueue_Blocks::class => [
+        Rest\Dynamics_Crm_Route::class,
+      ),
+      Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,
         Enqueue\Localization_Constants::class,
-      ],
+      ),
+      Enqueue\Enqueue_Blocks::class => array(
+        Lib_Manifest\Manifest::class,
+        Enqueue\Localization_Constants::class,
+      ),
 
-      // Admin
+      // Admin.
       Admin\Forms::class,
       Admin\Content::class,
 
       // Blocks.
-      Blocks\Blocks::class => [ Config::class ],
+      Blocks\Blocks::class => array( Config::class ),
 
-      // View
+      // View.
       View\Post_View_Filter::class,
-    ];
+    );
   }
 }

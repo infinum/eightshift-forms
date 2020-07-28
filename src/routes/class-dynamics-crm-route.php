@@ -1,6 +1,6 @@
 <?php
 /**
- * Endpoint for fetching data for highlight card component.
+ * Endpoint for sending data to the dynamics CRM.
  *
  * Example call:
  * /wp-json/eightshift-forms/v1/dynamics-crm
@@ -12,12 +12,16 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
-use SaintSystems\OData\ODataClient;
+use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Integrations\Dynamics_CRM;
+use Eightshift_Libs\Core\Config_Data;
 
 /**
  * Class Dynamics_Crm_Route
  */
 class Dynamics_Crm_Route extends Base_Route {
+
+  const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
 
   const ENTITY_PARAM = 'dynamics-crm-entity';
 
@@ -29,9 +33,20 @@ class Dynamics_Crm_Route extends Base_Route {
   const ENDPOINT_SLUG = '/dynamics-crm';
 
   /**
+   * Construct object
+   *
+   * @param Config_Data  $config       Config data obj.
+   * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
+   */
+  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm ) {
+    $this->config       = $config;
+    $this->dynamics_crm = $dynamics_crm;
+  }
+
+  /**
    * Method that returns rest response
    *
-   * @param  \WP_REST_Request $request Data got from enpoint url.
+   * @param  \WP_REST_Request $request Data got from endpoint url.
    *
    * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
    *                                is already an instance, WP_HTTP_Response, otherwise
@@ -39,100 +54,66 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
+    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
+      return $this->rest_response_handler( 'dynamics-crm-integration-not-used' );
+    }
+
     $params = $request->get_query_params();
-    $entity = $params[self::ENTITY_PARAM];
 
-    unset($params[self::ENTITY_PARAM]);
-    $post_data = $params;
-  
-    $response = $this->test_curl_client_credentials_grant();
+    if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
+      return $this->rest_response_handler( 'missing-entity-key' );
+    }
 
-    /**
-     * WORKING EXAMPLE
-     */
-    $odata_service_url = DYNAMICS_CRM_API_URL;
-    $odata_client = new ODataClient( $odata_service_url, function( $request ) use ($response) {
+    // We don't want to send the entity to CRM or it will reject our request.
+    $entity = $params[ self::ENTITY_PARAM ];
+    unset( $params[ self::ENTITY_PARAM ] );
 
-      // OAuth Bearer Token Authentication.
-      $access_token                      = $response['access_token'];
-      $request->headers['Authorization'] = 'Bearer ' . $access_token;
-    });
+    $this->dynamics_crm->set_oauth_credentials(
+      array(
+        'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
+        'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
+        'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
+        'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
+        'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+      )
+    );
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $leads = $odata_client->from( $entity )->get();
-      $leads = $odata_client->from( $entity )->post($post_data);
+      $response = $this->dynamics_crm->add_record( $entity, $params );
     } catch ( \Exception $e ) {
-      return \rest_ensure_response( [
+      return $this->rest_response_handler_unknown_error( $e->getMessage() );
+    }
+
+    return \rest_ensure_response(
+      array(
+        'code' => 200,
+        'data' => $response,
+      )
+    );
+  }
+
+  /**
+   * Define a list of responses for this route.
+   *
+   * @param  string $response_key Which response to get.
+   * @param  array  $data         (Optional) Data to pass to response handler.
+   * @return array
+   */
+  protected function defined_responses( string $response_key, array $data = array() ): array {
+    $responses = array(
+      'dynamics-crm-integration-not-used' => array(
         'code' => 400,
-        'data' => $e->getMessage(),
-      ] );
-    }
+        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        'data' => $data,
+      ),
+      'missing-entity-key' => array(
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
+        'data' => $data,
+      ),
+    );
 
-    return \rest_ensure_response( [
-      'code' => 200,
-      'data' => $response,
-      'leads' => $leads,
-      'test' => $this->test_odata(),
-    ] );
-  }
-
-  /**
-   * Tests curl credentials grant.
-   *
-   * @return void
-   */
-  protected function test_curl_client_credentials_grant() {
-    $body = [
-      'grant_type' => 'client_credentials',
-      'client_id' => DYNAMICS_CRM_CLIENT_ID,
-      'client_secret' => DYNAMICS_CRM_CLIENT_SECRET,
-      'scope' => DYNAMICS_CRM_SCOPE
-    ];
-
-    
-    $client = new \GuzzleHttp\Client();
-    $response = $client->get(DYNAMICS_CRM_AUTH_TOKEN_URL, [
-      'form_params' => $body,
-    ]);
-
-    if ($response->getStatusCode() !== 200) {
-      throw new \Exception('Something went wrong, status code: ' . $response->getStatusCode());
-    }
-
-    $json_body = json_decode((string) $response->getBody(), true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      throw new \Exception('Invalid JSON in body');
-    }
-
-    return $json_body;
-  }
-
-  /**
-   * Working test example of fetching stuff using OData.
-   *
-   * @return void
-   */
-  protected function test_odata() {
-    $odataServiceUrl = 'https://services.odata.org/V4/TripPinService';
-
-    $odataClient = new ODataClient( $odataServiceUrl );
-
-    // Retrieve all entities from the "People" Entity Set
-    $people = $odataClient->from( 'People' )->get();
-
-    // Or retrieve a specific entity by the Entity ID/Key
-    // try {
-    // $person = $odataClient->from( 'People' )->find( 'russellwhyte' );
-    // echo "Hello, I am $person->FirstName ";
-    // } catch ( Exception $e ) {
-    // echo $e->getMessage();
-    // }
-
-    // // Want to only select a few properties/columns?
-    // $people = $odataClient->from( 'People' )->select( 'FirstName', 'LastName' )->get();
-
-    return $people;
+    return $responses[ $response_key ];
   }
 }

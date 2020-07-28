@@ -1,6 +1,7 @@
 <?php
 /**
  * Template for the Checkbox Block view.
+ *
  * @package Eightshift_Forms\Blocks.
  */
 
@@ -10,11 +11,11 @@ $block_class = $attributes['blockClass'] ?? '';
 $name        = $attributes['name'] ?? '';
 $value       = $attributes['value'] ?? '';
 $description = $attributes['description'] ?? '';
-$id          = $attributes['id'] ?? '';
+$checkbox_id = $attributes['id'] ?? '';
 $classes     = $attributes['classes'] ?? '';
 $is_checked  = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
 $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_readOnly = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$is_read_only = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 $is_required = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 
 ?>
@@ -23,23 +24,23 @@ $is_required = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ?
   <?php
     $this->render_block_view(
       '/components/label/label.php',
-      [
+      array(
         'blockClass' => $attributes['blockClass'] ?? '',
         'label'      => $attributes['label'] ?? '',
         'id'         => $attributes['id'] ?? '',
-      ]
+      )
     );
-  ?>
+    ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <input
       name="<?php echo esc_attr( $name ); ?>"
-      <?php ! empty( $id ) ? printf('id="%s"', esc_attr( $id ) ): '' ?>
+      <?php ! empty( $checkbox_id ) ? printf( 'id="%s"', esc_attr( $checkbox_id ) ) : ''; ?>
       class="<?php echo esc_attr( "{$classes} {$block_class}__checkbox" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="checkbox"
       <?php echo esc_attr( $is_checked ); ?>
       <?php echo esc_attr( $is_disabled ); ?>
-      <?php echo esc_attr( $is_readOnly ); ?>
+      <?php echo esc_attr( $is_read_only ); ?>
       <?php echo esc_attr( $is_required ); ?>
     />
     <p class="<?php echo esc_attr( "{$block_class}__description" ); ?>">

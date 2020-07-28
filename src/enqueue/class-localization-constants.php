@@ -10,8 +10,8 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Libs\Manifest\Manifest_Data;
-use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Base_Route;
+use Eightshift_Forms\Core\Filters;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
@@ -23,10 +23,11 @@ class Localization_Constants {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
+   * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
+   * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
    */
   public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route ) {
-    $this->manifest = $manifest;
+    $this->manifest           = $manifest;
     $this->dynamics_crm_route = $dynamics_crm_route;
   }
 
@@ -36,37 +37,29 @@ class Localization_Constants {
    * @return array
    */
   public function get_localizations(): array {
-    $localization = [
-      self::LOCALIZATION_KEY => [
+    $localization = array(
+      self::LOCALIZATION_KEY => array(
         'siteUrl' => get_site_url(),
-        'isDynamicsCrmUsed' => $this->is_dynamics_crm_used(),
-      ]
-    ];
+        'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
+      ),
+    );
 
-    if ( $this->is_dynamics_crm_used() ) {
-      if (! defined( 'DYNAMICS_CRM_AVAILABLE_ENTITIES') || ! is_array( DYNAMICS_CRM_AVAILABLE_ENTITIES )) {
-        $available_entities = [
-          esc_html__('No options found, please set available options in DYNAMICS_CRM_AVAILABLE_ENTITIES constant as array', 'eightshift-forms' ),
-        ];
+    if ( has_filter( Filters::DYNAMICS_CRM ) ) {
+      $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
+      if ( ! empty( $entities ) ) {
+        $available_entities = array(
+          sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        );
       } else {
-        $available_entities = DYNAMICS_CRM_AVAILABLE_ENTITIES;
+        $available_entities = $entities;
       }
 
-      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
+      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = array(
         'restUri' => $this->dynamics_crm_route->get_route_uri(),
         'availableEntities' => $available_entities,
-      ];
+      );
     }
 
     return $localization;
-  }
-
-  /**
-   * Check if project defined usage of Dynamics CRM.
-   *
-   * @return boolean
-   */
-  protected function is_dynamics_crm_used() {
-    return defined( 'DYNAMICS_CRM_USED' ) && DYNAMICS_CRM_USED;
   }
 }

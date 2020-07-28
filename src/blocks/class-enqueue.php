@@ -60,10 +60,10 @@ class Enqueue extends Lib_Enqueue {
   }
 
     /**
-   * Get block editor only script key from project manifest.json
-   *
-   * @return string
-   */
+     * Get block editor only script key from project manifest.json
+     *
+     * @return string
+     */
   public function get_block_editor_script_key() : string {
     return 'esFromsApplicationBlocksEditor.js';
   }
