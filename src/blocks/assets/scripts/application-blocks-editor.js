@@ -13,7 +13,7 @@
  
  */
 
-import { registerBlocks, registerVariations } from '@eightshift/frontend-libs/scripts/editor';
+import { registerBlocks } from '@eightshift/frontend-libs/scripts/editor';
 import { Wrapper } from './../../wrapper/wrapper';
 import WrapperManifest from './../../wrapper/manifest.json';
 import globalSettings from './../../manifest.json';
@@ -28,12 +28,6 @@ registerBlocks(
   require.context('./../../custom', true, /-hooks.js$/),
   require.context('./../../custom', true, /-transforms.js$/),
 );
-
-// registerVariations(
-//   globalSettings,
-//   require.context('./../../variations', true, /manifest.json$/),
-//   require.context('./../../variations', true, /-transforms.js$/),
-// );
 
 // Run Wrapper hooks.
 hooks();
