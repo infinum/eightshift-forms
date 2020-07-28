@@ -17,3 +17,8 @@ $base-container-sizes: map-get-strict($global-variables, containers);
 
 // Define Base section Spacing from manifest.json
 $base-section-spacing: map-get-strict($global-variables, sectionSpacing);
+
+$base-z-index: (
+  overlay: 99,
+  spinner: 100,
+);

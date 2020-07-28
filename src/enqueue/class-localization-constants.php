@@ -37,28 +37,58 @@ class Localization_Constants {
    * @return array
    */
   public function get_localizations(): array {
-    $localization = array(
-      self::LOCALIZATION_KEY => array(
-        'siteUrl' => get_site_url(),
+    $localization = [
+      self::LOCALIZATION_KEY => [
+        'siteUrl'           => get_site_url(),
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
-      ),
-    );
+        'hasThemes'         => has_filter( Filters::GENERAL ),
+        'content' => [
+          'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
+          'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
+        ]
+      ]
+    ];
+
+    if ( has_filter( Filters::GENERAL ) ) {
+      $localization = $this->add_general_constants($localization);
+    }
 
     if ( has_filter( Filters::DYNAMICS_CRM ) ) {
-      $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
-      if ( ! empty( $entities ) ) {
-        $available_entities = array(
-          sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-        );
-      } else {
-        $available_entities = $entities;
-      }
-
-      $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = array(
-        'restUri' => $this->dynamics_crm_route->get_route_uri(),
-        'availableEntities' => $available_entities,
-      );
+      $localization = $this->add_dynamics_crm_constants($localization);
     }
+
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Dynamics CRM integration.
+   *
+   * @return void
+   */
+  protected function add_general_constants(array $localization) {
+    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Dynamics CRM integration.
+   *
+   * @return void
+   */
+  protected function add_dynamics_crm_constants(array $localization) {
+    $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
+    if ( empty( $entities ) ) {
+      $available_entities = [
+        sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+      ];
+    } else {
+      $available_entities = $entities;
+    }
+
+    $localization[ self::LOCALIZATION_KEY ]['dynamicsCrm'] = [
+      'restUri' => $this->dynamics_crm_route->get_route_uri(),
+      'availableEntities' => $available_entities,
+    ];
 
     return $localization;
   }

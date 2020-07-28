@@ -10,8 +10,15 @@
     "Radio"
   ],
   "hasInnerBlocks": true,
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
+    "wrapperUseShowControl": {
+      "type": "bool",
+      "default": false
+    },
     "allowedBlocks": {
       "type": "array",
       "items": {
@@ -20,6 +27,9 @@
       "default": [
         "eightshift-forms/radio-item"
       ]
+    },
+    "theme": {
+      "type": "string"
     },
     "label": {
       "type": "string"

@@ -16,11 +16,12 @@ export const TextareaEditor = (props) => {
       cols,
       isDisabled,
       isReadOnly,
+      theme = '',
     },
   } = props;
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}

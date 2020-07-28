@@ -1,9 +1,28 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
+import { PanelBody, TextControl, SelectControl, BaseControl } from '@wordpress/components';
+import { RichText } from '@wordpress/block-editor';
+
+/**
+ * Custom action which changes the "theme" attribute for this block and all it's innerBlocks.
+ *
+ * @param {string} newTheme New value for theme attribute
+ * @param {function} onChangeTheme Prebuilt action for form block.
+ */
+const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
+  const thisBlock = wp.data.select('core/block-editor').getSelectedBlock();
+  if (thisBlock.innerBlocks) {
+    thisBlock.innerBlocks.forEach((innerBlock) => {
+      innerBlock.attributes.theme = newTheme;
+      wp.data.dispatch('core/block-editor').updateBlock(innerBlock.clientId, innerBlock);
+    });
+  }
+  onChangeTheme(newTheme);
+};
 
 export const FormOptions = (props) => {
   const {
     attributes: {
+      blockClass,
       action,
       method,
       target,
@@ -11,6 +30,9 @@ export const FormOptions = (props) => {
       classes,
       type,
       dynamicsEntity,
+      theme,
+      successMessage,
+      errorMessage,
     },
     actions: {
       onChangeAction,
@@ -20,8 +42,13 @@ export const FormOptions = (props) => {
       onChangeClasses,
       onChangeType,
       onChangeDynamicsEntity,
+      onChangeTheme,
+      onChangeSuccessMessage,
+      onChangeErrorMessage,
     },
   } = props;
+
+  const richTextClass = `${blockClass}__rich-text`;
 
   const formTypes = [
     { label: __('Email', 'eightshift-forms'), value: 'email' },
@@ -29,20 +56,18 @@ export const FormOptions = (props) => {
   ];
 
   const {
+    hasThemes,
+    themes = [],
     isDynamicsCrmUsed,
     dynamicsCrm = [],
   } = window.eightshiftForms;
 
+  const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
+
   // All Dynamics CRM config stuff
   let crmEntitiesAsOptions = [];
   if (isDynamicsCrmUsed) {
-    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => {
-      return {
-        label: entity,
-        value: entity,
-      };
-    });
-
+    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => ({ label: entity, value: entity }));
     formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
   }
 
@@ -62,10 +87,50 @@ export const FormOptions = (props) => {
         <SelectControl
           label={__('CRM Entity', 'eightshift-forms')}
           help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
-          value={type}
+          value={dynamicsEntity}
           options={crmEntitiesAsOptions}
           onChange={onChangeDynamicsEntity}
         />
+      }
+
+      {onChangeTheme && hasThemes &&
+        <SelectControl
+          label={__('Theme', 'eightshift-forms')}
+          help={__('Choose your form theme.', 'eightshift-forms')}
+          value={theme}
+          options={themeAsOptions}
+          onChange={(newTheme) => {
+            updateThemeForAllInnerBlocks(newTheme, onChangeTheme);
+          }}
+        />
+      }
+
+      {onChangeSuccessMessage &&
+        <BaseControl
+          label={__('Success message', 'eightshift-forms')}
+          help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
+        >
+          <RichText
+            className={richTextClass}
+            placeholder={__('Add your success message', 'eightshift-forms')}
+            onChange={onChangeSuccessMessage}
+            value={successMessage}
+          />
+        </BaseControl>
+      }
+
+      {onChangeErrorMessage &&
+        <BaseControl
+          label={__('Error message', 'eightshift-forms')}
+          help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
+        >
+          <RichText
+            className={richTextClass}
+            placeholder={__('Add your error message', 'eightshift-forms')}
+            onChange={onChangeErrorMessage}
+            value={errorMessage}
+          />
+        </BaseControl>
       }
 
       {onChangeAction && type === 'custom' &&

@@ -7,19 +7,27 @@
 
 namespace Eightshift_Forms\Blocks;
 
+use Eightshift_Libs\Helpers\Components;
+
 $block_class   = $attributes['blockClass'] ?? '';
 $label         = $attributes['label'] ?? '';
 $name          = $attributes['name'] ?? '';
 $value         = $attributes['value'] ?? '';
 $radio_item_id = $attributes['id'] ?? '';
 $classes       = $attributes['classes'] ?? '';
+$theme         = $attributes['theme'] ?? '';
 $is_checked    = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
 $is_disabled   = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_read_only  = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 
+$block_classes = Components::classnames([
+  $block_class,
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+]);
+
 ?>
 
-<div class="<?php echo esc_attr( "{$block_class}" ); ?>">
+<div class="<?php echo esc_attr( $block_classes ); ?>">
   <input
     name="<?php echo esc_attr( $name ); ?>"
     <?php ! empty( $radio_item_id ) ? printf( 'id="%s"', esc_attr( $radio_item_id ) ) : ''; ?>

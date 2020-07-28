@@ -1,34 +1,46 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import { __, sprintf } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { SelectControl, RangeControl, ToggleControl, Icon } from '@wordpress/components';
+import { SelectControl, RangeControl, Icon } from '@wordpress/components';
 import { icons } from '@eightshift/frontend-libs/scripts/editor';
-import globalSettings from '../../manifest.json';
+import globalSettings from './../../manifest.json';
+import { WrapperResponsiveTabContentSimple } from './wrapper-responsive-tab-content-simple';
+
+export const offsetOptions = [
+  { label: __('Not Set', 'eightshift-boilerplate'), value: '' },
+  { label: __('Center', 'eightshift-boilerplate'), value: 'center' },
+];
+
+export const containerWidthOptions = [
+  { label: __('Not Set', 'eightshift-boilerplate'), value: '' },
+  { label: sprintf(__('Default (%s)', 'eightshift-boilerplate'), globalSettings.globalVariables.containers.default), value: 'default' },
+];
+
+export const gutterOptions = [
+  { label: __('Not Set', 'eightshift-boilerplate'), value: '' },
+  { label: sprintf(__('Default (%s)', 'eightshift-boilerplate'), globalSettings.globalVariables.gutters.default), value: 'default' },
+  { label: sprintf(__('No Spacing (%s)', 'eightshift-boilerplate'), globalSettings.globalVariables.gutters.none), value: 'none' },
+];
 
 export const WrapperResponsiveTabContent = (props) => {
   const {
     type,
-    contentWidth,
-    contentOffset,
+    useSimple,
+    width,
+    offset,
     containerWidth,
-    containerSpacing,
+    gutter,
     spacingTop,
     spacingBottom,
     hideBlock,
-    onChangeContentWidth,
-    onChangeContentOffset,
+    onChangeWidth,
+    onChangeOffset,
     onChangeContainerWidth,
-    onChangeContainerSpacing,
+    onChangeGutter,
     onChangeSpacingTop,
     onChangeSpacingBottom,
     onChangeHideBlock,
   } = props;
-
-  const spacingOptions = {
-    min: -10,
-    max: globalSettings.globalVariables.sectionSpacing.max,
-    step: globalSettings.globalVariables.sectionSpacing.step,
-  };
 
   const widthOptions = {
     min: -1,
@@ -37,131 +49,90 @@ export const WrapperResponsiveTabContent = (props) => {
     initial: globalSettings.globalVariables.maxCols,
   };
 
-  const contentOffsetOptions = [
-    { label: __('Not Set', 'eightshift-forms'), value: '' },
-    { label: __('Content Spacing', 'eightshift-forms'), value: 'content-spacing' },
-    { label: __('Center', 'eightshift-forms'), value: 'center' },
-  ];
-
-  const containerWidthOptions = [
-    { label: __('Not Set', 'eightshift-forms'), value: '' },
-    { label: __('Default', 'eightshift-forms'), value: 'default' },
-  ];
-  
-  const containerSpacingOptions = [
-    { label: __('Not Set', 'eightshift-forms'), value: '' },
-    { label: __('Default', 'eightshift-forms'), value: 'default' },
-    { label: __('No Spacing', 'eightshift-forms'), value: 'no-spacing' },
-  ];
-
   return (
     <Fragment>
-      {onChangeContentWidth && (
-        <RangeControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.width} />
-              {__('Content Width', 'eightshift-forms')}
-            </Fragment>
-          }
-          help={sprintf(__('Change block width in %d columns range. Example 6 = 50% screen width. If you set a value to -1 it will not be used and the parent brakepoint will be used.', 'eightshift-forms'), globalSettings.maxCols)}
-          value={contentWidth[type]}
-          onChange={onChangeContentWidth}
-          min={widthOptions.min}
-          max={widthOptions.max}
-          step={widthOptions.step}
-          initialPosition={widthOptions.initial}
-        />
-      )}
+      {!useSimple &&
+        <Fragment>
+          {onChangeWidth && (
+            <RangeControl
+              label={
+                <Fragment>
+                  <Icon icon={icons.width} />
+                  {__('Content Width', 'eightshift-boilerplate')}
+                </Fragment>
+              }
+              help={sprintf(__('Option to change the block width in the grid from the left. Change column width in %d columns range. Example: 6 is 50 percent of the screen width. If you set a value to -1 it will not be used and the parent breakpoint will be used.', 'eightshift-boilerplate'), globalSettings.globalVariables.maxCols)}
+              allowReset={true}
+              value={width[type]}
+              onChange={onChangeWidth}
+              min={widthOptions.min}
+              max={widthOptions.max}
+              step={widthOptions.step}
+              initialPosition={widthOptions.initial}
+            />
+          )}
 
-      {onChangeContentOffset && (
-        <SelectControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.offset} />
-              {__('Content Offset', 'eightshift-forms')}
-            </Fragment>
-          }
-          help={__('Change content position inside a block.', 'eightshift-forms')}
-          value={contentOffset[type]}
-          options={contentOffsetOptions}
-          onChange={onChangeContentOffset}
-        />
-      )}
+          {onChangeWidth && (
+            <RangeControl
+              label={
+                <Fragment>
+                  <Icon icon={icons.offset} />
+                  {__('Content Offset', 'eightshift-boilerplate')}
+                </Fragment>
+              }
+              help={sprintf(__('Option to change the block offset in the grid from the left. Change block offset in %d columns range. Example: 6 is 50 percent of the screen width. If you set a value to -1 it will not be used and the parent breakpoint will be used.', 'eightshift-boilerplate'), globalSettings.globalVariables.maxCols)}
+              allowReset={true}
+              value={offset[type]}
+              onChange={onChangeOffset}
+              min={widthOptions.min}
+              max={widthOptions.max}
+              step={widthOptions.step}
+              initialPosition={widthOptions.initial}
+            />
+          )}
 
-      {onChangeContainerWidth &&
-        <SelectControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.containerWidth} />
-              {__('Container Width', 'eightshift-forms')}
-            </Fragment>
+          {onChangeContainerWidth &&
+            <SelectControl
+              label={
+                <Fragment>
+                  <Icon icon={icons.containerWidth} />
+                  {__('Container Width', 'eightshift-boilerplate')}
+                </Fragment>
+              }
+              help={__('Change Container width. Changing this option will affect total width of the block and the total size of grid inside the block.', 'eightshift-boilerplate')}
+              value={containerWidth[type]}
+              options={containerWidthOptions}
+              onChange={onChangeContainerWidth}
+            />
           }
-          help={__('Change Container width. Changing this option will affect total width for Content Width option.', 'eightshift-forms')}
-          value={containerWidth[type]}
-          options={containerWidthOptions}
-          onChange={onChangeContainerWidth}
-        />
+
+          {onChangeGutter &&
+            <SelectControl
+              label={
+                <Fragment>
+                  <Icon icon={icons.gutter} />
+                  {__('Container Spacing', 'eightshift-boilerplate')}
+                </Fragment>
+              }
+              help={__('Change Container spacing on the left and right. More popular name is Container Gutter.', 'eightshift-boilerplate')}
+              value={gutter[type]}
+              options={gutterOptions}
+              onChange={onChangeGutter}
+            />
+          }
+        </Fragment>
       }
 
-      {onChangeContainerSpacing &&
-        <SelectControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.containerSpacing} />
-              {__('Container Spacing', 'eightshift-forms')}
-            </Fragment>
-          }
-          help={__('Change Container spacing on the left and right.', 'eightshift-forms')}
-          value={containerSpacing[type]}
-          options={containerSpacingOptions}
-          onChange={onChangeContainerSpacing}
-        />
-      }
+      <WrapperResponsiveTabContentSimple
+        type={type}
+        spacingTop={spacingTop}
+        spacingBottom={spacingBottom}
+        hideBlock={hideBlock}
+        onChangeSpacingTop={onChangeSpacingTop}
+        onChangeSpacingBottom={onChangeSpacingBottom}
+        onChangeHideBlock={onChangeHideBlock}
+      />
 
-      {onChangeSpacingTop &&
-        <RangeControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.spacingTop} />
-              {__('Spacing Top', 'eightshift-forms')}
-            </Fragment>
-          }
-          help={__('Change Block Spacing from the top. If you set a value to -10 it will not be used and the parent brakepoint will be used.', 'eightshift-forms')}
-          value={spacingTop[type]}
-          onChange={onChangeSpacingTop}
-          min={spacingOptions.min}
-          max={spacingOptions.max}
-          step={spacingOptions.step}
-        />
-      }
-
-      {onChangeSpacingBottom &&
-        <RangeControl
-          label={
-            <Fragment>
-              <Icon icon={() => icons.spacingBottom} />
-              {__('Spacing Bottom', 'eightshift-forms')}
-            </Fragment>
-          }
-          help={__('Change Block Spacing from the bottom. If you set a value to -10 it will not be used and the parent brakepoint will be used.', 'eightshift-forms')}
-          value={spacingBottom[type]}
-          onChange={onChangeSpacingBottom}
-          min={spacingOptions.min}
-          max={spacingOptions.max}
-          step={spacingOptions.step}
-        />
-      }
-
-
-      {onChangeHideBlock &&
-        <ToggleControl
-          label={__('Hide Block', 'eightshift-forms')}
-          help={__('Toggle block visibility.', 'eightshift-forms')}
-          checked={hideBlock[type]}
-          onChange={onChangeHideBlock}
-        />
-      }
     </Fragment>
   );
 };

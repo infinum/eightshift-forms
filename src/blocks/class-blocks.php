@@ -9,6 +9,7 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;
 use Eightshift_Forms\Admin\Forms;
+use Eightshift_Forms\Core\Config;
 
 /**
  * Blocks class.

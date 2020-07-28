@@ -39,9 +39,9 @@ class Form_View {
     );
 
     // Append additional allowed tags.
-    $allowed_tags['input']['required']    = 1;
-    $allowed_tags['textarea']['required'] = 1;
-    $allowed_tags['select']['required']   = 1;
+    $allowed_tags['input']['required']       = 1;
+    $allowed_tags['textarea']['required']    = 1;
+    $allowed_tags['select']['required']      = 1;
 
     return $allowed_tags;
   }

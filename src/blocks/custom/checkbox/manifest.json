@@ -9,8 +9,18 @@
   "keywords": [
     "Checkbox"
   ],
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
+    "wrapperUseShowControl": {
+      "type": "bool",
+      "default": false
+    },
+    "theme": {
+      "type": "string"
+    },
     "name": {
       "type": "string"
     },

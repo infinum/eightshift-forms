@@ -10,13 +10,31 @@
     "Form"
   ],
   "hasInnerBlocks": true,
-  "hasWrapper": false,
   "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": false
+    },
+    "wrapperUseShowControl": {
+      "type": "bool",
+      "default": false
+    },
     "allowedBlocks": {
       "type": "array",
       "items": {
         "type": "string"
       }
+    },
+    "theme": {
+      "type": "string"
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "Form successfully submitted"
+    },
+    "errorMessage": {
+      "type": "string",
+      "default": "There was a problem submitting your form"
     },
     "action": {
       "type": "string"

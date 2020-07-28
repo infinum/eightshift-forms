@@ -9,11 +9,12 @@ export const RadioEditor = (props) => {
       blockClass,
       label,
       allowedBlocks,
+      theme = '',
     },
   } = props;
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}

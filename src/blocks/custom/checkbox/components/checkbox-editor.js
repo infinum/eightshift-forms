@@ -15,6 +15,7 @@ export const CheckboxEditor = (props) => {
       isChecked,
       isDisabled,
       isReadOnly,
+      theme = '',
     },
     actions: {
       onChangeDescription,
@@ -22,7 +23,7 @@ export const CheckboxEditor = (props) => {
   } = props;
 
   return (
-    <div className={`${blockClass}`}>
+    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}
