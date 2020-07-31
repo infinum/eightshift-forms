@@ -1,7 +1,9 @@
-.block-checkbox {
-  padding: 10px 0;
+$block-checkbox-margin: 10px 0 20px 0 !default;
 
-  &__content-wrap {
+.block-checkbox {
+  margin: $block-checkbox-margin;
+
+  &__label {
     display: flex;
     align-items: center;
   }

@@ -36,9 +36,6 @@
     "label": {
       "type": "string"
     },
-    "description": {
-      "type": "string"
-    },
     "isChecked": {
       "type": "bool",
       "default": false
