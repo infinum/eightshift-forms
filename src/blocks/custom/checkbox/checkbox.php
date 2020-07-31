@@ -12,7 +12,7 @@ use Eightshift_Libs\Helpers\Components;
 $block_class = $attributes['blockClass'] ?? '';
 $name        = $attributes['name'] ?? '';
 $value       = $attributes['value'] ?? '';
-$description = $attributes['description'] ?? '';
+$label       = $attributes['label'] ?? '';
 $checkbox_id = $attributes['id'] ?? '';
 $classes     = $attributes['classes'] ?? '';
 $theme       = $attributes['theme'] ?? '';
@@ -28,21 +28,11 @@ $block_classes = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
-  <?php
-    $this->render_block_view(
-      '/components/label/label.php',
-      array(
-        'blockClass' => $attributes['blockClass'] ?? '',
-        'label'      => $attributes['label'] ?? '',
-        'id'         => $attributes['id'] ?? '',
-      )
-    );
-    ?>
-  <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
+  <label class="<?php echo esc_attr( "{$block_class}__label js-{$block_class}-label" ); ?>">
     <input
       name="<?php echo esc_attr( $name ); ?>"
       <?php ! empty( $checkbox_id ) ? printf( 'id="%s"', esc_attr( $checkbox_id ) ) : ''; ?>
-      class="<?php echo esc_attr( "{$classes} {$block_class}__checkbox" ); ?>"
+      class="<?php echo esc_attr( "{$classes} {$block_class}__checkbox js-{$block_class}-checkbox" ); ?>"
       value="<?php echo esc_attr( $value ); ?>"
       type="checkbox"
       <?php echo esc_attr( $is_checked ); ?>
@@ -50,8 +40,8 @@ $block_classes = Components::classnames([
       <?php echo esc_attr( $is_read_only ); ?>
       <?php echo esc_attr( $is_required ); ?>
     />
-    <p class="<?php echo esc_attr( "{$block_class}__description" ); ?>">
-      <?php echo wp_kses_post( $description ); ?>
-    </p>
-  </div>
+    <span class="<?php echo esc_attr( "{$block_class}__checkmark js-{$block_class}-checkmark" ); ?>"></span>
+    <span class="<?php echo esc_attr( "{$block_class}__label-content" ); ?>">
+      <?php echo wp_kses_post( $label ); ?>
+    </span>
 </div>

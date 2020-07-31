@@ -9,7 +9,6 @@ export const CheckboxEditor = (props) => {
       label,
       name,
       value,
-      description,
       id,
       classes,
       isChecked,
@@ -18,35 +17,33 @@ export const CheckboxEditor = (props) => {
       theme = '',
     },
     actions: {
-      onChangeDescription,
+      onChangeLabel,
     },
   } = props;
 
   return (
     <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
-      <LabelEditor
-        blockClass={blockClass}
-        label={label}
-        id={id}
-      />
-      <div className={`${blockClass}__content-wrap`}>
+      <label className={`${blockClass}__label`}>
+        <span className={`${blockClass}__label-content`}>
+          <RichText
+            className={`${blockClass}__label`}
+            placeholder={__('Add your label', 'eightshift-forms')}
+            onChange={onChangeLabel}
+            value={label}
+          />
+        </span>
         <input
           name={name}
           id={id}
           className={`${blockClass}__checkbox ${classes}`}
           value={value}
-          type='checkbox'
+          type="checkbox"
           checked={isChecked}
           disabled={isDisabled}
           readOnly={isReadOnly}
         />
-        <RichText
-          className={`${blockClass}__description`}
-          placeholder={__('Add your description', 'eightshift-forms')}
-          onChange={onChangeDescription}
-          value={description}
-        />
-      </div>
+        <span className={`${blockClass}__checkmark`}></span>
+      </label>
     </div>
   );
 };
