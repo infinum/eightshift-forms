@@ -12,6 +12,7 @@ export class Form {
     this.formMessageSuccess = this.formWrapper.querySelector('.js-form-message--success');
     this.formMessageError = this.formWrapper.querySelector('.js-form-message--error');
     this.overlay = this.formWrapper.querySelector('.js-form-overlay');
+    this.basicCaptchaField = this.form.querySelector('.js-block-captcha');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
 
     // Get form type from class.

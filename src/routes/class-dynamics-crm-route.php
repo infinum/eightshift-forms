@@ -60,6 +60,10 @@ class Dynamics_Crm_Route extends Base_Route {
 
     $params = $request->get_query_params();
 
+    if ( ! $this->check_captcha_if_present( $params ) ) {
+      return $this->rest_response_handler( 'captcha' );
+    }
+
     if ( ! isset( $params[self::ENTITY_PARAM ] ) ) {
       return $this->rest_response_handler( 'missing-entity-key' );
     }
@@ -96,6 +100,11 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   protected function defined_responses(string $response_key, array $data = []): array {
     $responses = [
+      'wrong-captcha' => [
+        'code' => 401,
+        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
+        'data' => $data,
+      ],
       'dynamics-crm-integration-not-used' => [
         'code' => 400,
         'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
