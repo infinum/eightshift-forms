@@ -13,8 +13,26 @@ namespace Eightshift_Forms\Captcha;
  * Basic math captcha functionality
  */
 class Basic_Captcha {
+
+  /**
+   * Key for the first number in the sum
+   * 
+   * @var string
+   */
   const FIRST_NUMBER_KEY = 'cap_first';
+
+  /**
+   * Key for the second number in the sum
+   * 
+   * @var string
+   */
   const SECOND_NUMBER_KEY = 'cap_second';
+
+  /**
+   * Key for the captcha result
+   * 
+   * @var string
+   */
   const RESULT_KEY = 'cap_result';
   
   /**
