@@ -44,6 +44,7 @@ $block_classes = Components::classnames([
       <?php echo esc_html( $second_number ); ?>
       <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo esc_html( $second_number ); ?>" />
     </div>
+    <div class="<?php echo esc_attr( "{$block_class}__captcha-equals" ); ?>"> = </div>
     <input
       name="<?php echo esc_attr( $name ); ?>"
       class="<?php echo esc_attr( "{$block_class}__captcha" ); ?>"

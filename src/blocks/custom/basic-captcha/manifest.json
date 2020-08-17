@@ -18,6 +18,9 @@
       "type": "bool",
       "default": false
     },
+    "label": {
+      "type": "string"
+    },
     "theme": {
       "type": "string"
     }
