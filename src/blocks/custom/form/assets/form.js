@@ -53,7 +53,7 @@ export class Form {
     this.startLoading();
     const response = await sendForm(url, data);
     const isSuccess = response && response.code && response.code === 200;
-    this.endLoading(isSuccess);
+    this.endLoading(isSuccess, response);
   }
 
   startLoading() {
@@ -69,7 +69,7 @@ export class Form {
     });
   }
 
-  endLoading(isSuccess) {
+  endLoading(isSuccess, response) {
     const state = isSuccess ? 'success' : 'error';
     this.STATE_IS_LOADING = false;
     this.form.classList.remove(this.CLASS_FORM_SUBMITTING);
@@ -83,6 +83,7 @@ export class Form {
     if (isSuccess) {
       this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
     } else {
+      this.formMessageError.textContent = response.message;
       this.formMessageError.classList.remove(this.CLASS_HIDE_MESSAGE);
     }
   }

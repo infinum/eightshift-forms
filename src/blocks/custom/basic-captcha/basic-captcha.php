@@ -8,9 +8,10 @@
 namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
+use Eightshift_Forms\Captcha\Basic_Captcha;
 
 $block_class   = $attributes['blockClass'] ?? '';
-$name          = $attributes['name'] ?? 'basicCaptcha';
+$name          = $attributes['name'] ?? Basic_Captcha::RESULT_KEY;
 $theme         = $attributes['theme'] ?? '';
 $first_number  = rand(1, 15);
 $second_number = rand(1, 15);
@@ -36,18 +37,21 @@ $block_classes = Components::classnames([
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap {$block_class}__theme--{$theme}" ); ?>">
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>" >
       <?php echo esc_html( $first_number ); ?>
-      <input type="hidden" tabindex="-1" readonly value="<?php echo esc_html( $first_number ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::FIRST_NUMBER_KEY ); ?>" readonly value="<?php echo esc_html( $first_number ); ?>" />
     </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-plus" ); ?>"> + </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>">
       <?php echo esc_html( $second_number ); ?>
-      <input type="hidden" value="<?php echo esc_html( $second_number ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo esc_html( $second_number ); ?>" />
     </div>
     <input
       name="<?php echo esc_attr( $name ); ?>"
       class="<?php echo esc_attr( "{$block_class}__captcha" ); ?>"
       type="text"
       required
+      aria-describedby="basic-captcha-description"
     />
   </div>
+
+  <div id="basic-captcha-description"><?php sprintf( esc_html__( 'Math captcha. Input sum of %d and %d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
 </div>

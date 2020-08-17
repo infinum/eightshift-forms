@@ -15,6 +15,7 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
+use Eightshift_Forms\Captcha\Basic_Captcha;
 
 /**
  * Class Dynamics_Crm_Route
@@ -38,9 +39,10 @@ class Dynamics_Crm_Route extends Base_Route {
    * @param Config_Data  $config       Config data obj.
    * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
    */
-  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm) {
+  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm, Basic_Captcha $basic_captcha) {
     $this->config = $config;
     $this->dynamics_crm = $dynamics_crm;
+    $this->basic_captcha = $basic_captcha;
   }
 
   /**
@@ -60,8 +62,8 @@ class Dynamics_Crm_Route extends Base_Route {
 
     $params = $request->get_query_params();
 
-    if ( ! $this->check_captcha_if_present( $params ) ) {
-      return $this->rest_response_handler( 'captcha' );
+    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
+      return $this->rest_response_handler( 'wrong-captcha' );
     }
 
     if ( ! isset( $params[self::ENTITY_PARAM ] ) ) {
@@ -84,7 +86,7 @@ class Dynamics_Crm_Route extends Base_Route {
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params);
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( $e->getMessage() );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
     return \rest_ensure_response([
