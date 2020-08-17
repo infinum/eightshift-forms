@@ -1,6 +1,6 @@
 <?php
 /**
- * Basic captcha functionality
+ * Basic math captcha functionality
  *
  * @package Eightshift_Forms\Captcha
  */
@@ -10,16 +10,20 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Captcha;
 
 /**
- * The plugin activation class.
+ * Basic math captcha functionality
  */
 class Basic_Captcha {
   const FIRST_NUMBER_KEY = 'cap_first';
   const SECOND_NUMBER_KEY = 'cap_second';
   const RESULT_KEY = 'cap_result';
   
+  /**
+   * If any of the captcha fields are submitted and inside $params array, check that the math adds up.
+   *
+   * @param  array $params Request parameters.
+   * @return boolean
+   */
   public function check_captcha_from_request_params( array $params ): bool {
-
-    error_log(print_r($params, true));
     
     // First let's see if captcha fields are in request params. If not, just return true.
     if (
