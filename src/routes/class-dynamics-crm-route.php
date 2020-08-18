@@ -103,7 +103,7 @@ class Dynamics_Crm_Route extends Base_Route {
   protected function defined_responses(string $response_key, array $data = []): array {
     $responses = [
       'wrong-captcha' => [
-        'code' => 401,
+        'code' => 429,
         'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
         'data' => $data,
       ],
