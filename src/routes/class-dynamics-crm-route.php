@@ -15,6 +15,7 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
+use Eightshift_Forms\Captcha\Basic_Captcha;
 
 /**
  * Class Dynamics_Crm_Route
@@ -38,9 +39,10 @@ class Dynamics_Crm_Route extends Base_Route {
    * @param Config_Data  $config       Config data obj.
    * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
    */
-  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm) {
+  public function __construct(Config_Data $config, Dynamics_CRM $dynamics_crm, Basic_Captcha $basic_captcha) {
     $this->config = $config;
     $this->dynamics_crm = $dynamics_crm;
+    $this->basic_captcha = $basic_captcha;
   }
 
   /**
@@ -59,6 +61,10 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     $params = $request->get_query_params();
+
+    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
+      return $this->rest_response_handler( 'wrong-captcha' );
+    }
 
     if ( ! isset( $params[self::ENTITY_PARAM ] ) ) {
       return $this->rest_response_handler( 'missing-entity-key' );
@@ -80,7 +86,7 @@ class Dynamics_Crm_Route extends Base_Route {
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params);
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( $e->getMessage() );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
     return \rest_ensure_response([
@@ -96,6 +102,11 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   protected function defined_responses(string $response_key, array $data = []): array {
     $responses = [
+      'wrong-captcha' => [
+        'code' => 429,
+        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
+        'data' => $data,
+      ],
       'dynamics-crm-integration-not-used' => [
         'code' => 400,
         'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),

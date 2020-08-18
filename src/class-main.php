@@ -17,6 +17,7 @@ use Eightshift_Libs\Manifest as Lib_Manifest;
 use Eightshift_Libs\I18n as Lib_I18n;
 use Eightshift_Forms\Admin;
 use Eightshift_Forms\Blocks;
+use Eightshift_Forms\Captcha;
 use Eightshift_Forms\Rest;
 use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
@@ -75,6 +76,7 @@ class Main extends Lib_Core {
       Rest\Dynamics_Crm_Route::class => array(
         Config::class,
         Integrations\Dynamics_CRM::class,
+        Captcha\Basic_Captcha::class,
       ),
 
       // Enqueue.

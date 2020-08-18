@@ -94,11 +94,11 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
      * @param  array  $data    (Optional) data to output.
      * @return mixed
      */
-  protected function rest_response_handler_unknown_error( string $message, array $data = array() ) {
+  protected function rest_response_handler_unknown_error( array $data = array() ) {
     return \rest_ensure_response(
       array(
         'code' => 400,
-        'message' => $message,
+        'message' => esc_html__( 'Unknown error', 'eightshift-forms' ),
         'data' => $data,
       )
     );
