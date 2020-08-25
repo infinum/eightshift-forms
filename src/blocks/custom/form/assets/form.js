@@ -19,6 +19,7 @@ export class Form {
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
 
     this.siteUrl = window.eightshiftForms.siteUrl;
+    this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
 
     this.restRouteUrls = {
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
@@ -53,6 +54,12 @@ export class Form {
     this.startLoading();
     const response = await sendForm(url, data);
     const isSuccess = response && response.code && response.code === 200;
+    const is500Error = response && response.code && response.code === 'internal_server_error';
+
+    if (is500Error) {
+      response.message = this.internalServerErrorMessage;
+    }
+
     this.endLoading(isSuccess, response);
   }
 
@@ -63,7 +70,7 @@ export class Form {
     this.overlay.classList.remove(this.CLASS_HIDE_OVERLAY);
     this.spinner.innerHTML = `<p>${this.formAccessibilityStatus.loading}</p>`;
     [this.formMessageSuccess, this.formMessageError].forEach((msgElem) => msgElem.classList.add(this.CLASS_HIDE_MESSAGE));
-    
+
     this.submits.forEach((submit) => {
       submit.disabled = true;
     });

@@ -45,8 +45,9 @@ class Localization_Constants {
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
           'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
-        ]
-      ]
+        ],
+        'internalServerError' => esc_html__( 'Internal server error', 'eightshift-forms' ),
+      ],
     ];
 
     if ( has_filter( Filters::GENERAL ) ) {
