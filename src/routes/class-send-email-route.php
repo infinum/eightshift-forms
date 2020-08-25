@@ -27,6 +27,11 @@ class Send_Email_Route extends Base_Route {
    */
   const ENDPOINT_SLUG = '/send-email';
 
+  const TO_PARAM = 'email_to';
+  const SUBJECT_PARAM = 'email_subject';
+  const MESSAGE_PARAM = 'email_message';
+  const ADDITIONAL_HEADERS_PARAM = 'email_additional_headers';
+
   /**
    * Construct object.
    *
