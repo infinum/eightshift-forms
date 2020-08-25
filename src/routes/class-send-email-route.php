@@ -65,15 +65,9 @@ class Send_Email_Route extends Base_Route {
       return $this->rest_response_handler( 'missing-params', $missing_params );
     }
 
-    $to          = sanitize_text_field( wp_unslash( $_GET['to'] ) );
-    $subject     = sanitize_text_field( wp_unslash( $_GET['subject'] ) );
-    $message     = sanitize_text_field( wp_unslash( $_GET['message'] ) );
-    $attachments = sanitize_text_field( wp_unslash( $_GET['attachments'] ?? '' ) );
-    $headers     = array_map( function( $header ) {
-      return sanitize_text_field( wp_unslash( $header ) );
-    }, $_GET['headers'] ?? [] );
+    $email_info = $this->build_email_info_from_params( $params );
 
-    $response = wp_mail( $to, $subject, $message );
+    $response = wp_mail( $email_info['to'], $email_info['subject'], $email_info['message'], $email_info['headers'] );
 
     if ( ! $response ) {
       return $this->rest_response_handler( 'send-email-error' );
@@ -83,6 +77,29 @@ class Send_Email_Route extends Base_Route {
       'code' => 200,
       'message' => esc_html__( 'Email sent', 'd66' ),
     ]);
+  }
+
+  /**
+   * Takes all parameters received in request and builds all subject / message info needed to send the email.
+   * Must return array with the following keys:
+   * - to
+   * - subject
+   * - message
+   * - headers
+   *
+   * @param  array $params Params received in request.
+   * @return array
+   */
+  protected function build_email_info_from_params( array $params ): array {
+    // $to          = sanitize_text_field( wp_unslash( $_GET['to'] ) );
+    // $subject     = sanitize_text_field( wp_unslash( $_GET['subject'] ) );
+    // $message     = sanitize_text_field( wp_unslash( $_GET['message'] ) );
+    // $attachments = sanitize_text_field( wp_unslash( $_GET['attachments'] ?? '' ) );
+    // $headers     = array_map( function( $header ) {
+    //   return sanitize_text_field( wp_unslash( $header ) );
+    // }, $_GET['headers'] ?? [] );
+
+    return $params
   }
 
   /**
