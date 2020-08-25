@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl, BaseControl } from '@wordpress/components';
+import { Fragment } from '@wordpress/element';
+import { PanelBody, TextControl, SelectControl, BaseControl, TabPanel, Dashicon } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 
 /**
@@ -73,65 +74,114 @@ export const FormOptions = (props) => {
 
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
-      {onChangeType &&
-        <SelectControl
-          label={__('Type', 'eightshift-forms')}
-          value={type}
-          help={__('Choose what will this form do on submit', 'eightshift-forms')}
-          options={formTypes}
-          onChange={onChangeType}
-        />
-      }
+      <TabPanel
+        className="custom-button-tabs"
+        activeClass="components-button is-button is-primary"
+        tabs={[
+          {
+            name: 'general',
+            title: <Dashicon icon="admin-generic" />,
+            className: 'tab-large components-button is-button is-default custom-button-with-icon',
+          },
+          {
+            name: 'email',
+            title: <Dashicon icon="email" />,
+            className: 'tab-desktop components-button is-button is-default custom-button-with-icon',
+          },
+          isDynamicsCrmUsed && type === 'dynamics-crm' && {
+            name: 'dynamics-crm',
+            title: <Dashicon icon="cloud-upload" />,
+            className: 'tab-tablet components-button is-button is-default custom-button-with-icon',
+          },
+        ]
+        }
+      >
+        {(tab) => (
+          <Fragment>
+            {tab.name === 'general' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('General Options', 'eightshift-forms')}</strong>
+                <p>{__('These are general form options.', 'eightshift-forms')}</p>
+                <br />
+                {onChangeType &&
+                  <SelectControl
+                    label={__('Type', 'eightshift-forms')}
+                    value={type}
+                    help={__('Choose what will this form do on submit', 'eightshift-forms')}
+                    options={formTypes}
+                    onChange={onChangeType}
+                  />
+                }
+                {onChangeTheme && hasThemes &&
+                  <SelectControl
+                    label={__('Theme', 'eightshift-forms')}
+                    help={__('Choose your form theme.', 'eightshift-forms')}
+                    value={theme}
+                    options={themeAsOptions}
+                    onChange={(newTheme) => {
+                      updateThemeForAllInnerBlocks(newTheme, onChangeTheme);
+                    }}
+                  />
+                }
 
-      {onChangeDynamicsEntity && isDynamicsCrmUsed && type === 'dynamics-crm' &&
-        <SelectControl
-          label={__('CRM Entity', 'eightshift-forms')}
-          help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
-          value={dynamicsEntity}
-          options={crmEntitiesAsOptions}
-          onChange={onChangeDynamicsEntity}
-        />
-      }
+                {onChangeSuccessMessage &&
+                  <BaseControl
+                    label={__('Success message', 'eightshift-forms')}
+                    help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
+                  >
+                    <RichText
+                      className={richTextClass}
+                      placeholder={__('Add your success message', 'eightshift-forms')}
+                      onChange={onChangeSuccessMessage}
+                      value={successMessage}
+                    />
+                  </BaseControl>
+                }
 
-      {onChangeTheme && hasThemes &&
-        <SelectControl
-          label={__('Theme', 'eightshift-forms')}
-          help={__('Choose your form theme.', 'eightshift-forms')}
-          value={theme}
-          options={themeAsOptions}
-          onChange={(newTheme) => {
-            updateThemeForAllInnerBlocks(newTheme, onChangeTheme);
-          }}
-        />
-      }
-
-      {onChangeSuccessMessage &&
-        <BaseControl
-          label={__('Success message', 'eightshift-forms')}
-          help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
-        >
-          <RichText
-            className={richTextClass}
-            placeholder={__('Add your success message', 'eightshift-forms')}
-            onChange={onChangeSuccessMessage}
-            value={successMessage}
-          />
-        </BaseControl>
-      }
-
-      {onChangeErrorMessage &&
-        <BaseControl
-          label={__('Error message', 'eightshift-forms')}
-          help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
-        >
-          <RichText
-            className={richTextClass}
-            placeholder={__('Add your error message', 'eightshift-forms')}
-            onChange={onChangeErrorMessage}
-            value={errorMessage}
-          />
-        </BaseControl>
-      }
+                {onChangeErrorMessage &&
+                  <BaseControl
+                    label={__('Error message', 'eightshift-forms')}
+                    help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
+                  >
+                    <RichText
+                      className={richTextClass}
+                      placeholder={__('Add your error message', 'eightshift-forms')}
+                      onChange={onChangeErrorMessage}
+                      value={errorMessage}
+                    />
+                  </BaseControl>
+                }
+              </Fragment>
+            )}
+            {tab.name === 'email' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Email Options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is sending emails.', 'eightshift-forms')}</p>
+                <br />
+              </Fragment>
+            )}
+            {tab.name === 'dynamics-crm' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Dynamics CRM Options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is sending data to Dynamics CRM.', 'eightshift-forms')}</p>
+                <br />
+                {onChangeDynamicsEntity && isDynamicsCrmUsed && type === 'dynamics-crm' &&
+                  <SelectControl
+                    label={__('CRM Entity', 'eightshift-forms')}
+                    help={__('Please enter the name of the entity record to which you wish to add records.', 'eightshift-forms')}
+                    value={dynamicsEntity}
+                    options={crmEntitiesAsOptions}
+                    onChange={onChangeDynamicsEntity}
+                  />
+                }
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+      </TabPanel>
 
       {onChangeAction && type === 'custom' &&
         <TextControl

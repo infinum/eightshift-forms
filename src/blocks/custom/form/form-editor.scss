@@ -2,6 +2,7 @@ $block-form: (
   horizontal-spacing: $base-gutter-size,
   rich-text: (
     mobile: (
+      background: global-settings(colors, white),
       border: 1px solid global-settings(colors, black),
       border-radius: 5px,
       padding: 5px,
