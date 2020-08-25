@@ -87,13 +87,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     );
   }
 
-    /**
-     * Response handler for unknown errors
-     *
-     * @param  string $message Message to output.
-     * @param  array  $data    (Optional) data to output.
-     * @return mixed
-     */
+  /**
+   * Response handler for unknown errors
+   *
+   * @param  array $data (Optional) data to output.
+   * @return mixed
+   */
   protected function rest_response_handler_unknown_error( array $data = array() ) {
     return \rest_ensure_response(
       array(
