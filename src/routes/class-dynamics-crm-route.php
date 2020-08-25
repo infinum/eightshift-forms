@@ -85,8 +85,6 @@ class Dynamics_Crm_Route extends Base_Route {
       ]
     );
 
-    error_log(print_r($params, true));
-
     // Retrieve all entities from the "leads" Entity Set.
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params );
