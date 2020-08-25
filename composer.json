@@ -25,6 +25,7 @@
     "source": "https://github.com/infinum/eightshift-forms-plugin"
   },
   "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
     "giacocorsiglia/wordpress-stubs": "^5.1",
     "infinum/coding-standards-wp": "0.4.3"
   },
