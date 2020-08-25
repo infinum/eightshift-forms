@@ -112,6 +112,7 @@ class Dynamics_Crm_Route extends Base_Route {
       Basic_Captcha::SECOND_NUMBER_KEY,
       Basic_Captcha::RESULT_KEY,
       'privacy',
+      'privacy-policy',
     ];
   }
 
