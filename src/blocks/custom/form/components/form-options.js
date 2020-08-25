@@ -19,6 +19,10 @@ export const FormOptions = (props) => {
       theme,
       successMessage,
       errorMessage,
+      emailTo,
+      emailSubject,
+      emailMessage,
+      emailAdditionalHeaders,
     },
     actions: {
       onChangeAction,
@@ -31,6 +35,10 @@ export const FormOptions = (props) => {
       onChangeTheme,
       onChangeSuccessMessage,
       onChangeErrorMessage,
+      onChangeEmailTo,
+      onChangeEmailSubject,
+      onChangeEmailMessage,
+      onChangeEmailAdditionalHeaders,
     },
   } = props;
 
@@ -108,9 +116,18 @@ export const FormOptions = (props) => {
               <Fragment>
                 <br />
                 <strong className="notice-title">{__('Email Options', 'eightshift-forms')}</strong>
-                <p>{__('These are options for when your form is sending emails.', 'eightshift-forms')}</p>
+                <p>{__('These are options for when your form is sending emails. You can use form fields by name as placeholders in Subject and Message fields in the following format [[field_name]]. These will be replace with actual field values before sending.', 'eightshift-forms')}</p>
                 <br />
                 <FormEmailOptions
+                  richTextClass={richTextClass}
+                  to={emailTo}
+                  subject={emailSubject}
+                  message={emailMessage}
+                  additionalHeaders={emailAdditionalHeaders}
+                  onChangeTo={onChangeEmailTo}
+                  onChangeSubject={onChangeEmailSubject}
+                  onChangeMessage={onChangeEmailMessage}
+                  onChangeAdditionalHeaders={onChangeEmailAdditionalHeaders}
                 />
               </Fragment>
             )}
