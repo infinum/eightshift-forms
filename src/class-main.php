@@ -87,6 +87,7 @@ class Main extends Lib_Core {
       Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
+        Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,

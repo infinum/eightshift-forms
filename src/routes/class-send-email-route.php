@@ -27,9 +27,9 @@ class Send_Email_Route extends Base_Route {
    */
   const ENDPOINT_SLUG = '/send-email';
 
-  const TO_PARAM = 'email_to';
-  const SUBJECT_PARAM = 'email_subject';
-  const MESSAGE_PARAM = 'email_message';
+  const TO_PARAM                 = 'email_to';
+  const SUBJECT_PARAM            = 'email_subject';
+  const MESSAGE_PARAM            = 'email_message';
   const ADDITIONAL_HEADERS_PARAM = 'email_additional_headers';
 
   /**
@@ -67,6 +67,8 @@ class Send_Email_Route extends Base_Route {
 
     $email_info = $this->build_email_info_from_params( $params );
 
+    $email_info['headers'] = $this->add_default_headers( $email_info['headers'] );
+
     $response = wp_mail( $email_info['to'], $email_info['subject'], $email_info['message'], $email_info['headers'] );
 
     if ( ! $response ) {
@@ -77,6 +79,18 @@ class Send_Email_Route extends Base_Route {
       'code' => 200,
       'message' => esc_html__( 'Email sent', 'd66' ),
     ]);
+  }
+
+  /**
+   * Adds default email headers so email is interpreted as HTML.
+   *
+   * @param  string $headers Existing headers.
+   * @return string
+   */
+  protected function add_default_headers( string $headers ) {
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    return $headers;
   }
 
   /**
@@ -91,15 +105,35 @@ class Send_Email_Route extends Base_Route {
    * @return array
    */
   protected function build_email_info_from_params( array $params ): array {
-    // $to          = sanitize_text_field( wp_unslash( $_GET['to'] ) );
-    // $subject     = sanitize_text_field( wp_unslash( $_GET['subject'] ) );
-    // $message     = sanitize_text_field( wp_unslash( $_GET['message'] ) );
-    // $attachments = sanitize_text_field( wp_unslash( $_GET['attachments'] ?? '' ) );
-    // $headers     = array_map( function( $header ) {
-    //   return sanitize_text_field( wp_unslash( $header ) );
-    // }, $_GET['headers'] ?? [] );
+    return [
+      'to' => $params[ self::TO_PARAM ] ?? '',
+      'subject' => $this->replace_placeholders_with_content( $params[ self::SUBJECT_PARAM ], $params ),
+      'message' => $this->replace_placeholders_with_content( $params[ self::MESSAGE_PARAM ], $params ),
+      'headers' => $params[ self::ADDITIONAL_HEADERS_PARAM ] ?? '',
+    ];
+  }
 
-    return $params
+  /**
+   * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
+   * leave the placeholder in text.
+   *
+   * @param  string $haystack String in which to look for placeholders.
+   * @param  array  $params   Array of params which should hold content for placeholders.
+   * @return string
+   */
+  protected function replace_placeholders_with_content( string $haystack, array $params ) {
+    $content = $haystack;
+
+    $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
+      $output = $match[0];
+      if ( isset( $params[ $match['placeholder_key'] ] ) ) {
+        $output = $params[ $match['placeholder_key'] ];
+      }
+
+      return $output;
+    }, $haystack);
+
+    return $content;
   }
 
   /**
@@ -109,9 +143,10 @@ class Send_Email_Route extends Base_Route {
    */
   protected function get_required_missing_params(): array {
     return [
-      'to',
-      'subject',
-      'message',
+      self::TO_PARAM,
+      self::SUBJECT_PARAM,
+      self::MESSAGE_PARAM,
+      self::ADDITIONAL_HEADERS_PARAM,
     ];
   }
 

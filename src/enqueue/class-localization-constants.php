@@ -26,9 +26,10 @@ class Localization_Constants {
    * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
    * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
    */
-  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route ) {
+  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route, Base_Route $send_email_route ) {
     $this->manifest           = $manifest;
     $this->dynamics_crm_route = $dynamics_crm_route;
+    $this->send_email_route   = $send_email_route;
   }
 
   /**
@@ -45,7 +46,10 @@ class Localization_Constants {
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
           'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
-        ]
+        ],
+        'sendEmail' => [
+          'restUri' => $this->send_email_route->get_route_uri(),
+        ],
       ]
     ];
 
