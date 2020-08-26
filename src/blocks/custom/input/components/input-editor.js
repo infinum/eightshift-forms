@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-
+import classNames from 'classnames'; // eslint-disable-line no-unused-vars
 import { LabelEditor } from './../../../components/label/components/label-editor';
 
 export const InputEditor = (props) => {
@@ -22,22 +22,37 @@ export const InputEditor = (props) => {
     },
   } = props;
 
+  const blockClasses = classNames(
+    blockClass,
+    type === 'hidden' ? `${blockClass}--hidden` : '',
+  );
+
+  const wrapClasses = classNames(
+    `${blockClass}__content-wrap`,
+    `${blockClass}__theme--${theme}`,
+  );
+
+  const inputClasses = classNames(
+    `${blockClass}__input`,
+    classes,
+  );
+
   return (
-    <div className={`${blockClass}`}>
+    <div className={blockClasses}>
       <LabelEditor
         blockClass={blockClass}
         label={label}
         id={id}
         onChangeLabel={onChangeLabel}
       />
-      <div className={`${blockClass}__content-wrap ${blockClass}__theme--${theme}`}>
+      <div className={wrapClasses}>
         <input
           name={name}
           placeholder={placeholder}
           id={id}
-          className={`${blockClass}__input ${classes}`}
+          className={inputClasses}
           value={value}
-          type={type}
+          type={type !== 'hidden' ? type : 'input'}
           disabled={isDisabled}
           readOnly={isReadOnly}
           tabIndex={'-1'}

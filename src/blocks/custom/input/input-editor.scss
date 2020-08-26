@@ -2,4 +2,8 @@
   &__input {
     pointer-events: none;
   }
+
+  &--hidden {
+    opacity: 0.5;
+  }
 }
