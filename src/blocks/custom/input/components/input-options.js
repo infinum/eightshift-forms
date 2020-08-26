@@ -59,6 +59,7 @@ export const InputOptions = (props) => {
           value={type}
           options={[
             { label: __('Text', 'eightshift-forms'), value: 'text' },
+            { label: __('Hidden', 'eightshift-forms'), value: 'hidden' },
             { label: __('Url', 'eightshift-forms'), value: 'url' },
             { label: __('Email', 'eightshift-forms'), value: 'email' },
             { label: __('Number', 'eightshift-forms'), value: 'nmber' },
