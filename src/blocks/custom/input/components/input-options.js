@@ -62,7 +62,7 @@ export const InputOptions = (props) => {
             { label: __('Hidden', 'eightshift-forms'), value: 'hidden' },
             { label: __('Url', 'eightshift-forms'), value: 'url' },
             { label: __('Email', 'eightshift-forms'), value: 'email' },
-            { label: __('Number', 'eightshift-forms'), value: 'nmber' },
+            { label: __('Number', 'eightshift-forms'), value: 'number' },
             { label: __('Password', 'eightshift-forms'), value: 'password' },
             { label: __('Color', 'eightshift-forms'), value: 'color' },
             { label: __('Date', 'eightshift-forms'), value: 'date' },
