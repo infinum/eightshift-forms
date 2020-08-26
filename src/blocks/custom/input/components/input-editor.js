@@ -17,6 +17,9 @@ export const InputEditor = (props) => {
       isReadOnly,
       theme = '',
     },
+    actions: {
+      onChangeLabel,
+    },
   } = props;
 
   return (
@@ -25,6 +28,7 @@ export const InputEditor = (props) => {
         blockClass={blockClass}
         label={label}
         id={id}
+        onChangeLabel={onChangeLabel}
       />
       <div className={`${blockClass}__content-wrap ${blockClass}__theme--${theme}`}>
         <input

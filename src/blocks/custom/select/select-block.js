@@ -14,7 +14,6 @@ export const Select = (props) => {
     attributes: {
       label,
     },
-    isSelected,
     clientId,
   } = props;
 
@@ -33,7 +32,7 @@ export const Select = (props) => {
           clientId={clientId}
         />
       </InspectorControls>
-      <SelectEditor {...props} />
+      <SelectEditor {...props} actions={actions} />
     </Fragment>
   );
 };

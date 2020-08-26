@@ -16,17 +16,14 @@ const hasSelectedInnerBlock = (props) => {
 
 export const SelectEditor = (props) => {
   const {
-    attributes,
     attributes: {
-      blockFullName,
       blockClass,
       label,
       allowedBlocks,
-      name,
-      id,
-      classes,
-      isDisabled,
       theme = '',
+    },
+    actions: {
+      onChangeLabel,
     },
     isSelected,
     clientId,
@@ -34,13 +31,12 @@ export const SelectEditor = (props) => {
 
   const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
 
-  console.log(wp.data.select('core/block-editor').getBlock(clientId).innerBlocks);
-
   return (
     <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}
+        onChangeLabel={onChangeLabel}
       />
       <div className={`${blockClass}__content-wrap`}>
         {!isBlockOrChildrenSelected &&

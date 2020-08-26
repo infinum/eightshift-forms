@@ -18,6 +18,9 @@ export const TextareaEditor = (props) => {
       isReadOnly,
       theme = '',
     },
+    actions: {
+      onChangeLabel,
+    },
   } = props;
 
   return (
@@ -25,7 +28,7 @@ export const TextareaEditor = (props) => {
       <LabelEditor
         blockClass={blockClass}
         label={label}
-        id={id}
+        onChangeLabel={onChangeLabel}
       />
       <div className={`${blockClass}__content-wrap`}>
         <textarea
