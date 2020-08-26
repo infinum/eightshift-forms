@@ -1,0 +1,6 @@
+.block-submit {
+  &__input,
+  &__button {
+    pointer-events: none;
+  }
+}

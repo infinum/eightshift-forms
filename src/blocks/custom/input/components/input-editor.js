@@ -36,6 +36,7 @@ export const InputEditor = (props) => {
           type={type}
           disabled={isDisabled}
           readOnly={isReadOnly}
+          tabIndex={'-1'}
         />
       </div>
     </div>

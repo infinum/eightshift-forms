@@ -38,6 +38,7 @@ export const TextareaEditor = (props) => {
           value={value}
           disabled={isDisabled}
           readOnly={isReadOnly}
+          tabIndex={'-1'}
         />
       </div>
     </div>

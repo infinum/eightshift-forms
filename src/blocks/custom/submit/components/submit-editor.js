@@ -22,6 +22,7 @@ export const SubmitEditor = (props) => {
           id={id}
           className={`${blockClass}__button ${classes}`}
           disabled={isDisabled}
+          tabIndex={'-1'}
         >
           {value}
         </button> :
@@ -32,6 +33,7 @@ export const SubmitEditor = (props) => {
           value={value}
           type={type}
           disabled={isDisabled}
+          tabIndex={'-1'}
         />}
     </div>
   );
