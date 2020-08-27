@@ -60,7 +60,10 @@ export const FormOptions = (props) => {
 
   let crmEntitiesAsOptions = [];
   if (isDynamicsCrmUsed) {
-    crmEntitiesAsOptions = dynamicsCrm.availableEntities.map((entity) => ({ label: entity, value: entity }));
+    crmEntitiesAsOptions = [
+      { label: __('Select CRM entity', 'eightshift-forms'), value: 'select-please' },
+      ...dynamicsCrm.availableEntities.map((entity) => ({ label: entity, value: entity })),
+    ];
     formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
   }
 

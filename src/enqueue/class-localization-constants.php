@@ -50,7 +50,8 @@ class Localization_Constants {
         'sendEmail' => [
           'restUri' => $this->send_email_route->get_route_uri(),
         ],
-      ]
+        'internalServerError' => esc_html__( 'Internal server error', 'eightshift-forms' ),
+      ],
     ];
 
     if ( has_filter( Filters::GENERAL ) ) {
