@@ -8,6 +8,7 @@
 namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
+use Eightshift_Forms\Helpers\Forms;
 
 $block_class         = $attributes['blockClass'] ?? '';
 $name                = $attributes['name'] ?? '';
@@ -22,6 +23,9 @@ $custom_validity_msg = $attributes['customValidityMsg'] ?? '';
 $is_disabled         = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_read_only        = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 $is_required         = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
+
+// Override form value if it's passed from $_GET.
+$value = Forms::maybe_override_value_from_query_string( $value, $name );
 
 $block_classes = Components::classnames([
   $block_class,
