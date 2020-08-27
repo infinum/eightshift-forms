@@ -23,7 +23,7 @@ export const FormEmailOptions = (props) => {
       {onChangeTo &&
         <TextControl
           label={__('To', 'eightshift-forms')}
-          help={__('Email address to which you wish to receive emails.', 'eightshift-forms')}
+          help={__('Email address to which the form sends emails to.', 'eightshift-forms')}
           value={to}
           onChange={onChangeTo}
         />
@@ -39,7 +39,7 @@ export const FormEmailOptions = (props) => {
       {onChangeMessage &&
         <BaseControl
           label={__('Message', 'eightshift-forms')}
-          help={__('Message you will receive on form submit. Remember you can use placeholders.', 'eightshift-forms')}
+          help={__('Message which is sent on form submit. Remember you can use placeholders.', 'eightshift-forms')}
         >
           <RichText
             className={richTextClass}
