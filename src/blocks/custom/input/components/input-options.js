@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { Fragment } from '@wordpress/element';
+import { PanelBody, TextControl, SelectControl, ToggleControl, ExternalLink, BaseControl } from '@wordpress/components';
 
 export const InputOptions = (props) => {
   const {
@@ -13,6 +14,8 @@ export const InputOptions = (props) => {
       isDisabled,
       isReadOnly,
       isRequired,
+      pattern,
+      customValidityMsg,
     },
     actions: {
       onChangeName,
@@ -24,6 +27,8 @@ export const InputOptions = (props) => {
       onChangeIsDisabled,
       onChangeIsReadOnly,
       onChangeIsRequired,
+      onChangePattern,
+      onChangeCustomValidityMsg,
     },
   } = props;
 
@@ -76,6 +81,29 @@ export const InputOptions = (props) => {
             { label: __('Week', 'eightshift-forms'), value: 'week' },
           ]}
           onChange={onChangeType}
+        />
+      }
+
+      {onChangePattern &&
+        <Fragment>
+          <TextControl
+            label={__('Custom pattern', 'eightshift-forms')}
+            help={__('Set a custom pattern that the user must match in order for this field to be valid', 'eightshift-forms')}
+            value={pattern}
+            onChange={onChangePattern}
+          />
+          <BaseControl>
+            <ExternalLink href="https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#Validating_against_a_regular_expression">{__('More info on regular expressions', 'eightshift-forms')}</ExternalLink>
+          </BaseControl>
+        </Fragment>
+      }
+
+      {onChangeCustomValidityMsg && pattern &&
+        <TextControl
+          label={__('Custom validity error message', 'eightshift-forms')}
+          help={__('Set a custom message that user sees if he doesnt match the set pattern.', 'eightshift-forms')}
+          value={customValidityMsg}
+          onChange={onChangeCustomValidityMsg}
         />
       }
 
