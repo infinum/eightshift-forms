@@ -43,6 +43,7 @@ class Form_View {
     $allowed_tags['input']['tabindex']                  = 1;
     $allowed_tags['input']['pattern']                   = 1;
     $allowed_tags['input']['data-attr-custom-validity'] = 1;
+    $allowed_tags['input']['data-opens-popup']          = 1;
     $allowed_tags['textarea']['required']               = 1;
     $allowed_tags['select']['required']                 = 1;
 
