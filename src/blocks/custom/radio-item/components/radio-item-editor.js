@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { LabelEditor } from './../../../components/label/components/label-editor';
 
 export const RadioItemEditor = (props) => {
   const {
@@ -14,6 +15,9 @@ export const RadioItemEditor = (props) => {
       isReadOnly,
       theme = '',
     },
+    actions: {
+      onChangeLabel,
+    },
   } = props;
 
   return (
@@ -23,14 +27,17 @@ export const RadioItemEditor = (props) => {
         id={id}
         className={`${blockClass}__radio ${classes}`}
         value={value}
-        type='radio'
+        type="radio"
         checked={isChecked}
         disabled={isDisabled}
         readOnly={isReadOnly}
       />
-      <label for={id} class={`${blockClass}__label`}>
-        {label}
-      </label>
+      <LabelEditor
+        blockClass={`${blockClass}__label`}
+        label={label}
+        id={id}
+        onChangeLabel={onChangeLabel}
+      />
     </div>
   );
 };
