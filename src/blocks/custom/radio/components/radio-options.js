@@ -6,13 +6,11 @@ export const RadioOptions = (props) => {
   const {
     attributes: {
       name,
-      preventSending,
     },
     actions: {
       onChangeName,
-      onChangePreventSending,
     },
-    clientId
+    clientId,
   } = props;
 
   // Once name is set on parent dispatch name attribute to all the children.
@@ -34,16 +32,6 @@ export const RadioOptions = (props) => {
           onChange={onChangeName}
         />
       }
-
-      {onChangePreventSending &&
-        <ToggleControl
-          label={__('Do not send?', 'eightshift-forms')}
-          help={__('If enabled this field will not be sent when form is submitted.', 'eightshift-forms')}
-          checked={preventSending}
-          onChange={onChangePreventSending}
-        />
-      }
-
     </PanelBody>
   );
 };

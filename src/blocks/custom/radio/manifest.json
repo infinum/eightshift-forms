@@ -36,10 +36,6 @@
     },
     "name": {
       "type": "string"
-    },
-    "preventSending": {
-      "type": "bool",
-      "default": false
     }
   }
 }

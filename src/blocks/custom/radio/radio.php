@@ -11,7 +11,6 @@ use Eightshift_Libs\Helpers\Components;
 
 $block_class     = $attributes['blockClass'] ?? '';
 $theme           = $attributes['theme'] ?? '';
-$prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -32,6 +31,5 @@ $block_classes = Components::classnames([
     ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
     <?php echo wp_kses_post( $inner_block_content ); ?>
-    <?php echo esc_attr( $prevent_sending ); ?>
   </div>
 </div>
