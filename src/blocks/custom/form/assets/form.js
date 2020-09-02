@@ -14,6 +14,7 @@ export class Form {
     this.overlay = this.formWrapper.querySelector('.js-form-overlay');
     this.basicCaptchaField = this.form.querySelector('.js-block-captcha');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
+    this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
 
     // Get form type from class.
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
@@ -92,11 +93,15 @@ export class Form {
       submit.disabled = false;
     });
 
+    console.log('asdad, sanity');
     if (isSuccess) {
+      console.log('is success');
       this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
+      this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 1);
     } else {
       this.formMessageError.textContent = response.message;
       this.formMessageError.classList.remove(this.CLASS_HIDE_MESSAGE);
+      this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 0);
     }
   }
 
