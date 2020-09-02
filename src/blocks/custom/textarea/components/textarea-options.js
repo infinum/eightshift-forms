@@ -13,6 +13,7 @@ export const TextareaOptions = (props) => {
       cols,
       isDisabled,
       isReadOnly,
+      preventSending,
     },
     actions: {
       onChangeName,
@@ -24,6 +25,7 @@ export const TextareaOptions = (props) => {
       onChangeCols,
       onChangeIsDisabled,
       onChangeIsReadOnly,
+      onChangePreventSending,
     },
   } = props;
 
@@ -98,6 +100,15 @@ export const TextareaOptions = (props) => {
           label={__('Readonly', 'eightshift-forms')}
           checked={isReadOnly}
           onChange={onChangeIsReadOnly}
+        />
+      }
+
+      {onChangePreventSending &&
+        <ToggleControl
+          label={__('Do not send?', 'eightshift-forms')}
+          help={__('If enabled this field will not be sent when form is submitted.', 'eightshift-forms')}
+          checked={preventSending}
+          onChange={onChangePreventSending}
         />
       }
     </PanelBody>

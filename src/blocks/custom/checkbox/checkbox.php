@@ -9,17 +9,18 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 
-$block_class = $attributes['blockClass'] ?? '';
-$name        = $attributes['name'] ?? '';
-$value       = $attributes['value'] ?? '';
-$label       = $attributes['label'] ?? '';
-$checkbox_id = $attributes['id'] ?? '';
-$classes     = $attributes['classes'] ?? '';
-$theme       = $attributes['theme'] ?? '';
-$is_checked  = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
-$is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_read_only = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
-$is_required = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
+$block_class     = $attributes['blockClass'] ?? '';
+$name            = $attributes['name'] ?? '';
+$value           = $attributes['value'] ?? '';
+$label           = $attributes['label'] ?? '';
+$checkbox_id     = $attributes['id'] ?? '';
+$classes         = $attributes['classes'] ?? '';
+$theme           = $attributes['theme'] ?? '';
+$is_checked      = isset( $attributes['isChecked'] ) && $attributes['isChecked'] ? 'checked' : '';
+$is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
+$is_read_only    = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$is_required     = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
+$prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -39,6 +40,7 @@ $block_classes = Components::classnames([
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_read_only ); ?>
       <?php echo esc_attr( $is_required ); ?>
+      <?php echo esc_attr( $prevent_sending ); ?>
     />
     <span class="<?php echo esc_attr( "{$block_class}__checkmark js-{$block_class}-checkmark" ); ?>"></span>
     <span class="<?php echo esc_attr( "{$block_class}__label-content" ); ?>">

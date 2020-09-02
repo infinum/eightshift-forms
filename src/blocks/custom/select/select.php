@@ -9,12 +9,13 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 
-$block_class = $attributes['blockClass'] ?? '';
-$name        = $attributes['name'] ?? '';
-$select_id   = $attributes['id'] ?? '';
-$classes     = $attributes['classes'] ?? '';
-$theme       = $attributes['theme'] ?? '';
-$is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
+$block_class     = $attributes['blockClass'] ?? '';
+$name            = $attributes['name'] ?? '';
+$select_id       = $attributes['id'] ?? '';
+$classes         = $attributes['classes'] ?? '';
+$theme           = $attributes['theme'] ?? '';
+$is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
+$prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -37,8 +38,9 @@ $block_classes = Components::classnames([
     <select
       <?php ! empty( $select_id ) ? printf( 'id="%s"', esc_attr( $select_id ) ) : ''; ?>
       name="<?php echo esc_attr( $name ); ?>"
-      <?php echo esc_attr( $is_disabled ); ?>
       class="<?php echo esc_attr( "{$block_class}__select {$classes}" ); ?>"
+      <?php echo esc_attr( $is_disabled ); ?>
+      <?php echo esc_attr( $prevent_sending ); ?>
     >
       <?php echo wp_kses_post( $inner_block_content ); ?>
     </select>

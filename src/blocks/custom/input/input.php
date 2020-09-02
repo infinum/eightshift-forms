@@ -24,7 +24,6 @@ $is_disabled         = isset( $attributes['isDisabled'] ) && $attributes['isDisa
 $is_read_only        = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 $is_required         = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 $prevent_sending     = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
-// $should_send         = isset( $attributes['shouldSend'] ) && $attributes['shouldSend'] ? 'data-do-not-send' : 'data-do-not-send';
 
 // Override form value if it's passed from $_GET.
 $value = Forms::maybe_override_value_from_query_string( $value, $name );

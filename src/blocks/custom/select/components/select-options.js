@@ -6,10 +6,12 @@ export const SelectOptions = (props) => {
     attributes: {
       name,
       isDisabled,
+      preventSending,
     },
     actions: {
       onChangeName,
       onChangeIsDisabled,
+      onChangePreventSending,
     },
   } = props;
 
@@ -29,6 +31,15 @@ export const SelectOptions = (props) => {
           label={__('Disabled', 'eightshift-forms')}
           checked={isDisabled}
           onChange={onChangeIsDisabled}
+        />
+      }
+
+      {onChangePreventSending &&
+        <ToggleControl
+          label={__('Do not send?', 'eightshift-forms')}
+          help={__('If enabled this field will not be sent when form is submitted.', 'eightshift-forms')}
+          checked={preventSending}
+          onChange={onChangePreventSending}
         />
       }
 
