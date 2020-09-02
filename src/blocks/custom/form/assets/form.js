@@ -15,6 +15,7 @@ export class Form {
     this.basicCaptchaField = this.form.querySelector('.js-block-captcha');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
+    this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
 
     // Get form type from class.
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
@@ -58,6 +59,7 @@ export class Form {
 
   async submitForm(url, data) {
     this.startLoading();
+
     const response = await sendForm(url, data);
     const isSuccess = response && response.code && response.code === 200;
     const is500Error = response && response.code && response.code === 'internal_server_error';
@@ -107,8 +109,46 @@ export class Form {
 
   /**
    * Returns all form fields as { key, value } objects.
+   * Replaces placeholder values with values from a field.
+   * Removes fields which shouldn't be sent.
    */
   getFormData(form) {
-    return [...form.elements].filter((formElem) => formElem.name).map((formElem) => ({ key: formElem.name, value: formElem.value }));
+    return [...form.elements].filter((formElem) => {
+      return formElem.name && ( ! formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND) );
+    }).map((formElem) => {
+      return {
+        key: formElem.name,
+        value: this.replacePlaceholders(formElem.value, [...form.elements]),
+      };
+    });
+  }
+
+  /**
+   * Replace all placeholders inside value of a form's field in format: [[form-field-name]] with values from
+   * other form fields.
+   *
+   * Used when we need to have multiple form fields send concatenated inside a single field.
+   *
+   * @param {string} value Value of form field (haystack) in which we're looking for placeholders
+   * @param {array} formElements All form's elements.
+   * @return {string}
+   */
+  replacePlaceholders(value, formElements) {
+
+    // Lets create a name: value map we're going to use for replacing stuff.
+    const valueMap = formElements.filter(formElem => formElem.name).reduce((obj, item) => ( obj[item.name] = item.value, obj ) ,{});
+    const relevantKeys = Object.keys(valueMap).filter(valueMap => valueMap.length);
+
+    // If nothing in valueMap has keys then we don't need to do any replacing.
+    if (!relevantKeys.length) {
+      return value;
+    }
+
+    // Now let's create a regex that's going to replace all placeholders with actual values (only if
+    // those fields exist in form ofc).
+    return value.replace(new RegExp(relevantKeys.map(key => `\\[\\[${key}\\]\\]`).join("|"), "gi"), (matched) => {
+      const matchedAsKey = matched.replaceAll('[', '').replaceAll(']', '');
+      return valueMap[matchedAsKey] ?? matched;
+    });
   }
 }

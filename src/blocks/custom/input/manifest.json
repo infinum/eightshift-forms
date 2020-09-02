@@ -60,6 +60,10 @@
     "isRequired": {
       "type": "bool",
       "default": false
+    },
+    "preventSending": {
+      "type": "bool",
+      "default": false
     }
   }
 }

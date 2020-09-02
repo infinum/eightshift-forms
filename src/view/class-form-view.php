@@ -44,8 +44,11 @@ class Form_View {
     $allowed_tags['input']['pattern']                   = 1;
     $allowed_tags['input']['data-attr-custom-validity'] = 1;
     $allowed_tags['input']['data-opens-popup']          = 1;
+    $allowed_tags['input']['data-do-not-send']          = 1;
     $allowed_tags['textarea']['required']               = 1;
+    $allowed_tags['textarea']['data-do-not-send']       = 1;
     $allowed_tags['select']['required']                 = 1;
+    $allowed_tags['select']['data-do-not-send']         = 1;
 
     return $allowed_tags;
   }

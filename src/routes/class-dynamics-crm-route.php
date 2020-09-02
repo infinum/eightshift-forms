@@ -63,6 +63,8 @@ class Dynamics_Crm_Route extends Base_Route {
 
     $params = $request->get_query_params();
 
+    error_log(print_r($params, true));
+
     if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       return $this->rest_response_handler( 'wrong-captcha' );
     }
