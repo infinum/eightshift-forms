@@ -16,8 +16,6 @@ use Eightshift_Libs\Rest\Base_Route as Libs_Base_Route;
 use Eightshift_Libs\Rest\Callable_Route;
 use Eightshift_Libs\Core\Config_Data;
 
-use SaintSystems\OData\ODataClient;
-
 /**
  * Class Dynamics_Crm_Route
  */
@@ -101,6 +99,32 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'data' => $data,
       )
     );
+  }
+
+  /**
+   * Checks if all required parameters are present in request.
+   *
+   * @param  array $parameters Array of request parameters.
+   * @return array Returns array of missing parameters to pass in response.
+   */
+  protected function find_required_missing_params( array $parameters ): array {
+    $missing_params = [];
+    foreach ( $this->get_required_missing_params() as $required_param ) {
+      if ( ! isset( $parameters[ $required_param ] ) ) {
+        $missing_params[] = $required_param;
+      }
+    }
+
+    return $missing_params;
+  }
+
+  /**
+   * Defines a list of required parameters which must be present in the request or it will error out.
+   *
+   * @return array
+   */
+  protected function get_required_missing_params(): array {
+    return [];
   }
 
   /**

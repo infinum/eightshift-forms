@@ -11,6 +11,9 @@ export const RadioEditor = (props) => {
       allowedBlocks,
       theme = '',
     },
+    actions: {
+      onChangeLabel,
+    },
   } = props;
 
   return (
@@ -18,6 +21,7 @@ export const RadioEditor = (props) => {
       <LabelEditor
         blockClass={blockClass}
         label={label}
+        onChangeLabel={onChangeLabel}
       />
       <div className={`${blockClass}__content-wrap`}>
         <InnerBlocks

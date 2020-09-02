@@ -57,6 +57,19 @@
     },
     "dynamicsEntity": {
       "type": "string"
+    },
+    "emailTo": {
+      "type": "string"
+    },
+    "emailSubject": {
+      "type": "string",
+      "default": "New email from your website"
+    },
+    "emailMessage": {
+      "type": "string"
+    },
+    "emailAdditionalHeaders": {
+      "type": "string"
     }
   }
 }

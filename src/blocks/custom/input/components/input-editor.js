@@ -17,6 +17,9 @@ export const InputEditor = (props) => {
       isReadOnly,
       theme = '',
     },
+    actions: {
+      onChangeLabel,
+    },
   } = props;
 
   const blockClasses = classNames(
@@ -40,6 +43,7 @@ export const InputEditor = (props) => {
         blockClass={blockClass}
         label={label}
         id={id}
+        onChangeLabel={onChangeLabel}
       />
       <div className={wrapClasses}>
         <input
@@ -51,6 +55,7 @@ export const InputEditor = (props) => {
           type={type !== 'hidden' ? type : 'input'}
           disabled={isDisabled}
           readOnly={isReadOnly}
+          tabIndex={'-1'}
         />
       </div>
     </div>

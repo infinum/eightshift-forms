@@ -23,6 +23,7 @@ export class Form {
 
     this.restRouteUrls = {
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
+      sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
     };
 
     this.formAccessibilityStatus = {
@@ -46,6 +47,10 @@ export class Form {
 
       if (this.formType === 'dynamics-crm') {
         this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
+      }
+
+      if (this.formType === 'email') {
+        this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
       }
     });
   }

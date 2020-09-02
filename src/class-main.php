@@ -78,11 +78,16 @@ class Main extends Lib_Core {
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
       ),
+      Rest\Send_Email_Route::class => array(
+        Config::class,
+        Captcha\Basic_Captcha::class,
+      ),
 
       // Enqueue.
       Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
+        Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,

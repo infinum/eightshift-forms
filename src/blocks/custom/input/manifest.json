@@ -43,6 +43,12 @@
     "label": {
       "type": "string"
     },
+    "pattern": {
+      "type": "string"
+    },
+    "customValidityMsg": {
+      "type": "string"
+    },
     "isDisabled": {
       "type": "bool",
       "default": false

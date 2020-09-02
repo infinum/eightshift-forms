@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import { RichText } from '@wordpress/block-editor';
-import { LabelEditor } from '../../../components/label/components/label-editor';
 
 export const CheckboxEditor = (props) => {
   const {
