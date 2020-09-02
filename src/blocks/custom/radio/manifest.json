@@ -9,6 +9,17 @@
   "keywords": [
     "Radio"
   ],
+  "styles": [
+    {
+        "name": "list",
+        "label": "List",
+        "isDefault": true
+    },
+    {
+        "name": "inline",
+        "label":"Inline"
+    }
+  ],
   "hasInnerBlocks": true,
   "attributes": {
     "wrapperUse": {

@@ -6,6 +6,7 @@ import { LabelEditor } from '../../../components/label/components/label-editor';
 export const RadioEditor = (props) => {
   const {
     attributes: {
+      className,
       blockClass,
       label,
       allowedBlocks,
@@ -17,7 +18,7 @@ export const RadioEditor = (props) => {
   } = props;
 
   return (
-    <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
+    <div className={`${blockClass} ${className} ${blockClass}__theme--${theme}`}>
       <LabelEditor
         blockClass={blockClass}
         label={label}

@@ -9,11 +9,13 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 
-$block_class     = $attributes['blockClass'] ?? '';
-$theme           = $attributes['theme'] ?? '';
+$block_class = $attributes['blockClass'] ?? '';
+$theme       = $attributes['theme'] ?? '';
+$style_class = $attributes['className'] ?? '';
 
 $block_classes = Components::classnames([
   $block_class,
+  $style_class,
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
