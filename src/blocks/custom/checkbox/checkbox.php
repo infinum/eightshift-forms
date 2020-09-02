@@ -46,4 +46,5 @@ $block_classes = Components::classnames([
     <span class="<?php echo esc_attr( "{$block_class}__label-content" ); ?>">
       <?php echo wp_kses_post( $label ); ?>
     </span>
+  </label>
 </div>
