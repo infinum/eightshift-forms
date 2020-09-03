@@ -62,8 +62,7 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     $params = $request->get_query_params();
-
-    error_log(print_r($params, true));
+    $params = $this->fix_dot_underscore_replacement( $params );
 
     if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       return $this->rest_response_handler( 'wrong-captcha' );
@@ -136,6 +135,28 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     return $filtered_params;
+  }
+
+
+  /**
+   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
+   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
+   *
+   * Quick and dirty fix is to replace these values back to dots after receiving them.
+   *
+   * @param array $params Request params.
+   * @return array
+   */
+  protected function fix_dot_underscore_replacement( array $params ): array {
+    foreach ( $params as $key => $value ) {
+      if ( strpos( $key, '@odata_bind' ) !== false ) {
+        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
+        unset( $params[ $key ] );
+        $params[ $new_key ] = $value;
+      }
+    }
+
+    return $params;
   }
 
   /**
