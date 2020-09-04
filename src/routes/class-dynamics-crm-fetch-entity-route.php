@@ -43,8 +43,9 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
   /**
    * Construct object
    *
-   * @param Config_Data  $config       Config data obj.
-   * @param Dynamics_CRM $dynamics_crm Dynamics CRM object.
+   * @param Config_Data  $config          Config data obj.
+   * @param Dynamics_CRM $dynamics_crm    Dynamics CRM object.
+   * @param Cache        $transient_cache Cache object.
    */
   public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Cache $transient_cache ) {
     $this->config       = $config;
