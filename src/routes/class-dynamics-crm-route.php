@@ -22,8 +22,6 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
  */
 class Dynamics_Crm_Route extends Base_Route {
 
-  const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
-
   const ENTITY_PARAM = 'dynamics-crm-entity';
 
   /**
@@ -90,7 +88,7 @@ class Dynamics_Crm_Route extends Base_Route {
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params );
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
     }
 
     return \rest_ensure_response(
