@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl, SelectControl } from '@wordpress/components';
 
 export const SelectOptions = (props) => {
   const {
@@ -7,13 +7,28 @@ export const SelectOptions = (props) => {
       name,
       isDisabled,
       preventSending,
+      prefillData,
+      prefillDataSource,
     },
     actions: {
       onChangeName,
       onChangeIsDisabled,
       onChangePreventSending,
+      onChangePrefillData,
+      onChangePrefillDataSource,
     },
   } = props;
+
+  const {
+    prefill,
+  } = window.eightshiftForms;
+
+  let prefillSourcesAsOptions = [];
+
+  prefillSourcesAsOptions = [
+    { label: __('Select prefill source', 'eightshift-forms'), value: 'select-please' },
+    ...prefill.generic.multi.map((entity) => ({ label: entity.label, value: entity.value })),
+  ];
 
   return (
     <PanelBody title={__('Select Settings', 'eightshift-forms')}>
@@ -23,6 +38,25 @@ export const SelectOptions = (props) => {
           label={__('Name', 'eightshift-forms')}
           value={name}
           onChange={onChangeName}
+        />
+      }
+
+      {onChangePrefillData &&
+        <ToggleControl
+          label={__('Prefill data?', 'eightshift-forms')}
+          help={__('If enabled, this field\'s select options will be prefilled from a source of your choice.', 'eightshift-forms')}
+          checked={prefillData}
+          onChange={onChangePrefillData}
+        />
+      }
+
+      {onChangePrefillData && prefillData &&
+        <SelectControl
+          label={__('Prefill from?', 'eightshift-forms')}
+          help={__('Please select the source from which to prefill values.', 'eightshift-forms')}
+          value={prefillDataSource}
+          options={prefillSourcesAsOptions}
+          onChange={onChangePrefillDataSource}
         />
       }
 

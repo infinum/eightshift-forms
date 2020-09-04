@@ -45,7 +45,7 @@ class Localization_Constants {
         'hasThemes'         => has_filter( Filters::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
-          'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' )
+          'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' ),
         ],
         'sendEmail' => [
           'restUri' => $this->send_email_route->get_route_uri(),
@@ -55,11 +55,15 @@ class Localization_Constants {
     ];
 
     if ( has_filter( Filters::GENERAL ) ) {
-      $localization = $this->add_general_constants($localization);
+      $localization = $this->add_general_constants( $localization );
     }
 
     if ( has_filter( Filters::DYNAMICS_CRM ) ) {
-      $localization = $this->add_dynamics_crm_constants($localization);
+      $localization = $this->add_dynamics_crm_constants( $localization );
+    }
+
+    if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
+      $localization[ self::LOCALIZATION_KEY ]['prefill']['generic']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
     return $localization;
@@ -70,17 +74,18 @@ class Localization_Constants {
    *
    * @return void
    */
-  protected function add_general_constants(array $localization) {
+  protected function add_general_constants( array $localization ) {
     $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
     return $localization;
   }
 
+
   /**
    * Localize all constants required for Dynamics CRM integration.
    *
    * @return void
    */
-  protected function add_dynamics_crm_constants(array $localization) {
+  protected function add_dynamics_crm_constants( array $localization ) {
     $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
@@ -96,5 +101,30 @@ class Localization_Constants {
     ];
 
     return $localization;
+  }
+
+
+  /**
+   * Localize all constants required for Dynamics CRM integration.
+   *
+   * @return array
+   */
+  protected function add_prefill_generic_multi_constants(): array {
+    $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
+
+    if ( ! is_array( $prefill_multi ) ) {
+      return [];
+    }
+
+    $prefill_multi_formatted = [];
+    foreach ( $prefill_multi as $source_name => $prefill_multi_source ) {
+      if ( isset( $prefill_multi_source['data'] ) ) {
+        unset( $prefill_multi_source['data'] );
+      }
+
+      $prefill_multi_formatted[] = $prefill_multi_source;
+    }
+
+    return $prefill_multi_formatted;
   }
 }

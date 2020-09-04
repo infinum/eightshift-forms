@@ -44,6 +44,13 @@
     "preventSending": {
       "type": "bool",
       "default": false
+    },
+    "prefillData": {
+      "type": "bool",
+      "default": false
+    },
+    "prefillDataSource": {
+      "type": "string"
     }
   }
 }

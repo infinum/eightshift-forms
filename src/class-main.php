@@ -17,6 +17,7 @@ use Eightshift_Libs\Manifest as Lib_Manifest;
 use Eightshift_Libs\I18n as Lib_I18n;
 use Eightshift_Forms\Admin;
 use Eightshift_Forms\Blocks;
+use Eightshift_Forms\Cache;
 use Eightshift_Forms\Captcha;
 use Eightshift_Forms\Rest;
 use Eightshift_Forms\Enqueue;
@@ -77,6 +78,11 @@ class Main extends Lib_Core {
         Config::class,
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
+      ),
+      Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(
+        Config::class,
+        Integrations\Dynamics_CRM::class,
+        Cache\Transient_Cache::class,
       ),
       Rest\Send_Email_Route::class => array(
         Config::class,

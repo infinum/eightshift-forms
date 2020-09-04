@@ -92,6 +92,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return mixed
    */
   protected function rest_response_handler_unknown_error( array $data = array() ) {
+
     return \rest_ensure_response(
       array(
         'code' => 400,

@@ -7,13 +7,17 @@
 
 namespace Eightshift_Forms\Blocks;
 
+use Eightshift_Forms\Core\Filters;
 use Eightshift_Libs\Helpers\Components;
+use Eightshift_Forms\Helpers\Prefill;
 
 $block_class     = $attributes['blockClass'] ?? '';
 $name            = $attributes['name'] ?? '';
 $select_id       = $attributes['id'] ?? '';
 $classes         = $attributes['classes'] ?? '';
 $theme           = $attributes['theme'] ?? '';
+$should_prefill  = $attributes['prefillData'] ?? false;
+$prefill_source  = $attributes['prefillDataSource'] ?? '';
 $is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
@@ -42,7 +46,15 @@ $block_classes = Components::classnames([
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $prevent_sending ); ?>
     >
-      <?php echo wp_kses_post( $inner_block_content ); ?>
+      <?php
+      if ( $should_prefill && ! empty( $prefill_source ) ) {
+        foreach ( Prefill::get_prefill_source_data( $prefill_source, Filters::PREFILL_GENERIC_MULTI ) as $option ) {
+          printf( '<option value="%s">%s</option>', esc_attr( $option['value'] ), esc_html( $option['label'] ) );
+        }
+      } else {
+        echo wp_kses_post( $inner_block_content );
+      }
+      ?>
     </select>
   </div>
 </div>
