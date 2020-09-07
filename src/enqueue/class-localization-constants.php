@@ -63,7 +63,7 @@ class Localization_Constants {
     }
 
     if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
-      $localization[ self::LOCALIZATION_KEY ]['prefill']['generic']['multi'] = $this->add_prefill_generic_multi_constants();
+      $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
     return $localization;

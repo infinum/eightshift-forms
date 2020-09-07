@@ -47,6 +47,13 @@
     },
     "name": {
       "type": "string"
+    },
+    "prefillData": {
+      "type": "bool",
+      "default": false
+    },
+    "prefillDataSource": {
+      "type": "string"
     }
   }
 }
