@@ -17,6 +17,6 @@ class Filters {
   const DYNAMICS_CRM           = 'eightshift_forms/dynamics_info';
   const ALLOWED_BLOCKS         = 'eightshift_forms/allowed_blocks';
   const GENERAL                = 'eightshift_forms/general_info';
-  const PREFILL_GENERIC_MULTI  = 'eightshift_forms/prefill/generic_multi';
-  const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/generic_single';
+  const PREFILL_GENERIC_MULTI  = 'eightshift_forms/prefill/multi';
+  const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
 }
