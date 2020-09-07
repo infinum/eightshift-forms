@@ -22,22 +22,27 @@ export const RadioItemEditor = (props) => {
 
   return (
     <div className={`${blockClass} ${blockClass}__theme--${theme}`}>
-      <input
-        name={name}
-        id={id}
-        className={`${blockClass}__radio ${classes}`}
-        value={value}
-        type="radio"
-        checked={isChecked}
-        disabled={isDisabled}
-        readOnly={isReadOnly}
-      />
-      <LabelEditor
-        blockClass={`${blockClass}__label`}
-        label={label}
-        id={id}
-        onChangeLabel={onChangeLabel}
-      />
+      <div className={`${blockClass}__label`}>
+        <input
+          name={name}
+          id={id}
+          className={`${blockClass}__radio ${classes}`}
+          value={value}
+          type="radio"
+          checked={isChecked}
+          disabled={isDisabled}
+          readOnly={isReadOnly}
+        />
+        <span className={`${blockClass}__radio-icon js-${blockClass}__radio-icon`}></span>
+        <div className={`${blockClass}__label-content`}>
+          <LabelEditor
+            blockClass={`${blockClass}__label`}
+            label={label}
+            id={id}
+            onChangeLabel={onChangeLabel}
+          />
+        </div>
+      </div>
     </div>
   );
 };
