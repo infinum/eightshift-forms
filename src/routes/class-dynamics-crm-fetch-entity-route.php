@@ -187,11 +187,6 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    */
   protected function defined_responses( string $response_key, array $data = [] ): array {
     $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
       'dynamics-crm-integration-not-used' => [
         'code' => 400,
         'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
