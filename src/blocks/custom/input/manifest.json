@@ -4,7 +4,7 @@
   "description" : "Input field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "editor-textcolor"
   },
   "keywords": [
     "Input"

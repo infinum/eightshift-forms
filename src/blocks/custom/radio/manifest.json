@@ -4,7 +4,7 @@
   "description" : "Radio field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "editor-ul"
   },
   "keywords": [
     "Radio"

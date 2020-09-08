@@ -4,7 +4,7 @@
   "description" : "Textarea field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "editor-textcolor"
   },
   "keywords": [
     "Textarea"

@@ -4,7 +4,7 @@
   "description" : "Select which form you wish to display.",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "pressthis"
   },
   "keywords": [
     "Forms"
