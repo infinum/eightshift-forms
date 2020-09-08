@@ -95,9 +95,7 @@ export class Form {
       submit.disabled = false;
     });
 
-    console.log('asdad, sanity');
     if (isSuccess) {
-      console.log('is success');
       this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
       this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 1);
     } else {
