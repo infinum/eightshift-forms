@@ -96,7 +96,7 @@ export const CheckboxOptions = (props) => {
       {onChangePreventSending &&
         <ToggleControl
           label={__('Do not send?', 'eightshift-forms')}
-          help={__('If enabled this field will not be sent when form is submitted.', 'eightshift-forms')}
+          help={__('If enabled this field won\'t be sent when the form is submitted.', 'eightshift-forms')}
           checked={preventSending}
           onChange={onChangePreventSending}
         />
