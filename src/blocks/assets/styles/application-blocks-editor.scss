@@ -19,3 +19,6 @@
 
 // Find all blocks and require block_name-editor.scss inside it.
 @import './../../custom/*/*-editor.scss';
+
+// Placeholders
+@import './placeholders/*.scss';
