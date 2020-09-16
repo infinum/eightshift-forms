@@ -70,7 +70,7 @@ $input_classes = Components::classnames([
       <?php echo esc_attr( $is_required ); ?>
       <?php echo esc_attr( $prevent_sending ); ?>
       <?php ( ! empty( $pattern ) ) ? printf( 'pattern="%s"', esc_attr( $pattern ) ) : ''; ?>
-      <?php ( ! empty( $custom_validity_msg ) && ! empty( $pattern ) ) ? printf( 'data-attr-custom-validity="%s"', esc_attr( $custom_validity_msg ) ) : ''; ?>
+      <?php ( ! empty( $custom_validity_msg ) && ! empty( $pattern ) ) ? printf( 'oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html( $custom_validity_msg ) ) : ''; ?>
     />
   </div>
 </div>
