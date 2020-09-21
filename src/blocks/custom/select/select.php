@@ -23,7 +23,14 @@ $prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preven
 
 $block_classes = Components::classnames([
   $block_class,
+  "js-$block_class",
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+]);
+
+$select_classes = Components::classnames([
+  "{$block_class}__select",
+  "js-{$block_class}-select",
+  $classes,
 ]);
 
 ?>
@@ -42,7 +49,7 @@ $block_classes = Components::classnames([
     <select
       <?php ! empty( $select_id ) ? printf( 'id="%s"', esc_attr( $select_id ) ) : ''; ?>
       name="<?php echo esc_attr( $name ); ?>"
-      class="<?php echo esc_attr( "{$block_class}__select {$classes}" ); ?>"
+      class="<?php echo esc_attr( $select_classes ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $prevent_sending ); ?>
     >
