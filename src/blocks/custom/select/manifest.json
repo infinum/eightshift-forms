@@ -11,14 +11,6 @@
   ],
   "hasInnerBlocks": true,
   "attributes": {
-    "wrapperUse": {
-      "type": "boolean",
-      "default": false
-    },
-    "wrapperUseShowControl": {
-      "type": "bool",
-      "default": false
-    },
     "allowedBlocks": {
       "type": "array",
       "items": {
@@ -45,12 +37,35 @@
       "type": "bool",
       "default": false
     },
+    "hideLoading": {
+      "type": "bool",
+      "default": true
+    },
     "prefillData": {
       "type": "bool",
       "default": false
     },
     "prefillDataSource": {
       "type": "string"
+    },
+    "wrapperUse": {
+      "type": "boolean",
+      "default": true
+    },
+    "wrapperUseSimple": {
+      "type": "bool",
+      "default": true
+    },
+    "wrapperSpacingBottom": {
+      "type": "object",
+      "default": {
+        "large": "60",
+        "tablet": "",
+        "mobile": "30"
+      },
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

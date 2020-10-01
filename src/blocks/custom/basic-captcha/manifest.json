@@ -10,19 +10,30 @@
     "captcha"
   ],
   "attributes": {
-    "wrapperUse": {
-      "type": "boolean",
-      "default": false
-    },
-    "wrapperUseShowControl": {
-      "type": "bool",
-      "default": false
-    },
     "label": {
       "type": "string"
     },
     "theme": {
       "type": "string"
+    },
+    "wrapperUse": {
+      "type": "boolean",
+      "default": true
+    },
+    "wrapperUseSimple": {
+      "type": "bool",
+      "default": true
+    },
+    "wrapperSpacingBottom": {
+      "type": "object",
+      "default": {
+        "large": "20",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

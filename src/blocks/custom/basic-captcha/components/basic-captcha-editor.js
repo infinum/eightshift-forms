@@ -8,6 +8,8 @@ export const BasicCaptchaEditor = (props) => {
     },
   } = props;
 
+  console.log(attributes);
+
   return (
     <ServerSideRender
       block={blockFullName}
