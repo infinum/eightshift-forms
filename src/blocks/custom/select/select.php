@@ -18,6 +18,7 @@ $classes         = $attributes['classes'] ?? '';
 $theme           = $attributes['theme'] ?? '';
 $should_prefill  = $attributes['prefillData'] ?? false;
 $prefill_source  = $attributes['prefillDataSource'] ?? '';
+$hide_loading    = $attributes['hideLoading'] ?? true;
 $is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
@@ -25,6 +26,12 @@ $block_classes = Components::classnames([
   $block_class,
   "js-$block_class",
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+  $hide_loading ? "{$block_class}--has-loader is-loading" : '',
+]);
+
+$content_wrap_classes = Components::classnames([
+  "{$block_class}__content-wrap",
+  "js-{$block_class}-content-wrap",
 ]);
 
 $select_classes = Components::classnames([
@@ -45,7 +52,7 @@ $select_classes = Components::classnames([
       )
     );
     ?>
-  <div class="<?php echo esc_attr( "{$block_class}__content-wrap" ); ?>">
+  <div class="<?php echo esc_attr( $content_wrap_classes ); ?>">
     <select
       <?php ! empty( $select_id ) ? printf( 'id="%s"', esc_attr( $select_id ) ) : ''; ?>
       name="<?php echo esc_attr( $name ); ?>"

@@ -20,6 +20,9 @@
         "label":"Inline"
     }
   ],
+  "parent": [
+    "eightshift-forms/form"
+  ],
   "hasInnerBlocks": true,
   "attributes": {
     "wrapperUse": {

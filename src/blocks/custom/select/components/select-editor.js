@@ -45,7 +45,7 @@ export const SelectEditor = (props) => {
       {isPrefillUsed &&
         <ServerSideRender
           block={blockFullName}
-          attributes={attributes}
+          attributes={{ ...attributes, hideLoading: false }}
           urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
         />
       }
