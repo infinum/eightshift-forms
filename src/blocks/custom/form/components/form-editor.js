@@ -7,14 +7,12 @@ export const FormEditor = (props) => {
       blockClass,
       classes,
       id,
-      allowedBlocks,
     },
   } = props;
 
   return (
     <form className={`${blockClass} ${classes}`} id={id}>
       <InnerBlocks
-        allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
         templateLock={false}
       />
     </form>
