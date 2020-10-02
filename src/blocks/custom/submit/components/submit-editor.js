@@ -1,5 +1,3 @@
-import { __ } from '@wordpress/i18n';
-
 export const SubmitEditor = (props) => {
   const {
     attributes: {

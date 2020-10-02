@@ -67,6 +67,35 @@ class Dynamics_CRM {
   }
 
   /**
+   * Reads all records for a single entity from CRM.
+   *
+   * @param  string $entity Entity to which we're adding records.
+   * @param  array  $data   Optional data / params we're using while fetching. If this is empty all records in an entity will be returned.
+   * @return array
+   *
+   * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
+   */
+  public function retch_all_from_entity( string $entity, array $data = [] ) {
+    $odata_client = $this->build_odata_client( $this->get_token() );
+
+    try {
+      $response = $odata_client->from( $entity )->get( $data );
+    } catch ( ClientException $e ) {
+
+      // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
+      // just throw because we don't know how to handle it.
+      if ( $e->getCode() === 401 ) {
+        $odata_client = $this->build_odata_client( $this->get_token( true ) );
+        $odata_client->from( $entity )->get( $data );
+      } else {
+        throw $e;
+      }
+    }
+
+    return $response;
+  }
+
+  /**
    * Set OAuth credentials, used when we can't inject it in DI.
    *
    * @param  array $credentials Credentials array.

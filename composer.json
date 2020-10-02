@@ -26,8 +26,8 @@
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-    "giacocorsiglia/wordpress-stubs": "^5.1",
-    "infinum/coding-standards-wp": "0.4.3"
+    "infinum/coding-standards-wp": "0.4.3",
+    "php-stubs/wordpress-stubs": "^5.5"
   },
   "require": {
     "php": ">=7.1",

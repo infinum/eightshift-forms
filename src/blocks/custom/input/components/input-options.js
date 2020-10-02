@@ -14,6 +14,7 @@ export const InputOptions = (props) => {
       isDisabled,
       isReadOnly,
       isRequired,
+      preventSending,
       pattern,
       customValidityMsg,
     },
@@ -27,6 +28,7 @@ export const InputOptions = (props) => {
       onChangeIsDisabled,
       onChangeIsReadOnly,
       onChangeIsRequired,
+      onChangePreventSending,
       onChangePattern,
       onChangeCustomValidityMsg,
     },
@@ -144,6 +146,15 @@ export const InputOptions = (props) => {
           label={__('Required', 'eightshift-forms')}
           checked={isRequired}
           onChange={onChangeIsRequired}
+        />
+      }
+
+      {onChangePreventSending &&
+        <ToggleControl
+          label={__('Do not send?', 'eightshift-forms')}
+          help={__('If enabled this field won\'t be sent when the form is submitted.', 'eightshift-forms')}
+          checked={preventSending}
+          onChange={onChangePreventSending}
         />
       }
     </PanelBody>

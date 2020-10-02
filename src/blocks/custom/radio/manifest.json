@@ -4,10 +4,24 @@
   "description" : "Radio field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "editor-ul"
   },
   "keywords": [
     "Radio"
+  ],
+  "styles": [
+    {
+        "name": "list",
+        "label": "List",
+        "isDefault": true
+    },
+    {
+        "name": "inline",
+        "label":"Inline"
+    }
+  ],
+  "parent": [
+    "eightshift-forms/form"
   ],
   "hasInnerBlocks": true,
   "attributes": {
@@ -35,6 +49,13 @@
       "type": "string"
     },
     "name": {
+      "type": "string"
+    },
+    "prefillData": {
+      "type": "bool",
+      "default": false
+    },
+    "prefillDataSource": {
       "type": "string"
     }
   }

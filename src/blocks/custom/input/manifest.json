@@ -4,7 +4,7 @@
   "description" : "Input field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "editor-textcolor"
   },
   "keywords": [
     "Input"
@@ -58,6 +58,10 @@
       "default": false
     },
     "isRequired": {
+      "type": "bool",
+      "default": false
+    },
+    "preventSending": {
       "type": "bool",
       "default": false
     }

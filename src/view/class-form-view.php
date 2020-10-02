@@ -39,13 +39,22 @@ class Form_View {
     );
 
     // Append additional allowed tags.
-    $allowed_tags['input']['required']                  = 1;
-    $allowed_tags['input']['tabindex']                  = 1;
-    $allowed_tags['input']['pattern']                   = 1;
-    $allowed_tags['input']['data-attr-custom-validity'] = 1;
-    $allowed_tags['input']['data-opens-popup']          = 1;
-    $allowed_tags['textarea']['required']               = 1;
-    $allowed_tags['select']['required']                 = 1;
+    $allowed_tags['input']['required']            = 1;
+    $allowed_tags['input']['checked']             = 1;
+    $allowed_tags['input']['tabindex']            = 1;
+    $allowed_tags['input']['pattern']             = 1;
+    $allowed_tags['input']['data-opens-popup']    = 1;
+    $allowed_tags['input']['data-do-not-send']    = 1;
+    $allowed_tags['input']['oninput']             = 1;
+    $allowed_tags['input']['min']                 = 1;
+    $allowed_tags['input']['max']                 = 1;
+    $allowed_tags['input']['maxlength']           = 1;
+    $allowed_tags['textarea']['required']         = 1;
+    $allowed_tags['textarea']['data-do-not-send'] = 1;
+    $allowed_tags['select']['required']           = 1;
+    $allowed_tags['select']['data-do-not-send']   = 1;
+    $allowed_tags['button']['aria-label']         = 1;
+    $allowed_tags['button']['role']               = 1;
 
     return $allowed_tags;
   }

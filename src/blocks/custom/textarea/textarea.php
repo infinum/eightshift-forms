@@ -9,17 +9,18 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 
-$block_class  = $attributes['blockClass'] ?? '';
-$name         = $attributes['name'] ?? '';
-$value        = $attributes['value'] ?? '';
-$textarea_id  = $attributes['id'] ?? '';
-$placeholder  = $attributes['placeholder'] ?? '';
-$classes      = $attributes['classes'] ?? '';
-$rows         = $attributes['rows'] ?? '';
-$cols         = $attributes['cols'] ?? '';
-$theme        = $attributes['theme'] ?? '';
-$is_disabled  = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_read_only = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$block_class     = $attributes['blockClass'] ?? '';
+$name            = $attributes['name'] ?? '';
+$value           = $attributes['value'] ?? '';
+$textarea_id     = $attributes['id'] ?? '';
+$placeholder     = $attributes['placeholder'] ?? '';
+$classes         = $attributes['classes'] ?? '';
+$rows            = $attributes['rows'] ?? '';
+$cols            = $attributes['cols'] ?? '';
+$theme           = $attributes['theme'] ?? '';
+$is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
+$is_read_only    = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
+$prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -50,6 +51,7 @@ $block_classes = Components::classnames([
       cols="<?php echo esc_attr( $cols ); ?>"
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_read_only ); ?>
+      <?php echo esc_attr( $prevent_sending ); ?>
     ></textarea>
   </div>
 </div>

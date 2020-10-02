@@ -1,5 +1,3 @@
-import { __ } from '@wordpress/i18n';
-
 import { LabelEditor } from '../../../components/label/components/label-editor';
 
 export const TextareaEditor = (props) => {

@@ -12,6 +12,7 @@ export const CheckboxOptions = (props) => {
       isDisabled,
       isReadOnly,
       isRequired,
+      preventSending,
     },
     actions: {
       onChangeName,
@@ -22,6 +23,7 @@ export const CheckboxOptions = (props) => {
       onChangeIsDisabled,
       onChangeIsReadOnly,
       onChangeIsRequired,
+      onChangePreventSending,
     },
   } = props;
 
@@ -88,6 +90,15 @@ export const CheckboxOptions = (props) => {
           label={__('Required', 'eightshift-forms')}
           checked={isRequired}
           onChange={onChangeIsRequired}
+        />
+      }
+
+      {onChangePreventSending &&
+        <ToggleControl
+          label={__('Do not send?', 'eightshift-forms')}
+          help={__('If enabled this field won\'t be sent when the form is submitted.', 'eightshift-forms')}
+          checked={preventSending}
+          onChange={onChangePreventSending}
         />
       }
     </PanelBody>

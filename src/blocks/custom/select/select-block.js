@@ -5,8 +5,8 @@ import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
 
 import { LabelOptions } from '../../components/label/components/label-options';
-import { SelectOptions } from './components/select-options';
-import { SelectEditor } from './components/select-editor';
+import { SelectOptions } from '../../components/select/components/select-options';
+import { SelectEditor } from '../../components/select/components/select-editor';
 
 export const Select = (props) => {
   const {

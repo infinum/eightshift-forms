@@ -4,8 +4,7 @@
       "type": "string"
     },
     "wrapperBackgroundColor": {
-      "type": "string",
-      "default": "white"
+      "type": "string"
     },
     "wrapperUse": {
       "type": "bool",

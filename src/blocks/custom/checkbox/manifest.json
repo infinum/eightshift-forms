@@ -4,20 +4,12 @@
   "description" : "Checkbox field",
   "category": "common",
   "icon": {
-    "src": "media-document"
+    "src": "yes-alt"
   },
   "keywords": [
     "Checkbox"
   ],
   "attributes": {
-    "wrapperUse": {
-      "type": "boolean",
-      "default": false
-    },
-    "wrapperUseShowControl": {
-      "type": "bool",
-      "default": false
-    },
     "theme": {
       "type": "string"
     },
@@ -51,6 +43,40 @@
     "isRequired": {
       "type": "bool",
       "default": false
+    },
+    "preventSending": {
+      "type": "bool",
+      "default": false
+    },
+    "wrapperUse": {
+      "type": "boolean",
+      "default": true
+    },
+    "wrapperUseSimple": {
+      "type": "bool",
+      "default": true
+    },
+    "wrapperGutter": {
+      "type": "array",
+      "default": {
+        "large": "none",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
+    },
+    "wrapperSpacingBottom": {
+      "type": "object",
+      "default": {
+        "large": "20",
+        "tablet": "",
+        "mobile": ""
+      },
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

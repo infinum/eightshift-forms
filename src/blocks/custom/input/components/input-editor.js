@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import classNames from 'classnames'; // eslint-disable-line no-unused-vars
+import { TextControl } from '@wordpress/components';
 import { LabelEditor } from './../../../components/label/components/label-editor';
 
 export const InputEditor = (props) => {
@@ -7,24 +7,21 @@ export const InputEditor = (props) => {
     attributes: {
       blockClass,
       label,
-      name,
       value,
       id,
-      placeholder,
-      classes,
       type,
-      isDisabled,
-      isReadOnly,
       theme = '',
     },
     actions: {
       onChangeLabel,
+      onChangeValue,
     },
   } = props;
 
+  const isHidden = type === 'hidden';
   const blockClasses = classNames(
     blockClass,
-    type === 'hidden' ? `${blockClass}--hidden` : '',
+    isHidden ? `${blockClass}--hidden` : '',
   );
 
   const wrapClasses = classNames(
@@ -32,30 +29,21 @@ export const InputEditor = (props) => {
     `${blockClass}__theme--${theme}`,
   );
 
-  const inputClasses = classNames(
-    `${blockClass}__input`,
-    classes,
-  );
-
   return (
     <div className={blockClasses}>
-      <LabelEditor
-        blockClass={blockClass}
-        label={label}
-        id={id}
-        onChangeLabel={onChangeLabel}
-      />
-      <div className={wrapClasses}>
-        <input
-          name={name}
-          placeholder={placeholder}
+      {!isHidden &&
+        <LabelEditor
+          blockClass={blockClass}
+          label={label}
           id={id}
-          className={inputClasses}
+          onChangeLabel={onChangeLabel}
+        />
+      }
+      <div className={wrapClasses}>
+        <TextControl
+          label={label}
           value={value}
-          type={type !== 'hidden' ? type : 'input'}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          tabIndex={'-1'}
+          onChange={onChangeValue}
         />
       </div>
     </div>

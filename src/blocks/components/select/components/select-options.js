@@ -1,32 +1,24 @@
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, ToggleControl, SelectControl } from '@wordpress/components';
-import { select, dispatch } from '@wordpress/data';
 
-export const RadioOptions = (props) => {
+export const SelectOptions = (props) => {
   const {
     attributes: {
       name,
+      isDisabled,
+      preventSending,
       prefillData,
       prefillDataSource,
     },
     actions: {
       onChangeName,
+      onChangeIsDisabled,
+      onChangePreventSending,
       onChangePrefillData,
       onChangePrefillDataSource,
     },
-    clientId,
   } = props;
 
-  // Once name is set on parent dispatch name attribute to all the children.
-  const children = select('core/editor').getBlocksByClientId(clientId)[0];
-
-  if (children) {
-    children.innerBlocks.forEach(function (block) {
-      dispatch('core/editor').updateBlockAttributes(block.clientId, { name });
-    });
-  }
-
-  // Build the prefill options.
   const {
     prefill,
   } = window.eightshiftForms;
@@ -37,7 +29,7 @@ export const RadioOptions = (props) => {
   ];
 
   return (
-    <PanelBody title={__('Radio Settings', 'eightshift-forms')}>
+    <PanelBody title={__('Select Settings', 'eightshift-forms')}>
 
       {onChangeName &&
         <TextControl
@@ -63,6 +55,23 @@ export const RadioOptions = (props) => {
           value={prefillDataSource}
           options={prefillSourcesAsOptions}
           onChange={onChangePrefillDataSource}
+        />
+      }
+
+      {onChangeIsDisabled &&
+        <ToggleControl
+          label={__('Disabled', 'eightshift-forms')}
+          checked={isDisabled}
+          onChange={onChangeIsDisabled}
+        />
+      }
+
+      {onChangePreventSending &&
+        <ToggleControl
+          label={__('Do not send?', 'eightshift-forms')}
+          help={__('If enabled this field won\'t be sent when the form is submitted.', 'eightshift-forms')}
+          checked={preventSending}
+          onChange={onChangePreventSending}
         />
       }
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Endpoint for fetching data for highlight card component.
+ * Endpoint for fetching data from Dynamics CRM.
  *
  * Example call:
- * /wp-json/eightshift-forms/v1/dynamics-crm
+ * /wp-json/eightshift-forms/v1/dynamics-crm-fetch-entity
  *
  * @package Eightshift_Forms\Rest
  */
@@ -12,15 +12,24 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
+use Eightshift_Forms\Cache\Cache;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use GuzzleHttp\Exception\ClientException;
 
 /**
- * Class Dynamics_Crm_Route
+ * Class Dynamics_Crm_Fetch_Entity_Route
  */
-class Dynamics_Crm_Route extends Base_Route {
+class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
+
+  /**
+   * This is how long this route's response will be cached.
+   *
+   * @var int
+   */
+  const HOW_LONG_TO_CACHE_RESPONSE_IN_SEC = 3600;
 
   const ENTITY_PARAM = 'dynamics-crm-entity';
 
@@ -29,19 +38,19 @@ class Dynamics_Crm_Route extends Base_Route {
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/dynamics-crm';
+  const ENDPOINT_SLUG = '/dynamics-crm-fetch-entity';
 
   /**
    * Construct object
    *
-   * @param Config_Data   $config       Config data obj.
-   * @param Dynamics_CRM  $dynamics_crm Dynamics CRM object.
-   * @param Basic_Captcha $basic_captcha Basic_Captcha object.
+   * @param Config_Data  $config          Config data obj.
+   * @param Dynamics_CRM $dynamics_crm    Dynamics CRM object.
+   * @param Cache        $transient_cache Cache object.
    */
-  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Basic_Captcha $basic_captcha ) {
-    $this->config        = $config;
-    $this->dynamics_crm  = $dynamics_crm;
-    $this->basic_captcha = $basic_captcha;
+  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Cache $transient_cache ) {
+    $this->config       = $config;
+    $this->dynamics_crm = $dynamics_crm;
+    $this->cache        = $transient_cache;
   }
 
   /**
@@ -60,11 +69,8 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     $params = $request->get_query_params();
-    $params = $this->fix_dot_underscore_replacement( $params );
 
-    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
-      return $this->rest_response_handler( 'wrong-captcha' );
-    }
+    $params = $this->fix_dot_underscore_replacement( $params );
 
     if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
       return $this->rest_response_handler( 'missing-entity-key' );
@@ -73,6 +79,18 @@ class Dynamics_Crm_Route extends Base_Route {
     // We don't want to send thee entity to CRM or it will reject our request.
     $entity = $params[ self::ENTITY_PARAM ];
     $params = $this->unset_irrelevant_params( $params );
+
+    // Load the response from cache if possible.
+    $cache_key = $this->cache->calculate_cache_key_for_request( self::ENDPOINT_SLUG, $this->get_route_uri(), $params );
+
+    if ( $this->cache->exists( $cache_key ) ) {
+      return \rest_ensure_response(
+        [
+          'code' => 200,
+          'data' => json_decode( $this->cache->get( $cache_key ), true ),
+        ]
+      );
+    }
 
     $this->dynamics_crm->set_oauth_credentials(
       [
@@ -86,15 +104,18 @@ class Dynamics_Crm_Route extends Base_Route {
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->dynamics_crm->add_record( $entity, $params );
-    } catch ( \Exception $e ) {
+      $response = $this->dynamics_crm->retch_all_from_entity( $entity, $params );
+      $this->cache->save( $cache_key, wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
+    } catch ( ClientException $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+    } catch ( \Exception $e ) {
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
     return \rest_ensure_response(
       [
         'code' => 200,
-        'data' => $response,
+        'data' => json_decode( wp_json_encode( $response ), true ),
       ]
     );
   }
@@ -166,11 +187,6 @@ class Dynamics_Crm_Route extends Base_Route {
    */
   protected function defined_responses( string $response_key, array $data = [] ): array {
     $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
       'dynamics-crm-integration-not-used' => [
         'code' => 400,
         'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),

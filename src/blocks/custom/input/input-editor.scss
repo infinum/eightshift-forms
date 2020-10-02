@@ -6,4 +6,10 @@
   &--hidden {
     opacity: 0.5;
   }
+
+  .components-base-control {
+    &__label {
+      @extend %visually-hidden;
+    }
+  }
 }
