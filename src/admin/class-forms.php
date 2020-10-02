@@ -75,7 +75,7 @@ class Forms implements Service {
       'supports'           => array( 'title', 'editor', 'thumbnail' ),
       'has_archive'        => false,
       'show_in_rest'       => true,
-      'publicly_queryable' => true,
+      'publicly_queryable' => false,
       'can_export'         => true,
       'capability_type'    => 'page',
       'rest_base'          => static::REST_API_ENDPOINT_SLUG,
