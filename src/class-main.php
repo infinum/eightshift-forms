@@ -24,7 +24,6 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
-use Eightshift_Forms\Integrations\Guzzle_Client;
 use GuzzleHttp\Client;
 
 /**
@@ -79,6 +78,10 @@ class Main extends Lib_Core {
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
       ),
+      Rest\Buckaroo_Route::class => array(
+        Config::class,
+        Captcha\Basic_Captcha::class,
+      ),
       Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(
         Config::class,
         Integrations\Dynamics_CRM::class,
@@ -93,6 +96,7 @@ class Main extends Lib_Core {
       Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
+        Rest\Buckaroo_Route::class,
         Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(

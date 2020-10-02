@@ -60,6 +60,7 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     $params = $request->get_query_params();
+
     $params = $this->fix_dot_underscore_replacement( $params );
 
     if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {

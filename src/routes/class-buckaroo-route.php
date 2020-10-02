@@ -1,9 +1,9 @@
 <?php
 /**
- * Endpoint for fetching data for highlight card component.
+ * Endpoint for handling Buckaroo integration on form submit.
  *
  * Example call:
- * /wp-json/eightshift-forms/v1/dynamics-crm
+ * /wp-json/eightshift-forms/v1/buckaroo
  *
  * @package Eightshift_Forms\Rest
  */
@@ -13,34 +13,29 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Core\Filters;
-use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 
 /**
- * Class Dynamics_Crm_Route
+ * Class Buckaroo_Route
  */
-class Dynamics_Crm_Route extends Base_Route {
-
-  const ENTITY_PARAM = 'dynamics-crm-entity';
+class Buckaroo_Route extends Base_Route {
 
   /**
    * Route slug
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/dynamics-crm';
+  const ENDPOINT_SLUG = '/buckaroo';
 
   /**
    * Construct object
    *
    * @param Config_Data   $config       Config data obj.
-   * @param Dynamics_CRM  $dynamics_crm Dynamics CRM object.
    * @param Basic_Captcha $basic_captcha Basic_Captcha object.
    */
-  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Basic_Captcha $basic_captcha ) {
+  public function __construct( Config_Data $config, Basic_Captcha $basic_captcha ) {
     $this->config        = $config;
-    $this->dynamics_crm  = $dynamics_crm;
     $this->basic_captcha = $basic_captcha;
   }
 
@@ -66,30 +61,7 @@ class Dynamics_Crm_Route extends Base_Route {
       return $this->rest_response_handler( 'wrong-captcha' );
     }
 
-    if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
-      return $this->rest_response_handler( 'missing-entity-key' );
-    }
-
-    // We don't want to send thee entity to CRM or it will reject our request.
-    $entity = $params[ self::ENTITY_PARAM ];
-    $params = $this->unset_irrelevant_params( $params );
-
-    $this->dynamics_crm->set_oauth_credentials(
-      [
-        'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-        'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
-        'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-        'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-        'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
-      ]
-    );
-
-    // Retrieve all entities from the "leads" Entity Set.
-    try {
-      $response = $this->dynamics_crm->add_record( $entity, $params );
-    } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
-    }
+    $response = 'so far so good';
 
     return \rest_ensure_response(
       [
@@ -171,9 +143,9 @@ class Dynamics_Crm_Route extends Base_Route {
         'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
         'data' => $data,
       ],
-      'dynamics-crm-integration-not-used' => [
+      'buckaroo-integration-not-used' => [
         'code' => 400,
-        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        'message' => sprintf( esc_html__( 'Buckaroo is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::BUCKAROO ),
         'data' => $data,
       ],
       'missing-entity-key' => [

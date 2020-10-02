@@ -47,6 +47,15 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
+   * By default allow public access to route.
+   *
+   * @return bool
+   */
+  public function permission_callback(): bool {
+    return true;
+  }
+
+  /**
    * Method that returns project Route namespace.
    *
    * @return string Project namespace for REST route.
@@ -79,20 +88,11 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
    */
   protected function get_callback_arguments() : array {
-    return array(
+    return [
       'methods'  => static::READABLE,
-      'callback' => array( $this, 'route_callback' ),
-      'permission_callback' => $this->permission_callback(),
-    );
-  }
-
-  /**
-   * By default allow public access to route.
-   *
-   * @return bool
-   */
-  protected function permission_callback(): bool {
-    return true;
+      'callback' => [ $this, 'route_callback' ],
+      'permission_callback' => [ $this, 'permission_callback' ],
+    ];
   }
 
   /**

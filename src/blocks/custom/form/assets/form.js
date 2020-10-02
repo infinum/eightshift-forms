@@ -24,6 +24,7 @@ export class Form {
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
 
     this.restRouteUrls = {
+      buckarooRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
     };
@@ -49,6 +50,10 @@ export class Form {
 
       if (this.formType === 'dynamics-crm') {
         this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
+      }
+
+      if (this.formType === 'buckaroo') {
+        this.submitForm(this.restRouteUrls.buckarooRestUri, this.getFormData(this.form));
       }
 
       if (this.formType === 'email') {
