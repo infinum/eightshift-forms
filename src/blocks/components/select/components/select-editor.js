@@ -35,10 +35,6 @@ export const SelectEditor = (props) => {
     clientId,
   } = props;
 
-  attributes.hideLoading = false;
-
-  console.log(attributes);
-
   const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
 
   const isPrefillUsed = prefillData && prefillDataSource;
@@ -49,7 +45,7 @@ export const SelectEditor = (props) => {
       {isPrefillUsed &&
         <ServerSideRender
           block={blockFullName}
-          attributes={attributes}
+          attributes={{ ...attributes, hideLoading: false }}
           urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
         />
       }
