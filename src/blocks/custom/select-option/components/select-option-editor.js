@@ -1,5 +1,3 @@
-import { __ } from '@wordpress/i18n';
-
 const rerenderParent = (clientId) => {
   const select = wp.data.select('core/block-editor');
   const parentId = select.getBlockRootClientId(clientId);

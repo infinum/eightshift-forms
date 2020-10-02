@@ -112,7 +112,7 @@ export class Form {
    */
   getFormData(form) {
     return [...form.elements].filter((formElem) => {
-      return formElem.name && ( ! formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND) );
+      return formElem.name && (!formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND));
     }).map((formElem) => {
       return {
         key: formElem.name,
@@ -134,8 +134,8 @@ export class Form {
   replacePlaceholders(value, formElements) {
 
     // Lets create a name: value map we're going to use for replacing stuff.
-    const valueMap = formElements.filter(formElem => formElem.name).reduce((obj, item) => ( obj[item.name] = item.value, obj ) ,{});
-    const relevantKeys = Object.keys(valueMap).filter(valueMap => valueMap.length);
+    const valueMap = formElements.filter((formElem) => formElem.name).reduce((obj, item) => (obj[item.name] = item.value, obj), {}); /* eslint-disable-line no-return-assign, no-sequences */
+    const relevantKeys = Object.keys(valueMap).filter((newValueMap) => newValueMap.length);
 
     // If nothing in valueMap has keys then we don't need to do any replacing.
     if (!relevantKeys.length) {
@@ -144,7 +144,7 @@ export class Form {
 
     // Now let's create a regex that's going to replace all placeholders with actual values (only if
     // those fields exist in form ofc).
-    return value.replace(new RegExp(relevantKeys.map(key => `\\[\\[${key}\\]\\]`).join("|"), "gi"), (matched) => {
+    return value.replace(new RegExp(relevantKeys.map((key) => `\\[\\[${key}\\]\\]`).join('|'), 'gi'), (matched) => {
       const matchedAsKey = matched.replaceAll('[', '').replaceAll(']', '');
       return valueMap[matchedAsKey] ?? matched;
     });

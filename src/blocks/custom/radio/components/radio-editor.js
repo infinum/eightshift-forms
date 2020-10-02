@@ -1,4 +1,3 @@
-import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/editor';
 import { Fragment } from '@wordpress/element';
 import ServerSideRender from '@wordpress/server-side-render';

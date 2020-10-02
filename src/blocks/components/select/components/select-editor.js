@@ -9,7 +9,7 @@ const hasSelectedInnerBlock = (props) => {
   const selected = select.getBlockSelectionStart();
   const inner = select.getBlock(props.clientId).innerBlocks ? select.getBlock(props.clientId).innerBlocks : [];
   for (let i = 0; i < inner.length; i++) {
-    if (inner[i].clientId === selected || inner[i].innerBlocks.length && hasSelectedInnerBlock(inner[i])) {
+    if (inner[i].clientId === selected || (inner[i].innerBlocks.length && hasSelectedInnerBlock(inner[i]))) {
       return true;
     }
   }

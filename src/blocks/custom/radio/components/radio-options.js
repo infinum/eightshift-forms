@@ -22,7 +22,7 @@ export const RadioOptions = (props) => {
 
   if (children) {
     children.innerBlocks.forEach(function (block) {
-      dispatch('core/editor').updateBlockAttributes(block.clientId, { name: name })
+      dispatch('core/editor').updateBlockAttributes(block.clientId, { name });
     });
   }
 

@@ -1,4 +1,3 @@
-import { __ } from '@wordpress/i18n';
 import classNames from 'classnames'; // eslint-disable-line no-unused-vars
 import { TextControl } from '@wordpress/components';
 import { LabelEditor } from './../../../components/label/components/label-editor';
@@ -8,19 +7,14 @@ export const InputEditor = (props) => {
     attributes: {
       blockClass,
       label,
-      name,
       value,
       id,
-      placeholder,
-      classes,
       type,
-      isDisabled,
-      isReadOnly,
       theme = '',
     },
     actions: {
       onChangeLabel,
-      onChangeValue
+      onChangeValue,
     },
   } = props;
 
