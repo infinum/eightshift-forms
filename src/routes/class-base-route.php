@@ -82,7 +82,17 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     return array(
       'methods'  => static::READABLE,
       'callback' => array( $this, 'route_callback' ),
+      'permission_callback' => $this->permission_callback(),
     );
+  }
+
+  /**
+   * By default allow public access to route.
+   *
+   * @return bool
+   */
+  protected function permission_callback(): bool {
+    return true;
   }
 
   /**
