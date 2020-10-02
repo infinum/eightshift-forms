@@ -53,6 +53,7 @@ export const FormOptions = (props) => {
     hasThemes,
     themes = [],
     isDynamicsCrmUsed,
+    isBuckarooUsed,
     dynamicsCrm = [],
   } = window.eightshiftForms;
 
@@ -67,29 +68,45 @@ export const FormOptions = (props) => {
     formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
   }
 
+  if (isBuckarooUsed) {
+    formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo' });
+  }
+
+  const tabs = [
+    {
+      name: 'general',
+      title: <Dashicon icon="admin-generic" />,
+      className: 'tab-general components-button is-button is-default custom-button-with-icon',
+    },
+    {
+      name: 'email',
+      title: <Dashicon icon="email" />,
+      className: 'tab-email components-button is-button is-default custom-button-with-icon',
+    },
+  ];
+
+  if (isDynamicsCrmUsed && type === 'dynamics-crm') {
+    tabs.push({
+      name: type,
+      title: <Dashicon icon="cloud-upload" />,
+      className: 'tab-dynamics-crm components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if (isBuckarooUsed && type === 'buckaroo') {
+    tabs.push({
+      name: type,
+      title: <Dashicon icon="money" />,
+      className: 'tab-dynamics-crm components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
   return (
     <PanelBody title={__('Form Settings', 'eightshift-forms')}>
       <TabPanel
         className="custom-button-tabs"
         activeClass="components-button is-button is-primary"
-        tabs={[
-          {
-            name: 'general',
-            title: <Dashicon icon="admin-generic" />,
-            className: 'tab-large components-button is-button is-default custom-button-with-icon',
-          },
-          {
-            name: 'email',
-            title: <Dashicon icon="email" />,
-            className: 'tab-desktop components-button is-button is-default custom-button-with-icon',
-          },
-          isDynamicsCrmUsed && type === 'dynamics-crm' && {
-            name: 'dynamics-crm',
-            title: <Dashicon icon="cloud-upload" />,
-            className: 'tab-tablet components-button is-button is-default custom-button-with-icon',
-          },
-        ]
-        }
+        tabs={tabs}
       >
         {(tab) => (
           <Fragment>
@@ -147,6 +164,14 @@ export const FormOptions = (props) => {
                   isDynamicsCrmUsed={isDynamicsCrmUsed}
                   onChangeDynamicsEntity={onChangeDynamicsEntity}
                 />
+              </Fragment>
+            )}
+            {tab.name === 'buckaroo' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Buckaroo Options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is sending data to Buckaroo.', 'eightshift-forms')}</p>
+                <br />
               </Fragment>
             )}
           </Fragment>

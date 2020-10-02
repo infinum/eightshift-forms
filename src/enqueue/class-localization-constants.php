@@ -42,6 +42,7 @@ class Localization_Constants {
       self::LOCALIZATION_KEY => [
         'siteUrl'           => get_site_url(),
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
+        'isBuckarooUsed'    => has_filter( Filters::BUCKAROO ),
         'hasThemes'         => has_filter( Filters::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
@@ -60,6 +61,10 @@ class Localization_Constants {
 
     if ( has_filter( Filters::DYNAMICS_CRM ) ) {
       $localization = $this->add_dynamics_crm_constants( $localization );
+    }
+
+    if ( has_filter( Filters::BUCKAROO ) ) {
+      $localization = $this->add_buckaroo_constants( $localization );
     }
 
     if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
@@ -83,9 +88,9 @@ class Localization_Constants {
   /**
    * Localize all constants required for Dynamics CRM integration.
    *
-   * @return void
+   * @return array
    */
-  protected function add_dynamics_crm_constants( array $localization ) {
+  protected function add_dynamics_crm_constants( array $localization ): array {
     $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
@@ -100,6 +105,15 @@ class Localization_Constants {
       'availableEntities' => $available_entities,
     ];
 
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Buckaroo integration.
+   *
+   * @return array
+   */
+  protected function add_buckaroo_constants( array $localization ): array {
     return $localization;
   }
 
