@@ -15,18 +15,26 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use GuzzleHttp\Client;
 
 /**
- * Class Buckaroo_Route
+ * Class Buckaroo_Ideal_Route
  */
-class Buckaroo_Route extends Base_Route {
+class Buckaroo_Ideal_Route extends Base_Route {
 
   /**
    * Route slug
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/buckaroo';
+  const ENDPOINT_SLUG = '/buckaroo-ideal';
+
+  /**
+   * Name of the required parameter for donation amount.
+   *
+   * @var string
+   */
+  const DONATION_AMOUNT_PARAM = 'donation-amount';
 
   /**
    * Construct object
@@ -61,7 +69,15 @@ class Buckaroo_Route extends Base_Route {
       return $this->rest_response_handler( 'wrong-captcha' );
     }
 
-    $response = 'so far so good';
+    if ( ! isset( $params[ self::DONATION_AMOUNT_PARAM ] ) ) {
+      return $this->rest_response_handler( 'missing-donation-amount' );
+    }
+
+    try {
+      $response = $this->test_buckaroo( $params[ self::DONATION_AMOUNT_PARAM ] );
+    } catch ( \Exception $e ) {
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+    }
 
     return \rest_ensure_response(
       [
@@ -69,6 +85,73 @@ class Buckaroo_Route extends Base_Route {
         'data' => $response,
       ]
     );
+  }
+
+  protected function test_buckaroo( $donation_amount ) {
+    $response     = [];
+    $buckaroo_uri = 'checkout.buckaroo.nl/json/Transaction';
+    $buckaroo_url = "https://{$buckaroo_uri}";
+
+    $post_array = array(
+      'Currency' => 'EUR',
+      'AmountDebit' => $donation_amount,
+      'Invoice' => 'testinvoice 123',
+      'ContinueOnIncomplete' => 1,
+      'Services' => array(
+        'ServiceList' => array(
+          array(
+            'Action' => 'Pay',
+            'Name' => 'ideal',
+            // 'Parameters' => array(
+            //   array(
+            //     'Name' => 'issuer',
+            //     'Value' => 'ABNANL2A',
+            //   ),
+            // ),
+          ),
+        ),
+      ),
+    );
+
+    $website_key = BUCKAROO_WEBSITE_KEY;
+    $secret_key  = BUCKAROO_SECRET_KEY;
+    $post        = json_encode( $post_array );
+    $md5         = md5( $post, true );
+    $post        = base64_encode( $md5 );
+    $uri         = strtolower( urlencode( $buckaroo_uri ) );
+    $nonce       = rand( 0000000, 9999999 );
+    $time        = time();
+
+    $hmac = $website_key . 'POST' . $uri . $time . $nonce . $post;
+    $s    = hash_hmac( 'sha256', $hmac, $secret_key, true );
+    $hmac = base64_encode( $s );
+
+    $authorization_header = "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
+
+    $headers = [
+      'Content-Type' => 'application/json',
+      'Authorization' => $authorization_header,
+
+    ];
+
+    $client        = new Client();
+    $post_response = $client->post($buckaroo_url, [
+      'headers' => $headers,
+      'body' => json_encode( $post_array ),
+    ]);
+
+    $post_response_json = json_decode( (string) $post_response->getBody(), true );
+
+    if ( json_last_error() !== JSON_ERROR_NONE ) {
+      throw new \Exception( 'Invalid JSON in response body' );
+    }
+
+    error_log(print_r($post_response_json, true));
+    error_log("Donation amount: $donation_amount");
+
+    $response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
+
+    return $response;
   }
 
   /**
@@ -86,7 +169,6 @@ class Buckaroo_Route extends Base_Route {
       'privacy-policy',
     ];
   }
-
 
   /**
    * Removes some params we don't want to send to CRM from request.
@@ -106,7 +188,6 @@ class Buckaroo_Route extends Base_Route {
 
     return $filtered_params;
   }
-
 
   /**
    * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
@@ -148,9 +229,9 @@ class Buckaroo_Route extends Base_Route {
         'message' => sprintf( esc_html__( 'Buckaroo is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::BUCKAROO ),
         'data' => $data,
       ],
-      'missing-entity-key' => [
+      'missing-donation-amount' => [
         'code' => 400,
-        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
+        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::DONATION_AMOUNT_PARAM ),
         'data' => $data,
       ],
     ];
