@@ -3,6 +3,7 @@ import { Fragment } from '@wordpress/element';
 import { PanelBody, TextControl, TabPanel, Dashicon } from '@wordpress/components';
 import { FormGeneralOptions } from './form-general-options';
 import { FormDynamicsCrmOptions } from './form-dynamics-crm-options';
+import { FormBuckarooOptions } from './form-buckaroo-options';
 import { FormEmailOptions } from './form-email-options';
 
 export const FormOptions = (props) => {
@@ -23,6 +24,7 @@ export const FormOptions = (props) => {
       emailSubject,
       emailMessage,
       emailAdditionalHeaders,
+      buckarooService,
     },
     actions: {
       onChangeAction,
@@ -39,6 +41,7 @@ export const FormOptions = (props) => {
       onChangeEmailSubject,
       onChangeEmailMessage,
       onChangeEmailAdditionalHeaders,
+      onChangeBuckarooService,
     },
   } = props;
 
@@ -172,6 +175,12 @@ export const FormOptions = (props) => {
                 <strong className="notice-title">{__('Buckaroo Options', 'eightshift-forms')}</strong>
                 <p>{__('These are options for when your form is sending data to Buckaroo.', 'eightshift-forms')}</p>
                 <br />
+                <FormBuckarooOptions
+                  type={type}
+                  service={buckarooService}
+                  onChangeService={onChangeBuckarooService}
+                />
+
               </Fragment>
             )}
           </Fragment>

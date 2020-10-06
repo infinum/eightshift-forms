@@ -78,7 +78,7 @@ class Main extends Lib_Core {
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
       ),
-      Rest\Buckaroo_Route::class => array(
+      Rest\Buckaroo_Ideal_Route::class => array(
         Config::class,
         Captcha\Basic_Captcha::class,
       ),
@@ -96,7 +96,7 @@ class Main extends Lib_Core {
       Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
-        Rest\Buckaroo_Route::class,
+        Rest\Buckaroo_Ideal_Route::class,
         Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(

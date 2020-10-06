@@ -36,6 +36,7 @@ class Form_View {
       'novalidate'               => 1,
       'data-form-type'           => 1,
       'data-dynamics-crm-entity' => 1,
+      'data-buckaroo-service'    => 1,
     );
 
     // Append additional allowed tags.

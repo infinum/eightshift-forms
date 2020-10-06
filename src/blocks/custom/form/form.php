@@ -28,6 +28,9 @@ $email_to                 = $attributes['emailTo'] ?? '';
 $email_subject            = $attributes['emailSubject'] ?? '';
 $email_message            = $attributes['emailMessage'] ?? '';
 $email_additional_headers = $attributes['emailAdditionalHeaders'] ?? '';
+$buckaroo_service         = $attributes['buckarooService'] ?? '';
+
+error_log('Buckaroo service: ' . $buckaroo_service);
 
 $block_classes = Components::classnames([
   $block_class,
@@ -45,8 +48,9 @@ $block_classes = Components::classnames([
     action="<?php echo esc_attr( $form_action ); ?>"
     method="<?php echo esc_attr( $form_method ); ?>"
     target="<?php echo esc_attr( $form_target ); ?>"
-    <?php ! empty( $form_id ) ? printf( 'id="%s"', esc_attr( $form_id ) ) : ''; ?>
     data-form-type="<?php echo esc_attr( $form_type ); ?>"
+    <?php ! empty( $form_id ) ? printf( 'id="%s"', esc_attr( $form_id ) ) : ''; ?>
+    <?php ! empty( $buckaroo_service ) ? printf( 'data-buckaroo-service="%s"', esc_attr( $buckaroo_service ) ) : ''; ?>
   >
     <?php echo wp_kses_post( $inner_block_content ); ?>
 
