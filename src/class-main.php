@@ -78,8 +78,14 @@ class Main extends Lib_Core {
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
       ),
+
+      // Buckaroo.
+      Integrations\Buckaroo\Buckaroo::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
       Rest\Buckaroo_Ideal_Route::class => array(
         Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
         Captcha\Basic_Captcha::class,
       ),
       Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(

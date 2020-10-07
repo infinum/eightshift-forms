@@ -34,6 +34,13 @@ class Config extends Lib_Config {
   const DYNAMICS_CRM_METHOD = 'dynamics-crm';
 
   /**
+   * Value for the form type when it's submitting to Buckaroo.
+   *
+   * @var string
+   */
+  const BUCKAROO_METHOD = 'buckaroo';
+
+  /**
    * Method that returns project name.
    *
    * Generally used for naming assets handlers, languages, etc.

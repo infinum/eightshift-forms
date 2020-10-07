@@ -74,6 +74,18 @@
     "buckarooService": {
       "type": "string",
       "default": "ideal"
+    },
+    "buckarooRedirectUrl": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlCancel": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlError": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlReject": {
+      "type": "string"
     }
   }
 }

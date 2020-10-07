@@ -12,23 +12,36 @@ use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
+use Eightshift_Forms\Rest\Buckaroo_Ideal_Route as Buckaroo_Route;
 
-$block_class              = $attributes['blockClass'] ?? '';
-$form_action              = $attributes['action'] ?? '';
-$form_method              = $attributes['method'] ?? '';
-$form_target              = $attributes['target'] ?? '';
-$form_classes             = $attributes['classes'] ?? '';
-$form_id                  = $attributes['id'] ?? '';
-$form_type                = $attributes['type'] ?? '';
-$form_theme               = $attributes['theme'] ?? '';
-$success_message          = $attributes['successMessage'] ?? '';
-$error_message            = $attributes['errorMessage'] ?? '';
-$dynamics_crm_entity      = $attributes['dynamicsEntity'] ?? '';
-$email_to                 = $attributes['emailTo'] ?? '';
-$email_subject            = $attributes['emailSubject'] ?? '';
-$email_message            = $attributes['emailMessage'] ?? '';
-$email_additional_headers = $attributes['emailAdditionalHeaders'] ?? '';
-$buckaroo_service         = $attributes['buckarooService'] ?? '';
+$block_class                  = $attributes['blockClass'] ?? '';
+$form_action                  = $attributes['action'] ?? '';
+$form_method                  = $attributes['method'] ?? '';
+$form_target                  = $attributes['target'] ?? '';
+$form_classes                 = $attributes['classes'] ?? '';
+$form_id                      = $attributes['id'] ?? '';
+$form_type                    = $attributes['type'] ?? '';
+$form_theme                   = $attributes['theme'] ?? '';
+$success_message              = $attributes['successMessage'] ?? '';
+$error_message                = $attributes['errorMessage'] ?? '';
+$dynamics_crm_entity          = $attributes['dynamicsEntity'] ?? '';
+$email_to                     = $attributes['emailTo'] ?? '';
+$email_subject                = $attributes['emailSubject'] ?? '';
+$email_message                = $attributes['emailMessage'] ?? '';
+$email_additional_headers     = $attributes['emailAdditionalHeaders'] ?? '';
+$buckaroo_redirect_url        = $attributes['buckarooRedirectUrl'] ?? '';
+$buckaroo_redirect_url_cancel = $attributes['buckarooRedirectUrlCancel'] ?? '';
+$buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
+$buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
+$buckaroo_service             = $attributes['buckarooService'] ?? '';
+
+error_log(print_r([
+  $form_type,
+  $buckaroo_redirect_url,
+  $buckaroo_redirect_url_cancel,
+  $buckaroo_redirect_url_error,
+  $buckaroo_redirect_url_reject,
+], true));
 
 error_log('Buckaroo service: ' . $buckaroo_service);
 
@@ -63,6 +76,13 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
+    <?php } ?>
+
+    <?php if ( $form_type === Config::BUCKAROO_METHOD ) { ?>
+      <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_CANCEL_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_cancel ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_ERROR_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_error ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_REJECT_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_reject ); ?>" />
     <?php } ?>
 
   </form>

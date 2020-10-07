@@ -15,7 +15,8 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
-use GuzzleHttp\Client;
+use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
+use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 
 /**
  * Class Buckaroo_Ideal_Route
@@ -30,6 +31,11 @@ class Buckaroo_Ideal_Route extends Base_Route {
   const ENDPOINT_SLUG = '/buckaroo-ideal';
 
   /**
+   * Issuer, bank code.
+   */
+  const ISSUER_PARAM = 'issuer';
+
+  /**
    * Name of the required parameter for donation amount.
    *
    * @var string
@@ -37,13 +43,43 @@ class Buckaroo_Ideal_Route extends Base_Route {
   const DONATION_AMOUNT_PARAM = 'donation-amount';
 
   /**
+   * Name of the required parameter for redirect url.
+   *
+   * @var string
+   */
+  const REDIRECT_URL_PARAM = 'redirect-url';
+
+  /**
+   * Name of the required parameter for redirect url cancel.
+   *
+   * @var string
+   */
+  const REDIRECT_URL_CANCEL_PARAM = 'redirect-url-cancel';
+
+  /**
+   * Name of the required parameter for redirect url error.
+   *
+   * @var string
+   */
+  const REDIRECT_URL_ERROR_PARAM = 'redirect-url-error';
+
+  /**
+   * Name of the required parameter for redirect url reject.
+   *
+   * @var string
+   */
+  const REDIRECT_URL_REJECT_PARAM = 'redirect-url-reject';
+
+  /**
    * Construct object
    *
-   * @param Config_Data   $config       Config data obj.
+   * @param Config_Data   $config        Config data obj.
+   * @param Buckaroo      $buckaroo      Buckaroo integration obj.
    * @param Basic_Captcha $basic_captcha Basic_Captcha object.
    */
-  public function __construct( Config_Data $config, Basic_Captcha $basic_captcha ) {
+  public function __construct( Config_Data $config, Buckaroo $buckaroo, Basic_Captcha $basic_captcha ) {
     $this->config        = $config;
+    $this->buckaroo      = $buckaroo;
     $this->basic_captcha = $basic_captcha;
   }
 
@@ -58,12 +94,14 @@ class Buckaroo_Ideal_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
-      return $this->rest_response_handler( 'dynamics-crm-integration-not-used' );
+    if ( ! has_filter( Filters::BUCKAROO ) ) {
+      return $this->rest_response_handler( 'buckaroo-integration-not-used' );
     }
 
     $params = $request->get_query_params();
     $params = $this->fix_dot_underscore_replacement( $params );
+
+    error_log(print_r($params, true));
 
     if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       return $this->rest_response_handler( 'wrong-captcha' );
@@ -74,7 +112,20 @@ class Buckaroo_Ideal_Route extends Base_Route {
     }
 
     try {
-      $response = $this->test_buckaroo( $params[ self::DONATION_AMOUNT_PARAM ] );
+      $this->buckaroo->set_redirect_urls(
+        $params[ self::REDIRECT_URL_PARAM ] ?? '',
+        $params[ self::REDIRECT_URL_CANCEL_PARAM ] ?? '',
+        $params[ self::REDIRECT_URL_ERROR_PARAM ] ?? '',
+        $params[ self::REDIRECT_URL_REJECT_PARAM ] ?? '',
+      );
+      $this->buckaroo->set_test();
+      $response = $this->buckaroo->send_payment(
+        $params[ self::DONATION_AMOUNT_PARAM ],
+        'test invoice 123',
+        $params[ self::ISSUER_PARAM ] ?? 'ABNANL2A'
+      );
+    } catch ( Missing_Filter_Info_Exception $e ) {
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
     }
@@ -87,87 +138,13 @@ class Buckaroo_Ideal_Route extends Base_Route {
     );
   }
 
-  protected function test_buckaroo( $donation_amount ) {
-    $response     = [];
-    $buckaroo_uri = 'checkout.buckaroo.nl/json/Transaction';
-    $buckaroo_url = "https://{$buckaroo_uri}";
-
-    $post_array = array(
-      'Currency' => 'EUR',
-      'AmountDebit' => $donation_amount,
-      'Invoice' => 'testinvoice 123',
-      'ContinueOnIncomplete' => 1,
-      'Services' => array(
-        'ServiceList' => array(
-          array(
-            'Action' => 'Pay',
-            'Name' => 'ideal',
-            // 'Parameters' => array(
-            //   array(
-            //     'Name' => 'issuer',
-            //     'Value' => 'ABNANL2A',
-            //   ),
-            // ),
-          ),
-        ),
-      ),
-    );
-
-    $website_key = BUCKAROO_WEBSITE_KEY;
-    $secret_key  = BUCKAROO_SECRET_KEY;
-    $post        = json_encode( $post_array );
-    $md5         = md5( $post, true );
-    $post        = base64_encode( $md5 );
-    $uri         = strtolower( urlencode( $buckaroo_uri ) );
-    $nonce       = rand( 0000000, 9999999 );
-    $time        = time();
-
-    $hmac = $website_key . 'POST' . $uri . $time . $nonce . $post;
-    $s    = hash_hmac( 'sha256', $hmac, $secret_key, true );
-    $hmac = base64_encode( $s );
-
-    $authorization_header = "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
-
-    $headers = [
-      'Content-Type' => 'application/json',
-      'Authorization' => $authorization_header,
-
-    ];
-
-    $client        = new Client();
-    $post_response = $client->post($buckaroo_url, [
-      'headers' => $headers,
-      'body' => json_encode( $post_array ),
-    ]);
-
-    $post_response_json = json_decode( (string) $post_response->getBody(), true );
-
-    if ( json_last_error() !== JSON_ERROR_NONE ) {
-      throw new \Exception( 'Invalid JSON in response body' );
-    }
-
-    error_log(print_r($post_response_json, true));
-    error_log("Donation amount: $donation_amount");
-
-    $response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
-
-    return $response;
-  }
-
   /**
    * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
    *
    * @return array
    */
   protected function get_irrelevant_params(): array {
-    return [
-      self::ENTITY_PARAM,
-      Basic_Captcha::FIRST_NUMBER_KEY,
-      Basic_Captcha::SECOND_NUMBER_KEY,
-      Basic_Captcha::RESULT_KEY,
-      'privacy',
-      'privacy-policy',
-    ];
+    return [];
   }
 
   /**
