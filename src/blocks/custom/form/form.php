@@ -35,22 +35,13 @@ $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
 
-error_log(print_r([
-  $form_type,
-  $buckaroo_redirect_url,
-  $buckaroo_redirect_url_cancel,
-  $buckaroo_redirect_url_error,
-  $buckaroo_redirect_url_reject,
-], true));
-
-error_log('Buckaroo service: ' . $buckaroo_service);
 
 $block_classes = Components::classnames([
   $block_class,
   $form_classes,
   'js-form',
   "js-form__type--{$form_type}",
-  ! empty( $form_theme ) ? "{$block_class}__theme--{$form_theme}" : ''
+  ! empty( $form_theme ) ? "{$block_class}__theme--{$form_theme}" : '',
 ]);
 
 ?>

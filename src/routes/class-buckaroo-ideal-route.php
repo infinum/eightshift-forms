@@ -101,8 +101,6 @@ class Buckaroo_Ideal_Route extends Base_Route {
     $params = $request->get_query_params();
     $params = $this->fix_dot_underscore_replacement( $params );
 
-    error_log(print_r($params, true));
-
     if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       return $this->rest_response_handler( 'wrong-captcha' );
     }
