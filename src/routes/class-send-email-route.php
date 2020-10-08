@@ -14,6 +14,7 @@ namespace Eightshift_Forms\Rest;
 
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
 
 /**
  * Class Send_Email_Route
@@ -54,15 +55,10 @@ class Send_Email_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    $params = $request->get_query_params();
-
-    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
-      return $this->rest_response_handler( 'wrong-captcha' );
-    }
-
-    $missing_params = $this->find_required_missing_params( $params );
-    if ( ! empty( $missing_params ) ) {
-      return $this->rest_response_handler( 'missing-params', $missing_params );
+    try {
+      $params = $this->verify_request( $request );
+    } catch ( Unverified_Request_Exception $e ) {
+      return rest_ensure_response( $e->get_data() );
     }
 
     $email_info = $this->build_email_info_from_params( $params );

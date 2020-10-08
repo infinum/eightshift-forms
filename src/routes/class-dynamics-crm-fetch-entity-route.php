@@ -17,6 +17,7 @@ use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use GuzzleHttp\Exception\ClientException;
 
 /**
@@ -64,16 +65,10 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
-      return $this->rest_response_handler( 'dynamics-crm-integration-not-used' );
-    }
-
-    $params = $request->get_query_params();
-
-    $params = $this->fix_dot_underscore_replacement( $params );
-
-    if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
-      return $this->rest_response_handler( 'missing-entity-key' );
+    try {
+      $params = $this->verify_request( $request, Filters::DYNAMICS_CRM );
+    } catch ( Unverified_Request_Exception $e ) {
+      return rest_ensure_response( $e->get_data() );
     }
 
     // We don't want to send thee entity to CRM or it will reject our request.
@@ -125,6 +120,15 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    *
    * @return array
    */
+  public function permission_callback(): bool {
+    return true;
+  }
+
+  /**
+   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+   *
+   * @return array
+   */
   protected function get_irrelevant_params(): array {
     return [
       self::ENTITY_PARAM,
@@ -156,25 +160,14 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
     return $filtered_params;
   }
 
-
   /**
-   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
-   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
+   * Defines a list of required parameters which must be present in the request or it will error out.
    *
-   * Quick and dirty fix is to replace these values back to dots after receiving them.
-   *
-   * @param array $params Request params.
    * @return array
    */
-  protected function fix_dot_underscore_replacement( array $params ): array {
-    foreach ( $params as $key => $value ) {
-      if ( strpos( $key, '@odata_bind' ) !== false ) {
-        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
-        unset( $params[ $key ] );
-        $params[ $new_key ] = $value;
-      }
-    }
-
-    return $params;
+  protected function get_required_missing_params(): array {
+    return [
+      self::ENTITY_PARAM,
+    ];
   }
 }

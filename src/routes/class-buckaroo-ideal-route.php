@@ -17,6 +17,7 @@ use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
 
 /**
  * Class Buckaroo_Ideal_Route
@@ -94,20 +95,10 @@ class Buckaroo_Ideal_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    if ( ! has_filter( Filters::BUCKAROO ) ) {
-      return $this->rest_response_handler( 'buckaroo-integration-not-used' );
-    }
-
-    $params = $request->get_query_params();
-    $params = $this->fix_dot_underscore_replacement( $params );
-
-    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
-      return $this->rest_response_handler( 'wrong-captcha' );
-    }
-
-    $missing_params = $this->find_required_missing_params( $params );
-    if ( ! empty( $missing_params ) ) {
-      return $this->rest_response_handler( 'missing-params', $missing_params );
+    try {
+      $params = $this->verify_request( $request, Filters::BUCKAROO );
+    } catch ( Unverified_Request_Exception $e ) {
+      return rest_ensure_response( $e->get_data() );
     }
 
     try {
@@ -125,7 +116,7 @@ class Buckaroo_Ideal_Route extends Base_Route {
         $params[ self::ISSUER_PARAM ] ?? 'ABNANL2A'
       );
     } catch ( Missing_Filter_Info_Exception $e ) {
-      return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage()] );
+      return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
     }
@@ -164,27 +155,6 @@ class Buckaroo_Ideal_Route extends Base_Route {
     }
 
     return $filtered_params;
-  }
-
-  /**
-   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
-   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
-   *
-   * Quick and dirty fix is to replace these values back to dots after receiving them.
-   *
-   * @param array $params Request params.
-   * @return array
-   */
-  protected function fix_dot_underscore_replacement( array $params ): array {
-    foreach ( $params as $key => $value ) {
-      if ( strpos( $key, '@odata_bind' ) !== false ) {
-        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
-        unset( $params[ $key ] );
-        $params[ $new_key ] = $value;
-      }
-    }
-
-    return $params;
   }
 
   /**

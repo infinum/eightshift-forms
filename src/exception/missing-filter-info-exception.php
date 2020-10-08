@@ -32,7 +32,7 @@ final class Missing_Filter_Info_Exception extends \RuntimeException implements G
     $message = sprintf(
       \esc_html__( 'Missing a required key %s in %s filter, please provide that as part of return array on that filter', 'eightshift-libs' ),
       $key,
-      $filter,
+      $filter
     );
 
     return new static( $message, 400 );

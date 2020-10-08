@@ -16,14 +16,16 @@ use Eightshift_Libs\Rest\Base_Route as Libs_Base_Route;
 use Eightshift_Libs\Rest\Callable_Route;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
 
 /**
  * Class Dynamics_Crm_Route
  */
 abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
 
-  const MISSING_KEY  = 'missing-key';
-  const MISSING_KEYS = 'missing-keys';
+  const MISSING_KEY    = 'missing-key';
+  const MISSING_KEYS   = 'missing-keys';
+  const MISSING_FILTER = 'missing-filter';
 
   /**
    * Instance variable of project config data.
@@ -100,20 +102,38 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
-   * Response handler for unknown errors
+   * Verifies everything is ok with request
    *
-   * @param  array $data (Optional) data to output.
-   * @return mixed
+   * @param  \WP_REST_Request $request WP_REST_Request object.
+   * @param  string           $required_filter (Optional) Filter that needs to exist to verify this request.
+   *
+   * @throws Unverified_Request_Exception When we should abort the request for some reason.
+   *
+   * @return array            filtered request params.
    */
-  protected function rest_response_handler_unknown_error( array $data = array() ) {
+  protected function verify_request( \WP_REST_Request $request, string $required_filter = '' ): array {
 
-    return \rest_ensure_response(
-      array(
-        'code' => 400,
-        'message' => esc_html__( 'Unknown error', 'eightshift-forms' ),
-        'data' => $data,
-      )
-    );
+    if ( ! empty( $required_filter ) && ! has_filter( $required_filter ) ) {
+      throw new Unverified_Request_Exception(
+        $this->rest_response_handler( 'integration-not-used', [ self::MISSING_FILTER => $required_filter ] )->data
+      );
+    }
+
+    $params = $request->get_query_params();
+    $params = $this->fix_dot_underscore_replacement( $params );
+
+    if ( ! empty( $this->basic_captcha ) && ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
+      throw new Unverified_Request_Exception( $this->rest_response_handler( 'wrong-captcha' )->data );
+    }
+
+    $missing_params = $this->find_required_missing_params( $params );
+    if ( ! empty( $missing_params ) ) {
+      throw new Unverified_Request_Exception(
+        $this->rest_response_handler( 'missing-params', [ self::MISSING_KEY => $missing_params ] )->data
+      );
+    }
+
+    return $params;
   }
 
   /**
@@ -143,12 +163,50 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
+   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
+   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
+   *
+   * Quick and dirty fix is to replace these values back to dots after receiving them.
+   *
+   * @param array $params Request params.
+   * @return array
+   */
+  protected function fix_dot_underscore_replacement( array $params ): array {
+    foreach ( $params as $key => $value ) {
+      if ( strpos( $key, '@odata_bind' ) !== false ) {
+        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
+        unset( $params[ $key ] );
+        $params[ $new_key ] = $value;
+      }
+    }
+
+    return $params;
+  }
+
+  /**
+   * Response handler for unknown errors
+   *
+   * @param  array $data (Optional) data to output.
+   * @return \WP_REST_Response|WP_Error|WP_HTTP_Response|mixed
+   */
+  protected function rest_response_handler_unknown_error( array $data = array() ) {
+
+    return \rest_ensure_response(
+      array(
+        'code' => 400,
+        'message' => esc_html__( 'Unknown error', 'eightshift-forms' ),
+        'data' => $data,
+      )
+    );
+  }
+
+  /**
    * Ensure correct response for rest using error handler function.
    *
    * @param  string $response_key Which response to get.
    * @param  array  $data         (Optional) Data to pass to response handler.
    *
-   * @return \WP_Error|array \WP_Error instance with error message and status or array.
+   * @return \WP_REST_Response|WP_Error|WP_HTTP_Response|mixed
    */
   protected function rest_response_handler( string $response_key, array $data = array() ) {
     $responses = array_merge( $this->route_responses(), $this->all_responses() );
@@ -190,29 +248,15 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => esc_html__( 'Missing one or more required parameters to process the request.', 'eightshift-forms' ),
       ],
-
-      // CRM specific.
-      'dynamics-crm-integration-not-used' => [
+      'integration-not-used' => [
         'code' => 400,
-        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-      ],
-      'missing-entity-key' => [
-        'code' => 400,
-        'message' => esc_html__( 'Missing required key in request', 'eightshift-forms' ),
+        'message' => sprintf( esc_html__( 'This form integration is not used, please add a filter returning all necessary info.', 'eightshift-forms' ) ),
       ],
 
       // Buckaroo specific.
-      'buckaroo-integration-not-used' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Buckaroo is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::BUCKAROO ),
-      ],
       'buckaroo-missing-keys' => [
         'code' => 400,
         'message' => esc_html__( 'Not all Buckaroo keys are set', 'eightshift-forms' ),
-      ],
-      'buckaroo-missing-donation-amount' => [
-        'code' => 400,
-        'message' => esc_html__( 'Missing key in request', 'eightshift-forms' ),
       ],
     ];
   }
@@ -220,7 +264,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   /**
    * Method that returns rest response
    *
-   * @param  \WP_REST_Request $request Data got from enpoint url.
+   * @param  \WP_REST_Request $request Data got from endpoint url.
    *
    * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
    *                                is already an instance, WP_HTTP_Response, otherwise
