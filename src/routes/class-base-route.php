@@ -15,11 +15,15 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Libs\Rest\Base_Route as Libs_Base_Route;
 use Eightshift_Libs\Rest\Callable_Route;
 use Eightshift_Libs\Core\Config_Data;
+use Eightshift_Forms\Core\Filters;
 
 /**
  * Class Dynamics_Crm_Route
  */
 abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
+
+  const MISSING_KEY  = 'missing-key';
+  const MISSING_KEYS = 'missing-keys';
 
   /**
    * Instance variable of project config data.
@@ -122,7 +126,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     $missing_params = [];
     foreach ( $this->get_required_missing_params() as $required_param ) {
       if ( ! isset( $parameters[ $required_param ] ) ) {
-        $missing_params[] = $required_param;
+        $missing_params[ self::MISSING_KEYS ] [] = $required_param;
       }
     }
 
@@ -147,17 +151,71 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return \WP_Error|array \WP_Error instance with error message and status or array.
    */
   protected function rest_response_handler( string $response_key, array $data = array() ) {
-    return \rest_ensure_response( $this->defined_responses( $response_key, $data ) );
+    $responses = array_merge( $this->route_responses(), $this->all_responses() );
+
+    $response = $responses[ $response_key ] ?? [
+      'code' => 400,
+      'message' => esc_html__( 'Undefined response', 'eightshift-forms' ),
+    ];
+
+    $response['data'] = $data;
+    return \rest_ensure_response( $response );
   }
 
   /**
    * Define a list of responses for this route.
    *
-   * @param  string $response_key Which response to get.
-   * @param  array  $data         (Optional) Data to pass to response handler.
    * @return array
    */
-  abstract protected function defined_responses( string $response_key, array $data = array() ): array;
+  protected function route_responses(): array {
+    return [];
+  }
+
+  /**
+   * A list of all responses.
+   *
+   * @return array
+   */
+  protected function all_responses(): array {
+    return [
+      'wrong-captcha' => [
+        'code' => 429,
+        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
+      ],
+      'send-email-error' => [
+        'code' => 400,
+        'message' => esc_html__( 'Error while sending an email.', 'eightshift-forms' ),
+      ],
+      'missing-params' => [
+        'code' => 400,
+        'message' => esc_html__( 'Missing one or more required parameters to process the request.', 'eightshift-forms' ),
+      ],
+
+      // CRM specific.
+      'dynamics-crm-integration-not-used' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+      ],
+      'missing-entity-key' => [
+        'code' => 400,
+        'message' => esc_html__( 'Missing required key in request', 'eightshift-forms' ),
+      ],
+
+      // Buckaroo specific.
+      'buckaroo-integration-not-used' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Buckaroo is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::BUCKAROO ),
+      ],
+      'buckaroo-missing-keys' => [
+        'code' => 400,
+        'message' => esc_html__( 'Not all Buckaroo keys are set', 'eightshift-forms' ),
+      ],
+      'buckaroo-missing-donation-amount' => [
+        'code' => 400,
+        'message' => esc_html__( 'Missing key in request', 'eightshift-forms' ),
+      ],
+    ];
+  }
 
   /**
    * Method that returns rest response

@@ -68,7 +68,7 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
-      return $this->rest_response_handler( 'missing-entity-key' );
+      return $this->rest_response_handler( 'missing-entity-key', [ self::MISSING_KEY => self::ENTITY_PARAM ]  );
     }
 
     // We don't want to send thee entity to CRM or it will reject our request.
@@ -156,34 +156,5 @@ class Dynamics_Crm_Route extends Base_Route {
     }
 
     return $params;
-  }
-
-  /**
-   * Define a list of responses for this route.
-   *
-   * @param  string $response_key Which key to return.
-   * @param  array  $data         Optional data to also return in response.
-   * @return array
-   */
-  protected function defined_responses( string $response_key, array $data = [] ): array {
-    $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'dynamics-crm-integration-not-used' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-        'data' => $data,
-      ],
-      'missing-entity-key' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
-        'data' => $data,
-      ],
-    ];
-
-    return $responses[ $response_key ];
   }
 }

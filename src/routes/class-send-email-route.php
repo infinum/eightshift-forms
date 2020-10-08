@@ -149,31 +149,4 @@ class Send_Email_Route extends Base_Route {
       self::ADDITIONAL_HEADERS_PARAM,
     ];
   }
-
-  /**
-   * Define a list of responses for this route.
-   *
-   * @return array
-   */
-  protected function defined_responses( string $response_key, array $data = [] ): array {
-    $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'send-email-error' => [
-        'code' => 400,
-        'message' => esc_html__( 'Error while sending an email.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'missing-params' => [
-        'code' => 400,
-        'message' => esc_html__( 'Missing one or more required parameters to process the request.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-    ];
-
-    return $responses[ $response_key ];
-  }
 }

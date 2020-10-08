@@ -105,8 +105,9 @@ class Buckaroo_Ideal_Route extends Base_Route {
       return $this->rest_response_handler( 'wrong-captcha' );
     }
 
-    if ( ! isset( $params[ self::DONATION_AMOUNT_PARAM ] ) ) {
-      return $this->rest_response_handler( 'missing-donation-amount' );
+    $missing_params = $this->find_required_missing_params( $params );
+    if ( ! empty( $missing_params ) ) {
+      return $this->rest_response_handler( 'missing-params', $missing_params );
     }
 
     try {
@@ -114,8 +115,9 @@ class Buckaroo_Ideal_Route extends Base_Route {
         $params[ self::REDIRECT_URL_PARAM ] ?? '',
         $params[ self::REDIRECT_URL_CANCEL_PARAM ] ?? '',
         $params[ self::REDIRECT_URL_ERROR_PARAM ] ?? '',
-        $params[ self::REDIRECT_URL_REJECT_PARAM ] ?? '',
+        $params[ self::REDIRECT_URL_REJECT_PARAM ] ?? ''
       );
+
       $this->buckaroo->set_test();
       $response = $this->buckaroo->send_payment(
         $params[ self::DONATION_AMOUNT_PARAM ],
@@ -123,7 +125,7 @@ class Buckaroo_Ideal_Route extends Base_Route {
         $params[ self::ISSUER_PARAM ] ?? 'ABNANL2A'
       );
     } catch ( Missing_Filter_Info_Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
+      return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage()] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
     }
@@ -186,31 +188,13 @@ class Buckaroo_Ideal_Route extends Base_Route {
   }
 
   /**
-   * Define a list of responses for this route.
+   * Defines a list of required parameters which must be present in the request or it will error out.
    *
-   * @param  string $response_key Which key to return.
-   * @param  array  $data         Optional data to also return in response.
    * @return array
    */
-  protected function defined_responses( string $response_key, array $data = [] ): array {
-    $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'buckaroo-integration-not-used' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Buckaroo is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::BUCKAROO ),
-        'data' => $data,
-      ],
-      'missing-donation-amount' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::DONATION_AMOUNT_PARAM ),
-        'data' => $data,
-      ],
+  protected function get_required_missing_params(): array {
+    return [
+      self::DONATION_AMOUNT_PARAM,
     ];
-
-    return $responses[ $response_key ];
   }
 }
