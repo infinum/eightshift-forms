@@ -35,8 +35,7 @@ export const FormBuckarooOptions = (props) => {
 
       {onChangeRedirectUrl &&
         <TextControl
-          label={__('Redirect url', 'eightshift-forms')}
-          help={__('Url to redirect to after a successful payment', 'eightshift-forms')}
+          label={__('Redirect url (on success)', 'eightshift-forms')}
           value={redirectUrl}
           onChange={onChangeRedirectUrl}
         />
@@ -44,15 +43,13 @@ export const FormBuckarooOptions = (props) => {
       {onChangeRedirectUrlCancel &&
         <TextControl
           label={__('Redirect url (when payment cancelled)', 'eightshift-forms')}
-          help={__('Url to redirect to after a payment has been cancelled', 'eightshift-forms')}
           value={redirectUrlCancel}
           onChange={onChangeRedirectUrlCancel}
         />
       }
       {onChangeRedirectUrlError &&
         <TextControl
-          label={__('Redirect url on error', 'eightshift-forms')}
-          help={__('Url to redirect to after there was an error', 'eightshift-forms')}
+          label={__('Redirect url (on error)', 'eightshift-forms')}
           value={redirectUrlError}
           onChange={onChangeRedirectUrlError}
         />
@@ -60,7 +57,6 @@ export const FormBuckarooOptions = (props) => {
       {onChangeRedirectUrlReject &&
         <TextControl
           label={__('Redirect url (when payment rejected)', 'eightshift-forms')}
-          help={__('Url to redirect to when payment is rejected', 'eightshift-forms')}
           value={redirectUrlReject}
           onChange={onChangeRedirectUrlReject}
         />
