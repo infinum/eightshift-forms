@@ -99,7 +99,7 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->dynamics_crm->retch_all_from_entity( $entity, $params );
+      $response = $this->dynamics_crm->fetch_all_from_entity( $entity, $params );
       $this->cache->save( $cache_key, wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
     } catch ( ClientException $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );

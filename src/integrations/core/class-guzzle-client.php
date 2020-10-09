@@ -37,7 +37,7 @@ class Guzzle_Client implements Http_Client {
   }
 
   /**
-   * Implementation of get request on the Http_Client.
+   * Implementation of post request on the Http_Client.
    *
    * @param  string $url        Url to ping.
    * @param  array  $parameters (Optional) parameters for the request.
@@ -45,5 +45,16 @@ class Guzzle_Client implements Http_Client {
    */
   public function post( string $url, array $parameters = array() ) {
     return $this->client->post( $url, $parameters );
+  }
+
+  /**
+   * Implementation of post request on the Http_Client.
+   *
+   * @param  string $url        Url to ping.
+   * @param  array  $parameters (Optional) parameters for the request.
+   * @return mixed
+   */
+  public function patch( string $url, array $parameters = array() ) {
+    return $this->client->patch( $url, $parameters );
   }
 }
