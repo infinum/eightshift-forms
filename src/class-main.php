@@ -63,6 +63,9 @@ class Main extends Lib_Core {
       // I18n.
       Lib_I18n\I18n::class => array( Config::class ),
 
+      // Authorization.
+      Integrations\Authorization\HMAC::class,
+
       // Dynamics CRM.
       Integrations\Core\Guzzle_Client::class => array(
         Client::class,
@@ -78,6 +81,12 @@ class Main extends Lib_Core {
         Integrations\Dynamics_CRM::class,
         Captcha\Basic_Captcha::class,
       ),
+      Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(
+        Config::class,
+        Integrations\Dynamics_CRM::class,
+        Integrations\Authorization\HMAC::class,
+        Cache\Transient_Cache::class,
+      ),
 
       // Buckaroo.
       Integrations\Buckaroo\Buckaroo::class => array(
@@ -88,11 +97,8 @@ class Main extends Lib_Core {
         Integrations\Buckaroo\Buckaroo::class,
         Captcha\Basic_Captcha::class,
       ),
-      Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(
-        Config::class,
-        Integrations\Dynamics_CRM::class,
-        Cache\Transient_Cache::class,
-      ),
+
+      // Email.
       Rest\Send_Email_Route::class => array(
         Config::class,
         Captcha\Basic_Captcha::class,
