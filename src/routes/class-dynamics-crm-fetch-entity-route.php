@@ -18,6 +18,7 @@ use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 use GuzzleHttp\Exception\ClientException;
 
 /**
@@ -44,13 +45,15 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
   /**
    * Construct object
    *
-   * @param Config_Data  $config          Config data obj.
-   * @param Dynamics_CRM $dynamics_crm    Dynamics CRM object.
-   * @param Cache        $transient_cache Cache object.
+   * @param Config_Data             $config          Config data obj.
+   * @param Authorization_Interface $hmac            Authorization object.
+   * @param Dynamics_CRM            $dynamics_crm    Dynamics CRM object.
+   * @param Cache                   $transient_cache Cache object.
    */
-  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Cache $transient_cache ) {
+  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Authorization_Interface $hmac, Cache $transient_cache ) {
     $this->config       = $config;
     $this->dynamics_crm = $dynamics_crm;
+    $this->hmac         = $hmac;
     $this->cache        = $transient_cache;
   }
 
@@ -140,26 +143,6 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
     ];
   }
 
-
-  /**
-   * Removes some params we don't want to send to CRM from request.
-   *
-   * @param  array $params Params received in request.
-   * @return array
-   */
-  protected function unset_irrelevant_params( array $params ): array {
-    $filtered_params   = [];
-    $irrelevant_params = array_flip( $this->get_irrelevant_params() );
-
-    foreach ( $params as $key => $param ) {
-      if ( ! isset( $irrelevant_params [ $key ] ) ) {
-        $filtered_params[ $key ] = $param;
-      }
-    }
-
-    return $filtered_params;
-  }
-
   /**
    * Defines a list of required parameters which must be present in the request or it will error out.
    *
@@ -169,5 +152,18 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
     return [
       self::ENTITY_PARAM,
     ];
+  }
+
+  /**
+   * Provide the expected salt ($this->get_authorization_salt()) for this route. This
+   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * handling.
+   *
+   * If this function returns a non-empty value, it is assumed the route requires authorization.
+   *
+   * @return string
+   */
+  protected function get_authorization_salt(): string {
+    return \apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ) ?? 'invalid-salt';
   }
 }

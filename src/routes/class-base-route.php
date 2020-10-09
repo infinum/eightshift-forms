@@ -17,6 +17,7 @@ use Eightshift_Libs\Rest\Callable_Route;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 /**
  * Class Dynamics_Crm_Route
@@ -113,6 +114,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function verify_request( \WP_REST_Request $request, string $required_filter = '' ): array {
 
+    // If this route requires a filter defined in project, we need to make sure that is defined.
     if ( ! empty( $required_filter ) && ! has_filter( $required_filter ) ) {
       throw new Unverified_Request_Exception(
         $this->rest_response_handler( 'integration-not-used', [ self::MISSING_FILTER => $required_filter ] )->data
@@ -122,10 +124,24 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     $params = $request->get_query_params();
     $params = $this->fix_dot_underscore_replacement( $params );
 
+    // Authorized routes need to provide the correct authorization hash to do anything.
+    if ( ! empty( $this->get_authorization_salt() ) ) {
+      $hash = $params[ HMAC::AUTHORIZATION_KEY ] ?? 'invalid-hash';
+      unset( $params[ HMAC::AUTHORIZATION_KEY ] );
+
+      if ( empty( $this->hmac ) || ! $this->hmac->verify_hash( $hash, $params, $this->get_authorization_salt() ) ) {
+        throw new Unverified_Request_Exception(
+          $this->rest_response_handler( 'authorization-invalid' )->data
+        );
+      }
+    }
+
+    // If captcha is used on this route and provided as part of the request, we need to confirm it's true.
     if ( ! empty( $this->basic_captcha ) && ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       throw new Unverified_Request_Exception( $this->rest_response_handler( 'wrong-captcha' )->data );
     }
 
+    // If this route has required parameters, we need to make sure they're all provided.
     $missing_params = $this->find_required_missing_params( $params );
     if ( ! empty( $missing_params ) ) {
       throw new Unverified_Request_Exception(
@@ -163,6 +179,19 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
+   * Provide the expected salt ($this->get_authorization_salt()) for this route. This
+   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * handling.
+   *
+   * If this function returns a non-empty value, it is assumed the route requires authorization.
+   *
+   * @return string
+   */
+  protected function get_authorization_salt(): string {
+    return '';
+  }
+
+  /**
    * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
    * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
    *
@@ -181,6 +210,34 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     }
 
     return $params;
+  }
+
+  /**
+   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+   *
+   * @return array
+   */
+  protected function get_irrelevant_params(): array {
+    return [];
+  }
+
+  /**
+   * Removes some params we don't want to send to CRM from request.
+   *
+   * @param  array $params Params received in request.
+   * @return array
+   */
+  protected function unset_irrelevant_params( array $params ): array {
+    $filtered_params   = [];
+    $irrelevant_params = array_flip( $this->get_irrelevant_params() );
+
+    foreach ( $params as $key => $param ) {
+      if ( ! isset( $irrelevant_params [ $key ] ) ) {
+        $filtered_params[ $key ] = $param;
+      }
+    }
+
+    return $filtered_params;
   }
 
   /**
@@ -251,6 +308,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       'integration-not-used' => [
         'code' => 400,
         'message' => sprintf( esc_html__( 'This form integration is not used, please add a filter returning all necessary info.', 'eightshift-forms' ) ),
+      ],
+      'authorization-invalid' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Unauthorized request', 'eightshift-forms' ) ),
       ],
 
       // Buckaroo specific.

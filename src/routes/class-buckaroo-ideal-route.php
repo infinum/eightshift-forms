@@ -130,34 +130,6 @@ class Buckaroo_Ideal_Route extends Base_Route {
   }
 
   /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
-  protected function get_irrelevant_params(): array {
-    return [];
-  }
-
-  /**
-   * Removes some params we don't want to send to CRM from request.
-   *
-   * @param  array $params Params received in request.
-   * @return array
-   */
-  protected function unset_irrelevant_params( array $params ): array {
-    $filtered_params   = [];
-    $irrelevant_params = array_flip( $this->get_irrelevant_params() );
-
-    foreach ( $params as $key => $param ) {
-      if ( ! isset( $irrelevant_params [ $key ] ) ) {
-        $filtered_params[ $key ] = $param;
-      }
-    }
-
-    return $filtered_params;
-  }
-
-  /**
    * Defines a list of required parameters which must be present in the request or it will error out.
    *
    * @return array
