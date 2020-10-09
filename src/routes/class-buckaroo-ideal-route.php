@@ -18,6 +18,8 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
+use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 /**
  * Class Buckaroo_Ideal_Route
@@ -74,14 +76,24 @@ class Buckaroo_Ideal_Route extends Base_Route {
   /**
    * Construct object
    *
-   * @param Config_Data   $config        Config data obj.
-   * @param Buckaroo      $buckaroo      Buckaroo integration obj.
-   * @param Basic_Captcha $basic_captcha Basic_Captcha object.
+   * @param Config_Data                     $config                          Config data obj.
+   * @param Buckaroo                        $buckaroo                        Buckaroo integration obj.
+   * @param Buckaroo_Response_Handler_Route $buckaroo_response_handler_route Response handler route obj.
+   * @param Authorization_Interface         $hmac                            Authorization object.
+   * @param Basic_Captcha                   $basic_captcha                   Basic_Captcha object.
    */
-  public function __construct( Config_Data $config, Buckaroo $buckaroo, Basic_Captcha $basic_captcha ) {
-    $this->config        = $config;
-    $this->buckaroo      = $buckaroo;
-    $this->basic_captcha = $basic_captcha;
+  public function __construct(
+    Config_Data $config,
+    Buckaroo $buckaroo,
+    Buckaroo_Response_Handler_Route $buckaroo_response_handler_route,
+    Authorization_Interface $hmac,
+    Basic_Captcha $basic_captcha
+  ) {
+    $this->config                          = $config;
+    $this->buckaroo                        = $buckaroo;
+    $this->buckaroo_response_handler_route = $buckaroo_response_handler_route;
+    $this->hmac                            = $hmac;
+    $this->basic_captcha                   = $basic_captcha;
   }
 
   /**
@@ -102,12 +114,7 @@ class Buckaroo_Ideal_Route extends Base_Route {
     }
 
     try {
-      $this->buckaroo->set_redirect_urls(
-        $params[ self::REDIRECT_URL_PARAM ] ?? '',
-        $params[ self::REDIRECT_URL_CANCEL_PARAM ] ?? '',
-        $params[ self::REDIRECT_URL_ERROR_PARAM ] ?? '',
-        $params[ self::REDIRECT_URL_REJECT_PARAM ] ?? ''
-      );
+      $params = $this->set_redirect_urls( $params );
 
       $this->buckaroo->set_test();
       $response = $this->buckaroo->send_payment(
@@ -127,6 +134,52 @@ class Buckaroo_Ideal_Route extends Base_Route {
         'data' => $response,
       ]
     );
+  }
+
+  /**
+   * We need to define redirect URLs so that Buckaroo redirects the user to our buckaroo-response-handler route
+   * which might run some custom logic and then redirect the user to the actual redirect URL as defined in the form's
+   * options.
+   *
+   * @param array $params Array of WP_REST_Request params.
+   * @return array
+   */
+  protected function set_redirect_urls( array $params ): array {
+
+    // Now let's define all Buckaroo-recognized statuses for which we need to provide redirect URLs.
+    $statuses = [
+      Buckaroo_Response_Handler_Route::STATUS_SUCCESS,
+      Buckaroo_Response_Handler_Route::STATUS_CANCELED,
+      Buckaroo_Response_Handler_Route::STATUS_ERROR,
+      Buckaroo_Response_Handler_Route::STATUS_REJECT,
+    ];
+
+    // Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
+    $redirect_urls = [];
+    $base_url      = \home_url( $this->buckaroo_response_handler_route->get_route_uri() );
+    foreach ( $statuses as $status_value ) {
+      $url_params = $params;
+      $url_params[ Buckaroo_Response_Handler_Route::STATUS_PARAM ] = $status_value;
+      $url = \add_query_arg( array_merge(
+        $url_params,
+        [ HMAC::AUTHORIZATION_KEY => rawurlencode( $this->hmac->generate_hash( $url_params, $this->generate_authorization_salt_for_response_handler() ) ) ]
+      ), $base_url );
+
+      $redirect_urls[] = $url;
+    }
+
+    $this->buckaroo->set_redirect_urls( ...$redirect_urls );
+
+    return $params;
+  }
+
+  /**
+   * Define authorization salt used for request to response handler.
+   *
+   * @return string
+   */
+  protected function generate_authorization_salt_for_response_handler(): string {
+    return \apply_filters( Filters::BUCKAROO, 'secret_key' ) ?? 'invalid-salt-for-response-handler';
   }
 
   /**

@@ -92,9 +92,16 @@ class Main extends Lib_Core {
       Integrations\Buckaroo\Buckaroo::class => array(
         Integrations\Core\Guzzle_Client::class,
       ),
+      Rest\Buckaroo_Response_Handler_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Integrations\Authorization\HMAC::class,
+      ),
       Rest\Buckaroo_Ideal_Route::class => array(
         Config::class,
         Integrations\Buckaroo\Buckaroo::class,
+        Rest\Buckaroo_Response_Handler_Route::class,
+        Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
       ),
 

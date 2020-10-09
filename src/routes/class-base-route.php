@@ -24,7 +24,6 @@ use Eightshift_Forms\Integrations\Authorization\HMAC;
  */
 abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
 
-  const MISSING_KEY    = 'missing-key';
   const MISSING_KEYS   = 'missing-keys';
   const MISSING_FILTER = 'missing-filter';
 
@@ -145,7 +144,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
     $missing_params = $this->find_required_missing_params( $params );
     if ( ! empty( $missing_params ) ) {
       throw new Unverified_Request_Exception(
-        $this->rest_response_handler( 'missing-params', [ self::MISSING_KEY => $missing_params ] )->data
+        $this->rest_response_handler( 'missing-params', $missing_params )->data
       );
     }
 
