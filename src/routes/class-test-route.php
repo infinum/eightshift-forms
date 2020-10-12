@@ -109,7 +109,7 @@ class Test_Route extends Base_Route {
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [
       self::REQUIRED_PARAMETER_1,
       self::REQUIRED_PARAMETER_2,

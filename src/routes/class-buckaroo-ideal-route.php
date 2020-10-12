@@ -187,7 +187,7 @@ class Buckaroo_Ideal_Route extends Base_Route {
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [
       self::DONATION_AMOUNT_PARAM,
     ];

@@ -159,7 +159,7 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [
       self::REDIRECT_URL_PARAM,
       self::REDIRECT_URL_CANCEL_PARAM,

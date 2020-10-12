@@ -112,7 +112,7 @@ class Dynamics_Crm_Route extends Base_Route {
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [
       self::ENTITY_PARAM,
     ];

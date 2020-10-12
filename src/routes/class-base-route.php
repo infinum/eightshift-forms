@@ -159,7 +159,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function find_required_missing_params( array $parameters ): array {
     $missing_params = [];
-    foreach ( $this->get_required_missing_params() as $required_param ) {
+    foreach ( $this->get_required_params() as $required_param ) {
       if ( ! isset( $parameters[ $required_param ] ) ) {
         $missing_params[ self::MISSING_KEYS ] [] = $required_param;
       }
@@ -173,7 +173,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [];
   }
 
