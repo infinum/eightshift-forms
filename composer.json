@@ -40,8 +40,12 @@
     },
     "autoload": {
         "classmap": [
-            "src/"
-        ]
+            "src/",
+            "tests/WordPressMocks/"
+        ],
+        "psr-4": {
+            "EightshiftFormsTests\\": "tests/"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

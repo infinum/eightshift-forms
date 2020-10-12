@@ -42,10 +42,9 @@ class Test_Route extends Base_Route {
    *
    * @var array
    */
-  const REQUIRED_PARAMETERS = [
-    'required-param',
-    'required-param-2',
-  ];
+  const REQUIRED_PARAMETER_1 = 'required-param';
+  const REQUIRED_PARAMETER_2 = 'required-param-2';
+  const IRRELEVANT_PARAM     = 'irrelevant-param';
 
   /**
    * Construct object
@@ -76,10 +75,12 @@ class Test_Route extends Base_Route {
   public function route_callback( \WP_REST_Request $request ) {
 
     try {
-      $params = $this->verify_request( $request, Filters::BUCKAROO );
+      $params = $this->verify_request( $request );
     } catch ( Unverified_Request_Exception $e ) {
       return rest_ensure_response( $e->get_data() );
     }
+
+    $params = $this->unset_irrelevant_params( $params );
 
     $mock_response = [
       'message' => 'all good',
@@ -99,7 +100,7 @@ class Test_Route extends Base_Route {
    *
    * @return string
    */
-  protected function generate_authorization_salt_for_response_handler(): string {
+  protected function get_authorization_salt(): string {
     return self::TEST_SALT;
   }
 
@@ -109,6 +110,20 @@ class Test_Route extends Base_Route {
    * @return array
    */
   protected function get_required_missing_params(): array {
-    return self::REQUIRED_PARAMETERS;
+    return [
+      self::REQUIRED_PARAMETER_1,
+      self::REQUIRED_PARAMETER_2,
+    ];
+  }
+
+  /**
+   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+   *
+   * @return array
+   */
+  protected function get_irrelevant_params(): array {
+    return [
+      self::IRRELEVANT_PARAM,
+    ];
   }
 }

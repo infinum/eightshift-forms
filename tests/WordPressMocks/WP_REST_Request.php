@@ -34,11 +34,45 @@ class WP_REST_Request
 	 *
 	 * These are the parameters you'd typically find in `$_GET`.
 	 *
-	 * @since 4.4.0
-	 *
 	 * @return array Parameter map of key to value
 	 */
 	public function get_query_params() {
 		return $this->params['GET'];
+	}
+
+	/**
+	 * Retrieves all params merged into 1 array.
+	 *
+	 * @return array Parameter map of key to value
+	 */
+	public function get_params() {
+		$order = $this->get_parameter_order();
+    $order = array_reverse( $order, true );
+
+    $params = array();
+    foreach ( $order as $type ) {
+        // array_merge() / the "+" operator will mess up
+        // numeric keys, so instead do a manual foreach.
+        foreach ( (array) $this->params[ $type ] as $key => $value ) {
+            $params[ $key ] = $value;
+        }
+    }
+
+    return $params;
+	}
+
+	/**
+	 * Retrieves the parameter priority order.
+	 *
+	 * @return array
+	 */
+	protected function get_parameter_order() {
+		return [
+			'JSON',
+			'POST',
+			'GET',
+			'URL',
+			'defaults'
+		];
 	}
 }
