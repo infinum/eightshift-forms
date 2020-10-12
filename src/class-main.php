@@ -38,6 +38,13 @@ use GuzzleHttp\Client;
 class Main extends Lib_Core {
 
   /**
+   * Set this to true if you need dependency injection in tests.
+   *
+   * @var boolean
+   */
+  protected $is_test = false;
+
+  /**
    * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
    */
   public function get_default_register_action_hook() : string {
@@ -45,13 +52,11 @@ class Main extends Lib_Core {
   }
 
   /**
-   * Get the list of services to register.
+   * Array of services classes used in production.
    *
-   * A list of classes which contain hooks.
-   *
-   * @return array<string> Array of fully qualified class names.
+   * @return array
    */
-  protected function get_service_classes() : array {
+  protected function prod_service_classes(): array {
     return array(
 
       // Config.
@@ -137,5 +142,47 @@ class Main extends Lib_Core {
       // View.
       View\Post_View_Filter::class,
     );
+  }
+
+  /**
+   * Array of service classes used in tests.
+   *
+   * @return array
+   */
+  protected function test_service_classes(): array {
+    return [
+      // Config.
+      Config::class,
+
+      // Authorization.
+      Integrations\Authorization\HMAC::class,
+
+      Rest\Test_Route::class => array(
+        Config::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
+    ];
+  }
+
+  /**
+   * Get the list of services to register.
+   *
+   * A list of classes which contain hooks.
+   *
+   * @return array<string> Array of fully qualified class names.
+   */
+  protected function get_service_classes() : array {
+    return $this->is_test ? $this->test_service_classes() : $this->prod_service_classes();
+  }
+
+  /**
+   * Provides additional / different services depending on if we're in test or not.
+   *
+   * @param  boolean $is_test Set to true if running tests.
+   * @return void
+   */
+  public function set_test( bool $is_test ): void {
+    $this->is_test = $is_test;
   }
 }
