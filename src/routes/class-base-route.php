@@ -120,7 +120,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       );
     }
 
-    $params = $request->get_query_params();
+    $params = $request->get_params();
     $params = $this->fix_dot_underscore_replacement( $params );
 
     // Authorized routes need to provide the correct authorization hash to do anything.
