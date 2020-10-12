@@ -12,6 +12,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
+use Eightshift_Forms\Core\Actions;
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
@@ -132,8 +133,10 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
     }
 
     try {
-      error_log('yey');
-      $response = 'yey';
+      if ( has_action( Actions::BUCKAROO_RESPONSE_HANDLER ) ) {
+        do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params );
+      }
+
       \wp_safe_redirect( $params[ self::REDIRECT_URL_PARAM ] );
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage() ] );
@@ -144,7 +147,9 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
     return \rest_ensure_response(
       [
         'code' => 200,
-        'data' => $response,
+        'data' => [
+          'message' => esc_html__( 'Something went wrong, you should have been redirected. ' ),
+        ],
       ]
     );
   }
@@ -177,6 +182,11 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
     return \apply_filters( Filters::BUCKAROO, 'secret_key' ) ?? 'invalid-salt';
   }
 
+  /**
+   * Override default get_callback_arguments method in order to allow POST requests as well as GET.
+   *
+   * @return array
+   */
   protected function get_callback_arguments() : array {
     return [
       'methods'  => [ static::READABLE, static::CREATABLE ],
