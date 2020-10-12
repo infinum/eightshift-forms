@@ -5,8 +5,13 @@ use \Brain\Monkey\Functions;
 
 class BaseTest extends \Codeception\Test\Unit
 {
+
+  const WP_REDIRECT_ACTION = 'eightshift_forms_test/wp_safe_redirect_happened';
+
   protected function _before()
   {
+    Monkey\setUp();
+
     // Given functions will return the first argument they will receive,
     // just like `when( $function_name )->justReturnArg()` was used for all of them.
     Functions\stubs(
@@ -24,7 +29,9 @@ class BaseTest extends \Codeception\Test\Unit
 
     // Given function just return true,
     Functions\stubs([
-      'wp_safe_redirect' => true
+      'wp_safe_redirect' => function($data) {
+        do_action( self::WP_REDIRECT_ACTION, $this);
+      },
     ]);
 
     // Given functions can have a custom callback.
@@ -43,10 +50,8 @@ class BaseTest extends \Codeception\Test\Unit
 
         return new \WP_REST_Response( $response );
       },
-
     ]);
 
-    Monkey\setUp();
   }
 
   protected function _after()

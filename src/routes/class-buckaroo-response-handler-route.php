@@ -103,6 +103,13 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
   const REDIRECT_URL_REJECT_PARAM = 'redirect-url-reject';
 
   /**
+   * Name of the required parameter (provided by Buckaroo) indicating response status.
+   *
+   * @var string
+   */
+  const BUCKAROO_RESPONSE_CODE_PARAM = 'BRQ_STATUSCODE';
+
+  /**
    * Construct object
    *
    * @param Config_Data             $config   Config data obj.
@@ -138,8 +145,6 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
       }
 
       \wp_safe_redirect( $params[ self::REDIRECT_URL_PARAM ] );
-    } catch ( Missing_Filter_Info_Exception $e ) {
-      return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
     }
@@ -166,6 +171,7 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
       self::REDIRECT_URL_ERROR_PARAM,
       self::REDIRECT_URL_REJECT_PARAM,
       self::STATUS_PARAM,
+      self::BUCKAROO_RESPONSE_CODE_PARAM,
     ];
   }
 

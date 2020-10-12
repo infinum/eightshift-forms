@@ -6,7 +6,7 @@ use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 class TestRouteTest extends BaseRouteTest
 {
-  protected function get_route_name(  ) {
+  protected function getRouteName(): string {
     return Test_Route::class;
   }
 
