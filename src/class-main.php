@@ -157,10 +157,26 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
+      // HTTP.
+      Integrations\Core\Guzzle_Client::class => array(
+        Client::class,
+      ),
+
+      // Base route.
       Rest\Test_Route::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
+      ),
+
+      // Buckaroo.
+      Integrations\Buckaroo\Buckaroo::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
+      Rest\Buckaroo_Response_Handler_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Integrations\Authorization\HMAC::class,
       ),
     ];
   }
