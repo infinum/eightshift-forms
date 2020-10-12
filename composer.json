@@ -25,6 +25,7 @@
         "source": "https://github.com/infinum/eightshift-forms-plugin"
     },
     "require-dev": {
+        "brain/monkey": "^2.5",
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.0.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
