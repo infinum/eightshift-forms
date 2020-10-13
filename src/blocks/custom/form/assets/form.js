@@ -26,6 +26,7 @@ export class Form {
 
     this.restRouteUrls = {
       buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
+      buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
     };
@@ -61,6 +62,9 @@ export class Form {
         switch (buckarooService) {
           case 'ideal':
             restUrl = this.restRouteUrls.buckarooIdealRestUri;
+            break;
+          case 'emandate':
+            restUrl = this.restRouteUrls.buckarooEmandateRestUri;
             break;
           default:
         }
@@ -141,7 +145,7 @@ export class Form {
         return false;
       }
 
-      return formElem.name && (!formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND));;
+      return formElem.name && (!formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND));
     }).map((formElem) => {
       return {
         key: formElem.name,

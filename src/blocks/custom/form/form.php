@@ -12,7 +12,7 @@ use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
-use Eightshift_Forms\Rest\Buckaroo_Ideal_Route as Buckaroo_Route;
+use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
 
 $block_class                  = $attributes['blockClass'] ?? '';
 $form_action                  = $attributes['action'] ?? '';
@@ -34,6 +34,7 @@ $buckaroo_redirect_url_cancel = $attributes['buckarooRedirectUrlCancel'] ?? '';
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
+$buckaroo_payment_type        = $attributes['buckarooPaymentType'] ?? '';
 
 
 $block_classes = Components::classnames([

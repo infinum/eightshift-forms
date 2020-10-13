@@ -365,6 +365,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => esc_html__( 'Not all Buckaroo keys are set', 'eightshift-forms' ),
       ],
+      'buckaroo-request-exception' => [
+        'code' => 400,
+        'message' => esc_html__( 'Error ocurred, unable to redirect to Buckaroo', 'eightshift-forms' ),
+      ],
     ];
   }
 

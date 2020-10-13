@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Integrations\Buckaroo;
 
 use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use Eightshift_Forms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
 use Eightshift_Forms\Integrations\Core\Http_Client;
 
 /**
@@ -18,9 +19,11 @@ use Eightshift_Forms\Integrations\Core\Http_Client;
  */
 class Buckaroo {
 
-  const TYPE_IDEAL = 'ideal';
-  const LIVE_URI   = 'checkout.buckaroo.nl/json/Transaction';
-  const TEST_URI   = 'testcheckout.buckaroo.nl/json/Transaction';
+  const TYPE_IDEAL            = 'ideal';
+  const LIVE_URI_DATA_REQUEST = 'checkout.buckaroo.nl/json/DataRequest';
+  const TEST_URI_DATA_REQUEST = 'testcheckout.buckaroo.nl/json/DataRequest';
+  const LIVE_URI_TRANSACTION  = 'checkout.buckaroo.nl/json/Transaction';
+  const TEST_URI_TRANSACTION  = 'testcheckout.buckaroo.nl/json/Transaction';
 
   /**
    * Currency of the payment
@@ -72,6 +75,13 @@ class Buckaroo {
   protected $is_test_uri = false;
 
   /**
+   * Set if we want to the /DataRequest endpoint instead of /Transaction.
+   *
+   * @var boolean
+   */
+  protected $is_data_request = false;
+
+  /**
    * Constructs object
    *
    * @param Http_Client $guzzle_client OAuth2 client implementation.
@@ -81,18 +91,20 @@ class Buckaroo {
   }
 
   /**
-   * Injects a record into CRM.
+   * Creates a payment request.
    *
-   * @param  int|float|string $donation_amount Donation amount.
-   * @param  string           $invoice Invoice name.
-   * @param  string           $issuer Issuer (bank) name.
+   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+   * @param  string $issuer          Issuer (bank) name.
    * @return bool
    *
-   * @throws \Exception       When something is wrong with JSON we get from Buckaroo.
+   * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
    */
-  public function send_payment( $donation_amount, string $invoice, string $issuer = '' ) {
+  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, $language = 'nl', string $issuer = '' ) {
     $response             = [];
-    $post_array           = $this->build_post_body( $donation_amount, $invoice, $issuer );
+    $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
 
     $post_response = $this->guzzle_client->post("https://{$this->get_buckaroo_uri()}", [
@@ -106,7 +118,49 @@ class Buckaroo {
     $post_response_json = json_decode( (string) $post_response->getBody(), true );
 
     if ( json_last_error() !== JSON_ERROR_NONE ) {
-      throw new \Exception( 'Invalid JSON in response body' );
+      throw new Buckaroo_Request_Exception( esc_html__( 'Invalid JSON in response body', 'eightshift-forms' ) );
+    }
+
+    if ( ! isset( $post_response_json['RequiredAction']['RedirectURL'] ) ) {
+      throw new Buckaroo_Request_Exception( esc_html__( 'Missing redirect URL in Buckaroo response', 'eightshift-forms' ), $post_response_json );
+    }
+
+    $response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
+
+    return $response;
+  }
+
+  /**
+   * Creates a payment request.
+   *
+   * @param  int|float|string $donation_amount Donation amount.
+   * @param  string           $invoice Invoice name.
+   * @param  string           $issuer Issuer (bank) name.
+   * @return bool
+   *
+   * @throws Buckaroo_Request_Exception When something is wrong with JSON we get from Buckaroo.
+   */
+  public function send_payment( $donation_amount, string $invoice, string $issuer = '' ) {
+    $response             = [];
+    $post_array           = $this->build_post_body_for_payment( $donation_amount, $invoice, $issuer );
+    $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
+
+    $post_response = $this->guzzle_client->post("https://{$this->get_buckaroo_uri()}", [
+      'headers' => [
+        'Content-Type' => 'application/json',
+        'Authorization' => $authorization_header,
+      ],
+      'body' => \wp_json_encode( $post_array ),
+    ]);
+
+    $post_response_json = json_decode( (string) $post_response->getBody(), true );
+
+    if ( json_last_error() !== JSON_ERROR_NONE ) {
+      throw new Buckaroo_Request_Exception( esc_html__( 'Invalid JSON in response body', 'eightshift-forms' ) );
+    }
+
+    if ( ! isset( $post_response_json['RequiredAction']['RedirectURL'] ) ) {
+      throw new Buckaroo_Request_Exception( esc_html__( 'Missing redirect URL in Buckaroo response', 'eightshift-forms' ), $post_response_json );
     }
 
     $response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
@@ -128,6 +182,45 @@ class Buckaroo {
     $this->set_return_url_cancel( $redirect_url_cancel );
     $this->set_return_url_error( $redirect_url_error );
     $this->set_return_url_reject( $redirect_url_reject );
+  }
+
+  /**
+   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+   *
+   * @param  array $params Parameters from request.
+   * @return string
+   */
+  public function generate_debtor_reference( array $params ) {
+    $prefix      = 'debtor';
+    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $random_hash = hash( 'crc32', uniqid() );
+    return "{$prefix}-{$data_hash}-{$random_hash}";
+  }
+
+  /**
+   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+   *
+   * @param  array $params Parameters from request.
+   * @return string
+   */
+  public function generate_invoice_name( array $params ) {
+    $prefix      = 'invoice';
+    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $random_hash = hash( 'crc32', uniqid() );
+    return "{$prefix}-{$data_hash}-{$random_hash}";
+  }
+
+  /**
+   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+   *
+   * @param  array $params Parameters from request.
+   * @return string
+   */
+  public function generate_purchase_id( array $params ) {
+    $prefix      = 'purchase-id';
+    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $random_hash = hash( 'crc32', uniqid() );
+    return "{$prefix}-{$data_hash}-{$random_hash}";
   }
 
   /**
@@ -163,7 +256,7 @@ class Buckaroo {
    * @param  string           $issuer Issuer (bank) name.
    * @return array
    */
-  protected function build_post_body( $donation_amount, string $invoice, string $issuer = '' ): array {
+  protected function build_post_body_for_payment( $donation_amount, string $invoice, string $issuer = '' ): array {
     $this->verify_buckaroo_info_exists();
 
     $post_array = [
@@ -201,6 +294,68 @@ class Buckaroo {
   }
 
   /**
+   * Builds the body of request
+   *
+   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+   * @param  string $issuer          Issuer (bank) name.
+   * @return array
+   */
+  protected function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, $language = 'nl', string $issuer = '' ): array {
+    $this->verify_buckaroo_info_exists();
+
+    $post_array = [
+      'Currency' => $this->get_currency(),
+      'ContinueOnIncomplete' => 1,
+      'Services' => [
+        'ServiceList' => [],
+      ],
+    ];
+
+    $service_array = [
+      'Action' => 'CreateMandate',
+      'Name' => $this->get_pay_type(),
+      'Parameters' => [
+        [
+          'Name' => 'debtorreference',
+          'Value' => $debtorreference,
+        ],
+        [
+          'Name' => 'sequencetype',
+          'Value' => $sequencetype,
+        ],
+        [
+          'Name' => 'purchaseid',
+          'Value' => $purchaseid,
+        ],
+        [
+          'Name' => 'language',
+          'Value' => $language,
+        ],
+      ],
+    ];
+
+    // Add issuing bank if provided as part of request.
+    if ( ! empty( $issuer ) ) {
+      $service_array['Parameters'][] = [
+        'Name' => 'debtorbankid',
+        'Value' => $issuer,
+      ];
+    }
+
+    $post_array['ReturnURL']       = $this->get_return_url();
+    $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
+    $post_array['ReturnURLError']  = $this->get_return_url_error();
+    $post_array['ReturnURLReject'] = $this->get_return_url_reject();
+
+    $post_array['Services']['ServiceList'][] = $service_array;
+
+    return $post_array;
+  }
+
+  /**
    * Make sure we have the data we need defined as filters.
    *
    * @throws \Missing_Filter_Info_Exception When not all required keys are set.
@@ -223,7 +378,25 @@ class Buckaroo {
    * @return string
    */
   protected function get_buckaroo_uri(): string {
-    return $this->is_test() ? self::TEST_URI : self::LIVE_URI;
+    return $this->is_test() ? $this->get_buckaroo_uri_test() : $this->get_buckaroo_uri_live();
+  }
+
+  /**
+   * Returns correct Buckaroo live uri.
+   *
+   * @return string
+   */
+  protected function get_buckaroo_uri_live(): string {
+    return $this->is_data_request() ? self::LIVE_URI_DATA_REQUEST : self::LIVE_URI_TRANSACTION;
+  }
+
+  /**
+   * Returns correct Buckaroo test uri.
+   *
+   * @return string
+   */
+  protected function get_buckaroo_uri_test(): string {
+    return $this->is_data_request() ? self::TEST_URI_DATA_REQUEST : self::TEST_URI_TRANSACTION;
   }
 
   /**
@@ -236,12 +409,30 @@ class Buckaroo {
   }
 
   /**
+   * Check if we're running a test or not.
+   *
+   * @return boolean
+   */
+  protected function is_data_request(): bool {
+    return $this->is_data_request;
+  }
+
+  /**
    * Set if you need to use the test URI instead of live one.
    *
    * @return void
    */
   public function set_test(): void {
     $this->is_test_uri = true;
+  }
+
+  /**
+   * Set if you need to use the test URI instead of live one.
+   *
+   * @return void
+   */
+  public function set_data_request(): void {
+    $this->is_data_request = true;
   }
 
   /**

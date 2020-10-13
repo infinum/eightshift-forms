@@ -109,6 +109,13 @@ class Main extends Lib_Core {
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
       ),
+      Rest\Buckaroo_Emandate_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Rest\Buckaroo_Response_Handler_Route::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
 
       // Email.
       Rest\Send_Email_Route::class => array(
@@ -121,6 +128,7 @@ class Main extends Lib_Core {
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
         Rest\Buckaroo_Ideal_Route::class,
+        Rest\Buckaroo_Emandate_Route::class,
         Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(

@@ -19,6 +19,7 @@ export const FormBuckarooOptions = (props) => {
 
   const buckarooOptions = [
     { label: 'iDEAL', value: 'ideal' },
+    { label: 'Emandate', value: 'emandate' },
   ];
 
   return (
