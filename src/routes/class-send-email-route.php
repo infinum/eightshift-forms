@@ -74,6 +74,7 @@ class Send_Email_Route extends Base_Route {
     return \rest_ensure_response([
       'code' => 200,
       'message' => esc_html__( 'Email sent', 'd66' ),
+      'data' => [],
     ]);
   }
 
@@ -107,29 +108,6 @@ class Send_Email_Route extends Base_Route {
       'message' => $this->replace_placeholders_with_content( $params[ self::MESSAGE_PARAM ], $params ),
       'headers' => $params[ self::ADDITIONAL_HEADERS_PARAM ] ?? '',
     ];
-  }
-
-  /**
-   * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
-   * leave the placeholder in text.
-   *
-   * @param  string $haystack String in which to look for placeholders.
-   * @param  array  $params   Array of params which should hold content for placeholders.
-   * @return string
-   */
-  protected function replace_placeholders_with_content( string $haystack, array $params ) {
-    $content = $haystack;
-
-    $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
-      $output = $match[0];
-      if ( isset( $params[ $match['placeholder_key'] ] ) ) {
-        $output = $params[ $match['placeholder_key'] ];
-      }
-
-      return $output;
-    }, $haystack);
-
-    return $content;
   }
 
   /**

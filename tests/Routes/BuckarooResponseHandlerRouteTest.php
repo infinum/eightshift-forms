@@ -49,7 +49,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
@@ -73,7 +73,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => 'http://someurl-com',
       $this->route_endpoint::STATUS_PARAM => 'success',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -100,7 +100,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->assertSame( 1, did_action( Actions::BUCKAROO_RESPONSE_HANDLER ) );
@@ -126,7 +126,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ) );
