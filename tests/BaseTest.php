@@ -7,6 +7,7 @@ class BaseTest extends \Codeception\Test\Unit
 {
 
   const WP_REDIRECT_ACTION = 'eightshift_forms_test/wp_safe_redirect_happened';
+  const WP_MAIL_ACTION = 'eightshift_forms_test/wp_mail_happened';
 
   protected function _before()
   {
@@ -27,13 +28,6 @@ class BaseTest extends \Codeception\Test\Unit
       ]
     );
 
-    // Given function just return true,
-    Functions\stubs([
-      'wp_safe_redirect' => function($data) {
-        do_action( self::WP_REDIRECT_ACTION, $this);
-      },
-    ]);
-
     // Given functions can have a custom callback.
     Functions\stubs([
       'wp_json_encode' => function($data) {
@@ -49,6 +43,13 @@ class BaseTest extends \Codeception\Test\Unit
         }
 
         return new \WP_REST_Response( $response );
+      },
+      'wp_safe_redirect' => function($data) {
+        do_action( self::WP_REDIRECT_ACTION, $this);
+      },
+      'wp_mail' => function($data) {
+        do_action( self::WP_MAIL_ACTION, $this);
+        return true;
       },
     ]);
 

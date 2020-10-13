@@ -169,7 +169,13 @@ class Main extends Lib_Core {
         Captcha\Basic_Captcha::class,
       ),
 
-      // Buckaroo.
+      // Email route.
+      Rest\Send_Email_Route::class => array(
+        Config::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Buckaroo routes.
       Integrations\Buckaroo\Buckaroo::class => array(
         Integrations\Core\Guzzle_Client::class,
       ),

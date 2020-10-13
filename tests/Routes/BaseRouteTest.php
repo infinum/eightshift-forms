@@ -28,7 +28,6 @@ abstract class BaseRouteTest extends BaseTest
     $this->assertObjectHasAttribute('data', $response);
     $this->assertArrayHasKey('code', $response->data);
     $this->assertArrayHasKey('data', $response->data);
-    $this->assertArrayHasKey('message', $response->data['data']);
   }
 
   protected function verifyProperlyFormattedError($response) {
