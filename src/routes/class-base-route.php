@@ -120,8 +120,9 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       );
     }
 
-    $params = $request->get_params();
-    $params = $this->fix_dot_underscore_replacement( $params );
+    $params      = $request->get_query_params();
+    $params      = $this->fix_dot_underscore_replacement( $params );
+    $post_params = $request->get_body_params();
 
     // Authorized routes need to provide the correct authorization hash to do anything.
     if ( ! empty( $this->get_authorization_salt() ) ) {
@@ -148,6 +149,14 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       );
     }
 
+    // If this route has required parameters, we need to make sure they're all provided.
+    $missing_post_params = $this->find_required_missing_params( $post_params, true );
+    if ( ! empty( $missing_post_params ) ) {
+      throw new Unverified_Request_Exception(
+        $this->rest_response_handler( 'missing-post-params', $missing_post_params )->data
+      );
+    }
+
     return $params;
   }
 
@@ -155,11 +164,13 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * Checks if all required parameters are present in request.
    *
    * @param  array $parameters Array of request parameters.
+   * @param  bool  $is_post    (Optional) True if we're checking POST params instead of GET params.
    * @return array Returns array of missing parameters to pass in response.
    */
-  protected function find_required_missing_params( array $parameters ): array {
-    $missing_params = [];
-    foreach ( $this->get_required_params() as $required_param ) {
+  protected function find_required_missing_params( array $parameters, bool $is_post = false ): array {
+    $missing_params  = [];
+    $required_params = $is_post ? $this->get_required_post_params() : $this->get_required_params();
+    foreach ( $required_params as $required_param ) {
       if ( ! isset( $parameters[ $required_param ] ) ) {
         $missing_params[ self::MISSING_KEYS ] [] = $required_param;
       }
@@ -169,12 +180,44 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
+   * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
    *
    * @return array
    */
   protected function get_required_params(): array {
     return [];
+  }
+
+  /**
+   * Defines a list of required parameters which must be present in the request as POST parameters or it will error out.
+   *
+   * @return array
+   */
+  protected function get_required_post_params(): array {
+    return [];
+  }
+
+  /**
+   * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
+   * leave the placeholder in text.
+   *
+   * @param  string $haystack String in which to look for placeholders.
+   * @param  array  $params   Array of params which should hold content for placeholders.
+   * @return string
+   */
+  protected function replace_placeholders_with_content( string $haystack, array $params ) {
+    $content = $haystack;
+
+    $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
+      $output = $match[0];
+      if ( isset( $params[ $match['placeholder_key'] ] ) ) {
+        $output = $params[ $match['placeholder_key'] ];
+      }
+
+      return $output;
+    }, $haystack);
+
+    return $content;
   }
 
   /**
@@ -302,7 +345,11 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       ],
       'missing-params' => [
         'code' => 400,
-        'message' => esc_html__( 'Missing one or more required parameters to process the request.', 'eightshift-forms' ),
+        'message' => esc_html__( 'Missing one or more required GET parameters to process the request.', 'eightshift-forms' ),
+      ],
+      'missing-post-params' => [
+        'code' => 400,
+        'message' => esc_html__( 'Missing one or more required POST parameters to process the request.', 'eightshift-forms' ),
       ],
       'integration-not-used' => [
         'code' => 400,

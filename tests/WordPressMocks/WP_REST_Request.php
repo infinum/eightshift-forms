@@ -41,6 +41,17 @@ class WP_REST_Request
 	}
 
 	/**
+	 * Retrieves parameters from body.
+	 *
+	 * These are the parameters you'd typically find in `$_POST`.
+	 *
+	 * @return array Parameter map of key to value
+	 */
+	public function get_body_params() {
+		return $this->params['POST'];
+	}
+
+	/**
 	 * Retrieves all params merged into 1 array.
 	 *
 	 * @return array Parameter map of key to value

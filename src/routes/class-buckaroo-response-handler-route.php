@@ -134,14 +134,15 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
   public function route_callback( \WP_REST_Request $request ) {
 
     try {
-      $params = $this->verify_request( $request, Filters::BUCKAROO );
+      $params          = $this->verify_request( $request, Filters::BUCKAROO );
+      $buckaroo_params = $request->get_body_params();
     } catch ( Unverified_Request_Exception $e ) {
       return rest_ensure_response( $e->get_data() );
     }
 
     try {
       if ( has_action( Actions::BUCKAROO_RESPONSE_HANDLER ) ) {
-        do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params );
+        do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
       }
 
       \wp_safe_redirect( $params[ self::REDIRECT_URL_PARAM ] );
@@ -171,6 +172,16 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
       self::REDIRECT_URL_ERROR_PARAM,
       self::REDIRECT_URL_REJECT_PARAM,
       self::STATUS_PARAM,
+    ];
+  }
+
+  /**
+   * Defines a list of required parameters which must be present in the request or it will error out.
+   *
+   * @return array
+   */
+  protected function get_required_post_params(): array {
+    return [
       self::BUCKAROO_RESPONSE_CODE_PARAM,
     ];
   }
