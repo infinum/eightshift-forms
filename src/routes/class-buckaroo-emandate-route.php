@@ -62,7 +62,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       $this->buckaroo->set_pay_type( 'emandate' );
       $response = $this->buckaroo->create_emandate(
         $this->buckaroo->generate_debtor_reference( $params ),
-        '1',
+        '0',
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
         $params[ self::ISSUER_PARAM ] ?? '',
