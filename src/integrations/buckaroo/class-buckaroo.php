@@ -102,9 +102,9 @@ class Buckaroo {
    *
    * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
    */
-  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, $language = 'nl', string $issuer = '' ) {
+  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ) {
     $response             = [];
-    $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer );
+    $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
 
     $post_response = $this->guzzle_client->post("https://{$this->get_buckaroo_uri()}", [
@@ -301,9 +301,10 @@ class Buckaroo {
    * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
+   * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
    * @return array
    */
-  protected function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, $language = 'nl', string $issuer = '' ): array {
+  protected function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
     $this->verify_buckaroo_info_exists();
 
     $post_array = [
@@ -334,6 +335,10 @@ class Buckaroo {
           'Name' => 'language',
           'Value' => $language,
         ],
+        [
+          'Name' => 'emandatereason',
+          'Value' => $emandatereason,
+        ],
       ],
     ];
 
@@ -351,6 +356,8 @@ class Buckaroo {
     $post_array['ReturnURLReject'] = $this->get_return_url_reject();
 
     $post_array['Services']['ServiceList'][] = $service_array;
+
+    error_log(print_r($post_array, true));
 
     return $post_array;
   }

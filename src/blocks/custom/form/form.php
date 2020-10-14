@@ -13,6 +13,7 @@ use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
 use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
+use Eightshift_Forms\Rest\Buckaroo_Emandate_Route;
 
 $block_class                  = $attributes['blockClass'] ?? '';
 $form_action                  = $attributes['action'] ?? '';
@@ -34,8 +35,7 @@ $buckaroo_redirect_url_cancel = $attributes['buckarooRedirectUrlCancel'] ?? '';
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
-$buckaroo_payment_type        = $attributes['buckarooPaymentType'] ?? '';
-
+$buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -75,6 +75,10 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_CANCEL_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_cancel ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_ERROR_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_error ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_REJECT_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_reject ); ?>" />
+
+      <?php if ( $buckaroo_service === 'emandate' ) { ?>
+        <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
+      <?php } ?>
     <?php } ?>
 
   </form>

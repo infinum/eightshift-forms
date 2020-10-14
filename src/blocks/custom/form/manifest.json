@@ -75,6 +75,9 @@
       "type": "string",
       "default": "ideal"
     },
+    "buckarooEmandateDescription": {
+      "type": "string"
+    },
     "buckarooRedirectUrl": {
       "type": "string"
     },

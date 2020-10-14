@@ -30,6 +30,13 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
   const ENDPOINT_SLUG = '/buckaroo-emandate';
 
   /**
+   * Description of the emandate.
+   *
+   * @var string
+   */
+  const EMANDATE_DESCRIPTION_PARAM = 'emandate-description';
+
+  /**
    * Method that returns rest response
    *
    * @param  \WP_REST_Request $request Data got from endpoint url.
@@ -58,7 +65,8 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
         '1',
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
-        $params[ self::ISSUER_PARAM ] ?? ''
+        $params[ self::ISSUER_PARAM ] ?? '',
+        $params[ self::EMANDATE_DESCRIPTION_PARAM ] ?? ''
       );
 
     } catch ( Missing_Filter_Info_Exception $e ) {
@@ -83,6 +91,8 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    * @return array
    */
   protected function get_required_params(): array {
-    return [];
+    return [
+      self::EMANDATE_DESCRIPTION_PARAM,
+    ];
   }
 }

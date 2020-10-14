@@ -1,16 +1,18 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { SelectControl, TextControl } from '@wordpress/components';
+import { SelectControl, TextControl, TextareaControl } from '@wordpress/components';
 
 
 export const FormBuckarooOptions = (props) => {
   const {
     service,
+    emandateDescription,
     redirectUrl,
     redirectUrlCancel,
     redirectUrlError,
     redirectUrlReject,
     onChangeService,
+    onChangeEmandateDescription,
     onChangeRedirectUrl,
     onChangeRedirectUrlCancel,
     onChangeRedirectUrlError,
@@ -34,6 +36,17 @@ export const FormBuckarooOptions = (props) => {
         />
       }
 
+      {onChangeEmandateDescription && service === 'emandate' &&
+        <TextareaControl
+          label={__('Emandate description', 'eightshift-forms')}
+          value={emandateDescription}
+          help={__('A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers\' bank account. Max 70 characters.', 'eightshift-forms')}
+          onChange={(newValue) => {
+            const MAX_CHARS_IN_FIELD = 70;
+            onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_FIELD));
+          }}
+        />
+      }
       {onChangeRedirectUrl &&
         <TextControl
           label={__('Redirect url (on success)', 'eightshift-forms')}
