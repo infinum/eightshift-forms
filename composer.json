@@ -1,10 +1,12 @@
 {
     "name": "eightshift/eightshift-forms-plugin",
-    "version": "1.2.2",
-    "description": "This repository contains all the tools you need to start building a modern WordPress project.",
+    "description": "Eightshift Forms plugin for building developer-friendly Gutenberg-ready forms in WordPress",
     "keywords": [
         "composer",
-        "installer",
+        "form",
+        "forms",
+        "email",
+        "Mailchimp",
         "plugin",
         "blocks",
         "Gutenberg",
@@ -30,7 +32,8 @@
         "codeception/module-asserts": "^1.0.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "infinum/coding-standards-wp": "0.4.3",
-        "php-stubs/wordpress-stubs": "^5.5"
+        "php-stubs/wordpress-stubs": "^5.5",
+        "szepeviktor/phpstan-wordpress": "^0.6.5"
     },
     "require": {
         "php": ">=7.1",
@@ -55,7 +58,10 @@
         "process-timeout": 2000
     },
     "scripts": {
-        "check-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.1-",
-        "fix-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.1-"
+        "analyze": "@php ./vendor/bin/phpstan analyze",
+        "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+        "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
+        "test:all": "@php ./vendor/bin/codecept run",
+        "test:unit": "@php ./vendor/bin/codecept run unit"
     }
 }
