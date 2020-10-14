@@ -73,7 +73,7 @@ class Send_Email_Route extends Base_Route {
 
     return \rest_ensure_response([
       'code' => 200,
-      'message' => esc_html__( 'Email sent', 'd66' ),
+      'message' => esc_html__( 'Email sent', 'eightshift-forms' ),
       'data' => [],
     ]);
   }

@@ -357,8 +357,6 @@ class Buckaroo {
 
     $post_array['Services']['ServiceList'][] = $service_array;
 
-    error_log(print_r($post_array, true));
-
     return $post_array;
   }
 

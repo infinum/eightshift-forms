@@ -30,7 +30,7 @@ final class Missing_Filter_Info_Exception extends \RuntimeException implements G
    */
   public static function view_exception( $filter, $key ) {
     $message = sprintf(
-      \esc_html__( 'Missing a required key %s in %s filter, please provide that as part of return array on that filter', 'eightshift-libs' ),
+      \esc_html__( 'Missing a required key %s in %s filter, please provide that as part of return array on that filter', 'eightshift-forms' ),
       $key,
       $filter
     );
