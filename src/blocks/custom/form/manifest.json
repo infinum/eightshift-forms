@@ -78,6 +78,10 @@
     "buckarooEmandateDescription": {
       "type": "string"
     },
+    "buckarooSequenceType": {
+      "type": "string",
+      "default": "0"
+    },
     "buckarooRedirectUrl": {
       "type": "string"
     },

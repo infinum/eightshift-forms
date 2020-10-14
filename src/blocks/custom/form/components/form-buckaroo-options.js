@@ -8,12 +8,14 @@ export const FormBuckarooOptions = (props) => {
     blockClass,
     service,
     emandateDescription,
+    sequenceType,
     redirectUrl,
     redirectUrlCancel,
     redirectUrlError,
     redirectUrlReject,
     onChangeService,
     onChangeEmandateDescription,
+    onChangeSequenceType,
     onChangeRedirectUrl,
     onChangeRedirectUrlCancel,
     onChangeRedirectUrlError,
@@ -23,6 +25,11 @@ export const FormBuckarooOptions = (props) => {
   const buckarooOptions = [
     { label: 'iDEAL', value: 'ideal' },
     { label: 'Emandate', value: 'emandate' },
+  ];
+
+  const sequenceTypeOptions = [
+    { label: __('Recurring', 'eightshift-forms'), value: '0' },
+    { label: __('One Off', 'eightshift-forms'), value: '1' },
   ];
 
   const fieldsForService = {
@@ -51,6 +58,15 @@ export const FormBuckarooOptions = (props) => {
           value={service}
           options={buckarooOptions}
           onChange={onChangeService}
+        />
+      }
+      {onChangeSequenceType &&
+        <SelectControl
+          label={__('Recurring / One off?', 'eightshift-forms')}
+          help={__('Set if this form will create a recurring or one-off emandate.', 'eightshift-forms')}
+          value={sequenceType}
+          options={sequenceTypeOptions}
+          onChange={onChangeSequenceType}
         />
       }
       {fieldsForService[service] &&

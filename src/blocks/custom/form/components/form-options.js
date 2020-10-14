@@ -26,6 +26,7 @@ export const FormOptions = (props) => {
       emailAdditionalHeaders,
       buckarooService,
       buckarooEmandateDescription,
+      buckarooSequenceType,
       buckarooRedirectUrl,
       buckarooRedirectUrlCancel,
       buckarooRedirectUrlError,
@@ -48,6 +49,7 @@ export const FormOptions = (props) => {
       onChangeEmailAdditionalHeaders,
       onChangeBuckarooService,
       onChangeBuckarooEmandateDescription,
+      onChangeBuckarooSequenceType,
       onChangeBuckarooRedirectUrl,
       onChangeBuckarooRedirectUrlCancel,
       onChangeBuckarooRedirectUrlError,
@@ -190,12 +192,14 @@ export const FormOptions = (props) => {
                   type={type}
                   service={buckarooService}
                   emandateDescription={buckarooEmandateDescription}
+                  sequenceType={buckarooSequenceType}
                   redirectUrl={buckarooRedirectUrl}
                   redirectUrlCancel={buckarooRedirectUrlCancel}
                   redirectUrlError={buckarooRedirectUrlError}
                   redirectUrlReject={buckarooRedirectUrlReject}
                   onChangeService={onChangeBuckarooService}
                   onChangeEmandateDescription={onChangeBuckarooEmandateDescription}
+                  onChangeSequenceType={onChangeBuckarooSequenceType}
                   onChangeRedirectUrl={onChangeBuckarooRedirectUrl}
                   onChangeRedirectUrlCancel={onChangeBuckarooRedirectUrlCancel}
                   onChangeRedirectUrlError={onChangeBuckarooRedirectUrlError}

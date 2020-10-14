@@ -30,11 +30,18 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
   const ENDPOINT_SLUG = '/buckaroo-emandate';
 
   /**
-   * Description of the emandate.
+   * Description of the emandate param.
    *
    * @var string
    */
   const EMANDATE_DESCRIPTION_PARAM = 'emandate-description';
+
+  /**
+   * Sequencetype param for emandates. 0 = recurring, 1 = one off.
+   *
+   * @var string
+   */
+  const SEQUENCE_TYPE_PARAM = 'sequence-type';
 
   /**
    * Method that returns rest response
@@ -62,7 +69,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       $this->buckaroo->set_pay_type( 'emandate' );
       $response = $this->buckaroo->create_emandate(
         $this->buckaroo->generate_debtor_reference( $params ),
-        '0',
+        $params[ self::SEQUENCE_TYPE_PARAM ] ?? '',
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
         $params[ self::ISSUER_PARAM ] ?? '',
@@ -92,6 +99,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    */
   protected function get_required_params(): array {
     return [
+      self::SEQUENCE_TYPE_PARAM,
       self::EMANDATE_DESCRIPTION_PARAM,
     ];
   }

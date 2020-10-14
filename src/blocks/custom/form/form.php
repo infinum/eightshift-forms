@@ -36,6 +36,7 @@ $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
 $buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? '';
+$buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -77,6 +78,7 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_REJECT_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_reject ); ?>" />
 
       <?php if ( $buckaroo_service === 'emandate' ) { ?>
+        <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_sequence_type ); ?>" />
         <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
       <?php } ?>
     <?php } ?>
