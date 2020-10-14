@@ -1,10 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { SelectControl, TextControl, TextareaControl } from '@wordpress/components';
+import { SelectControl, TextControl, TextareaControl, BaseControl } from '@wordpress/components';
 
 
 export const FormBuckarooOptions = (props) => {
   const {
+    blockClass,
     service,
     emandateDescription,
     redirectUrl,
@@ -24,6 +25,23 @@ export const FormBuckarooOptions = (props) => {
     { label: 'Emandate', value: 'emandate' },
   ];
 
+  const fieldsForService = {
+    ideal: [
+      {
+        name: 'donation-amount',
+        required: true,
+      },
+      {
+        name: 'issuer',
+      },
+    ],
+    emandate: [
+      {
+        name: 'issuer',
+      },
+    ],
+  };
+
   return (
     <Fragment>
       {onChangeService &&
@@ -34,6 +52,20 @@ export const FormBuckarooOptions = (props) => {
           options={buckarooOptions}
           onChange={onChangeService}
         />
+      }
+      {fieldsForService[service] &&
+        <BaseControl>
+          <div className={`${blockClass}__fields-for-service`}>
+            <h3>{__('When using this service, you should add fields with the following names: ', 'eightshift-forms')}</h3>
+            <ul className={`${blockClass}__fields-for-service-list`}>
+              {fieldsForService[service].map((serviceField, key) => {
+                return (
+                  <li key={key}>{!serviceField.required ? <i>{__('(Optional)', 'eightshift-forms')}</i> : ''} {serviceField.name}</li>
+                );
+              })}
+            </ul>
+          </div>
+        </BaseControl>
       }
 
       {onChangeEmandateDescription && service === 'emandate' &&
@@ -47,6 +79,7 @@ export const FormBuckarooOptions = (props) => {
           }}
         />
       }
+
       {onChangeRedirectUrl &&
         <TextControl
           label={__('Redirect url (on success)', 'eightshift-forms')}

@@ -186,6 +186,7 @@ export const FormOptions = (props) => {
                 <p>{__('These are options for when your form is sending data to Buckaroo.', 'eightshift-forms')}</p>
                 <br />
                 <FormBuckarooOptions
+                  blockClass={blockClass}
                   type={type}
                   service={buckarooService}
                   emandateDescription={buckarooEmandateDescription}
