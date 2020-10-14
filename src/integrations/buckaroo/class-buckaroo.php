@@ -241,9 +241,9 @@ class Buckaroo {
     $nonce       = \wp_rand( 0000000, 9999999 );
     $time        = time();
 
-    $hmac = $website_key . 'POST' . $uri . $time . $nonce . $post;
-    $s    = hash_hmac( 'sha256', $hmac, $secret_key, true );
-    $hmac = base64_encode( $s ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+    $hmac     = $website_key . 'POST' . $uri . $time . $nonce . $post;
+    $sha_hash = hash_hmac( 'sha256', $hmac, $secret_key, true );
+    $hmac     = base64_encode( $sha_hash ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
     return "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
   }

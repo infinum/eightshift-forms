@@ -42,7 +42,7 @@ class Main extends Lib_Core {
    *
    * @var boolean
    */
-  protected $is_test = false;
+  private $is_test = false;
 
   /**
    * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.

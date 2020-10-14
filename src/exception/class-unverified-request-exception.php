@@ -14,7 +14,7 @@ use Eightshift_Libs\Exception\General_Exception;
 /**
  * Unverified_Request_Exception class.
  */
-class Unverified_Request_Exception extends \Exception implements General_Exception {
+class Unverified_Request_Exception extends \RuntimeException implements General_Exception {
 
   /**
    * Data to expose.

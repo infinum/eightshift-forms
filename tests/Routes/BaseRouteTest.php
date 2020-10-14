@@ -4,7 +4,6 @@ use EightshiftFormsTests\BaseTest;
 
 use Eightshift_Forms\Core\Main;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
-use Eightshift_Forms\Rest\Test_Route;
 
 abstract class BaseRouteTest extends BaseTest
 {

@@ -22,6 +22,8 @@ export const FormBuckarooOptions = (props) => {
     onChangeRedirectUrlReject,
   } = props;
 
+  const MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD = 70;
+
   const buckarooOptions = [
     { label: 'iDEAL', value: 'ideal' },
     { label: 'Emandate', value: 'emandate' },
@@ -90,8 +92,7 @@ export const FormBuckarooOptions = (props) => {
           value={emandateDescription}
           help={__('A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers\' bank account. Max 70 characters.', 'eightshift-forms')}
           onChange={(newValue) => {
-            const MAX_CHARS_IN_FIELD = 70;
-            onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_FIELD));
+            onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD));
           }}
         />
       }

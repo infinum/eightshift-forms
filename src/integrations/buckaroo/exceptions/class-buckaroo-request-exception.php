@@ -14,7 +14,7 @@ use Eightshift_Libs\Exception\General_Exception;
 /**
  * Buckaroo_Request_Exception class.
  */
-class Buckaroo_Request_Exception extends \Exception implements General_Exception {
+class Buckaroo_Request_Exception extends \RuntimeException implements General_Exception {
 
   /**
    * Message to throw.

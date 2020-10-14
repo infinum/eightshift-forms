@@ -35,6 +35,17 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   protected $config;
 
   /**
+   * Method that returns rest response
+   *
+   * @param  \WP_REST_Request $request Data got from endpoint url.
+   *
+   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+   *                                is already an instance, WP_HTTP_Response, otherwise
+   *                                returns a new WP_REST_Response instance.
+   */
+  abstract public function route_callback( \WP_REST_Request $request );
+
+  /**
    * Create a new instance that injects classes
    *
    * @param Config_Data $config Inject config which holds data regarding project details.
@@ -161,25 +172,6 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
-   * Checks if all required parameters are present in request.
-   *
-   * @param  array $parameters Array of request parameters.
-   * @param  bool  $is_post    (Optional) True if we're checking POST params instead of GET params.
-   * @return array Returns array of missing parameters to pass in response.
-   */
-  protected function find_required_missing_params( array $parameters, bool $is_post = false ): array {
-    $missing_params  = [];
-    $required_params = $is_post ? $this->get_required_post_params() : $this->get_required_params();
-    foreach ( $required_params as $required_param ) {
-      if ( ! isset( $parameters[ $required_param ] ) ) {
-        $missing_params[ self::MISSING_KEYS ] [] = $required_param;
-      }
-    }
-
-    return $missing_params;
-  }
-
-  /**
    * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
    *
    * @return array
@@ -231,27 +223,6 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function get_authorization_salt(): string {
     return '';
-  }
-
-  /**
-   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
-   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
-   *
-   * Quick and dirty fix is to replace these values back to dots after receiving them.
-   *
-   * @param array $params Request params.
-   * @return array
-   */
-  protected function fix_dot_underscore_replacement( array $params ): array {
-    foreach ( $params as $key => $value ) {
-      if ( strpos( $key, '@odata_bind' ) !== false ) {
-        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
-        unset( $params[ $key ] );
-        $params[ $new_key ] = $value;
-      }
-    }
-
-    return $params;
   }
 
   /**
@@ -333,7 +304,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    *
    * @return array
    */
-  protected function all_responses(): array {
+  private function all_responses(): array {
     return [
       'wrong-captcha' => [
         'code' => 429,
@@ -373,13 +344,42 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
-   * Method that returns rest response
+   * Checks if all required parameters are present in request.
    *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
+   * @param  array $parameters Array of request parameters.
+   * @param  bool  $is_post    (Optional) True if we're checking POST params instead of GET params.
+   * @return array Returns array of missing parameters to pass in response.
    */
-  abstract public function route_callback( \WP_REST_Request $request );
+  private function find_required_missing_params( array $parameters, bool $is_post = false ): array {
+    $missing_params  = [];
+    $required_params = $is_post ? $this->get_required_post_params() : $this->get_required_params();
+    foreach ( $required_params as $required_param ) {
+      if ( ! isset( $parameters[ $required_param ] ) ) {
+        $missing_params[ self::MISSING_KEYS ] [] = $required_param;
+      }
+    }
+
+    return $missing_params;
+  }
+
+  /**
+   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
+   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
+   *
+   * Quick and dirty fix is to replace these values back to dots after receiving them.
+   *
+   * @param array $params Request params.
+   * @return array
+   */
+  private function fix_dot_underscore_replacement( array $params ): array {
+    foreach ( $params as $key => $value ) {
+      if ( strpos( $key, '@odata_bind' ) !== false ) {
+        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
+        unset( $params[ $key ] );
+        $params[ $new_key ] = $value;
+      }
+    }
+
+    return $params;
+  }
 }
