@@ -84,7 +84,7 @@ class Send_Email_Route extends Base_Route {
    * @param  string $headers Existing headers.
    * @return string
    */
-  protected function add_default_headers( string $headers ) {
+  protected function add_default_headers( string $headers ): string {
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
     return $headers;

@@ -12,18 +12,17 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
-use Eightshift_Forms\Core\Actions;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Actions;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
-use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 
 /**
  * Class Buckaroo_Response_Handler_Route
  */
-class Buckaroo_Response_Handler_Route extends Base_Route {
+class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
 
   /**
    * Route slug
@@ -141,8 +140,8 @@ class Buckaroo_Response_Handler_Route extends Base_Route {
     }
 
     try {
-      if ( has_action( Actions::BUCKAROO_RESPONSE_HANDLER ) ) {
-        do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
+      if ( has_action( self::BUCKAROO_RESPONSE_HANDLER ) ) {
+        do_action( self::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
       }
 
       \wp_safe_redirect( $params[ self::REDIRECT_URL_PARAM ] );

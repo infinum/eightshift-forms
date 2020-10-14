@@ -11,12 +11,12 @@ namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Rest\Base_Route;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
  */
-class Localization_Constants {
+class Localization_Constants implements Filters {
 
   const LOCALIZATION_KEY = 'eightshiftForms';
 
@@ -43,9 +43,9 @@ class Localization_Constants {
     $localization = [
       self::LOCALIZATION_KEY => [
         'siteUrl'           => get_site_url(),
-        'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
-        'isBuckarooUsed'    => has_filter( Filters::BUCKAROO ),
-        'hasThemes'         => has_filter( Filters::GENERAL ),
+        'isDynamicsCrmUsed' => has_filter( self::DYNAMICS_CRM ),
+        'isBuckarooUsed'    => has_filter( self::BUCKAROO ),
+        'hasThemes'         => has_filter( self::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
           'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' ),
@@ -57,19 +57,19 @@ class Localization_Constants {
       ],
     ];
 
-    if ( has_filter( Filters::GENERAL ) ) {
+    if ( has_filter( self::GENERAL ) ) {
       $localization = $this->add_general_constants( $localization );
     }
 
-    if ( has_filter( Filters::DYNAMICS_CRM ) ) {
+    if ( has_filter( self::DYNAMICS_CRM ) ) {
       $localization = $this->add_dynamics_crm_constants( $localization );
     }
 
-    if ( has_filter( Filters::BUCKAROO ) ) {
+    if ( has_filter( self::BUCKAROO ) ) {
       $localization = $this->add_buckaroo_constants( $localization );
     }
 
-    if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
+    if ( has_filter( self::PREFILL_GENERIC_MULTI ) ) {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
@@ -83,7 +83,7 @@ class Localization_Constants {
    * @return array
    */
   protected function add_general_constants( array $localization ): array {
-    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
+    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( self::GENERAL, 'themes' );
     return $localization;
   }
 
@@ -95,10 +95,10 @@ class Localization_Constants {
    * @return array
    */
   protected function add_dynamics_crm_constants( array $localization ): array {
-    $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
+    $entities = apply_filters( self::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
-        sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), self::DYNAMICS_CRM ),
       ];
     } else {
       $available_entities = $entities;
@@ -136,7 +136,7 @@ class Localization_Constants {
    * @return array
    */
   protected function add_prefill_generic_multi_constants(): array {
-    $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
+    $prefill_multi = apply_filters( self::PREFILL_GENERIC_MULTI, [] );
 
     if ( ! is_array( $prefill_multi ) ) {
       return [];

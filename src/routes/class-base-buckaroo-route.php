@@ -12,14 +12,14 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 use Eightshift_Libs\Core\Config_Data;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 /**
  * Class Base_Buckaroo_Route
  */
-abstract class Base_Buckaroo_Route extends Base_Route {
+abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
 
   /**
    * Issuer, bank code.
@@ -137,7 +137,7 @@ abstract class Base_Buckaroo_Route extends Base_Route {
    * @return string
    */
   protected function generate_authorization_salt_for_response_handler(): string {
-    return \apply_filters( Filters::BUCKAROO, 'secret_key' ) ?? 'invalid-salt-for-emandate-handler';
+    return \apply_filters( self::BUCKAROO, 'secret_key' ) ?? 'invalid-salt-for-emandate-handler';
   }
 
   /**

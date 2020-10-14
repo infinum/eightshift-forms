@@ -2,17 +2,17 @@
 /**
  * The Filters class, used for defining available filters
  *
- * @package Eightshift_Forms\Core
+ * @package Eightshift_Forms\Hooks
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Core;
+namespace Eightshift_Forms\Hooks;
 
 /**
  * The Actions class, used for defining available actions.
  */
-class Actions {
+interface Actions {
 
   /**
    * This action should be used when doing Buckaroo integration. It will run after the user

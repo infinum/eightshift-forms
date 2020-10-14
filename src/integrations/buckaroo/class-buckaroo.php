@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Integrations\Buckaroo;
 
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
 use Eightshift_Forms\Integrations\Core\Http_Client;
@@ -17,7 +17,7 @@ use Eightshift_Forms\Integrations\Core\Http_Client;
 /**
  * Buckaroo integration class.
  */
-class Buckaroo {
+class Buckaroo implements Filters {
 
   const TYPE_IDEAL            = 'ideal';
   const LIVE_URI_DATA_REQUEST = 'checkout.buckaroo.nl/json/DataRequest';
@@ -377,8 +377,8 @@ class Buckaroo {
    */
   private function generate_authorization_header( array $post_array, string $buckaroo_uri ): string {
     $this->verify_buckaroo_info_exists();
-    $website_key = \apply_filters( Filters::BUCKAROO, 'website_key' );
-    $secret_key  = \apply_filters( Filters::BUCKAROO, 'secret_key' );
+    $website_key = \apply_filters( self::BUCKAROO, 'website_key' );
+    $secret_key  = \apply_filters( self::BUCKAROO, 'secret_key' );
     $post        = \wp_json_encode( $post_array );
     $md5         = md5( $post, true );
     $post        = base64_encode( $md5 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -502,8 +502,6 @@ class Buckaroo {
 
     $post_array['Services']['ServiceList'][] = $service_array;
 
-    error_log(print_r($post_array, true));
-
     return $post_array;
   }
 
@@ -515,12 +513,12 @@ class Buckaroo {
    * @return void
    */
   private function verify_buckaroo_info_exists(): void {
-    if ( empty( \apply_filters( Filters::BUCKAROO, 'website_key' ) ) ) {
-      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'website_key' );
+    if ( empty( \apply_filters( self::BUCKAROO, 'website_key' ) ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( self::BUCKAROO, 'website_key' );
     }
 
-    if ( empty( \apply_filters( Filters::BUCKAROO, 'secret_key' ) ) ) {
-      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'secret_key' );
+    if ( empty( \apply_filters( self::BUCKAROO, 'secret_key' ) ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( self::BUCKAROO, 'secret_key' );
     }
   }
 

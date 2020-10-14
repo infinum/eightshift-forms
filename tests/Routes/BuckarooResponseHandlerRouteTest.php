@@ -1,11 +1,11 @@
 <?php namespace EightshiftFormsTests\Routes;
 
-use Eightshift_Forms\Core\Actions;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 use Eightshift_Forms\Rest\Buckaroo_Response_Handler_Route;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
+use Eightshift_Forms\Hooks\Actions;
 
-class BuckarooResponseHandlerRouteTest extends BaseRouteTest
+class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters, Actions
 {
   protected function getRouteName(): string {
     return Buckaroo_Response_Handler_Route::class;
@@ -20,11 +20,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
    * @return void
    */
   protected function addHooks() {
-    add_filter( Filters::BUCKAROO, function($key) {
+    add_filter( self::BUCKAROO, function($key) {
       return $key;
     }, 1, 1);
 
-    add_action( Actions::BUCKAROO_RESPONSE_HANDLER, function($key) {
+    add_action( self::BUCKAROO_RESPONSE_HANDLER, function($key) {
       return $key;
     }, 1, 1);
   }
@@ -49,7 +49,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
@@ -73,7 +73,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => 'http://someurl-com',
       $this->route_endpoint::STATUS_PARAM => 'success',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -100,10 +100,10 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
-    $this->assertSame( 1, did_action( Actions::BUCKAROO_RESPONSE_HANDLER ) );
+    $this->assertSame( 1, did_action( self::BUCKAROO_RESPONSE_HANDLER ) );
   }
 
   /**
@@ -126,7 +126,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( Filters::BUCKAROO, 'secret_key' ) );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ) );

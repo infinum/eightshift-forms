@@ -12,8 +12,6 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
-use Eightshift_Forms\Core\Filters;
-use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
@@ -49,7 +47,7 @@ class Buckaroo_Ideal_Route extends Base_Buckaroo_Route {
   public function route_callback( \WP_REST_Request $request ) {
 
     try {
-      $params = $this->verify_request( $request, Filters::BUCKAROO );
+      $params = $this->verify_request( $request, self::BUCKAROO );
     } catch ( Unverified_Request_Exception $e ) {
       return rest_ensure_response( $e->get_data() );
     }

@@ -13,7 +13,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Cache\Cache;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
@@ -24,7 +24,7 @@ use GuzzleHttp\Exception\ClientException;
 /**
  * Class Dynamics_Crm_Fetch_Entity_Route
  */
-class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
+class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
 
   /**
    * This is how long this route's response will be cached.
@@ -69,7 +69,7 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
   public function route_callback( \WP_REST_Request $request ) {
 
     try {
-      $params = $this->verify_request( $request, Filters::DYNAMICS_CRM );
+      $params = $this->verify_request( $request, self::DYNAMICS_CRM );
     } catch ( Unverified_Request_Exception $e ) {
       return rest_ensure_response( $e->get_data() );
     }
@@ -92,11 +92,11 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
 
     $this->dynamics_crm->set_oauth_credentials(
       [
-        'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-        'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
-        'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-        'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-        'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+        'url'           => apply_filters( self::DYNAMICS_CRM, 'auth_token_url' ),
+        'client_id'     => apply_filters( self::DYNAMICS_CRM, 'client_id' ),
+        'client_secret' => apply_filters( self::DYNAMICS_CRM, 'client_secret' ),
+        'scope'         => apply_filters( self::DYNAMICS_CRM, 'scope' ),
+        'api_url'       => apply_filters( self::DYNAMICS_CRM, 'api_url' ),
       ]
     );
 
@@ -164,6 +164,6 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    * @return string
    */
   protected function get_authorization_salt(): string {
-    return \apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ) ?? 'invalid-salt';
+    return \apply_filters( self::DYNAMICS_CRM, 'client_secret' ) ?? 'invalid-salt';
   }
 }

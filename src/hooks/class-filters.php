@@ -2,17 +2,17 @@
 /**
  * The Filters class, used for defining available filters
  *
- * @package Eightshift_Forms\Core
+ * @package Eightshift_Forms\Hooks
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Core;
+namespace Eightshift_Forms\Hooks;
 
 /**
  * The Filters class, used for defining available filters.
  */
-class Filters {
+interface Filters {
 
   /**
    * Filter used to provide Microsoft Dynamics CRM credentials / info from your project to Eightshift Forms.

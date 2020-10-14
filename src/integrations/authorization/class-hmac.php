@@ -10,12 +10,12 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations\Authorization;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 
 /**
  * HMAC generator class.
  */
-class HMAC implements Service, Authorization_Interface {
+class HMAC implements Service, Authorization_Interface, Filters {
 
   const AUTHORIZATION_KEY = 'authorization_hmac';
 
@@ -25,7 +25,7 @@ class HMAC implements Service, Authorization_Interface {
    * @return void
    */
   public function register() {
-    \add_filter( Filters::AUTHORIZATION_GENERATOR, [ $this, 'generate_hash' ], 1, 2 );
+    \add_filter( self::AUTHORIZATION_GENERATOR, [ $this, 'generate_hash' ], 1, 2 );
   }
 
   /**

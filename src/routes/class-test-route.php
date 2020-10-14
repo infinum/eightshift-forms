@@ -12,7 +12,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
@@ -21,7 +21,7 @@ use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 /**
  * Class Test_Route
  */
-class Test_Route extends Base_Route {
+class Test_Route extends Base_Route implements Filters {
 
   /**
    * Route slug

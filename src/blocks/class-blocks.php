@@ -9,12 +9,12 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;
 use Eightshift_Forms\Admin\Forms;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 
 /**
  * Blocks class.
  */
-class Blocks extends Lib_Blocks {
+class Blocks extends Lib_Blocks implements Filters {
 
   /**
    * Register all the hooks
@@ -37,8 +37,8 @@ class Blocks extends Lib_Blocks {
    */
   public function get_all_allowed_forms_blocks( $allowed_block_types, $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {
-      if ( has_filter( Filters::ALLOWED_BLOCKS ) ) {
-        return apply_filters( Filters::ALLOWED_BLOCKS, $this->get_all_blocks_list() );
+      if ( has_filter( self::ALLOWED_BLOCKS ) ) {
+        return apply_filters( self::ALLOWED_BLOCKS, $this->get_all_blocks_list() );
       } else {
         return $this->get_all_blocks_list();
       }
