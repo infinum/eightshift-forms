@@ -1,13 +1,13 @@
 <?php namespace EightshiftFormsTests\Routes;
 
-use Eightshift_Forms\Rest\Test_Route;
+use EightshiftFormsTests\Mocks\TestRoute;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 class TestRouteTest extends BaseRouteTest
 {
   protected function getRouteName(): string {
-    return Test_Route::class;
+    return TestRoute::class;
   }
 
   /**
@@ -19,10 +19,10 @@ class TestRouteTest extends BaseRouteTest
   {
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
-      Test_Route::REQUIRED_PARAMETER_2 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], Test_Route::TEST_SALT );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
@@ -38,9 +38,9 @@ class TestRouteTest extends BaseRouteTest
   {
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], Test_Route::TEST_SALT );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -58,8 +58,8 @@ class TestRouteTest extends BaseRouteTest
 
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
-      Test_Route::REQUIRED_PARAMETER_2 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
@@ -77,12 +77,12 @@ class TestRouteTest extends BaseRouteTest
 
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
       Basic_Captcha::FIRST_NUMBER_KEY => 2,
       Basic_Captcha::SECOND_NUMBER_KEY => 2,
       Basic_Captcha::RESULT_KEY => 5,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], Test_Route::TEST_SALT );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -99,13 +99,13 @@ class TestRouteTest extends BaseRouteTest
 
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
-      Test_Route::REQUIRED_PARAMETER_2 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
       Basic_Captcha::FIRST_NUMBER_KEY => 2,
       Basic_Captcha::SECOND_NUMBER_KEY => 2,
       Basic_Captcha::RESULT_KEY => 4,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], Test_Route::TEST_SALT );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
@@ -122,15 +122,15 @@ class TestRouteTest extends BaseRouteTest
 
     $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
     $request->params['GET'] = [
-      Test_Route::REQUIRED_PARAMETER_1 => 'some-value',
-      Test_Route::REQUIRED_PARAMETER_2 => 'some-value',
-      Test_Route::IRRELEVANT_PARAM => 'some-irrelevant-value',
+      TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
+      TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
+      TestRoute::IRRELEVANT_PARAM => 'some-irrelevant-value',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], Test_Route::TEST_SALT );
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
-    $this->assertArrayNotHasKey(Test_Route::IRRELEVANT_PARAM, $response->data['data']['received-params'] );
+    $this->assertArrayNotHasKey(TestRoute::IRRELEVANT_PARAM, $response->data['data']['received-params'] );
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message']);
   }
 }
