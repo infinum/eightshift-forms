@@ -15,7 +15,6 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Libs\Rest\Base_Route as Libs_Base_Route;
 use Eightshift_Libs\Rest\Callable_Route;
 use Eightshift_Libs\Core\Config_Data;
-use Eightshift_Forms\Core\Filters;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 
@@ -260,7 +259,6 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return \WP_REST_Response|WP_Error|WP_HTTP_Response|mixed
    */
   protected function rest_response_handler_unknown_error( array $data = array() ) {
-
     return \rest_ensure_response(
       array(
         'code' => 400,

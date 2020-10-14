@@ -223,208 +223,7 @@ class Buckaroo {
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
 
-  /**
-   * Generates the correct authorization header.
-   *
-   * @param array  $post_array   Array of post data we're sending to Buckaroo.
-   * @param string $buckaroo_uri Buckaroo URI we're posting to.
-   * @return string
-   */
-  protected function generate_authorization_header( array $post_array, string $buckaroo_uri ): string {
-    $this->verify_buckaroo_info_exists();
-    $website_key = \apply_filters( Filters::BUCKAROO, 'website_key' );
-    $secret_key  = \apply_filters( Filters::BUCKAROO, 'secret_key' );
-    $post        = \wp_json_encode( $post_array );
-    $md5         = md5( $post, true );
-    $post        = base64_encode( $md5 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-    $uri         = strtolower( rawurlencode( $buckaroo_uri ) );
-    $nonce       = \wp_rand( 0000000, 9999999 );
-    $time        = time();
-
-    $hmac     = $website_key . 'POST' . $uri . $time . $nonce . $post;
-    $sha_hash = hash_hmac( 'sha256', $hmac, $secret_key, true );
-    $hmac     = base64_encode( $sha_hash ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-
-    return "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
-  }
-
-  /**
-   * Builds the body of request
-   *
-   * @param  int|float|string $donation_amount Donation amount.
-   * @param  string           $invoice Invoice name.
-   * @param  string           $issuer Issuer (bank) name.
-   * @return array
-   */
-  protected function build_post_body_for_payment( $donation_amount, string $invoice, string $issuer = '' ): array {
-    $this->verify_buckaroo_info_exists();
-
-    $post_array = [
-      'Currency' => $this->get_currency(),
-      'AmountDebit' => $donation_amount,
-      'Invoice' => $invoice,
-      'ContinueOnIncomplete' => 1,
-      'Services' => [
-        'ServiceList' => [],
-      ],
-    ];
-
-    $service_array = [
-      'Action' => 'Pay',
-      'Name' => $this->get_pay_type(),
-      'Parameters' => [],
-    ];
-
-    // Add issuing bank if provided as part of request.
-    if ( ! empty( $issuer ) ) {
-      $service_array['Parameters'][] = [
-        'Name' => 'issuer',
-        'Value' => $issuer,
-      ];
-    }
-
-    $post_array['ReturnURL']       = $this->get_return_url();
-    $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
-    $post_array['ReturnURLError']  = $this->get_return_url_error();
-    $post_array['ReturnURLReject'] = $this->get_return_url_reject();
-
-    $post_array['Services']['ServiceList'][] = $service_array;
-
-    return $post_array;
-  }
-
-  /**
-   * Builds the body of request
-   *
-   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
-   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
-   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
-   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
-   * @param  string $issuer          Issuer (bank) name.
-   * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
-   * @return array
-   */
-  protected function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
-    $this->verify_buckaroo_info_exists();
-
-    $post_array = [
-      'Currency' => $this->get_currency(),
-      'ContinueOnIncomplete' => 1,
-      'Services' => [
-        'ServiceList' => [],
-      ],
-    ];
-
-    $service_array = [
-      'Action' => 'CreateMandate',
-      'Name' => $this->get_pay_type(),
-      'Parameters' => [
-        [
-          'Name' => 'debtorreference',
-          'Value' => $debtorreference,
-        ],
-        [
-          'Name' => 'sequencetype',
-          'Value' => $sequencetype,
-        ],
-        [
-          'Name' => 'purchaseid',
-          'Value' => $purchaseid,
-        ],
-        [
-          'Name' => 'language',
-          'Value' => $language,
-        ],
-        [
-          'Name' => 'emandatereason',
-          'Value' => $emandatereason,
-        ],
-      ],
-    ];
-
-    // Add issuing bank if provided as part of request.
-    if ( ! empty( $issuer ) ) {
-      $service_array['Parameters'][] = [
-        'Name' => 'debtorbankid',
-        'Value' => $issuer,
-      ];
-    }
-
-    $post_array['ReturnURL']       = $this->get_return_url();
-    $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
-    $post_array['ReturnURLError']  = $this->get_return_url_error();
-    $post_array['ReturnURLReject'] = $this->get_return_url_reject();
-
-    $post_array['Services']['ServiceList'][] = $service_array;
-
-    error_log(print_r($post_array, true));
-
-    return $post_array;
-  }
-
-  /**
-   * Make sure we have the data we need defined as filters.
-   *
-   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
-   *
-   * @return void
-   */
-  protected function verify_buckaroo_info_exists(): void {
-    if ( empty( \apply_filters( Filters::BUCKAROO, 'website_key' ) ) ) {
-      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'website_key' );
-    }
-
-    if ( empty( \apply_filters( Filters::BUCKAROO, 'secret_key' ) ) ) {
-      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'secret_key' );
-    }
-  }
-
-  /**
-   * Get the correct url depending on if we're testing or not.
-   *
-   * @return string
-   */
-  protected function get_buckaroo_uri(): string {
-    return $this->is_test() ? $this->get_buckaroo_uri_test() : $this->get_buckaroo_uri_live();
-  }
-
-  /**
-   * Returns correct Buckaroo live uri.
-   *
-   * @return string
-   */
-  protected function get_buckaroo_uri_live(): string {
-    return $this->is_data_request() ? self::LIVE_URI_DATA_REQUEST : self::LIVE_URI_TRANSACTION;
-  }
-
-  /**
-   * Returns correct Buckaroo test uri.
-   *
-   * @return string
-   */
-  protected function get_buckaroo_uri_test(): string {
-    return $this->is_data_request() ? self::TEST_URI_DATA_REQUEST : self::TEST_URI_TRANSACTION;
-  }
-
-  /**
-   * Check if we're running a test or not.
-   *
-   * @return boolean
-   */
-  protected function is_test(): bool {
-    return $this->is_test_uri;
-  }
-
-  /**
-   * Check if we're running a test or not.
-   *
-   * @return boolean
-   */
-  protected function is_data_request(): bool {
-    return $this->is_data_request;
-  }
-
-  /**
+    /**
    * Set if you need to use the test URI instead of live one.
    *
    * @return void
@@ -568,4 +367,206 @@ class Buckaroo {
 
     return $this;
   }
+
+  /**
+   * Generates the correct authorization header.
+   *
+   * @param array  $post_array   Array of post data we're sending to Buckaroo.
+   * @param string $buckaroo_uri Buckaroo URI we're posting to.
+   * @return string
+   */
+  private function generate_authorization_header( array $post_array, string $buckaroo_uri ): string {
+    $this->verify_buckaroo_info_exists();
+    $website_key = \apply_filters( Filters::BUCKAROO, 'website_key' );
+    $secret_key  = \apply_filters( Filters::BUCKAROO, 'secret_key' );
+    $post        = \wp_json_encode( $post_array );
+    $md5         = md5( $post, true );
+    $post        = base64_encode( $md5 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+    $uri         = strtolower( rawurlencode( $buckaroo_uri ) );
+    $nonce       = \wp_rand( 0000000, 9999999 );
+    $time        = time();
+
+    $hmac     = $website_key . 'POST' . $uri . $time . $nonce . $post;
+    $sha_hash = hash_hmac( 'sha256', $hmac, $secret_key, true );
+    $hmac     = base64_encode( $sha_hash ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+
+    return "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
+  }
+
+  /**
+   * Builds the body of request
+   *
+   * @param  int|float|string $donation_amount Donation amount.
+   * @param  string           $invoice Invoice name.
+   * @param  string           $issuer Issuer (bank) name.
+   * @return array
+   */
+  private function build_post_body_for_payment( $donation_amount, string $invoice, string $issuer = '' ): array {
+    $this->verify_buckaroo_info_exists();
+
+    $post_array = [
+      'Currency' => $this->get_currency(),
+      'AmountDebit' => $donation_amount,
+      'Invoice' => $invoice,
+      'ContinueOnIncomplete' => 1,
+      'Services' => [
+        'ServiceList' => [],
+      ],
+    ];
+
+    $service_array = [
+      'Action' => 'Pay',
+      'Name' => $this->get_pay_type(),
+      'Parameters' => [],
+    ];
+
+    // Add issuing bank if provided as part of request.
+    if ( ! empty( $issuer ) ) {
+      $service_array['Parameters'][] = [
+        'Name' => 'issuer',
+        'Value' => $issuer,
+      ];
+    }
+
+    $post_array['ReturnURL']       = $this->get_return_url();
+    $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
+    $post_array['ReturnURLError']  = $this->get_return_url_error();
+    $post_array['ReturnURLReject'] = $this->get_return_url_reject();
+
+    $post_array['Services']['ServiceList'][] = $service_array;
+
+    return $post_array;
+  }
+
+  /**
+   * Builds the body of request
+   *
+   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+   * @param  string $issuer          Issuer (bank) name.
+   * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
+   * @return array
+   */
+  private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
+    $this->verify_buckaroo_info_exists();
+
+    $post_array = [
+      'Currency' => $this->get_currency(),
+      'ContinueOnIncomplete' => 1,
+      'Services' => [
+        'ServiceList' => [],
+      ],
+    ];
+
+    $service_array = [
+      'Action' => 'CreateMandate',
+      'Name' => $this->get_pay_type(),
+      'Parameters' => [
+        [
+          'Name' => 'debtorreference',
+          'Value' => $debtorreference,
+        ],
+        [
+          'Name' => 'sequencetype',
+          'Value' => $sequencetype,
+        ],
+        [
+          'Name' => 'purchaseid',
+          'Value' => $purchaseid,
+        ],
+        [
+          'Name' => 'language',
+          'Value' => $language,
+        ],
+        [
+          'Name' => 'emandatereason',
+          'Value' => $emandatereason,
+        ],
+      ],
+    ];
+
+    // Add issuing bank if provided as part of request.
+    if ( ! empty( $issuer ) ) {
+      $service_array['Parameters'][] = [
+        'Name' => 'debtorbankid',
+        'Value' => $issuer,
+      ];
+    }
+
+    $post_array['ReturnURL']       = $this->get_return_url();
+    $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
+    $post_array['ReturnURLError']  = $this->get_return_url_error();
+    $post_array['ReturnURLReject'] = $this->get_return_url_reject();
+
+    $post_array['Services']['ServiceList'][] = $service_array;
+
+    error_log(print_r($post_array, true));
+
+    return $post_array;
+  }
+
+  /**
+   * Make sure we have the data we need defined as filters.
+   *
+   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
+   *
+   * @return void
+   */
+  private function verify_buckaroo_info_exists(): void {
+    if ( empty( \apply_filters( Filters::BUCKAROO, 'website_key' ) ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'website_key' );
+    }
+
+    if ( empty( \apply_filters( Filters::BUCKAROO, 'secret_key' ) ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( Filters::BUCKAROO, 'secret_key' );
+    }
+  }
+
+  /**
+   * Get the correct url depending on if we're testing or not.
+   *
+   * @return string
+   */
+  private function get_buckaroo_uri(): string {
+    return $this->is_test() ? $this->get_buckaroo_uri_test() : $this->get_buckaroo_uri_live();
+  }
+
+  /**
+   * Returns correct Buckaroo live uri.
+   *
+   * @return string
+   */
+  private function get_buckaroo_uri_live(): string {
+    return $this->is_data_request() ? self::LIVE_URI_DATA_REQUEST : self::LIVE_URI_TRANSACTION;
+  }
+
+  /**
+   * Returns correct Buckaroo test uri.
+   *
+   * @return string
+   */
+  private function get_buckaroo_uri_test(): string {
+    return $this->is_data_request() ? self::TEST_URI_DATA_REQUEST : self::TEST_URI_TRANSACTION;
+  }
+
+  /**
+   * Check if we're running a test or not.
+   *
+   * @return boolean
+   */
+  private function is_test(): bool {
+    return $this->is_test_uri;
+  }
+
+  /**
+   * Check if we're running a test or not.
+   *
+   * @return boolean
+   */
+  private function is_data_request(): bool {
+    return $this->is_data_request;
+  }
+
 }
