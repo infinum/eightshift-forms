@@ -14,6 +14,7 @@ namespace Eightshift_Forms\Rest;
 
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
 
 /**
  * Class Send_Email_Route
@@ -54,15 +55,10 @@ class Send_Email_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    $params = $request->get_query_params();
-
-    if ( ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
-      return $this->rest_response_handler( 'wrong-captcha' );
-    }
-
-    $missing_params = $this->find_required_missing_params( $params );
-    if ( ! empty( $missing_params ) ) {
-      return $this->rest_response_handler( 'missing-params', $missing_params );
+    try {
+      $params = $this->verify_request( $request );
+    } catch ( Unverified_Request_Exception $e ) {
+      return rest_ensure_response( $e->get_data() );
     }
 
     $email_info = $this->build_email_info_from_params( $params );
@@ -77,7 +73,8 @@ class Send_Email_Route extends Base_Route {
 
     return \rest_ensure_response([
       'code' => 200,
-      'message' => esc_html__( 'Email sent', 'd66' ),
+      'message' => esc_html__( 'Email sent', 'eightshift-forms' ),
+      'data' => [],
     ]);
   }
 
@@ -87,7 +84,7 @@ class Send_Email_Route extends Base_Route {
    * @param  string $headers Existing headers.
    * @return string
    */
-  protected function add_default_headers( string $headers ) {
+  protected function add_default_headers( string $headers ): string {
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
     return $headers;
@@ -114,66 +111,16 @@ class Send_Email_Route extends Base_Route {
   }
 
   /**
-   * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
-   * leave the placeholder in text.
-   *
-   * @param  string $haystack String in which to look for placeholders.
-   * @param  array  $params   Array of params which should hold content for placeholders.
-   * @return string
-   */
-  protected function replace_placeholders_with_content( string $haystack, array $params ) {
-    $content = $haystack;
-
-    $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
-      $output = $match[0];
-      if ( isset( $params[ $match['placeholder_key'] ] ) ) {
-        $output = $params[ $match['placeholder_key'] ];
-      }
-
-      return $output;
-    }, $haystack);
-
-    return $content;
-  }
-
-  /**
    * Defines a list of required parameters which must be present in the request or it will error out.
    *
    * @return array
    */
-  protected function get_required_missing_params(): array {
+  protected function get_required_params(): array {
     return [
       self::TO_PARAM,
       self::SUBJECT_PARAM,
       self::MESSAGE_PARAM,
       self::ADDITIONAL_HEADERS_PARAM,
     ];
-  }
-
-  /**
-   * Define a list of responses for this route.
-   *
-   * @return array
-   */
-  protected function defined_responses( string $response_key, array $data = [] ): array {
-    $responses = [
-      'wrong-captcha' => [
-        'code' => 429,
-        'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'send-email-error' => [
-        'code' => 400,
-        'message' => esc_html__( 'Error while sending an email.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-      'missing-params' => [
-        'code' => 400,
-        'message' => esc_html__( 'Missing one or more required parameters to process the request.', 'eightshift-forms' ),
-        'data' => $data,
-      ],
-    ];
-
-    return $responses[ $response_key ];
   }
 }

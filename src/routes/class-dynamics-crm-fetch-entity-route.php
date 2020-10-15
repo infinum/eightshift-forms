@@ -13,16 +13,18 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Cache\Cache;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
+use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class Dynamics_Crm_Fetch_Entity_Route
  */
-class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
+class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
 
   /**
    * This is how long this route's response will be cached.
@@ -43,13 +45,15 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
   /**
    * Construct object
    *
-   * @param Config_Data  $config          Config data obj.
-   * @param Dynamics_CRM $dynamics_crm    Dynamics CRM object.
-   * @param Cache        $transient_cache Cache object.
+   * @param Config_Data             $config          Config data obj.
+   * @param Authorization_Interface $hmac            Authorization object.
+   * @param Dynamics_CRM            $dynamics_crm    Dynamics CRM object.
+   * @param Cache                   $transient_cache Cache object.
    */
-  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Cache $transient_cache ) {
+  public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Authorization_Interface $hmac, Cache $transient_cache ) {
     $this->config       = $config;
     $this->dynamics_crm = $dynamics_crm;
+    $this->hmac         = $hmac;
     $this->cache        = $transient_cache;
   }
 
@@ -64,16 +68,10 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    */
   public function route_callback( \WP_REST_Request $request ) {
 
-    if ( ! has_filter( Filters::DYNAMICS_CRM ) ) {
-      return $this->rest_response_handler( 'dynamics-crm-integration-not-used' );
-    }
-
-    $params = $request->get_query_params();
-
-    $params = $this->fix_dot_underscore_replacement( $params );
-
-    if ( ! isset( $params[ self::ENTITY_PARAM ] ) ) {
-      return $this->rest_response_handler( 'missing-entity-key' );
+    try {
+      $params = $this->verify_request( $request, self::DYNAMICS_CRM );
+    } catch ( Unverified_Request_Exception $e ) {
+      return rest_ensure_response( $e->get_data() );
     }
 
     // We don't want to send thee entity to CRM or it will reject our request.
@@ -94,17 +92,17 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
 
     $this->dynamics_crm->set_oauth_credentials(
       [
-        'url'           => apply_filters( Filters::DYNAMICS_CRM, 'auth_token_url' ),
-        'client_id'     => apply_filters( Filters::DYNAMICS_CRM, 'client_id' ),
-        'client_secret' => apply_filters( Filters::DYNAMICS_CRM, 'client_secret' ),
-        'scope'         => apply_filters( Filters::DYNAMICS_CRM, 'scope' ),
-        'api_url'       => apply_filters( Filters::DYNAMICS_CRM, 'api_url' ),
+        'url'           => apply_filters( self::DYNAMICS_CRM, 'auth_token_url' ),
+        'client_id'     => apply_filters( self::DYNAMICS_CRM, 'client_id' ),
+        'client_secret' => apply_filters( self::DYNAMICS_CRM, 'client_secret' ),
+        'scope'         => apply_filters( self::DYNAMICS_CRM, 'scope' ),
+        'api_url'       => apply_filters( self::DYNAMICS_CRM, 'api_url' ),
       ]
     );
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->dynamics_crm->retch_all_from_entity( $entity, $params );
+      $response = $this->dynamics_crm->fetch_all_from_entity( $entity, $params );
       $this->cache->save( $cache_key, wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
     } catch ( ClientException $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
@@ -125,6 +123,15 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
    *
    * @return array
    */
+  public function permission_callback(): bool {
+    return true;
+  }
+
+  /**
+   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+   *
+   * @return array
+   */
   protected function get_irrelevant_params(): array {
     return [
       self::ENTITY_PARAM,
@@ -136,69 +143,27 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route {
     ];
   }
 
-
   /**
-   * Removes some params we don't want to send to CRM from request.
+   * Defines a list of required parameters which must be present in the request or it will error out.
    *
-   * @param  array $params Params received in request.
    * @return array
    */
-  protected function unset_irrelevant_params( array $params ): array {
-    $filtered_params   = [];
-    $irrelevant_params = array_flip( $this->get_irrelevant_params() );
-
-    foreach ( $params as $key => $param ) {
-      if ( ! isset( $irrelevant_params [ $key ] ) ) {
-        $filtered_params[ $key ] = $param;
-      }
-    }
-
-    return $filtered_params;
-  }
-
-
-  /**
-   * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
-   * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
-   *
-   * Quick and dirty fix is to replace these values back to dots after receiving them.
-   *
-   * @param array $params Request params.
-   * @return array
-   */
-  protected function fix_dot_underscore_replacement( array $params ): array {
-    foreach ( $params as $key => $value ) {
-      if ( strpos( $key, '@odata_bind' ) !== false ) {
-        $new_key = str_replace( '@odata_bind', '@odata.bind', $key );
-        unset( $params[ $key ] );
-        $params[ $new_key ] = $value;
-      }
-    }
-
-    return $params;
-  }
-
-  /**
-   * Define a list of responses for this route.
-   *
-   * @param  string $response_key Which key to return.
-   * @param  array  $data         Optional data to also return in response.
-   * @return array
-   */
-  protected function defined_responses( string $response_key, array $data = [] ): array {
-    $responses = [
-      'dynamics-crm-integration-not-used' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Dynamics CRM integration is not used, please add a %s filter returning all necessary info.', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
-        'data' => $data,
-      ],
-      'missing-entity-key' => [
-        'code' => 400,
-        'message' => sprintf( esc_html__( 'Missing %s key in request', 'eightshift-forms' ), self::ENTITY_PARAM ),
-        'data' => $data,
-      ],
+  protected function get_required_params(): array {
+    return [
+      self::ENTITY_PARAM,
     ];
+  }
 
-    return $responses[ $response_key ];
+  /**
+   * Provide the expected salt ($this->get_authorization_salt()) for this route. This
+   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * handling.
+   *
+   * If this function returns a non-empty value, it is assumed the route requires authorization.
+   *
+   * @return string
+   */
+  protected function get_authorization_salt(): string {
+    return \apply_filters( self::DYNAMICS_CRM, 'client_secret' ) ?? 'invalid-salt';
   }
 }

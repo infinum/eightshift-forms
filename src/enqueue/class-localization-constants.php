@@ -11,12 +11,12 @@ namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Rest\Base_Route;
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
  */
-class Localization_Constants {
+class Localization_Constants implements Filters {
 
   const LOCALIZATION_KEY = 'eightshiftForms';
 
@@ -26,10 +26,12 @@ class Localization_Constants {
    * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
    * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
    */
-  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route, Base_Route $send_email_route ) {
-    $this->manifest           = $manifest;
-    $this->dynamics_crm_route = $dynamics_crm_route;
-    $this->send_email_route   = $send_email_route;
+  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route, Base_Route $buckaroo_ideal_route, Base_Route $buckaroo_emandate_route, Base_Route $send_email_route ) {
+    $this->manifest                = $manifest;
+    $this->dynamics_crm_route      = $dynamics_crm_route;
+    $this->buckaroo_ideal_route    = $buckaroo_ideal_route;
+    $this->buckaroo_emandate_route = $buckaroo_emandate_route;
+    $this->send_email_route        = $send_email_route;
   }
 
   /**
@@ -41,8 +43,9 @@ class Localization_Constants {
     $localization = [
       self::LOCALIZATION_KEY => [
         'siteUrl'           => get_site_url(),
-        'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
-        'hasThemes'         => has_filter( Filters::GENERAL ),
+        'isDynamicsCrmUsed' => has_filter( self::DYNAMICS_CRM ),
+        'isBuckarooUsed'    => has_filter( self::BUCKAROO ),
+        'hasThemes'         => has_filter( self::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
           'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' ),
@@ -54,15 +57,19 @@ class Localization_Constants {
       ],
     ];
 
-    if ( has_filter( Filters::GENERAL ) ) {
+    if ( has_filter( self::GENERAL ) ) {
       $localization = $this->add_general_constants( $localization );
     }
 
-    if ( has_filter( Filters::DYNAMICS_CRM ) ) {
+    if ( has_filter( self::DYNAMICS_CRM ) ) {
       $localization = $this->add_dynamics_crm_constants( $localization );
     }
 
-    if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
+    if ( has_filter( self::BUCKAROO ) ) {
+      $localization = $this->add_buckaroo_constants( $localization );
+    }
+
+    if ( has_filter( self::PREFILL_GENERIC_MULTI ) ) {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
@@ -72,10 +79,11 @@ class Localization_Constants {
   /**
    * Localize all constants required for Dynamics CRM integration.
    *
-   * @return void
+   * @param  array $localization Existing localizations.
+   * @return array
    */
-  protected function add_general_constants( array $localization ) {
-    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
+  protected function add_general_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( self::GENERAL, 'themes' );
     return $localization;
   }
 
@@ -83,13 +91,14 @@ class Localization_Constants {
   /**
    * Localize all constants required for Dynamics CRM integration.
    *
-   * @return void
+   * @param  array $localization Existing localizations.
+   * @return array
    */
-  protected function add_dynamics_crm_constants( array $localization ) {
-    $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
+  protected function add_dynamics_crm_constants( array $localization ): array {
+    $entities = apply_filters( self::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
-        sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), Filters::DYNAMICS_CRM ),
+        sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), self::DYNAMICS_CRM ),
       ];
     } else {
       $available_entities = $entities;
@@ -103,6 +112,23 @@ class Localization_Constants {
     return $localization;
   }
 
+  /**
+   * Localize all constants required for Buckaroo integration.
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  protected function add_buckaroo_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_KEY ]['buckaroo'] = [
+      'restUri' => [
+        'ideal' => $this->buckaroo_ideal_route->get_route_uri(),
+        'emandate' => $this->buckaroo_emandate_route->get_route_uri(),
+      ],
+    ];
+
+    return $localization;
+  }
+
 
   /**
    * Localize all constants required for Dynamics CRM integration.
@@ -110,7 +136,7 @@ class Localization_Constants {
    * @return array
    */
   protected function add_prefill_generic_multi_constants(): array {
-    $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
+    $prefill_multi = apply_filters( self::PREFILL_GENERIC_MULTI, [] );
 
     if ( ! is_array( $prefill_multi ) ) {
       return [];

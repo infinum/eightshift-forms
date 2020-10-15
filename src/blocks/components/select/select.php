@@ -7,7 +7,7 @@
 
 namespace Eightshift_Forms\Blocks;
 
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Helpers\Prefill;
 

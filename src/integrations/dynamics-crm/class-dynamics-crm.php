@@ -75,7 +75,7 @@ class Dynamics_CRM {
    *
    * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
    */
-  public function retch_all_from_entity( string $entity, array $data = [] ) {
+  public function fetch_all_from_entity( string $entity, array $data = [] ) {
     $odata_client = $this->build_odata_client( $this->get_token() );
 
     try {

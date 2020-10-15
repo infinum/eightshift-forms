@@ -14,6 +14,7 @@ export class Form {
     this.overlay = this.formWrapper.querySelector('.js-form-overlay');
     this.basicCaptchaField = this.form.querySelector('.js-block-captcha');
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
+    this.DATA_ATTR_BUCKAROO_SERVICE = 'data-buckaroo-service';
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
 
@@ -24,6 +25,8 @@ export class Form {
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
 
     this.restRouteUrls = {
+      buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
+      buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
     };
@@ -40,6 +43,7 @@ export class Form {
     this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
   }
 
+
   init() {
     this.form.addEventListener('submit', async (e) => {
 
@@ -49,6 +53,27 @@ export class Form {
 
       if (this.formType === 'dynamics-crm') {
         this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
+      }
+
+      if (this.formType === 'buckaroo') {
+        const buckarooService = this.form.getAttribute(this.DATA_ATTR_BUCKAROO_SERVICE);
+        let restUrl = '';
+
+        switch (buckarooService) {
+          case 'ideal':
+            restUrl = this.restRouteUrls.buckarooIdealRestUri;
+            break;
+          case 'emandate':
+            restUrl = this.restRouteUrls.buckarooEmandateRestUri;
+            break;
+          default:
+        }
+
+        const response = await this.submitForm(restUrl, this.getFormData(this.form));
+
+        if (response.code === 200 && response.data && response.data.redirectUrl) {
+          window.location.href = response.data.redirectUrl;
+        }
       }
 
       if (this.formType === 'email') {
@@ -69,6 +94,8 @@ export class Form {
     }
 
     this.endLoading(isSuccess, response);
+
+    return response;
   }
 
   startLoading() {
@@ -112,6 +139,12 @@ export class Form {
    */
   getFormData(form) {
     return [...form.elements].filter((formElem) => {
+
+      // Filter out unchecked radio buttons.
+      if (formElem.getAttribute('type') === 'radio' && !formElem.checked) {
+        return false;
+      }
+
       return formElem.name && (!formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND));
     }).map((formElem) => {
       return {

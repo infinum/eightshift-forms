@@ -9,12 +9,12 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Helpers;
 
-use Eightshift_Forms\Core\Filters;
+use Eightshift_Forms\Hooks\Filters;
 
 /**
  * Helpers for prefill
  */
-class Prefill {
+class Prefill implements Filters {
 
   const FAILED_TO_PREFILL_LABEL = 'Unable to prefill options';
 
@@ -30,7 +30,7 @@ class Prefill {
    * @return array
    */
   public static function get_prefill_source_data( string $prefill_source_name, string $filter_name ): array {
-    if ( ! has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
+    if ( ! has_filter( self::PREFILL_GENERIC_MULTI ) ) {
       return [
         [
           'label' => esc_html__( 'Unable to prefill options, selected options not defined', 'eightshift-forms' ),

@@ -1,54 +1,67 @@
 {
-  "name": "eightshift/eightshift-forms-plugin",
-  "version": "1.2.2",
-  "description": "This repository contains all the tools you need to start building a modern WordPress project.",
-  "keywords": [
-    "composer",
-    "installer",
-    "plugin",
-    "blocks",
-    "Gutenberg",
-    "WordPress"
-  ],
-  "homepage": "https://eightshift.com/",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Eightshift team",
-      "email": "team@eightshift.com",
-      "homepage": "https://eightshift.com/",
-      "role": "Developer / IT Manager"
+    "name": "eightshift/eightshift-forms-plugin",
+    "description": "Eightshift Forms plugin for building developer-friendly Gutenberg-ready forms in WordPress",
+    "keywords": [
+        "composer",
+        "form",
+        "forms",
+        "email",
+        "Mailchimp",
+        "plugin",
+        "blocks",
+        "Gutenberg",
+        "WordPress"
+    ],
+    "homepage": "https://eightshift.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eightshift team",
+            "email": "team@eightshift.com",
+            "homepage": "https://eightshift.com/",
+            "role": "Developer / IT Manager"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/infinum/eightshift-forms-plugin/issues",
+        "source": "https://github.com/infinum/eightshift-forms-plugin"
+    },
+    "require-dev": {
+        "brain/monkey": "^2.5",
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.0.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "infinum/coding-standards-wp": "0.4.3",
+        "php-stubs/wordpress-stubs": "^5.5",
+        "szepeviktor/phpstan-wordpress": "^0.6.5"
+    },
+    "require": {
+        "php": ">=7.1",
+        "guzzlehttp/guzzle": "^6.0",
+        "infinum/eightshift-libs": "^2.2.2",
+        "saintsystems/odata-client": "^0.4.2"
+    },
+    "autoload": {
+        "classmap": [
+            "src/",
+            "tests/WordPressMocks/"
+        ],
+        "psr-4": {
+            "EightshiftFormsTests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "process-timeout": 2000
+    },
+    "scripts": {
+        "analyze": "@php ./vendor/bin/phpstan analyze",
+        "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+        "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
+        "test:all": "@php ./vendor/bin/codecept run",
+        "test:unit": "@php ./vendor/bin/codecept run unit"
     }
-  ],
-  "support": {
-    "issues": "https://github.com/infinum/eightshift-forms-plugin/issues",
-    "source": "https://github.com/infinum/eightshift-forms-plugin"
-  },
-  "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-    "infinum/coding-standards-wp": "0.4.3",
-    "php-stubs/wordpress-stubs": "^5.5"
-  },
-  "require": {
-    "php": ">=7.1",
-    "guzzlehttp/guzzle": "^6.0",
-    "infinum/eightshift-libs": "^2.2.2",
-    "saintsystems/odata-client": "^0.4.2"
-  },
-  "autoload": {
-    "classmap": [
-      "src/"
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "config": {
-    "sort-packages": true,
-    "optimize-autoloader": true,
-    "process-timeout": 2000
-  },
-  "scripts": {
-    "check-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.1-",
-    "fix-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.1-"
-  }
 }

@@ -1,5 +1,13 @@
 $block-form: (
   horizontal-spacing: $base-gutter-size,
+  fields-for-service: (
+    mobile: (
+      border: 1px solid global-settings(colors, black),
+      border-radius: 5px,
+      border-color: global-settings(colors, primary),
+      padding: 5px,
+    )
+  ),
   rich-text: (
     mobile: (
       background: global-settings(colors, white),
@@ -24,5 +32,14 @@ $block-form: (
 
   &__rich-text {
     @include responsive($block-form, rich-text);
+  }
+
+  &__fields-for-service {
+    @include responsive($block-form, fields-for-service);
+  }
+
+  &__fields-for-service-list {
+    list-style: initial;
+    padding-left: 20px;
   }
 }

@@ -24,7 +24,6 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
-use Eightshift_Forms\Integrations\Guzzle_Client;
 use GuzzleHttp\Client;
 
 /**
@@ -39,6 +38,13 @@ use GuzzleHttp\Client;
 class Main extends Lib_Core {
 
   /**
+   * Set this to true if you need dependency injection in tests.
+   *
+   * @var boolean
+   */
+  private $is_test = false;
+
+  /**
    * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
    */
   public function get_default_register_action_hook() : string {
@@ -46,13 +52,11 @@ class Main extends Lib_Core {
   }
 
   /**
-   * Get the list of services to register.
+   * Array of services classes used in production.
    *
-   * A list of classes which contain hooks.
-   *
-   * @return array<string> Array of fully qualified class names.
+   * @return array
    */
-  protected function get_service_classes() : array {
+  protected function prod_service_classes(): array {
     return array(
 
       // Config.
@@ -63,6 +67,9 @@ class Main extends Lib_Core {
 
       // I18n.
       Lib_I18n\I18n::class => array( Config::class ),
+
+      // Authorization.
+      Integrations\Authorization\HMAC::class,
 
       // Dynamics CRM.
       Integrations\Core\Guzzle_Client::class => array(
@@ -82,8 +89,35 @@ class Main extends Lib_Core {
       Rest\Dynamics_Crm_Fetch_Entity_Route::class => array(
         Config::class,
         Integrations\Dynamics_CRM::class,
+        Integrations\Authorization\HMAC::class,
         Cache\Transient_Cache::class,
       ),
+
+      // Buckaroo.
+      Integrations\Buckaroo\Buckaroo::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
+      Rest\Buckaroo_Response_Handler_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Integrations\Authorization\HMAC::class,
+      ),
+      Rest\Buckaroo_Ideal_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Rest\Buckaroo_Response_Handler_Route::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
+      Rest\Buckaroo_Emandate_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Rest\Buckaroo_Response_Handler_Route::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Email.
       Rest\Send_Email_Route::class => array(
         Config::class,
         Captcha\Basic_Captcha::class,
@@ -93,6 +127,8 @@ class Main extends Lib_Core {
       Localization_Constants::class => array(
         Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
+        Rest\Buckaroo_Ideal_Route::class,
+        Rest\Buckaroo_Emandate_Route::class,
         Rest\Send_Email_Route::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
@@ -114,5 +150,69 @@ class Main extends Lib_Core {
       // View.
       View\Post_View_Filter::class,
     );
+  }
+
+  /**
+   * Array of service classes used in tests.
+   *
+   * @return array
+   */
+  protected function test_service_classes(): array {
+    return [
+      // Config.
+      Config::class,
+
+      // Authorization.
+      Integrations\Authorization\HMAC::class,
+
+      // HTTP.
+      Integrations\Core\Guzzle_Client::class => array(
+        Client::class,
+      ),
+
+      // Base route.
+      Rest\Test_Route::class => array(
+        Config::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Email route.
+      Rest\Send_Email_Route::class => array(
+        Config::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Buckaroo routes.
+      Integrations\Buckaroo\Buckaroo::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
+      Rest\Buckaroo_Response_Handler_Route::class => array(
+        Config::class,
+        Integrations\Buckaroo\Buckaroo::class,
+        Integrations\Authorization\HMAC::class,
+      ),
+    ];
+  }
+
+  /**
+   * Get the list of services to register.
+   *
+   * A list of classes which contain hooks.
+   *
+   * @return array<string> Array of fully qualified class names.
+   */
+  protected function get_service_classes() : array {
+    return $this->is_test ? $this->test_service_classes() : $this->prod_service_classes();
+  }
+
+  /**
+   * Provides additional / different services depending on if we're in test or not.
+   *
+   * @param  boolean $is_test Set to true if running tests.
+   * @return void
+   */
+  public function set_test( bool $is_test ): void {
+    $this->is_test = $is_test;
   }
 }

@@ -70,6 +70,29 @@
     },
     "emailAdditionalHeaders": {
       "type": "string"
+    },
+    "buckarooService": {
+      "type": "string",
+      "default": "ideal"
+    },
+    "buckarooEmandateDescription": {
+      "type": "string"
+    },
+    "buckarooSequenceType": {
+      "type": "string",
+      "default": "0"
+    },
+    "buckarooRedirectUrl": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlCancel": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlError": {
+      "type": "string"
+    },
+    "buckarooRedirectUrlReject": {
+      "type": "string"
     }
   }
 }
