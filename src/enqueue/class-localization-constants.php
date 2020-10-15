@@ -26,12 +26,20 @@ class Localization_Constants implements Filters {
    * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
    * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
    */
-  public function __construct( Manifest_Data $manifest, Base_Route $dynamics_crm_route, Base_Route $buckaroo_ideal_route, Base_Route $buckaroo_emandate_route, Base_Route $send_email_route ) {
+  public function __construct(
+    Manifest_Data $manifest,
+    Base_Route $dynamics_crm_route,
+    Base_Route $buckaroo_ideal_route,
+    Base_Route $buckaroo_emandate_route,
+    Base_Route $send_email_route,
+    Base_Route $mailchimp_route
+  ) {
     $this->manifest                = $manifest;
     $this->dynamics_crm_route      = $dynamics_crm_route;
     $this->buckaroo_ideal_route    = $buckaroo_ideal_route;
     $this->buckaroo_emandate_route = $buckaroo_emandate_route;
     $this->send_email_route        = $send_email_route;
+    $this->mailchimp_route         = $mailchimp_route;
   }
 
   /**
@@ -67,6 +75,10 @@ class Localization_Constants implements Filters {
 
     if ( has_filter( self::BUCKAROO ) ) {
       $localization = $this->add_buckaroo_constants( $localization );
+    }
+
+    if ( has_filter( self::MAILCHIMP ) ) {
+      $localization = $this->add_mailchimp_constants( $localization );
     }
 
     if ( has_filter( self::PREFILL_GENERIC_MULTI ) ) {
@@ -129,6 +141,19 @@ class Localization_Constants implements Filters {
     return $localization;
   }
 
+  /**
+   * Localize all constants required for Buckaroo integration.
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  protected function add_mailchimp_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
+      'restUri' => $this->mailchimp_route->get_route_uri(),
+    ];
+
+    return $localization;
+  }
 
   /**
    * Localize all constants required for Dynamics CRM integration.

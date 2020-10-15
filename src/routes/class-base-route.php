@@ -338,6 +338,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => esc_html__( 'Error ocurred, unable to redirect to Buckaroo', 'eightshift-forms' ),
       ],
+
+      // Mailchimp specific.
+      'mailchimp-missing-keys' => [
+        'code' => 400,
+        'message' => esc_html__( 'Not all Mailchimp API info is set', 'eightshift-forms' ),
+      ],
     ];
   }
 

@@ -69,6 +69,7 @@ export const FormOptions = (props) => {
     themes = [],
     isDynamicsCrmUsed,
     isBuckarooUsed,
+    isMailchimpUsed,
     dynamicsCrm = [],
   } = window.eightshiftForms;
 
@@ -85,6 +86,10 @@ export const FormOptions = (props) => {
 
   if (isBuckarooUsed) {
     formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo' });
+  }
+
+  if (isMailchimpUsed) {
+    formTypes.push({ label: __('Mailchimp', 'eightshift-forms'), value: 'mailchimp' });
   }
 
   const tabs = [
@@ -112,7 +117,15 @@ export const FormOptions = (props) => {
     tabs.push({
       name: type,
       title: <Dashicon icon="money" />,
-      className: 'tab-dynamics-crm components-button is-button is-default custom-button-with-icon',
+      className: 'tab-buckaroo components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if (isMailchimpUsed && type === 'mailchimp') {
+    tabs.push({
+      name: type,
+      title: <Dashicon icon="email-alt2" />,
+      className: 'tab-mailchimp components-button is-button is-default custom-button-with-icon',
     });
   }
 
@@ -204,6 +217,19 @@ export const FormOptions = (props) => {
                   onChangeRedirectUrlCancel={onChangeBuckarooRedirectUrlCancel}
                   onChangeRedirectUrlError={onChangeBuckarooRedirectUrlError}
                   onChangeRedirectUrlReject={onChangeBuckarooRedirectUrlReject}
+                />
+
+              </Fragment>
+            )}
+            {tab.name === 'mailchimp' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Mailchimp Options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is sending data to Mailchimp.', 'eightshift-forms')}</p>
+                <br />
+                <FormMailchimpOptions
+                  blockClass={blockClass}
+                  type={type}
                 />
 
               </Fragment>

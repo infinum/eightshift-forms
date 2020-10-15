@@ -39,6 +39,7 @@
         "php": ">=7.1",
         "guzzlehttp/guzzle": "^6.0",
         "infinum/eightshift-libs": "^2.2.2",
+        "mailchimp/marketing": "dev-master",
         "saintsystems/odata-client": "^0.4.2"
     },
     "autoload": {

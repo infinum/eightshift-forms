@@ -59,4 +59,5 @@ interface Filters {
   const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
   const DYNAMICS_CRM            = 'eightshift_forms/dynamics_info';
   const BUCKAROO                = 'eightshift_forms/buckaroo';
+  const MAILCHIMP               = 'eightshift_forms/mailchimp';
 }
