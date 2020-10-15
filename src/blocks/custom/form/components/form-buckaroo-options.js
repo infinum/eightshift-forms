@@ -62,15 +62,6 @@ export const FormBuckarooOptions = (props) => {
           onChange={onChangeService}
         />
       }
-      {onChangeSequenceType &&
-        <SelectControl
-          label={__('Recurring / One off?', 'eightshift-forms')}
-          help={__('Set if this form will create a recurring or one-off emandate.', 'eightshift-forms')}
-          value={sequenceType}
-          options={sequenceTypeOptions}
-          onChange={onChangeSequenceType}
-        />
-      }
       {fieldsForService[service] &&
         <BaseControl>
           <div className={`${blockClass}__fields-for-service`}>
@@ -84,6 +75,15 @@ export const FormBuckarooOptions = (props) => {
             </ul>
           </div>
         </BaseControl>
+      }
+      {onChangeSequenceType && service === 'emandate' &&
+        <SelectControl
+          label={__('Recurring / One off?', 'eightshift-forms')}
+          help={__('Set if this form will create a recurring or one-off emandate.', 'eightshift-forms')}
+          value={sequenceType}
+          options={sequenceTypeOptions}
+          onChange={onChangeSequenceType}
+        />
       }
 
       {onChangeEmandateDescription && service === 'emandate' &&
