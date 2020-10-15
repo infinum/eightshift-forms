@@ -28,13 +28,73 @@ class Mailchimp {
     $this->guzzle_client = $guzzle_client;
   }
 
-  public function add_or_update_record( string $email, string $list_id, array $params ) {
-    error_log( 'Added or updated record' );
-    $this->build_client();
+  /**
+   * Adds or updates a member in Mailchimp.
+   *
+   * @param  string $list_id Audience list ID.
+   * @param  string $email   Contact's email.
+   * @param  string $status  (Optional) Member's status (if new).
+   * @param  array  $params  (Optional) list of params from request.
+   * @return mixed
+   */
+  public function add_or_update_member( string $list_id, string $email, string $status = 'pending', array $params = [] ) {
+    $this->maybe_build_client();
 
-    $this->add_or_update_member( $email, $list_id );
-    error_log(print_r($mailchimp->lists, true));
-    $response = $mailchimp->ping->get();
+    $response = $this->client->lists->setListMember($list_id, $this->calculate_subscriber_hash( $email ), [
+      'email_address' => $email,
+      'status_if_new' => $status,
+    ]);
+    return $response;
+  }
+
+  /**
+   * Add a tag to a member
+   *
+   * @param  string       $list_id Audience list ID.
+   * @param  string       $email   Contact's email.
+   * @param  array<array> $tags    Array of tags for user, requires to keys: name, status.
+   * @return mixed
+   */
+  public function update_list_member_tags( string $list_id, string $email, array $tags ) {
+    $this->maybe_build_client();
+    $response = $this->client->lists->updateListMemberTags( $list_id, $this->calculate_subscriber_hash( $email ), $tags );
+    return $response;
+  }
+
+  /**
+   * List a member
+   *
+   * @param  string $list_id Audience list ID.
+   * @param  string $email   Contact's email.
+   * @return mixed
+   */
+  public function get_list_member( string $list_id, string $email ) {
+    $this->maybe_build_client();
+    $response = $this->client->lists->getListMember( $list_id, $this->calculate_subscriber_hash( $email ) );
+    return $response;
+  }
+
+  /**
+   * Get information about all lists in the account.
+   *
+   * @return mixed
+   */
+  public function get_all_lists() {
+    $this->maybe_build_client();
+    $response = $this->client->lists->getAllLists();
+    return $response;
+  }
+
+  /**
+   * Get a list of member's tags.
+   *
+   * @param  string $list_id Audience list ID.
+   * @param  string $email   Contact's email.
+   * @return mixed
+   */
+  private function get_list_member_tags( string $list_id, string $email ) {
+    $this->maybe_build_client();
+    $response = $this->client->lists->getListMemberTags( $list_id, $this->calculate_subscriber_hash( $email ) );
     return $response;
   }
 
@@ -43,21 +103,23 @@ class Mailchimp {
    *
    * @return void
    */
-  private function build_client(): void {
-    $mailchimp = new ApiClient();
-    $mailchimp->setConfig( $this->get_config() );
-    $this->client = $mailchimp;
+  private function maybe_build_client(): void {
+    if ( empty( $this->client ) ) {
+      $client = new ApiClient();
+      $client->setConfig( $this->get_config() );
+      $this->client = $client;
+
+    }
   }
 
   /**
-   * Add or update member to Mailchimp.
+   * Calculates the subscriber hash from email.
    *
-   * @param string $email
-   * @param string $list_id
-   * @return boolean
+   * @param  string $email Contact's email.
+   * @return string
    */
-  private function add_or_update_member( string $email, string $list_id ): bool {
-    return true;
+  private function calculate_subscriber_hash( string $email ): string {
+    return md5( $email );
   }
 
   /**
