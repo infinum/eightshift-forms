@@ -14,6 +14,7 @@ use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
 use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
 use Eightshift_Forms\Rest\Buckaroo_Emandate_Route;
+use Eightshift_Forms\Rest\Mailchimp_Route;
 
 $block_class                  = $attributes['blockClass'] ?? '';
 $form_action                  = $attributes['action'] ?? '';
@@ -37,6 +38,7 @@ $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
 $buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? '';
 $buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
+$mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -81,6 +83,10 @@ $block_classes = Components::classnames([
         <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_sequence_type ); ?>" />
         <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
       <?php } ?>
+    <?php } ?>
+
+    <?php if ( $form_type === Config::MAILCHIMP_METHOD ) { ?>
+      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
     <?php } ?>
 
   </form>

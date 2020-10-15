@@ -12,6 +12,7 @@ namespace Eightshift_Forms\Enqueue;
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Rest\Base_Route;
 use Eightshift_Forms\Hooks\Filters;
+use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
@@ -32,7 +33,8 @@ class Localization_Constants implements Filters {
     Base_Route $buckaroo_ideal_route,
     Base_Route $buckaroo_emandate_route,
     Base_Route $send_email_route,
-    Base_Route $mailchimp_route
+    Base_Route $mailchimp_route,
+    Mailchimp $mailchimp
   ) {
     $this->manifest                = $manifest;
     $this->dynamics_crm_route      = $dynamics_crm_route;
@@ -40,6 +42,7 @@ class Localization_Constants implements Filters {
     $this->buckaroo_emandate_route = $buckaroo_emandate_route;
     $this->send_email_route        = $send_email_route;
     $this->mailchimp_route         = $mailchimp_route;
+    $this->mailchimp               = $mailchimp;
   }
 
   /**
@@ -51,9 +54,10 @@ class Localization_Constants implements Filters {
     $localization = [
       self::LOCALIZATION_KEY => [
         'siteUrl'           => get_site_url(),
-        'isDynamicsCrmUsed' => has_filter( self::DYNAMICS_CRM ),
-        'isBuckarooUsed'    => has_filter( self::BUCKAROO ),
-        'hasThemes'         => has_filter( self::GENERAL ),
+        'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
+        'isBuckarooUsed'    => has_filter( Filters::BUCKAROO ),
+        'isMailchimpUsed'   => has_filter( Filters::MAILCHIMP ),
+        'hasThemes'         => has_filter( Filters::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
           'formSuccess' => esc_html__( 'Form successfully submitted.', 'eightshift-forms' ),
@@ -65,23 +69,23 @@ class Localization_Constants implements Filters {
       ],
     ];
 
-    if ( has_filter( self::GENERAL ) ) {
+    if ( has_filter( Filters::GENERAL ) ) {
       $localization = $this->add_general_constants( $localization );
     }
 
-    if ( has_filter( self::DYNAMICS_CRM ) ) {
+    if ( has_filter( Filters::DYNAMICS_CRM ) ) {
       $localization = $this->add_dynamics_crm_constants( $localization );
     }
 
-    if ( has_filter( self::BUCKAROO ) ) {
+    if ( has_filter( Filters::BUCKAROO ) ) {
       $localization = $this->add_buckaroo_constants( $localization );
     }
 
-    if ( has_filter( self::MAILCHIMP ) ) {
+    if ( has_filter( Filters::MAILCHIMP ) ) {
       $localization = $this->add_mailchimp_constants( $localization );
     }
 
-    if ( has_filter( self::PREFILL_GENERIC_MULTI ) ) {
+    if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
@@ -95,7 +99,7 @@ class Localization_Constants implements Filters {
    * @return array
    */
   protected function add_general_constants( array $localization ): array {
-    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( self::GENERAL, 'themes' );
+    $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
     return $localization;
   }
 
@@ -107,7 +111,7 @@ class Localization_Constants implements Filters {
    * @return array
    */
   protected function add_dynamics_crm_constants( array $localization ): array {
-    $entities = apply_filters( self::DYNAMICS_CRM, 'available_entities' );
+    $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
         sprintf( esc_html__( 'No options found, please set available options in %s filter as available_entities', 'eightshift-forms' ), self::DYNAMICS_CRM ),
@@ -150,10 +154,61 @@ class Localization_Constants implements Filters {
   protected function add_mailchimp_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
+      'audiences' => $this->fetch_mailchimp_audiences(),
     ];
 
     return $localization;
   }
+
+  /**
+   * Reads the list of audiences from Mailchimp. Used in form options to
+   * select which audience does this form post to.
+   *
+   * @return array
+   */
+  protected function fetch_mailchimp_audiences(): array {
+    $audiences = [];
+
+    try {
+      $response = $this->mailchimp->get_all_lists();
+    } catch ( \Exception $e ) {
+      return $audiences;
+    }
+
+    foreach ( $response->lists as $list_obj ) {
+      $audiences[] = [
+        'value' => $list_obj->id,
+        'label' => $list_obj->name,
+      ];
+    }
+
+    return $audiences;
+  }
+
+  // /**
+  //  * Reads the list of audiences from Mailchimp. Used in form options to
+  //  * select which audience does this form post to.
+  //  *
+  //  * @return array
+  //  */
+  // protected function fetch_mailchimp_segments(): array {
+  //   $tags = [];
+
+  //   try {
+  //     $response = $this->mailchimp->get_all_segments('eb7fd0b84a');
+  //   } catch ( \Exception $e ) {
+  //     return $tags;
+  //   }
+
+  //   // foreach ( $response->lists as $list_obj ) {
+  //   //   $audiences[] = [
+  //   //     'value' => $list_obj->id,
+  //   //     'label' => $list_obj->name,
+  //   //   ];
+  //   // }
+
+  //   return $tags;
+  // }
 
   /**
    * Localize all constants required for Dynamics CRM integration.
@@ -161,7 +216,7 @@ class Localization_Constants implements Filters {
    * @return array
    */
   protected function add_prefill_generic_multi_constants(): array {
-    $prefill_multi = apply_filters( self::PREFILL_GENERIC_MULTI, [] );
+    $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
 
     if ( ! is_array( $prefill_multi ) ) {
       return [];

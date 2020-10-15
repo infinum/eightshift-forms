@@ -12,12 +12,18 @@ namespace Eightshift_Forms\Integrations\Mailchimp;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Core\Http_Client;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
-use \MailchimpMarketing\ApiClient;
-
+use \MailchimpMarketing\ApiClient as MarketingApiClient;
 /**
  * Mailchimp integration class.
  */
 class Mailchimp {
+
+  /**
+   * Mailchimp Marketing Api client.
+   *
+   * @var ApiClient
+   */
+  private $client;
 
   /**
    * Constructs object
@@ -78,10 +84,36 @@ class Mailchimp {
    * Get information about all lists in the account.
    *
    * @return mixed
+   *
+   * @throws \Exception When response is invalid.
    */
   public function get_all_lists() {
     $this->maybe_build_client();
     $response = $this->client->lists->getAllLists();
+
+    if ( ! isset( $response, $response->lists ) && ! is_array( $response->lists ) ) {
+      throw new \Exception( 'Lists response invalid' );
+    }
+
+    foreach ( $response->lists as $list_obj ) {
+
+      if ( ! is_object( $list_obj ) || ! isset( $list_obj->id, $list_obj->name ) ) {
+        throw new \Exception( 'Lists response invalid' );
+      }
+    }
+
+    return $response;
+  }
+
+  /**
+   * Get information about all tags in the account.
+   *
+   * @param  string $list_id Audience list ID.
+   * @return mixed
+   */
+  public function get_all_segments( string $list_id ) {
+    $this->maybe_build_client();
+    $response = $this->client->lists->listSegments( $list_id );
     return $response;
   }
 
@@ -105,10 +137,13 @@ class Mailchimp {
    */
   private function maybe_build_client(): void {
     if ( empty( $this->client ) ) {
-      $client = new ApiClient();
-      $client->setConfig( $this->get_config() );
+      $this->verify_mailchimp_info_exists();
+      $client = new MarketingApiClient();
+      $client->setConfig( [
+        'apiKey' => \apply_filters( Filters::MAILCHIMP, 'api_key' ),
+        'server' => \apply_filters( Filters::MAILCHIMP, 'server' ),
+      ] );
       $this->client = $client;
-
     }
   }
 
@@ -120,20 +155,6 @@ class Mailchimp {
    */
   private function calculate_subscriber_hash( string $email ): string {
     return md5( $email );
-  }
-
-  /**
-   * Reads API connection details from filters.
-   *
-   * @return array
-   */
-  private function get_config(): array {
-    $this->verify_mailchimp_info_exists();
-
-    return [
-      'apiKey' => \apply_filters( Filters::MAILCHIMP, 'api_key' ),
-      'server' => \apply_filters( Filters::MAILCHIMP, 'server' ),
-    ];
   }
 
   /**

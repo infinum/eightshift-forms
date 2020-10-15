@@ -5,6 +5,7 @@ import { FormGeneralOptions } from './form-general-options';
 import { FormDynamicsCrmOptions } from './form-dynamics-crm-options';
 import { FormBuckarooOptions } from './form-buckaroo-options';
 import { FormEmailOptions } from './form-email-options';
+import { FormMailchimpOptions } from './form-mailchimp-options';
 
 export const FormOptions = (props) => {
   const {
@@ -31,6 +32,11 @@ export const FormOptions = (props) => {
       buckarooRedirectUrlCancel,
       buckarooRedirectUrlError,
       buckarooRedirectUrlReject,
+      mailchimpListId,
+      mailchimpAddTag,
+      mailchimpTag,
+      mailchimpAddSegment,
+      mailchimpSegment,
     },
     actions: {
       onChangeAction,
@@ -54,6 +60,11 @@ export const FormOptions = (props) => {
       onChangeBuckarooRedirectUrlCancel,
       onChangeBuckarooRedirectUrlError,
       onChangeBuckarooRedirectUrlReject,
+      onChangeMailchimpListId,
+      onChangeMailchimpAddTag,
+      onChangeMailchimpTag,
+      onChangeMailchimpAddSegment,
+      onChangeMailchimpSegment,
     },
   } = props;
 
@@ -71,6 +82,9 @@ export const FormOptions = (props) => {
     isBuckarooUsed,
     isMailchimpUsed,
     dynamicsCrm = [],
+    mailchimp: {
+      audiences,
+    },
   } = window.eightshiftForms;
 
   const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
@@ -230,6 +244,17 @@ export const FormOptions = (props) => {
                 <FormMailchimpOptions
                   blockClass={blockClass}
                   type={type}
+                  listId={mailchimpListId}
+                  audiences={audiences}
+                  addTag={mailchimpAddTag}
+                  tag={mailchimpTag}
+                  addSegment={mailchimpAddSegment}
+                  segment={mailchimpSegment}
+                  onChangeListId={onChangeMailchimpListId}
+                  onChangeAddTag={onChangeMailchimpAddTag}
+                  onChangeTag={onChangeMailchimpTag}
+                  onChangeAddSegment={onChangeMailchimpAddSegment}
+                  onChangeSegment={onChangeMailchimpSegment}
                 />
 
               </Fragment>

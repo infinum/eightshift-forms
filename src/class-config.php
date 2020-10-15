@@ -41,6 +41,13 @@ class Config extends Lib_Config {
   const BUCKAROO_METHOD = 'buckaroo';
 
   /**
+   * Value for the form type when it's submitting to Mailchimp.
+   *
+   * @var string
+   */
+  const MAILCHIMP_METHOD = 'mailchimp';
+
+  /**
    * Method that returns project name.
    *
    * Generally used for naming assets handlers, languages, etc.

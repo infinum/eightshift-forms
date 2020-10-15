@@ -1,9 +1,9 @@
 <?php
 /**
- * Endpoint for adding / updating contacts in Mailchimp.
+ * Endpoint for fetching segments for a list from Mailchimp.
  *
  * Example call:
- * /wp-json/eightshift-forms/v1/mailchimp
+ * /wp-json/eightshift-forms/v1/mailchimp-fetch-segments
  *
  * @package Eightshift_Forms\Rest
  */
@@ -20,23 +20,16 @@ use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
 
 /**
- * Class Mailchimp_Route
+ * Class Mailchimp_Fetch_Segments_Route
  */
-class Mailchimp_Route extends Base_Route implements Filters {
+class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
 
   /**
    * Route slug
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/mailchimp';
-
-  /**
-   * Parameter for email.
-   *
-   * @var string
-   */
-  const EMAIL_PARAM = 'email';
+  const ENDPOINT_SLUG = '/mailchimp-fetch-segments';
 
   /**
    * Parameter for list ID.
@@ -76,28 +69,11 @@ class Mailchimp_Route extends Base_Route implements Filters {
     }
 
     $list_id = $params[ self::LIST_ID_PARAM ] ?? '';
-    $email   = $params[ self::EMAIL_PARAM ] ?? '';
+    // $list_id = $params[ self::LIST_ID_PARAM ] ?? '';
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->mailchimp->add_or_update_member(
-        $list_id,
-        $email
-      );
-      $response_tags = $this->mailchimp->update_list_member_tags(
-        $list_id,
-        $email,
-        [
-          [
-            'name' => 'testtag',
-            'status' => 'active'
-          ],
-        ]
-      );
-
-      error_log(print_r($this->mailchimp->get_list_member( $list_id, $email ), true));
-      error_log(print_r($response_tags, true));
-      error_log(print_r($this->mailchimp->get_all_lists(), true));
+      $response = $this->mailchimp->get_all_segments( $list_id );
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailchimp-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
@@ -120,7 +96,6 @@ class Mailchimp_Route extends Base_Route implements Filters {
    */
   protected function get_required_params(): array {
     return [
-      self::EMAIL_PARAM,
       self::LIST_ID_PARAM,
     ];
   }

@@ -127,6 +127,11 @@ class Main extends Lib_Core {
         Integrations\Mailchimp\Mailchimp::class,
         Captcha\Basic_Captcha::class,
       ),
+      Rest\Mailchimp_Fetch_Segments_Route::class => array(
+        Config::class,
+        Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
+      ),
 
       // Email.
       Rest\Send_Email_Route::class => array(
@@ -142,6 +147,7 @@ class Main extends Lib_Core {
         Rest\Buckaroo_Emandate_Route::class,
         Rest\Send_Email_Route::class,
         Rest\Mailchimp_Route::class,
+        Integrations\Mailchimp\Mailchimp::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,
