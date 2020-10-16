@@ -95,9 +95,6 @@ class Mailchimp_Route extends Base_Route implements Filters {
         ]
       );
 
-      error_log(print_r($this->mailchimp->get_list_member( $list_id, $email ), true));
-      error_log(print_r($response_tags, true));
-      error_log(print_r($this->mailchimp->get_all_lists(), true));
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailchimp-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
