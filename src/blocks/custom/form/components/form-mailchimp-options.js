@@ -8,11 +8,17 @@ import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
 
 const getTagsAndSegments = (listId) => {
   return useSelect((select) => {
-    const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveSegments(listId);
+    const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveSegments([
+      {
+        key: 'list-id',
+        value: listId,
+      },
+    ]);
 
     // Response if there was an error.
     if (!response || !response.data || response.code !== 200 || !response.data.tags || !response.data.segments) {
       return {
+        routeResponse: response,
         isLoading: _.isEmpty(response),
         tags: [],
         segments: [],
@@ -53,9 +59,9 @@ export const FormMailchimpOptions = (props) => {
   } = props;
 
   const tagsAndSegments = getTagsAndSegments(listId);
+  console.log(tagsAndSegments);
 
   const {
-    routeResponse,
     isLoading,
     tags,
     segments,

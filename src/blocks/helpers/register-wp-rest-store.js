@@ -1,5 +1,30 @@
 import apiFetch from '@wordpress/api-fetch';
 import { registerStore } from '@wordpress/data';
+import crypto from 'crypto';
+
+/**
+ * Generates a unique hash (to be used as key) from argument data. This is to ensure each call with different arguments
+ * is properly stored / retrieved.
+ *
+ * Tries to be smart in determining which algo is used and has a relatively ugly fallback if for some reason none of
+ * the acceptable hashing algorithms are available in Node.
+ *
+ * @param {array} args Route query arguments.
+ * @return {string}
+ */
+const generateKeyFromArgs = (args) => {
+  const acceptableAlgos = [
+    'sha256',
+    'md5',
+  ];
+
+  const usedAlgo = acceptableAlgos.filter((algo) => {
+    return crypto.getHashes().includes(algo);
+  })[0] ?? '';
+
+  const hash = usedAlgo ? crypto.createHash(usedAlgo).update(JSON.stringify(args)).digest('hex') : JSON.stringify(args);
+  return hash;
+};
 
 /**
  * Registers a custom store for a custom WP Rest route. All GET parameters should be passed on
@@ -13,11 +38,11 @@ export const registerWpRestStore = (routeUri) => {
         segments,
       };
     },
-    receiveSegmentsAction(path, listId) {
+    receiveSegmentsAction(path, args) {
       return {
         type: 'RECEIVE_SEGMENTS',
         path,
-        listId,
+        args,
       };
     },
   };
@@ -43,23 +68,29 @@ export const registerWpRestStore = (routeUri) => {
     actions,
 
     selectors: {
-      receiveSegments(state, listId) {
+      receiveSegments(state, args) {
         const { segments } = state;
-        return segments[listId] ?? {};
+        return segments[generateKeyFromArgs(args)] ?? {};
       },
     },
 
     controls: {
       RECEIVE_SEGMENTS(action) {
-        const path = `${action.path}?list-id=${action.listId}`;
-        return apiFetch({ path });
+        const {
+          path,
+          args,
+        } = action;
+
+        const argsAsQueryParams = `${args[0].key}=${args[0].value}`;
+        const fullPath = `${path}?${argsAsQueryParams}`;
+        return apiFetch({ path: fullPath });
       },
     },
 
     resolvers: {
-      * receiveSegments(listId) {
-        const segments = yield actions.receiveSegmentsAction(`/${routeUri}`, listId);
-        return actions.setSegments({ [listId]: segments });
+      * receiveSegments(args) {
+        const segments = yield actions.receiveSegmentsAction(`/${routeUri}`, args);
+        return actions.setSegments({ [generateKeyFromArgs(args)]: segments });
       },
     },
   });
