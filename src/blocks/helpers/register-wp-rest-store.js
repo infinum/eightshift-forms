@@ -32,15 +32,15 @@ const generateKeyFromArgs = (args) => {
  */
 export const registerWpRestStore = (routeUri) => {
   const actions = {
-    setSegments(segments) {
+    setResponse(response) {
       return {
-        type: 'SET_SEGMENTS',
-        segments,
+        type: 'SET_RESPONSE',
+        response,
       };
     },
-    receiveSegmentsAction(path, args) {
+    receiveResponseAction(path, args) {
       return {
-        type: 'RECEIVE_SEGMENTS',
+        type: 'RECEIVE_RESPONSE',
         path,
         args,
       };
@@ -48,14 +48,14 @@ export const registerWpRestStore = (routeUri) => {
   };
 
   registerStore(routeUri, {
-    reducer(state = { segments: {} }, action) {
+    reducer(state = { response: {} }, action) {
 
       switch (action.type) {
-        case 'SET_SEGMENTS':
+        case 'SET_RESPONSE':
           return {
-            segments: {
-              ...state.segments || {},
-              ...action.segments,
+            response: {
+              ...state.response || {},
+              ...action.response,
             },
 
           };
@@ -68,14 +68,14 @@ export const registerWpRestStore = (routeUri) => {
     actions,
 
     selectors: {
-      receiveSegments(state, args) {
-        const { segments } = state;
-        return segments[generateKeyFromArgs(args)] ?? {};
+      receiveResponse(state, args) {
+        const { response } = state;
+        return response[generateKeyFromArgs(args)] ?? {};
       },
     },
 
     controls: {
-      RECEIVE_SEGMENTS(action) {
+      RECEIVE_RESPONSE(action) {
         const {
           path,
           args,
@@ -88,9 +88,9 @@ export const registerWpRestStore = (routeUri) => {
     },
 
     resolvers: {
-      * receiveSegments(args) {
-        const segments = yield actions.receiveSegmentsAction(`/${routeUri}`, args);
-        return actions.setSegments({ [generateKeyFromArgs(args)]: segments });
+      * receiveResponse(args) {
+        const response = yield actions.receiveResponseAction(`/${routeUri}`, args);
+        return actions.setResponse({ [generateKeyFromArgs(args)]: response });
       },
     },
   });

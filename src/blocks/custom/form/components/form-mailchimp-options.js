@@ -8,7 +8,7 @@ import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
 
 const getTagsAndSegments = (listId) => {
   return useSelect((select) => {
-    const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveSegments([
+    const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveResponse([
       {
         key: 'list-id',
         value: listId,
