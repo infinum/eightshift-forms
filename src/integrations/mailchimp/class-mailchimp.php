@@ -110,10 +110,23 @@ class Mailchimp {
    *
    * @param  string $list_id Audience list ID.
    * @return mixed
+   *
+   * @throws \Exception When response is invalid.
    */
   public function get_all_segments( string $list_id ) {
     $this->maybe_build_client();
     $response = $this->client->lists->listSegments( $list_id );
+
+    if ( ! isset( $response, $response->segments ) && ! is_array( $response->segments ) ) {
+      throw new \Exception( 'Segments response invalid' );
+    }
+
+    foreach ( $response->segments as $segment_obj ) {
+
+      if ( ! is_object( $segment_obj ) || ! isset( $segment_obj->id, $segment_obj->name, $segment_obj->type ) ) {
+        throw new \Exception( 'Specific segment response invalid' );
+      }
+    }
     return $response;
   }
 

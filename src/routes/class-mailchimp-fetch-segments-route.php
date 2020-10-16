@@ -69,15 +69,17 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
     }
 
     $list_id = $params[ self::LIST_ID_PARAM ] ?? '';
-    // $list_id = $params[ self::LIST_ID_PARAM ] ?? '';
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->mailchimp->get_all_segments( $list_id );
+      $response = $this->extract_tags_and_segments( $this->mailchimp->get_all_segments( $list_id ) );
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailchimp-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
+      return $this->rest_response_handler_unknown_error( [
+        'error' => $e->getMessage(),
+        'list-id' => $list_id,
+      ] );
     }
 
     return \rest_ensure_response(
@@ -88,7 +90,6 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
       ]
     );
   }
-
   /**
    * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
    *
@@ -98,5 +99,29 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
     return [
       self::LIST_ID_PARAM,
     ];
+  }
+
+  /**
+   * Extracts segments and tags from the segments response depending on their type
+   *
+   * @param  Object $response Mailchimp API call response.
+   * @return array
+   */
+  private function extract_tags_and_segments( $response ): array {
+    $tags_segments = [
+      'tags' => [],
+      'segments' => [],
+    ];
+    foreach ( $response->segments as $segment ) {
+      switch ( $segment->type ) {
+        case 'static':
+            $tags_segments['tags'][] = $segment;
+              break;
+        case 'saved':
+            $tags_segments['segments'][] = $segment;
+              break;
+      }
+    }
+    return $tags_segments;
   }
 }

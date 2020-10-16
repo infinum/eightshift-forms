@@ -11,11 +11,11 @@ const registerCustomStore = () => {
         segments,
       };
     },
-    receiveSegments(path) {
-
+    receiveSegmentsAction(path, listId) {
       return {
         type: 'RECEIVE_SEGMENTS',
         path,
+        listId,
       };
     },
   };
@@ -26,8 +26,11 @@ const registerCustomStore = () => {
       switch (action.type) {
         case 'SET_SEGMENTS':
           return {
-            ...state,
-            segments: action.segments,
+            segments: {
+              ...state.segments || {},
+              ...action.segments,
+            },
+
           };
         default:
       }
@@ -38,22 +41,23 @@ const registerCustomStore = () => {
     actions,
 
     selectors: {
-      receiveSegments(state) {
+      receiveSegments(state, listId) {
         const { segments } = state;
-        return segments;
+        return segments[listId] ?? {};
       },
     },
 
     controls: {
       RECEIVE_SEGMENTS(action) {
-        return apiFetch({ path: action.path });
+        const path = `${action.path}?list-id=${action.listId}`;
+        return apiFetch({ path });
       },
     },
 
     resolvers: {
       * receiveSegments(listId) {
-        const segments = yield actions.receiveSegments(`/eightshift-forms/v1/mailchimp-fetch-segments?list-id=${listId}`);
-        return actions.setSegments(segments);
+        const segments = yield actions.receiveSegmentsAction('/eightshift-forms/v1/mailchimp-fetch-segments', listId);
+        return actions.setSegments({ [listId]: segments });
       },
     },
   });

@@ -1,12 +1,14 @@
+import _ from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
+import { AsyncSelectControl } from '../../../components/async-select/async-select';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/mailchimp-fetch-segments';
 
 export const FormMailchimpOptions = (props) => {
   const {
-    // listId,
+    listId,
     audiences,
     addTag,
     tag,
@@ -19,40 +21,59 @@ export const FormMailchimpOptions = (props) => {
     onChangeSegment,
   } = props;
 
-  const listId = 'eb7fd0b84a';
-
-  console.log('List ID: ', listId);
-
   const tagsAndSegments = useSelect((select) => {
     const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveSegments(listId);
-    const defaultResponse = {
-      tags: [
-        {
-          label: 'No tags found for route',
-          value: tag || 0,
-        },
-      ],
-      segments: [
-        {
-          label: 'No segments found for route',
-          value: tag || 0,
-        },
-      ],
+
+    // Response if there was an error.
+    if (!response || !response.data || response.code !== 200 || !response.data.tags || !response.data.segments) {
+      return {
+        routeResponse: response,
+        isLoading: _.isEmpty(response),
+        tags: [],
+        segments: [],
+      };
+    }
+
+    return {
+      routeResponse: response,
+      isLoading: false,
+      tags: response.data.tags.map((currentTag) => {
+        return {
+          label: currentTag.name,
+          value: currentTag.id,
+        };
+      }),
+      segments: response.data.segments.map((currentSegment) => {
+        return {
+          label: currentSegment.name,
+          value: currentSegment.id,
+        };
+      }),
     };
-    return response && response.data && response.data.segments ? response.data.segments.map((segment) => {
-      console.log(segment);
-    }) : defaultResponse;
   }, [listId]);
 
-  console.log(count);
+  const {
+    routeResponse,
+    isLoading,
+    tags,
+    segments,
+  } = tagsAndSegments;
+  console.log('isLoading', isLoading, routeResponse);
 
-  const tags = [];
-  const segments = [];
-
-  const audienceOptions = audiences.length ? audiences : [
+  const audienceOptions = audiences.length ? [
+    // {
+    //   value: '',
+    //   label: __('Please select audience', 'eightshift-forms'),
+    // },
+    ...audiences,
     {
-      label: __('ERROR unable to read audience list from Mailchimp', 'eightshift-forms'),
+      value: '12123',
+      label: 'Temp mock audience',
+    },
+  ] : [
+    {
       value: listId,
+      label: __('ERROR unable to read audience list from Mailchimp', 'eightshift-forms'),
     },
   ];
 
@@ -64,7 +85,11 @@ export const FormMailchimpOptions = (props) => {
           help={__('Please select which list does this form add members to', 'eightshift-forms')}
           value={listId}
           options={audienceOptions}
-          onChange={onChangeListId}
+          onChange={(newListId) => {
+            onChangeTag(null);
+            onChangeSegment(null);
+            onChangeListId(newListId);
+          }}
         />
       }
       {onChangeAddTag &&
@@ -76,11 +101,12 @@ export const FormMailchimpOptions = (props) => {
         />
       }
       {onChangeTag && addTag &&
-        <SelectControl
+        <AsyncSelectControl
           label={__('Tag', 'eightshift-forms')}
           help={__('Select which tag to add to user', 'eightshift-forms')}
           value={tag}
           options={tags}
+          isLoading={isLoading}
           onChange={onChangeTag}
         />
       }
@@ -93,11 +119,12 @@ export const FormMailchimpOptions = (props) => {
         />
       }
       {onChangeSegment && addSegment &&
-        <SelectControl
+        <AsyncSelectControl
           label={__('Segment', 'eightshift-forms')}
           help={__('Select which segment to add to user', 'eightshift-forms')}
           value={segment}
           options={segments}
+          isLoading={isLoading}
           onChange={onChangeSegment}
         />
       }
