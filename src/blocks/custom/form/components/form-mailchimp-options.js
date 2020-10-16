@@ -6,6 +6,11 @@ import { useSelect } from '@wordpress/data';
 import { AsyncSelectControl } from '../../../components/async-select/async-select';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
 
+/**
+ * Fetches tags segments for Mailchimp audience with listId from store.
+ *
+ * @param {string} listId List for which to fetch tags / segments.
+ */
 const getTagsAndSegments = (listId) => {
   return useSelect((select) => {
     const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveResponse([
@@ -18,7 +23,6 @@ const getTagsAndSegments = (listId) => {
     // Response if there was an error.
     if (!response || !response.data || response.code !== 200 || !response.data.tags || !response.data.segments) {
       return {
-        routeResponse: response,
         isLoading: _.isEmpty(response),
         tags: [],
         segments: [],
@@ -27,22 +31,17 @@ const getTagsAndSegments = (listId) => {
 
     return {
       isLoading: false,
-      tags: response.data.tags.map((currentTag) => {
-        return {
-          label: currentTag.name,
-          value: currentTag.id,
-        };
-      }),
-      segments: response.data.segments.map((currentSegment) => {
-        return {
-          label: currentSegment.name,
-          value: currentSegment.id,
-        };
-      }),
+      tags: response.data.tags.map((currentTag) => ({ label: currentTag.name, value: currentTag.id })),
+      segments: response.data.segments.map((currentSegment) => ({ label: currentSegment.name, value: currentSegment.id })),
     };
   }, [listId]);
 };
 
+/**
+ * Options component
+ *
+ * @param {object} props Component props.
+ */
 export const FormMailchimpOptions = (props) => {
   const {
     listId,
