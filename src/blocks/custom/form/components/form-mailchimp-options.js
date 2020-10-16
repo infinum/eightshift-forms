@@ -6,28 +6,13 @@ import { useSelect } from '@wordpress/data';
 import { AsyncSelectControl } from '../../../components/async-select/async-select';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/mailchimp-fetch-segments';
 
-export const FormMailchimpOptions = (props) => {
-  const {
-    listId,
-    audiences,
-    addTag,
-    tag,
-    addSegment,
-    segment,
-    onChangeListId,
-    onChangeAddTag,
-    onChangeTag,
-    onChangeAddSegment,
-    onChangeSegment,
-  } = props;
-
-  const tagsAndSegments = useSelect((select) => {
+const getTagsAndSegments = (listId) => {
+  return useSelect((select) => {
     const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveSegments(listId);
 
     // Response if there was an error.
     if (!response || !response.data || response.code !== 200 || !response.data.tags || !response.data.segments) {
       return {
-        routeResponse: response,
         isLoading: _.isEmpty(response),
         tags: [],
         segments: [],
@@ -35,7 +20,6 @@ export const FormMailchimpOptions = (props) => {
     }
 
     return {
-      routeResponse: response,
       isLoading: false,
       tags: response.data.tags.map((currentTag) => {
         return {
@@ -51,6 +35,24 @@ export const FormMailchimpOptions = (props) => {
       }),
     };
   }, [listId]);
+};
+
+export const FormMailchimpOptions = (props) => {
+  const {
+    listId,
+    audiences,
+    addTag,
+    tag,
+    addSegment,
+    segment,
+    onChangeListId,
+    onChangeAddTag,
+    onChangeTag,
+    onChangeAddSegment,
+    onChangeSegment,
+  } = props;
+
+  const tagsAndSegments = getTagsAndSegments(listId);
 
   const {
     routeResponse,
@@ -58,13 +60,12 @@ export const FormMailchimpOptions = (props) => {
     tags,
     segments,
   } = tagsAndSegments;
-  console.log('isLoading', isLoading, routeResponse);
 
   const audienceOptions = audiences.length ? [
-    // {
-    //   value: '',
-    //   label: __('Please select audience', 'eightshift-forms'),
-    // },
+    {
+      value: '',
+      label: __('Please select audience', 'eightshift-forms'),
+    },
     ...audiences,
     {
       value: '12123',

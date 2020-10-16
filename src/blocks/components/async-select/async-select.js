@@ -7,12 +7,7 @@ export const AsyncSelectControl = (props) => {
   const {
     label,
     defaultOptionLabel = __('Please select option', 'eightshift-forms'),
-    noOptionsOption = [
-      {
-        label: __('No options available', 'eightshift-forms'),
-        value: '',
-      },
-    ],
+    noOptionsLabel = __('No options available', 'eightshift-forms'),
     help = '',
     value,
     options,
@@ -20,15 +15,18 @@ export const AsyncSelectControl = (props) => {
     isLoading,
   } = props;
 
-  const selectOptions = [
+  const selectOptions = options && options.length ? [
     {
       label: defaultOptionLabel,
       value: null,
     },
     ...options,
+  ] : [
+    {
+      label: noOptionsLabel,
+      value: '',
+    },
   ];
-
-  const hasOptions = options && options.length;
 
   return (
     <Fragment>
@@ -44,7 +42,7 @@ export const AsyncSelectControl = (props) => {
           label={label}
           help={help}
           value={value}
-          options={hasOptions ? selectOptions : noOptionsOption}
+          options={selectOptions}
           onChange={onChange}
         />
       }
