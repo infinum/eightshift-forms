@@ -13,5 +13,5 @@ import './styles/application-blocks-editor.scss';
 import './scripts/application-blocks-editor';
 
 // Stores.
-import '../stores';
+import '../stores/all';
 

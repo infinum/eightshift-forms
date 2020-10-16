@@ -1,9 +1,11 @@
 import apiFetch from '@wordpress/api-fetch';
 import { registerStore } from '@wordpress/data';
 
-const MAILCHIMP_FETCH_SEGMENTS_STORE = 'eightshift-forms/mailchimp-get-segments';
-
-const registerCustomStore = () => {
+/**
+ * Registers a custom store for a custom WP Rest route. All GET parameters should be passed on
+ * to selector and ultimately to route itself.
+ */
+export const registerWpRestStore = (routeUri) => {
   const actions = {
     setSegments(segments) {
       return {
@@ -20,7 +22,7 @@ const registerCustomStore = () => {
     },
   };
 
-  registerStore(MAILCHIMP_FETCH_SEGMENTS_STORE, {
+  registerStore(routeUri, {
     reducer(state = { segments: {} }, action) {
 
       switch (action.type) {
@@ -56,13 +58,9 @@ const registerCustomStore = () => {
 
     resolvers: {
       * receiveSegments(listId) {
-        const segments = yield actions.receiveSegmentsAction('/eightshift-forms/v1/mailchimp-fetch-segments', listId);
+        const segments = yield actions.receiveSegmentsAction(`/${routeUri}`, listId);
         return actions.setSegments({ [listId]: segments });
       },
     },
   });
 };
-
-registerCustomStore();
-
-export { MAILCHIMP_FETCH_SEGMENTS_STORE };

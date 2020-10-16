@@ -4,7 +4,7 @@ import { Fragment } from '@wordpress/element';
 import { SelectControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { AsyncSelectControl } from '../../../components/async-select/async-select';
-import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/mailchimp-fetch-segments';
+import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
 
 const getTagsAndSegments = (listId) => {
   return useSelect((select) => {
