@@ -43,6 +43,8 @@ class Mailchimp {
    * @param  array  $params       (Optional) list of params from request.
    * @param  string $status       (Optional) Member's status (if new).
    * @return mixed
+   *
+   * @throws \Exception When response is invalid.
    */
   public function add_or_update_member( string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending' ) {
     $this->maybe_build_client();
@@ -52,6 +54,11 @@ class Mailchimp {
     $params['merge_fields']  = $merge_fields;
 
     $response = $this->client->lists->setListMember( $list_id, $this->calculate_subscriber_hash( $email ), $params );
+
+    if ( ! is_object( $response ) || ! isset( $response->id, $response->email_address ) ) {
+      throw new \Exception( 'setListMember response invalid' );
+    }
+
     return $response;
   }
 
@@ -62,6 +69,8 @@ class Mailchimp {
    * @param  string $email     Contact's email.
    * @param  array  $tag_names Just a 1d array of tag names. Other processing is done inside.
    * @return bool
+   *
+   * @throws \Exception When response is invalid.
    */
   public function add_member_tags( string $list_id, string $email, array $tag_names ): bool {
     $this->maybe_build_client();
@@ -82,19 +91,6 @@ class Mailchimp {
     // will throw an exception. If something is slightly off (such as not having the correct format for
     // tags array), it will also return an empty response.
     return ! $update_response ? true : false;
-  }
-
-  /**
-   * List member tags.
-   *
-   * @param  string $list_id Audience list ID.
-   * @param  string $email   Contact's email.
-   * @return mixed
-   */
-  public function list_member_tags( string $list_id, string $email ) {
-    $this->maybe_build_client();
-    $response = $this->client->lists->getListMemberTags( $list_id, $this->calculate_subscriber_hash( $email ) );
-    return $response;
   }
 
   /**
