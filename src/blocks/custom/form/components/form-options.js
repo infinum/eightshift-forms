@@ -34,9 +34,7 @@ export const FormOptions = (props) => {
       buckarooRedirectUrlReject,
       mailchimpListId,
       mailchimpAddTag,
-      mailchimpTag,
-      mailchimpAddSegment,
-      mailchimpSegment,
+      mailchimpTags,
     },
     actions: {
       onChangeAction,
@@ -62,9 +60,7 @@ export const FormOptions = (props) => {
       onChangeBuckarooRedirectUrlReject,
       onChangeMailchimpListId,
       onChangeMailchimpAddTag,
-      onChangeMailchimpTag,
-      onChangeMailchimpAddSegment,
-      onChangeMailchimpSegment,
+      onChangeMailchimpTags,
     },
   } = props;
 
@@ -247,14 +243,10 @@ export const FormOptions = (props) => {
                   listId={mailchimpListId}
                   audiences={audiences}
                   addTag={mailchimpAddTag}
-                  tag={mailchimpTag}
-                  addSegment={mailchimpAddSegment}
-                  segment={mailchimpSegment}
+                  tags={mailchimpTags}
                   onChangeListId={onChangeMailchimpListId}
                   onChangeAddTag={onChangeMailchimpAddTag}
-                  onChangeTag={onChangeMailchimpTag}
-                  onChangeAddSegment={onChangeMailchimpAddSegment}
-                  onChangeSegment={onChangeMailchimpSegment}
+                  onChangeTags={onChangeMailchimpTags}
                 />
 
               </Fragment>

@@ -100,24 +100,10 @@
     "mailchimpAddTag": {
       "type": "boolean"
     },
-    "mailchimpTag": {
-      "type": "string"
-    },
-    "mailchimpAddSegment": {
-      "type": "boolean"
-    },
-    "mailchimpSegment": {
-      "type": "string"
-    },
     "mailchimpTags": {
       "type": "array",
-      "default": {
-        "large": "none",
-        "tablet": "",
-        "mobile": ""
-      },
       "items": {
-        "type": "object"
+        "type": "string"
       }
     }
   }

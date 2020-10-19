@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { AsyncSelectControl } from '../../../components/async-select/async-select';
+import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
 
 /**
@@ -11,7 +11,7 @@ import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
  *
  * @param {string} listId List for which to fetch tags / segments.
  */
-const getTagsAndSegments = (listId) => {
+const getTags = (listId) => {
   return useSelect((select) => {
     const response = select(MAILCHIMP_FETCH_SEGMENTS_STORE).receiveResponse([
       {
@@ -24,15 +24,13 @@ const getTagsAndSegments = (listId) => {
     if (!response || !response.data || response.code !== 200 || !response.data.tags || !response.data.segments) {
       return {
         isLoading: _.isEmpty(response),
-        tags: [],
-        segments: [],
+        suggestions: [],
       };
     }
 
     return {
       isLoading: false,
-      tags: response.data.tags.map((currentTag) => ({ label: currentTag.name, value: currentTag.id })),
-      segments: response.data.segments.map((currentSegment) => ({ label: currentSegment.name, value: currentSegment.id })),
+      suggestions: response.data.tags.map((currentTag) => (currentTag.name)),
     };
   }, [listId]);
 };
@@ -47,24 +45,16 @@ export const FormMailchimpOptions = (props) => {
     listId,
     audiences,
     addTag,
-    tag,
-    addSegment,
-    segment,
+    tags,
     onChangeListId,
     onChangeAddTag,
-    onChangeTag,
-    onChangeAddSegment,
-    onChangeSegment,
+    onChangeTags,
   } = props;
-
-  const tagsAndSegments = getTagsAndSegments(listId);
-  console.log(tagsAndSegments);
 
   const {
     isLoading,
-    tags,
-    segments,
-  } = tagsAndSegments;
+    suggestions,
+  } = getTags(listId);
 
   const audienceOptions = audiences.length ? [
     {
@@ -92,46 +82,28 @@ export const FormMailchimpOptions = (props) => {
           value={listId}
           options={audienceOptions}
           onChange={(newListId) => {
-            onChangeTag(null);
-            onChangeSegment(null);
+            onChangeTags([]);
             onChangeListId(newListId);
           }}
         />
       }
       {onChangeAddTag &&
         <ToggleControl
-          label={__('Add tag to member?', 'eightshift-forms')}
-          help={__('If enabled, the form will add selected tag to member on submit.', 'eightshift-forms')}
+          label={__('Add tag(s) to member?', 'eightshift-forms')}
+          help={__('If enabled, the form will add selected tag(s) to member on submit.', 'eightshift-forms')}
           checked={addTag}
           onChange={onChangeAddTag}
         />
       }
-      {onChangeTag && addTag &&
-        <AsyncSelectControl
-          label={__('Tag', 'eightshift-forms')}
-          help={__('Select which tag to add to user', 'eightshift-forms')}
-          value={tag}
-          options={tags}
+      {onChangeTags && addTag &&
+        <AsyncFormTokenField
+          label={__('Tag(s)', 'eightshift-forms')}
+          help={__('Select which tag to add to user. Will autofill found tags from Mailchimp. Any new tags you enter will be created', 'eightshift-forms')}
+          placeholder={__('Start typing to add tags', 'eightshift-forms')}
+          value={tags}
+          suggestions={suggestions}
           isLoading={isLoading}
-          onChange={onChangeTag}
-        />
-      }
-      {onChangeAddSegment &&
-        <ToggleControl
-          label={__('Put member in segment?', 'eightshift-forms')}
-          help={__('If enabled, the form will add member to selected segment on submit.', 'eightshift-forms')}
-          checked={addSegment}
-          onChange={onChangeAddSegment}
-        />
-      }
-      {onChangeSegment && addSegment &&
-        <AsyncSelectControl
-          label={__('Segment', 'eightshift-forms')}
-          help={__('Select which segment to add to user', 'eightshift-forms')}
-          value={segment}
-          options={segments}
-          isLoading={isLoading}
-          onChange={onChangeSegment}
+          onChange={onChangeTags}
         />
       }
     </Fragment>

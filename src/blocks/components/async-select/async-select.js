@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { SelectControl, Spinner, BaseControl } from '@wordpress/components';
+import { SelectControl } from '@wordpress/components';
+import { EditorSpinner } from '../editor-spinner/editor-spinner-editor';
 
 export const AsyncSelectControl = (props) => {
 
@@ -18,7 +19,7 @@ export const AsyncSelectControl = (props) => {
   const selectOptions = options && options.length ? [
     {
       label: defaultOptionLabel,
-      value: null,
+      value: '',
     },
     ...options,
   ] : [
@@ -31,14 +32,11 @@ export const AsyncSelectControl = (props) => {
   return (
     <Fragment>
       {isLoading &&
-        <BaseControl label={label} help={help}>
-          <div className="async-select__spinner-wrapper">
-            <Spinner />
-          </div>
-        </BaseControl>
+        <EditorSpinner label={label} help={help} />
       }
       {!isLoading &&
         <SelectControl
+          multiple={true}
           label={label}
           help={help}
           value={value}

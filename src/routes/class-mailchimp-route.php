@@ -18,6 +18,7 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use stdClass;
 
 /**
  * Class Mailchimp_Route
@@ -44,6 +45,13 @@ class Mailchimp_Route extends Base_Route implements Filters {
    * @var string
    */
   const LIST_ID_PARAM = 'list-id';
+
+  /**
+   * Parameter for member tag.
+   *
+   * @var string
+   */
+  const TAGS_PARAM = 'tags';
 
   /**
    * Construct object
@@ -75,26 +83,19 @@ class Mailchimp_Route extends Base_Route implements Filters {
       return rest_ensure_response( $e->get_data() );
     }
 
-    $list_id = $params[ self::LIST_ID_PARAM ] ?? '';
-    $email   = $params[ self::EMAIL_PARAM ] ?? '';
+    $list_id            = $params[ self::LIST_ID_PARAM ] ?? '';
+    $email              = $params[ self::EMAIL_PARAM ] ?? '';
+    $tags               = $params[ self::TAGS_PARAM ] ?? [];
+    $merge_field_params = $this->unset_irrelevant_params( $params );
+    $response           = [];
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response = $this->mailchimp->add_or_update_member(
-        $list_id,
-        $email
-      );
-      $response_tags = $this->mailchimp->update_list_member_tags(
-        $list_id,
-        $email,
-        [
-          [
-            'name' => 'testtag',
-            'status' => 'active'
-          ],
-        ]
-      );
+      $response['add'] = $this->mailchimp->add_or_update_member( $list_id, $email, $merge_field_params );
 
+      if ( ! empty( $tags ) ) {
+        $response['tags'] = $this->mailchimp->add_member_tags( $list_id, $email, $tags );
+      }
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailchimp-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
@@ -119,6 +120,25 @@ class Mailchimp_Route extends Base_Route implements Filters {
     return [
       self::EMAIL_PARAM,
       self::LIST_ID_PARAM,
+      self::TAGS_PARAM,
+    ];
+  }
+
+  /**
+   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+   *
+   * @return array
+   */
+  protected function get_irrelevant_params(): array {
+    return [
+      self::EMAIL_PARAM,
+      self::LIST_ID_PARAM,
+      self::TAGS_PARAM,
+      Basic_Captcha::FIRST_NUMBER_KEY,
+      Basic_Captcha::SECOND_NUMBER_KEY,
+      Basic_Captcha::RESULT_KEY,
+      'privacy',
+      'privacy-policy',
     ];
   }
 }
