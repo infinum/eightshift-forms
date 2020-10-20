@@ -17,6 +17,7 @@ export class Form {
     this.DATA_ATTR_BUCKAROO_SERVICE = 'data-buckaroo-service';
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
+    this.EVENT_SUBMIT = 'ef-submit';
 
     // Get form type from class.
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
@@ -48,12 +49,14 @@ export class Form {
   init() {
     this.form.addEventListener('submit', async (e) => {
 
+      let response;
+
       if (this.formType !== 'custom') {
         e.preventDefault();
       }
 
       if (this.formType === 'dynamics-crm') {
-        this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
+        response = this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
       }
 
       if (this.formType === 'buckaroo') {
@@ -78,11 +81,11 @@ export class Form {
       }
 
       if (this.formType === 'mailchimp') {
-        this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
+        response = this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
       }
 
       if (this.formType === 'email') {
-        this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
+        response = this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
       }
 
       if (this.formType === 'custom-event') {
@@ -94,10 +97,24 @@ export class Form {
 
 
         customEvents.forEach((customEvent) => {
-          const event = new CustomEvent(customEvent, { detail: this.getFormData(this.form) });
-          this.form.dispatchEvent(event);
+          const submitEvent = new CustomEvent(customEvent, {
+            detail: {
+              formData: this.getFormData(this.form),
+            },
+          });
+          this.form.dispatchEvent(submitEvent);
         });
       }
+
+      // Dispatch custom JS event to which you can hook in your project.
+      const event = new CustomEvent(this.eventSubmit, {
+        detail: {
+          response: response || {},
+          formData: this.getFormData(this.form),
+        },
+      });
+      this.form.dispatchEvent(event);
+
     });
   }
 
