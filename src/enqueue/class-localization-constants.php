@@ -13,6 +13,7 @@ use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Rest\Base_Route;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use Eightshift_Libs\Rest\Callable_Route;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
@@ -29,11 +30,11 @@ class Localization_Constants implements Filters {
    */
   public function __construct(
     Manifest_Data $manifest,
-    Base_Route $dynamics_crm_route,
-    Base_Route $buckaroo_ideal_route,
-    Base_Route $buckaroo_emandate_route,
-    Base_Route $send_email_route,
-    Base_Route $mailchimp_route,
+    Callable_Route $dynamics_crm_route,
+    Callable_Route $buckaroo_ideal_route,
+    Callable_Route $buckaroo_emandate_route,
+    Callable_Route $send_email_route,
+    Callable_Route $mailchimp_route,
     Mailchimp $mailchimp
   ) {
     $this->manifest                = $manifest;
@@ -184,31 +185,6 @@ class Localization_Constants implements Filters {
 
     return $audiences;
   }
-
-  // /**
-  //  * Reads the list of audiences from Mailchimp. Used in form options to
-  //  * select which audience does this form post to.
-  //  *
-  //  * @return array
-  //  */
-  // protected function fetch_mailchimp_segments(): array {
-  //   $tags = [];
-
-  //   try {
-  //     $response = $this->mailchimp->get_all_segments('eb7fd0b84a');
-  //   } catch ( \Exception $e ) {
-  //     return $tags;
-  //   }
-
-  //   // foreach ( $response->lists as $list_obj ) {
-  //   //   $audiences[] = [
-  //   //     'value' => $list_obj->id,
-  //   //     'label' => $list_obj->name,
-  //   //   ];
-  //   // }
-
-  //   return $tags;
-  // }
 
   /**
    * Localize all constants required for Dynamics CRM integration.

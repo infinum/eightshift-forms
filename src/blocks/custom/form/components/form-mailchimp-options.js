@@ -62,10 +62,6 @@ export const FormMailchimpOptions = (props) => {
       label: __('Please select audience', 'eightshift-forms'),
     },
     ...audiences,
-    {
-      value: '12123',
-      label: 'Temp mock audience',
-    },
   ] : [
     {
       value: listId,
