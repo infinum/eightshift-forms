@@ -90,7 +90,7 @@ class Mailchimp {
     // This call is weird in that an empty (204) response means success. If something went very wrong it
     // will throw an exception. If something is slightly off (such as not having the correct format for
     // tags array), it will also return an empty response.
-    return ! $update_response ? true : false;
+    return ! empty( $update_response );
   }
 
   /**
@@ -102,8 +102,7 @@ class Mailchimp {
    */
   public function get_list_member( string $list_id, string $email ) {
     $this->maybe_build_client();
-    $response = $this->client->lists->getListMember( $list_id, $this->calculate_subscriber_hash( $email ) );
-    return $response;
+    return $this->client->lists->getListMember( $list_id, $this->calculate_subscriber_hash( $email ) );
   }
 
   /**
