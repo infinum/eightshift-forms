@@ -3,6 +3,11 @@ import { Fragment, useState } from '@wordpress/element';
 import { SelectControl, BaseControl, ToggleControl, CheckboxControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 
+/**
+ * Single checkbox for form type.
+ *
+ * @param {Object} props Props.
+ */
 const TypeCheckbox = (props) => {
 
   const {
@@ -31,6 +36,11 @@ const TypeCheckbox = (props) => {
   );
 };
 
+/**
+ * Component for selecting multiple form types.
+ *
+ * @param {object} props Props
+ */
 const ComplexTypeSelector = (props) => {
   const {
     label,
