@@ -15,6 +15,7 @@ const TypeCheckbox = (props) => {
     value,
     selectedTypes,
     isChecked,
+    types,
   } = props;
 
   const [isCheckedState, setChecked] = useState(isChecked);
@@ -24,12 +25,23 @@ const TypeCheckbox = (props) => {
       {...props}
       checked={isCheckedState}
       onChange={(isNowChecked) => {
+        let newSelectedTypes = [];
         if (isNowChecked && !selectedTypes.includes(value)) {
-          onChange([...selectedTypes, value]);
+          newSelectedTypes = [...selectedTypes, value];
+
         } else if (!isNowChecked && selectedTypes.includes(value)) {
-          onChange(selectedTypes.filter((type) => type !== value));
+          newSelectedTypes = selectedTypes.filter((type) => type !== value);
+          onChange();
         }
 
+        // We need to move types that redirect to last place.
+        types.filter((type) => type.redirects).forEach((redirectType) => {
+          if (newSelectedTypes.includes(redirectType.value)) {
+            newSelectedTypes = newSelectedTypes.concat(newSelectedTypes.splice(newSelectedTypes.indexOf(redirectType.value), 1));
+          }
+        });
+
+        onChange(newSelectedTypes);
         setChecked(isNowChecked);
       }}
     />
@@ -59,6 +71,8 @@ const ComplexTypeSelector = (props) => {
               key={key}
               value={type.value}
               label={type.label}
+              types={types}
+              isRedirect={type.redirects || false}
               isChecked={value.includes(type.value)}
               selectedTypes={value}
               onChange={onChange}

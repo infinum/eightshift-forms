@@ -103,7 +103,7 @@ export const FormOptions = (props) => {
   }
 
   if (isBuckarooUsed) {
-    formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo' });
+    formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo', redirects: true });
   }
 
   if (isMailchimpUsed) {
