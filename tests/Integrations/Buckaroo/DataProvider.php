@@ -111,6 +111,27 @@ class DataProvider
   }
 
   /**
+   * Example of "transaction cancelled by user" response from Buckaroo.
+   *
+   * @return array
+   */
+  public function idealCancelledResponseWhenUserClicksBackMock(): array {
+    return [
+      'BRQ_AMOUNT' => '5.00',
+      'BRQ_CURRENCY' => 'EUR',
+      'BRQ_INVOICENUMBER' => 'purchase-id-ab99027e-a7a78a7c',
+      'BRQ_MUTATIONTYPE' => 'NotSet',
+      'BRQ_STATUSCODE' => 890,
+      'BRQ_STATUSMESSAGE' => 'Cancelled by user',
+      'BRQ_TEST' => true,
+      'BRQ_TIMESTAMP' => '2020-10-20 17:12:36',
+      'BRQ_TRANSACTIONS' => '35F8440E759C48859482AB4BD52FE4CE',
+      'BRQ_WEBSITEKEY' => 'pjTB7CdkZ8',
+      'BRQ_SIGNATURE' => '501561444ad5f7584661d8ef8b1ccd2701973382',
+    ];
+  }
+
+  /**
    * Example of "pending processing" response from Buckaroo.
    *
    * @return array
