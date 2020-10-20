@@ -189,6 +189,24 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   }
 
   /**
+   * Define name of the filter used for filtering required GET params.
+   *
+   * @return string
+   */
+  protected function get_required_params_filter(): string {
+    return 'invalid_get_params_filter';
+  }
+
+  /**
+   * Define name of the filter used for filtering required GET params.
+   *
+   * @return string
+   */
+  protected function get_required_post_params_filter(): string {
+    return 'invalid_post_params_filter';
+  }
+
+  /**
    * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
    * leave the placeholder in text.
    *
@@ -355,8 +373,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return array Returns array of missing parameters to pass in response.
    */
   private function find_required_missing_params( array $parameters, bool $is_post = false ): array {
-    $missing_params  = [];
-    $required_params = $is_post ? $this->get_required_post_params() : $this->get_required_params();
+    $missing_params       = [];
+    $required_params_get  = has_filter( $this->get_required_params_filter() ) ? apply_filters( $this->get_required_params_filter(), $this->get_required_params() ) : $this->get_required_params();
+    $required_params_post = has_filter( $this->get_required_post_params_filter() ) ? apply_filters( $this->get_required_post_params_filter(), $this->get_required_post_params() ) : $this->get_required_post_params();
+    $required_params      = $is_post ? $required_params_post : $required_params_get;
+
+    $this->get_required_params();
     foreach ( $required_params as $required_param ) {
       if ( ! isset( $parameters[ $required_param ] ) ) {
         $missing_params[ self::MISSING_KEYS ] [] = $required_param;

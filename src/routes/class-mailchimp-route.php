@@ -131,8 +131,6 @@ class Mailchimp_Route extends Base_Route implements Filters {
    */
   protected function get_irrelevant_params(): array {
     return [
-      self::EMAIL_PARAM,
-      self::LIST_ID_PARAM,
       self::TAGS_PARAM,
       Basic_Captcha::FIRST_NUMBER_KEY,
       Basic_Captcha::SECOND_NUMBER_KEY,

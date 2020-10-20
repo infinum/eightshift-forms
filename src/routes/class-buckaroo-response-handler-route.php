@@ -146,7 +146,7 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
 
       \wp_safe_redirect( $params[ self::REDIRECT_URL_PARAM ] );
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
     return \rest_ensure_response(
