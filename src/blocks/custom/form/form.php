@@ -40,6 +40,7 @@ $buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? ''
 $buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
+$custom_event_names           = $attributes['eventNames'] ?? [];
 
 $block_classes = Components::classnames([
   $block_class,
@@ -91,6 +92,12 @@ $block_classes = Components::classnames([
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
         <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
+      <?php } ?>
+    <?php } ?>
+
+    <?php if ( $form_type === Config::CUSTOM_EVENT_METHOD ) { ?>
+      <?php foreach ( $custom_event_names as $custom_event_name ) { ?>
+        <input type="hidden" name="custom-events[]" value="<?php echo esc_attr( $custom_event_name ); ?>" />
       <?php } ?>
     <?php } ?>
 

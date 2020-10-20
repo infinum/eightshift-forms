@@ -6,6 +6,7 @@ import { FormDynamicsCrmOptions } from './form-dynamics-crm-options';
 import { FormBuckarooOptions } from './form-buckaroo-options';
 import { FormEmailOptions } from './form-email-options';
 import { FormMailchimpOptions } from './form-mailchimp-options';
+import { FormCustomEventOptions } from './form-custom-event-options';
 
 export const FormOptions = (props) => {
   const {
@@ -35,6 +36,7 @@ export const FormOptions = (props) => {
       mailchimpListId,
       mailchimpAddTag,
       mailchimpTags,
+      eventNames,
     },
     actions: {
       onChangeAction,
@@ -61,6 +63,7 @@ export const FormOptions = (props) => {
       onChangeMailchimpListId,
       onChangeMailchimpAddTag,
       onChangeMailchimpTags,
+      onChangeEventNames,
     },
   } = props;
 
@@ -68,7 +71,8 @@ export const FormOptions = (props) => {
 
   const formTypes = [
     { label: __('Email', 'eightshift-forms'), value: 'email' },
-    { label: __('Custom', 'eightshift-forms'), value: 'custom' },
+    { label: __('Custom (PHP)', 'eightshift-forms'), value: 'custom' },
+    { label: __('Custom (Event)', 'eightshift-forms'), value: 'custom-event' },
   ];
 
   const {
@@ -136,6 +140,14 @@ export const FormOptions = (props) => {
       name: type,
       title: <Dashicon icon="email-alt2" />,
       className: 'tab-mailchimp components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if (type === 'custom-event') {
+    tabs.push({
+      name: type,
+      title: <Dashicon icon="megaphone" />,
+      className: 'tab-custom-event components-button is-button is-default custom-button-with-icon',
     });
   }
 
@@ -247,6 +259,21 @@ export const FormOptions = (props) => {
                   onChangeListId={onChangeMailchimpListId}
                   onChangeAddTag={onChangeMailchimpAddTag}
                   onChangeTags={onChangeMailchimpTags}
+                />
+
+              </Fragment>
+            )}
+            {tab.name === 'custom-event' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Custom event options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is triggering a custom event.', 'eightshift-forms')}</p>
+                <br />
+                <FormCustomEventOptions
+                  blockClass={blockClass}
+                  type={type}
+                  eventNames={eventNames}
+                  onChangeEventNames={onChangeEventNames}
                 />
 
               </Fragment>

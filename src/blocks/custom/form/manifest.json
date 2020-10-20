@@ -105,6 +105,12 @@
       "items": {
         "type": "string"
       }
+    },
+    "eventNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

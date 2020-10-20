@@ -84,6 +84,20 @@ export class Form {
       if (this.formType === 'email') {
         this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
       }
+
+      if (this.formType === 'custom-event') {
+        e.preventDefault();
+
+        const customEvents = [...this.form.elements].filter((formElem) => formElem.getAttribute('name') === 'custom-events[]').map((formElem) => {
+          return formElem.value;
+        });
+
+
+        customEvents.forEach((customEvent) => {
+          const event = new CustomEvent(customEvent, { detail: this.getFormData(this.form) });
+          this.form.dispatchEvent(event);
+        });
+      }
     });
   }
 
