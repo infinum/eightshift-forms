@@ -14,6 +14,7 @@ namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
 
 /**
@@ -101,5 +102,14 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       self::SEQUENCE_TYPE_PARAM,
       self::EMANDATE_DESCRIPTION_PARAM,
     ];
+  }
+
+  /**
+   * Define name of the filter used for filtering required GET params.
+   *
+   * @return string
+   */
+  protected function get_required_params_filter(): string {
+    return Filters::REQUIRED_PARAMS_BUCKAROO_EMANDATE;
   }
 }

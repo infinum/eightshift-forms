@@ -59,4 +59,46 @@ interface Filters {
   const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
   const DYNAMICS_CRM            = 'eightshift_forms/dynamics_info';
   const BUCKAROO                = 'eightshift_forms/buckaroo';
+  const MAILCHIMP               = 'eightshift_forms/mailchimp';
+
+  /**
+   * Filter used to add additional required parameters to Buckaroo Emandate route
+   *
+   * You should return an array with 1 or more key names and those keys will now be required params.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/required_params/buckaroo_emandate', [ $this, 'add_required_params' ], 11, 1 );
+   *   }
+   *
+   *   public function get_info( array $required_params ) {
+   *     $required_params[] = 'new-key';
+   *     return $required_params;
+   *   }
+   *
+   * @var string
+   */
+  const REQUIRED_PARAMS_BUCKAROO_EMANDATE = 'eightshift_forms/required_params/buckaroo_emandate';
+
+
+  /**
+   * Filter used to add additional required parameters to Buckaroo Ideal route
+   *
+   * You should return an array with 1 or more key names and those keys will now be required params.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/required_params/buckaroo_ideal', [ $this, 'add_required_params' ], 11, 1 );
+   *   }
+   *
+   *   public function get_info( array $required_params ) {
+   *     $required_params[] = 'new-key';
+   *     return $required_params;
+   *   }
+   *
+   * @var string
+   */
+  const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
 }

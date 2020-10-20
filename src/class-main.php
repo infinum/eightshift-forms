@@ -24,6 +24,7 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
+use EightshiftFormsTests\Mocks\TestRoute;
 use GuzzleHttp\Client;
 
 /**
@@ -117,6 +118,21 @@ class Main extends Lib_Core {
         Captcha\Basic_Captcha::class,
       ),
 
+      // Mailchimp.
+      Integrations\Mailchimp\Mailchimp::class => array(
+        Integrations\Core\Guzzle_Client::class,
+      ),
+      Rest\Mailchimp_Route::class => array(
+        Config::class,
+        Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
+      ),
+      Rest\Mailchimp_Fetch_Segments_Route::class => array(
+        Config::class,
+        Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
       // Email.
       Rest\Send_Email_Route::class => array(
         Config::class,
@@ -130,6 +146,8 @@ class Main extends Lib_Core {
         Rest\Buckaroo_Ideal_Route::class,
         Rest\Buckaroo_Emandate_Route::class,
         Rest\Send_Email_Route::class,
+        Rest\Mailchimp_Route::class,
+        Integrations\Mailchimp\Mailchimp::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,
@@ -171,7 +189,7 @@ class Main extends Lib_Core {
       ),
 
       // Base route.
-      Rest\Test_Route::class => array(
+      TestRoute::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,

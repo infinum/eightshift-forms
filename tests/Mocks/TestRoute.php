@@ -10,13 +10,14 @@
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Rest;
+namespace EightshiftFormsTests\Mocks;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
+use Eightshift_Forms\Rest\Base_Route;
 
 /**
  * Class TestRoute

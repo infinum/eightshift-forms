@@ -27,6 +27,7 @@ export class Form {
     this.restRouteUrls = {
       buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
       buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
+      mailchimpRestUri: `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
     };
@@ -74,6 +75,10 @@ export class Form {
         if (response.code === 200 && response.data && response.data.redirectUrl) {
           window.location.href = response.data.redirectUrl;
         }
+      }
+
+      if (this.formType === 'mailchimp') {
+        this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
       }
 
       if (this.formType === 'email') {

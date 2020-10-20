@@ -38,7 +38,7 @@ then
   echo "--------------------"
   echo "Running Code Sniffer"
   echo "--------------------"
-  composer check-cs -- -p --parallel=4 --colors $FILES
+  composer standards:check -- -p --parallel=4 --colors $FILES
   if [ $? != 0 ]
   then
     echo "Possible warnings and errors found."

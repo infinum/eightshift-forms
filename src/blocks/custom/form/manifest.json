@@ -93,6 +93,18 @@
     },
     "buckarooRedirectUrlReject": {
       "type": "string"
+    },
+    "mailchimpListId": {
+      "type": "string"
+    },
+    "mailchimpAddTag": {
+      "type": "boolean"
+    },
+    "mailchimpTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

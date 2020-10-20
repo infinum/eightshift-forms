@@ -10,7 +10,7 @@ class DataProvider
    *
    * @return array
    */
-  public function successResponseMock(): array {
+  public function idealSuccessResponseMock(): array {
     return [
         'BRQ_AMOUNT' => 5.00,
         'BRQ_CURRENCY' => 'EUR',
@@ -40,7 +40,7 @@ class DataProvider
    *
    * @return array
    */
-  public function errorResponseMock(): array {
+  public function idealErrorResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -65,7 +65,7 @@ class DataProvider
    *
    * @return array
    */
-  public function rejectResponseMock(): array {
+  public function idealRejectResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -90,7 +90,7 @@ class DataProvider
    *
    * @return array
    */
-  public function cancelledResponseMock(): array {
+  public function idealCancelledResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -115,7 +115,7 @@ class DataProvider
    *
    * @return array
    */
-  public function pendingResponseMock(): array {
+  public function idealPendingResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -131,6 +131,80 @@ class DataProvider
       'BRQ_TRANSACTIONS' => 'AAC90995D35347C9B2D8D9EDFB265B1F',
       'BRQ_WEBSITEKEY' => 'pjTB7CdkZ8',
       'BRQ_SIGNATURE' => '0a03229db3842c7042fbca3091092d8df628f097',
+    ];
+  }
+
+  /**
+   * Example of "Emandate success" response from Buckaroo.
+   *
+   * @return array
+   */
+  public function emandateSuccessResponseMock(): array {
+    return [
+        'BRQ_DATAREQUEST' => '47AB5D6FD7A94B11B5DF94D688BE23B9',
+        'BRQ_PRIMARY_SERVICE' => 'emandate',
+        'BRQ_SERVICE_EMANDATE_ACCOUNTNAME' => 'J. de Tester',
+        'BRQ_SERVICE_EMANDATE_BANKID' => 'ASNBNL21',
+        'BRQ_SERVICE_EMANDATE_EMANDATESTATUS' => 'Success',
+        'BRQ_SERVICE_EMANDATE_IBAN' => 'NL13TEST0123456789',
+        'BRQ_SERVICE_EMANDATE_ISERROR' => 'False',
+        'BRQ_SERVICE_EMANDATE_MANDATEID' => '14N47AB5D6FD7A94B11B5DF94D688BE23B9',
+        'BRQ_SERVICE_EMANDATE_MAXAMOUNT' => 0.00,
+        'BRQ_SERVICE_EMANDATE_ORIGINALMANDATEID' => '14N47AB5D6FD7A94B11B5DF94D688BE23B9',
+        'BRQ_SERVICE_EMANDATE_REFERENCE' => 'debtor-98c0d0e1-fb1d5b48',
+        'BRQ_SERVICE_EMANDATE_SIGNERNAME' => 'J. de Tester',
+        'BRQ_SERVICE_EMANDATE_VALIDATIONREFERENCE' => 'TestValidation',
+        'BRQ_STATUSCODE' => 190,
+        'BRQ_STATUSCODE_DETAIL' => 'S001',
+        'BRQ_STATUSMESSAGE' => 'Transaction successfully processed',
+        'BRQ_TEST' => true,
+        'BRQ_TIMESTAMP' => '2020-10-19 17:16:50',
+        'BRQ_WEBSITEKEY' => 'pjTB7CdkZ8',
+        'BRQ_SIGNATURE' => '1bbd43e52198337768bfadb2ae09f6963ff9934d',
+    ];
+  }
+
+  /**
+   * Example of "Emandate failed" response from Buckaroo.
+   *
+   * @return array
+   */
+  public function emandateFailedResponseMock(): array {
+    return [
+      'BRQ_DATAREQUEST' => '2CE5C53079244252A4DABBBDA3C552B5',
+      'BRQ_PRIMARY_SERVICE' => 'emandate',
+      'BRQ_SERVICE_EMANDATE_EMANDATESTATUS' => 'Failure',
+      'BRQ_SERVICE_EMANDATE_ISERROR' => 'False',
+      'BRQ_SERVICE_EMANDATE_MANDATEID' => '14N2CE5C53079244252A4DABBBDA3C552B5',
+      'BRQ_STATUSCODE' => 490,
+      'BRQ_STATUSCODE_DETAIL' => 'S994',
+      'BRQ_STATUSMESSAGE' => 'An error occurred while processing the transaction through DeutscheBankProcessor.',
+      'BRQ_TEST' => true,
+      'BRQ_TIMESTAMP' => '2020-10-19 17:19:44',
+      'BRQ_WEBSITEKEY' => 'pjTB7CdkZ8',
+      'BRQ_SIGNATURE' => '3ab605b4229bc2ca884b1b29873f8693b8272b98',
+    ];
+  }
+
+  /**
+   * Example of "Emandate failed" response from Buckaroo.
+   *
+   * @return array
+   */
+  public function emandateCancelledResponseMock(): array {
+    return [
+      'BRQ_DATAREQUEST' => '2D2AF2ECC2BD4BDBB94222DF72C03B6A',
+      'BRQ_PRIMARY_SERVICE' => 'emandate',
+      'BRQ_SERVICE_EMANDATE_EMANDATESTATUS' => 'Cancelled',
+      'BRQ_SERVICE_EMANDATE_ISERROR' => 'False',
+      'BRQ_SERVICE_EMANDATE_MANDATEID' => '14N2D2AF2ECC2BD4BDBB94222DF72C03B6A',
+      'BRQ_STATUSCODE' => 890,
+      'BRQ_STATUSCODE_DETAIL' => 'S111',
+      'BRQ_STATUSMESSAGE' => 'The transaction was cancelled by the user.',
+      'BRQ_TEST' => true,
+      'BRQ_TIMESTAMP' => '2020-10-19 17:21:11',
+      'BRQ_WEBSITEKEY' => 'pjTB7CdkZ8',
+      'BRQ_SIGNATURE' => '986bc119d27c70d8e70f00ce02c5bd3269d11943',
     ];
   }
 }
