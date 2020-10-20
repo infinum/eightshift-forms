@@ -1,7 +1,65 @@
 import { __ } from '@wordpress/i18n';
-import { Fragment } from '@wordpress/element';
-import { SelectControl, BaseControl } from '@wordpress/components';
+import { Fragment, useState } from '@wordpress/element';
+import { SelectControl, BaseControl, ToggleControl, CheckboxControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
+
+const TypeCheckbox = (props) => {
+
+  const {
+    onChange,
+    value,
+    selectedTypes,
+    isChecked,
+  } = props;
+
+  const [isCheckedState, setChecked] = useState(isChecked);
+
+  return (
+    <CheckboxControl
+      {...props}
+      checked={isCheckedState}
+      onChange={(isNowChecked) => {
+        if (isNowChecked && !selectedTypes.includes(value)) {
+          onChange([...selectedTypes, value]);
+        } else if (!isNowChecked && selectedTypes.includes(value)) {
+          onChange(selectedTypes.filter((type) => type !== value));
+        }
+
+        setChecked(isNowChecked);
+      }}
+    />
+  );
+};
+
+const ComplexTypeSelector = (props) => {
+  const {
+    label,
+    value = [],
+    types,
+    help,
+    onChange,
+  } = props;
+
+  return (
+    <Fragment>
+      <BaseControl label={label} help={help}>
+        {types.map((type, key) => {
+          return (
+            <TypeCheckbox
+              key={key}
+              value={type.value}
+              label={type.label}
+              isChecked={value.includes(type.value)}
+              selectedTypes={value}
+              onChange={onChange}
+            />
+          );
+        })}
+      </BaseControl>
+    </Fragment>
+  );
+
+};
 
 /**
  * Custom action which changes the "theme" attribute for this block and all it's innerBlocks.
@@ -23,6 +81,8 @@ const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
 export const FormGeneralOptions = (props) => {
   const {
     type,
+    typeComplex,
+    isComplexType,
     formTypes,
     theme,
     themeAsOptions,
@@ -31,6 +91,8 @@ export const FormGeneralOptions = (props) => {
     successMessage,
     errorMessage,
     onChangeType,
+    onChangeTypeComplex,
+    onChangeIsComplexType,
     onChangeTheme,
     onChangeSuccessMessage,
     onChangeErrorMessage,
@@ -38,13 +100,30 @@ export const FormGeneralOptions = (props) => {
 
   return (
     <Fragment>
-      {onChangeType &&
+      {onChangeIsComplexType &&
+        <ToggleControl
+          label={__('Is form complex?', 'eightshift-forms')}
+          help={__('Complex forms are those that can do multiple things on submit (for example: first add member to Mailchimp and then redirect to Buckaroo for payment)', 'eightshift-forms')}
+          checked={isComplexType}
+          onChange={onChangeIsComplexType}
+        />
+      }
+      {onChangeType && !isComplexType &&
         <SelectControl
           label={__('Type', 'eightshift-forms')}
           value={type}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
           options={formTypes}
           onChange={onChangeType}
+        />
+      }
+      {onChangeTypeComplex && isComplexType &&
+        <ComplexTypeSelector
+          label={__('Type (Complex)', 'eightshift-forms')}
+          value={typeComplex}
+          help={__('Choose what will this form do on submit', 'eightshift-forms')}
+          types={formTypes}
+          onChange={onChangeTypeComplex}
         />
       }
       {onChangeTheme && hasThemes &&

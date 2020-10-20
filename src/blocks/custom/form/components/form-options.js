@@ -18,6 +18,8 @@ export const FormOptions = (props) => {
       id,
       classes,
       type,
+      typeComplex,
+      isComplexType,
       dynamicsEntity,
       theme,
       successMessage,
@@ -45,6 +47,8 @@ export const FormOptions = (props) => {
       onChangeId,
       onChangeClasses,
       onChangeType,
+      onChangeTypeComplex,
+      onChangeIsComplexType,
       onChangeDynamicsEntity,
       onChangeTheme,
       onChangeSuccessMessage,
@@ -168,6 +172,8 @@ export const FormOptions = (props) => {
                 <br />
                 <FormGeneralOptions
                   type={type}
+                  isComplexType={isComplexType}
+                  typeComplex={typeComplex}
                   formTypes={formTypes}
                   theme={theme}
                   themeAsOptions={themeAsOptions}
@@ -176,6 +182,8 @@ export const FormOptions = (props) => {
                   successMessage={successMessage}
                   errorMessage={errorMessage}
                   onChangeType={onChangeType}
+                  onChangeTypeComplex={onChangeTypeComplex}
+                  onChangeIsComplexType={onChangeIsComplexType}
                   onChangeTheme={onChangeTheme}
                   onChangeSuccessMessage={onChangeSuccessMessage}
                   onChangeErrorMessage={onChangeErrorMessage}

@@ -51,9 +51,19 @@
     "classes": {
       "type": "string"
     },
+    "isComplexType": {
+      "type": "bool",
+      "default": false
+    },
     "type": {
       "type": "string",
       "default": "email"
+    },
+    "typeComplex": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "dynamicsEntity": {
       "type": "string"
