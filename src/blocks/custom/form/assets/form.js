@@ -32,8 +32,10 @@ export class Form {
 
     // Get form type from class.
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
-    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX).split(',') || [];
-    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT).split(',') || [];
+    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
+    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
+    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
+    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
     this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
 
     this.siteUrl = window.eightshiftForms.siteUrl;
@@ -60,7 +62,6 @@ export class Form {
     ];
 
     this.errors = [];
-
   }
 
 
@@ -69,11 +70,10 @@ export class Form {
    */
   init() {
     this.form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
       this.startLoading();
 
       if (!this.isComplex) {
+        console.log('is NOT complex', this.formType);
         const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
         this.submitEvent({ eventName: this.eventSubmit, formData: this.getFormData(this.form), response });
 
@@ -256,11 +256,19 @@ export class Form {
     });
   }
 
+  /**
+   * Un-hides success message.
+   */
   showSuccessMessage() {
     this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
     this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 1);
   }
 
+  /**
+   * Un-hides all error messages.
+   *
+   * @param {array} errors Array of error string.
+   */
   showErrorMessages(errors) {
 
     errors.forEach((error) => {
@@ -268,11 +276,14 @@ export class Form {
     });
     this.formErrorMessageWrapper.classList.remove(this.CLASS_HIDE_MESSAGE);
 
-    // this.formMessageError.textContent = response.message || 'Unknown Error';
-    // this.formMessageError.classList.remove(this.CLASS_HIDE_MESSAGE);
     this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 0);
   }
 
+  /**
+   * Appends a new error message element at the end of error message wrapper.
+   *
+   * @param {string} error Error's contents
+   */
   appendErrorMessage(error) {
     const errorMessageElem = document.createElement('div');
     errorMessageElem.classList.add(this.errorMessageClasses);
