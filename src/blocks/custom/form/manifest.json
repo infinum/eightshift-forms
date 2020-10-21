@@ -59,11 +59,19 @@
       "type": "string",
       "default": "email"
     },
-    "typeComplex": {
+    "typesComplex": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "default": []
+    },
+    "typesComplexRedirect": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     },
     "dynamicsEntity": {
       "type": "string"

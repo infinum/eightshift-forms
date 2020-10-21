@@ -15,6 +15,14 @@ $block-form: (
       border-radius: 5px,
       padding: 5px,
     )
+  ),
+  types-wrapper: (
+    mobile: (
+      border: 1px solid,
+      border-radius: 4px,
+      background: global-settings(colors, white),
+      padding: 8px,
+    ),
   )
 );
 
@@ -41,5 +49,9 @@ $block-form: (
   &__fields-for-service-list {
     list-style: initial;
     padding-left: 20px;
+  }
+
+  &__types-wrapper {
+    @include responsive($block-form, types-wrapper);
   }
 }

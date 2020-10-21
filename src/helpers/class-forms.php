@@ -28,4 +28,23 @@ class Forms {
 
     return $value;
   }
+
+  /**
+   * Build a single fast (key based) array for checking which from type(s) is/are used.
+   *
+   * @return array
+   */
+  public static function detect_used_types( bool $is_complex, string $form_type, array $form_types_complex, array $form_types_complex_redirect ): array {
+    $used_types = [];
+
+    if ( $is_complex ) {
+      foreach ( array_merge( $form_types_complex, $form_types_complex_redirect ) as $complex_form_type ) {
+        $used_types[ $complex_form_type ] = 1;
+      }
+    } else {
+      $used_types[ $form_type ] = 1;
+    }
+
+    return $used_types;
+  }
 }

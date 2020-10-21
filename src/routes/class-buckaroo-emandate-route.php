@@ -87,6 +87,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
     return \rest_ensure_response(
       [
         'code' => 200,
+        'message' => esc_html__( 'Successfully started emandate creation process', 'eightshift-forms' ),
         'data' => $response,
       ]
     );

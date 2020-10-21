@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment, useState } from '@wordpress/element';
-import { SelectControl, BaseControl, ToggleControl, CheckboxControl } from '@wordpress/components';
+import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 
 /**
@@ -11,11 +11,14 @@ import { RichText } from '@wordpress/block-editor';
 const TypeCheckbox = (props) => {
 
   const {
-    onChange,
+    onChangeTypes,
+    onChangeTypesRedirect,
     value,
     selectedTypes,
+    selectedTypesRedirect,
     isChecked,
-    types,
+    isRedirect,
+    setIsError,
   } = props;
 
   const [isCheckedState, setChecked] = useState(isChecked);
@@ -25,23 +28,32 @@ const TypeCheckbox = (props) => {
       {...props}
       checked={isCheckedState}
       onChange={(isNowChecked) => {
-        let newSelectedTypes = [];
-        if (isNowChecked && !selectedTypes.includes(value)) {
-          newSelectedTypes = [...selectedTypes, value];
 
-        } else if (!isNowChecked && selectedTypes.includes(value)) {
-          newSelectedTypes = selectedTypes.filter((type) => type !== value);
-          onChange();
+        // Redirects have an array of their own.
+        if (!isRedirect) {
+          if (isNowChecked && !selectedTypes.includes(value)) {
+            onChangeTypes([...selectedTypes, value]);
+          }
+
+          if (!isNowChecked && selectedTypes.includes(value)) {
+            onChangeTypes(selectedTypes.filter((type) => type !== value));
+          }
+
+        } else {
+          if (isNowChecked && !selectedTypesRedirect.includes(value)) {
+
+            if (selectedTypesRedirect.length > 0) {
+              setIsError(true);
+              return null;
+            }
+            onChangeTypesRedirect([...selectedTypesRedirect, value]);
+          }
+
+          if (!isNowChecked && selectedTypesRedirect.includes(value)) {
+            onChangeTypesRedirect(selectedTypesRedirect.filter((type) => type !== value));
+          }
         }
 
-        // We need to move types that redirect to last place.
-        types.filter((type) => type.redirects).forEach((redirectType) => {
-          if (newSelectedTypes.includes(redirectType.value)) {
-            newSelectedTypes = newSelectedTypes.concat(newSelectedTypes.splice(newSelectedTypes.indexOf(redirectType.value), 1));
-          }
-        });
-
-        onChange(newSelectedTypes);
         setChecked(isNowChecked);
       }}
     />
@@ -55,32 +67,50 @@ const TypeCheckbox = (props) => {
  */
 const ComplexTypeSelector = (props) => {
   const {
+    blockClass,
     label,
-    value = [],
+    typesComplex,
+    typesComplexRedirect,
     types,
     help,
-    onChange,
+    onChangeTypes,
+    onChangeTypesRedirect,
   } = props;
 
+  const [isError, setIsError] = useState(false);
+
+  const dismissError = () => {
+    setIsError(false);
+  };
+
   return (
-    <Fragment>
-      <BaseControl label={label} help={help}>
+    <BaseControl label={label} help={help}>
+
+      {isError &&
+        <Notice status="error" onRemove={dismissError}>
+          {__('Unable to select multiple types that redirect.', 'eightshift-forms')}
+        </Notice>
+      }
+
+      <div className={`${blockClass}__types-wrapper`}>
         {types.map((type, key) => {
           return (
             <TypeCheckbox
               key={key}
               value={type.value}
               label={type.label}
-              types={types}
               isRedirect={type.redirects || false}
-              isChecked={value.includes(type.value)}
-              selectedTypes={value}
-              onChange={onChange}
+              isChecked={typesComplex.includes(type.value) || typesComplexRedirect.includes(type.value)}
+              selectedTypes={typesComplex}
+              selectedTypesRedirect={typesComplexRedirect}
+              onChangeTypes={onChangeTypes}
+              onChangeTypesRedirect={onChangeTypesRedirect}
+              setIsError={setIsError}
             />
           );
         })}
-      </BaseControl>
-    </Fragment>
+      </div>
+    </BaseControl>
   );
 
 };
@@ -104,8 +134,10 @@ const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
 
 export const FormGeneralOptions = (props) => {
   const {
+    blockClass,
     type,
-    typeComplex,
+    typesComplex,
+    typesComplexRedirect,
     isComplexType,
     formTypes,
     theme,
@@ -115,7 +147,8 @@ export const FormGeneralOptions = (props) => {
     successMessage,
     errorMessage,
     onChangeType,
-    onChangeTypeComplex,
+    onChangeTypesComplex,
+    onChangeTypesComplexRedirect,
     onChangeIsComplexType,
     onChangeTheme,
     onChangeSuccessMessage,
@@ -126,8 +159,8 @@ export const FormGeneralOptions = (props) => {
     <Fragment>
       {onChangeIsComplexType &&
         <ToggleControl
-          label={__('Is form complex?', 'eightshift-forms')}
-          help={__('Complex forms are those that can do multiple things on submit (for example: first add member to Mailchimp and then redirect to Buckaroo for payment)', 'eightshift-forms')}
+          label={__('Multiple types?', 'eightshift-forms')}
+          help={__('Enabled if your form needs to do multiple things on submit.', 'eightshift-forms')}
           checked={isComplexType}
           onChange={onChangeIsComplexType}
         />
@@ -141,13 +174,16 @@ export const FormGeneralOptions = (props) => {
           onChange={onChangeType}
         />
       }
-      {onChangeTypeComplex && isComplexType &&
+      {onChangeTypesComplex && isComplexType &&
         <ComplexTypeSelector
-          label={__('Type (Complex)', 'eightshift-forms')}
-          value={typeComplex}
+          blockClass={blockClass}
+          label={__('Types (Multiple)', 'eightshift-forms')}
+          typesComplex={typesComplex}
+          typesComplexRedirect={typesComplexRedirect}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
           types={formTypes}
-          onChange={onChangeTypeComplex}
+          onChangeTypes={onChangeTypesComplex}
+          onChangeTypesRedirect={onChangeTypesComplexRedirect}
         />
       }
       {onChangeTheme && hasThemes &&

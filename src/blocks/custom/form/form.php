@@ -8,6 +8,7 @@
 namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Forms\Helpers\Components;
+use Eightshift_Forms\Helpers\Forms;
 
 use Eightshift_Forms\Core\Config;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
@@ -23,6 +24,9 @@ $form_target                  = $attributes['target'] ?? '';
 $form_classes                 = $attributes['classes'] ?? '';
 $form_id                      = $attributes['id'] ?? '';
 $form_type                    = $attributes['type'] ?? '';
+$form_types_complex           = $attributes['typesComplex'] ?? '';
+$form_types_complex_redirect  = $attributes['typesComplexRedirect'] ?? '';
+$is_form_complex              = isset( $attributes['isComplexType'] ) ? filter_var( $attributes['isComplexType'], FILTER_VALIDATE_BOOL ) : false;
 $form_theme                   = $attributes['theme'] ?? '';
 $success_message              = $attributes['successMessage'] ?? '';
 $error_message                = $attributes['errorMessage'] ?? '';
@@ -41,6 +45,7 @@ $buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
 $custom_event_names           = $attributes['eventNames'] ?? [];
+$used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 
 $block_classes = Components::classnames([
   $block_class,
@@ -58,24 +63,40 @@ $block_classes = Components::classnames([
     action="<?php echo esc_attr( $form_action ); ?>"
     method="<?php echo esc_attr( $form_method ); ?>"
     target="<?php echo esc_attr( $form_target ); ?>"
-    data-form-type="<?php echo esc_attr( $form_type ); ?>"
+    target="<?php echo esc_attr( $form_target ); ?>"
     <?php ! empty( $form_id ) ? printf( 'id="%s"', esc_attr( $form_id ) ) : ''; ?>
-    <?php ! empty( $buckaroo_service ) ? printf( 'data-buckaroo-service="%s"', esc_attr( $buckaroo_service ) ) : ''; ?>
+    <?php $is_form_complex ? printf( 'data-is-form-complex' ) : ''; ?>
+
+    <?php if ( isset( $used_types[ Config::BUCKAROO_METHOD ] ) ) { ?>
+      data-buckaroo-service="<?php echo esc_attr( $buckaroo_service ); ?>"
+    <?php } ?>
+
+    <?php if ( ! $is_form_complex ) { ?>
+      data-form-type="<?php echo esc_attr( $form_type ); ?>"
+    <?php } else { ?>
+      data-form-types-complex="<?php echo esc_attr( implode( ',', $form_types_complex ) ); ?>"
+      data-form-types-complex-redirect="<?php echo esc_attr( implode( ',', $form_types_complex_redirect ) ); ?>"
+    <?php } ?>
   >
     <?php echo wp_kses_post( $inner_block_content ); ?>
 
-    <?php if ( $form_type === Config::DYNAMICS_CRM_METHOD ) { ?>
+    <?php
+    /**
+     * Here we need to add some additional fields for specific methods.
+     */
+    ?>
+    <?php if ( isset( $used_types[ Config::DYNAMICS_CRM_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Dynamics_Crm_Route::ENTITY_PARAM ); ?>" value="<?php echo esc_attr( $dynamics_crm_entity ); ?>" />
     <?php } ?>
 
-    <?php if ( $form_type === Config::EMAIL_METHOD ) { ?>
+    <?php if ( isset( $used_types[ Config::EMAIL_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::TO_PARAM ); ?>" value="<?php echo esc_attr( $email_to ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
     <?php } ?>
 
-    <?php if ( $form_type === Config::BUCKAROO_METHOD ) { ?>
+    <?php if ( isset( $used_types[ Config::BUCKAROO_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_CANCEL_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_cancel ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_ERROR_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_error ); ?>" />
@@ -87,7 +108,7 @@ $block_classes = Components::classnames([
       <?php } ?>
     <?php } ?>
 
-    <?php if ( $form_type === Config::MAILCHIMP_METHOD ) { ?>
+    <?php if ( isset( $used_types[ Config::MAILCHIMP_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
@@ -95,7 +116,7 @@ $block_classes = Components::classnames([
       <?php } ?>
     <?php } ?>
 
-    <?php if ( $form_type === Config::CUSTOM_EVENT_METHOD ) { ?>
+    <?php if ( isset( $used_types[ Config::CUSTOM_EVENT_METHOD ] ) ) { ?>
       <?php foreach ( $custom_event_names as $custom_event_name ) { ?>
         <input type="hidden" name="custom-events[]" value="<?php echo esc_attr( $custom_event_name ); ?>" />
       <?php } ?>
@@ -106,6 +127,6 @@ $block_classes = Components::classnames([
   <?php echo wp_kses_post( Components::render( 'form-overlay' ) ); ?>
   <?php echo wp_kses_post( Components::render( 'spinner' ) ); ?>
   <?php echo wp_kses_post( Components::render( 'form-message', [ 'message' => $success_message, 'type' => 'success' ] ) ); ?>
-  <?php echo wp_kses_post( Components::render( 'form-message', [ 'message' => $error_message, 'type' => 'error' ] ) ); ?>
+  <?php echo wp_kses_post( Components::render( 'form-error-message-wrapper' ) ); ?>
 </div>
 
