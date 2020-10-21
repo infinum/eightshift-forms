@@ -51,6 +51,9 @@ class BaseTest extends \Codeception\Test\Unit
         do_action( self::WP_MAIL_ACTION, $this);
         return true;
       },
+      'home_url' => function() {
+        return '';
+      },
     ]);
 
   }
