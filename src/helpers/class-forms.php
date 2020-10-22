@@ -81,10 +81,6 @@ class Forms {
       return $parsed_blocks;
     }
 
-    if ( ! isset( $parsed_blocks[0]['attrs']['theme'] ) ) {
-      return $parsed_blocks;
-    }
-
     // Update form's theme.
     $parsed_blocks[0]['attrs']['theme'] = $theme;
 
