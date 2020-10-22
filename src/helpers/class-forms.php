@@ -42,7 +42,8 @@ class Forms {
     $used_types = [];
 
     if ( $is_complex ) {
-      foreach ( array_merge( $form_types_complex, $form_types_complex_redirect ) as $complex_form_type ) {
+      $all_complex_types = array_merge( $form_types_complex, $form_types_complex_redirect );
+      foreach ( $all_complex_types as $complex_form_type ) {
         $used_types[ $complex_form_type ] = 1;
       }
     } else {
