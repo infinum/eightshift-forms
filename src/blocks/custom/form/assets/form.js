@@ -27,7 +27,7 @@ export class Form {
     this.STATE_IS_LOADING = false;
     this.CLASS_FORM_SUBMITTING = 'form-submitting';
     this.CLASS_HIDE_SPINNER = 'hide-spinner';
-    this.CLASS_HIDE_MESSAGE = 'hide-form-message';
+    this.CLASS_HIDE_MESSAGE = 'is-form-message-hidden';
     this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
 
     // Get form type from class.

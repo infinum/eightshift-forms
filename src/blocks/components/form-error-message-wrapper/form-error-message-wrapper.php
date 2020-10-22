@@ -15,7 +15,7 @@ $component_class = 'form-error-message-wrapper';
 $block_classes = Components::classnames([
   $component_class,
   "js-{$component_class}",
-  'hide-form-message',
+  'is-form-message-hidden',
   ! empty ( $block_class ) ? "{$block_class}__{$component_class}" : '',
 ]);
 
