@@ -11,7 +11,6 @@ import { FormCustomOptions } from './form-custom-options';
 
 export const FormOptions = (props) => {
   const {
-    clientId,
     attributes: {
       blockClass,
       action,
@@ -192,7 +191,6 @@ export const FormOptions = (props) => {
                 <p>{__('These are general form options.', 'eightshift-forms')}</p>
                 <br />
                 <FormGeneralOptions
-                  clientId={clientId}
                   blockClass={blockClass}
                   type={type}
                   isComplexType={isComplexType}

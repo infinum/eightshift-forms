@@ -47,4 +47,54 @@ class Forms {
 
     return $used_types;
   }
+
+  /**
+   * Recursively changes theme for all inner blocks.
+   *
+   * @param array  $inner_blocks Array of inner blocks.
+   * @param string $theme Theme name.
+   * @return array
+   */
+  public static function recursively_change_theme_for_all_inner_blocks( array $inner_blocks, string $theme ) {
+    foreach ( $inner_blocks as $key => $inner_block ) {
+      $inner_blocks[ $key ]['attrs']['theme'] = $theme;
+
+      if ( ! empty( $inner_block['innerBlocks'] ) ) {
+        $inner_blocks[ $key ]['innerBlocks'] = self::recursively_change_theme_for_all_inner_blocks( $inner_block['innerBlocks'], $theme );
+      }
+    }
+
+    return $inner_blocks;
+  }
+
+  /**
+   * Manually sets theme attribute for all form fields. This is done so we can decouple the form's theme (light / dark / etc)
+   * from it's contents. I.e. we can have the same form light in 1 section and dark in another.
+   *
+   * @param  array  $parsed_blocks Array of parsed blocks.
+   * @param  string $theme         Theme name.
+   * @return array
+   */
+  public static function add_theme_to_parsed_blocks( array $parsed_blocks, string $theme ): array {
+
+    if ( empty( $theme ) ) {
+      return $parsed_blocks;
+    }
+
+    if ( ! isset( $parsed_blocks[0]['attrs']['theme'] ) ) {
+      return $parsed_blocks;
+    }
+
+    // Update form's theme.
+    $parsed_blocks[0]['attrs']['theme'] = $theme;
+
+    // Update theme for all inner blocks.
+    if ( empty( $parsed_blocks[0]['innerBlocks'] ) ) {
+      return $parsed_blocks;
+    } else {
+      $parsed_blocks[0]['innerBlocks'] = self::recursively_change_theme_for_all_inner_blocks( $parsed_blocks[0]['innerBlocks'], $theme );
+    }
+
+    return $parsed_blocks;
+  }
 }

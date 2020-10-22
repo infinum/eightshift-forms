@@ -2,8 +2,6 @@ import { __ } from '@wordpress/i18n';
 import { Fragment, useState } from '@wordpress/element';
 import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
-import { getAllChildrenRecursive, updateThemeForAllBlocks } from './update-theme-helpers';
 
 /**
  * Single checkbox for form type.
@@ -117,35 +115,14 @@ const ComplexTypeSelector = (props) => {
 
 };
 
-/**
- * Custom action which changes the "theme" attribute for this block and all it's innerBlocks.
- *
- * @param {string} newTheme New value for theme attribute
- * @param {function} onChangeTheme Prebuilt action for form block.
- */
-const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
-  const thisBlock = wp.data.select('core/block-editor').getSelectedBlock();
-  if (thisBlock.innerBlocks) {
-    thisBlock.innerBlocks.forEach((innerBlock) => {
-      innerBlock.attributes.theme = newTheme;
-      wp.data.dispatch('core/block-editor').updateBlock(innerBlock.clientId, innerBlock);
-    });
-  }
-  onChangeTheme(newTheme);
-};
-
 export const FormGeneralOptions = (props) => {
   const {
-    clientId,
     blockClass,
     type,
     typesComplex,
     typesComplexRedirect,
     isComplexType,
     formTypes,
-    theme,
-    themeAsOptions,
-    hasThemes,
     richTextClass,
     successMessage,
     errorMessage,
@@ -153,14 +130,9 @@ export const FormGeneralOptions = (props) => {
     onChangeTypesComplex,
     onChangeTypesComplexRedirect,
     onChangeIsComplexType,
-    onChangeTheme,
     onChangeSuccessMessage,
     onChangeErrorMessage,
   } = props;
-
-  const block = useSelect((select) => {
-    return select('core/block-editor').getBlock(clientId);
-  });
 
   return (
     <Fragment>
@@ -191,18 +163,6 @@ export const FormGeneralOptions = (props) => {
           types={formTypes}
           onChangeTypes={onChangeTypesComplex}
           onChangeTypesRedirect={onChangeTypesComplexRedirect}
-        />
-      }
-      {onChangeTheme && hasThemes &&
-        <SelectControl
-          label={__('Theme', 'eightshift-forms')}
-          help={__('Choose your form theme.', 'eightshift-forms')}
-          value={theme}
-          options={themeAsOptions}
-          onChange={(newTheme) => {
-            updateThemeForAllBlocks(getAllChildrenRecursive(block), newTheme);
-            onChangeTheme(newTheme);
-          }}
         />
       }
 

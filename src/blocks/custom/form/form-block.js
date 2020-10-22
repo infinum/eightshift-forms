@@ -9,7 +9,6 @@ import { FormOptions } from './components/form-options';
 
 export const Form = (props) => {
   const {
-    clientId,
     attributes,
   } = props;
 
@@ -19,13 +18,11 @@ export const Form = (props) => {
     <Fragment>
       <InspectorControls>
         <FormOptions
-          clientId={clientId}
           attributes={attributes}
           actions={actions}
         />
       </InspectorControls>
       <FormEditor
-        clientId={clientId}
         attributes={attributes}
         actions={actions}
       />
