@@ -36,7 +36,7 @@ $block_classes = Components::classnames([
 
 $wrapper_classes = Components::classnames([
   "{$block_class}__content-wrap",
-  "{$block_class}__theme--{$theme}",
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
   "js-{$block_class}",
 ]);
 

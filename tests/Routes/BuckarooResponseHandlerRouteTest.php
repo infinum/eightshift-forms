@@ -132,4 +132,29 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ) );
   }
 
+  /**
+   * We expect an error when we're missing Buckaroo required keys
+   *
+   * @return void
+   */
+  public function testUserWasRedirectedIfRedirectUrlsMissing()
+  {
+    $this->addHooks();
+
+    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
+    $request->params['GET'] = [
+      $this->route_endpoint::REDIRECT_URL_PARAM => '',
+      $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => '',
+      $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => '',
+      $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => '',
+      $this->route_endpoint::STATUS_PARAM => 'success',
+    ];
+    $request->params['POST'] = [
+      $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
+    ];
+    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
+    $response = $this->route_endpoint->route_callback( $request );
+
+    $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ) );
+  }
 }

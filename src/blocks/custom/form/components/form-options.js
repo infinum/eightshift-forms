@@ -6,6 +6,8 @@ import { FormDynamicsCrmOptions } from './form-dynamics-crm-options';
 import { FormBuckarooOptions } from './form-buckaroo-options';
 import { FormEmailOptions } from './form-email-options';
 import { FormMailchimpOptions } from './form-mailchimp-options';
+import { FormCustomEventOptions } from './form-custom-event-options';
+import { FormCustomOptions } from './form-custom-options';
 
 export const FormOptions = (props) => {
   const {
@@ -17,6 +19,9 @@ export const FormOptions = (props) => {
       id,
       classes,
       type,
+      typesComplex,
+      typesComplexRedirect,
+      isComplexType,
       dynamicsEntity,
       theme,
       successMessage,
@@ -35,6 +40,7 @@ export const FormOptions = (props) => {
       mailchimpListId,
       mailchimpAddTag,
       mailchimpTags,
+      eventNames,
     },
     actions: {
       onChangeAction,
@@ -43,6 +49,9 @@ export const FormOptions = (props) => {
       onChangeId,
       onChangeClasses,
       onChangeType,
+      onChangeTypesComplex,
+      onChangeTypesComplexRedirect,
+      onChangeIsComplexType,
       onChangeDynamicsEntity,
       onChangeTheme,
       onChangeSuccessMessage,
@@ -61,6 +70,7 @@ export const FormOptions = (props) => {
       onChangeMailchimpListId,
       onChangeMailchimpAddTag,
       onChangeMailchimpTags,
+      onChangeEventNames,
     },
   } = props;
 
@@ -68,7 +78,8 @@ export const FormOptions = (props) => {
 
   const formTypes = [
     { label: __('Email', 'eightshift-forms'), value: 'email' },
-    { label: __('Custom', 'eightshift-forms'), value: 'custom' },
+    { label: __('Custom (PHP)', 'eightshift-forms'), value: 'custom', redirects: true },
+    { label: __('Custom (Event)', 'eightshift-forms'), value: 'custom-event' },
   ];
 
   const {
@@ -95,7 +106,7 @@ export const FormOptions = (props) => {
   }
 
   if (isBuckarooUsed) {
-    formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo' });
+    formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo', redirects: true });
   }
 
   if (isMailchimpUsed) {
@@ -108,34 +119,59 @@ export const FormOptions = (props) => {
       title: <Dashicon icon="admin-generic" />,
       className: 'tab-general components-button is-button is-default custom-button-with-icon',
     },
-    {
+  ];
+
+  if ((!isComplexType && type === 'email') || (isComplexType && typesComplex.includes('email'))) {
+    tabs.push({
       name: 'email',
       title: <Dashicon icon="email" />,
       className: 'tab-email components-button is-button is-default custom-button-with-icon',
-    },
-  ];
+    });
+  }
 
-  if (isDynamicsCrmUsed && type === 'dynamics-crm') {
+  if (isDynamicsCrmUsed && (
+    (!isComplexType && type === 'dynamics-crm') || (isComplexType && typesComplex.includes('dynamics-crm'))
+  )) {
     tabs.push({
-      name: type,
+      name: 'dynamics-crm',
       title: <Dashicon icon="cloud-upload" />,
       className: 'tab-dynamics-crm components-button is-button is-default custom-button-with-icon',
     });
   }
 
-  if (isBuckarooUsed && type === 'buckaroo') {
+  if (isBuckarooUsed && (
+    (!isComplexType && type === 'buckaroo') || (isComplexType && typesComplexRedirect.includes('buckaroo'))
+  )) {
     tabs.push({
-      name: type,
+      name: 'buckaroo',
       title: <Dashicon icon="money" />,
       className: 'tab-buckaroo components-button is-button is-default custom-button-with-icon',
     });
   }
 
-  if (isMailchimpUsed && type === 'mailchimp') {
+  if (isMailchimpUsed && (
+    (!isComplexType && type === 'mailchimp') || (isComplexType && typesComplex.includes('mailchimp'))
+  )) {
     tabs.push({
-      name: type,
+      name: 'mailchimp',
       title: <Dashicon icon="email-alt2" />,
       className: 'tab-mailchimp components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if ((!isComplexType && type === 'custom') || (isComplexType && typesComplexRedirect.includes('custom'))) {
+    tabs.push({
+      name: 'custom',
+      title: <Dashicon icon="arrow-right-alt" />,
+      className: 'tab-custom components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if ((!isComplexType && type === 'custom-event') || (isComplexType && typesComplex.includes('custom-event'))) {
+    tabs.push({
+      name: 'custom-event',
+      title: <Dashicon icon="megaphone" />,
+      className: 'tab-custom-event components-button is-button is-default custom-button-with-icon',
     });
   }
 
@@ -155,7 +191,11 @@ export const FormOptions = (props) => {
                 <p>{__('These are general form options.', 'eightshift-forms')}</p>
                 <br />
                 <FormGeneralOptions
+                  blockClass={blockClass}
                   type={type}
+                  isComplexType={isComplexType}
+                  typesComplex={typesComplex}
+                  typesComplexRedirect={typesComplexRedirect}
                   formTypes={formTypes}
                   theme={theme}
                   themeAsOptions={themeAsOptions}
@@ -164,6 +204,9 @@ export const FormOptions = (props) => {
                   successMessage={successMessage}
                   errorMessage={errorMessage}
                   onChangeType={onChangeType}
+                  onChangeTypesComplex={onChangeTypesComplex}
+                  onChangeTypesComplexRedirect={onChangeTypesComplexRedirect}
+                  onChangeIsComplexType={onChangeIsComplexType}
                   onChangeTheme={onChangeTheme}
                   onChangeSuccessMessage={onChangeSuccessMessage}
                   onChangeErrorMessage={onChangeErrorMessage}
@@ -251,33 +294,41 @@ export const FormOptions = (props) => {
 
               </Fragment>
             )}
+            {tab.name === 'custom' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Custom PHP action', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is triggering a custom PHP action.', 'eightshift-forms')}</p>
+                <br />
+                <FormCustomOptions
+                  action={action}
+                  method={method}
+                  target={target}
+                  onChangeAction={onChangeAction}
+                  onChangeMethod={onChangeMethod}
+                  onChangeTarget={onChangeTarget}
+                />
+
+              </Fragment>
+            )}
+            {tab.name === 'custom-event' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('Custom event options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is triggering a custom event.', 'eightshift-forms')}</p>
+                <br />
+                <FormCustomEventOptions
+                  blockClass={blockClass}
+                  type={type}
+                  eventNames={eventNames}
+                  onChangeEventNames={onChangeEventNames}
+                />
+
+              </Fragment>
+            )}
           </Fragment>
         )}
       </TabPanel>
-
-      {onChangeAction && type === 'custom' &&
-        <TextControl
-          label={__('Action', 'eightshift-forms')}
-          value={action}
-          onChange={onChangeAction}
-        />
-      }
-
-      {onChangeMethod && type === 'custom' &&
-        <TextControl
-          label={__('Method', 'eightshift-forms')}
-          value={method}
-          onChange={onChangeMethod}
-        />
-      }
-
-      {onChangeTarget && type === 'custom' &&
-        <TextControl
-          label={__('Target', 'eightshift-forms')}
-          value={target}
-          onChange={onChangeTarget}
-        />
-      }
 
       {onChangeClasses &&
         <TextControl

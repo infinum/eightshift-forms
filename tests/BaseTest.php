@@ -25,6 +25,8 @@ class BaseTest extends \Codeception\Test\Unit
           'esc_html__',
           'esc_html_x',
           'esc_attr_x',
+          'sanitize_text_field',
+          'wp_unslash',
       ]
     );
 
@@ -50,6 +52,9 @@ class BaseTest extends \Codeception\Test\Unit
       'wp_mail' => function($data) {
         do_action( self::WP_MAIL_ACTION, $this);
         return true;
+      },
+      'home_url' => function() {
+        return '';
       },
     ]);
 

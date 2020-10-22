@@ -180,6 +180,15 @@ class Response {
   }
 
   /**
+   * Check if response is an cancel.
+   *
+   * @return boolean
+   */
+  public function is_cancel(): bool {
+    return $this->status === self::STATUS_CODE_CANCELLED;
+  }
+
+  /**
    * Get emandate reference ID.
    *
    * @return  string
@@ -337,7 +346,7 @@ class Response {
    * @throws Invalid_Buckaroo_Response_Exception When we're unable to validate response.
    */
   private function validate_response(): bool {
-    if ( $this->service === self::SERVICE_INVALID ) {
+    if ( ! $this->is_cancel() && $this->service === self::SERVICE_INVALID ) {
       throw new Invalid_Buckaroo_Response_Exception( esc_html__( 'Unable to build Buckaroo response, invalid service.', 'eightshift-forms' ) );
     }
 
@@ -357,7 +366,7 @@ class Response {
       throw new Invalid_Buckaroo_Response_Exception( esc_html__( 'Unable to build Buckaroo response, unable to locate payment amount.', 'eightshift-forms' ) );
     }
 
-    if ( $this->is_ideal() && empty( $this->ideal_payment_id ) ) {
+    if ( ! $this->is_cancel() && $this->is_ideal() && empty( $this->ideal_payment_id ) ) {
       throw new Invalid_Buckaroo_Response_Exception( esc_html__( 'Unable to build Buckaroo response, unable to locate payment ID.', 'eightshift-forms' ) );
     }
 

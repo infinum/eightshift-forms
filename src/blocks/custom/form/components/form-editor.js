@@ -1,5 +1,10 @@
-import { InnerBlocks } from '@wordpress/editor';
+import { InnerBlocks } from '@wordpress/block-editor';
 
+/**
+ * Form editor.
+ *
+ * @param {object} props Props.
+ */
 export const FormEditor = (props) => {
   const {
     attributes: {

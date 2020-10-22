@@ -106,7 +106,7 @@ class Mailchimp_Route extends Base_Route implements Filters {
       [
         'code' => 200,
         'data' => $response,
-        'message' => esc_html__( 'success', 'eightshift-forms' ),
+        'message' => esc_html__( 'Successfully added ', 'eightshift-forms' ),
       ]
     );
   }
@@ -120,7 +120,6 @@ class Mailchimp_Route extends Base_Route implements Filters {
     return [
       self::EMAIL_PARAM,
       self::LIST_ID_PARAM,
-      self::TAGS_PARAM,
     ];
   }
 

@@ -10,6 +10,7 @@ import { InputOptions } from './components/input-options';
 
 export const Input = (props) => {
   const {
+    clientId,
     attributes,
     attributes: {
       label,
@@ -28,6 +29,7 @@ export const Input = (props) => {
         <InputOptions
           attributes={attributes}
           actions={actions}
+          clientId={clientId}
         />
       </InspectorControls>
       <InputEditor

@@ -51,9 +51,27 @@
     "classes": {
       "type": "string"
     },
+    "isComplexType": {
+      "type": "bool",
+      "default": false
+    },
     "type": {
       "type": "string",
       "default": "email"
+    },
+    "typesComplex": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "typesComplexRedirect": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     },
     "dynamicsEntity": {
       "type": "string"
@@ -101,6 +119,12 @@
       "type": "boolean"
     },
     "mailchimpTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eventNames": {
       "type": "array",
       "items": {
         "type": "string"

@@ -21,6 +21,9 @@
     "selectedFormId": {
       "type": "string",
       "default": "0"
+    },
+    "theme": {
+      "type": "string"
     }
   }
 }

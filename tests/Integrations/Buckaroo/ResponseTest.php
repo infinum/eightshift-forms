@@ -42,6 +42,12 @@ class BuckarooResponse extends BaseTest
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_CANCELLED );
   }
 
+  public function testIdealCancelledByBackButtonResponse()
+  {
+    $response = Response_Factory::build( $this->dataProvider->idealCancelledResponseWhenUserClicksBackMock());
+    $this->assertEquals( $response->get_status(), Response::STATUS_CODE_CANCELLED );
+  }
+
   public function testEmandateFailResponse()
   {
     $response = Response_Factory::build( $this->dataProvider->emandateFailedResponseMock());

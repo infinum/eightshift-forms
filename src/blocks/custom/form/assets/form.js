@@ -2,7 +2,10 @@ import { sendForm } from '../../../helpers/forms';
 
 export class Form {
   constructor(element, {
+    DATA_ATTR_IS_FORM_COMPLEX,
     DATA_ATTR_FORM_TYPE,
+    DATA_ATTR_FORM_TYPES_COMPLEX,
+    DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT,
   }) {
     this.formWrapper = element;
     this.form = element.querySelector('.js-block-form-form');
@@ -10,16 +13,30 @@ export class Form {
     this.spinner = element.querySelector('.js-spinner');
     this.submits = this.form.querySelectorAll('input[type="submit"]');
     this.formMessageSuccess = this.formWrapper.querySelector('.js-form-message--success');
-    this.formMessageError = this.formWrapper.querySelector('.js-form-message--error');
+    this.formErrorMessageWrapper = this.formWrapper.querySelector('.js-form-error-message-wrapper');
     this.overlay = this.formWrapper.querySelector('.js-form-overlay');
     this.basicCaptchaField = this.form.querySelector('.js-block-captcha');
+    this.DATA_ATTR_IS_FORM_COMPLEX = DATA_ATTR_IS_FORM_COMPLEX;
     this.DATA_ATTR_FORM_TYPE = DATA_ATTR_FORM_TYPE;
+    this.DATA_ATTR_FORM_TYPES_COMPLEX = DATA_ATTR_FORM_TYPES_COMPLEX;
+    this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT = DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT;
     this.DATA_ATTR_BUCKAROO_SERVICE = 'data-buckaroo-service';
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
+    this.EVENT_SUBMIT = 'ef-submit';
+    this.STATE_IS_LOADING = false;
+    this.CLASS_FORM_SUBMITTING = 'form-submitting';
+    this.CLASS_HIDE_SPINNER = 'hide-spinner';
+    this.CLASS_HIDE_MESSAGE = 'is-form-message-hidden';
+    this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
 
     // Get form type from class.
     this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
+    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
+    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
+    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
+    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
+    this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
 
     this.siteUrl = window.eightshiftForms.siteUrl;
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
@@ -37,59 +54,158 @@ export class Form {
       success: window.eightshiftForms.content.formSuccess,
     };
 
-    this.STATE_IS_LOADING = false;
-    this.CLASS_FORM_SUBMITTING = 'form-submitting';
-    this.CLASS_HIDE_SPINNER = 'hide-spinner';
-    this.CLASS_HIDE_MESSAGE = 'hide-form-message';
-    this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
+    this.errorMessageClasses = [
+      'form-message',
+      'js-form-message',
+      'js-form-message--error',
+      'form-message__type--error',
+    ];
+
+    this.errors = [];
   }
 
 
+  /**
+   * Setup all form handling.
+   */
   init() {
     this.form.addEventListener('submit', async (e) => {
+      this.startLoading();
 
-      if (this.formType !== 'custom') {
-        e.preventDefault();
-      }
+      if (!this.isComplex) {
+        const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
+        this.submitEvent({ eventName: this.eventSubmit, formData: this.getFormData(this.form), response });
 
-      if (this.formType === 'dynamics-crm') {
-        this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
-      }
+        if (isSuccess) {
+          this.showSuccessMessage();
+        } else {
+          this.errors.push(response.message || 'Unknown Error');
+          this.showErrorMessages(this.errors);
+        }
+        this.endLoading(isSuccess);
+      } else {
 
-      if (this.formType === 'buckaroo') {
-        const buckarooService = this.form.getAttribute(this.DATA_ATTR_BUCKAROO_SERVICE);
-        let restUrl = '';
-
-        switch (buckarooService) {
-          case 'ideal':
-            restUrl = this.restRouteUrls.buckarooIdealRestUri;
-            break;
-          case 'emandate':
-            restUrl = this.restRouteUrls.buckarooEmandateRestUri;
-            break;
-          default:
+        // Submit to all regular routes in parallel.
+        const submitPromises = [];
+        for (const typeComplex of this.formTypesComplex) {
+          submitPromises.push(this.submitFormSimple(e, typeComplex));
+        }
+        const submitStatuses = await Promise.all(submitPromises);
+        for (const submitStatus of submitStatuses) {
+          if (!submitStatus.isSuccess) {
+            this.errors.push(submitStatus.response.message || 'Unknown Error');
+          }
         }
 
-        const response = await this.submitForm(restUrl, this.getFormData(this.form));
+        // Now let's submit to redirect route after (only if set)
+        if (this.formTypesComplexRedirect.length) {
+          const { isSuccess, response } = await this.submitFormSimple(e, this.formTypesComplexRedirect[0] || '');
 
-        if (response.code === 200 && response.data && response.data.redirectUrl) {
-          window.location.href = response.data.redirectUrl;
+          if (!isSuccess) {
+            this.errors.push(response.message || 'Unknown Error');
+          }
         }
-      }
 
-      if (this.formType === 'mailchimp') {
-        this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
-      }
+        const isComplexSuccess = this.errors.length === 0;
 
-      if (this.formType === 'email') {
-        this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
+        if (isComplexSuccess) {
+          this.showSuccessMessage();
+        } else {
+          this.showErrorMessages(this.errors);
+        }
+
+        this.endLoading(isComplexSuccess);
       }
     });
   }
 
-  async submitForm(url, data) {
-    this.startLoading();
+  /**
+   * Submits the form for a single type.
+   *
+   * @param {EventObject} e Event object.
+   * @param {string} formType Current form type.
+   */
+  async submitFormSimple(e, formType) {
+    let submitStatus = {};
 
+    if (formType !== 'custom') {
+      e.preventDefault();
+      submitStatus = { response: {}, isSuccess: true };
+    }
+
+    if (formType === 'dynamics-crm') {
+      submitStatus = this.submitForm(this.restRouteUrls.dynamicsCrmRestUri, this.getFormData(this.form));
+    }
+
+    if (formType === 'buckaroo') {
+      const buckarooService = this.form.getAttribute(this.DATA_ATTR_BUCKAROO_SERVICE);
+      let restUrl = '';
+
+      switch (buckarooService) {
+        case 'ideal':
+          restUrl = this.restRouteUrls.buckarooIdealRestUri;
+          break;
+        case 'emandate':
+          restUrl = this.restRouteUrls.buckarooEmandateRestUri;
+          break;
+        default:
+      }
+
+      submitStatus = await this.submitForm(restUrl, this.getFormData(this.form));
+      const { response } = submitStatus;
+
+      if (response.code === 200 && response.data && response.data.redirectUrl) {
+        window.location.href = response.data.redirectUrl;
+      } else {
+        submitStatus.isSuccess = false;
+      }
+    }
+
+    if (formType === 'mailchimp') {
+      submitStatus = this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
+    }
+
+    if (formType === 'email') {
+      submitStatus = this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
+    }
+
+    if (formType === 'custom-event') {
+      const customEvents = [...this.form.elements].filter((formElem) => formElem.getAttribute('name') === 'custom-events[]').map((formElem) => {
+        return formElem.value;
+      });
+
+      customEvents.forEach((eventName) => {
+        this.submitEvent({ eventName, formData: this.getFormData(this.form) });
+      });
+
+      submitStatus = { response: {}, isSuccess: true };
+    }
+
+    return submitStatus;
+  }
+
+  /**
+   * Submits a custom JS event.
+   *
+   * @param {object} props Props.
+   */
+  submitEvent({ eventName, formData, response = {} }) {
+    const submitEvent = new CustomEvent(eventName, {
+      detail: {
+        response,
+        formData,
+      },
+    });
+    this.form.dispatchEvent(submitEvent);
+  }
+
+  /**
+   * Submits form.
+   *
+   * @param {string} url  Url to where to send request.
+   * @param {object} data Data to send to endpoint.
+   */
+  async submitForm(url, data) {
     const response = await sendForm(url, data);
     const isSuccess = response && response.code && response.code === 200;
     const is500Error = response && response.code && response.code === 'internal_server_error';
@@ -98,25 +214,36 @@ export class Form {
       response.message = this.internalServerErrorMessage;
     }
 
-    this.endLoading(isSuccess, response);
-
-    return response;
+    return {
+      isSuccess,
+      response,
+    };
   }
 
+  /**
+   * Starts the form loading state.
+   */
   startLoading() {
     this.STATE_IS_LOADING = true;
     this.form.classList.add(this.CLASS_FORM_SUBMITTING);
     this.spinner.classList.remove(this.CLASS_HIDE_SPINNER);
     this.overlay.classList.remove(this.CLASS_HIDE_OVERLAY);
     this.spinner.innerHTML = `<p>${this.formAccessibilityStatus.loading}</p>`;
-    [this.formMessageSuccess, this.formMessageError].forEach((msgElem) => msgElem.classList.add(this.CLASS_HIDE_MESSAGE));
+    [this.formMessageSuccess, this.formErrorMessageWrapper].forEach((msgElem) => msgElem.classList.add(this.CLASS_HIDE_MESSAGE));
+    this.errors = [];
+    this.formErrorMessageWrapper.innerHTML = '';
 
     this.submits.forEach((submit) => {
       submit.disabled = true;
     });
   }
 
-  endLoading(isSuccess, response) {
+  /**
+   * Ends the form loading state
+   *
+   * @param {bool} isSuccess State of the response.
+   */
+  endLoading(isSuccess) {
     const state = isSuccess ? 'success' : 'error';
     this.STATE_IS_LOADING = false;
     this.form.classList.remove(this.CLASS_FORM_SUBMITTING);
@@ -126,15 +253,41 @@ export class Form {
     this.submits.forEach((submit) => {
       submit.disabled = false;
     });
+  }
 
-    if (isSuccess) {
-      this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
-      this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 1);
-    } else {
-      this.formMessageError.textContent = response.message;
-      this.formMessageError.classList.remove(this.CLASS_HIDE_MESSAGE);
-      this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 0);
-    }
+  /**
+   * Un-hides success message.
+   */
+  showSuccessMessage() {
+    this.formMessageSuccess.classList.remove(this.CLASS_HIDE_MESSAGE);
+    this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 1);
+  }
+
+  /**
+   * Un-hides all error messages.
+   *
+   * @param {array} errors Array of error string.
+   */
+  showErrorMessages(errors) {
+
+    errors.forEach((error) => {
+      this.appendErrorMessage(error);
+    });
+    this.formErrorMessageWrapper.classList.remove(this.CLASS_HIDE_MESSAGE);
+
+    this.form.setAttribute(this.DATA_ATTR_SUCCESSFULLY_SUBMITTED, 0);
+  }
+
+  /**
+   * Appends a new error message element at the end of error message wrapper.
+   *
+   * @param {string} error Error's contents
+   */
+  appendErrorMessage(error) {
+    const errorMessageElem = document.createElement('div');
+    errorMessageElem.classList.add(this.errorMessageClasses);
+    errorMessageElem.innerHTML = error;
+    this.formErrorMessageWrapper.appendChild(errorMessageElem);
   }
 
   /**

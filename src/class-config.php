@@ -48,6 +48,13 @@ class Config extends Lib_Config {
   const MAILCHIMP_METHOD = 'mailchimp';
 
   /**
+   * Value for the form type when it's submitting to Mailchimp.
+   *
+   * @var string
+   */
+  const CUSTOM_EVENT_METHOD = 'custom-event';
+
+  /**
    * Method that returns project name.
    *
    * Generally used for naming assets handlers, languages, etc.
