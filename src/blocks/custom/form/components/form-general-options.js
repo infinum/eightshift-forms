@@ -2,6 +2,8 @@ import { __ } from '@wordpress/i18n';
 import { Fragment, useState } from '@wordpress/element';
 import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
+import { getAllChildrenRecursive, updateThemeForAllBlocks } from './update-theme-helpers';
 
 /**
  * Single checkbox for form type.
@@ -134,6 +136,7 @@ const updateThemeForAllInnerBlocks = (newTheme, onChangeTheme) => {
 
 export const FormGeneralOptions = (props) => {
   const {
+    clientId,
     blockClass,
     type,
     typesComplex,
@@ -154,6 +157,10 @@ export const FormGeneralOptions = (props) => {
     onChangeSuccessMessage,
     onChangeErrorMessage,
   } = props;
+
+  const block = useSelect((select) => {
+    return select('core/block-editor').getBlock(clientId);
+  });
 
   return (
     <Fragment>
@@ -193,7 +200,8 @@ export const FormGeneralOptions = (props) => {
           value={theme}
           options={themeAsOptions}
           onChange={(newTheme) => {
-            updateThemeForAllInnerBlocks(newTheme, onChangeTheme);
+            updateThemeForAllBlocks(getAllChildrenRecursive(block), newTheme);
+            onChangeTheme(newTheme);
           }}
         />
       }

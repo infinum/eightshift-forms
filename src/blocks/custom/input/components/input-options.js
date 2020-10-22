@@ -1,9 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { PanelBody, TextControl, SelectControl, ToggleControl, ExternalLink, BaseControl } from '@wordpress/components';
+import { updateThemeFromTopParent } from '../../../helpers/update-theme-from-top-parent';
 
 export const InputOptions = (props) => {
   const {
+    clientId,
     attributes: {
       name,
       value,
@@ -31,8 +33,11 @@ export const InputOptions = (props) => {
       onChangePreventSending,
       onChangePattern,
       onChangeCustomValidityMsg,
+      onChangeTheme,
     },
   } = props;
+
+  updateThemeFromTopParent(clientId, onChangeTheme);
 
   return (
     <PanelBody title={__('Input Settings', 'eightshift-forms')}>

@@ -73,7 +73,6 @@ export class Form {
       this.startLoading();
 
       if (!this.isComplex) {
-        console.log('is NOT complex', this.formType);
         const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
         this.submitEvent({ eventName: this.eventSubmit, formData: this.getFormData(this.form), response });
 
