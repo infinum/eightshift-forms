@@ -18,7 +18,8 @@ $second_number = rand(1, 15);
 
 $block_classes = Components::classnames([
   $block_class,
-  "js-{$block_class}"
+  "js-{$block_class}",
+  ! empty( $theme) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
 ?>
@@ -31,6 +32,7 @@ $block_classes = Components::classnames([
         'blockClass' => $attributes['blockClass'] ?? '',
         'label'      => $attributes['label'] ?? '',
         'id'         => $attributes['id'] ?? '',
+        'theme'      => $attributes['theme'] ?? '',
       )
     );
     ?>
