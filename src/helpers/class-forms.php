@@ -32,6 +32,10 @@ class Forms {
   /**
    * Build a single fast (key based) array for checking which from type(s) is/are used.
    *
+   * @param  bool   $is_complex                  Is form complex? (uses multiple types).
+   * @param  string $form_type                   Used form type (used if not complex).
+   * @param  array  $form_types_complex          Used form types.
+   * @param  array  $form_types_complex_redirect Used form types that redirect on success.
    * @return array
    */
   public static function detect_used_types( bool $is_complex, string $form_type, array $form_types_complex, array $form_types_complex_redirect ): array {
@@ -49,48 +53,21 @@ class Forms {
   }
 
   /**
-   * Recursively changes theme for all inner blocks.
+   * Recursively changes theme for all blocks.
    *
-   * @param array  $inner_blocks Array of inner blocks.
+   * @param array  $blocks Array of blocks.
    * @param string $theme Theme name.
    * @return array
    */
-  public static function recursively_change_theme_for_all_inner_blocks( array $inner_blocks, string $theme ) {
-    foreach ( $inner_blocks as $key => $inner_block ) {
-      $inner_blocks[ $key ]['attrs']['theme'] = $theme;
+  public static function recursively_change_theme_for_all_blocks( array $blocks, string $theme ) {
+    foreach ( $blocks as $key => $block ) {
+      $blocks[ $key ]['attrs']['theme'] = $theme;
 
-      if ( ! empty( $inner_block['innerBlocks'] ) ) {
-        $inner_blocks[ $key ]['innerBlocks'] = self::recursively_change_theme_for_all_inner_blocks( $inner_block['innerBlocks'], $theme );
+      if ( ! empty( $block['innerBlocks'] ) ) {
+        $blocks[ $key ]['innerBlocks'] = self::recursively_change_theme_for_all_blocks( $block['innerBlocks'], $theme );
       }
     }
 
-    return $inner_blocks;
-  }
-
-  /**
-   * Manually sets theme attribute for all form fields. This is done so we can decouple the form's theme (light / dark / etc)
-   * from it's contents. I.e. we can have the same form light in 1 section and dark in another.
-   *
-   * @param  array  $parsed_blocks Array of parsed blocks.
-   * @param  string $theme         Theme name.
-   * @return array
-   */
-  public static function add_theme_to_parsed_blocks( array $parsed_blocks, string $theme ): array {
-
-    if ( empty( $theme ) ) {
-      return $parsed_blocks;
-    }
-
-    // Update form's theme.
-    $parsed_blocks[0]['attrs']['theme'] = $theme;
-
-    // Update theme for all inner blocks.
-    if ( empty( $parsed_blocks[0]['innerBlocks'] ) ) {
-      return $parsed_blocks;
-    } else {
-      $parsed_blocks[0]['innerBlocks'] = self::recursively_change_theme_for_all_inner_blocks( $parsed_blocks[0]['innerBlocks'], $theme );
-    }
-
-    return $parsed_blocks;
+    return $blocks;
   }
 }

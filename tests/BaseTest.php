@@ -25,6 +25,8 @@ class BaseTest extends \Codeception\Test\Unit
           'esc_html__',
           'esc_html_x',
           'esc_attr_x',
+          'sanitize_text_field',
+          'wp_unslash',
       ]
     );
 
