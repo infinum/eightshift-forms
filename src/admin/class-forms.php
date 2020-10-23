@@ -15,11 +15,18 @@ use Eightshift_Libs\Core\Service;
 class Forms implements Service {
 
   /**
-   * Post type slug costant.
+   * Post type slug constant.
    *
    * @var string
    */
   const POST_TYPE_SLUG = 'eightshift-forms';
+
+  /**
+   * Post type slug constant.
+   *
+   * @var string
+   */
+  const POST_CAPABILITY_TYPE = 'eightshift-form';
 
   /**
    * Browser url slug constant.
@@ -77,7 +84,7 @@ class Forms implements Service {
       'show_in_rest'       => true,
       'publicly_queryable' => false,
       'can_export'         => true,
-      'capability_type'    => 'page',
+      'capability_type'    => self::POST_CAPABILITY_TYPE,
       'rest_base'          => static::REST_API_ENDPOINT_SLUG,
       'template_lock'      => 'all',
       'template'           => $template,
