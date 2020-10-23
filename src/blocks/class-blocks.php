@@ -44,7 +44,10 @@ class Blocks extends Lib_Blocks implements Filters {
       }
     }
 
-    $allowed_block_types[] = "{$this->config->get_project_name()}/forms";
+    // If this filter is the first to run, $allowed_block_types will be === true.
+    if ( is_array( $allowed_block_types ) ) {
+      $allowed_block_types[] = "{$this->config->get_project_name()}/forms";
+    }
 
     return $allowed_block_types;
   }
