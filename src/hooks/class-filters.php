@@ -108,10 +108,13 @@ interface Filters {
    * You should return an array with the key name == role_name and value as true / false (if you wish to add or remove access)
    * [
    *   'administrator' => true,
+   *   'editor' => true,
+   * ]
+   *
+   * If you wish to remove access from a role you previously authorized, you can just return it in the array with false:
+   * [
+   *   'administrator' => true,
    *   'editor' => false,
-   *   'author' => false,
-   *   'contributor' => false,
-   *   'subscriber' => false,
    * ]
    *
    * Example:
@@ -121,7 +124,7 @@ interface Filters {
    *   }
    *
    *   public function modify_roles_with_access( array $existing_roles ) {
-   *     $existing_roles['editor] = true;
+   *     $existing_roles['editor'] = true;
    *     return $existing_roles;
    *   }
    *
