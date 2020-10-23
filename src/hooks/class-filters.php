@@ -53,13 +53,168 @@ interface Filters {
    * @var string
    */
   const GENERAL                 = 'eightshift_forms/general_info';
+
+  /**
+   * Filter used for defining prefill sources for form blocks which allow user to select one or more things 
+   * (select & radio). Then in that block's options, the editor can select any of the prefill/multi sources you set.
+   * Prefilled block won't allow editor to modify the options. The options will instead be the ones you set in code.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/prefill/multi', [ $this, 'prefill_multi' ], 1, 1 );
+   *   }
+   *
+   *
+   *  public function prefill_multi( array $prefilled_data ): array {
+   *    $prefilled_data[ 'source-key' ] = [
+   *      'value' => 'source-key',
+   *      'label' => 'Test source',
+   *      'data' => [
+   *        [
+   *          'label' => 'Label source 1',
+   *          'value' => 'value',
+   *        ],
+   *        [
+   *          'label' => 'Label 2',
+   *          'value' => 'value-2',
+   *        ],
+   *      ],
+   *    ];
+   * 
+   *   return $prefilled_data;
+   *  }
+   *
+   * @var string
+   */
   const PREFILL_GENERIC_MULTI   = 'eightshift_forms/prefill/multi';
+
+  /**
+   * Filter used for defining prefill sources for form blocks which allow user to input a single value 
+   * (input, textarea, checkbox). Then in that block's options, the editor can select any of the prefill/single sources you set.
+   * Prefilled block won't allow editor to modify the value. The options will instead be the ones you set in code.
+   *
+   * NOT YET IMPLEMENTED
+   *
+   * @var string
+   */
   const PREFILL_GENERIC_SINGLE  = 'eightshift_forms/prefill/single';
-  const ALLOWED_BLOCKS          = 'eightshift_forms/allowed_blocks';
+
+  /**
+   * Filter used for allowing your own blocks to form to be added inside a form.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/allowed_blocks', [ $this, 'add_allowed_blocks' ], 1, 1 );
+   *   }
+   *
+   *  public function add_allowed_blocks( $allowed_blocks ) {
+   *    $allowed_blocks[] = 'your-namespace/paragraph';
+   *    $allowed_blocks[] = 'your-namespace/another-block';
+   *    return $allowed_blocks;
+   *  }
+   *
+   * @var string
+   */
+  const ALLOWED_BLOCKS = 'eightshift_forms/allowed_blocks';
+
+  /**
+   * Used for generating authorization hash based on an array of parameters and secret hash. You need this if
+   * you wish to send requests to routes which require authorization from your project.
+   * 
+   * You don't need to add the filter in your project, you can just use apply_filters().
+   * 
+   * All routes currently use HMAC authorization and you should use it like in the example.
+   *
+   * Example:
+   *
+   *  use \Eightshift_Forms\Integrations\Authorization\HMAC;
+   *
+   *  public function add_authorization_hash_to_params( array $params, string $secret ) {
+   *    $params[ HMAC::AUTHORIZATION_KEY ] = apply_filters( 'eightshift_forms/authorization_generator', $params, $secret )
+   *    return $params;
+   *  }
+   *
+   * @var string
+   */
   const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
-  const DYNAMICS_CRM            = 'eightshift_forms/dynamics_info';
-  const BUCKAROO                = 'eightshift_forms/buckaroo';
-  const MAILCHIMP               = 'eightshift_forms/mailchimp';
+
+  /**
+   * Filter used for providing Microsoft 365 Dynamics CRM credentials.
+   * IMPORTANT - Make sure to always return a string, even if $key isn't set.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/dynamics_info', [ $this, 'get_info' ], 1, 1 );
+   *   }
+   *
+   *  public function get_info( string $key ) {
+   *    $info = [
+   *      'client_id' => 'client-id',
+   *      'client_secret' => 'client-secret',
+   *      'auth_token_url' => 'https://login.microsoftonline.com/1234-some-hash/oauth2/v2.0/token',
+   *      'scope' => 'https://your-crm-api-endpoint.dynamics.com/.default',
+   *      'api_url' => 'https://your-crm-api-endpoint.dynamics.com/api/data/v9.1',
+   *      'available_entities' => [
+   *        'entity_1',
+   *        'entity_2,
+   *      ],
+   *    ];
+   *
+   *    return $info[ $key ] ?? '';
+   *  }
+   *
+   * @var string
+   */
+  const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
+
+  /**
+   * Filter used for providing Buckaroo credentials.
+   * IMPORTANT - Make sure to always return a string, even if $key isn't set.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/buckaroo', [ $this, 'get_info' ], 1, 1 );
+   *   }
+   *
+   *  public function get_info( string $key ) {
+   *    $info = [
+   *      'website_key' => 'website_key',
+   *      'secret_key' => 'secret_key',
+   *    ];
+   *
+   *    return $info[ $key ] ?? '';
+   *  }
+   *
+   * @var string
+   */
+  const BUCKAROO = 'eightshift_forms/buckaroo';
+
+  /**
+   * Filter used for providing Mailchimp credentials.
+   * IMPORTANT - Make sure to always return a string, even if $key isn't set.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/mailchimp', [ $this, 'get_info' ], 1, 1 );
+   *   }
+   *
+   *  public function get_info( string $key ) {
+   *    $info = [
+   *      'api_key' => 'your-api-key',
+   *      'server' => 'us2',
+   *    ];
+   *
+   *    return $info[ $key ] ?? '';
+   *  }
+   *
+   * @var string
+   */
+  const MAILCHIMP = 'eightshift_forms/mailchimp';
 
   /**
    * Filter used to add additional required parameters to Buckaroo Emandate route
