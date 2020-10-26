@@ -12,6 +12,7 @@ use Eightshift_Libs\Helpers\Components;
 $block_class  = $attributes['blockClass'] ?? '';
 $message      = $attributes['message'] ?? '';
 $message_type = $attributes['type'] ?? 'success';
+$theme        = $attributes['theme'] ?? '';
 
 $component_class = 'form-message';
 
@@ -21,7 +22,8 @@ $block_classes = Components::classnames([
   "js-{$component_class}--{$message_type}",
   "{$block_class}__type--{$message_type}",
   'is-form-message-hidden',
-  ! empty ( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
 ?>

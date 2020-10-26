@@ -9,6 +9,7 @@ namespace Eightshift_Forms\Blocks;
 use Eightshift_Libs\Helpers\Components;
 
 $block_class = $attributes['blockClass'] ?? '';
+$theme       = $attributes['theme'] ?? '';
 
 $component_class = 'spinner';
 
@@ -17,6 +18,7 @@ $component_classes = Components::classnames([
   "js-{$component_class}",
   'hide-spinner',
   ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
 ?>
