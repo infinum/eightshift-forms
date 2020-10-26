@@ -24,7 +24,7 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
-use EightshiftFormsTests\Mocks\Test_Route;
+use EightshiftFormsTests\Mocks\TestRoute;
 use GuzzleHttp\Client;
 
 /**
@@ -192,7 +192,7 @@ class Main extends Lib_Core {
       ),
 
       // Base route.
-      Test_Route::class => array(
+      TestRoute::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
