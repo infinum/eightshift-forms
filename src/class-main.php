@@ -72,7 +72,7 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
-      // Admin
+      // Admin.
       Admin\Users::class,
 
       // Dynamics CRM.

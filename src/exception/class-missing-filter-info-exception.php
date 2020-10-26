@@ -20,9 +20,8 @@ final class Missing_Filter_Info_Exception extends \RuntimeException implements G
    * Create a new instance of the exception if the view file itself created
    * an exception.
    *
-   * @param string     $uri       URI of the file that is not accessible or
-   *                              not readable.
-   * @param \Exception $exception Exception that was thrown by the view file.
+   * @param string $filter Which filter doesn't have all info.
+   * @param string $key    Which key is missing in info provided by filter.
    *
    * @return static
    *
@@ -30,7 +29,7 @@ final class Missing_Filter_Info_Exception extends \RuntimeException implements G
    */
   public static function view_exception( $filter, $key ) {
     $message = sprintf(
-      \esc_html__( 'Missing a required key %s in %s filter, please provide that as part of return array on that filter', 'eightshift-forms' ),
+      \esc_html__( 'Missing a required key %1$s in %2$s filter, please provide that as part of return array on that filter', 'eightshift-forms' ),
       $key,
       $filter
     );

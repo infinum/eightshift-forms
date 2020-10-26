@@ -22,9 +22,17 @@ class Forms {
    * @return string
    */
   public static function maybe_override_value_from_query_string( string $value, string $name ) {
+
+    /**
+     * Ignoring nonce verification missing warning because of the dynamic nature of this feature
+     * ( i.e. you can set any form to post to another form and prefill any field )
+     * not sure how nonce could be implemented here.
+     */
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
     if ( isset( $_GET[ "field-$name" ] ) ) {
       $value = \sanitize_text_field( \wp_unslash( $_GET[ "field-$name" ] ) );
     }
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
     return $value;
   }

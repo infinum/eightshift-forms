@@ -21,7 +21,7 @@ class Buckaroo_Request_Exception extends \RuntimeException implements General_Ex
    *
    * @var string
    */
-  private $message = '';
+  protected $message = '';
 
   /**
    * Data to expose.
