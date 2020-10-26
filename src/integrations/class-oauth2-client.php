@@ -77,7 +77,6 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    * @param  string $scope         Scope for which to request access token.
    * @return string
    *
-   * @throws ClientException When the request fails.
    * @throws \Exception      When the response isn't as expected.
    */
   protected function fetch_token( string $url, string $client_id, string $client_secret, string $scope ) {
