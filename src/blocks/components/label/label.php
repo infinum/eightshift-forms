@@ -6,6 +6,7 @@
  */
 
 namespace Eightshift_Forms\Blocks;
+
 use Eightshift_Libs\Helpers\Components;
 
 $block_class = $attributes['blockClass'] ?? '';
@@ -18,7 +19,7 @@ $component_class = 'label';
 $component_classes = Components::classnames([
   "{$component_class}__label-wrap",
   "{$block_class}__label-wrap",
-  ! empty( $theme) ? "{$component_class}__theme--{$theme}" : '',
+  ! empty( $theme ) ? "{$component_class}__theme--{$theme}" : '',
 ]);
 
 ?>

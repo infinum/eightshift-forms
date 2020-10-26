@@ -224,7 +224,7 @@ class Buckaroo implements Filters {
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
 
-    /**
+  /**
    * Set if you need to use the test URI instead of live one.
    *
    * @return void

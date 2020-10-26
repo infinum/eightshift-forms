@@ -52,10 +52,10 @@ interface Filters {
    *
    * @var string
    */
-  const GENERAL                 = 'eightshift_forms/general_info';
+  const GENERAL = 'eightshift_forms/general_info';
 
   /**
-   * Filter used for defining prefill sources for form blocks which allow user to select one or more things 
+   * Filter used for defining prefill sources for form blocks which allow user to select one or more things
    * (select & radio). Then in that block's options, the editor can select any of the prefill/multi sources you set.
    * Prefilled block won't allow editor to modify the options. The options will instead be the ones you set in code.
    *
@@ -81,16 +81,16 @@ interface Filters {
    *        ],
    *      ],
    *    ];
-   * 
+   *
    *   return $prefilled_data;
    *  }
    *
    * @var string
    */
-  const PREFILL_GENERIC_MULTI   = 'eightshift_forms/prefill/multi';
+  const PREFILL_GENERIC_MULTI = 'eightshift_forms/prefill/multi';
 
   /**
-   * Filter used for defining prefill sources for form blocks which allow user to input a single value 
+   * Filter used for defining prefill sources for form blocks which allow user to input a single value
    * (input, textarea, checkbox). Then in that block's options, the editor can select any of the prefill/single sources you set.
    * Prefilled block won't allow editor to modify the value. The options will instead be the ones you set in code.
    *
@@ -98,7 +98,7 @@ interface Filters {
    *
    * @var string
    */
-  const PREFILL_GENERIC_SINGLE  = 'eightshift_forms/prefill/single';
+  const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
 
   /**
    * Filter used for allowing your own blocks to form to be added inside a form.
@@ -122,9 +122,9 @@ interface Filters {
   /**
    * Used for generating authorization hash based on an array of parameters and secret hash. You need this if
    * you wish to send requests to routes which require authorization from your project.
-   * 
+   *
    * You don't need to add the filter in your project, you can just use apply_filters().
-   * 
+   *
    * All routes currently use HMAC authorization and you should use it like in the example.
    *
    * Example:

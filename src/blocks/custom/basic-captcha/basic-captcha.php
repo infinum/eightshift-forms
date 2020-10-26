@@ -13,13 +13,13 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 $block_class   = $attributes['blockClass'] ?? '';
 $name          = $attributes['name'] ?? Basic_Captcha::RESULT_KEY;
 $theme         = $attributes['theme'] ?? '';
-$first_number  = rand(1, 15);
-$second_number = rand(1, 15);
+$first_number  = rand( 1, 15 );
+$second_number = rand( 1, 15 );
 
 $block_classes = Components::classnames([
   $block_class,
   "js-{$block_class}",
-  ! empty( $theme) ? "{$block_class}__theme--{$theme}" : '',
+  ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
 ?>
@@ -56,5 +56,5 @@ $block_classes = Components::classnames([
     />
   </div>
 
-  <div id="basic-captcha-description"><?php sprintf( esc_html__( 'Math captcha. Input sum of %d and %d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
+  <div id="basic-captcha-description"><?php sprintf( esc_html__( 'Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
 </div>
