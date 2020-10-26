@@ -16,7 +16,7 @@ export const FormEmailOptions = (props) => {
     onChangeAdditionalHeaders,
   } = props;
 
-  const defaultMessage = message ?? 'Message from user [[name]]:<br><br>[[message]]';
+  const defaultMessage = message || '';
 
   return (
     <Fragment>
