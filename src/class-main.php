@@ -72,6 +72,9 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
+      // Admin
+      Admin\Users::class,
+
       // Dynamics CRM.
       Integrations\Core\Guzzle_Client::class => array(
         Client::class,

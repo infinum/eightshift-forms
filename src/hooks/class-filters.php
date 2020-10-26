@@ -101,4 +101,34 @@ interface Filters {
    * @var string
    */
   const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
+
+  /**
+   * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
+   *
+   * You should return an array with the key name == role_name and value as true / false (if you wish to add or remove access)
+   * [
+   *   'administrator' => true,
+   *   'editor' => true,
+   * ]
+   *
+   * If you wish to remove access from a role you previously authorized, you can just return it in the array with false:
+   * [
+   *   'administrator' => true,
+   *   'editor' => false,
+   * ]
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/roles_with_access_to_forms', [ $this, 'modify_roles_with_access' ], 11, 1 );
+   *   }
+   *
+   *   public function modify_roles_with_access( array $existing_roles ) {
+   *     $existing_roles['editor'] = true;
+   *     return $existing_roles;
+   *   }
+   *
+   * @var string
+   */
+  const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
 }
