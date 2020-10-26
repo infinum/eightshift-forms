@@ -8,15 +8,13 @@ export const FormEmailOptions = (props) => {
     richTextClass,
     to,
     subject,
-    message,
+    message = '',
     additionalHeaders,
     onChangeTo,
     onChangeSubject,
     onChangeMessage,
     onChangeAdditionalHeaders,
   } = props;
-
-  const defaultMessage = message ?? 'Message from user [[name]]:<br><br>[[message]]';
 
   return (
     <Fragment>
@@ -45,7 +43,7 @@ export const FormEmailOptions = (props) => {
             className={richTextClass}
             placeholder={__('Add your message', 'eightshift-forms')}
             onChange={onChangeMessage}
-            value={defaultMessage}
+            value={message}
           />
         </BaseControl>
       }
