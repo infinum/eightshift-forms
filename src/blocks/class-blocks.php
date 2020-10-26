@@ -31,9 +31,9 @@ class Blocks extends Lib_Blocks implements Filters {
    * Limit block on forms post type to internal plugin blocks
    *
    * @param bool|array $allowed_block_types Array of block type slugs, or boolean to enable/disable all.
-   * @param object     $post The post resource data.
+   * @param \WP_Post   $post The post resource data.
    *
-   * @return array
+   * @return array|bool
    */
   public function get_all_allowed_forms_blocks( $allowed_block_types, $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {

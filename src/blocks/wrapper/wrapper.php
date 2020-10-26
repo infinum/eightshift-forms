@@ -17,7 +17,7 @@ $wrapper_disable    = $attributes['wrapperDisable'] ?? false;
 if ( ! $wrapper_use || $wrapper_disable ) {
   $this->render_wrapper_view(
     $template_path,
-    $attributes,
+    $attributes ?? [],
     $inner_block_content
   );
 

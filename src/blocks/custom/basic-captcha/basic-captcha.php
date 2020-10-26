@@ -38,13 +38,13 @@ $block_classes = Components::classnames([
     ?>
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap {$block_class}__theme--{$theme}" ); ?>">
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>" >
-      <?php echo esc_html( $first_number ); ?>
-      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::FIRST_NUMBER_KEY ); ?>" readonly value="<?php echo esc_html( $first_number ); ?>" />
+      <?php echo intval( $first_number ); ?>
+      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::FIRST_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $first_number ); ?>" />
     </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-plus" ); ?>"> + </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>">
-      <?php echo esc_html( $second_number ); ?>
-      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo esc_html( $second_number ); ?>" />
+      <?php echo intval( $second_number ); ?>
+      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $second_number ); ?>" />
     </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-equals" ); ?>"> = </div>
     <input
@@ -56,5 +56,5 @@ $block_classes = Components::classnames([
     />
   </div>
 
-  <div id="basic-captcha-description"><?php sprintf( esc_html__( 'Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
+  <div id="basic-captcha-description"><?php printf( esc_html__( 'Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
 </div>
