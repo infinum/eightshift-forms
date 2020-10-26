@@ -77,7 +77,8 @@
       "type": "string"
     },
     "emailTo": {
-      "type": "string"
+      "type": "string",
+      "default": "administrator@yoursite.com"
     },
     "emailSubject": {
       "type": "string",
