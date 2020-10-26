@@ -98,6 +98,7 @@ class Buckaroo implements Filters {
    * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
+   * @param  string $emandatereason  Description of the emandate.
    * @return bool
    *
    * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
@@ -223,7 +224,7 @@ class Buckaroo implements Filters {
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
 
-    /**
+  /**
    * Set if you need to use the test URI instead of live one.
    *
    * @return void

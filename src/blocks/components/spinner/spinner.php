@@ -1,6 +1,7 @@
 <?php
 /**
  * Template for the Label Component.
+ *
  * @package Eightshift_Forms\Blocks.
  */
 

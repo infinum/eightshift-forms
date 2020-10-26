@@ -17,7 +17,7 @@ $wrapper_disable    = $attributes['wrapperDisable'] ?? false;
 if ( ! $wrapper_use || $wrapper_disable ) {
   $this->render_wrapper_view(
     $template_path,
-    $attributes,
+    $attributes ?? [],
     $inner_block_content
   );
 
@@ -31,21 +31,21 @@ $wrapper_main_class = 'wrapper';
 $wrapper_class = Components::classnames([
   $wrapper_main_class,
   ! empty( $attributes['wrapperBackgroundColor'] ) ? "{$wrapper_main_class}__bg-color--{$attributes['wrapperBackgroundColor']}" : '',
-  $attributes['wrapperSpacingTop'] ? Components::responsive_selectors($attributes['wrapperSpacingTop'], 'spacing-top', $wrapper_main_class) : '',
-  $attributes['wrapperSpacingBottom'] ? Components::responsive_selectors($attributes['wrapperSpacingBottom'], 'spacing-bottom', $wrapper_main_class) : '',
-  $attributes['wrapperHideBlock'] ? Components::responsive_selectors($attributes['wrapperHideBlock'], 'hide-block', $wrapper_main_class, false) : '',
+  $attributes['wrapperSpacingTop'] ? Components::responsive_selectors( $attributes['wrapperSpacingTop'], 'spacing-top', $wrapper_main_class ) : '',
+  $attributes['wrapperSpacingBottom'] ? Components::responsive_selectors( $attributes['wrapperSpacingBottom'], 'spacing-bottom', $wrapper_main_class ) : '',
+  $attributes['wrapperHideBlock'] ? Components::responsive_selectors( $attributes['wrapperHideBlock'], 'hide-block', $wrapper_main_class, false ) : '',
 ]);
 
 $wrapper_container_class = Components::classnames([
   "{$wrapper_main_class}__container",
-  $attributes['wrapperContainerWidth'] ? Components::responsive_selectors($attributes['wrapperContainerWidth'], 'container-width', $wrapper_main_class) : '',
-  $attributes['wrapperGutter'] ? Components::responsive_selectors($attributes['wrapperGutter'], 'gutter', $wrapper_main_class) : '',
+  $attributes['wrapperContainerWidth'] ? Components::responsive_selectors( $attributes['wrapperContainerWidth'], 'container-width', $wrapper_main_class ) : '',
+  $attributes['wrapperGutter'] ? Components::responsive_selectors( $attributes['wrapperGutter'], 'gutter', $wrapper_main_class ) : '',
 ]);
 
 $wrapper_inner_class = Components::classnames([
   "{$wrapper_main_class}__inner",
-  $attributes['wrapperWidth'] ? Components::responsive_selectors($attributes['wrapperWidth'], 'width', $wrapper_main_class) : '',
-  $attributes['wrapperOffset'] ? Components::responsive_selectors($attributes['wrapperOffset'], 'offset', $wrapper_main_class) : '',
+  $attributes['wrapperWidth'] ? Components::responsive_selectors( $attributes['wrapperWidth'], 'width', $wrapper_main_class ) : '',
+  $attributes['wrapperOffset'] ? Components::responsive_selectors( $attributes['wrapperOffset'], 'offset', $wrapper_main_class ) : '',
 ]);
 
 ?>

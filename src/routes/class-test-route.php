@@ -19,9 +19,9 @@ use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 
 /**
- * Class TestRoute
+ * Class Test_Route
  */
-class TestRoute extends Base_Route implements Filters {
+class Test_Route extends Base_Route implements Filters {
 
   /**
    * Route slug
