@@ -56,5 +56,5 @@ $block_classes = Components::classnames([
     />
   </div>
 
-  <div id="basic-captcha-description"><?php printf( esc_html__( 'Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms' ), $first_number, $second_number ); ?></div>
+  <div id="basic-captcha-description"><?php printf( esc_html__( 'Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms' ), intval( $first_number ), intval( $second_number ) ); ?></div>
 </div>
