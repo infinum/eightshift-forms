@@ -25,8 +25,13 @@ class Localization_Constants implements Filters {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data $manifest           Inject manifest which holds data about assets from manifest.json.
-   * @param Base_Route    $dynamics_crm_route Dynamics CRM route object which holds values we need to localize.
+   * @param Manifest_Data  $manifest                Inject manifest which holds data about assets from manifest.json.
+   * @param Callable_Route $dynamics_crm_route      Dynamics CRM route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_ideal_route    Buckaroo (Ideal) route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_emandate_route Buckaroo (Emandate) route object which holds values we need to localize.
+   * @param Callable_Route $send_email_route        Send Email route object which holds values we need to localize.
+   * @param Callable_Route $mailchimp_route         Mailchimp route object which holds values we need to localize.
+   * @param Mailchimp      $mailchimp               Mailchimp implementation.
    */
   public function __construct(
     Manifest_Data $manifest,

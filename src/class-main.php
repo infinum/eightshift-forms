@@ -24,7 +24,7 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
-use EightshiftFormsTests\Mocks\TestRoute;
+use EightshiftFormsTests\Mocks\Test_Route;
 use GuzzleHttp\Client;
 
 /**
@@ -72,7 +72,7 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
-      // Admin
+      // Admin.
       Admin\Users::class,
 
       // Dynamics CRM.
@@ -192,7 +192,7 @@ class Main extends Lib_Core {
       ),
 
       // Base route.
-      TestRoute::class => array(
+      Test_Route::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,

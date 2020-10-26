@@ -13,8 +13,8 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 $block_class   = $attributes['blockClass'] ?? '';
 $name          = $attributes['name'] ?? Basic_Captcha::RESULT_KEY;
 $theme         = $attributes['theme'] ?? '';
-$first_number  = rand( 1, 15 );
-$second_number = rand( 1, 15 );
+$first_number  = wp_rand( 1, 15 );
+$second_number = wp_rand( 1, 15 );
 
 $block_classes = Components::classnames([
   $block_class,

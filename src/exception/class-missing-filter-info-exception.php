@@ -20,9 +20,8 @@ final class Missing_Filter_Info_Exception extends \RuntimeException implements G
    * Create a new instance of the exception if the view file itself created
    * an exception.
    *
-   * @param string     $uri       URI of the file that is not accessible or
-   *                              not readable.
-   * @param \Exception $exception Exception that was thrown by the view file.
+   * @param string $filter Which filter doesn't have all info.
+   * @param string $key    Which key is missing in info provided by filter.
    *
    * @return static
    *

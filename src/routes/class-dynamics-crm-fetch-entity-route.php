@@ -46,8 +46,8 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
    * Construct object
    *
    * @param Config_Data             $config          Config data obj.
-   * @param Authorization_Interface $hmac            Authorization object.
    * @param Dynamics_CRM            $dynamics_crm    Dynamics CRM object.
+   * @param Authorization_Interface $hmac            Authorization object.
    * @param Cache                   $transient_cache Cache object.
    */
   public function __construct( Config_Data $config, Dynamics_CRM $dynamics_crm, Authorization_Interface $hmac, Cache $transient_cache ) {
