@@ -1,7 +1,7 @@
 {
   "blockName": "form",
   "title": "Form",
-  "description" : "Form",
+  "description": "Form",
   "category": "common",
   "icon": {
     "src": "media-document"
@@ -85,7 +85,8 @@
       "default": "New email from your website"
     },
     "emailMessage": {
-      "type": "string"
+      "type": "string",
+      "default": "Message from user [[name]]: [[message]]"
     },
     "emailAdditionalHeaders": {
       "type": "string"
