@@ -125,8 +125,8 @@ $block_classes = Components::classnames([
   </form>
 
   <?php echo wp_kses_post( Components::render( 'form-overlay' ) ); ?>
-  <?php echo wp_kses_post( Components::render( 'spinner' ) ); ?>
-  <?php echo wp_kses_post( Components::render( 'form-message', [ 'message' => $success_message, 'type' => 'success' ] ) ); ?>
-  <?php echo wp_kses_post( Components::render( 'form-error-message-wrapper' ) ); ?>
+  <?php echo wp_kses_post( Components::render( 'spinner', [ 'theme' => $form_theme ] ) ); ?>
+  <?php echo wp_kses_post( Components::render( 'form-message', [ 'message' => $success_message, 'type' => 'success', 'theme' => $form_theme ] ) ); ?>
+  <?php echo wp_kses_post( Components::render( 'form-error-message-wrapper', [ 'theme' => $form_theme ] ) ); ?>
 </div>
 

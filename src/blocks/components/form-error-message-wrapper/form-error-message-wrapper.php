@@ -10,6 +10,7 @@ namespace Eightshift_Forms\Blocks;
 use Eightshift_Libs\Helpers\Components;
 
 $block_class     = $attributes['blockClass'] ?? '';
+$theme           = $attributes['theme'] ?? '';
 $component_class = 'form-error-message-wrapper';
 
 $block_classes = Components::classnames([
@@ -17,6 +18,7 @@ $block_classes = Components::classnames([
   "js-{$component_class}",
   'is-form-message-hidden',
   ! empty ( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty ( $theme ) ? "{$component_class}__theme--{$theme}" : '',
 ]);
 
 ?>
