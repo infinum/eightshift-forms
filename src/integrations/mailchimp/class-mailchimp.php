@@ -170,6 +170,10 @@ class Mailchimp {
    * @return void
    */
   private function verify_mailchimp_info_exists(): void {
+    if ( ! has_filter( Filters::MAILCHIMP ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, esc_html__( 'entire_filter', 'eightshift-forms' ) );
+    }
+
     if ( empty( \apply_filters( Filters::MAILCHIMP, 'api_key' ) ) ) {
       throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, 'api_key' );
     }

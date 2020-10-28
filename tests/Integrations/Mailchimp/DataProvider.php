@@ -8,6 +8,8 @@ class DataProvider
 {
   const INVALID_LIST_ID = 'invalid-list-id';
   const MOCK_EMAIL = 'someemail@infinum.com';
+  const MOCK_TAG_1 = 'aaa';
+  const MOCK_TAG_2 = 'bbb';
 
   public static function defaultMergeFields() {
     return [
@@ -65,10 +67,10 @@ class DataProvider
     $response->tags_count = 2;
     $tag_1 = new stdClass();
     $tag_1->id = 280164;
-    $tag_1->name = 'aaa';
+    $tag_1->name = self::MOCK_TAG_1;
     $tag_2 = new stdClass();
     $tag_2->id = 280216;
-    $tag_2->name = 'bbb';
+    $tag_2->name = self::MOCK_TAG_2;
     $response->tags = [
       $tag_1,
       $tag_2

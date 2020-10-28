@@ -40,7 +40,11 @@ class MockMailchimpMarketingClient implements Mailchimp_Marketing_Client_Interfa
             'email' => DataProvider::MOCK_EMAIL,
             'mergeFields' => $params['merge_fields'],
           ]);
-        }
+        },
+
+        'updateListMemberTags' => function( $list_id, $subscriber_hash, $tags ) {
+          return '';
+        },
       ]),
     ]);
   }

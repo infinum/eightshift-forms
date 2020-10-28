@@ -196,6 +196,9 @@ class Main extends Lib_Core {
         Client::class,
       ),
 
+      // Captcha.
+      Captcha\Basic_Captcha::class,
+
       // Base route.
       Mocks\TestRoute::class => array(
         Config::class,
@@ -217,6 +220,13 @@ class Main extends Lib_Core {
         Config::class,
         Integrations\Buckaroo\Buckaroo::class,
         Integrations\Authorization\HMAC::class,
+      ),
+
+      // Mailchimp.
+      Rest\Mailchimp_Route::class => array(
+        Config::class,
+        Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
       ),
     ];
   }

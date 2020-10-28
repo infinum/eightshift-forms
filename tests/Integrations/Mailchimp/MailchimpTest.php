@@ -3,6 +3,7 @@
 namespace EightshiftFormsTests\Integrations\Mailchimp;
 
 use Eightshift_Forms\Core\Main;
+use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsTests\BaseTest;
 use \GuzzleHttp\Exception\ClientException;
@@ -20,6 +21,7 @@ class MailchimpTest extends BaseTest
 
   public function testAddOrUpdateMember()
   {
+    $this->addHooks();
     $params = [
       'listId' => 'list-id',
       'email' => DataProvider::MOCK_EMAIL,
@@ -40,6 +42,7 @@ class MailchimpTest extends BaseTest
 
   public function testAddOrUpdateMemberIfMissingListId()
   {
+    $this->addHooks();
     $params = [
       'listId' => DataProvider::INVALID_LIST_ID,
       'email' => DataProvider::MOCK_EMAIL,
@@ -60,5 +63,19 @@ class MailchimpTest extends BaseTest
     } catch(ClientException $e) {
       $this->assertIsObject($e);
     }
+  }
+
+  /**
+   * Mocking that a certain filter exists. See documentation of Brain Monkey:
+   * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
+   *
+   * We can't return any actual value, we can just "mock register" this filter.
+   *
+   * @return void
+   */
+  protected function addHooks() {
+    add_filter( Filters::MAILCHIMP, function($key) {
+      return $key;
+    }, 1, 1);
   }
 }
