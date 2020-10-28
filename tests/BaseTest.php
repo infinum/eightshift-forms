@@ -52,11 +52,7 @@ class BaseTest extends \Codeception\Test\Unit
         do_action( self::WP_REDIRECT_ACTION, $this);
       },
       'wp_mail' => function($to, $subject, $message, $headers = [], $attachments = []) {
-        if ( 
-          ! empty( $to )
-          && ! empty( $subject )
-          && ! empty( $message )
-        ) {
+        if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
           do_action( self::WP_MAIL_ACTION, $this);
           return true;
         }

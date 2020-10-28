@@ -24,7 +24,7 @@ use Eightshift_Forms\Enqueue;
 use Eightshift_Forms\Enqueue\Localization_Constants;
 use Eightshift_Forms\View;
 use Eightshift_Forms\Integrations;
-use EightshiftFormsTests\Mocks\TestRoute;
+use EightshiftFormsTests\Mocks;
 use GuzzleHttp\Client;
 
 /**
@@ -123,7 +123,7 @@ class Main extends Lib_Core {
 
       // Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
-        Integrations\Core\Guzzle_Client::class,
+        Integrations\Mailchimp\Mailchimp_Marketing_Client::class,
       ),
       Rest\Mailchimp_Route::class => array(
         Config::class,
@@ -186,13 +186,18 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
+      // Integrations.
+      Integrations\Mailchimp\Mailchimp::class => array(
+        Mocks\MockMailchimpMarketingClient::class,
+      ),
+
       // HTTP.
       Integrations\Core\Guzzle_Client::class => array(
         Client::class,
       ),
 
       // Base route.
-      TestRoute::class => array(
+      Mocks\TestRoute::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
