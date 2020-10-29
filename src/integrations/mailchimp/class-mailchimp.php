@@ -10,9 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations\Mailchimp;
 
 use Eightshift_Forms\Hooks\Filters;
-use Eightshift_Forms\Integrations\Core\Http_Client;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
-use \MailchimpMarketing\ApiClient as MarketingApiClient;
 /**
  * Mailchimp integration class.
  */
@@ -28,10 +26,10 @@ class Mailchimp {
   /**
    * Constructs object
    *
-   * @param Http_Client $guzzle_client Guzzle client.
+   * @param Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client Mailchimp marketing client.
    */
-  public function __construct( Http_Client $guzzle_client ) {
-    $this->guzzle_client = $guzzle_client;
+  public function __construct( Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client ) {
+    $this->client = $mailchimp_marketing_client->get_client();
   }
 
   /**
@@ -47,8 +45,7 @@ class Mailchimp {
    * @throws \Exception When response is invalid.
    */
   public function add_or_update_member( string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending' ) {
-    $this->maybe_build_client();
-
+    $this->verify_mailchimp_info_exists();
     $params['email_address'] = $email;
     $params['status_if_new'] = $status;
     $params['merge_fields']  = $merge_fields;
@@ -73,7 +70,7 @@ class Mailchimp {
    * @throws \Exception When response is invalid.
    */
   public function add_member_tags( string $list_id, string $email, array $tag_names ): bool {
-    $this->maybe_build_client();
+    $this->verify_mailchimp_info_exists();
 
     // This call requires a very specific format for tags.
     $tags_request = [
@@ -101,7 +98,7 @@ class Mailchimp {
    * @return mixed
    */
   public function get_list_member( string $list_id, string $email ) {
-    $this->maybe_build_client();
+    $this->verify_mailchimp_info_exists();
     return $this->client->lists->getListMember( $list_id, $this->calculate_subscriber_hash( $email ) );
   }
 
@@ -113,7 +110,7 @@ class Mailchimp {
    * @throws \Exception When response is invalid.
    */
   public function get_all_lists() {
-    $this->maybe_build_client();
+    $this->verify_mailchimp_info_exists();
     $response = $this->client->lists->getAllLists();
 
     if ( ! isset( $response, $response->lists ) && ! is_array( $response->lists ) ) {
@@ -139,7 +136,7 @@ class Mailchimp {
    * @throws \Exception When response is invalid.
    */
   public function get_all_segments( string $list_id ) {
-    $this->maybe_build_client();
+    $this->verify_mailchimp_info_exists();
     $response = $this->client->lists->listSegments( $list_id );
 
     if ( ! isset( $response, $response->segments ) && ! is_array( $response->segments ) ) {
@@ -153,23 +150,6 @@ class Mailchimp {
       }
     }
     return $response;
-  }
-
-  /**
-   * Builds Mailchimp API client
-   *
-   * @return void
-   */
-  private function maybe_build_client(): void {
-    if ( empty( $this->client ) ) {
-      $this->verify_mailchimp_info_exists();
-      $client = new MarketingApiClient();
-      $client->setConfig( [
-        'apiKey' => \apply_filters( Filters::MAILCHIMP, 'api_key' ),
-        'server' => \apply_filters( Filters::MAILCHIMP, 'server' ),
-      ] );
-      $this->client = $client;
-    }
   }
 
   /**
@@ -190,6 +170,10 @@ class Mailchimp {
    * @return void
    */
   private function verify_mailchimp_info_exists(): void {
+    if ( ! has_filter( Filters::MAILCHIMP ) ) {
+      throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, esc_html__( 'entire_filter', 'eightshift-forms' ) );
+    }
+
     if ( empty( \apply_filters( Filters::MAILCHIMP, 'api_key' ) ) ) {
       throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, 'api_key' );
     }

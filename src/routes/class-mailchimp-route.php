@@ -18,7 +18,6 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
-use stdClass;
 
 /**
  * Class Mailchimp_Route

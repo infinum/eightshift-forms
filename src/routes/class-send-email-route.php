@@ -120,7 +120,6 @@ class Send_Email_Route extends Base_Route {
       self::TO_PARAM,
       self::SUBJECT_PARAM,
       self::MESSAGE_PARAM,
-      self::ADDITIONAL_HEADERS_PARAM,
     ];
   }
 }

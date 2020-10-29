@@ -13,6 +13,8 @@ class BaseTest extends \Codeception\Test\Unit
   {
     Monkey\setUp();
 
+    Functions\stubTranslationFunctions();
+
     // Given functions will return the first argument they will receive,
     // just like `when( $function_name )->justReturnArg()` was used for all of them.
     Functions\stubs(
@@ -49,15 +51,18 @@ class BaseTest extends \Codeception\Test\Unit
       'wp_safe_redirect' => function($data) {
         do_action( self::WP_REDIRECT_ACTION, $this);
       },
-      'wp_mail' => function($data) {
-        do_action( self::WP_MAIL_ACTION, $this);
-        return true;
+      'wp_mail' => function($to, $subject, $message, $headers = [], $attachments = []) {
+        if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
+          do_action( self::WP_MAIL_ACTION, $this);
+          return true;
+        }
+
+        return false;
       },
       'home_url' => function() {
         return '';
       },
     ]);
-
   }
 
   protected function _after()
