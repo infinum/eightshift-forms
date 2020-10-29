@@ -12,6 +12,8 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Rest;
 
+use Eightshift_Forms\Buckaroo\Invalid_Buckaroo_Response_Exception;
+use Eightshift_Forms\Buckaroo\Response_Factory;
 use Eightshift_Forms\Hooks\Actions;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Libs\Core\Config_Data;
@@ -144,7 +146,8 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
         do_action( self::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
       }
 
-      $redirect_url = ! empty( $params[ self::REDIRECT_URL_PARAM ] ) ? $params[ self::REDIRECT_URL_PARAM ] : \home_url();
+      $redirect_url = $this->build_redirect_url( $params, $buckaroo_params );
+      error_log($redirect_url);
       \wp_safe_redirect( $redirect_url );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
@@ -158,6 +161,63 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
         ],
       ]
     );
+  }
+
+  /**
+   * Builds the final redirect URL depending on response
+   *
+   * @param array $params          GET params passed from original Buckaroo route.
+   * @param array $buckaroo_params POST params received from Buckaroo (indicating the payment status).
+   * @return string
+   */
+  public function build_redirect_url( array $params, array $buckaroo_params ): string {
+
+    try {
+      $buckaroo_response = Response_Factory::build( $buckaroo_params );
+
+      // Get the correct redirect URL.
+      if ( $buckaroo_response->is_ideal() ) {
+        switch ( $buckaroo_response->get_status() ) {
+          case $buckaroo_response::STATUS_CODE_SUCCESS:
+            $redirect_url = $params[ self::REDIRECT_URL_PARAM ] ?? '';
+                break;
+          case $buckaroo_response::STATUS_CODE_ERROR:
+            $redirect_url = $params[ self::REDIRECT_URL_ERROR_PARAM ] ?? '';
+                break;
+          case $buckaroo_response::STATUS_CODE_CANCELLED:
+            $redirect_url = $params[ self::REDIRECT_URL_CANCEL_PARAM ] ?? '';
+                break;
+          case $buckaroo_response::STATUS_CODE_REJECT:
+            $redirect_url = $params[ self::REDIRECT_URL_REJECT_PARAM ] ?? '';
+                break;
+        }
+      } elseif ( $buckaroo_response->is_emandate() ) {
+        switch ( $buckaroo_response->get_status() ) {
+          case $buckaroo_response::STATUS_CODE_SUCCESS:
+            $redirect_url = $params[ self::REDIRECT_URL_PARAM ] ?? '';
+                break;
+          case $buckaroo_response::STATUS_CODE_ERROR:
+            $redirect_url = $params[ self::REDIRECT_URL_ERROR_PARAM ] ?? '';
+                break;
+          case $buckaroo_response::STATUS_CODE_CANCELLED:
+            $redirect_url = $params[ self::REDIRECT_URL_CANCEL_PARAM ] ?? '';
+                break;
+        }
+      }
+    } catch ( Invalid_Buckaroo_Response_Exception $e ) {
+      $redirect_url = \add_query_arg( 'invalid-buckaroo-response', 1, \home_url() );
+    }
+
+    // If the redirect URL wasn't provided, just default to home.
+    if ( empty( $redirect_url ) ) {
+      $redirect_url = \home_url();
+    }
+
+    if ( has_filter( Filters::BUCKAROO_REDIRECT_URL ) ) {
+      $redirect_url = apply_filters( Filters::BUCKAROO_REDIRECT_URL, $redirect_url, $params, $buckaroo_params );
+    }
+
+    return $redirect_url;
   }
 
   /**
