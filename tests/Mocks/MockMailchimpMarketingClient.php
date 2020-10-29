@@ -45,8 +45,21 @@ class MockMailchimpMarketingClient implements Mailchimp_Marketing_Client_Interfa
         'updateListMemberTags' => function( $list_id, $subscriber_hash, $tags ) {
           return '';
         },
+
+        'setConfig' => function($data) {
+          return;
+        }
       ]),
     ]);
+  }
+
+  /**
+   * Mock setting config.
+   *
+   * @return object
+   */
+  public function set_config() {
+    $this->client->setConfig([]);
   }
 
   /**

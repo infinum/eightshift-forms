@@ -88,6 +88,16 @@ class Mailchimp_Route extends Base_Route implements Filters {
     $merge_field_params = $this->unset_irrelevant_params( $params );
     $response           = [];
 
+    // Make sure we have the list ID
+    if ( empty( $list_id ) ) {
+      return $this->rest_response_handler( 'mailchimp-missing-list-id' );
+    }
+
+    // Make sure we have an email
+    if ( empty( $email ) ) {
+      return $this->rest_response_handler( 'mailchimp-missing-email' );
+    }
+
     // Retrieve all entities from the "leads" Entity Set.
     try {
       $response['add'] = $this->mailchimp->add_or_update_member( $list_id, $email, $merge_field_params );
