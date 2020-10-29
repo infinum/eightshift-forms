@@ -147,7 +147,6 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
       }
 
       $redirect_url = $this->build_redirect_url( $params, $buckaroo_params );
-      error_log($redirect_url);
       \wp_safe_redirect( $redirect_url );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
