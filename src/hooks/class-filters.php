@@ -258,6 +258,25 @@ interface Filters {
   const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
 
   /**
+   * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
+   * redirected after completing / erroring out on payment - these are defined in Form's Buckaroo options)
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/modify_buckaroo_redirect_url', [ $this, 'modify_url' ], 1, 3 );
+   *   }
+   *
+   *  public function modify_url( string $redirect_url, array $params, array $buckaroo_params ) {
+   *    $redirect_url = add_query_arg( 'key', 'value', $redirect_url );
+   *    return $redirect_url;
+   *  }
+   *
+   * @var string
+   */
+  const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirect_url';
+
+  /**
    * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
    *
    * You should return an array with the key name == role_name and value as true / false (if you wish to add or remove access)

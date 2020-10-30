@@ -6,6 +6,7 @@ use \Brain\Monkey\Functions;
 class BaseTest extends \Codeception\Test\Unit
 {
 
+  const HOME_URL = 'https://homeurl.com';
   const WP_REDIRECT_ACTION = 'eightshift_forms_test/wp_safe_redirect_happened';
   const WP_MAIL_ACTION = 'eightshift_forms_test/wp_mail_happened';
 
@@ -60,7 +61,10 @@ class BaseTest extends \Codeception\Test\Unit
         return false;
       },
       'home_url' => function() {
-        return '';
+        return self::HOME_URL;
+      },
+      'add_query_arg' => function($data) {
+        return $data;
       },
     ]);
   }

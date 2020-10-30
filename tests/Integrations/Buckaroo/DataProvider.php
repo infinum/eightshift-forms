@@ -10,7 +10,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealSuccessResponseMock(): array {
+  public static function idealSuccessResponseMock(): array {
     return [
         'BRQ_AMOUNT' => 5.00,
         'BRQ_CURRENCY' => 'EUR',
@@ -40,7 +40,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealErrorResponseMock(): array {
+  public static function idealErrorResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -65,7 +65,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealRejectResponseMock(): array {
+  public static function idealRejectResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -90,7 +90,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealCancelledResponseMock(): array {
+  public static function idealCancelledResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -115,7 +115,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealCancelledResponseWhenUserClicksBackMock(): array {
+  public static function idealCancelledResponseWhenUserClicksBackMock(): array {
     return [
       'BRQ_AMOUNT' => '5.00',
       'BRQ_CURRENCY' => 'EUR',
@@ -136,7 +136,7 @@ class DataProvider
    *
    * @return array
    */
-  public function idealPendingResponseMock(): array {
+  public static function idealPendingResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
       'BRQ_CURRENCY' => 'EUR',
@@ -160,7 +160,7 @@ class DataProvider
    *
    * @return array
    */
-  public function emandateSuccessResponseMock(): array {
+  public static function emandateSuccessResponseMock(): array {
     return [
         'BRQ_DATAREQUEST' => '47AB5D6FD7A94B11B5DF94D688BE23B9',
         'BRQ_PRIMARY_SERVICE' => 'emandate',
@@ -190,7 +190,7 @@ class DataProvider
    *
    * @return array
    */
-  public function emandateFailedResponseMock(): array {
+  public static function emandateFailedResponseMock(): array {
     return [
       'BRQ_DATAREQUEST' => '2CE5C53079244252A4DABBBDA3C552B5',
       'BRQ_PRIMARY_SERVICE' => 'emandate',
@@ -212,7 +212,7 @@ class DataProvider
    *
    * @return array
    */
-  public function emandateCancelledResponseMock(): array {
+  public static function emandateCancelledResponseMock(): array {
     return [
       'BRQ_DATAREQUEST' => '2D2AF2ECC2BD4BDBB94222DF72C03B6A',
       'BRQ_PRIMARY_SERVICE' => 'emandate',

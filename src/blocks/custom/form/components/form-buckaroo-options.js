@@ -10,14 +10,12 @@ export const FormBuckarooOptions = (props) => {
     emandateDescription,
     sequenceType,
     redirectUrl,
-    redirectUrlCancel,
     redirectUrlError,
     redirectUrlReject,
     onChangeService,
     onChangeEmandateDescription,
     onChangeSequenceType,
     onChangeRedirectUrl,
-    onChangeRedirectUrlCancel,
     onChangeRedirectUrlError,
     onChangeRedirectUrlReject,
   } = props;
@@ -104,13 +102,6 @@ export const FormBuckarooOptions = (props) => {
           onChange={onChangeRedirectUrl}
         />
       }
-      {onChangeRedirectUrlCancel &&
-        <TextControl
-          label={__('Redirect url (when payment cancelled)', 'eightshift-forms')}
-          value={redirectUrlCancel}
-          onChange={onChangeRedirectUrlCancel}
-        />
-      }
       {onChangeRedirectUrlError &&
         <TextControl
           label={__('Redirect url (on error)', 'eightshift-forms')}
@@ -118,7 +109,7 @@ export const FormBuckarooOptions = (props) => {
           onChange={onChangeRedirectUrlError}
         />
       }
-      {onChangeRedirectUrlReject &&
+      {onChangeRedirectUrlReject && service === 'ideal' &&
         <TextControl
           label={__('Redirect url (when payment rejected)', 'eightshift-forms')}
           value={redirectUrlReject}

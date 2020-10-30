@@ -34,7 +34,6 @@ export const FormOptions = (props) => {
       buckarooEmandateDescription,
       buckarooSequenceType,
       buckarooRedirectUrl,
-      buckarooRedirectUrlCancel,
       buckarooRedirectUrlError,
       buckarooRedirectUrlReject,
       mailchimpListId,
@@ -64,7 +63,6 @@ export const FormOptions = (props) => {
       onChangeBuckarooEmandateDescription,
       onChangeBuckarooSequenceType,
       onChangeBuckarooRedirectUrl,
-      onChangeBuckarooRedirectUrlCancel,
       onChangeBuckarooRedirectUrlError,
       onChangeBuckarooRedirectUrlReject,
       onChangeMailchimpListId,
@@ -260,14 +258,12 @@ export const FormOptions = (props) => {
                   emandateDescription={buckarooEmandateDescription}
                   sequenceType={buckarooSequenceType}
                   redirectUrl={buckarooRedirectUrl}
-                  redirectUrlCancel={buckarooRedirectUrlCancel}
                   redirectUrlError={buckarooRedirectUrlError}
                   redirectUrlReject={buckarooRedirectUrlReject}
                   onChangeService={onChangeBuckarooService}
                   onChangeEmandateDescription={onChangeBuckarooEmandateDescription}
                   onChangeSequenceType={onChangeBuckarooSequenceType}
                   onChangeRedirectUrl={onChangeBuckarooRedirectUrl}
-                  onChangeRedirectUrlCancel={onChangeBuckarooRedirectUrlCancel}
                   onChangeRedirectUrlError={onChangeBuckarooRedirectUrlError}
                   onChangeRedirectUrlReject={onChangeBuckarooRedirectUrlReject}
                 />
