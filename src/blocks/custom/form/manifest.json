@@ -96,7 +96,8 @@
       "default": "ideal"
     },
     "buckarooEmandateDescription": {
-      "type": "string"
+      "type": "string",
+      "default": "Emandate reason"
     },
     "buckarooSequenceType": {
       "type": "string",
