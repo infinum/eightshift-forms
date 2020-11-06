@@ -64,11 +64,11 @@ class Buckaroo_Request_Exception extends \RuntimeException implements General_Ex
   }
 
   /**
-   * $this->string getter.
+   * $this->message getter.
    *
    * @return string
    */
   public function get_message(): string {
-    return $this->string;
+    return $this->message;
   }
 }
