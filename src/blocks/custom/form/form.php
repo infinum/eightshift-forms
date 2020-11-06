@@ -36,12 +36,14 @@ $email_subject                = $attributes['emailSubject'] ?? '';
 $email_message                = $attributes['emailMessage'] ?? '';
 $email_additional_headers     = $attributes['emailAdditionalHeaders'] ?? '';
 $buckaroo_redirect_url        = $attributes['buckarooRedirectUrl'] ?? '';
+$buckaroo_redirect_url_cancel = ! empty( \get_permalink() ) ? \get_permalink() : \home_url();
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
-$buckaroo_redirect_url_cancel = ! empty( \get_permalink() ) ? \get_permalink() : \home_url();
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
 $buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? '';
 $buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
+$buckaroo_is_recurring        = $buckaroo_sequence_type === '0';
+$buckaroo_sequence_type_front = isset( $attributes['buckarooIsSequenceTypeOnFrontend'] ) ? filter_var( $attributes['buckarooIsSequenceTypeOnFrontend'], FILTER_VALIDATE_BOOLEAN ) : false;
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
 $custom_event_names           = $attributes['eventNames'] ?? [];
@@ -103,8 +105,11 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_REJECT_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_reject ); ?>" />
 
       <?php if ( $buckaroo_service === 'emandate' ) { ?>
-        <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_sequence_type ); ?>" />
         <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
+
+        <?php if ( ! $buckaroo_sequence_type_front && $buckaroo_is_recurring ) { ?>
+          <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_IS_RECURRING_PARAM ); ?>" value="1" />
+        <?php } ?>
       <?php } ?>
     <?php } ?>
 

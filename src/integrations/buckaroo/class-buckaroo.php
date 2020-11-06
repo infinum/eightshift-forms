@@ -103,9 +103,9 @@ class Buckaroo implements Filters {
    *
    * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
    */
-  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ) {
+  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason, $maxamount = null ) {
     $response             = [];
-    $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason );
+    $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason, $maxamount );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
 
     $post_response = $this->guzzle_client->post("https://{$this->get_buckaroo_uri()}", [
@@ -164,6 +164,7 @@ class Buckaroo implements Filters {
       throw new Buckaroo_Request_Exception( esc_html__( 'Missing redirect URL in Buckaroo response', 'eightshift-forms' ), $post_response_json );
     }
 
+    error_log(print_r($post_response_json, true));
     $response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
 
     return $response;
@@ -448,9 +449,10 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
+   * @param  string $maxamount       This is the maximum amount per SEPA Direct Debit. Debtor can change this value during the authorization process. The (altered) value will be communicated in the push message to the Merchant. This parameter is for B2B only and required if that's the case.
    * @return array
    */
-  private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
+  private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason, $maxamount ): array {
     $this->verify_buckaroo_info_exists();
 
     $post_array = [
@@ -464,6 +466,7 @@ class Buckaroo implements Filters {
     $service_array = [
       'Action' => 'CreateMandate',
       'Name' => $this->get_pay_type(),
+      'maxamount' => 15.00,
       'Parameters' => [
         [
           'Name' => 'debtorreference',
@@ -496,6 +499,14 @@ class Buckaroo implements Filters {
       ];
     }
 
+    // Add maxamount if provided as part of request.
+    if ( ! empty( $maxamount ) ) {
+      // $service_array['Parameters'][] = [
+      //   'Name' => 'maxamount',
+      //   'Value' => 15.00,
+      // ];
+    }
+
     $post_array['ReturnURL']       = $this->get_return_url();
     $post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
     $post_array['ReturnURLError']  = $this->get_return_url_error();
@@ -503,6 +514,7 @@ class Buckaroo implements Filters {
 
     $post_array['Services']['ServiceList'][] = $service_array;
 
+    error_log(print_r($post_array, true));
     return $post_array;
   }
 

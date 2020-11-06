@@ -103,6 +103,10 @@
       "type": "string",
       "default": "0"
     },
+    "buckarooIsSequenceTypeOnFrontend": {
+      "type": "boolean",
+      "default": false
+    },
     "buckarooRedirectUrl": {
       "type": "string"
     },

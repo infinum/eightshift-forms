@@ -13,6 +13,8 @@ export const CheckboxOptions = (props) => {
       isReadOnly,
       isRequired,
       preventSending,
+      showName = true,
+      showValue = true,
     },
     actions: {
       onChangeName,
@@ -29,7 +31,7 @@ export const CheckboxOptions = (props) => {
 
   return (
     <PanelBody title={__('Checkbox Settings', 'eightshift-forms')}>
-      {onChangeName &&
+      {onChangeName && showName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
           value={name}
@@ -37,7 +39,7 @@ export const CheckboxOptions = (props) => {
         />
       }
 
-      {onChangeValue &&
+      {onChangeValue && showValue &&
         <TextControl
           label={__('Value', 'eightshift-forms')}
           value={value}

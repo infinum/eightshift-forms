@@ -37,11 +37,21 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
   const EMANDATE_DESCRIPTION_PARAM = 'emandate-description';
 
   /**
+   * Name of the required parameter for donation amount.
+   *
+   * @var string
+   */
+  const DONATION_AMOUNT_PARAM = 'donation-amount';
+
+  /**
    * Sequencetype param for emandates. 0 = recurring, 1 = one off.
    *
    * @var string
    */
-  const SEQUENCE_TYPE_PARAM = 'sequence-type';
+  const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'sequence-type-is-recurring';
+
+  const SEQUENCE_TYPE_RECURRING_VALUE = '0';
+  const SEQUENCE_TYPE_ONE_TIME_VALUE = '1';
 
   /**
    * Method that returns rest response
@@ -60,6 +70,8 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       return rest_ensure_response( $e->get_data() );
     }
 
+    error_log(print_r($params, true));
+
     try {
       $params = $this->set_redirect_urls( $params );
 
@@ -69,11 +81,12 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       $this->buckaroo->set_pay_type( 'emandate' );
       $response = $this->buckaroo->create_emandate(
         $this->buckaroo->generate_debtor_reference( $params ),
-        $params[ self::SEQUENCE_TYPE_PARAM ] ?? '',
+        ! empty( $params[ self::SEQUENCE_TYPE_IS_RECURRING_PARAM ] ) ? self::SEQUENCE_TYPE_RECURRING_VALUE : self::SEQUENCE_TYPE_ONE_TIME_VALUE,
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
         $params[ self::ISSUER_PARAM ] ?? '',
-        $params[ self::EMANDATE_DESCRIPTION_PARAM ] ?? ''
+        $params[ self::EMANDATE_DESCRIPTION_PARAM ] ?? '',
+        $params[ self::DONATION_AMOUNT_PARAM ] ?? null
       );
 
     } catch ( Missing_Filter_Info_Exception $e ) {
@@ -100,7 +113,6 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    */
   protected function get_required_params(): array {
     return [
-      self::SEQUENCE_TYPE_PARAM,
       self::EMANDATE_DESCRIPTION_PARAM,
     ];
   }

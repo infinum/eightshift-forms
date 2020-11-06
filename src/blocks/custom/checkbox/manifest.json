@@ -16,8 +16,16 @@
     "name": {
       "type": "string"
     },
+    "showName": {
+      "type": "boolean",
+      "default": true
+    },
     "value": {
       "type": "string"
+    },
+    "showValue": {
+      "type": "boolean",
+      "default": true
     },
     "id": {
       "type": "string"

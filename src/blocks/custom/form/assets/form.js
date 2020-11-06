@@ -303,6 +303,11 @@ export class Form {
         return false;
       }
 
+      // Filter out unchecked checkboxes buttons.
+      if (formElem.getAttribute('type') === 'checkbox' && !formElem.checked) {
+        return false;
+      }
+
       return formElem.name && (!formElem.hasAttribute(this.DATA_ATTR_FIELD_DONT_SEND));
     }).map((formElem) => {
       return {
