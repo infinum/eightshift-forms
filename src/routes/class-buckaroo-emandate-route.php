@@ -37,13 +37,6 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
   const EMANDATE_DESCRIPTION_PARAM = 'emandate-description';
 
   /**
-   * Name of the required parameter for donation amount.
-   *
-   * @var string
-   */
-  const DONATION_AMOUNT_PARAM = 'donation-amount';
-
-  /**
    * Sequencetype param for emandates. 0 = recurring, 1 = one off.
    *
    * @var string
@@ -70,8 +63,6 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       return rest_ensure_response( $e->get_data() );
     }
 
-    error_log(print_r($params, true));
-
     try {
       $params = $this->set_redirect_urls( $params );
 
@@ -85,8 +76,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
         $params[ self::ISSUER_PARAM ] ?? '',
-        $params[ self::EMANDATE_DESCRIPTION_PARAM ] ?? '',
-        $params[ self::DONATION_AMOUNT_PARAM ] ?? null
+        $params[ self::EMANDATE_DESCRIPTION_PARAM ] ?? ''
       );
 
     } catch ( Missing_Filter_Info_Exception $e ) {
