@@ -112,7 +112,9 @@ export const FormBuckarooOptions = (props) => {
           value={emandateDescription}
           help={__('A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers\' bank account. Max 70 characters.', 'eightshift-forms')}
           onChange={(newValue) => {
-            onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD));
+            if (newValue.length > 0) {
+              onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD));
+            }
           }}
         />
       }
