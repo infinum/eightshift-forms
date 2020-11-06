@@ -41,7 +41,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    *
    * @var string
    */
-  const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'sequence-type-is-recurring';
+  const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'is-recurring';
 
   const SEQUENCE_TYPE_RECURRING_VALUE = '0';
   const SEQUENCE_TYPE_ONE_TIME_VALUE = '1';

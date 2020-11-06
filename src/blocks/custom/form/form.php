@@ -40,6 +40,7 @@ $buckaroo_redirect_url_cancel = ! empty( \get_permalink() ) ? \get_permalink() :
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
+$buckaroo_payment_desc        = $attributes['buckarooPaymentDescription'] ?? '';
 $buckaroo_emandate_desc       = $attributes['buckarooEmandateDescription'] ?? '';
 $buckaroo_sequence_type       = $attributes['buckarooSequenceType'] ?? '';
 $buckaroo_is_recurring        = $buckaroo_sequence_type === '0';
@@ -110,6 +111,10 @@ $block_classes = Components::classnames([
         <?php if ( ! $buckaroo_sequence_type_front && $buckaroo_is_recurring ) { ?>
           <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_IS_RECURRING_PARAM ); ?>" value="1" />
         <?php } ?>
+      <?php } ?>
+
+      <?php if ( $buckaroo_service === 'ideal' ) { ?>
+        <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::PAYMENT_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_payment_desc ); ?>" />
       <?php } ?>
     <?php } ?>
 

@@ -23,11 +23,23 @@ abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
 
   /**
    * Issuer, bank code.
+   *
+   * @var string
    */
   const ISSUER_PARAM = 'issuer';
 
   /**
+   * Param for description of this transaction. Not used in Emandates because Emandates
+   * has it's own field / param for this: (see buckaroo-emandate-route).
+   *
+   * @var string
+   */
+  const PAYMENT_DESCRIPTION_PARAM = 'payment-description';
+
+  /**
    * Test param, set if you wish to Test Buckaroo implementation.
+   *
+   * @var string
    */
   const TEST_PARAM = 'test';
 

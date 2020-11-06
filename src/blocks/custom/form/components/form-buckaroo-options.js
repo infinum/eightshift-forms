@@ -7,6 +7,7 @@ export const FormBuckarooOptions = (props) => {
   const {
     blockClass,
     service,
+    paymentDescription,
     emandateDescription,
     sequenceType,
     isSequenceTypeOnFrontend,
@@ -15,6 +16,7 @@ export const FormBuckarooOptions = (props) => {
     redirectUrlReject,
     onChangeIsSequenceTypeOnFrontend,
     onChangeService,
+    onChangePaymentDescription,
     onChangeEmandateDescription,
     onChangeSequenceType,
     onChangeRedirectUrl,
@@ -94,9 +96,19 @@ export const FormBuckarooOptions = (props) => {
         />
       }
 
+
+      {onChangePaymentDescription &&
+        <TextareaControl
+          label={__('Payment description', 'eightshift-forms')}
+          value={paymentDescription}
+          help={__('A description of for this transaction', 'eightshift-forms')}
+          onChange={onChangePaymentDescription}
+        />
+      }
+
       {onChangeEmandateDescription && service === 'emandate' &&
         <TextareaControl
-          label={__('Emandate description', 'eightshift-forms')}
+          label={__('Emandate reason', 'eightshift-forms')}
           value={emandateDescription}
           help={__('A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers\' bank account. Max 70 characters.', 'eightshift-forms')}
           onChange={(newValue) => {

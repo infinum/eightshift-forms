@@ -103,6 +103,10 @@
       "type": "string",
       "default": "0"
     },
+    "buckarooPaymentDescription": {
+      "type": "string",
+      "default": "Description of the payment"
+    },
     "buckarooIsSequenceTypeOnFrontend": {
       "type": "boolean",
       "default": false

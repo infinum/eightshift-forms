@@ -135,15 +135,17 @@ class Buckaroo implements Filters {
    * Creates a payment request.
    *
    * @param  int|float|string $donation_amount Donation amount.
-   * @param  string           $invoice Invoice name.
-   * @param  string           $issuer Issuer (bank) name.
+   * @param  string           $invoice         Invoice name.
+   * @param  string           $issuer          Issuer (bank) name.
+   * @param  bool             $is_recurring    Is recurring payment.
+   * @param  string           $description     Description of the payment.
    * @return bool
    *
    * @throws Buckaroo_Request_Exception When something is wrong with JSON we get from Buckaroo.
    */
-  public function send_payment( $donation_amount, string $invoice, string $issuer = '' ) {
+  public function send_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ) {
     $response             = [];
-    $post_array           = $this->build_post_body_for_payment( $donation_amount, $invoice, $issuer );
+    $post_array           = $this->build_post_body_for_payment( $donation_amount, $invoice, $issuer, $is_recurring, $description );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
 
     $post_response = $this->guzzle_client->post("https://{$this->get_buckaroo_uri()}", [
@@ -398,11 +400,13 @@ class Buckaroo implements Filters {
    * Builds the body of request
    *
    * @param  int|float|string $donation_amount Donation amount.
-   * @param  string           $invoice Invoice name.
-   * @param  string           $issuer Issuer (bank) name.
+   * @param  string           $invoice         Invoice name.
+   * @param  string           $issuer          Issuer (bank) name.
+   * @param  bool             $is_recurring    Is recurring payment.
+   * @param  string           $description     Description of the payment.
    * @return array
    */
-  private function build_post_body_for_payment( $donation_amount, string $invoice, string $issuer = '' ): array {
+  private function build_post_body_for_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ): array {
     $this->verify_buckaroo_info_exists();
 
     $post_array = [
@@ -413,7 +417,13 @@ class Buckaroo implements Filters {
       'Services' => [
         'ServiceList' => [],
       ],
+      'Description' => $description,
     ];
+
+    // Set payment to recurring if needed.
+    if ( $is_recurring ) {
+      $post_array['StartRecurrent'] = 'True';
+    }
 
     $service_array = [
       'Action' => 'Pay',
@@ -448,6 +458,7 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
+   * @param  string $maxamount       This is the maximum amount per SEPA Direct Debit. Debtor can change this value during the authorization process. The (altered) value will be communicated in the push message to the Merchant. This parameter is for B2B only and required if that's the case.
    * @return array
    */
   private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
@@ -464,6 +475,7 @@ class Buckaroo implements Filters {
     $service_array = [
       'Action' => 'CreateMandate',
       'Name' => $this->get_pay_type(),
+      'maxamount' => 15.00,
       'Parameters' => [
         [
           'Name' => 'debtorreference',
