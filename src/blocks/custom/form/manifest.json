@@ -91,6 +91,18 @@
     "emailAdditionalHeaders": {
       "type": "string"
     },
+    "emailSendConfirmationToSender": {
+      "type": "boolean",
+      "default": false
+    },
+    "emailConfirmationSubject": {
+      "type": "string",
+      "default": "Thank you for contacting us"
+    },
+    "emailConfirmationMessage": {
+      "type": "string",
+      "default": "We have received your query and will get back to you as soon as possible."
+    },
     "buckarooService": {
       "type": "string",
       "default": "ideal"

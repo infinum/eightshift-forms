@@ -28,10 +28,14 @@ class Send_Email_Route extends Base_Route {
    */
   const ENDPOINT_SLUG = '/send-email';
 
-  const TO_PARAM                 = 'email_to';
-  const SUBJECT_PARAM            = 'email_subject';
-  const MESSAGE_PARAM            = 'email_message';
-  const ADDITIONAL_HEADERS_PARAM = 'email_additional_headers';
+  const TO_PARAM                          = 'email_to';
+  const SUBJECT_PARAM                     = 'email_subject';
+  const MESSAGE_PARAM                     = 'email_message';
+  const ADDITIONAL_HEADERS_PARAM          = 'email_additional_headers';
+  const SEND_CONFIRMATION_TO_SENDER_PARAM = 'email_send_copy_to_sender';
+  const CONFIRMATION_SUBJECT_PARAM        = 'email_confirmation_subject';
+  const CONFIRMATION_MESSAGE_PARAM        = 'email_confirmation_message';
+  const EMAIL_PARAM                       = 'email';
 
   /**
    * Construct object.
@@ -61,13 +65,28 @@ class Send_Email_Route extends Base_Route {
       return rest_ensure_response( $e->get_data() );
     }
 
-    $email_info = $this->build_email_info_from_params( $params );
+    // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct
+    if (
+      $this->should_send_email_copy_to_user( $params ) &&
+      ! $this->is_email_set_and_valid( $params )
+     ) {
+      return $this->rest_response_handler( 'invalid-email-error' );
+    }
 
+    $email_info            = $this->build_email_info_from_params( $params );
     $email_info['headers'] = $this->add_default_headers( $email_info['headers'] );
+    $response              = wp_mail( $email_info['to'], $email_info['subject'], $email_info['message'], $email_info['headers'] );
 
-    $response = wp_mail( $email_info['to'], $email_info['subject'], $email_info['message'], $email_info['headers'] );
+    // If we need to send copy to sender.
+    if ( $this->should_send_email_copy_to_user( $params ) ) {
+      $email_confirmation_info            = $this->build_email_info_from_params( $params, true );
+      $response_confirmation              = wp_mail( $params[ self::EMAIL_PARAM ], $email_confirmation_info['subject'], $email_confirmation_info['message'] );
+    }
 
-    if ( ! $response ) {
+    if (
+      ! $response ||
+      ( $this->should_send_email_copy_to_user( $params ) && ! $response_confirmation )
+    ) {
       return $this->rest_response_handler( 'send-email-error' );
     }
 
@@ -90,6 +109,14 @@ class Send_Email_Route extends Base_Route {
     return $headers;
   }
 
+  protected function should_send_email_copy_to_user( array $params ): bool {
+    return isset( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ] ) && filter_var( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ], FILTER_VALIDATE_BOOL );
+  }
+
+  protected function is_email_set_and_valid( array $params ): bool {
+    return isset( $params[ self::EMAIL_PARAM ] ) && filter_var( $params[ self::EMAIL_PARAM ], FILTER_VALIDATE_EMAIL );
+  }
+
   /**
    * Takes all parameters received in request and builds all subject / message info needed to send the email.
    * Must return array with the following keys:
@@ -98,14 +125,18 @@ class Send_Email_Route extends Base_Route {
    * - message
    * - headers
    *
-   * @param  array $params Params received in request.
+   * @param  array $params              Params received in request.
+   * @param  bool  $is_for_confirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
    * @return array
    */
-  protected function build_email_info_from_params( array $params ): array {
+  protected function build_email_info_from_params( array $params, bool $is_for_confirmation = false ): array {
+    $subject_param = $is_for_confirmation ? self::CONFIRMATION_SUBJECT_PARAM : self::SUBJECT_PARAM;
+    $message_param = $is_for_confirmation ? self::CONFIRMATION_MESSAGE_PARAM : self::MESSAGE_PARAM;
+
     return [
       'to' => $params[ self::TO_PARAM ] ?? '',
-      'subject' => $this->replace_placeholders_with_content( $params[ self::SUBJECT_PARAM ], $params ),
-      'message' => $this->replace_placeholders_with_content( $params[ self::MESSAGE_PARAM ], $params ),
+      'subject' => $this->replace_placeholders_with_content( $params[ $subject_param ], $params ),
+      'message' => $this->replace_placeholders_with_content( $params[ $message_param ], $params ),
       'headers' => $params[ self::ADDITIONAL_HEADERS_PARAM ] ?? '',
     ];
   }

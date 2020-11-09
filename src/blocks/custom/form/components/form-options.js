@@ -30,6 +30,9 @@ export const FormOptions = (props) => {
       emailSubject,
       emailMessage,
       emailAdditionalHeaders,
+      emailSendConfirmationToSender,
+      emailConfirmationSubject,
+      emailConfirmationMessage,
       buckarooService,
       buckarooPaymentDescription,
       buckarooEmandateDescription,
@@ -62,6 +65,9 @@ export const FormOptions = (props) => {
       onChangeEmailSubject,
       onChangeEmailMessage,
       onChangeEmailAdditionalHeaders,
+      onChangeEmailSendConfirmationToSender,
+      onChangeEmailConfirmationSubject,
+      onChangeEmailConfirmationMessage,
       onChangeBuckarooService,
       onChangeBuckarooPaymentDescription,
       onChangeBuckarooEmandateDescription,
@@ -229,10 +235,16 @@ export const FormOptions = (props) => {
                   subject={emailSubject}
                   message={emailMessage}
                   additionalHeaders={emailAdditionalHeaders}
+                  sendConfirmationToSender={emailSendConfirmationToSender}
+                  confirmationMessage={emailConfirmationMessage}
+                  confirmationSubject={emailConfirmationSubject}
                   onChangeTo={onChangeEmailTo}
                   onChangeSubject={onChangeEmailSubject}
                   onChangeMessage={onChangeEmailMessage}
                   onChangeAdditionalHeaders={onChangeEmailAdditionalHeaders}
+                  onChangeSendConfirmationToSender={onChangeEmailSendConfirmationToSender}
+                  onChangeConfirmationSubject={onChangeEmailConfirmationSubject}
+                  onChangeConfirmationMessage={onChangeEmailConfirmationMessage}
                 />
               </Fragment>
             )}

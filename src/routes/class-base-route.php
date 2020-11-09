@@ -346,6 +346,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => sprintf( esc_html__( 'Unauthorized request', 'eightshift-forms' ) ),
       ],
+      'invalid-email-error' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Please enter a valid email.', 'eightshift-forms' ) ),
+      ],
 
       // Buckaroo specific.
       'buckaroo-missing-keys' => [
@@ -362,10 +366,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => esc_html__( 'Not all Mailchimp API info is set', 'eightshift-forms' ),
       ],
+
       'mailchimp-missing-list-id' => [
         'code' => 400,
         'message' => esc_html__( 'Please set a valid List ID in Form options in editor.', 'eightshift-forms' ),
       ],
+
       'mailchimp-missing-email' => [
         'code' => 400,
         'message' => esc_html__( 'Please enter your email.', 'eightshift-forms' ),

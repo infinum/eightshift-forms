@@ -35,6 +35,9 @@ $email_to                     = $attributes['emailTo'] ?? '';
 $email_subject                = $attributes['emailSubject'] ?? '';
 $email_message                = $attributes['emailMessage'] ?? '';
 $email_additional_headers     = $attributes['emailAdditionalHeaders'] ?? '';
+$email_send_confirm_to_sender = isset( $attributes['emailSendConfirmationToSender'] ) ? filter_var( $attributes['emailSendConfirmationToSender'], FILTER_VALIDATE_BOOL ) : false;
+$email_confirmation_subject   = $attributes['emailConfirmationSubject'] ?? '';
+$email_confirmation_message   = $attributes['emailConfirmationMessage'] ?? '';
 $buckaroo_redirect_url        = $attributes['buckarooRedirectUrl'] ?? '';
 $buckaroo_redirect_url_cancel = ! empty( \get_permalink() ) ? \get_permalink() : \home_url();
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
@@ -97,6 +100,9 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo esc_attr( $email_send_confirm_to_sender ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_subject ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_message ); ?>" />
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::BUCKAROO_METHOD ] ) ) { ?>
