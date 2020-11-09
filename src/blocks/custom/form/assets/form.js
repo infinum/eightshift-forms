@@ -23,6 +23,7 @@ export class Form {
     this.DATA_ATTR_BUCKAROO_SERVICE = 'data-buckaroo-service';
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
+    this.DATA_ATTR_REDIRECT_URL_SUCCESS = 'data-redirect-on-success';
     this.EVENT_SUBMIT = 'ef-submit';
     this.STATE_IS_LOADING = false;
     this.CLASS_FORM_SUBMITTING = 'form-submitting';
@@ -37,6 +38,12 @@ export class Form {
     this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
     this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
     this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
+
+    // Redirection
+    this.shouldRedirect = this.form.hasAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS);
+    if (this.shouldRedirect) {
+      this.redirectUrlSuccess = this.form.getAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS) || '';
+    }
 
     this.siteUrl = window.eightshiftForms.siteUrl;
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
@@ -83,6 +90,8 @@ export class Form {
           this.showErrorMessages(this.errors);
         }
         this.endLoading(isSuccess);
+
+        this.maybeRedirect(isSuccess);
       } else {
 
         // Submit to all regular routes in parallel.
@@ -115,8 +124,23 @@ export class Form {
         }
 
         this.endLoading(isComplexSuccess);
+
+        this.maybeRedirect(isComplexSuccess);
       }
     });
+  }
+
+  /**
+   * Redirects user on success if needed.
+   *
+   * @param {boolean} success Is form successfully submitted
+   */
+  maybeRedirect(success) {
+    if (!success || !this.shouldRedirect || !this.redirectUrlSuccess) {
+      return;
+    }
+
+    window.location.href = this.redirectUrlSuccess;
   }
 
   /**

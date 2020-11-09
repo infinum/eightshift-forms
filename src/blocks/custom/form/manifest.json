@@ -73,6 +73,14 @@
       },
       "default": []
     },
+    "shouldRedirectOnSuccess": {
+      "type": "bool",
+      "default": false
+    },
+    "redirectSuccess": {
+      "type": "string",
+      "default": "/thank-you"
+    },
     "dynamicsEntity": {
       "type": "string"
     },

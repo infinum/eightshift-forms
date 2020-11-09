@@ -30,6 +30,8 @@ $is_form_complex              = isset( $attributes['isComplexType'] ) ? filter_v
 $form_theme                   = $attributes['theme'] ?? '';
 $success_message              = $attributes['successMessage'] ?? '';
 $error_message                = $attributes['errorMessage'] ?? '';
+$should_redirect_on_success   = isset( $attributes['shouldRedirectOnSuccess'] ) ? filter_var( $attributes['shouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL ) : false;
+$redirect_url_success         = $attributes['redirectSuccess'] ?? '';
 $dynamics_crm_entity          = $attributes['dynamicsEntity'] ?? '';
 $email_to                     = $attributes['emailTo'] ?? '';
 $email_subject                = $attributes['emailSubject'] ?? '';
@@ -72,6 +74,7 @@ $block_classes = Components::classnames([
     target="<?php echo esc_attr( $form_target ); ?>"
     <?php ! empty( $form_id ) ? printf( 'id="%s"', esc_attr( $form_id ) ) : ''; ?>
     <?php $is_form_complex ? printf( 'data-is-form-complex' ) : ''; ?>
+    <?php $should_redirect_on_success ? printf( 'data-redirect-on-success="%s"', esc_url( $redirect_url_success ) ) : ''; ?>
 
     <?php if ( isset( $used_types[ Config::BUCKAROO_METHOD ] ) ) { ?>
       data-buckaroo-service="<?php echo esc_attr( $buckaroo_service ); ?>"

@@ -26,6 +26,8 @@ export const FormOptions = (props) => {
       theme,
       successMessage,
       errorMessage,
+      shouldRedirectOnSuccess,
+      redirectSuccess,
       emailTo,
       emailSubject,
       emailMessage,
@@ -61,6 +63,8 @@ export const FormOptions = (props) => {
       onChangeTheme,
       onChangeSuccessMessage,
       onChangeErrorMessage,
+      onChangeShouldRedirectOnSuccess,
+      onChangeRedirectSuccess,
       onChangeEmailTo,
       onChangeEmailSubject,
       onChangeEmailMessage,
@@ -213,6 +217,8 @@ export const FormOptions = (props) => {
                   richTextClass={richTextClass}
                   successMessage={successMessage}
                   errorMessage={errorMessage}
+                  shouldRedirectOnSuccess={shouldRedirectOnSuccess}
+                  redirectSuccess={redirectSuccess}
                   onChangeType={onChangeType}
                   onChangeTypesComplex={onChangeTypesComplex}
                   onChangeTypesComplexRedirect={onChangeTypesComplexRedirect}
@@ -220,6 +226,8 @@ export const FormOptions = (props) => {
                   onChangeTheme={onChangeTheme}
                   onChangeSuccessMessage={onChangeSuccessMessage}
                   onChangeErrorMessage={onChangeErrorMessage}
+                  onChangeShouldRedirectOnSuccess={onChangeShouldRedirectOnSuccess}
+                  onChangeRedirectSuccess={onChangeRedirectSuccess}
                 />
               </Fragment>
             )}

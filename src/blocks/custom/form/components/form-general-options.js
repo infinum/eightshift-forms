@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment, useState } from '@wordpress/element';
-import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice } from '@wordpress/components';
+import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice, TextControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
+import { CantHaveMultipleRedirects } from './cant-have-multiple-redirects-notice';
 
 /**
  * Single checkbox for form type.
@@ -19,6 +20,8 @@ const TypeCheckbox = (props) => {
     isChecked,
     isRedirect,
     setIsError,
+    shouldRedirectOnSuccess,
+    setIsErrorOnComplexTypeSelect,
   } = props;
 
   const [isCheckedState, setChecked] = useState(isChecked);
@@ -41,6 +44,12 @@ const TypeCheckbox = (props) => {
 
         } else {
           if (isNowChecked && !selectedTypesRedirect.includes(value)) {
+
+            // Prevent checking if new value is redirect but we already have redirection enabled.
+            if (shouldRedirectOnSuccess) {
+              setIsErrorOnComplexTypeSelect(true);
+              return null;
+            }
 
             if (selectedTypesRedirect.length > 0) {
               setIsError(true);
@@ -75,6 +84,8 @@ const ComplexTypeSelector = (props) => {
     help,
     onChangeTypes,
     onChangeTypesRedirect,
+    setIsErrorOnComplexTypeSelect,
+    shouldRedirectOnSuccess,
   } = props;
 
   const [isError, setIsError] = useState(false);
@@ -106,6 +117,8 @@ const ComplexTypeSelector = (props) => {
               onChangeTypes={onChangeTypes}
               onChangeTypesRedirect={onChangeTypesRedirect}
               setIsError={setIsError}
+              setIsErrorOnComplexTypeSelect={setIsErrorOnComplexTypeSelect}
+              shouldRedirectOnSuccess={shouldRedirectOnSuccess}
             />
           );
         })}
@@ -126,16 +139,47 @@ export const FormGeneralOptions = (props) => {
     richTextClass,
     successMessage,
     errorMessage,
+    shouldRedirectOnSuccess,
+    redirectSuccess,
     onChangeType,
     onChangeTypesComplex,
     onChangeTypesComplexRedirect,
     onChangeIsComplexType,
     onChangeSuccessMessage,
     onChangeErrorMessage,
+    onChangeShouldRedirectOnSuccess,
+    onChangeRedirectSuccess,
   } = props;
+
+  const doesTypeRedirect = formTypes.filter((curType) => {
+    if (curType.value !== type || !curType.redirects) {
+      return false;
+    }
+
+    return true;
+  }).length > 0;
+
+  const doesOneOfComplexTypesRedirects = typesComplexRedirect.length > 0;
+  const hasRedirectTypes = (!isComplexType && doesTypeRedirect) || (isComplexType && doesOneOfComplexTypesRedirects);
+  const [isErrorOnRedirectToggle, setIsErrorOnRedirectToggle] = useState(false);
+  const [isErrorOnTypeSelect, seIsErrorOnTypeSelect] = useState(false);
+  const [isErrorOnComplexTypeSelect, setIsErrorOnComplexTypeSelect] = useState(false);
+
+  const dismissErrorOnRedirectToggle = () => {
+    setIsErrorOnRedirectToggle(false);
+  };
+
+  const dismissErrorOnTypeSelect = () => {
+    seIsErrorOnTypeSelect(false);
+  };
+
+  const dismissErrorOnComplexTypeSelect = () => {
+    setIsErrorOnComplexTypeSelect(false);
+  };
 
   return (
     <Fragment>
+
       {onChangeIsComplexType &&
         <ToggleControl
           label={__('Multiple types?', 'eightshift-forms')}
@@ -144,25 +188,40 @@ export const FormGeneralOptions = (props) => {
           onChange={onChangeIsComplexType}
         />
       }
+      {isErrorOnTypeSelect &&
+        <CantHaveMultipleRedirects dismissError={dismissErrorOnTypeSelect} forSelects={true} />
+      }
       {onChangeType && !isComplexType &&
         <SelectControl
           label={__('Type', 'eightshift-forms')}
           value={type}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
           options={formTypes}
-          onChange={onChangeType}
+          onChange={(newValue) => {
+            if (!shouldRedirectOnSuccess) {
+              onChangeType(newValue);
+            } else {
+              seIsErrorOnTypeSelect(true);
+            }
+          }}
         />
+      }
+
+      {isErrorOnComplexTypeSelect &&
+        <CantHaveMultipleRedirects dismissError={dismissErrorOnComplexTypeSelect} forSelects={true} />
       }
       {onChangeTypesComplex && isComplexType &&
         <ComplexTypeSelector
           blockClass={blockClass}
           label={__('Types (Multiple)', 'eightshift-forms')}
+          help={__('Choose what will this form do on submit', 'eightshift-forms')}
           typesComplex={typesComplex}
           typesComplexRedirect={typesComplexRedirect}
-          help={__('Choose what will this form do on submit', 'eightshift-forms')}
           types={formTypes}
           onChangeTypes={onChangeTypesComplex}
           onChangeTypesRedirect={onChangeTypesComplexRedirect}
+          setIsErrorOnComplexTypeSelect={setIsErrorOnComplexTypeSelect}
+          shouldRedirectOnSuccess={shouldRedirectOnSuccess}
         />
       }
 
@@ -192,6 +251,34 @@ export const FormGeneralOptions = (props) => {
             value={errorMessage}
           />
         </BaseControl>
+      }
+
+      {isErrorOnRedirectToggle &&
+        <CantHaveMultipleRedirects dismissError={dismissErrorOnRedirectToggle} />
+      }
+
+      {onChangeShouldRedirectOnSuccess &&
+        <ToggleControl
+          label={__('Redirect on success?', 'eightshift-forms')}
+          help={__('Enable if you wish for the user to be redirected to success page after submitting form. Cannot be used if your form type redirects.', 'eightshift-forms')}
+          checked={shouldRedirectOnSuccess}
+          onChange={(newValue) => {
+            if (!hasRedirectTypes) {
+              onChangeShouldRedirectOnSuccess(newValue);
+            } else {
+              setIsErrorOnRedirectToggle(true);
+            }
+          }}
+        />
+      }
+
+      {onChangeRedirectSuccess && shouldRedirectOnSuccess &&
+        <TextControl
+          label={__('Redirect URL', 'eightshift-forms')}
+          help={__('Redirect to which user will be redirected on success. Needs to be on the same domain.', 'eightshift-forms')}
+          value={redirectSuccess}
+          onChange={onChangeRedirectSuccess}
+        />
       }
 
     </Fragment>
