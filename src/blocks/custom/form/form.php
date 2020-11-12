@@ -11,6 +11,7 @@ use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Helpers\Forms;
 
 use Eightshift_Forms\Core\Config;
+use Eightshift_Forms\Hooks\Actions;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
 use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
@@ -65,6 +66,8 @@ $block_classes = Components::classnames([
   ! empty( $form_theme ) ? "{$block_class}__theme--{$form_theme}" : '',
 ]);
 
+
+
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
@@ -92,6 +95,14 @@ $block_classes = Components::classnames([
     <?php echo wp_kses_post( $inner_block_content ); ?>
 
     <?php
+
+    /**
+     * Project specific fields.
+     */
+    if ( has_action( Actions::EXTRA_FORM_FIELDS ) ) {
+      do_action( Actions::EXTRA_FORM_FIELDS, $attributes );
+    }
+
     /**
      * Here we need to add some additional fields for specific methods.
      */
