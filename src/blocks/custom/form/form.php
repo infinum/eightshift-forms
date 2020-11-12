@@ -17,6 +17,7 @@ use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
 use Eightshift_Forms\Rest\Buckaroo_Emandate_Route;
 use Eightshift_Forms\Rest\Mailchimp_Route;
 
+$current_url                  = ! empty( \get_permalink() ) ? \get_permalink() : '';
 $block_class                  = $attributes['blockClass'] ?? '';
 $form_action                  = $attributes['action'] ?? '';
 $form_method                  = $attributes['method'] ?? '';
@@ -30,6 +31,7 @@ $is_form_complex              = isset( $attributes['isComplexType'] ) ? filter_v
 $form_theme                   = $attributes['theme'] ?? '';
 $success_message              = $attributes['successMessage'] ?? '';
 $error_message                = $attributes['errorMessage'] ?? '';
+$referral_url                 = isset( $attributes['referralUrl'] ) ? $attributes['referralUrl'] : $current_url;
 $should_redirect_on_success   = isset( $attributes['shouldRedirectOnSuccess'] ) ? filter_var( $attributes['shouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL ) : false;
 $redirect_url_success         = $attributes['redirectSuccess'] ?? '';
 $dynamics_crm_entity          = $attributes['dynamicsEntity'] ?? '';
@@ -41,7 +43,7 @@ $email_send_confirm_to_sender = isset( $attributes['emailSendConfirmationToSende
 $email_confirmation_subject   = $attributes['emailConfirmationSubject'] ?? '';
 $email_confirmation_message   = $attributes['emailConfirmationMessage'] ?? '';
 $buckaroo_redirect_url        = $attributes['buckarooRedirectUrl'] ?? '';
-$buckaroo_redirect_url_cancel = ! empty( \get_permalink() ) ? \get_permalink() : \home_url();
+$buckaroo_redirect_url_cancel = ! empty( $current_url ) ? $current_url : \home_url();
 $buckaroo_redirect_url_error  = $attributes['buckarooRedirectUrlError'] ?? '';
 $buckaroo_redirect_url_reject = $attributes['buckarooRedirectUrlReject'] ?? '';
 $buckaroo_service             = $attributes['buckarooService'] ?? '';
@@ -94,6 +96,8 @@ $block_classes = Components::classnames([
      * Here we need to add some additional fields for specific methods.
      */
     ?>
+    <input type="hidden" name="referral-url" value="<?php echo esc_url( $referral_url ); ?>" />
+
     <?php if ( isset( $used_types[ Config::DYNAMICS_CRM_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Dynamics_Crm_Route::ENTITY_PARAM ); ?>" value="<?php echo esc_attr( $dynamics_crm_entity ); ?>" />
     <?php } ?>
