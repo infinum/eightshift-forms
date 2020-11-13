@@ -48,6 +48,10 @@
     "prefillDataSource": {
       "type": "string"
     },
+    "showName": {
+      "type": "boolean",
+      "default": true
+    },
     "wrapperUse": {
       "type": "boolean",
       "default": true

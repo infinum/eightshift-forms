@@ -9,6 +9,7 @@ export const SelectOptions = (props) => {
       preventSending,
       prefillData,
       prefillDataSource,
+      showName = true,
     },
     actions: {
       onChangeName,
@@ -31,7 +32,7 @@ export const SelectOptions = (props) => {
   return (
     <PanelBody title={__('Select Settings', 'eightshift-forms')}>
 
-      {onChangeName &&
+      {onChangeName && showName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
           value={name}
