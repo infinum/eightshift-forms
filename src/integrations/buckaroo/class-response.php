@@ -14,10 +14,10 @@ namespace Eightshift_Forms\Buckaroo;
  */
 class Response {
 
-  const SERVICE_IDEAL    = 'ideal';
-  const SERVICE_EMANDATE = 'emandate';
+  const SERVICE_IDEAL        = 'ideal';
+  const SERVICE_EMANDATE     = 'emandate';
   const SERVICE_PAY_BY_EMAIL = 'pay-by-email';
-  const SERVICE_INVALID  = 'unsupported-buckaroo-service';
+  const SERVICE_INVALID      = 'unsupported-buckaroo-service';
 
   const STATUS_CODE_SUCCESS   = 190;
   const STATUS_CODE_ERROR     = 490;
