@@ -31,19 +31,7 @@ export class Form {
     this.CLASS_HIDE_MESSAGE = 'is-form-message-hidden';
     this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
 
-    // Get form type from class.
-    this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
-    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
-    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
-    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
-    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
-    this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
-
-    // Redirection
-    this.shouldRedirect = this.form.hasAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS);
-    if (this.shouldRedirect) {
-      this.redirectUrlSuccess = this.form.getAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS) || '';
-    }
+    this.updateAllElements();
 
     this.siteUrl = window.eightshiftForms.siteUrl;
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
@@ -78,6 +66,7 @@ export class Form {
   init() {
     this.form.addEventListener('submit', async (e) => {
       this.startLoading();
+      this.updateAllElements();
 
       if (!this.isComplex) {
         const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
@@ -128,6 +117,27 @@ export class Form {
         this.maybeRedirect(isComplexSuccess);
       }
     });
+  }
+
+  /**
+   * Updates form types and all it's configuration. We need to extract this and do it during initialization +
+   * before submit because this configuration could be manipulated inside a project.
+   */
+  updateAllElements() {
+
+    // Get form type from class.
+    this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
+    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
+    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
+    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
+    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
+    this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
+
+    // Redirection
+    this.shouldRedirect = this.form.hasAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS);
+    if (this.shouldRedirect) {
+      this.redirectUrlSuccess = this.form.getAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS) || '';
+    }
   }
 
   /**
