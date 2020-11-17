@@ -41,7 +41,10 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    *
    * @var string
    */
-  const SEQUENCE_TYPE_PARAM = 'sequence-type';
+  const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'is-recurring';
+
+  const SEQUENCE_TYPE_RECURRING_VALUE = '0';
+  const SEQUENCE_TYPE_ONE_TIME_VALUE = '1';
 
   /**
    * Method that returns rest response
@@ -69,7 +72,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
       $this->buckaroo->set_pay_type( 'emandate' );
       $response = $this->buckaroo->create_emandate(
         $this->buckaroo->generate_debtor_reference( $params ),
-        $params[ self::SEQUENCE_TYPE_PARAM ] ?? '',
+        ! empty( $params[ self::SEQUENCE_TYPE_IS_RECURRING_PARAM ] ) ? self::SEQUENCE_TYPE_RECURRING_VALUE : self::SEQUENCE_TYPE_ONE_TIME_VALUE,
         $this->buckaroo->generate_purchase_id( $params ),
         'nl',
         $params[ self::ISSUER_PARAM ] ?? '',
@@ -100,7 +103,6 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
    */
   protected function get_required_params(): array {
     return [
-      self::SEQUENCE_TYPE_PARAM,
       self::EMANDATE_DESCRIPTION_PARAM,
     ];
   }

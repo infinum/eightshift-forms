@@ -35,6 +35,7 @@ class Form_View {
       'enctype'                          => 1,
       'novalidate'                       => 1,
       'data-is-form-complex'             => 1,
+      'data-redirect-on-success'         => 1,
       'data-form-type'                   => 1,
       'data-form-types-complex'          => 1,
       'data-form-types-complex-redirect' => 1,

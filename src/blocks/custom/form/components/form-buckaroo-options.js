@@ -1,18 +1,22 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { SelectControl, TextControl, TextareaControl, BaseControl } from '@wordpress/components';
+import { SelectControl, TextControl, TextareaControl, BaseControl, ToggleControl } from '@wordpress/components';
 
 
 export const FormBuckarooOptions = (props) => {
   const {
     blockClass,
     service,
+    paymentDescription,
     emandateDescription,
     sequenceType,
+    isSequenceTypeOnFrontend,
     redirectUrl,
     redirectUrlError,
     redirectUrlReject,
+    onChangeIsSequenceTypeOnFrontend,
     onChangeService,
+    onChangePaymentDescription,
     onChangeEmandateDescription,
     onChangeSequenceType,
     onChangeRedirectUrl,
@@ -74,7 +78,15 @@ export const FormBuckarooOptions = (props) => {
           </div>
         </BaseControl>
       }
-      {onChangeSequenceType && service === 'emandate' &&
+      {onChangeIsSequenceTypeOnFrontend && service === 'emandate' &&
+        <ToggleControl
+          label={__('Allow user to set Recurring / One time in form?', 'eightshift-forms')}
+          help={__('If enabled you need to allow the user to select the recurring / one-time on frontend. You need to add a pre-defined field for this OR a field with name "sequence-type" to the form.', 'eightshift-forms')}
+          checked={isSequenceTypeOnFrontend}
+          onChange={onChangeIsSequenceTypeOnFrontend}
+        />
+      }
+      {onChangeSequenceType && !isSequenceTypeOnFrontend && service === 'emandate' &&
         <SelectControl
           label={__('Recurring / One off?', 'eightshift-forms')}
           help={__('Set if this form will create a recurring or one-off emandate.', 'eightshift-forms')}
@@ -84,13 +96,25 @@ export const FormBuckarooOptions = (props) => {
         />
       }
 
+
+      {onChangePaymentDescription &&
+        <TextareaControl
+          label={__('Payment description', 'eightshift-forms')}
+          value={paymentDescription}
+          help={__('A description of for this transaction', 'eightshift-forms')}
+          onChange={onChangePaymentDescription}
+        />
+      }
+
       {onChangeEmandateDescription && service === 'emandate' &&
         <TextareaControl
-          label={__('Emandate description', 'eightshift-forms')}
+          label={__('Emandate reason', 'eightshift-forms')}
           value={emandateDescription}
           help={__('A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers\' bank account. Max 70 characters.', 'eightshift-forms')}
           onChange={(newValue) => {
-            onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD));
+            if (newValue.length > 0) {
+              onChangeEmandateDescription(newValue.substring(0, MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD));
+            }
           }}
         />
       }

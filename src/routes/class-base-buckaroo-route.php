@@ -23,11 +23,23 @@ abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
 
   /**
    * Issuer, bank code.
+   *
+   * @var string
    */
   const ISSUER_PARAM = 'issuer';
 
   /**
+   * Param for description of this transaction. Not used in Emandates because Emandates
+   * has it's own field / param for this: (see buckaroo-emandate-route).
+   *
+   * @var string
+   */
+  const PAYMENT_DESCRIPTION_PARAM = 'payment-description';
+
+  /**
    * Test param, set if you wish to Test Buckaroo implementation.
+   *
+   * @var string
    */
   const TEST_PARAM = 'test';
 
@@ -106,6 +118,11 @@ abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
     foreach ( $statuses as $status_value ) {
       $url_params = $params;
       $url_params[ Buckaroo_Response_Handler_Route::STATUS_PARAM ] = $status_value;
+
+      // We need to encode all params to ensure they're sent properly.
+      $url_params = $this->urlencode_params( $url_params );
+
+      // As the last step, add the authorization hash which verifies that the request was not tampered with.
       $url = \add_query_arg( array_merge(
         $url_params,
         [ HMAC::AUTHORIZATION_KEY => rawurlencode( $this->hmac->generate_hash( $url_params, $this->generate_authorization_salt_for_response_handler() ) ) ]

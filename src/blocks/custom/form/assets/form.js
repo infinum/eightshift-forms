@@ -23,6 +23,7 @@ export class Form {
     this.DATA_ATTR_BUCKAROO_SERVICE = 'data-buckaroo-service';
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
+    this.DATA_ATTR_REDIRECT_URL_SUCCESS = 'data-redirect-on-success';
     this.EVENT_SUBMIT = 'ef-submit';
     this.STATE_IS_LOADING = false;
     this.CLASS_FORM_SUBMITTING = 'form-submitting';
@@ -30,13 +31,7 @@ export class Form {
     this.CLASS_HIDE_MESSAGE = 'is-form-message-hidden';
     this.CLASS_HIDE_OVERLAY = 'hide-form-overlay';
 
-    // Get form type from class.
-    this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
-    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
-    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
-    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
-    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
-    this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
+    this.updateAllElements();
 
     this.siteUrl = window.eightshiftForms.siteUrl;
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
@@ -71,6 +66,7 @@ export class Form {
   init() {
     this.form.addEventListener('submit', async (e) => {
       this.startLoading();
+      this.updateAllElements();
 
       if (!this.isComplex) {
         const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
@@ -83,6 +79,8 @@ export class Form {
           this.showErrorMessages(this.errors);
         }
         this.endLoading(isSuccess);
+
+        this.maybeRedirect(isSuccess);
       } else {
 
         // Submit to all regular routes in parallel.
@@ -115,8 +113,44 @@ export class Form {
         }
 
         this.endLoading(isComplexSuccess);
+
+        this.maybeRedirect(isComplexSuccess);
       }
     });
+  }
+
+  /**
+   * Updates form types and all it's configuration. We need to extract this and do it during initialization +
+   * before submit because this configuration could be manipulated inside a project.
+   */
+  updateAllElements() {
+
+    // Get form type from class.
+    this.formType = this.form.getAttribute(this.DATA_ATTR_FORM_TYPE);
+    this.formTypesComplex = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX) || null;
+    this.formTypesComplex = this.formTypesComplex ? this.formTypesComplex.split(',') : [];
+    this.formTypesComplexRedirect = this.form.getAttribute(this.DATA_ATTR_FORM_TYPES_COMPLEX_REDIRECT) || null;
+    this.formTypesComplexRedirect = this.formTypesComplexRedirect ? this.formTypesComplexRedirect.split(',') : [];
+    this.isComplex = this.form.hasAttribute(this.DATA_ATTR_IS_FORM_COMPLEX);
+
+    // Redirection
+    this.shouldRedirect = this.form.hasAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS);
+    if (this.shouldRedirect) {
+      this.redirectUrlSuccess = this.form.getAttribute(this.DATA_ATTR_REDIRECT_URL_SUCCESS) || '';
+    }
+  }
+
+  /**
+   * Redirects user on success if needed.
+   *
+   * @param {boolean} success Is form successfully submitted
+   */
+  maybeRedirect(success) {
+    if (!success || !this.shouldRedirect || !this.redirectUrlSuccess) {
+      return;
+    }
+
+    window.location.href = this.redirectUrlSuccess;
   }
 
   /**
@@ -300,6 +334,11 @@ export class Form {
 
       // Filter out unchecked radio buttons.
       if (formElem.getAttribute('type') === 'radio' && !formElem.checked) {
+        return false;
+      }
+
+      // Filter out unchecked checkboxes buttons.
+      if (formElem.getAttribute('type') === 'checkbox' && !formElem.checked) {
         return false;
       }
 

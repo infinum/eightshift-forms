@@ -24,4 +24,25 @@ interface Actions {
    * @var string
    */
   const BUCKAROO_RESPONSE_HANDLER = 'eightshift_forms/buckaroo_response_handler';
+
+  /**
+   * Use this action if you need to echo extra hidden (or non-hidden) fields to the form specifically for your project.
+   * Make sure to echo valid HTML (most likely <input type="hidden"> fields) and this will be echoed inside the form.
+   *
+   * The action's callback needs to be provided in your project.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_action( 'eightshift_forms/extra_form_fields', [ $this, 'add_additional_fields' ], 1, 1 );
+   *   }
+   *
+   *   @param $attributes Array of form's attributes.
+   *   public function add_additional_fields( array $attributes ) {
+   *     echo '<input type="hidden" name="some-extra-field" value="your-value" />';
+   *   }
+   *
+   * @var string
+   */
+  const EXTRA_FORM_FIELDS = 'eightshift_forms/extra_form_fields';
 }

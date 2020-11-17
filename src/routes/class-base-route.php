@@ -139,6 +139,9 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       $hash = $params[ HMAC::AUTHORIZATION_KEY ] ?? 'invalid-hash';
       unset( $params[ HMAC::AUTHORIZATION_KEY ] );
 
+      // We need to URLencode all params before verifying them.
+      $params = $this->urlencode_params( $params );
+
       if ( empty( $this->hmac ) || ! $this->hmac->verify_hash( $hash, $params, $this->get_authorization_salt() ) ) {
         throw new Unverified_Request_Exception(
           $this->rest_response_handler( 'authorization-invalid' )->data
@@ -204,6 +207,18 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function get_required_post_params_filter(): string {
     return 'invalid_post_params_filter';
+  }
+
+  /**
+   * URLencode all string params in request.
+   *
+   * @param  array $params Array of request params.
+   * @return array
+   */
+  protected function urlencode_params( array $params ): array {
+    return array_map( function( $param ) {
+      return is_string( $param ) ? urlencode( $param ) : $param;
+    }, $params);
   }
 
   /**
@@ -346,6 +361,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => sprintf( esc_html__( 'Unauthorized request', 'eightshift-forms' ) ),
       ],
+      'invalid-email-error' => [
+        'code' => 400,
+        'message' => sprintf( esc_html__( 'Please enter a valid email.', 'eightshift-forms' ) ),
+      ],
 
       // Buckaroo specific.
       'buckaroo-missing-keys' => [
@@ -362,10 +381,12 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
         'code' => 400,
         'message' => esc_html__( 'Not all Mailchimp API info is set', 'eightshift-forms' ),
       ],
+
       'mailchimp-missing-list-id' => [
         'code' => 400,
         'message' => esc_html__( 'Please set a valid List ID in Form options in editor.', 'eightshift-forms' ),
       ],
+
       'mailchimp-missing-email' => [
         'code' => 400,
         'message' => esc_html__( 'Please enter your email.', 'eightshift-forms' ),

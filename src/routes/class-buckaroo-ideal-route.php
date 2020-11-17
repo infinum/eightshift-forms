@@ -37,6 +37,13 @@ class Buckaroo_Ideal_Route extends Base_Buckaroo_Route {
   const DONATION_AMOUNT_PARAM = 'donation-amount';
 
   /**
+   * Field to make the iDEAL payment recurring
+   *
+   * @var string
+   */
+  const IS_RECURRING_PARAM = 'is-recurring';
+
+  /**
    * Method that returns rest response
    *
    * @param  \WP_REST_Request $request Data got from endpoint url.
@@ -60,7 +67,9 @@ class Buckaroo_Ideal_Route extends Base_Buckaroo_Route {
       $response = $this->buckaroo->send_payment(
         $params[ self::DONATION_AMOUNT_PARAM ],
         $this->buckaroo->generate_purchase_id( $params ),
-        $params[ self::ISSUER_PARAM ] ?? ''
+        $params[ self::ISSUER_PARAM ] ?? '',
+        ! empty( $params[ self::IS_RECURRING_PARAM ] ),
+        $params[ self::PAYMENT_DESCRIPTION_PARAM ] ?? ''
       );
 
     } catch ( Missing_Filter_Info_Exception $e ) {

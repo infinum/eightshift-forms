@@ -26,14 +26,22 @@ export const FormOptions = (props) => {
       theme,
       successMessage,
       errorMessage,
+      shouldRedirectOnSuccess,
+      redirectSuccess,
       emailTo,
       emailSubject,
       emailMessage,
       emailAdditionalHeaders,
+      emailSendConfirmationToSender,
+      emailConfirmationSubject,
+      emailConfirmationMessage,
       buckarooService,
+      buckarooPaymentDescription,
       buckarooEmandateDescription,
       buckarooSequenceType,
+      buckarooIsSequenceTypeOnFrontend,
       buckarooRedirectUrl,
+      buckarooRedirectUrlCancel,
       buckarooRedirectUrlError,
       buckarooRedirectUrlReject,
       mailchimpListId,
@@ -55,14 +63,22 @@ export const FormOptions = (props) => {
       onChangeTheme,
       onChangeSuccessMessage,
       onChangeErrorMessage,
+      onChangeShouldRedirectOnSuccess,
+      onChangeRedirectSuccess,
       onChangeEmailTo,
       onChangeEmailSubject,
       onChangeEmailMessage,
       onChangeEmailAdditionalHeaders,
+      onChangeEmailSendConfirmationToSender,
+      onChangeEmailConfirmationSubject,
+      onChangeEmailConfirmationMessage,
       onChangeBuckarooService,
+      onChangeBuckarooPaymentDescription,
       onChangeBuckarooEmandateDescription,
       onChangeBuckarooSequenceType,
+      onChangeBuckarooIsSequenceTypeOnFrontend,
       onChangeBuckarooRedirectUrl,
+      onChangeBuckarooRedirectUrlCancel,
       onChangeBuckarooRedirectUrlError,
       onChangeBuckarooRedirectUrlReject,
       onChangeMailchimpListId,
@@ -201,6 +217,8 @@ export const FormOptions = (props) => {
                   richTextClass={richTextClass}
                   successMessage={successMessage}
                   errorMessage={errorMessage}
+                  shouldRedirectOnSuccess={shouldRedirectOnSuccess}
+                  redirectSuccess={redirectSuccess}
                   onChangeType={onChangeType}
                   onChangeTypesComplex={onChangeTypesComplex}
                   onChangeTypesComplexRedirect={onChangeTypesComplexRedirect}
@@ -208,6 +226,8 @@ export const FormOptions = (props) => {
                   onChangeTheme={onChangeTheme}
                   onChangeSuccessMessage={onChangeSuccessMessage}
                   onChangeErrorMessage={onChangeErrorMessage}
+                  onChangeShouldRedirectOnSuccess={onChangeShouldRedirectOnSuccess}
+                  onChangeRedirectSuccess={onChangeRedirectSuccess}
                 />
               </Fragment>
             )}
@@ -223,10 +243,16 @@ export const FormOptions = (props) => {
                   subject={emailSubject}
                   message={emailMessage}
                   additionalHeaders={emailAdditionalHeaders}
+                  sendConfirmationToSender={emailSendConfirmationToSender}
+                  confirmationMessage={emailConfirmationMessage}
+                  confirmationSubject={emailConfirmationSubject}
                   onChangeTo={onChangeEmailTo}
                   onChangeSubject={onChangeEmailSubject}
                   onChangeMessage={onChangeEmailMessage}
                   onChangeAdditionalHeaders={onChangeEmailAdditionalHeaders}
+                  onChangeSendConfirmationToSender={onChangeEmailSendConfirmationToSender}
+                  onChangeConfirmationSubject={onChangeEmailConfirmationSubject}
+                  onChangeConfirmationMessage={onChangeEmailConfirmationMessage}
                 />
               </Fragment>
             )}
@@ -255,17 +281,23 @@ export const FormOptions = (props) => {
                   blockClass={blockClass}
                   type={type}
                   service={buckarooService}
+                  paymentDescription={buckarooPaymentDescription}
                   emandateDescription={buckarooEmandateDescription}
                   sequenceType={buckarooSequenceType}
+                  isSequenceTypeOnFrontend={buckarooIsSequenceTypeOnFrontend}
                   redirectUrl={buckarooRedirectUrl}
+                  redirectUrlCancel={buckarooRedirectUrlCancel}
                   redirectUrlError={buckarooRedirectUrlError}
                   redirectUrlReject={buckarooRedirectUrlReject}
                   onChangeService={onChangeBuckarooService}
                   onChangeEmandateDescription={onChangeBuckarooEmandateDescription}
+                  onChangePaymentDescription={onChangeBuckarooPaymentDescription}
                   onChangeSequenceType={onChangeBuckarooSequenceType}
                   onChangeRedirectUrl={onChangeBuckarooRedirectUrl}
+                  onChangeRedirectUrlCancel={onChangeBuckarooRedirectUrlCancel}
                   onChangeRedirectUrlError={onChangeBuckarooRedirectUrlError}
                   onChangeRedirectUrlReject={onChangeBuckarooRedirectUrlReject}
+                  onChangeIsSequenceTypeOnFrontend={onChangeBuckarooIsSequenceTypeOnFrontend}
                 />
 
               </Fragment>
