@@ -154,7 +154,7 @@ abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
    * @return string
    */
   protected function generate_authorization_salt_for_response_handler(): string {
-    return \apply_filters( self::BUCKAROO, 'secret_key' ) ?? 'invalid-salt-for-emandate-handler';
+    return \apply_filters( self::BUCKAROO, 'secret_key' ) ?? 'invalid-salt-for-buckaroo-handler';
   }
 
   /**

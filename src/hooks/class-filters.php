@@ -267,7 +267,7 @@ interface Filters {
    *     add_filter( 'eightshift_forms/modify_buckaroo_redirect_url', [ $this, 'modify_url' ], 1, 3 );
    *   }
    *
-   *  public function modify_url( string $redirect_url, array $params, array $buckaroo_params ) {
+   *  public function modify_url( string $redirect_url, array $params, Buckaroo_Response $buckaroo_response ) {
    *    $redirect_url = add_query_arg( 'key', 'value', $redirect_url );
    *    return $redirect_url;
    *  }
@@ -275,6 +275,50 @@ interface Filters {
    * @var string
    */
   const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirect_url';
+
+  /**
+   * This filter receives the buckaroo params (POST params that Buckaroo sends back to our site after processing the
+   * request) and allows you to modify them. For example you can check if everything is valid, mock some data
+   * or otherwise modify the params. You also get GET params as well so you can change things depending on the
+   * sending context (which route / service it was sent from, which fields were set by user, etc).
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/buckaroo_filter_buckaroo_params', [ $this, 'modify_params' ], 1, 2 );
+   *   }
+   *
+   *  public function modify_params( array $params, array $buckaroo_params ) {
+   *    if ( $params['test-enabled-field'] === '1' ) {
+   *      $buckaroo_params['BRQ_STATUSCODE'] = 123;
+   *      $buckaroo_params['BRQ_MOCK'] = true;
+   *    }
+   *
+   *    return $buckaroo_params;
+   *  }
+   *
+   * @var string
+   */
+  const BUCKAROO_FILTER_BUCKAROO_PARAMS = 'eightshift_forms/buckaroo_filter_buckaroo_params';
+
+  /**
+   * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
+   * redirected after completing / erroring out on payment - these are defined in Form's Buckaroo options)
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override', [ $this, 'modify_url' ], 1, 1 );
+   *   }
+   *
+   *  public function modify_url( string $redirect_url ) {
+   *    $redirect_url = add_query_arg( 'key', 'value', $redirect_url );
+   *    return $redirect_url;
+   *  }
+   *
+   * @var string
+   */
+  const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override';
 
   /**
    * Filter used to modify which roles have access to Forms CPT (by default it's just admins).

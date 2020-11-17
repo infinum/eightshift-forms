@@ -24,30 +24,33 @@ class Localization_Constants implements Filters {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data  $manifest                Inject manifest which holds data about assets from manifest.json.
-   * @param Callable_Route $dynamics_crm_route      Dynamics CRM route object which holds values we need to localize.
-   * @param Callable_Route $buckaroo_ideal_route    Buckaroo (Ideal) route object which holds values we need to localize.
-   * @param Callable_Route $buckaroo_emandate_route Buckaroo (Emandate) route object which holds values we need to localize.
-   * @param Callable_Route $send_email_route        Send Email route object which holds values we need to localize.
-   * @param Callable_Route $mailchimp_route         Mailchimp route object which holds values we need to localize.
-   * @param Mailchimp      $mailchimp               Mailchimp implementation.
+   * @param Manifest_Data  $manifest                    Inject manifest which holds data about assets from manifest.json.
+   * @param Callable_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_pay_by_email_route Buckaroo (Pay By Email) route object which holds values we need to localize.
+   * @param Callable_Route $send_email_route            Send Email route object which holds values we need to localize.
+   * @param Callable_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
+   * @param Mailchimp      $mailchimp                   Mailchimp implementation.
    */
   public function __construct(
     Manifest_Data $manifest,
     Callable_Route $dynamics_crm_route,
     Callable_Route $buckaroo_ideal_route,
     Callable_Route $buckaroo_emandate_route,
+    Callable_Route $buckaroo_pay_by_email_route,
     Callable_Route $send_email_route,
     Callable_Route $mailchimp_route,
     Mailchimp $mailchimp
   ) {
-    $this->manifest                = $manifest;
-    $this->dynamics_crm_route      = $dynamics_crm_route;
-    $this->buckaroo_ideal_route    = $buckaroo_ideal_route;
-    $this->buckaroo_emandate_route = $buckaroo_emandate_route;
-    $this->send_email_route        = $send_email_route;
-    $this->mailchimp_route         = $mailchimp_route;
-    $this->mailchimp               = $mailchimp;
+    $this->manifest                    = $manifest;
+    $this->dynamics_crm_route          = $dynamics_crm_route;
+    $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
+    $this->buckaroo_emandate_route     = $buckaroo_emandate_route;
+    $this->buckaroo_pay_by_email_route = $buckaroo_pay_by_email_route;
+    $this->send_email_route            = $send_email_route;
+    $this->mailchimp_route             = $mailchimp_route;
+    $this->mailchimp                   = $mailchimp;
   }
 
   /**
@@ -144,6 +147,7 @@ class Localization_Constants implements Filters {
       'restUri' => [
         'ideal' => $this->buckaroo_ideal_route->get_route_uri(),
         'emandate' => $this->buckaroo_emandate_route->get_route_uri(),
+        'payByEmail' => $this->buckaroo_pay_by_email_route->get_route_uri(),
       ],
     ];
 

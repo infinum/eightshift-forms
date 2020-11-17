@@ -16,6 +16,7 @@ class Response {
 
   const SERVICE_IDEAL    = 'ideal';
   const SERVICE_EMANDATE = 'emandate';
+  const SERVICE_PAY_BY_EMAIL = 'pay-by-email';
   const SERVICE_INVALID  = 'unsupported-buckaroo-service';
 
   const STATUS_CODE_SUCCESS   = 190;
@@ -37,6 +38,7 @@ class Response {
   const IDEAL_PAYMENT_AMOUNT_PARAM  = 'BRQ_AMOUNT';
   const IDEAL_PAYMENT_ID_PARAM      = 'BRQ_PAYMENT';
   const IDEAL_INVOICE_NUMBER_PARAM  = 'BRQ_INVOICENUMBER';
+  const MOCK_PAY_BY_EMAIL_PARAM     = 'BRQ_MOCK_SERVICE';
 
   /**
    * Service type of response.
@@ -168,6 +170,15 @@ class Response {
    */
   public function is_emandate(): bool {
     return $this->service === self::SERVICE_EMANDATE;
+  }
+
+  /**
+   * Check if response is an Pay By Email (Mocked) response.
+   *
+   * @return boolean
+   */
+  public function is_pay_by_email(): bool {
+    return $this->service === self::SERVICE_PAY_BY_EMAIL;
   }
 
   /**
@@ -335,6 +346,10 @@ class Response {
       return self::SERVICE_EMANDATE;
     }
 
+    if ( isset( $buckaroo_params[ self::MOCK_PAY_BY_EMAIL_PARAM ] ) && $buckaroo_params[ self::MOCK_PAY_BY_EMAIL_PARAM ] === self::SERVICE_PAY_BY_EMAIL ) {
+      return self::SERVICE_PAY_BY_EMAIL;
+    }
+
     return self::SERVICE_INVALID;
   }
 
@@ -354,7 +369,7 @@ class Response {
       throw new Invalid_Buckaroo_Response_Exception( esc_html__( 'Unable to build Buckaroo response, invalid status code.', 'eightshift-forms' ) );
     }
 
-    if ( $this->is_success() && empty( $this->bank_id ) ) {
+    if ( ! $this->is_pay_by_email() && $this->is_success() && empty( $this->bank_id ) ) {
       throw new Invalid_Buckaroo_Response_Exception( esc_html__( 'Unable to build Buckaroo response, unable to locate bank ID.', 'eightshift-forms' ) );
     }
 

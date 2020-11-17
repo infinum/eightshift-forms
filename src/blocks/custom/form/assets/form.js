@@ -39,6 +39,7 @@ export class Form {
     this.restRouteUrls = {
       buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
       buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
+      buckarooPayByEmailRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.payByEmail}`,
       mailchimpRestUri: `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
@@ -181,6 +182,9 @@ export class Form {
           break;
         case 'emandate':
           restUrl = this.restRouteUrls.buckarooEmandateRestUri;
+          break;
+        case 'pay-by-email':
+          restUrl = this.restRouteUrls.buckarooPayByEmailRestUri;
           break;
         default:
       }
