@@ -24,7 +24,7 @@ use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 /**
  * Class Buckaroo_Response_Handler_Route
  */
-class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
+class Buckaroo_Response_Handler_Route extends Base_Route implements Actions, Filters {
 
   /**
    * Route slug
@@ -142,9 +142,11 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
     }
 
     try {
-      if ( has_action( self::BUCKAROO_RESPONSE_HANDLER ) ) {
-        do_action( self::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
+      if ( has_filter( Filters::BUCKAROO_FILTER_BUCKAROO_PARAMS ) ) {
+        $buckaroo_params = apply_filters( Filters::BUCKAROO_FILTER_BUCKAROO_PARAMS, $params, $buckaroo_params );
       }
+
+      do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
 
       $redirect_url = $this->build_redirect_url( $params, $buckaroo_params );
       \wp_safe_redirect( $redirect_url );
@@ -156,7 +158,7 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
       [
         'code' => 200,
         'data' => [
-          'message' => esc_html__( 'Something went wrong, you should have been redirected. ' ),
+          'message' => esc_html__( 'Something went wrong, you should have been redirected.' ),
         ],
       ]
     );
@@ -217,17 +219,6 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions {
       self::REDIRECT_URL_ERROR_PARAM,
       self::REDIRECT_URL_REJECT_PARAM,
       self::STATUS_PARAM,
-    ];
-  }
-
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
-  protected function get_required_post_params(): array {
-    return [
-      self::BUCKAROO_RESPONSE_CODE_PARAM,
     ];
   }
 

@@ -24,7 +24,10 @@ export class Form {
     this.DATA_ATTR_SUCCESSFULLY_SUBMITTED = 'data-form-successfully-submitted';
     this.DATA_ATTR_FIELD_DONT_SEND = 'data-do-not-send';
     this.DATA_ATTR_REDIRECT_URL_SUCCESS = 'data-redirect-on-success';
-    this.EVENT_SUBMIT = 'ef-submit';
+    this.EVENT_SUBMIT_SUCCESS = 'ef-simple-submit-success';
+    this.EVENT_SUBMIT_ERROR = 'ef-simple-submit-error';
+    this.EVENT_SUBMIT_COMPLEX_SUCCESS = 'ef-complex-submit-success';
+    this.EVENT_SUBMIT_COMPLEX_ERROR = 'ef-complex-submit-error';
     this.STATE_IS_LOADING = false;
     this.CLASS_FORM_SUBMITTING = 'form-submitting';
     this.CLASS_HIDE_SPINNER = 'hide-spinner';
@@ -39,6 +42,7 @@ export class Form {
     this.restRouteUrls = {
       buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
       buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
+      buckarooPayByEmailRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.payByEmail}`,
       mailchimpRestUri: `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`,
       dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
       sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
@@ -70,11 +74,12 @@ export class Form {
 
       if (!this.isComplex) {
         const { isSuccess, response } = await this.submitFormSimple(e, this.formType);
-        this.submitEvent({ eventName: this.eventSubmit, formData: this.getFormData(this.form), response });
 
         if (isSuccess) {
+          this.submitEvent({ eventName: this.EVENT_SUBMIT_SUCCESS, formData: this.getFormData(this.form), response });
           this.showSuccessMessage();
         } else {
+          this.submitEvent({ eventName: this.EVENT_SUBMIT_ERROR, formData: this.getFormData(this.form), response });
           this.errors.push(response.message || 'Unknown Error');
           this.showErrorMessages(this.errors);
         }
@@ -107,8 +112,10 @@ export class Form {
         const isComplexSuccess = this.errors.length === 0;
 
         if (isComplexSuccess) {
+          this.submitEvent({ eventName: this.EVENT_SUBMIT_COMPLEX_SUCCESS, formData: this.getFormData(this.form) });
           this.showSuccessMessage();
         } else {
+          this.submitEvent({ eventName: this.EVENT_SUBMIT_COMPLEX_ERROR, formData: this.getFormData(this.form), errors: this.errors });
           this.showErrorMessages(this.errors);
         }
 
@@ -181,6 +188,9 @@ export class Form {
           break;
         case 'emandate':
           restUrl = this.restRouteUrls.buckarooEmandateRestUri;
+          break;
+        case 'pay-by-email':
+          restUrl = this.restRouteUrls.buckarooPayByEmailRestUri;
           break;
         default:
       }
