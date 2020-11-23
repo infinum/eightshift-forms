@@ -146,9 +146,7 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions, Fil
         $buckaroo_params = apply_filters( Filters::BUCKAROO_FILTER_BUCKAROO_PARAMS, $params, $buckaroo_params );
       }
 
-      if ( has_action( Actions::BUCKAROO_RESPONSE_HANDLER ) ) {
-        do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
-      }
+      do_action( Actions::BUCKAROO_RESPONSE_HANDLER, $params, $buckaroo_params );
 
       $redirect_url = $this->build_redirect_url( $params, $buckaroo_params );
       \wp_safe_redirect( $redirect_url );
