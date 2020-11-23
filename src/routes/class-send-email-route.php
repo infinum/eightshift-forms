@@ -134,7 +134,7 @@ class Send_Email_Route extends Base_Route {
     $message_param = $is_for_confirmation ? self::CONFIRMATION_MESSAGE_PARAM : self::MESSAGE_PARAM;
 
     return [
-      'to' => $params[ self::TO_PARAM ] ?? '',
+      'to' => ! empty( $params[ self::TO_PARAM ] ) ? wp_unslash( sanitize_text_field( strtolower( $params[ self::TO_PARAM ] ) ) ) : '',
       'subject' => $this->replace_placeholders_with_content( $params[ $subject_param ], $params ),
       'message' => $this->replace_placeholders_with_content( $params[ $message_param ], $params ),
       'headers' => $params[ self::ADDITIONAL_HEADERS_PARAM ] ?? '',
