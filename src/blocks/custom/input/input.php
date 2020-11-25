@@ -32,6 +32,9 @@ $value = Forms::maybe_override_value_from_query_string( $value, $name );
 $block_classes = Components::classnames([
   $block_class,
   "js-{$block_class}",
+  ! empty( $is_required ) ? "{$block_class}--is-required" : '',
+  ! empty( $is_disabled ) ? "{$block_class}--is-disabled" : '',
+  ! empty( $is_read_only ) ? "{$block_class}--is-read-only" : '',
 ]);
 
 $wrapper_classes = Components::classnames([
