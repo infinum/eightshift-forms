@@ -18,6 +18,7 @@ $classes         = $attributes['classes'] ?? '';
 $rows            = $attributes['rows'] ?? '';
 $cols            = $attributes['cols'] ?? '';
 $theme           = $attributes['theme'] ?? '';
+$is_required     = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 $is_disabled     = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_read_only    = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 $prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
@@ -25,6 +26,9 @@ $prevent_sending = isset( $attributes['preventSending'] ) && $attributes['preven
 $block_classes = Components::classnames([
   $block_class,
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+  ! empty( $is_required ) ? "{$block_class}--is-required" : '',
+  ! empty( $is_disabled ) ? "{$block_class}--is-disabled" : '',
+  ! empty( $is_read_only ) ? "{$block_class}--is-read-only" : '',
 ]);
 
 ?>
@@ -49,6 +53,7 @@ $block_classes = Components::classnames([
       value="<?php echo esc_attr( $value ); ?>"
       rows="<?php echo esc_attr( $rows ); ?>"
       cols="<?php echo esc_attr( $cols ); ?>"
+      <?php echo esc_attr( $is_required ); ?>
       <?php echo esc_attr( $is_disabled ); ?>
       <?php echo esc_attr( $is_read_only ); ?>
       <?php echo esc_attr( $prevent_sending ); ?>

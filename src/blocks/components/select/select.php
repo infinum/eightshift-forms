@@ -30,6 +30,7 @@ $component_classes = Components::classnames([
   "js-{$component_class}",
   ! empty( $theme ) ? "{$component_class}__theme--{$theme}" : '',
   $hide_loading ? "{$component_class}--has-loader is-loading" : '',
+  ! empty( $is_disabled ) ? "{$component_class}--is-disabled" : '',
   "{$block_class}__{$component_class}",
 ]);
 
