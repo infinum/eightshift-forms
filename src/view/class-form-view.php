@@ -62,6 +62,7 @@ class Form_View {
     $allowed_tags['textarea']['aria-labelledby']  = 1;
     $allowed_tags['textarea']['aria-describedby'] = 1;
     $allowed_tags['textarea']['disabled']         = 1;
+    $allowed_tags['textarea']['placeholder']      = 1;
     $allowed_tags['select']['required']           = 1;
     $allowed_tags['select']['data-do-not-send']   = 1;
     $allowed_tags['select']['aria-describedby']   = 1;
