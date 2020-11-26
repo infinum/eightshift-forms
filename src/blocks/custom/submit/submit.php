@@ -21,6 +21,7 @@ $is_disabled = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ?
 $block_classes = Components::classnames([
   $block_class,
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
+  ! empty( $is_disabled ) ? "{$block_class}--is-disabled" : '',
 ]);
 ?>
 

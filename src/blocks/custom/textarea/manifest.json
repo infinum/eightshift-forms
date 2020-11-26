@@ -45,6 +45,10 @@
     "cols": {
       "type": "string"
     },
+    "isRequired": {
+      "type": "bool",
+      "default": false
+    },
     "isDisabled": {
       "type": "bool",
       "default": false

@@ -33,11 +33,13 @@ class Response {
   const EMANDATE_ID_PARAM           = 'BRQ_SERVICE_EMANDATE_MANDATEID';
   const EMANDATE_REFERENCE_ID_PARAM = 'BRQ_SERVICE_EMANDATE_REFERENCE';
   const EMANDATE_BANK_ID_PARAM      = 'BRQ_SERVICE_EMANDATE_BANKID';
+  const EMANDATE_IBAN_PARAM         = 'BRQ_SERVICE_EMANDATE_IBAN';
   const IDEAL_BANK_NAME_PARAM       = 'BRQ_SERVICE_IDEAL_CONSUMERISSUER';
   const IDEAL_BANK_ID_PARAM         = 'BRQ_SERVICE_IDEAL_CONSUMERBIC';
   const IDEAL_PAYMENT_AMOUNT_PARAM  = 'BRQ_AMOUNT';
   const IDEAL_PAYMENT_ID_PARAM      = 'BRQ_PAYMENT';
   const IDEAL_INVOICE_NUMBER_PARAM  = 'BRQ_INVOICENUMBER';
+  const IDEAL_IBAN_PARAM            = 'BRQ_SERVICE_IDEAL_CONSUMERIBAN';
   const MOCK_PAY_BY_EMAIL_PARAM     = 'BRQ_MOCK_SERVICE';
 
   /**
@@ -67,6 +69,13 @@ class Response {
    * @var string
    */
   private $bank_id;
+
+  /**
+   * Payer's IBAN.
+   *
+   * @var string
+   */
+  private $iban;
 
   /**
    * Payer's bank name.
@@ -143,10 +152,12 @@ class Response {
       $this->ideal_payment_amount = $buckaroo_params[ self::IDEAL_PAYMENT_AMOUNT_PARAM ] ?? '';
       $this->ideal_payment_id     = $buckaroo_params[ self::IDEAL_PAYMENT_ID_PARAM ] ?? '';
       $this->ideal_invoice_number = $buckaroo_params[ self::IDEAL_INVOICE_NUMBER_PARAM ] ?? '';
+      $this->iban                  = $buckaroo_params[ self::IDEAL_IBAN_PARAM ] ?? '';
     } elseif ( $this->is_emandate() ) {
       $this->bank_id               = $buckaroo_params[ self::EMANDATE_BANK_ID_PARAM ] ?? '';
       $this->emandate_id           = $buckaroo_params[ self::EMANDATE_ID_PARAM ] ?? '';
       $this->emandate_reference_id = $buckaroo_params[ self::EMANDATE_REFERENCE_ID_PARAM ] ?? '';
+      $this->iban                  = $buckaroo_params[ self::EMANDATE_IBAN_PARAM ] ?? '';
     }
 
     $this->test = isset( $buckaroo_params[ self::TEST_PARAM ] ) ? filter_var( $buckaroo_params[ self::TEST_PARAM ], FILTER_VALIDATE_BOOL ) : false;
@@ -197,6 +208,15 @@ class Response {
    */
   public function is_cancel(): bool {
     return $this->status === self::STATUS_CODE_CANCELLED;
+  }
+
+  /**
+   * Get payer's IBAN.
+   *
+   * @return  string
+   */
+  public function get_iban() {
+    return $this->iban;
   }
 
   /**

@@ -39,14 +39,25 @@ export class Form {
     this.siteUrl = window.eightshiftForms.siteUrl;
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
 
-    this.restRouteUrls = {
-      buckarooIdealRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`,
-      buckarooEmandateRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`,
-      buckarooPayByEmailRestUri: `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.payByEmail}`,
-      mailchimpRestUri: `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`,
-      dynamicsCrmRestUri: `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`,
-      sendEmailRestUri: `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`,
-    };
+    this.restRouteUrls = {};
+
+    if (window.eightshiftForms.mailchimp) {
+      this.restRouteUrls.mailchimpRestUri = `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`;
+    }
+
+    if (window.eightshiftForms.dynamicsCrm) {
+      this.restRouteUrls.dynamicsCrmRestUri = `${this.siteUrl}${window.eightshiftForms.dynamicsCrm.restUri}`;
+    }
+
+    if (window.eightshiftForms.sendEmail) {
+      this.restRouteUrls.sendEmailRestUri = `${this.siteUrl}${window.eightshiftForms.sendEmail.restUri}`;
+    }
+
+    if (window.eightshiftForms.buckaroo) {
+      this.restRouteUrls.buckarooIdealRestUri = `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.ideal}`;
+      this.restRouteUrls.buckarooEmandateRestUri = `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.emandate}`;
+      this.restRouteUrls.buckarooPayByEmailRestUri = `${this.siteUrl}${window.eightshiftForms.buckaroo.restUri.payByEmail}`;
+    }
 
     this.formAccessibilityStatus = {
       loading: window.eightshiftForms.content.formLoading,

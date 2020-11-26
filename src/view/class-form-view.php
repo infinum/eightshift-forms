@@ -56,20 +56,26 @@ class Form_View {
     $allowed_tags['input']['maxlength']           = 1;
     $allowed_tags['input']['aria-labelledby']     = 1;
     $allowed_tags['input']['aria-describedby']    = 1;
+    $allowed_tags['input']['disabled']            = 1;
     $allowed_tags['textarea']['required']         = 1;
     $allowed_tags['textarea']['data-do-not-send'] = 1;
     $allowed_tags['textarea']['aria-labelledby']  = 1;
     $allowed_tags['textarea']['aria-describedby'] = 1;
+    $allowed_tags['textarea']['disabled']         = 1;
+    $allowed_tags['textarea']['placeholder']      = 1;
     $allowed_tags['select']['required']           = 1;
     $allowed_tags['select']['data-do-not-send']   = 1;
     $allowed_tags['select']['aria-describedby']   = 1;
     $allowed_tags['select']['aria-labelledby']    = 1;
+    $allowed_tags['select']['disabled']           = 1;
     $allowed_tags['button']['aria-label']         = 1;
     $allowed_tags['button']['role']               = 1;
     $allowed_tags['button']['aria-describedby']   = 1;
     $allowed_tags['button']['aria-labelledby']    = 1;
+    $allowed_tags['button']['disabled']           = 1;
     $allowed_tags['radio']['aria-describedby']    = 1;
     $allowed_tags['radio']['aria-labelledby']     = 1;
+    $allowed_tags['radio']['disabled']            = 1;
 
     return $allowed_tags;
   }

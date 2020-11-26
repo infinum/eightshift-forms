@@ -1,5 +1,5 @@
 import { Fragment } from '@wordpress/element';
-import { InspectorControls } from '@wordpress/editor';
+import { InspectorControls } from '@wordpress/block-editor';
 
 import { getActions } from '@eightshift/frontend-libs/scripts/editor';
 import manifest from './manifest.json';
