@@ -83,17 +83,17 @@ class Mailchimp_Route extends Base_Route implements Filters {
     }
 
     $list_id            = $params[ self::LIST_ID_PARAM ] ?? '';
-    $email              = $params[ self::EMAIL_PARAM ] ?? '';
+    $email              = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
     $tags               = $params[ self::TAGS_PARAM ] ?? [];
     $merge_field_params = $this->unset_irrelevant_params( $params );
     $response           = [];
 
-    // Make sure we have the list ID
+    // Make sure we have the list ID.
     if ( empty( $list_id ) ) {
       return $this->rest_response_handler( 'mailchimp-missing-list-id' );
     }
 
-    // Make sure we have an email
+    // Make sure we have an email.
     if ( empty( $email ) ) {
       return $this->rest_response_handler( 'mailchimp-missing-email' );
     }
