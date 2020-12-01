@@ -23,10 +23,9 @@ export const FormsEditor = (props) => {
         />
       }
       {isFormSelected &&
-        <ServerSideRender
-          block={blockFullName}
-          attributes={attributes}
-          urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
+        <Placeholder
+          icon="saved"
+          label={__('Form will be rendered here.', 'eightshift-forms')}
         />
       }
     </Fragment>
