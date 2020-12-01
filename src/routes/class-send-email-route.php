@@ -79,8 +79,8 @@ class Send_Email_Route extends Base_Route {
 
     // If we need to send copy to sender.
     if ( $this->should_send_email_copy_to_user( $params ) ) {
-      $email_confirmation_info            = $this->build_email_info_from_params( $params, true );
-      $response_confirmation              = wp_mail( $params[ self::EMAIL_PARAM ], $email_confirmation_info['subject'], $email_confirmation_info['message'] );
+      $email_confirmation_info = $this->build_email_info_from_params( $params, true );
+      $response_confirmation   = wp_mail( $params[ self::EMAIL_PARAM ], $email_confirmation_info['subject'], $email_confirmation_info['message'] );
     }
 
     if (

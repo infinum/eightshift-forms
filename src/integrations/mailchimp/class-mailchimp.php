@@ -183,7 +183,7 @@ class Mailchimp {
       throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, 'server' );
     }
 
-    if (empty($this->client)) {
+    if ( empty( $this->client ) ) {
       $this->mailchimp_marketing_client->set_config();
       $this->client = $this->mailchimp_marketing_client->get_client();
     }

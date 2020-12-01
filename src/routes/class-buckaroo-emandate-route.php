@@ -44,7 +44,7 @@ class Buckaroo_Emandate_Route extends Base_Buckaroo_Route {
   const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'is-recurring';
 
   const SEQUENCE_TYPE_RECURRING_VALUE = '0';
-  const SEQUENCE_TYPE_ONE_TIME_VALUE = '1';
+  const SEQUENCE_TYPE_ONE_TIME_VALUE  = '1';
 
   /**
    * Method that returns rest response
