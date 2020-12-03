@@ -217,7 +217,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function urlencode_params( array $params ): array {
     return array_map( function( $param ) {
-      return is_string( $param ) ? urlencode( $param ) : $param;
+      return is_string( $param ) ? rawurlencode( $param ) : $param;
     }, $params);
   }
 

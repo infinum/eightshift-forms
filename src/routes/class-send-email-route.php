@@ -65,7 +65,7 @@ class Send_Email_Route extends Base_Route {
       return rest_ensure_response( $e->get_data() );
     }
 
-    // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct
+    // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
     if (
       $this->should_send_email_copy_to_user( $params ) &&
       ! $this->is_email_set_and_valid( $params )
@@ -109,10 +109,22 @@ class Send_Email_Route extends Base_Route {
     return $headers;
   }
 
+  /**
+   * Check if we received a parameter to send an email confirmation to user.
+   *
+   * @param  array $params Query parameters sent to route.
+   * @return bool
+   */
   protected function should_send_email_copy_to_user( array $params ): bool {
     return isset( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ] ) && filter_var( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ], FILTER_VALIDATE_BOOL );
   }
 
+  /**
+   * Check if email param is set and valid.
+   *
+   * @param  array $params Query parameters sent to route.
+   * @return boolean
+   */
   protected function is_email_set_and_valid( array $params ): bool {
     return isset( $params[ self::EMAIL_PARAM ] ) && filter_var( $params[ self::EMAIL_PARAM ], FILTER_VALIDATE_EMAIL );
   }

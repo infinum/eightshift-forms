@@ -458,7 +458,6 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
-   * @param  string $maxamount       This is the maximum amount per SEPA Direct Debit. Debtor can change this value during the authorization process. The (altered) value will be communicated in the push message to the Merchant. This parameter is for B2B only and required if that's the case.
    * @return array
    */
   private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {

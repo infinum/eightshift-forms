@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Mailchimp marketing client implementation
  *

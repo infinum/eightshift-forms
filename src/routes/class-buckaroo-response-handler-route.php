@@ -179,16 +179,16 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions, Fil
       // Get the correct redirect URL (expects them to be urlencoded).
       switch ( $buckaroo_response->get_status() ) {
         case $buckaroo_response::STATUS_CODE_SUCCESS:
-          $redirect_url = isset( $params[ self::REDIRECT_URL_PARAM ] ) ? urldecode( $params[ self::REDIRECT_URL_PARAM ] ) : '';
+          $redirect_url = isset( $params[ self::REDIRECT_URL_PARAM ] ) ? rawurldecode( $params[ self::REDIRECT_URL_PARAM ] ) : '';
               break;
         case $buckaroo_response::STATUS_CODE_ERROR:
-          $redirect_url = isset( $params[ self::REDIRECT_URL_ERROR_PARAM ] ) ? urldecode( $params[ self::REDIRECT_URL_ERROR_PARAM ] ) : '';
+          $redirect_url = isset( $params[ self::REDIRECT_URL_ERROR_PARAM ] ) ? rawurldecode( $params[ self::REDIRECT_URL_ERROR_PARAM ] ) : '';
               break;
         case $buckaroo_response::STATUS_CODE_CANCELLED:
-          $redirect_url = isset( $params[ self::REDIRECT_URL_CANCEL_PARAM ] ) ? urldecode( $params[ self::REDIRECT_URL_CANCEL_PARAM ] ) : '';
+          $redirect_url = isset( $params[ self::REDIRECT_URL_CANCEL_PARAM ] ) ? rawurldecode( $params[ self::REDIRECT_URL_CANCEL_PARAM ] ) : '';
               break;
         case $buckaroo_response::STATUS_CODE_REJECT:
-          $redirect_url = isset( $params[ self::REDIRECT_URL_REJECT_PARAM ] ) ? urldecode( $params[ self::REDIRECT_URL_REJECT_PARAM ] ) : '';
+          $redirect_url = isset( $params[ self::REDIRECT_URL_REJECT_PARAM ] ) ? rawurldecode( $params[ self::REDIRECT_URL_REJECT_PARAM ] ) : '';
               break;
       }
     } catch ( Invalid_Buckaroo_Response_Exception $e ) {

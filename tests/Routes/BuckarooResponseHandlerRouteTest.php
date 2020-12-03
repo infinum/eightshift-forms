@@ -132,7 +132,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => 'http://someurl.com',
-      $this->route_endpoint::STATUS_PARAM => urlencode('success'),
+      $this->route_endpoint::STATUS_PARAM => rawurlencode('success'),
     ];
     $request->params['POST'] = DataProvider::idealSuccessResponseMock();
     $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
@@ -321,7 +321,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 
   private function urlencode_params( array $params ): array {
     return array_map( function( $param ) {
-      return is_string( $param ) ? urlencode( $param ) : $param;
+      return is_string( $param ) ? rawurlencode( $param ) : $param;
     }, $params);
   }
 
