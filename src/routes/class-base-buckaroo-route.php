@@ -72,6 +72,41 @@ abstract class Base_Buckaroo_Route extends Base_Route implements Filters {
   const REDIRECT_URL_REJECT_PARAM = 'redirect-url-reject';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Buckaroo integration obj.
+   *
+   * @var Buckaroo
+   */
+  protected $buckaroo;
+
+  /**
+   * Buckaroo Response Handler Route obj.
+   *
+   * @var Buckaroo_Response_Handler_Route
+   */
+  protected $buckaroo_response_handler_route;
+
+  /**
+   * Implementation of the Authorization obj.
+   *
+   * @var Authorization_Interface
+   */
+  protected $hmac;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object
    *
    * @param Config_Data                     $config                          Config data obj.

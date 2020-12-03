@@ -23,7 +23,25 @@ use Eightshift_Forms\Integrations\Authorization\HMAC;
  */
 abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
 
+  /**
+   * Endpoint slug for the implementing class. Needs to be overriden.
+   *
+   * @var string
+   */
+  const ENDPOINT_SLUG = 'override-me';
+
+  /**
+   * Key for the missing keys response. Used if route has required keys but not all are sent.
+   *
+   * @var string
+   */
   const MISSING_KEYS   = 'missing-keys';
+
+  /**
+   * Missing filter key. Used if route has required filter which wasn't implemented in your project.
+   *
+   * @var string
+   */
   const MISSING_FILTER = 'missing-filter';
 
   /**

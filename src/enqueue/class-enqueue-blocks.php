@@ -18,6 +18,20 @@ use Eightshift_Libs\Enqueue\Enqueue_Blocks as Lib_Enqueue_Blocks;
 class Enqueue_Blocks extends Lib_Enqueue_Blocks {
 
   /**
+   * Manifest obj.
+   *
+   * @var Manifest_Data
+   */
+  protected $manifest;
+
+  /**
+   * Object which holds all variables that need to be passed to the editor.
+   *
+   * @var Localization_Constants
+   */
+  private $localization_constants;
+
+  /**
    * Create a new admin instance.
    *
    * @param Manifest_Data          $manifest               Inject manifest which holds data about assets from manifest.json.

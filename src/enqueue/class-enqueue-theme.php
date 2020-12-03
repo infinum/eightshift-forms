@@ -19,6 +19,20 @@ use Eightshift_Libs\Manifest\Manifest_Data;
 class Enqueue_Theme extends Lib_Enqueue_Theme {
 
   /**
+   * Manifest obj.
+   *
+   * @var Manifest_Data
+   */
+  protected $manifest;
+
+  /**
+   * Object which holds all variables that need to be passed to the editor.
+   *
+   * @var Localization_Constants
+   */
+  private $localization_constants;
+
+  /**
    * Create a new admin instance.
    *
    * @param Manifest_Data          $manifest               Inject manifest which holds data about assets from manifest.json.

@@ -38,6 +38,13 @@ class Send_Email_Route extends Base_Route {
   const EMAIL_PARAM                       = 'email';
 
   /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object.
    *
    * @param Config_Data   $config        Config data obj.

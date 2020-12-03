@@ -17,6 +17,13 @@ use GuzzleHttp\ClientInterface;
 class Guzzle_Client implements Http_Client {
 
   /**
+   * Guzzle client object usd for making requests.
+   *
+   * @var ClientInterface.
+   */
+  protected $client;
+
+  /**
    * Constructs object.
    *
    * @param ClientInterface $client DI injected Guzzle client.

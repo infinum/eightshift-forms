@@ -19,7 +19,68 @@ use Eightshift_Libs\Rest\Callable_Route;
  */
 class Localization_Constants implements Filters {
 
+  /**
+   * Key under which all localizations are held. window.${LOCALIZATION_KEY}
+   *
+   * @var string
+   */
   const LOCALIZATION_KEY = 'eightshiftForms';
+
+  /**
+   * Dynamics CRM 365 route obj.
+   *
+   * @var Manifest_Data
+   */
+  private $manifest;
+
+  /**
+   * Some variable.
+   *
+   * @var Callable_Route
+   */
+  private $dynamics_crm_route;
+
+  /**
+   * Buckaroo iDEAL route obj.
+   *
+   * @var Callable_Route
+   */
+  private $buckaroo_ideal_route;
+
+  /**
+   * Buckaroo Emandate route obj.
+   *
+   * @var Callable_Route
+   */
+  private $buckaroo_emandate_route;
+
+  /**
+   * Buckaroo Pay By Email route obj.
+   *
+   * @var Callable_Route
+   */
+  private $buckaroo_pay_by_email_route;
+
+  /**
+   * Send email route object.
+   *
+   * @var Callable_Route
+   */
+  private $send_email_route;
+
+  /**
+   * Mailchimp route object.
+   *
+   * @var Callable_Route
+   */
+  private $mailchimp_route;
+
+  /**
+   * Mailchimp client implementation.
+   *
+   * @var Mailchimp
+   */
+  private $mailchimp;
 
   /**
    * Create a new admin instance.

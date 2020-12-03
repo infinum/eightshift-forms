@@ -53,6 +53,27 @@ class Mailchimp_Route extends Base_Route implements Filters {
   const TAGS_PARAM = 'tags';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Mailchimp object.
+   *
+   * @var Mailchimp
+   */
+  protected $mailchimp;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object
    *
    * @param Config_Data   $config        Config data obj.

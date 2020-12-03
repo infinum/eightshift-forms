@@ -82,9 +82,16 @@ class Buckaroo implements Filters {
   protected $is_data_request = false;
 
   /**
+   * HTTP client implementation obj which uses Guzzle.
+   *
+   * @var Http_Client.
+   */
+  private $guzzle_client;
+
+  /**
    * Constructs object
    *
-   * @param Http_Client $guzzle_client OAuth2 client implementation.
+   * @param Http_Client $guzzle_client HTTP client implementation.
    */
   public function __construct( Http_Client $guzzle_client ) {
     $this->guzzle_client = $guzzle_client;

@@ -43,6 +43,34 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
   const ENDPOINT_SLUG = '/dynamics-crm-fetch-entity';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Dynamics CRM object.
+   *
+   * @var Dynamics_CRM
+   */
+  protected $dynamics_crm;
+
+  /**
+   * Implementation of the Authorization obj.
+   *
+   * @var Authorization_Interface
+   */
+  protected $hmac;
+
+  /**
+   * Cache implementation obj.
+   *
+   * @var Cache
+   */
+  protected $cache;
+
+  /**
    * Construct object
    *
    * @param Config_Data             $config          Config data obj.

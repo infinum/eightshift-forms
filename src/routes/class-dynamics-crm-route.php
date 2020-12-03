@@ -33,6 +33,27 @@ class Dynamics_Crm_Route extends Base_Route implements Filters {
   const ENDPOINT_SLUG = '/dynamics-crm';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Dynamics CRM object.
+   *
+   * @var Dynamics_CRM
+   */
+  protected $dynamics_crm;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object
    *
    * @param Config_Data   $config       Config data obj.

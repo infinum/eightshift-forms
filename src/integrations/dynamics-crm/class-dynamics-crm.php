@@ -29,6 +29,13 @@ class Dynamics_CRM {
   private $oauth2_client;
 
   /**
+   * Odata service url.
+   *
+   * @var string
+   */
+  private $odata_service_url;
+
+  /**
    * Constructs object
    *
    * @param OAuth2_Client_Interface $oauth2_client OAuth2 client implementation.

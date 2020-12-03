@@ -24,6 +24,13 @@ class Mailchimp {
   private $client;
 
   /**
+   * Our own implementation of Mailchimp Marketing Client.
+   *
+   * @var Mailchimp_Marketing_Client_Interface
+   */
+  private $mailchimp_marketing_client;
+
+  /**
    * Constructs object
    *
    * @param Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client Mailchimp marketing client.

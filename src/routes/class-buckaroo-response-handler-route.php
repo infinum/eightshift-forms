@@ -111,6 +111,27 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions, Fil
   const BUCKAROO_RESPONSE_CODE_PARAM = 'BRQ_STATUSCODE';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Buckaroo integration obj.
+   *
+   * @var Buckaroo
+   */
+  protected $buckaroo;
+
+  /**
+   * Implementation of the Authorization obj.
+   *
+   * @var Authorization_Interface
+   */
+  protected $hmac;
+
+  /**
    * Construct object
    *
    * @param Config_Data             $config   Config data obj.
