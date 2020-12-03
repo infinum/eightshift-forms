@@ -10,9 +10,16 @@ namespace Eightshift_Boilerplate\Blocks;
 use Eightshift_Libs\Helpers\Components;
 
 // Used to add or remove wrapper.
-$wrapper_use        = $attributes['wrapperUse'] ?? true;
-$wrapper_use_simple = $attributes['wrapperUseSimple'] ?? false;
-$wrapper_disable    = $attributes['wrapperDisable'] ?? false;
+$attributes          = ! empty( $attributes ) ? $attributes : [];
+$inner_block_content = ! empty( $inner_block_content ) ? $inner_block_content : '';
+$template_path       = ! empty( $template_path ) ? $template_path : '';
+$wrapper_use         = $attributes['wrapperUse'] ?? true;
+$wrapper_use_simple  = $attributes['wrapperUseSimple'] ?? false;
+$wrapper_disable     = $attributes['wrapperDisable'] ?? false;
+
+if ( empty( $this ) ) {
+  return;
+}
 
 if ( ! $wrapper_use || $wrapper_disable ) {
   $this->render_wrapper_view(

@@ -93,7 +93,7 @@ class Dynamics_CRM {
       // just throw because we don't know how to handle it.
       if ( $e->getCode() === 401 ) {
         $odata_client = $this->build_odata_client( $this->get_token( true ) );
-        $odata_client->from( $entity )->get( $data );
+        $response     = $odata_client->from( $entity )->get( $data );
       } else {
         throw $e;
       }

@@ -92,7 +92,7 @@ class Send_Email_Route extends Base_Route {
 
     if (
       ! $response ||
-      ( $this->should_send_email_copy_to_user( $params ) && ! $response_confirmation )
+      ( $this->should_send_email_copy_to_user( $params ) && empty( $response_confirmation ) )
     ) {
       return $this->rest_response_handler( 'send-email-error' );
     }

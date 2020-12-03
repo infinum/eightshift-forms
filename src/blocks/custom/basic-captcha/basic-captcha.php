@@ -22,6 +22,10 @@ $block_classes = Components::classnames([
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
 
+if ( empty( $this ) ) {
+  return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">

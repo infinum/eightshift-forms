@@ -31,6 +31,10 @@ $block_classes = Components::classnames([
   ! empty( $is_read_only ) ? "{$block_class}--is-read-only" : '',
 ]);
 
+if ( empty( $this ) ) {
+  return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
