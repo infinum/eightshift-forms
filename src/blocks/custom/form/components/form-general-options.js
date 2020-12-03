@@ -64,6 +64,8 @@ const TypeCheckbox = (props) => {
         }
 
         setChecked(isNowChecked);
+
+        return true;
       }}
     />
   );

@@ -1,15 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { Placeholder } from '@wordpress/components';
-import ServerSideRender from '@wordpress/server-side-render';
 
 export const FormsEditor = (props) => {
   const {
     attributes: {
-      blockFullName,
       selectedFormId,
     },
-    attributes,
   } = props;
 
   const isFormSelected = selectedFormId && selectedFormId !== '0';
