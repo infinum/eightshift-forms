@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Integrations\Mailchimp;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use \MailchimpMarketing\ApiClient;
 /**
  * Mailchimp integration class.
  */
@@ -173,7 +174,7 @@ class Mailchimp {
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws Missing_Filter_Info_Exception When not all required keys are set.
    *
    * @return void
    */

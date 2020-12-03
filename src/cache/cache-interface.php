@@ -19,15 +19,16 @@ interface Cache {
    *
    * @param  string $cache_key Where to save the data.
    * @param  string $data      Data to save in cache, preferably json_encoded.
+   * @param  int    $expiration (Optional) Cache expiration time.
    * @return bool
    */
-  public function save( string $cache_key, string $data ): bool;
+  public function save( string $cache_key, string $data, int $expiration = 3600 ): bool;
 
   /**
    * Returns specific cache.
    *
    * @param  string $cache_key Which cache to read.
-   * @return bool
+   * @return string
    */
   public function get( string $cache_key ): string;
 

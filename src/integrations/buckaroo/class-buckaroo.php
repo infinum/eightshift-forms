@@ -527,7 +527,7 @@ class Buckaroo implements Filters {
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws Missing_Filter_Info_Exception When not all required keys are set.
    *
    * @return void
    */

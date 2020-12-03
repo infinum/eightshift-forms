@@ -149,7 +149,7 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
   /**
    * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
    *
-   * @return array
+   * @return bool
    */
   public function permission_callback(): bool {
     return true;

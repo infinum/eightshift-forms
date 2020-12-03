@@ -40,7 +40,7 @@ class Guzzle_Client implements Http_Client {
    * @return mixed
    */
   public function get( string $url, array $parameters = array() ) {
-    return $this->client->get( $url, $parameters );
+    return $this->client->request( 'GET', $url, $parameters );
   }
 
   /**
@@ -51,7 +51,7 @@ class Guzzle_Client implements Http_Client {
    * @return mixed
    */
   public function post( string $url, array $parameters = array() ) {
-    return $this->client->post( $url, $parameters );
+    return $this->client->request( 'POST', $url, $parameters );
   }
 
   /**
@@ -62,6 +62,6 @@ class Guzzle_Client implements Http_Client {
    * @return mixed
    */
   public function patch( string $url, array $parameters = array() ) {
-    return $this->client->patch( $url, $parameters );
+    return $this->client->request( 'PATCH', $url, $parameters );
   }
 }

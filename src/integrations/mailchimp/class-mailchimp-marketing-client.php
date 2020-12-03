@@ -20,7 +20,7 @@ class Mailchimp_Marketing_Client implements Mailchimp_Marketing_Client_Interface
   /**
    * Mailchimp API's Marketing client object.
    *
-   * @var ApiClient
+   * @var MarketingApiClient
    */
   protected $client;
 

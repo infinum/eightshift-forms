@@ -45,7 +45,7 @@ class HMAC implements Service, Authorization_Interface, Filters {
    * @param  string $hash   Hash we're verifying.
    * @param  array  $params Request params we're verifying.
    * @param  string $salt   Salt used to generate the hash.
-   * @return string
+   * @return bool
    */
   public function verify_hash( string $hash, array $params, string $salt ): bool {
     return $hash === $this->generate_hash( $params, $salt );

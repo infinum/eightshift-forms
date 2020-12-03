@@ -20,4 +20,11 @@ interface Mailchimp_Marketing_Client_Interface {
    * @return object
    */
   public function get_client();
+
+  /**
+   * Sets the config because we can't set config during construction (filters aren't yet registered)
+   *
+   * @return void
+   */
+  public function set_config();
 }
