@@ -78,7 +78,6 @@ class Localization_Constants implements Filters {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data  $manifest                    Inject manifest which holds data about assets from manifest.json.
    * @param Callable_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
    * @param Callable_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
    * @param Callable_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
