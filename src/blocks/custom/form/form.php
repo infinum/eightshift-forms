@@ -119,7 +119,7 @@ if ( empty( $this ) ) {
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo esc_attr( $email_send_confirm_to_sender ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo (int) $email_send_confirm_to_sender; ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_message ); ?>" />
     <?php } ?>

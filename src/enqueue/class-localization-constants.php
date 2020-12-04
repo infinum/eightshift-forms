@@ -27,13 +27,6 @@ class Localization_Constants implements Filters {
   const LOCALIZATION_KEY = 'eightshiftForms';
 
   /**
-   * Dynamics CRM 365 route obj.
-   *
-   * @var Manifest_Data
-   */
-  private $manifest;
-
-  /**
    * Some variable.
    *
    * @var Callable_Route
@@ -95,7 +88,6 @@ class Localization_Constants implements Filters {
    * @param Mailchimp      $mailchimp                   Mailchimp implementation.
    */
   public function __construct(
-    Manifest_Data $manifest,
     Callable_Route $dynamics_crm_route,
     Callable_Route $buckaroo_ideal_route,
     Callable_Route $buckaroo_emandate_route,
@@ -104,7 +96,6 @@ class Localization_Constants implements Filters {
     Callable_Route $mailchimp_route,
     Mailchimp $mailchimp
   ) {
-    $this->manifest                    = $manifest;
     $this->dynamics_crm_route          = $dynamics_crm_route;
     $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
     $this->buckaroo_emandate_route     = $buckaroo_emandate_route;

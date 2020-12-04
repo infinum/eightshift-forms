@@ -151,7 +151,6 @@ class Main extends Lib_Core {
 
       // Enqueue.
       Localization_Constants::class => array(
-        Lib_Manifest\Manifest::class,
         Rest\Dynamics_Crm_Route::class,
         Rest\Buckaroo_Ideal_Route::class,
         Rest\Buckaroo_Emandate_Route::class,
