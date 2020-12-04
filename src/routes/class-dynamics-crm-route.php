@@ -102,7 +102,8 @@ class Dynamics_Crm_Route extends Base_Route implements Filters {
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params );
     } catch ( ClientException $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+      $error = ! empty( $e->getResponse() ) ? $e->getResponse()->getBody()->getContents() : esc_html__( 'Unknown error', 'eightshift-forms' );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $error ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }

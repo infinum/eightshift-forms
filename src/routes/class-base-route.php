@@ -104,7 +104,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return string Route version as a string.
    */
   protected function get_version() : string {
-    return $this->config->get_project_routes_version();
+    return 'v1';
   }
 
   /**
@@ -247,7 +247,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @param  array  $params   Array of params which should hold content for placeholders.
    * @return string
    */
-  protected function replace_placeholders_with_content( string $haystack, array $params ) {
+  protected function replace_placeholders_with_content( string $haystack, array $params ): string {
     $content = $haystack;
 
     $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
@@ -259,7 +259,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       return $output;
     }, $haystack);
 
-    return $content;
+    return (string) $content;
   }
 
   /**

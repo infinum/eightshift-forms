@@ -133,7 +133,8 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
       $response = $this->dynamics_crm->fetch_all_from_entity( $entity, $params );
       $this->cache->save( $cache_key, (string) wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
     } catch ( ClientException $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+      $error = ! empty( $e->getResponse() ) ? $e->getResponse()->getBody()->getContents() : esc_html__( 'Unknown error', 'eightshift-forms' );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $error ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
