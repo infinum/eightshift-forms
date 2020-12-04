@@ -106,11 +106,11 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  Description of the emandate.
-   * @return bool
+   * @return array
    *
    * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
    */
-  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ) {
+  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
     $response             = [];
     $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
@@ -146,11 +146,11 @@ class Buckaroo implements Filters {
    * @param  string           $issuer          Issuer (bank) name.
    * @param  bool             $is_recurring    Is recurring payment.
    * @param  string           $description     Description of the payment.
-   * @return bool
+   * @return array
    *
    * @throws Buckaroo_Request_Exception When something is wrong with JSON we get from Buckaroo.
    */
-  public function send_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ) {
+  public function send_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ): array {
     $response             = [];
     $post_array           = $this->build_post_body_for_payment( $donation_amount, $invoice, $issuer, $is_recurring, $description );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
