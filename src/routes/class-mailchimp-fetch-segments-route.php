@@ -133,6 +133,11 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
       'tags' => [],
       'segments' => [],
     ];
+
+    if ( ! isset( $response->segments ) ) {
+      return $tags_segments;
+    }
+
     foreach ( $response->segments as $segment ) {
       switch ( $segment->type ) {
         case 'static':

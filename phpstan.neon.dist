@@ -8,3 +8,10 @@ parameters:
     treatPhpDocTypesAsCertain: false
     paths:
         - src/
+    ignoreErrors:
+        -
+            message: '~^Access to an undefined property MailchimpMarketing\\ApiClient~'
+            path: src/integrations/mailchimp/class-mailchimp.php
+        -
+            message: '~^Function apply_filters invoked with [0-9] parameters~'
+            path: src/routes/class-buckaroo-response-handler-route.php
