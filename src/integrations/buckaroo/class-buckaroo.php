@@ -202,7 +202,7 @@ class Buckaroo implements Filters {
    */
   public function generate_debtor_reference( array $params ) {
     $prefix      = 'debtor';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -215,7 +215,7 @@ class Buckaroo implements Filters {
    */
   public function generate_invoice_name( array $params ) {
     $prefix      = 'invoice';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -228,7 +228,7 @@ class Buckaroo implements Filters {
    */
   public function generate_purchase_id( array $params ) {
     $prefix      = 'purchase-id';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -389,7 +389,7 @@ class Buckaroo implements Filters {
     $this->verify_buckaroo_info_exists();
     $website_key = \apply_filters( self::BUCKAROO, 'website_key' );
     $secret_key  = \apply_filters( self::BUCKAROO, 'secret_key' );
-    $post        = \wp_json_encode( $post_array );
+    $post        = (string) \wp_json_encode( $post_array );
     $md5         = md5( $post, true );
     $post        = base64_encode( $md5 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
     $uri         = strtolower( rawurlencode( $buckaroo_uri ) );

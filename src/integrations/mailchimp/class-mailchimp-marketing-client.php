@@ -46,7 +46,7 @@ class Mailchimp_Marketing_Client implements Mailchimp_Marketing_Client_Interface
   /**
    * Returns the build client
    *
-   * @return object
+   * @return MarketingApiClient
    */
   public function get_client() {
     return $this->client;

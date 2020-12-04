@@ -36,7 +36,7 @@ class HMAC implements Service, Authorization_Interface, Filters {
    * @return string
    */
   public function generate_hash( array $params, string $salt ): string {
-    return 'hmac ' . hash_hmac( 'sha512', \wp_json_encode( $params ), $salt );
+    return 'hmac ' . hash_hmac( 'sha512', (string) \wp_json_encode( $params ), $salt );
   }
 
   /**

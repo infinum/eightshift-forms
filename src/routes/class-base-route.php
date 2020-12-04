@@ -47,7 +47,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    */
   protected $config;
 

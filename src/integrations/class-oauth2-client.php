@@ -76,7 +76,7 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    */
   public function get_token( string $token_key, bool $should_fetch_new = false ): string {
     if ( ! $should_fetch_new ) {
-      $token = $this->get_token_from_cache( $token_key );
+      $token = (string) $this->get_token_from_cache( $token_key );
     }
 
     if ( $should_fetch_new || empty( $token ) ) {
