@@ -21,7 +21,7 @@ use Eightshift_Forms\Integrations\Authorization\HMAC;
 /**
  * Class Dynamics_Crm_Route
  */
-abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
+abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Active_Route {
 
   /**
    * Endpoint slug for the implementing class. Needs to be overriden.
@@ -35,7 +35,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    *
    * @var string
    */
-  const MISSING_KEYS   = 'missing-keys';
+  const MISSING_KEYS = 'missing-keys';
 
   /**
    * Missing filter key. Used if route has required filter which wasn't implemented in your project.
