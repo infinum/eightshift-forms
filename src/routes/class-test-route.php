@@ -47,6 +47,27 @@ class Test_Route extends Base_Route implements Filters {
   const IRRELEVANT_PARAM     = 'irrelevant-param';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Implementation of the Authorization obj.
+   *
+   * @var Authorization_Interface
+   */
+  protected $hmac;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object
    *
    * @param Config_Data             $config        Config data obj.

@@ -38,6 +38,13 @@ class Send_Email_Route extends Base_Route {
   const EMAIL_PARAM                       = 'email';
 
   /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object.
    *
    * @param Config_Data   $config        Config data obj.
@@ -65,7 +72,7 @@ class Send_Email_Route extends Base_Route {
       return rest_ensure_response( $e->get_data() );
     }
 
-    // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct
+    // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
     if (
       $this->should_send_email_copy_to_user( $params ) &&
       ! $this->is_email_set_and_valid( $params )
@@ -79,13 +86,13 @@ class Send_Email_Route extends Base_Route {
 
     // If we need to send copy to sender.
     if ( $this->should_send_email_copy_to_user( $params ) ) {
-      $email_confirmation_info            = $this->build_email_info_from_params( $params, true );
-      $response_confirmation              = wp_mail( $params[ self::EMAIL_PARAM ], $email_confirmation_info['subject'], $email_confirmation_info['message'] );
+      $email_confirmation_info = $this->build_email_info_from_params( $params, true );
+      $response_confirmation   = wp_mail( $params[ self::EMAIL_PARAM ], $email_confirmation_info['subject'], $email_confirmation_info['message'] );
     }
 
     if (
       ! $response ||
-      ( $this->should_send_email_copy_to_user( $params ) && ! $response_confirmation )
+      ( $this->should_send_email_copy_to_user( $params ) && empty( $response_confirmation ) )
     ) {
       return $this->rest_response_handler( 'send-email-error' );
     }
@@ -109,10 +116,22 @@ class Send_Email_Route extends Base_Route {
     return $headers;
   }
 
+  /**
+   * Check if we received a parameter to send an email confirmation to user.
+   *
+   * @param  array $params Query parameters sent to route.
+   * @return bool
+   */
   protected function should_send_email_copy_to_user( array $params ): bool {
     return isset( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ] ) && filter_var( $params[ self::SEND_CONFIRMATION_TO_SENDER_PARAM ], FILTER_VALIDATE_BOOL );
   }
 
+  /**
+   * Check if email param is set and valid.
+   *
+   * @param  array $params Query parameters sent to route.
+   * @return boolean
+   */
   protected function is_email_set_and_valid( array $params ): bool {
     return isset( $params[ self::EMAIL_PARAM ] ) && filter_var( $params[ self::EMAIL_PARAM ], FILTER_VALIDATE_EMAIL );
   }

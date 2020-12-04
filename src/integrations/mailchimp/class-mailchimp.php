@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Integrations\Mailchimp;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use \MailchimpMarketing\ApiClient;
 /**
  * Mailchimp integration class.
  */
@@ -22,6 +23,13 @@ class Mailchimp {
    * @var ApiClient
    */
   private $client;
+
+  /**
+   * Our own implementation of Mailchimp Marketing Client.
+   *
+   * @var Mailchimp_Marketing_Client_Interface
+   */
+  private $mailchimp_marketing_client;
 
   /**
    * Constructs object
@@ -166,7 +174,7 @@ class Mailchimp {
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws Missing_Filter_Info_Exception When not all required keys are set.
    *
    * @return void
    */
@@ -183,7 +191,7 @@ class Mailchimp {
       throw Missing_Filter_Info_Exception::view_exception( Filters::MAILCHIMP, 'server' );
     }
 
-    if (empty($this->client)) {
+    if ( empty( $this->client ) ) {
       $this->mailchimp_marketing_client->set_config();
       $this->client = $this->mailchimp_marketing_client->get_client();
     }

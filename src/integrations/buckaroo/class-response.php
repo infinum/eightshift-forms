@@ -152,7 +152,7 @@ class Response {
       $this->ideal_payment_amount = $buckaroo_params[ self::IDEAL_PAYMENT_AMOUNT_PARAM ] ?? '';
       $this->ideal_payment_id     = $buckaroo_params[ self::IDEAL_PAYMENT_ID_PARAM ] ?? '';
       $this->ideal_invoice_number = $buckaroo_params[ self::IDEAL_INVOICE_NUMBER_PARAM ] ?? '';
-      $this->iban                  = $buckaroo_params[ self::IDEAL_IBAN_PARAM ] ?? '';
+      $this->iban                 = $buckaroo_params[ self::IDEAL_IBAN_PARAM ] ?? '';
     } elseif ( $this->is_emandate() ) {
       $this->bank_id               = $buckaroo_params[ self::EMANDATE_BANK_ID_PARAM ] ?? '';
       $this->emandate_id           = $buckaroo_params[ self::EMANDATE_ID_PARAM ] ?? '';

@@ -54,4 +54,9 @@
   <rule ref="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound">
     <severity>0</severity>
   </rule>
+
+  <!-- Added because phpcs was complaining about this even tho it seemed ok. Looks like a bug in phpcs.-->
+  <rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
+    <severity>0</severity>
+  </rule>
 </ruleset>

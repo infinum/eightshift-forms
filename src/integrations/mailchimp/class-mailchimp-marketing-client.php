@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Mailchimp marketing client implementation
  *
@@ -19,11 +18,17 @@ use \MailchimpMarketing\ApiClient as MarketingApiClient;
 class Mailchimp_Marketing_Client implements Mailchimp_Marketing_Client_Interface {
 
   /**
+   * Mailchimp API's Marketing client object.
+   *
+   * @var MarketingApiClient
+   */
+  protected $client;
+
+  /**
    * Constructs object
    */
   public function __construct() {
     $this->client = new MarketingApiClient();
-
   }
 
   /**
@@ -41,7 +46,7 @@ class Mailchimp_Marketing_Client implements Mailchimp_Marketing_Client_Interface
   /**
    * Returns the build client
    *
-   * @return object
+   * @return MarketingApiClient
    */
   public function get_client() {
     return $this->client;

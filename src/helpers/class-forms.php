@@ -30,7 +30,9 @@ class Forms {
      */
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
     if ( isset( $_GET[ "field-$name" ] ) ) {
-      $value = \sanitize_text_field( \wp_unslash( $_GET[ "field-$name" ] ) );
+      $unslashed = \wp_unslash( $_GET[ "field-$name" ] );
+      $unslashed = is_array( $unslashed ) ? implode( ' ', $unslashed ) : $unslashed;
+      $value     = \sanitize_text_field( $unslashed );
     }
     // phpcs:enable WordPress.Security.NonceVerification.Recommended
 

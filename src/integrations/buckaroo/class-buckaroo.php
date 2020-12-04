@@ -82,9 +82,16 @@ class Buckaroo implements Filters {
   protected $is_data_request = false;
 
   /**
+   * HTTP client implementation obj which uses Guzzle.
+   *
+   * @var Http_Client.
+   */
+  private $guzzle_client;
+
+  /**
    * Constructs object
    *
-   * @param Http_Client $guzzle_client OAuth2 client implementation.
+   * @param Http_Client $guzzle_client HTTP client implementation.
    */
   public function __construct( Http_Client $guzzle_client ) {
     $this->guzzle_client = $guzzle_client;
@@ -99,11 +106,11 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  Description of the emandate.
-   * @return bool
+   * @return array
    *
    * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
    */
-  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ) {
+  public function create_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
     $response             = [];
     $post_array           = $this->build_post_body_for_emandate( $debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
@@ -139,11 +146,11 @@ class Buckaroo implements Filters {
    * @param  string           $issuer          Issuer (bank) name.
    * @param  bool             $is_recurring    Is recurring payment.
    * @param  string           $description     Description of the payment.
-   * @return bool
+   * @return array
    *
    * @throws Buckaroo_Request_Exception When something is wrong with JSON we get from Buckaroo.
    */
-  public function send_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ) {
+  public function send_payment( $donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description ): array {
     $response             = [];
     $post_array           = $this->build_post_body_for_payment( $donation_amount, $invoice, $issuer, $is_recurring, $description );
     $authorization_header = $this->generate_authorization_header( $post_array, $this->get_buckaroo_uri() );
@@ -195,7 +202,7 @@ class Buckaroo implements Filters {
    */
   public function generate_debtor_reference( array $params ) {
     $prefix      = 'debtor';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -208,7 +215,7 @@ class Buckaroo implements Filters {
    */
   public function generate_invoice_name( array $params ) {
     $prefix      = 'invoice';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -221,7 +228,7 @@ class Buckaroo implements Filters {
    */
   public function generate_purchase_id( array $params ) {
     $prefix      = 'purchase-id';
-    $data_hash   = hash( 'crc32', wp_json_encode( $params ) );
+    $data_hash   = hash( 'crc32', (string) wp_json_encode( $params ) );
     $random_hash = hash( 'crc32', uniqid() );
     return "{$prefix}-{$data_hash}-{$random_hash}";
   }
@@ -382,7 +389,7 @@ class Buckaroo implements Filters {
     $this->verify_buckaroo_info_exists();
     $website_key = \apply_filters( self::BUCKAROO, 'website_key' );
     $secret_key  = \apply_filters( self::BUCKAROO, 'secret_key' );
-    $post        = \wp_json_encode( $post_array );
+    $post        = (string) \wp_json_encode( $post_array );
     $md5         = md5( $post, true );
     $post        = base64_encode( $md5 ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
     $uri         = strtolower( rawurlencode( $buckaroo_uri ) );
@@ -458,7 +465,6 @@ class Buckaroo implements Filters {
    * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
    * @param  string $issuer          Issuer (bank) name.
    * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
-   * @param  string $maxamount       This is the maximum amount per SEPA Direct Debit. Debtor can change this value during the authorization process. The (altered) value will be communicated in the push message to the Merchant. This parameter is for B2B only and required if that's the case.
    * @return array
    */
   private function build_post_body_for_emandate( string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason ): array {
@@ -521,7 +527,7 @@ class Buckaroo implements Filters {
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws \Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws Missing_Filter_Info_Exception When not all required keys are set.
    *
    * @return void
    */

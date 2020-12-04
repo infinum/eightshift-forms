@@ -21,15 +21,33 @@ use Eightshift_Forms\Integrations\Authorization\HMAC;
 /**
  * Class Dynamics_Crm_Route
  */
-abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
+abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Active_Route {
 
-  const MISSING_KEYS   = 'missing-keys';
+  /**
+   * Endpoint slug for the implementing class. Needs to be overriden.
+   *
+   * @var string
+   */
+  const ENDPOINT_SLUG = 'override-me';
+
+  /**
+   * Key for the missing keys response. Used if route has required keys but not all are sent.
+   *
+   * @var string
+   */
+  const MISSING_KEYS = 'missing-keys';
+
+  /**
+   * Missing filter key. Used if route has required filter which wasn't implemented in your project.
+   *
+   * @var string
+   */
   const MISSING_FILTER = 'missing-filter';
 
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    */
   protected $config;
 
@@ -86,7 +104,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @return string Route version as a string.
    */
   protected function get_version() : string {
-    return $this->config->get_project_routes_version();
+    return 'v1';
   }
 
   /**
@@ -217,7 +235,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    */
   protected function urlencode_params( array $params ): array {
     return array_map( function( $param ) {
-      return is_string( $param ) ? urlencode( $param ) : $param;
+      return is_string( $param ) ? rawurlencode( $param ) : $param;
     }, $params);
   }
 
@@ -229,7 +247,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
    * @param  array  $params   Array of params which should hold content for placeholders.
    * @return string
    */
-  protected function replace_placeholders_with_content( string $haystack, array $params ) {
+  protected function replace_placeholders_with_content( string $haystack, array $params ): string {
     $content = $haystack;
 
     $content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function( $match ) use ( $params ) {
@@ -241,7 +259,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route {
       return $output;
     }, $haystack);
 
-    return $content;
+    return (string) $content;
   }
 
   /**

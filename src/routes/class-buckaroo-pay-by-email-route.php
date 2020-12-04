@@ -67,7 +67,6 @@ class Buckaroo_Pay_By_Email_Route extends Base_Buckaroo_Route {
       if ( has_filter( Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE ) ) {
         $redirect_url = apply_filters( Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE, $redirect_url );
       }
-
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'buckaroo-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( Buckaroo_Request_Exception $e ) {

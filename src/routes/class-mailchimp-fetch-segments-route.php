@@ -39,6 +39,27 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
   const LIST_ID_PARAM = 'list-id';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Mailchimp object.
+   *
+   * @var Mailchimp
+   */
+  protected $mailchimp;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
+
+  /**
    * Construct object
    *
    * @param Config_Data   $config        Config data obj.
@@ -112,6 +133,11 @@ class Mailchimp_Fetch_Segments_Route extends Base_Route implements Filters {
       'tags' => [],
       'segments' => [],
     ];
+
+    if ( ! isset( $response->segments ) ) {
+      return $tags_segments;
+    }
+
     foreach ( $response->segments as $segment ) {
       switch ( $segment->type ) {
         case 'static':

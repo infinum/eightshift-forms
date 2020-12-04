@@ -18,8 +18,9 @@ class Response_Factory {
    * Build Response object.
    *
    * @param array $buckaroo_params Array of Buckaroo response params.
+   * @return Response
    */
-  public static function build( array $buckaroo_params ) {
+  public static function build( array $buckaroo_params ): Response {
     return new Response( $buckaroo_params );
   }
 }

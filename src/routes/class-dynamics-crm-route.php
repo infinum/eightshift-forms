@@ -17,6 +17,7 @@ use Eightshift_Forms\Integrations\Dynamics_CRM;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class Dynamics_Crm_Route
@@ -31,6 +32,27 @@ class Dynamics_Crm_Route extends Base_Route implements Filters {
    * @var string
    */
   const ENDPOINT_SLUG = '/dynamics-crm';
+
+  /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Dynamics CRM object.
+   *
+   * @var Dynamics_CRM
+   */
+  protected $dynamics_crm;
+
+  /**
+   * Basic Captcha object.
+   *
+   * @var Basic_Captcha
+   */
+  protected $basic_captcha;
 
   /**
    * Construct object
@@ -79,8 +101,11 @@ class Dynamics_Crm_Route extends Base_Route implements Filters {
     // Retrieve all entities from the "leads" Entity Set.
     try {
       $response = $this->dynamics_crm->add_record( $entity, $params );
+    } catch ( ClientException $e ) {
+      $error = ! empty( $e->getResponse() ) ? $e->getResponse()->getBody()->getContents() : esc_html__( 'Unknown error', 'eightshift-forms' );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $error ] );
     } catch ( \Exception $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
     return \rest_ensure_response(

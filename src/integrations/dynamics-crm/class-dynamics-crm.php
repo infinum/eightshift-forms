@@ -13,6 +13,8 @@ use Eightshift_Forms\Integrations\OAuth2_Client_Interface;
 use SaintSystems\OData\ODataClient;
 
 use \GuzzleHttp\Exception\ClientException;
+use \SaintSystems\OData\IODataClient;
+use \Illuminate\Support\Collection;
 
 /**
  * Dynamics CRM integration class.
@@ -27,6 +29,13 @@ class Dynamics_CRM {
    * @var OAuth2_Client_Interface
    */
   private $oauth2_client;
+
+  /**
+   * Odata service url.
+   *
+   * @var string
+   */
+  private $odata_service_url;
 
   /**
    * Constructs object
@@ -71,7 +80,7 @@ class Dynamics_CRM {
    *
    * @param  string $entity Entity to which we're adding records.
    * @param  array  $data   Optional data / params we're using while fetching. If this is empty all records in an entity will be returned.
-   * @return array
+   * @return Collection
    *
    * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
    */
@@ -86,7 +95,7 @@ class Dynamics_CRM {
       // just throw because we don't know how to handle it.
       if ( $e->getCode() === 401 ) {
         $odata_client = $this->build_odata_client( $this->get_token( true ) );
-        $odata_client->from( $entity )->get( $data );
+        $response     = $odata_client->from( $entity )->get( $data );
       } else {
         throw $e;
       }
@@ -110,9 +119,9 @@ class Dynamics_CRM {
    * Builds the odata client used for interacting with the CRM
    *
    * @param  string $access_token OAuth access token for this request.
-   * @return object
+   * @return IODataClient
    */
-  private function build_odata_client( string $access_token ) {
+  private function build_odata_client( string $access_token ): IODataClient {
     return new ODataClient(
       $this->odata_service_url,
       function( $request ) use ( $access_token ) {

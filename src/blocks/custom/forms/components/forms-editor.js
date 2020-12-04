@@ -1,15 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { Placeholder } from '@wordpress/components';
-import ServerSideRender from '@wordpress/server-side-render';
 
 export const FormsEditor = (props) => {
   const {
     attributes: {
-      blockFullName,
       selectedFormId,
     },
-    attributes,
   } = props;
 
   const isFormSelected = selectedFormId && selectedFormId !== '0';
@@ -23,10 +20,9 @@ export const FormsEditor = (props) => {
         />
       }
       {isFormSelected &&
-        <ServerSideRender
-          block={blockFullName}
-          attributes={attributes}
-          urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
+        <Placeholder
+          icon="saved"
+          label={__('Form will be rendered here.', 'eightshift-forms')}
         />
       }
     </Fragment>

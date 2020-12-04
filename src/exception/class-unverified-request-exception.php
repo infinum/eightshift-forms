@@ -21,7 +21,7 @@ class Unverified_Request_Exception extends \RuntimeException implements General_
    *
    * @var array
    */
-  private $data = '';
+  private $data = [];
 
   /**
    * Constructs object

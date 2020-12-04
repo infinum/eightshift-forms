@@ -17,8 +17,8 @@ $block_classes = Components::classnames([
   $component_class,
   "js-{$component_class}",
   'is-form-message-hidden',
-  ! empty ( $block_class ) ? "{$block_class}__{$component_class}" : '',
-  ! empty ( $theme ) ? "{$component_class}__theme--{$theme}" : '',
+  ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty( $theme ) ? "{$component_class}__theme--{$theme}" : '',
 ]);
 
 ?>

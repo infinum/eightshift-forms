@@ -57,6 +57,7 @@ $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
+$inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -66,7 +67,9 @@ $block_classes = Components::classnames([
   ! empty( $form_theme ) ? "{$block_class}__theme--{$form_theme}" : '',
 ]);
 
-
+if ( empty( $this ) ) {
+  return;
+}
 
 ?>
 
@@ -99,7 +102,7 @@ $block_classes = Components::classnames([
     /**
      * Project specific fields.
      */
-    do_action( Actions::EXTRA_FORM_FIELDS, $attributes );
+    do_action( Actions::EXTRA_FORM_FIELDS, $attributes ?? [] );
 
     /**
      * Here we need to add some additional fields for specific methods.
@@ -116,7 +119,7 @@ $block_classes = Components::classnames([
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo esc_attr( $email_send_confirm_to_sender ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo (int) $email_send_confirm_to_sender; ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_subject ); ?>" />
       <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_message ); ?>" />
     <?php } ?>

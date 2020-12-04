@@ -10,14 +10,18 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations;
 
 use Eightshift_Forms\Integrations\Core\Http_Client;
-use GuzzleHttp\Exception\ClientException;
 
 /**
  * OAuth2_Client class which handles access token connections.
  */
 class OAuth2_Client implements OAuth2_Client_Interface {
 
-  const HOUR_IN_SECONDS = '3600';
+  /**
+   * How much is hour in seconds.
+   *
+   * @var int
+   */
+  const HOUR_IN_SECONDS = 3600;
 
   /**
    * DI injected Http_Client implementation.
@@ -25,6 +29,34 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    * @var Http_Client
    */
   protected $http_client;
+
+  /**
+   * Url to which we're submitting.
+   *
+   * @var string
+   */
+  protected $url;
+
+  /**
+   * Oauth2 client id.
+   *
+   * @var string
+   */
+  protected $client_id;
+
+  /**
+   * Oauth2 client secret.
+   *
+   * @var string
+   */
+  protected $client_secret;
+
+  /**
+   * Oauth2 scope.
+   *
+   * @var string
+   */
+  protected $scope;
 
   /**
    * Constructs object.
@@ -44,7 +76,7 @@ class OAuth2_Client implements OAuth2_Client_Interface {
    */
   public function get_token( string $token_key, bool $should_fetch_new = false ): string {
     if ( ! $should_fetch_new ) {
-      $token = $this->get_token_from_cache( $token_key );
+      $token = (string) $this->get_token_from_cache( $token_key );
     }
 
     if ( $should_fetch_new || empty( $token ) ) {

@@ -43,6 +43,34 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
   const ENDPOINT_SLUG = '/dynamics-crm-fetch-entity';
 
   /**
+   * Config data obj.
+   *
+   * @var Config_Data
+   */
+  protected $config;
+
+  /**
+   * Dynamics CRM object.
+   *
+   * @var Dynamics_CRM
+   */
+  protected $dynamics_crm;
+
+  /**
+   * Implementation of the Authorization obj.
+   *
+   * @var Authorization_Interface
+   */
+  protected $hmac;
+
+  /**
+   * Cache implementation obj.
+   *
+   * @var Cache
+   */
+  protected $cache;
+
+  /**
    * Construct object
    *
    * @param Config_Data             $config          Config data obj.
@@ -103,9 +131,10 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
     // Retrieve all entities from the "leads" Entity Set.
     try {
       $response = $this->dynamics_crm->fetch_all_from_entity( $entity, $params );
-      $this->cache->save( $cache_key, wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
+      $this->cache->save( $cache_key, (string) wp_json_encode( $response ), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC );
     } catch ( ClientException $e ) {
-      return $this->rest_response_handler_unknown_error( [ 'error' => $e->getResponse()->getBody()->getContents() ] );
+      $error = ! empty( $e->getResponse() ) ? $e->getResponse()->getBody()->getContents() : esc_html__( 'Unknown error', 'eightshift-forms' );
+      return $this->rest_response_handler_unknown_error( [ 'error' => $error ] );
     } catch ( \Exception $e ) {
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
@@ -113,7 +142,7 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
     return \rest_ensure_response(
       [
         'code' => 200,
-        'data' => json_decode( wp_json_encode( $response ), true ),
+        'data' => json_decode( (string) wp_json_encode( $response ), true ),
       ]
     );
   }
@@ -121,7 +150,7 @@ class Dynamics_Crm_Fetch_Entity_Route extends Base_Route implements Filters {
   /**
    * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
    *
-   * @return array
+   * @return bool
    */
   public function permission_callback(): bool {
     return true;

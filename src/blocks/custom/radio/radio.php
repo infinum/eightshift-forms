@@ -11,18 +11,23 @@ use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Helpers\Prefill;
 use Eightshift_Forms\Hooks\Filters;
 
-$block_class    = $attributes['blockClass'] ?? '';
-$theme          = $attributes['theme'] ?? '';
-$style_class    = $attributes['className'] ?? '';
-$name           = $attributes['name'] ?? '';
-$should_prefill = $attributes['prefillData'] ?? false;
-$prefill_source = $attributes['prefillDataSource'] ?? '';
+$block_class         = $attributes['blockClass'] ?? '';
+$theme               = $attributes['theme'] ?? '';
+$style_class         = $attributes['className'] ?? '';
+$name                = $attributes['name'] ?? '';
+$should_prefill      = $attributes['prefillData'] ?? false;
+$prefill_source      = $attributes['prefillDataSource'] ?? '';
+$inner_block_content = ! empty( $inner_block_content ) ? $inner_block_content : '';
 
 $block_classes = Components::classnames([
   $block_class,
   $style_class,
   ! empty( $theme ) ? "{$block_class}__theme--{$theme}" : '',
 ]);
+
+if ( empty( $this ) ) {
+  return;
+}
 
 ?>
 
