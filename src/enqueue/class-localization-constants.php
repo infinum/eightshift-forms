@@ -9,91 +9,41 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Enqueue;
 
+use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
-use Eightshift_Forms\Rest\Active_Route;
+use Eightshift_Libs\Rest\Callable_Route;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
  */
 class Localization_Constants implements Filters {
 
-  /**
-   * Key under which all localizations are held. window.${LOCALIZATION_KEY}
-   *
-   * @var string
-   */
   const LOCALIZATION_KEY = 'eightshiftForms';
-
-  /**
-   * Some variable.
-   *
-   * @var Active_Route
-   */
-  private $dynamics_crm_route;
-
-  /**
-   * Buckaroo iDEAL route obj.
-   *
-   * @var Active_Route
-   */
-  private $buckaroo_ideal_route;
-
-  /**
-   * Buckaroo Emandate route obj.
-   *
-   * @var Active_Route
-   */
-  private $buckaroo_emandate_route;
-
-  /**
-   * Buckaroo Pay By Email route obj.
-   *
-   * @var Active_Route
-   */
-  private $buckaroo_pay_by_email_route;
-
-  /**
-   * Send email route object.
-   *
-   * @var Active_Route
-   */
-  private $send_email_route;
-
-  /**
-   * Mailchimp route object.
-   *
-   * @var Active_Route
-   */
-  private $mailchimp_route;
-
-  /**
-   * Mailchimp client implementation.
-   *
-   * @var Mailchimp
-   */
-  private $mailchimp;
 
   /**
    * Create a new admin instance.
    *
-   * @param Active_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
-   * @param Active_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
-   * @param Active_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
-   * @param Active_Route $buckaroo_pay_by_email_route Buckaroo (Pay By Email) route object which holds values we need to localize.
-   * @param Active_Route $send_email_route            Send Email route object which holds values we need to localize.
-   * @param Active_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
-   * @param Mailchimp    $mailchimp                   Mailchimp implementation.
+   * @param Manifest_Data  $manifest                    Inject manifest which holds data about assets from manifest.json.
+   * @param Callable_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
+   * @param Callable_Route $buckaroo_pay_by_email_route Buckaroo (Pay By Email) route object which holds values we need to localize.
+   * @param Callable_Route $send_email_route            Send Email route object which holds values we need to localize.
+   * @param Callable_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
+   * @param Mailchimp      $mailchimp                   Mailchimp implementation.
    */
   public function __construct(
-    Active_Route $dynamics_crm_route,
-    Active_Route $buckaroo_ideal_route,
-    Active_Route $buckaroo_emandate_route,
-    Active_Route $buckaroo_pay_by_email_route,
-    Active_Route $send_email_route,
-    Active_Route $mailchimp_route,
+    Manifest_Data $manifest,
+    Callable_Route $dynamics_crm_route,
+    Callable_Route $buckaroo_ideal_route,
+    Callable_Route $buckaroo_emandate_route,
+    Callable_Route $buckaroo_pay_by_email_route,
+    Callable_Route $send_email_route,
+    Callable_Route $mailchimp_route,
     Mailchimp $mailchimp
   ) {
+    $this->manifest                    = $manifest;
     $this->dynamics_crm_route          = $dynamics_crm_route;
     $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
     $this->buckaroo_emandate_route     = $buckaroo_emandate_route;
@@ -145,6 +95,10 @@ class Localization_Constants implements Filters {
 
     if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
+    }
+
+    if ( has_filter( Filters::PREFILL_GENERIC_SINGLE ) ) {
+      $localization[ self::LOCALIZATION_KEY ]['prefill']['single'] = $this->add_prefill_generic_single_constants();
     }
 
     return $localization;
@@ -245,7 +199,7 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Localize all constants required for Dynamics CRM integration.
+   * Adds prefill options to multi option blocks (select, radio, etc).
    *
    * @return array
    */
@@ -266,5 +220,29 @@ class Localization_Constants implements Filters {
     }
 
     return $prefill_multi_formatted;
+  }
+
+  /**
+   * Adds prefill options to single option blocks (input, etc).
+   *
+   * @return array
+   */
+  protected function add_prefill_generic_single_constants(): array {
+    $prefill_single = apply_filters( Filters::PREFILL_GENERIC_SINGLE, [] );
+
+    if ( ! is_array( $prefill_single ) ) {
+      return [];
+    }
+
+    $prefill_single_formatted = [];
+    foreach ( $prefill_single as $source_name => $prefill_single_source ) {
+      if ( isset( $prefill_single_source['data'] ) ) {
+        unset( $prefill_single_source['data'] );
+      }
+
+      $prefill_single_formatted[] = $prefill_single_source;
+    }
+
+    return $prefill_single_formatted;
   }
 }
