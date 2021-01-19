@@ -69,6 +69,34 @@ class Mailchimp {
   }
 
   /**
+   * Adds a member in Mailchimp.
+   *
+   * @param  string $list_id      Audience list ID.
+   * @param  string $email        Contact's email.
+   * @param  array  $merge_fields List of merge fields to add to request.
+   * @param  array  $params       (Optional) list of params from request.
+   * @param  string $status       (Optional) Member's status (if new).
+   * @return mixed
+   *
+   * @throws \Exception When response is invalid.
+   */
+  public function add_member( string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending' ) {
+    $this->setup_client_config_and_verify();
+
+    $params['email_address'] = $email;
+    $params['status']        = $status;
+    $params['merge_fields']  = $merge_fields;
+
+    $response = $this->client->lists->addListMember( $list_id, $params );
+
+    if ( ! is_object( $response ) || ! isset( $response->id, $response->email_address ) ) {
+      throw new \Exception( 'setListMember response invalid' );
+    }
+
+    return $response;
+  }
+
+  /**
    * Add a tag to a member.
    *
    * @param  string $list_id   Audience list ID.
