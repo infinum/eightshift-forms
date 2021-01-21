@@ -32,8 +32,6 @@ class MailchimpRouteTest extends BaseRouteTest
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
-    error_log(print_r($response, true));
-
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
   }
