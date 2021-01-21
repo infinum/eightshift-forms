@@ -54,7 +54,7 @@ class Response {
    *
    * @var int
    */
-  private $status = '';
+  private $status;
 
   /**
    * Status code as readable text.
