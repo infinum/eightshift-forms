@@ -104,7 +104,9 @@ if ( empty( $this ) ) {
     /**
      * Project specific fields.
      */
-    do_action( Actions::EXTRA_FORM_FIELDS, $attributes ?? [] );
+    if ( has_action( Actions::EXTRA_FORM_FIELDS ) ) {
+      do_action( Actions::EXTRA_FORM_FIELDS, $attributes ?? [] );
+    }
 
     /**
      * Here we need to add some additional fields for specific methods.
