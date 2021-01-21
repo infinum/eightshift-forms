@@ -29,6 +29,8 @@ class MailchimpRouteTest extends BaseRouteTest
     $request->params['GET'] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
+      'nonce' => 'asdb',
+      'form-unique-id' => '123'
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
@@ -70,6 +72,8 @@ class MailchimpRouteTest extends BaseRouteTest
         'bbb',
         'ccc',
       ],
+      'nonce' => 'asdb',
+      'form-unique-id' => '123'
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
