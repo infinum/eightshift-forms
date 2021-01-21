@@ -47,7 +47,7 @@ class Response {
    *
    * @var string
    */
-  private $service;
+  private $service = '';
 
   /**
    * Status code of response.
@@ -61,63 +61,63 @@ class Response {
    *
    * @var string
    */
-  private $status_as_text;
+  private $status_as_text = '';
 
   /**
    * Payer's bank ID.
    *
    * @var string
    */
-  private $bank_id;
+  private $bank_id = '';
 
   /**
    * Payer's IBAN.
    *
    * @var string
    */
-  private $iban;
+  private $iban = '';
 
   /**
    * Payer's bank name.
    *
    * @var string
    */
-  private $ideal_bank_name;
+  private $ideal_bank_name = '';
 
   /**
    * Payment amount when using iDEAL.
    *
    * @var string
    */
-  private $ideal_payment_amount;
+  private $ideal_payment_amount = '';
 
   /**
    * Payment ID when using iDEAL.
    *
    * @var string
    */
-  private $ideal_payment_id;
+  private $ideal_payment_id = '';
 
   /**
    * Invoice number when using iDEAL.
    *
    * @var string
    */
-  private $ideal_invoice_number;
+  private $ideal_invoice_number = '';
 
   /**
    * Emandate ID.
    *
    * @var string
    */
-  private $emandate_id;
+  private $emandate_id = '';
 
   /**
    * Emandate reference ID.
    *
    * @var string
    */
-  private $emandate_reference_id;
+  private $emandate_reference_id = '';
 
   /**
    * Check if this is a test response or not.
