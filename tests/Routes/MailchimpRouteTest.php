@@ -32,12 +32,14 @@ class MailchimpRouteTest extends BaseRouteTest
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
+    error_log(print_r($response, true));
+
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
   }
 
   /**
-   * Correct request should result in 200 response
+   * Invalid list ID should trigger an error response.
    *
    * @return void
    */
