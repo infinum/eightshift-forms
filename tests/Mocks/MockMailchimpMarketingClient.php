@@ -41,6 +41,17 @@ class MockMailchimpMarketingClient implements Mailchimp_Marketing_Client_Interfa
             'mergeFields' => $params['merge_fields'],
           ]);
         },
+        'addListMember' => function( $list_id, $params ) {
+          if ( $list_id === DataProvider::INVALID_LIST_ID ) {
+            throw new ClientException( 'invalid list id', new Request('GET', 'test'), new Response() );
+          }
+
+          return DataProvider::getMockAddOrUpdateMemberResponse([
+            'listId' => $list_id,
+            'email' => DataProvider::MOCK_EMAIL,
+            'mergeFields' => $params['merge_fields'],
+          ]);
+        },
 
         'updateListMemberTags' => function( $list_id, $subscriber_hash, $tags ) {
           return '';

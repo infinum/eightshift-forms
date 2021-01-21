@@ -37,7 +37,7 @@ class MailchimpRouteTest extends BaseRouteTest
   }
 
   /**
-   * Correct request should result in 200 response
+   * Invalid list ID should trigger an error response.
    *
    * @return void
    */
