@@ -58,6 +58,7 @@ $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 $inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
+$form_id                      = 'form-' . hash( 'crc32', time() . mt_rand(0, 10000) );
 
 $block_classes = Components::classnames([
   $block_class,
@@ -75,6 +76,7 @@ if ( empty( $this ) ) {
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
   <form
+    id="<?php echo esc_attr( $form_id ); ?>"
     class="<?php echo esc_attr( "{$block_class}__form js-{$block_class}-form" ); ?>"
     action="<?php echo esc_attr( $form_action ); ?>"
     method="<?php echo esc_attr( $form_method ); ?>"
@@ -157,6 +159,8 @@ if ( empty( $this ) ) {
       <?php } ?>
     <?php } ?>
 
+    <input type="hidden" name="form-unique-id" value="<?php echo esc_attr( $form_id )?>" />
+    <?php wp_nonce_field( $form_id, 'nonce', false ); ?>
   </form>
 
   <?php echo wp_kses_post( Components::render( 'form-overlay' ) ); ?>

@@ -167,6 +167,19 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
       }
     }
 
+    // Verify nonce if submitted.
+    if ( $this->does_require_nonce_verification() ) {
+      if (
+        ! isset( $params['nonce'] ) ||
+        ! isset( $params['form-unique-id'] ) ||
+        ! wp_verify_nonce( $params['nonce'], $params['form-unique-id'] )
+      ) {
+        throw new Unverified_Request_Exception(
+          $this->rest_response_handler( 'invalid-nonce' )->data
+        );
+      }
+    }
+
     // If captcha is used on this route and provided as part of the request, we need to confirm it's true.
     if ( ! empty( $this->basic_captcha ) && ! $this->basic_captcha->check_captcha_from_request_params( $params ) ) {
       throw new Unverified_Request_Exception( $this->rest_response_handler( 'wrong-captcha' )->data );
@@ -285,6 +298,15 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
   }
 
   /**
+   * Toggle if this route requires nonce verification.
+   *
+   * @return bool
+   */
+  protected function does_require_nonce_verification(): bool {
+    return false;
+  }
+
+  /**
    * Removes some params we don't want to send to CRM from request.
    *
    * @param  array $params Params received in request.
@@ -355,6 +377,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
    */
   private function all_responses(): array {
     return [
+      'invalid-nonce' => [
+        'code' => 400,
+        'message' => esc_html__( 'Invalid nonce.', 'eightshift-forms' ),
+      ],
       'wrong-captcha' => [
         'code' => 429,
         'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),
