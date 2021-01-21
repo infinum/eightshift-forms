@@ -134,7 +134,13 @@ class Mailchimp_Route extends Base_Route implements Filters {
         $response['tags'] = $this->mailchimp->add_member_tags( $list_id, $email, $tags );
       }
     } catch ( ClientException $e ) {
-      $decoded_exception = json_decode( $e->getResponse()->getBody()->getContents(), true );
+
+      // If Response is null for whatever reason, just treat it like a unknown error.
+      if ( empty( $e->getResponse() ) ) {
+        return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
+      }
+
+      $decoded_exception = ! empty( $e->getResponse() ) ? json_decode( $e->getResponse()->getBody()->getContents(), true ) : [];
 
       if ( isset( $decoded_exception['title'] ) && $decoded_exception['title'] === self::ERROR_USER_EXISTS ) {
         $msg_user_exists = \esc_html__( 'User already exists', 'eightshift-forms' );
