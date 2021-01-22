@@ -168,7 +168,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
     }
 
     // Verify nonce if submitted.
-    if ( $this->does_require_nonce_verification() ) {
+    if ( $this->requires_nonce_verification() ) {
       if (
         ! isset( $params['nonce'] ) ||
         ! isset( $params['form-unique-id'] ) ||
@@ -302,7 +302,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
    *
    * @return bool
    */
-  protected function does_require_nonce_verification(): bool {
+  protected function requires_nonce_verification(): bool {
     return false;
   }
 

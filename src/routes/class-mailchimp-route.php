@@ -174,7 +174,7 @@ class Mailchimp_Route extends Base_Route implements Filters {
    *
    * @return bool
    */
-  protected function does_require_nonce_verification(): bool {
+  protected function requires_nonce_verification(): bool {
     return true;
   }
 }
