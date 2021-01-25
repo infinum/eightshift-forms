@@ -66,6 +66,9 @@ class BaseTest extends \Codeception\Test\Unit
       'add_query_arg' => function($data) {
         return $data;
       },
+      'wp_verify_nonce' => function() {
+        return true;
+      },
     ]);
   }
 

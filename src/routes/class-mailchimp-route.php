@@ -191,4 +191,13 @@ class Mailchimp_Route extends Base_Route implements Filters {
       'privacy-policy',
     ];
   }
+
+  /**
+   * Toggle if this route requires nonce verification
+   *
+   * @return bool
+   */
+  protected function requires_nonce_verification(): bool {
+    return true;
+  }
 }
