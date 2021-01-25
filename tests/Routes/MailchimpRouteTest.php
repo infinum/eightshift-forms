@@ -25,8 +25,8 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingNewMembers()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request('POST', $this->route_endpoint->get_route_uri());
+    $request->params['POST'] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
       'nonce' => 'asdb',
@@ -45,8 +45,8 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallFailsIfInvalidListId()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request('POST', $this->route_endpoint->get_route_uri());
+    $request->params['POST'] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => DataProvider::INVALID_LIST_ID,
     ];
@@ -63,8 +63,8 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingTags()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request('POST', $this->route_endpoint->get_route_uri());
+    $request->params['POST'] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
       $this->route_endpoint::TAGS_PARAM => [

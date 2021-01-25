@@ -14,11 +14,13 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessful()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request('POST', $this->route_endpoint->get_route_uri());
+    $request->params['POST'] = [
       $this->route_endpoint::TO_PARAM => 'some value',
       $this->route_endpoint::SUBJECT_PARAM => 'some value',
       $this->route_endpoint::MESSAGE_PARAM => 'some value',
+      'nonce' => 'some value',
+      'form-unique-id' => 'some-d',
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
@@ -34,11 +36,13 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWithPlaceholders()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request('POST', $this->route_endpoint->get_route_uri());
+    $request->params['POST'] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',
       $this->route_endpoint::MESSAGE_PARAM => 'Message [[message]]',
+      'nonce' => 'some value',
+      'form-unique-id' => 'some-d',
     ];
 
     $response = $this->route_endpoint->route_callback( $request );
