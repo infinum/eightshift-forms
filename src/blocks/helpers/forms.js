@@ -1,5 +1,5 @@
-const sendGet = async (url, data, options = {
-  method: 'GET', // *GET, POST, PUT, DELETE, etc.
+const sendRequest = async (url, data, method = 'POST', options = {
+  method, // *GET, POST, PUT, DELETE, etc.
   mode: 'cors', // no-cors, *cors, same-origin
   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
   credentials: 'same-origin', // include, *same-origin, omit
@@ -23,5 +23,6 @@ const sendGet = async (url, data, options = {
 };
 
 export const sendForm = async (where, formData) => {
-  return sendGet(where, formData);
+  return sendRequest(where, formData);
 };
+

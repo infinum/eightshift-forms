@@ -257,14 +257,11 @@ class Buckaroo_Response_Handler_Route extends Base_Route implements Actions, Fil
   }
 
   /**
-   * Override default get_callback_arguments method in order to allow POST requests as well as GET.
+   * Returns allowed methods for this route.
    *
-   * @return array
+   * @return string|array
    */
-  protected function get_callback_arguments() : array {
-    return [
-      'methods'  => [ static::READABLE, static::CREATABLE ],
-      'callback' => [ $this, 'route_callback' ],
-    ];
+  protected function get_methods() {
+    return [ static::READABLE, static::CREATABLE ];
   }
 }

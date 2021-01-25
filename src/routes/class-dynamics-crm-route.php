@@ -142,4 +142,22 @@ class Dynamics_Crm_Route extends Base_Route implements Filters {
       self::ENTITY_PARAM,
     ];
   }
+
+  /**
+   * Toggle if this route requires nonce verification
+   *
+   * @return bool
+   */
+  protected function requires_nonce_verification(): bool {
+    return true;
+  }
+
+  /**
+   * Returns allowed methods for this route.
+   *
+   * @return string|array
+   */
+  protected function get_methods() {
+    return static::CREATABLE;
+  }
 }

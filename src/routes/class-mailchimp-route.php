@@ -200,4 +200,13 @@ class Mailchimp_Route extends Base_Route implements Filters {
   protected function requires_nonce_verification(): bool {
     return true;
   }
+
+  /**
+   * Returns allowed methods for this route.
+   *
+   * @return mixed
+   */
+  protected function get_methods() {
+    return static::CREATABLE;
+  }
 }
