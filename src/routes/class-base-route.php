@@ -123,10 +123,19 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
    */
   protected function get_callback_arguments() : array {
     return [
-      'methods'  => static::READABLE,
+      'methods'  => $this->get_methods(),
       'callback' => [ $this, 'route_callback' ],
       'permission_callback' => [ $this, 'permission_callback' ],
     ];
+  }
+
+  /**
+   * Returns allowed methods for this route.
+   *
+   * @return string|array
+   */
+  protected function get_methods() {
+    return static::READABLE;
   }
 
   /**

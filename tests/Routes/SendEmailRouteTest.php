@@ -3,6 +3,8 @@
 use Eightshift_Forms\Rest\Send_Email_Route;
 class SendEmailRouteTest extends BaseRouteTest
 {
+  const METHOD = 'POST';
+
   protected function getRouteName(): string {
     return Send_Email_Route::class;
   }
@@ -14,11 +16,13 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessful()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'some value',
       $this->route_endpoint::SUBJECT_PARAM => 'some value',
       $this->route_endpoint::MESSAGE_PARAM => 'some value',
+      'nonce' => 'some value',
+      'form-unique-id' => 'some-d',
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
@@ -34,11 +38,13 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWithPlaceholders()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',
       $this->route_endpoint::MESSAGE_PARAM => 'Message [[message]]',
+      'nonce' => 'some value',
+      'form-unique-id' => 'some-d',
     ];
 
     $response = $this->route_endpoint->route_callback( $request );
@@ -55,8 +61,8 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallFailsIfRequiredParamsEmpty()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',
       $this->route_endpoint::MESSAGE_PARAM => '',
@@ -68,7 +74,7 @@ class SendEmailRouteTest extends BaseRouteTest
     $this->assertEquals(400, $response->data['code'] );
     $this->assertSame( 0, did_action( self::WP_MAIL_ACTION ) );
 
-    $request->params['GET'] = [
+    $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => '',
       $this->route_endpoint::MESSAGE_PARAM => 'message',
@@ -80,7 +86,7 @@ class SendEmailRouteTest extends BaseRouteTest
     $this->assertEquals(400, $response->data['code'] );
     $this->assertSame( 0, did_action( self::WP_MAIL_ACTION ) );
 
-    $request->params['GET'] = [
+    $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => '',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',
       $this->route_endpoint::MESSAGE_PARAM => 'message',
