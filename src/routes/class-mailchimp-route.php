@@ -204,7 +204,7 @@ class Mailchimp_Route extends Base_Route implements Filters {
   /**
    * Returns allowed methods for this route.
    *
-   * @return mixed
+   * @return string|array
    */
   protected function get_methods() {
     return static::CREATABLE;

@@ -9,6 +9,7 @@ use Brain\Monkey\Filters as BrainFilters;
 
 class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters, Actions
 {
+  const METHOD = 'GET';
 
   protected function getRouteName(): string {
     return Buckaroo_Response_Handler_Route::class;
@@ -41,8 +42,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => 'http://someurl.com',
@@ -54,7 +55,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     // We need to URL encode params before calculating the hash (because that is done in the route before
     // verifying the hash. However we can't send the URLs encoded because that won't work. In the app these are sent
     // (encoded) to Buckaroo which will decode them when redirecting back to the response handler.
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
       $this->urlencode_params($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
@@ -73,15 +74,15 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => 'http://someurl.com',
       $this->route_endpoint::STATUS_PARAM => 'success',
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
+    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -97,8 +98,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => 'http://someurl.com',
@@ -108,7 +109,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
       $this->urlencode_params($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
@@ -126,8 +127,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => 'http://someurl.com',
@@ -135,7 +136,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::STATUS_PARAM => rawurlencode('success'),
     ];
     $request->params['POST'] = DataProvider::idealSuccessResponseMock();
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
       $this->urlencode_params($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
@@ -152,8 +153,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => '',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => '',
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => '',
@@ -163,7 +164,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params['GET'][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
       $this->urlencode_params($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
