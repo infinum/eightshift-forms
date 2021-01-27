@@ -46,9 +46,11 @@ export const FormMailchimpOptions = (props) => {
     audiences,
     addTag,
     tags,
+    addExistingMembers,
     onChangeListId,
     onChangeAddTag,
     onChangeTags,
+    onChangeAddExistingMembers,
   } = props;
 
   const {
@@ -100,6 +102,14 @@ export const FormMailchimpOptions = (props) => {
           suggestions={suggestions}
           isLoading={isLoading}
           onChange={onChangeTags}
+        />
+      }
+      {onChangeAddExistingMembers &&
+        <ToggleControl
+          label={__('Modify existing Mailchimp information on submit?', 'eightshift-forms')}
+          help={__('If enabled, the form will modify existing user\'s Mailchimp information on submit. If disabled, it will only add new users to the list.', 'eightshift-forms')}
+          checked={addExistingMembers}
+          onChange={onChangeAddExistingMembers}
         />
       }
     </Fragment>

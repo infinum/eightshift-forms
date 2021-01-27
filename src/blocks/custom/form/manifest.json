@@ -40,7 +40,8 @@
       "type": "string"
     },
     "method": {
-      "type": "string"
+      "type": "string",
+      "default": "POST"
     },
     "target": {
       "type": "string"
@@ -154,6 +155,10 @@
       "items": {
         "type": "string"
       }
+    },
+    "mailchimpAddExistingMembers": {
+      "type": "boolean",
+      "default": false
     },
     "eventNames": {
       "type": "array",
