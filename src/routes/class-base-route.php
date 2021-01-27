@@ -492,15 +492,15 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
   }
 
   /**
-   * Sanitizes all received fields recursively. If it's not something we know how to
-   * handle (like an object - even tho we should never get one) don't touch it.
+   * Sanitizes all received fields recursively. If a field is something we don't need to
+   * sanitize then we don't touch it.
    *
    * @param  array $params Array of params.
    * @return array
    */
   private function sanitize_fields( array $params ) {
     foreach ( $params as $key => $param ) {
-      if ( is_string( $param ) || is_numeric( $param ) ) {
+      if ( is_string( $param ) ) {
         $params[ $key ] = \wp_unslash( \sanitize_text_field( $param ) );
       } elseif ( is_array( $param ) ) {
         $params[ $key ] = $this->sanitize_fields( $param );
