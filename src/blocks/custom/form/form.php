@@ -150,7 +150,7 @@ if ( empty( $this ) ) {
 
     <?php if ( isset( $used_types[ Config::MAILCHIMP_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_add_existing ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo (int) $mailchimp_add_existing; ?>" />
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
         <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
