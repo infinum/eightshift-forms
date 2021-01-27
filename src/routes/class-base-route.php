@@ -157,9 +157,9 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
       );
     }
 
-    $params      = $request->get_query_params();
+    $params      = $this->sanitize_fields( $request->get_query_params() );
     $params      = $this->fix_dot_underscore_replacement( $params );
-    $post_params = $request->get_body_params();
+    $post_params = $this->sanitize_fields( $request->get_body_params() );
 
     // Authorized routes need to provide the correct authorization hash to do anything.
     if ( ! empty( $this->get_authorization_salt() ) ) {
@@ -490,4 +490,24 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
 
     return $params;
   }
+
+  /**
+   * Sanitizes all received fields recursively. If it's not something we know how to
+   * handle (like an object - even tho we should never get one) don't touch it.
+   *
+   * @param  array $params Array of params.
+   * @return array
+   */
+  private function sanitize_fields( array $params ) {
+    foreach ( $params as $key => $param ) {
+      if ( is_string( $param ) || is_numeric( $param ) ) {
+        $params[ $key ] = \wp_unslash( \sanitize_text_field( $param ) );
+      } elseif ( is_array( $param ) ) {
+        $params[ $key ] = $this->sanitize_fields( $param );
+      }
+    }
+
+    return $params;
+  }
+
 }
