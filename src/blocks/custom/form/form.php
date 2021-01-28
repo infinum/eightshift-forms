@@ -55,6 +55,7 @@ $buckaroo_is_recurring        = $buckaroo_sequence_type === '0';
 $buckaroo_sequence_type_front = isset( $attributes['buckarooIsSequenceTypeOnFrontend'] ) ? filter_var( $attributes['buckarooIsSequenceTypeOnFrontend'], FILTER_VALIDATE_BOOLEAN ) : false;
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
+$mailchimp_add_existing       = isset( $attributes['mailchimpAddExistingMembers'] ) ? filter_var( $attributes['mailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL ) : false;
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 $inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
@@ -149,6 +150,7 @@ if ( empty( $this ) ) {
 
     <?php if ( isset( $used_types[ Config::MAILCHIMP_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo (int) $mailchimp_add_existing; ?>" />
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
         <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />

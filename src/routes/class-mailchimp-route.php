@@ -54,6 +54,13 @@ class Mailchimp_Route extends Base_Route implements Filters {
   const TAGS_PARAM = 'tags';
 
   /**
+   * Parameter for toggle if we modify Mailchimp user data if they already exist.
+   *
+   * @var string
+   */
+  const ADD_EXISTING_MEMBERS_PARAM = 'add-existing-members';
+
+  /**
    * Error if user exists
    *
    * @var string
@@ -110,11 +117,12 @@ class Mailchimp_Route extends Base_Route implements Filters {
       return rest_ensure_response( $e->get_data() );
     }
 
-    $list_id            = $params[ self::LIST_ID_PARAM ] ?? '';
-    $email              = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
-    $tags               = $params[ self::TAGS_PARAM ] ?? [];
-    $merge_field_params = $this->unset_irrelevant_params( $params );
-    $response           = [];
+    $list_id                     = $params[ self::LIST_ID_PARAM ] ?? '';
+    $email                       = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
+    $tags                        = $params[ self::TAGS_PARAM ] ?? [];
+    $should_add_existing_members = isset( $params[ self::ADD_EXISTING_MEMBERS_PARAM ] ) ? filter_var( $params[ self::ADD_EXISTING_MEMBERS_PARAM ], FILTER_VALIDATE_BOOL ) : false;
+    $merge_field_params          = $this->unset_irrelevant_params( $params );
+    $response                    = [];
 
     // Make sure we have the list ID.
     if ( empty( $list_id ) ) {
@@ -128,7 +136,11 @@ class Mailchimp_Route extends Base_Route implements Filters {
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response['add'] = $this->mailchimp->add_member( $list_id, $email, $merge_field_params );
+      if ( $should_add_existing_members ) {
+        $response['add'] = $this->mailchimp->add_or_update_member( $list_id, $email, $merge_field_params );
+      } else {
+        $response['add'] = $this->mailchimp->add_member( $list_id, $email, $merge_field_params );
+      }
 
       if ( ! empty( $tags ) ) {
         $response['tags'] = $this->mailchimp->add_member_tags( $list_id, $email, $tags );
@@ -136,7 +148,7 @@ class Mailchimp_Route extends Base_Route implements Filters {
     } catch ( ClientException $e ) {
       $decoded_exception = ! empty( $e->getResponse() ) ? json_decode( $e->getResponse()->getBody()->getContents(), true ) : [];
 
-      if ( isset( $decoded_exception['title'] ) && $decoded_exception['title'] === self::ERROR_USER_EXISTS ) {
+      if ( ! $should_add_existing_members && isset( $decoded_exception['title'] ) && $decoded_exception['title'] === self::ERROR_USER_EXISTS ) {
         $msg_user_exists = \esc_html__( 'User already exists', 'eightshift-forms' );
         $response['add'] = $msg_user_exists;
         $message         = $msg_user_exists;

@@ -47,6 +47,7 @@ export const FormOptions = (props) => {
       mailchimpListId,
       mailchimpAddTag,
       mailchimpTags,
+      mailchimpAddExistingMembers,
       eventNames,
     },
     actions: {
@@ -84,6 +85,7 @@ export const FormOptions = (props) => {
       onChangeMailchimpListId,
       onChangeMailchimpAddTag,
       onChangeMailchimpTags,
+      onChangeMailchimpAddExistingMembers,
       onChangeEventNames,
     },
   } = props;
@@ -315,9 +317,11 @@ export const FormOptions = (props) => {
                   audiences={audiences}
                   addTag={mailchimpAddTag}
                   tags={mailchimpTags}
+                  addExistingMembers={mailchimpAddExistingMembers}
                   onChangeListId={onChangeMailchimpListId}
                   onChangeAddTag={onChangeMailchimpAddTag}
                   onChangeTags={onChangeMailchimpTags}
+                  onChangeAddExistingMembers={onChangeMailchimpAddExistingMembers}
                 />
 
               </Fragment>
