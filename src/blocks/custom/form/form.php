@@ -24,7 +24,7 @@ $form_action                  = $attributes['action'] ?? '';
 $form_method                  = $attributes['method'] ?? '';
 $form_target                  = $attributes['target'] ?? '';
 $form_classes                 = $attributes['classes'] ?? '';
-$form_id                      = $attributes['id'] ?? '';
+$form_id                      = $attributes['id'] ?? 'form-' . hash( 'crc32', time() . wp_rand( 0, 10000 ) );
 $form_type                    = $attributes['type'] ?? '';
 $form_types_complex           = $attributes['typesComplex'] ?? '';
 $form_types_complex_redirect  = $attributes['typesComplexRedirect'] ?? '';
@@ -59,7 +59,6 @@ $mailchimp_add_existing       = isset( $attributes['mailchimpAddExistingMembers'
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 $inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
-$form_id                      = 'form-' . hash( 'crc32', time() . wp_rand( 0, 10000 ) );
 
 $block_classes = Components::classnames([
   $block_class,
