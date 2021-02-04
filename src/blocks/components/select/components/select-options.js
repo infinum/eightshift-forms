@@ -24,9 +24,11 @@ export const SelectOptions = (props) => {
     prefill,
   } = window.eightshiftForms;
 
+  const safePrefillMulti = prefill && prefill.multi ? prefill.multi : [];
+
   const prefillSourcesAsOptions = [
     { label: __('Select prefill source', 'eightshift-forms'), value: 'select-please' },
-    ...prefill.multi.map((entity) => ({ label: entity.label, value: entity.value })),
+    ...safePrefillMulti.map((entity) => ({ label: entity.label, value: entity.value })),
   ];
 
   return (
