@@ -4,7 +4,7 @@
   "description" : "Radio Item field",
   "category": "common",
   "icon": {
-    "src": "editor-ul"
+    "src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g transform='translate(-272 -218)' fill='none' fill-rule='evenodd'><path fill='none' d='M272 218h20v20h-20z'/><circle stroke='currentColor' stroke-width='1.5' cx='282' cy='228' r='7.25'/><circle stroke='currentColor' stroke-width='1.5' fill-opacity='.12' fill='currentColor' cx='282' cy='228' r='3.25'/></g></svg>"
   },
   "keywords": [
     "Radio Item"
