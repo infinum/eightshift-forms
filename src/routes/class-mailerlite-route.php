@@ -70,12 +70,12 @@ class Mailerlite_Route extends Base_Route implements Filters {
    * Construct object
    *
    * @param Config_Data   $config        Config data obj.
-   * @param Mailerlite     $mailerlite     Mailerlite object.
+   * @param Mailerlite    $mailerlite    Mailerlite object.
    * @param Basic_Captcha $basic_captcha Basic_Captcha object.
    */
   public function __construct( Config_Data $config, Mailerlite $mailerlite, Basic_Captcha $basic_captcha ) {
     $this->config        = $config;
-    $this->mailerlite     = $mailerlite;
+    $this->mailerlite    = $mailerlite;
     $this->basic_captcha = $basic_captcha;
   }
 

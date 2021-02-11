@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailerlite marketing client implementation
+ * Mailerlite client implementation
  *
  * @package Eightshift_Forms\Integrations\Mailerlite
  */
@@ -20,7 +20,7 @@ use \Http\Adapter\Guzzle6\Client as Guzzle6;
 class Mailerlite_Client implements Mailerlite_Client_Interface {
 
   /**
-   * MAILERLITE client object.
+   * Mailerlite client object.
    *
    * @var MailerLiteClient
    */

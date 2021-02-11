@@ -283,8 +283,8 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Reads the list of audiences from Mailerlite. Used in form options to
-   * select which audience does this form post to.
+   * Reads the list of groups from Mailerlite. Used in form options to
+   * select which group does this form post to.
    *
    * @return array
    */

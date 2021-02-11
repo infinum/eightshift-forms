@@ -18,14 +18,14 @@ use \MailerLiteApi\MailerLite as MailerLiteClient;
 class Mailerlite {
 
   /**
-   * Mailerlite Marketing Api client.
+   * Mailerlite Api client.
    *
    * @var MailerLiteClient
    */
   private $client;
 
   /**
-   * Our own implementation of Mailerlite Marketing Client.
+   * Our own implementation of Mailerlite Client.
    *
    * @var Mailerlite_Client_Interface
    */
@@ -34,7 +34,7 @@ class Mailerlite {
   /**
    * Constructs object
    *
-   * @param Mailerlite_Client_Interface $mailerlite_client Mailerlite marketing client.
+   * @param Mailerlite_Client_Interface $mailerlite_client Mailerlite client.
    */
   public function __construct( Mailerlite_Client_Interface $mailerlite_client ) {
     $this->mailerlite_client = $mailerlite_client;
@@ -54,7 +54,7 @@ class Mailerlite {
   /**
    * Adds a subscriber in Mailerlite.
    *
-   * @param  string $group_id        Group  ID.
+   * @param  string $group_id        Group ID.
    * @param  string $email           Contact's email.
    * @param  array  $subscriber_data List of merge fields to add to request.
    * @param  array  $params          Additional params

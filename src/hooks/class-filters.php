@@ -226,10 +226,10 @@ interface Filters {
    *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1, 1 );
    *   }
    *
-   *  public function get_info( string $key ) {
+   *  public function get_info( string $key ): string
+   *  {
    *    $info = [
    *      'api_key' => 'your-api-key',
-   *      'server' => 'us2',
    *    ];
    *
    *    return $info[ $key ] ?? '';
