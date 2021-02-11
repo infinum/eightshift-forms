@@ -160,6 +160,13 @@
       "type": "boolean",
       "default": false
     },
+    "mailerliteGroupId": {
+      "type": "string"
+    },
+    "mailerliteAddExistingMembers": {
+      "type": "boolean",
+      "default": false
+    },
     "eventNames": {
       "type": "array",
       "items": {

@@ -6,6 +6,7 @@ import { FormDynamicsCrmOptions } from './form-dynamics-crm-options';
 import { FormBuckarooOptions } from './form-buckaroo-options';
 import { FormEmailOptions } from './form-email-options';
 import { FormMailchimpOptions } from './form-mailchimp-options';
+import { FormMailerliteOptions } from './form-mailerlite-options';
 import { FormCustomEventOptions } from './form-custom-event-options';
 import { FormCustomOptions } from './form-custom-options';
 
@@ -48,6 +49,8 @@ export const FormOptions = (props) => {
       mailchimpAddTag,
       mailchimpTags,
       mailchimpAddExistingMembers,
+      mailerliteGroupId,
+      mailerliteAddExistingMembers,
       eventNames,
     },
     actions: {
@@ -86,6 +89,8 @@ export const FormOptions = (props) => {
       onChangeMailchimpAddTag,
       onChangeMailchimpTags,
       onChangeMailchimpAddExistingMembers,
+      onChangeMailerliteGroupId,
+      onChangeMailerliteAddExistingMembers,
       onChangeEventNames,
     },
   } = props;
@@ -104,11 +109,14 @@ export const FormOptions = (props) => {
     isDynamicsCrmUsed,
     isBuckarooUsed,
     isMailchimpUsed,
+    isMailerliteUsed,
     dynamicsCrm = [],
     mailchimp = {},
+    mailerlite = {},
   } = window.eightshiftForms;
 
-  const audiences = (mailchimp && mailchimp.audiences) ? mailchimp.audiences : [];
+  const mailchimpAudiences = (mailchimp && mailchimp.audiences) ? mailchimp.audiences : [];
+  const mailerliteGroups = (mailerlite && mailerlite.groups) ? mailerlite.groups : [];
 
   const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
@@ -127,6 +135,10 @@ export const FormOptions = (props) => {
 
   if (isMailchimpUsed) {
     formTypes.push({ label: __('Mailchimp', 'eightshift-forms'), value: 'mailchimp' });
+  }
+
+  if (isMailerliteUsed) {
+    formTypes.push({ label: __('Mailerlite', 'eightshift-forms'), value: 'mailerlite' });
   }
 
   const tabs = [
@@ -172,6 +184,16 @@ export const FormOptions = (props) => {
       name: 'mailchimp',
       title: <Dashicon icon="email-alt2" />,
       className: 'tab-mailchimp components-button is-button is-default custom-button-with-icon',
+    });
+  }
+
+  if (isMailerliteUsed && (
+    (!isComplexType && type === 'mailerlite') || (isComplexType && typesComplex.includes('mailerlite'))
+  )) {
+    tabs.push({
+      name: 'mailerlite',
+      title: <Dashicon icon="email-alt2" />,
+      className: 'tab-mailerlite components-button is-button is-default custom-button-with-icon',
     });
   }
 
@@ -314,7 +336,7 @@ export const FormOptions = (props) => {
                   blockClass={blockClass}
                   type={type}
                   listId={mailchimpListId}
-                  audiences={audiences}
+                  audiences={mailchimpAudiences}
                   addTag={mailchimpAddTag}
                   tags={mailchimpTags}
                   addExistingMembers={mailchimpAddExistingMembers}
@@ -322,6 +344,24 @@ export const FormOptions = (props) => {
                   onChangeAddTag={onChangeMailchimpAddTag}
                   onChangeTags={onChangeMailchimpTags}
                   onChangeAddExistingMembers={onChangeMailchimpAddExistingMembers}
+                />
+
+              </Fragment>
+            )}
+            {tab.name === 'mailerlite' && (
+              <Fragment>
+                <br />
+                <strong className="notice-title">{__('MailerLite Options', 'eightshift-forms')}</strong>
+                <p>{__('These are options for when your form is sending data to MailerLite.', 'eightshift-forms')}</p>
+                <br />
+                <FormMailerliteOptions
+                  blockClass={blockClass}
+                  type={type}
+                  groupId={mailerliteGroupId}
+                  groups={mailerliteGroups}
+                  addExistingMembers={mailerliteAddExistingMembers}
+                  onChangeGroupId={onChangeMailerliteGroupId}
+                  onChangeAddExistingMembers={onChangeMailerliteAddExistingMembers}
                 />
 
               </Fragment>

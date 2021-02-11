@@ -217,6 +217,29 @@ interface Filters {
   const MAILCHIMP = 'eightshift_forms/mailchimp';
 
   /**
+   * Filter used for providing mailerlite credentials.
+   * IMPORTANT - Make sure to always return a string, even if $key isn't set.
+   *
+   * Example:
+   *
+   *   public function register(): void {
+   *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1, 1 );
+   *   }
+   *
+   *  public function get_info( string $key ) {
+   *    $info = [
+   *      'api_key' => 'your-api-key',
+   *      'server' => 'us2',
+   *    ];
+   *
+   *    return $info[ $key ] ?? '';
+   *  }
+   *
+   * @var string
+   */
+  const MAILERLITE = 'eightshift_forms/mailerlite';
+
+  /**
    * Filter used to add additional required parameters to Buckaroo Emandate route
    *
    * You should return an array with 1 or more key names and those keys will now be required params.

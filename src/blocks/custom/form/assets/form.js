@@ -41,6 +41,10 @@ export class Form {
 
     this.restRouteUrls = {};
 
+    if (window.eightshiftForms.mailerlite) {
+      this.restRouteUrls.mailerliteRestUri = `${this.siteUrl}${window.eightshiftForms.mailerlite.restUri}`;
+    }
+
     if (window.eightshiftForms.mailchimp) {
       this.restRouteUrls.mailchimpRestUri = `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`;
     }
@@ -218,6 +222,10 @@ export class Form {
 
     if (formType === 'mailchimp') {
       submitStatus = this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
+    }
+
+    if (formType === 'mailerlite') {
+      submitStatus = this.submitForm(this.restRouteUrls.mailerliteRestUri, this.getFormData(this.form));
     }
 
     if (formType === 'email') {

@@ -444,6 +444,22 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
         'code' => 400,
         'message' => esc_html__( 'Please enter your email.', 'eightshift-forms' ),
       ],
+
+      // Mailerlite specific.
+      'mailerlite-missing-keys' => [
+        'code' => 400,
+        'message' => esc_html__( 'Not all Mailerlite API info is set', 'eightshift-forms' ),
+      ],
+
+      'mailerlite-missing-list-id' => [
+        'code' => 400,
+        'message' => esc_html__( 'Please set a valid List ID in Form options in editor.', 'eightshift-forms' ),
+      ],
+
+      'mailerlite-missing-email' => [
+        'code' => 400,
+        'message' => esc_html__( 'Please enter your email.', 'eightshift-forms' ),
+      ],
     ];
   }
 

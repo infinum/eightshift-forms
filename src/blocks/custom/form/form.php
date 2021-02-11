@@ -17,6 +17,7 @@ use Eightshift_Forms\Rest\Send_Email_Route;
 use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
 use Eightshift_Forms\Rest\Buckaroo_Emandate_Route;
 use Eightshift_Forms\Rest\Mailchimp_Route;
+use Eightshift_Forms\Rest\Mailerlite_Route;
 
 $current_url                  = ! empty( \get_permalink() ) ? \get_permalink() : '';
 $block_class                  = $attributes['blockClass'] ?? '';
@@ -56,6 +57,7 @@ $buckaroo_sequence_type_front = isset( $attributes['buckarooIsSequenceTypeOnFron
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
 $mailchimp_add_existing       = isset( $attributes['mailchimpAddExistingMembers'] ) ? filter_var( $attributes['mailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL ) : false;
+$mailerlite_group_id            = $attributes['mailerliteGroupId'] ?? '';
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 $inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
@@ -154,6 +156,10 @@ if ( empty( $this ) ) {
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
         <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
       <?php } ?>
+    <?php } ?>
+
+    <?php if ( isset( $used_types[ Config::MAILERLITE_METHOD ] ) ) { ?>
+      <input type="hidden" name="<?php echo esc_attr( Mailerlite_Route::GROUP_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailerlite_group_id ); ?>" />
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::CUSTOM_EVENT_METHOD ] ) ) { ?>

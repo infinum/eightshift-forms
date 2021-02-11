@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
 use Eightshift_Forms\Rest\Active_Route;
 
 /**
@@ -75,6 +76,20 @@ class Localization_Constants implements Filters {
   private $mailchimp;
 
   /**
+   * Mailerlite route object.
+   *
+   * @var Active_Route
+   */
+  private $mailerlite_route;
+
+  /**
+   * Mailerlite client implementation.
+   *
+   * @var Mailerlite
+   */
+  private $mailerlite;
+
+  /**
    * Create a new admin instance.
    *
    * @param Active_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
@@ -92,7 +107,9 @@ class Localization_Constants implements Filters {
     Active_Route $buckaroo_pay_by_email_route,
     Active_Route $send_email_route,
     Active_Route $mailchimp_route,
-    Mailchimp $mailchimp
+    Mailchimp $mailchimp,
+    Active_Route $mailerlite_route,
+    Mailerlite $mailerlite
   ) {
     $this->dynamics_crm_route          = $dynamics_crm_route;
     $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
@@ -101,6 +118,8 @@ class Localization_Constants implements Filters {
     $this->send_email_route            = $send_email_route;
     $this->mailchimp_route             = $mailchimp_route;
     $this->mailchimp                   = $mailchimp;
+    $this->mailerlite_route             = $mailerlite_route;
+    $this->mailerlite                   = $mailerlite;
   }
 
   /**
@@ -115,6 +134,7 @@ class Localization_Constants implements Filters {
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
         'isBuckarooUsed'    => has_filter( Filters::BUCKAROO ),
         'isMailchimpUsed'   => has_filter( Filters::MAILCHIMP ),
+        'isMailerliteUsed'  => has_filter( Filters::MAILERLITE ),
         'hasThemes'         => has_filter( Filters::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
@@ -141,6 +161,10 @@ class Localization_Constants implements Filters {
 
     if ( has_filter( Filters::MAILCHIMP ) ) {
       $localization = $this->add_mailchimp_constants( $localization );
+    }
+
+    if ( has_filter( Filters::MAILERLITE ) ) {
+      $localization = $this->add_mailerlite_constants( $localization );
     }
 
     if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
@@ -205,7 +229,7 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Localize all constants required for Buckaroo integration.
+   * Localize all constants required for Mailchimp integration.
    *
    * @param  array $localization Existing localizations.
    * @return array
@@ -214,6 +238,20 @@ class Localization_Constants implements Filters {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
       'audiences' => $this->fetch_mailchimp_audiences(),
+    ];
+
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Mailerlite integration.
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  protected function add_mailerlite_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_KEY ]['mailerlite'] = [
+      'restUri' => $this->mailerlite_route->get_route_uri(),
     ];
 
     return $localization;
@@ -242,6 +280,31 @@ class Localization_Constants implements Filters {
     }
 
     return $audiences;
+  }
+
+  /**
+   * Reads the list of audiences from Mailerlite. Used in form options to
+   * select which audience does this form post to.
+   *
+   * @return array
+   */
+  protected function fetch_mailerlite_groups(): array {
+    $groups = [];
+
+    try {
+      $response = $this->mailerlite->get_all_groups();
+    } catch ( \Exception $e ) {
+      return $groups;
+    }
+
+    foreach ( $response as $list_obj ) {
+      $groups[] = [
+        'value' => $list_obj->id,
+        'label' => $list_obj->name,
+      ];
+    }
+
+    return $groups;
   }
 
   /**

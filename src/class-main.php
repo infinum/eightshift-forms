@@ -143,6 +143,21 @@ class Main extends Lib_Core {
         Captcha\Basic_Captcha::class,
       ),
 
+      // Mailerlite.
+      Integrations\Mailerlite\Mailerlite::class => array(
+        Integrations\Mailerlite\Mailerlite_Client::class,
+      ),
+      Rest\Mailerlite_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
+        Captcha\Basic_Captcha::class,
+      ),
+      Rest\Mailerlite_Fetch_Groups_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
       // Email.
       Rest\Send_Email_Route::class => array(
         Config::class,
@@ -158,6 +173,8 @@ class Main extends Lib_Core {
         Rest\Send_Email_Route::class,
         Rest\Mailchimp_Route::class,
         Integrations\Mailchimp\Mailchimp::class,
+        Rest\Mailerlite_Route::class,
+        Integrations\Mailerlite\Mailerlite::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,
