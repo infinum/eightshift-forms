@@ -30,6 +30,7 @@ jobs:
               id: composer-cache
               run: |
                 echo "::set-output name=dir::$(composer config cache-files-dir)"
+
             - name: Cache composer dependencies
               uses: actions/cache@v1
               with:
@@ -60,6 +61,7 @@ jobs:
               id: composer-cache
               run: |
                 echo "::set-output name=dir::$(composer config cache-files-dir)"
+
             - name: Cache composer dependencies
               uses: actions/cache@v1
               with:
@@ -90,6 +92,7 @@ jobs:
               id: composer-cache
               run: |
                 echo "::set-output name=dir::$(composer config cache-files-dir)"
+
             - name: Cache composer dependencies
               uses: actions/cache@v1
               with:
