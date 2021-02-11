@@ -64,7 +64,8 @@ class Mailerlite {
    */
   public function add_subscriber( string $group_id, string $email, array $subscriber_data, array $params = [] ) {
     $this->setup_client_config_and_verify();
-
+    error_log( print_r( ( $subscriber_data ), true ) );
+    
     $subscriber_data['email'] = $email;
 
     $response = $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );

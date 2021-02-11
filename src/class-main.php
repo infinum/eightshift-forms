@@ -210,9 +210,14 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
-      // Integrations.
+      // Integrations Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
         Mocks\MockMailchimpMarketingClient::class,
+      ),
+
+      // Integrations Mailerlite.
+      Integrations\Mailerlite\Mailerlite::class => array(
+        Mocks\MockMailerliteClient::class,
       ),
 
       // HTTP.
@@ -250,6 +255,13 @@ class Main extends Lib_Core {
       Rest\Mailchimp_Route::class => array(
         Config::class,
         Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Mailerlite.
+      Rest\Mailerlite_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
         Captcha\Basic_Captcha::class,
       ),
     ];
