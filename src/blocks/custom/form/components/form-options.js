@@ -50,7 +50,6 @@ export const FormOptions = (props) => {
       mailchimpTags,
       mailchimpAddExistingMembers,
       mailerliteGroupId,
-      mailerliteAddExistingMembers,
       eventNames,
     },
     actions: {
@@ -90,7 +89,6 @@ export const FormOptions = (props) => {
       onChangeMailchimpTags,
       onChangeMailchimpAddExistingMembers,
       onChangeMailerliteGroupId,
-      onChangeMailerliteAddExistingMembers,
       onChangeEventNames,
     },
   } = props;
@@ -359,9 +357,7 @@ export const FormOptions = (props) => {
                   type={type}
                   groupId={mailerliteGroupId}
                   groups={mailerliteGroups}
-                  addExistingMembers={mailerliteAddExistingMembers}
                   onChangeGroupId={onChangeMailerliteGroupId}
-                  onChangeAddExistingMembers={onChangeMailerliteAddExistingMembers}
                 />
 
               </Fragment>
