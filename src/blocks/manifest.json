@@ -1,6 +1,7 @@
 {
   "namespace": "eightshift-forms",
-  "background": "#900000",
+	"background": "#F6F8F8",
+	"foreground": "#0D3636",
   "globalVariables": {
     "maxCols": 12,
     "containers": {
