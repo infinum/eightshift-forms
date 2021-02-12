@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Integrations\Mailchimp;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use Eightshift_Forms\Integrations\Client_Interface;
 use \MailchimpMarketing\ApiClient;
 /**
  * Mailchimp integration class.
@@ -27,16 +28,16 @@ class Mailchimp {
   /**
    * Our own implementation of Mailchimp Marketing Client.
    *
-   * @var Mailchimp_Marketing_Client_Interface
+   * @var Client_Interface
    */
   private $mailchimp_marketing_client;
 
   /**
    * Constructs object
    *
-   * @param Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client Mailchimp marketing client.
+   * @param Client_Interface $mailchimp_marketing_client Mailchimp marketing client.
    */
-  public function __construct( Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client ) {
+  public function __construct( Client_Interface $mailchimp_marketing_client ) {
     $this->mailchimp_marketing_client = $mailchimp_marketing_client;
   }
 

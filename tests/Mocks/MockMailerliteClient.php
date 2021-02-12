@@ -10,7 +10,7 @@ declare( strict_types=1 );
 
 namespace EightshiftFormsTests\Mocks;
 
-use Eightshift_Forms\Integrations\Mailerlite\Mailerlite_Client_Interface;
+use Eightshift_Forms\Integrations\Client_Interface;
 use \MailchimpMarketing\ApiClient as MarketingApiClient;
 use \MailchimpMarketing\Api\ListsApi;
 use Codeception\Stub;
@@ -22,7 +22,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * Mailerlite integration class.
  */
-class MockMailerliteClient implements Mailerlite_Client_Interface {
+class MockMailerliteClient implements Client_Interface {
 
   /**
    * Constructs object

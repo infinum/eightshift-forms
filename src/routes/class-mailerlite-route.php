@@ -116,6 +116,8 @@ class Mailerlite_Route extends Base_Route implements Filters {
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailerlite-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( \Exception $e ) {
+      error_log( print_r( ( $e ), true ) );
+      
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 

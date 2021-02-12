@@ -180,7 +180,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_general_constants( array $localization ): array {
+  private function add_general_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
     return $localization;
   }
@@ -192,7 +192,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_dynamics_crm_constants( array $localization ): array {
+  private function add_dynamics_crm_constants( array $localization ): array {
     $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
@@ -216,7 +216,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_buckaroo_constants( array $localization ): array {
+  private function add_buckaroo_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['buckaroo'] = [
       'restUri' => [
         'ideal' => $this->buckaroo_ideal_route->get_route_uri(),
@@ -234,7 +234,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_mailchimp_constants( array $localization ): array {
+  private function add_mailchimp_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
       'audiences' => $this->fetch_mailchimp_audiences(),
@@ -249,7 +249,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_mailerlite_constants( array $localization ): array {
+  private function add_mailerlite_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailerlite'] = [
       'restUri' => $this->mailerlite_route->get_route_uri(),
     ];
@@ -263,7 +263,7 @@ class Localization_Constants implements Filters {
    *
    * @return array
    */
-  protected function fetch_mailchimp_audiences(): array {
+  private function fetch_mailchimp_audiences(): array {
     $audiences = [];
 
     try {
@@ -288,7 +288,7 @@ class Localization_Constants implements Filters {
    *
    * @return array
    */
-  protected function fetch_mailerlite_groups(): array {
+  private function fetch_mailerlite_groups(): array {
     $groups = [];
 
     try {
@@ -312,7 +312,7 @@ class Localization_Constants implements Filters {
    *
    * @return array
    */
-  protected function add_prefill_generic_multi_constants(): array {
+  private function add_prefill_generic_multi_constants(): array {
     $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
 
     if ( ! is_array( $prefill_multi ) ) {

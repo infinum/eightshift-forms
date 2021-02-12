@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Integrations\Mailerlite;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
+use Eightshift_Forms\Integrations\Client_Interface;
 use \MailerLiteApi\MailerLite as MailerLiteClient;
 /**
  * Mailerlite integration class.
@@ -27,16 +28,16 @@ class Mailerlite {
   /**
    * Our own implementation of Mailerlite Client.
    *
-   * @var Mailerlite_Client_Interface
+   * @var Client_Interface
    */
   private $mailerlite_client;
 
   /**
    * Constructs object
    *
-   * @param Mailerlite_Client_Interface $mailerlite_client Mailerlite client.
+   * @param Client_Interface $mailerlite_client Mailerlite client.
    */
-  public function __construct( Mailerlite_Client_Interface $mailerlite_client ) {
+  public function __construct( Client_Interface $mailerlite_client ) {
     $this->mailerlite_client = $mailerlite_client;
   }
 
@@ -64,8 +65,6 @@ class Mailerlite {
    */
   public function add_subscriber( string $group_id, string $email, array $subscriber_data, array $params = [] ) {
     $this->setup_client_config_and_verify();
-    error_log( print_r( ( $subscriber_data ), true ) );
-    
     $subscriber_data['email'] = $email;
 
     $response = $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );

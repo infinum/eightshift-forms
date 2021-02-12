@@ -1,20 +1,20 @@
 <?php
 /**
- * Mailerlite_Client_Interface interface
+ * Client_Interface interface
  *
- * @package Eightshift_Forms\Integrations\Mailerlite
+ * @package Eightshift_Forms\Integrations
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Integrations\Mailerlite;
+namespace Eightshift_Forms\Integrations;
 
 use \MailerLiteApi\MailerLite;
 
 /**
- * Mailerlite_Client_Interface interface.
+ * Client_Interface interface.
  */
-interface Mailerlite_Client_Interface {
+interface Client_Interface {
 
   /**
    * Returns the build client

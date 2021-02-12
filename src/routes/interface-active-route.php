@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailchimp_Marketing_Client_Interface interface
+ * Active_Route interface
  *
  * @package Eightshift_Forms\Integrations\Mailchimp
  */

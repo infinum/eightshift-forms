@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations\Mailerlite;
 
 use Eightshift_Forms\Hooks\Filters;
+use Eightshift_Forms\Integrations\Client_Interface;
 use \MailerLiteApi\MailerLite as MailerLiteClient;
 use \GuzzleHttp\Client as GuzzleHttp;
 use \Http\Adapter\Guzzle6\Client as Guzzle6;
@@ -17,14 +18,14 @@ use \Http\Adapter\Guzzle6\Client as Guzzle6;
 /**
  * Mailerlite integration class.
  */
-class Mailerlite_Client implements Mailerlite_Client_Interface {
+class Mailerlite_Client implements Client_Interface {
 
   /**
    * Mailerlite client object.
    *
    * @var MailerLiteClient
    */
-  protected $client;
+  private $client;
 
   /**
    * Sets the config because we can't set config during construction (filters aren't yet registered)
