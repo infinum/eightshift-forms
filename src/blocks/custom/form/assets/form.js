@@ -348,7 +348,7 @@ export class Form {
    */
   appendErrorMessage(error) {
     const errorMessageElem = document.createElement('div');
-    errorMessageElem.classList.add(this.errorMessageClasses);
+    errorMessageElem.classList.add(...this.errorMessageClasses);
     errorMessageElem.innerHTML = error;
     this.formErrorMessageWrapper.appendChild(errorMessageElem);
   }
