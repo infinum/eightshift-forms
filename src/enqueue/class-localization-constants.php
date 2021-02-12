@@ -118,8 +118,8 @@ class Localization_Constants implements Filters {
     $this->send_email_route            = $send_email_route;
     $this->mailchimp_route             = $mailchimp_route;
     $this->mailchimp                   = $mailchimp;
-    $this->mailerlite_route             = $mailerlite_route;
-    $this->mailerlite                   = $mailerlite;
+    $this->mailerlite_route            = $mailerlite_route;
+    $this->mailerlite                  = $mailerlite;
   }
 
   /**
