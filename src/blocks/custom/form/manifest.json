@@ -9,6 +9,9 @@
   "keywords": [
     "Form"
   ],
+  "supports": {
+    "multiple": false
+  },
   "hasInnerBlocks": true,
   "attributes": {
     "wrapperUse": {
