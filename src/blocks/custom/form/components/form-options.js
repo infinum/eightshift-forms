@@ -350,7 +350,7 @@ export const FormOptions = (props) => {
               <Fragment>
                 <br />
                 <strong className="notice-title">{__('MailerLite Options', 'eightshift-forms')}</strong>
-                <p>{__('These are options for when your form is sending data to MailerLite.', 'eightshift-forms')}</p>
+                <p>{__('These are the options for when your form is sending data to MailerLite.', 'eightshift-forms')}</p>
                 <br />
                 <FormMailerliteOptions
                   blockClass={blockClass}

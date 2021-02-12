@@ -223,7 +223,7 @@ interface Filters {
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1 );
    *   }
    *
    *  public function get_info( string $key ): string
