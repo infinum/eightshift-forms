@@ -252,6 +252,7 @@ class Localization_Constants implements Filters {
   private function add_mailerlite_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailerlite'] = [
       'restUri' => $this->mailerlite_route->get_route_uri(),
+      'groups' => $this->fetch_mailerlite_groups(),
     ];
 
     return $localization;

@@ -453,7 +453,7 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
 
       'mailerlite-missing-group-id' => [
         'code' => 400,
-        'message' => esc_html__( 'Please set a valid Group ID in Form options in editor.', 'eightshift-forms' ),
+        'message' => esc_html__( 'Please set a valid Group ID.', 'eightshift-forms' ),
       ],
 
       'mailerlite-blocked-email' => [
