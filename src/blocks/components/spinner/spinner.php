@@ -12,7 +12,7 @@ use Eightshift_Libs\Helpers\Components;
 $block_class = $attributes['blockClass'] ?? '';
 $theme       = $attributes['theme'] ?? '';
 
-$component_class = 'spinner';
+$component_class = 'form-spinner';
 
 $component_classes = Components::classnames([
   $component_class,

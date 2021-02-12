@@ -10,7 +10,7 @@ export class Form {
     this.formWrapper = element;
     this.form = element.querySelector('.js-block-form-form');
     this.formId = element.getAttribute('id');
-    this.spinner = element.querySelector('.js-spinner');
+    this.spinner = element.querySelector('.js-form-spinner');
     this.submits = this.form.querySelectorAll('input[type="submit"]');
     this.formMessageSuccess = this.formWrapper.querySelector('.js-form-message--success');
     this.formErrorMessageWrapper = this.formWrapper.querySelector('.js-form-error-message-wrapper');
