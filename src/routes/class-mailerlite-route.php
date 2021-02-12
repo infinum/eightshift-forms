@@ -18,6 +18,7 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
+use Http\Client\Exception\HttpException;
 
 /**
  * Class Mailerlite_Route
@@ -98,7 +99,7 @@ class Mailerlite_Route extends Base_Route implements Filters {
     $email              = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
     $group_id           = ! empty( $params[ self::GROUP_ID_PARAM ] ) ? strtolower( $params[ self::GROUP_ID_PARAM ] ) : '';
     $merge_field_params = $this->unset_irrelevant_params( $params );
-    $response           = [];
+    $response           = '';
 
     // Make sure we have the group ID.
     if ( empty( $group_id ) ) {
@@ -109,15 +110,18 @@ class Mailerlite_Route extends Base_Route implements Filters {
     if ( empty( $email ) ) {
       return $this->rest_response_handler( 'mailerlite-missing-email' );
     }
-
+    
     // Retrieve all entities from the "leads" Entity Set.
     try {
-        $response['add'] = $this->mailerlite->add_subscriber( $group_id, $email, $merge_field_params );
+      $response = $this->mailerlite->add_subscriber( $group_id, $email, $merge_field_params );
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailerlite-missing-keys', [ 'message' => $e->getMessage() ] );
+    } catch ( HttpException $e ) {
+      $msg = $e->getResponse()->getBody()->getContents();
+      $message = json_decode($msg, true)['error']['message'];
+
+      return $this->rest_response_handler( 'mailerlite-blocked-email', [ 'message' => $message ] );
     } catch ( \Exception $e ) {
-      error_log( print_r( ( $e ), true ) );
-      
       return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
     }
 
@@ -125,7 +129,7 @@ class Mailerlite_Route extends Base_Route implements Filters {
       [
         'code' => 200,
         'data' => $response,
-        'message' => ! empty( $message ) ? $message : \esc_html__( 'Successfully added ', 'eightshift-forms' ),
+        'message' => ! empty( $message ) ? $message : \esc_html__( 'Successfully added', 'eightshift-forms' ),
       ]
     );
   }

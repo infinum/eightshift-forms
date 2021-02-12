@@ -13,6 +13,7 @@ use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Integrations\Client_Interface;
 use \MailerLiteApi\MailerLite as MailerLiteClient;
+
 /**
  * Mailerlite integration class.
  */
@@ -67,9 +68,7 @@ class Mailerlite {
     $this->setup_client_config_and_verify();
     $subscriber_data['email'] = $email;
 
-    $response = $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );
-
-    return $response;
+    return $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );;
   }
 
   /**
