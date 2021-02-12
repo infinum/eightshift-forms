@@ -19,7 +19,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "allowedBlocks": {
@@ -56,7 +56,7 @@
       "type": "string"
     },
     "isComplexType": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "type": {
@@ -78,7 +78,7 @@
       "default": []
     },
     "shouldRedirectOnSuccess": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "redirectSuccess": {
