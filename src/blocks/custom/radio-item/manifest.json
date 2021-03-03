@@ -18,7 +18,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-      "type": "bool",
+       "type": "boolean",
       "default": false
     },
     "theme": {
@@ -40,15 +40,15 @@
       "type": "string"
     },
     "isChecked": {
-      "type": "bool",
+       "type": "boolean",
       "default": false
     },
     "isDisabled": {
-      "type": "bool",
+       "type": "boolean",
       "default": false
     },
     "isReadOnly": {
-      "type": "bool",
+       "type": "boolean",
       "default": false
     }
   }

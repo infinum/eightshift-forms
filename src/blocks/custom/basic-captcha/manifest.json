@@ -21,7 +21,7 @@
       "default": true
     },
     "wrapperUseSimple": {
-      "type": "bool",
+       "type": "boolean",
       "default": true
     },
     "wrapperSpacingBottom": {
