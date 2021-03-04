@@ -37,23 +37,23 @@
       "type": "string"
     },
     "isChecked": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isDisabled": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isReadOnly": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isRequired": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "preventSending": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "wrapperUse": {
@@ -61,7 +61,7 @@
       "default": true
     },
     "wrapperUseSimple": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "wrapperGutter": {

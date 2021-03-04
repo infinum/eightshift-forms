@@ -7,23 +7,23 @@
       "type": "string"
     },
     "wrapperUse": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "wrapperUseShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "wrapperUseSimple": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "wrapperUseSimpleShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "wrapperDisable": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "wrapperWidth": {

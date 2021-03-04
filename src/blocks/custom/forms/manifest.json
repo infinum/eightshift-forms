@@ -15,7 +15,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "selectedFormId": {

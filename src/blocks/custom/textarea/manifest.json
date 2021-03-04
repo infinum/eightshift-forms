@@ -15,7 +15,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "theme": {
@@ -46,19 +46,19 @@
       "type": "string"
     },
     "isRequired": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isDisabled": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isReadOnly": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "preventSending": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     }
   }

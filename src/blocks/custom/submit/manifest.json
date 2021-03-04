@@ -15,7 +15,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "theme": {
@@ -39,7 +39,7 @@
       "default": "submit"
     },
     "isDisabled": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     }
   }

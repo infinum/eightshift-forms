@@ -30,19 +30,19 @@
       "type": "string"
     },
     "isDisabled": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "preventSending": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "hideLoading": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "prefillData": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "prefillDataSource": {
@@ -57,7 +57,7 @@
       "default": true
     },
     "wrapperUseSimple": {
-       "type": "boolean",
+      "type": "boolean",
       "default": true
     },
     "wrapperSpacingBottom": {

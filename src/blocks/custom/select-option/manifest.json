@@ -19,7 +19,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "value": {
@@ -29,11 +29,11 @@
       "type": "string"
     },
     "isOptionSelected": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     },
     "isDisabled": {
-       "type": "boolean",
+      "type": "boolean",
       "default": false
     }
   }
