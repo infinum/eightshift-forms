@@ -167,6 +167,10 @@ class Main extends Lib_Core {
         Lib_Manifest\Manifest::class,
         Enqueue\Localization_Constants::class,
       ),
+      Enqueue\Enqueue_Admin::class => array(
+        Lib_Manifest\Manifest::class,
+        Enqueue\Localization_Constants::class,
+      ),
 
       // Admin.
       Admin\Forms::class,
