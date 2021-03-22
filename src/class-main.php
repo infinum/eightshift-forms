@@ -200,6 +200,7 @@ class Main extends Lib_Core {
       // Integrations.
       Integrations\Mailchimp\Mailchimp::class => array(
         Mocks\MockMailchimpMarketingClient::class,
+        Cache\Transient_Cache::class,
       ),
 
       // HTTP.
