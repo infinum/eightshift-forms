@@ -26,6 +26,13 @@ class Localization_Constants implements Filters {
   const LOCALIZATION_KEY = 'eightshiftForms';
 
   /**
+   * Key under which all localizations are held. window.${LOCALIZATION_KEY}. Only loaded in admin.
+   *
+   * @var string
+   */
+  const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
+
+  /**
    * Some variable.
    *
    * @var Active_Route
@@ -147,6 +154,25 @@ class Localization_Constants implements Filters {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
 
+    if ( has_filter( Filters::PREFILL_GENERIC_SINGLE ) ) {
+      $localization[ self::LOCALIZATION_KEY ]['prefill']['single'] = $this->add_prefill_generic_single_constants();
+    }
+
+    return $localization;
+  }
+
+  /**
+   * Define all variables we need in both editor and frontend.
+   *
+   * @return array
+   */
+  public function get_admin_localizations(): array {
+    $localization = [];
+
+    if ( has_filter( Filters::MAILCHIMP ) ) {
+      $localization = $this->add_mailchimp_admin_constants( $localization );
+    }
+
     return $localization;
   }
 
@@ -205,7 +231,7 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Localize all constants required for Buckaroo integration.
+   * Localize all constants required for Mailchimp integration.
    *
    * @param  array $localization Existing localizations.
    * @return array
@@ -213,6 +239,19 @@ class Localization_Constants implements Filters {
   protected function add_mailchimp_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
+    ];
+
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Mailchimp integration (only available in admin)
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  protected function add_mailchimp_admin_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_ADMIN_KEY ]['mailchimp'] = [
       'audiences' => $this->fetch_mailchimp_audiences(),
     ];
 
@@ -245,7 +284,7 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Localize all constants required for Dynamics CRM integration.
+   * Adds prefill options to multi option blocks (select, radio, etc).
    *
    * @return array
    */
@@ -266,5 +305,29 @@ class Localization_Constants implements Filters {
     }
 
     return $prefill_multi_formatted;
+  }
+
+  /**
+   * Adds prefill options to single option blocks (input, etc).
+   *
+   * @return array
+   */
+  protected function add_prefill_generic_single_constants(): array {
+    $prefill_single = apply_filters( Filters::PREFILL_GENERIC_SINGLE, [] );
+
+    if ( ! is_array( $prefill_single ) ) {
+      return [];
+    }
+
+    $prefill_single_formatted = [];
+    foreach ( $prefill_single as $source_name => $prefill_single_source ) {
+      if ( isset( $prefill_single_source['data'] ) ) {
+        unset( $prefill_single_source['data'] );
+      }
+
+      $prefill_single_formatted[] = $prefill_single_source;
+    }
+
+    return $prefill_single_formatted;
   }
 }

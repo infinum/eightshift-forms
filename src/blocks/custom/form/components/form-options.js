@@ -105,10 +105,11 @@ export const FormOptions = (props) => {
     isBuckarooUsed,
     isMailchimpUsed,
     dynamicsCrm = [],
-    mailchimp = {},
   } = window.eightshiftForms;
 
-  const audiences = (mailchimp && mailchimp.audiences) ? mailchimp.audiences : [];
+  const mailchimpAdmin = window.eightshiftFormsAdmin.mailchimp || {};
+
+  const audiences = (mailchimpAdmin && mailchimpAdmin.audiences) ? mailchimpAdmin.audiences : [];
 
   const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
