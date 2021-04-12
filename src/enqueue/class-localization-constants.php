@@ -9,10 +9,9 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Enqueue;
 
-use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
-use Eightshift_Libs\Rest\Callable_Route;
+use Eightshift_Forms\Rest\Active_Route;
 
 /**
  * Handles setting constants we need to add to both editor and frontend.
@@ -29,7 +28,7 @@ class Localization_Constants implements Filters {
   const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
 
   /**
-   * Some variable.
+   * Dynamics CRM route obj.
    *
    * @var Active_Route
    */
@@ -80,26 +79,23 @@ class Localization_Constants implements Filters {
   /**
    * Create a new admin instance.
    *
-   * @param Manifest_Data  $manifest                    Inject manifest which holds data about assets from manifest.json.
-   * @param Callable_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
-   * @param Callable_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
-   * @param Callable_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
-   * @param Callable_Route $buckaroo_pay_by_email_route Buckaroo (Pay By Email) route object which holds values we need to localize.
-   * @param Callable_Route $send_email_route            Send Email route object which holds values we need to localize.
-   * @param Callable_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
-   * @param Mailchimp      $mailchimp                   Mailchimp implementation.
+   * @param Active_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
+   * @param Active_Route $buckaroo_ideal_route        Buckaroo (Ideal) route object which holds values we need to localize.
+   * @param Active_Route $buckaroo_emandate_route     Buckaroo (Emandate) route object which holds values we need to localize.
+   * @param Active_Route $buckaroo_pay_by_email_route Buckaroo (Pay By Email) route object which holds values we need to localize.
+   * @param Active_Route $send_email_route            Send Email route object which holds values we need to localize.
+   * @param Active_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
+   * @param Mailchimp    $mailchimp                   Mailchimp implementation.
    */
   public function __construct(
-    Manifest_Data $manifest,
-    Callable_Route $dynamics_crm_route,
-    Callable_Route $buckaroo_ideal_route,
-    Callable_Route $buckaroo_emandate_route,
-    Callable_Route $buckaroo_pay_by_email_route,
-    Callable_Route $send_email_route,
-    Callable_Route $mailchimp_route,
+    Active_Route $dynamics_crm_route,
+    Active_Route $buckaroo_ideal_route,
+    Active_Route $buckaroo_emandate_route,
+    Active_Route $buckaroo_pay_by_email_route,
+    Active_Route $send_email_route,
+    Active_Route $mailchimp_route,
     Mailchimp $mailchimp
   ) {
-    $this->manifest                    = $manifest;
     $this->dynamics_crm_route          = $dynamics_crm_route;
     $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
     $this->buckaroo_emandate_route     = $buckaroo_emandate_route;
