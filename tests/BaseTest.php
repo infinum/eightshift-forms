@@ -28,8 +28,8 @@ class BaseTest extends \Codeception\Test\Unit
           'esc_html__',
           'esc_html_x',
           'esc_attr_x',
-          'sanitize_text_field',
           'wp_unslash',
+          'wp_check_invalid_utf8'
       ]
     );
 
@@ -69,6 +69,62 @@ class BaseTest extends \Codeception\Test\Unit
       'wp_verify_nonce' => function() {
         return true;
       },
+      'wp_pre_kses_less_than' => function ( $text ) {
+        return preg_replace_callback( '%<[^>]*?((?=<)|>|$)%', function($matches) {
+          if ( false === strpos( $matches[0], '>' ) ) {
+            return esc_html( $matches[0] );
+        }
+        return $matches[0];
+        }, $text );
+      },
+      'wp_strip_all_tags' => function ( $string, $remove_breaks = false ) {
+        $string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
+        $string = strip_tags( $string );
+     
+        if ( $remove_breaks ) {
+            $string = preg_replace( '/[\r\n\t ]+/', ' ', $string );
+        }
+     
+        return trim( $string );
+      },
+      'sanitize_text_field' => function ( $str, $keep_newlines = false ) {
+        if ( is_object( $str ) || is_array( $str ) ) {
+          return '';
+        }
+    
+        $str = (string) $str;
+    
+        $filtered = wp_check_invalid_utf8( $str );
+    
+        if ( strpos( $filtered, '<' ) !== false ) {
+            $filtered = wp_pre_kses_less_than( $filtered );
+            // This will strip extra whitespace for us.
+            $filtered = wp_strip_all_tags( $filtered, false );
+    
+            // Use HTML entities in a special case to make sure no later
+            // newline stripping stage could lead to a functional tag.
+            $filtered = str_replace( "<\n", "&lt;\n", $filtered );
+        }
+    
+        if ( ! $keep_newlines ) {
+            $filtered = preg_replace( '/[\r\n\t ]+/', ' ', $filtered );
+        }
+        $filtered = trim( $filtered );
+    
+        $found = false;
+        while ( preg_match( '/%[a-f0-9]{2}/i', $filtered, $match ) ) {
+            $filtered = str_replace( $match[0], '', $filtered );
+            $found    = true;
+        }
+    
+        if ( $found ) {
+            // Strip out the whitespace that may now exist after removing the octets.
+            $filtered = trim( preg_replace( '/ +/', ' ', $filtered ) );
+        }
+    
+        return $filtered;
+      },
+
     ]);
   }
 

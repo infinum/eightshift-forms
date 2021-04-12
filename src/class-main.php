@@ -217,6 +217,11 @@ class Main extends Lib_Core {
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,
       ),
+      Mocks\TestRouteSanitization::class => array(
+        Config::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
 
       // Email route.
       Rest\Send_Email_Route::class => array(
