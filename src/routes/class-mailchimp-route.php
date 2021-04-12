@@ -18,6 +18,7 @@ use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class Mailchimp_Route
@@ -53,12 +54,25 @@ class Mailchimp_Route extends Base_Route implements Filters {
   const TAGS_PARAM = 'tags';
 
   /**
+   * Parameter for toggle if we modify Mailchimp user data if they already exist.
+   *
+   * @var string
+   */
+  const ADD_EXISTING_MEMBERS_PARAM = 'add-existing-members';
+
+  /**
+   * Error if user exists
+   *
+   * @var string
+   */
+  const ERROR_USER_EXISTS = 'Member Exists';
+
+  /**
    * Config data obj.
    *
    * @var Config_Data
    */
   protected $config;
-
   /**
    * Mailchimp object.
    *
@@ -103,11 +117,12 @@ class Mailchimp_Route extends Base_Route implements Filters {
       return rest_ensure_response( $e->get_data() );
     }
 
-    $list_id            = $params[ self::LIST_ID_PARAM ] ?? '';
-    $email              = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
-    $tags               = $params[ self::TAGS_PARAM ] ?? [];
-    $merge_field_params = $this->unset_irrelevant_params( $params );
-    $response           = [];
+    $list_id                     = $params[ self::LIST_ID_PARAM ] ?? '';
+    $email                       = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
+    $tags                        = $params[ self::TAGS_PARAM ] ?? [];
+    $should_add_existing_members = isset( $params[ self::ADD_EXISTING_MEMBERS_PARAM ] ) ? filter_var( $params[ self::ADD_EXISTING_MEMBERS_PARAM ], FILTER_VALIDATE_BOOL ) : false;
+    $merge_field_params          = $this->unset_irrelevant_params( $params );
+    $response                    = [];
 
     // Make sure we have the list ID.
     if ( empty( $list_id ) ) {
@@ -121,10 +136,30 @@ class Mailchimp_Route extends Base_Route implements Filters {
 
     // Retrieve all entities from the "leads" Entity Set.
     try {
-      $response['add'] = $this->mailchimp->add_or_update_member( $list_id, $email, $merge_field_params );
+      if ( $should_add_existing_members ) {
+        $response['add'] = $this->mailchimp->add_or_update_member( $list_id, $email, $merge_field_params );
+      } else {
+        $response['add'] = $this->mailchimp->add_member( $list_id, $email, $merge_field_params );
+      }
 
       if ( ! empty( $tags ) ) {
         $response['tags'] = $this->mailchimp->add_member_tags( $list_id, $email, $tags );
+      }
+    } catch ( ClientException $e ) {
+      $decoded_exception = ! empty( $e->getResponse() ) ? json_decode( $e->getResponse()->getBody()->getContents(), true ) : [];
+
+      if ( ! $should_add_existing_members && isset( $decoded_exception['title'] ) && $decoded_exception['title'] === self::ERROR_USER_EXISTS ) {
+        $msg_user_exists = \esc_html__( 'User already exists', 'eightshift-forms' );
+        $response['add'] = $msg_user_exists;
+        $message         = $msg_user_exists;
+
+        // We need to do the "adding tags" call as well (if needed) as the exception in the "add_member" method
+        // has stopped execution.
+        if ( ! empty( $tags ) ) {
+          $response['tags'] = $this->mailchimp->add_member_tags( $list_id, $email, $tags );
+        }
+      } else {
+        return $this->rest_response_handler_unknown_error( [ 'error' => $e->getMessage() ] );
       }
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailchimp-missing-keys', [ 'message' => $e->getMessage() ] );
@@ -136,7 +171,7 @@ class Mailchimp_Route extends Base_Route implements Filters {
       [
         'code' => 200,
         'data' => $response,
-        'message' => esc_html__( 'Successfully added ', 'eightshift-forms' ),
+        'message' => ! empty( $message ) ? $message : \esc_html__( 'Successfully added ', 'eightshift-forms' ),
       ]
     );
   }
@@ -167,5 +202,23 @@ class Mailchimp_Route extends Base_Route implements Filters {
       'privacy',
       'privacy-policy',
     ];
+  }
+
+  /**
+   * Toggle if this route requires nonce verification
+   *
+   * @return bool
+   */
+  protected function requires_nonce_verification(): bool {
+    return true;
+  }
+
+  /**
+   * Returns allowed methods for this route.
+   *
+   * @return string|array
+   */
+  protected function get_methods() {
+    return static::CREATABLE;
   }
 }

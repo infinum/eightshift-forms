@@ -24,7 +24,7 @@ $form_action                  = $attributes['action'] ?? '';
 $form_method                  = $attributes['method'] ?? '';
 $form_target                  = $attributes['target'] ?? '';
 $form_classes                 = $attributes['classes'] ?? '';
-$form_id                      = $attributes['id'] ?? '';
+$form_id                      = $attributes['id'] ?? 'form-' . hash( 'crc32', time() . wp_rand( 0, 10000 ) );
 $form_type                    = $attributes['type'] ?? '';
 $form_types_complex           = $attributes['typesComplex'] ?? '';
 $form_types_complex_redirect  = $attributes['typesComplexRedirect'] ?? '';
@@ -55,6 +55,7 @@ $buckaroo_is_recurring        = $buckaroo_sequence_type === '0';
 $buckaroo_sequence_type_front = isset( $attributes['buckarooIsSequenceTypeOnFrontend'] ) ? filter_var( $attributes['buckarooIsSequenceTypeOnFrontend'], FILTER_VALIDATE_BOOLEAN ) : false;
 $mailchimp_list_id            = $attributes['mailchimpListId'] ?? '';
 $mailchimp_tags               = $attributes['mailchimpTags'] ?? [];
+$mailchimp_add_existing       = isset( $attributes['mailchimpAddExistingMembers'] ) ? filter_var( $attributes['mailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL ) : false;
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types( $is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect );
 $inner_block_content          = ! empty( $inner_block_content ) ? $inner_block_content : '';
@@ -75,6 +76,7 @@ if ( empty( $this ) ) {
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
   <form
+    id="<?php echo esc_attr( $form_id ); ?>"
     class="<?php echo esc_attr( "{$block_class}__form js-{$block_class}-form" ); ?>"
     action="<?php echo esc_attr( $form_action ); ?>"
     method="<?php echo esc_attr( $form_method ); ?>"
@@ -102,7 +104,9 @@ if ( empty( $this ) ) {
     /**
      * Project specific fields.
      */
-    do_action( Actions::EXTRA_FORM_FIELDS, $attributes ?? [] );
+    if ( has_action( Actions::EXTRA_FORM_FIELDS ) ) {
+      do_action( Actions::EXTRA_FORM_FIELDS, $attributes ?? [] );
+    }
 
     /**
      * Here we need to add some additional fields for specific methods.
@@ -145,6 +149,7 @@ if ( empty( $this ) ) {
 
     <?php if ( isset( $used_types[ Config::MAILCHIMP_METHOD ] ) ) { ?>
       <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo (int) $mailchimp_add_existing; ?>" />
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
         <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
@@ -157,6 +162,8 @@ if ( empty( $this ) ) {
       <?php } ?>
     <?php } ?>
 
+    <input type="hidden" name="form-unique-id" value="<?php echo esc_attr( $form_id ); ?>" />
+    <?php wp_nonce_field( $form_id, 'nonce', false ); ?>
   </form>
 
   <?php echo wp_kses_post( Components::render( 'form-overlay' ) ); ?>

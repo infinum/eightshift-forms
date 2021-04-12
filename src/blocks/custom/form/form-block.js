@@ -9,6 +9,7 @@ import { FormOptions } from './components/form-options';
 
 export const Form = (props) => {
   const {
+    clientId,
     attributes,
   } = props;
 
@@ -23,6 +24,7 @@ export const Form = (props) => {
         />
       </InspectorControls>
       <FormEditor
+        clientId={clientId}
         attributes={attributes}
         actions={actions}
       />

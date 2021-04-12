@@ -123,10 +123,19 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
    */
   protected function get_callback_arguments() : array {
     return [
-      'methods'  => static::READABLE,
+      'methods'  => $this->get_methods(),
       'callback' => [ $this, 'route_callback' ],
       'permission_callback' => [ $this, 'permission_callback' ],
     ];
+  }
+
+  /**
+   * Returns allowed methods for this route.
+   *
+   * @return string|array
+   */
+  protected function get_methods() {
+    return static::READABLE;
   }
 
   /**
@@ -163,6 +172,19 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
       if ( empty( $this->hmac ) || ! $this->hmac->verify_hash( $hash, $params, $this->get_authorization_salt() ) ) {
         throw new Unverified_Request_Exception(
           $this->rest_response_handler( 'authorization-invalid' )->data
+        );
+      }
+    }
+
+    // Verify nonce if submitted.
+    if ( $this->requires_nonce_verification() ) {
+      if (
+        ! isset( $params['nonce'] ) ||
+        ! isset( $params['form-unique-id'] ) ||
+        ! wp_verify_nonce( $params['nonce'], $params['form-unique-id'] )
+      ) {
+        throw new Unverified_Request_Exception(
+          $this->rest_response_handler( 'invalid-nonce' )->data
         );
       }
     }
@@ -285,6 +307,15 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
   }
 
   /**
+   * Toggle if this route requires nonce verification.
+   *
+   * @return bool
+   */
+  protected function requires_nonce_verification(): bool {
+    return false;
+  }
+
+  /**
    * Removes some params we don't want to send to CRM from request.
    *
    * @param  array $params Params received in request.
@@ -355,6 +386,10 @@ abstract class Base_Route extends Libs_Base_Route implements Callable_Route, Act
    */
   private function all_responses(): array {
     return [
+      'invalid-nonce' => [
+        'code' => 400,
+        'message' => esc_html__( 'Invalid nonce.', 'eightshift-forms' ),
+      ],
       'wrong-captcha' => [
         'code' => 429,
         'message' => esc_html__( 'Wrong captcha answer.', 'eightshift-forms' ),

@@ -47,6 +47,7 @@ export const FormOptions = (props) => {
       mailchimpListId,
       mailchimpAddTag,
       mailchimpTags,
+      mailchimpAddExistingMembers,
       eventNames,
     },
     actions: {
@@ -84,6 +85,7 @@ export const FormOptions = (props) => {
       onChangeMailchimpListId,
       onChangeMailchimpAddTag,
       onChangeMailchimpTags,
+      onChangeMailchimpAddExistingMembers,
       onChangeEventNames,
     },
   } = props;
@@ -103,10 +105,11 @@ export const FormOptions = (props) => {
     isBuckarooUsed,
     isMailchimpUsed,
     dynamicsCrm = [],
-    mailchimp = {},
   } = window.eightshiftForms;
 
-  const audiences = (mailchimp && mailchimp.audiences) ? mailchimp.audiences : [];
+  const mailchimpAdmin = window.eightshiftFormsAdmin.mailchimp || {};
+
+  const audiences = (mailchimpAdmin && mailchimpAdmin.audiences) ? mailchimpAdmin.audiences : [];
 
   const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
@@ -315,9 +318,11 @@ export const FormOptions = (props) => {
                   audiences={audiences}
                   addTag={mailchimpAddTag}
                   tags={mailchimpTags}
+                  addExistingMembers={mailchimpAddExistingMembers}
                   onChangeListId={onChangeMailchimpListId}
                   onChangeAddTag={onChangeMailchimpAddTag}
                   onChangeTags={onChangeMailchimpTags}
+                  onChangeAddExistingMembers={onChangeMailchimpAddExistingMembers}
                 />
 
               </Fragment>

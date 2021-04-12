@@ -6,6 +6,8 @@ use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
 
 class MailchimpRouteTest extends BaseRouteTest
 {
+  const METHOD = 'POST';
+
   protected function getRouteName(): string {
     return Mailchimp_Route::class;
   }
@@ -25,10 +27,12 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingNewMembers()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
+      'nonce' => 'asdb',
+      'form-unique-id' => '123'
     ];
     $response = $this->route_endpoint->route_callback( $request );
 
@@ -37,14 +41,14 @@ class MailchimpRouteTest extends BaseRouteTest
   }
 
   /**
-   * Correct request should result in 200 response
+   * Invalid list ID should trigger an error response.
    *
    * @return void
    */
   public function testRestCallFailsIfInvalidListId()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => DataProvider::INVALID_LIST_ID,
     ];
@@ -61,8 +65,8 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingTags()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
-    $request->params['GET'] = [
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
       $this->route_endpoint::TAGS_PARAM => [
@@ -70,6 +74,8 @@ class MailchimpRouteTest extends BaseRouteTest
         'bbb',
         'ccc',
       ],
+      'nonce' => 'asdb',
+      'form-unique-id' => '123'
     ];
     $response = $this->route_endpoint->route_callback( $request );
 

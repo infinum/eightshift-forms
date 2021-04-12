@@ -9,13 +9,29 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Integrations\Mailchimp;
 
+use Eightshift_Forms\Cache\Cache;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use \MailchimpMarketing\ApiClient;
+
 /**
  * Mailchimp integration class.
  */
 class Mailchimp {
+
+  /**
+   * Lists transient name
+   *
+   * @var string
+   */
+  const CACHE_LISTS = 'eightshift-forms-mailchimp-lists';
+
+  /**
+   * Lists transient expiration time.
+   *
+   * @var int
+   */
+  const CACHE_LIST_TIMEOUT = 60 * 15; // 15 min
 
   /**
    * Mailchimp Marketing Api client.
@@ -32,12 +48,21 @@ class Mailchimp {
   private $mailchimp_marketing_client;
 
   /**
+   * Cache object used for caching Mailchimp responses.
+   *
+   * @var Cache
+   */
+  private $cache;
+
+  /**
    * Constructs object
    *
    * @param Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client Mailchimp marketing client.
+   * @param Cache                                $transient_cache            Transient cache object.
    */
-  public function __construct( Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client ) {
+  public function __construct( Mailchimp_Marketing_Client_Interface $mailchimp_marketing_client, Cache $transient_cache ) {
     $this->mailchimp_marketing_client = $mailchimp_marketing_client;
+    $this->cache                      = $transient_cache;
   }
 
   /**
@@ -60,6 +85,34 @@ class Mailchimp {
     $params['merge_fields']  = $merge_fields;
 
     $response = $this->client->lists->setListMember( $list_id, $this->calculate_subscriber_hash( $email ), $params );
+
+    if ( ! is_object( $response ) || ! isset( $response->id, $response->email_address ) ) {
+      throw new \Exception( 'setListMember response invalid' );
+    }
+
+    return $response;
+  }
+
+  /**
+   * Adds a member in Mailchimp.
+   *
+   * @param  string $list_id      Audience list ID.
+   * @param  string $email        Contact's email.
+   * @param  array  $merge_fields List of merge fields to add to request.
+   * @param  array  $params       (Optional) list of params from request.
+   * @param  string $status       (Optional) Member's status (if new).
+   * @return mixed
+   *
+   * @throws \Exception When response is invalid.
+   */
+  public function add_member( string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending' ) {
+    $this->setup_client_config_and_verify();
+
+    $params['email_address'] = $email;
+    $params['status']        = $status;
+    $params['merge_fields']  = $merge_fields;
+
+    $response = $this->client->lists->addListMember( $list_id, $params );
 
     if ( ! is_object( $response ) || ! isset( $response->id, $response->email_address ) ) {
       throw new \Exception( 'setListMember response invalid' );
@@ -114,23 +167,33 @@ class Mailchimp {
   /**
    * Get information about all lists in the account.
    *
+   * @param bool $is_fresh Set to true if you want to fetch the lists regardless if we already have them cached.
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-  public function get_all_lists() {
-    $this->setup_client_config_and_verify();
-    $response = $this->client->lists->getAllLists();
+  public function get_all_lists( bool $is_fresh = false ) {
 
-    if ( ! isset( $response, $response->lists ) && ! is_array( $response->lists ) ) {
-      throw new \Exception( 'Lists response invalid' );
-    }
+    $cached_response = $this->cache->get( self::CACHE_LISTS );
 
-    foreach ( $response->lists as $list_obj ) {
+    if ( $is_fresh || empty( $cached_response ) ) {
+      $this->setup_client_config_and_verify();
+      $response = $this->client->lists->getAllLists();
 
-      if ( ! is_object( $list_obj ) || ! isset( $list_obj->id, $list_obj->name ) ) {
+      if ( ! isset( $response, $response->lists ) && ! is_array( $response->lists ) ) {
         throw new \Exception( 'Lists response invalid' );
       }
+
+      foreach ( $response->lists as $list_obj ) {
+
+        if ( ! is_object( $list_obj ) || ! isset( $list_obj->id, $list_obj->name ) ) {
+          throw new \Exception( 'Lists response invalid' );
+        }
+      }
+
+      $this->cache->save( self::CACHE_LISTS, (string) wp_json_encode( $response ), self::CACHE_LIST_TIMEOUT );
+    } else {
+      $response = json_decode( $cached_response );
     }
 
     return $response;

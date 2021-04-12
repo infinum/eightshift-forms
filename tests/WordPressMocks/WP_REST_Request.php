@@ -37,13 +37,13 @@ class WP_REST_Request
 	 * @return array Parameter map of key to value
 	 */
 	public function get_query_params() {
-		return $this->params['GET'];
+		return $this->method === 'POST' ? $this->params['POST'] : $this->params['GET'];
 	}
 
 	/**
 	 * Retrieves parameters from body.
 	 *
-	 * These are the parameters you'd typically find in `$_POST`.
+	 * These are the parameters you'd typically find in `$_POST` (if you have both $_GET and $_POST params at the same time)
 	 *
 	 * @return array Parameter map of key to value
 	 */

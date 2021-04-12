@@ -4,7 +4,7 @@
   "description" : "Checkbox field",
   "category": "common",
   "icon": {
-    "src": "yes-alt"
+    "src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><path fill='none' d='M0 0h20v20H0z'/><path d='M17.5.25h-15A2.25 2.25 0 00.25 2.5v15a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-15A2.25 2.25 0 0017.5.25zm-15 1.5h15a.75.75 0 01.75.75v15a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-15a.75.75 0 01.75-.75z' fill='currentColor' fill-rule='nonzero'/><g fill='currentColor' fill-rule='nonzero'><path d='M14.43 6.514a.75.75 0 011.207.883l-.066.09-6.818 8a.75.75 0 01-.98.142l-.089-.068-3.182-2.824a.75.75 0 01.908-1.189l.088.067 2.609 2.316 6.322-7.417z' fill-opacity='.12'/><path d='M14.43 5.514a.75.75 0 011.207.883l-.066.09-6.818 8a.75.75 0 01-.98.142l-.089-.068-3.182-2.824a.75.75 0 01.908-1.189l.088.067 2.609 2.316 6.322-7.417z'/></g></g></svg>"
   },
   "keywords": [
     "Checkbox"
@@ -37,23 +37,23 @@
       "type": "string"
     },
     "isChecked": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "isDisabled": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "isReadOnly": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "isRequired": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "preventSending": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "wrapperUse": {
@@ -61,7 +61,7 @@
       "default": true
     },
     "wrapperUseSimple": {
-      "type": "bool",
+      "type": "boolean",
       "default": true
     },
     "wrapperGutter": {

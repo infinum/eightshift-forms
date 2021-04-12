@@ -22,6 +22,62 @@ class Localization_Constants implements Filters {
   const LOCALIZATION_KEY = 'eightshiftForms';
 
   /**
+   * Key under which all localizations are held. window.${LOCALIZATION_KEY}. Only loaded in admin.
+   *
+   * @var string
+   */
+  const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
+
+  /**
+   * Some variable.
+   *
+   * @var Active_Route
+   */
+  private $dynamics_crm_route;
+
+  /**
+   * Buckaroo iDEAL route obj.
+   *
+   * @var Active_Route
+   */
+  private $buckaroo_ideal_route;
+
+  /**
+   * Buckaroo Emandate route obj.
+   *
+   * @var Active_Route
+   */
+  private $buckaroo_emandate_route;
+
+  /**
+   * Buckaroo Pay By Email route obj.
+   *
+   * @var Active_Route
+   */
+  private $buckaroo_pay_by_email_route;
+
+  /**
+   * Send email route object.
+   *
+   * @var Active_Route
+   */
+  private $send_email_route;
+
+  /**
+   * Mailchimp route object.
+   *
+   * @var Active_Route
+   */
+  private $mailchimp_route;
+
+  /**
+   * Mailchimp client implementation.
+   *
+   * @var Mailchimp
+   */
+  private $mailchimp;
+
+  /**
    * Create a new admin instance.
    *
    * @param Manifest_Data  $manifest                    Inject manifest which holds data about assets from manifest.json.
@@ -105,6 +161,21 @@ class Localization_Constants implements Filters {
   }
 
   /**
+   * Define all variables we need in both editor and frontend.
+   *
+   * @return array
+   */
+  public function get_admin_localizations(): array {
+    $localization = [];
+
+    if ( has_filter( Filters::MAILCHIMP ) ) {
+      $localization = $this->add_mailchimp_admin_constants( $localization );
+    }
+
+    return $localization;
+  }
+
+  /**
    * Localize all constants required for Dynamics CRM integration.
    *
    * @param  array $localization Existing localizations.
@@ -159,7 +230,7 @@ class Localization_Constants implements Filters {
   }
 
   /**
-   * Localize all constants required for Buckaroo integration.
+   * Localize all constants required for Mailchimp integration.
    *
    * @param  array $localization Existing localizations.
    * @return array
@@ -167,6 +238,19 @@ class Localization_Constants implements Filters {
   protected function add_mailchimp_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
+    ];
+
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Mailchimp integration (only available in admin)
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  protected function add_mailchimp_admin_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_ADMIN_KEY ]['mailchimp'] = [
       'audiences' => $this->fetch_mailchimp_audiences(),
     ];
 
