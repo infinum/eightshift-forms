@@ -33,7 +33,7 @@ class Transient_Cache implements Cache {
    * @return string
    */
   public function get( string $cache_key ): string {
-    return get_transient( $cache_key );
+    return (string) get_transient( $cache_key );
   }
 
   /**

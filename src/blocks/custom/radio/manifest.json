@@ -30,7 +30,7 @@
       "default": false
     },
     "wrapperUseShowControl": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "allowedBlocks": {
@@ -53,7 +53,7 @@
       "default": "your-radio-button"
     },
     "prefillData": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "prefillDataSource": {
