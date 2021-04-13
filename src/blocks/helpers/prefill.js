@@ -15,3 +15,18 @@ export const getSinglePrefillSources = () => {
 
   return prefillSourcesAsValues;
 };
+
+export const getMultiPrefillSources = () => {
+
+  const {
+    prefill: {
+      multi = [],
+    } = {},
+  } = window.eightshiftForms;
+
+  const label = multi.length > 0 ? __('Select prefill source', 'eightshift-forms') : __('No prefill source defined', 'eightshift-forms')
+  return [
+    { label, value: 'select-please' },
+    ...multi.map((entity) => ({ label: entity.label, value: entity.value })),
+  ];
+};
