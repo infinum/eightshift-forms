@@ -48,7 +48,7 @@ export const InputOptions = (props) => {
   const {
     prefill: {
       single = [],
-    },
+    } = {},
   } = window.eightshiftForms;
 
   const prefillSourcesAsValues = [
