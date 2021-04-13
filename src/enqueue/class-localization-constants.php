@@ -162,7 +162,9 @@ class Localization_Constants implements Filters {
    * @return array
    */
   public function get_admin_localizations(): array {
-    $localization = [];
+    $localization = [
+      self::LOCALIZATION_ADMIN_KEY => [],
+    ];
 
     if ( has_filter( Filters::MAILCHIMP ) ) {
       $localization = $this->add_mailchimp_admin_constants( $localization );

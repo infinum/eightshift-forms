@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, ToggleControl, SelectControl } from '@wordpress/components';
+import { getMultiPrefillSources } from '../../../helpers/prefill';
 
 export const SelectOptions = (props) => {
   const {
@@ -20,16 +21,7 @@ export const SelectOptions = (props) => {
     },
   } = props;
 
-  const {
-    prefill,
-  } = window.eightshiftForms;
-
-  const safePrefillMulti = prefill && prefill.multi ? prefill.multi : [];
-
-  const prefillSourcesAsOptions = [
-    { label: __('Select prefill source', 'eightshift-forms'), value: 'select-please' },
-    ...safePrefillMulti.map((entity) => ({ label: entity.label, value: entity.value })),
-  ];
+  const prefillSourcesAsOptions = getMultiPrefillSources();
 
   return (
     <PanelBody title={__('Select Settings', 'eightshift-forms')}>

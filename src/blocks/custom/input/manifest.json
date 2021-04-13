@@ -47,7 +47,7 @@
       "type": "string"
     },
     "prefillData": {
-      "type": "bool",
+      "type": "boolean",
       "default": false
     },
     "prefillDataSource": {
@@ -71,6 +71,14 @@
     "preventSending": {
       "type": "boolean",
       "default": false
+    },
+    "showName": {
+      "type": "boolean",
+      "default": true
+    },
+    "showType": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

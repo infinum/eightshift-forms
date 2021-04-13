@@ -131,6 +131,7 @@ class Main extends Lib_Core {
       // Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
         Integrations\Mailchimp\Mailchimp_Marketing_Client::class,
+        Cache\Transient_Cache::class,
       ),
       Rest\Mailchimp_Route::class => array(
         Config::class,
