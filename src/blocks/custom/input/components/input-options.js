@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { PanelBody, TextControl, SelectControl, ToggleControl, ExternalLink, BaseControl } from '@wordpress/components';
 import { updateThemeFromTopParent } from '../../../helpers/update-theme-from-top-parent';
+import { getSinglePrefillSources } from '../../../helpers/prefill';
 
 export const InputOptions = (props) => {
   const {
@@ -45,16 +46,7 @@ export const InputOptions = (props) => {
     },
   } = props;
 
-  const {
-    prefill: {
-      single = [],
-    } = {},
-  } = window.eightshiftForms;
-
-  const prefillSourcesAsValues = [
-    { label: __('Select prefill source', 'eightshift-forms'), value: 'select-please' },
-    ...single,
-  ];
+  const prefillSourcesAsValues = getSinglePrefillSources();
 
   updateThemeFromTopParent(clientId, onChangeTheme);
 
