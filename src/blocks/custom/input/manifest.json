@@ -71,6 +71,10 @@
     "preventSending": {
       "type": "boolean",
       "default": false
+    },
+    "showName": {
+      "type": "boolean",
+      "default": true
     }
   }
 }
