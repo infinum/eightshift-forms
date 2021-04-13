@@ -9,6 +9,8 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 use Eightshift_Forms\Helpers\Forms;
+use Eightshift_Forms\Helpers\Prefill;
+use Eightshift_Forms\Hooks\Filters;
 
 $block_class         = $attributes['blockClass'] ?? '';
 $name                = $attributes['name'] ?? '';
@@ -20,11 +22,20 @@ $classes             = $attributes['classes'] ?? '';
 $theme               = $attributes['theme'] ?? '';
 $input_type          = $attributes['type'] ?? '';
 $pattern             = $attributes['pattern'] ?? '';
+$prefill_source      = $attributes['prefillDataSource'] ?? '';
+$should_prefill      = isset( $attributes['prefillData'] ) ? filter_var( $attributes['prefillData'], FILTER_VALIDATE_BOOLEAN ) : false;
 $custom_validity_msg = $attributes['customValidityMsg'] ?? '';
 $is_disabled         = isset( $attributes['isDisabled'] ) && $attributes['isDisabled'] ? 'disabled' : '';
 $is_read_only        = isset( $attributes['isReadOnly'] ) && $attributes['isReadOnly'] ? 'readonly' : '';
 $is_required         = isset( $attributes['isRequired'] ) && $attributes['isRequired'] ? 'required' : '';
 $prevent_sending     = isset( $attributes['preventSending'] ) && $attributes['preventSending'] ? 'data-do-not-send' : '';
+
+// Prefill value if needed.
+if ( $should_prefill && ! empty( $prefill_source ) ) {
+  $value = Prefill::get_prefill_source_data_single( $prefill_source, Filters::PREFILL_GENERIC_SINGLE );
+} else {
+  $value = $attributes['value'] ?? '';
+}
 
 // Override form value if it's passed from $_GET.
 $value = Forms::maybe_override_value_from_query_string( $value, $name );
@@ -32,9 +43,6 @@ $value = Forms::maybe_override_value_from_query_string( $value, $name );
 $block_classes = Components::classnames([
   $block_class,
   "js-{$block_class}",
-  ! empty( $is_required ) ? "{$block_class}--is-required" : '',
-  ! empty( $is_disabled ) ? "{$block_class}--is-disabled" : '',
-  ! empty( $is_read_only ) ? "{$block_class}--is-read-only" : '',
 ]);
 
 $wrapper_classes = Components::classnames([

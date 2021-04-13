@@ -18,11 +18,6 @@ use Eightshift_Forms\Rest\Active_Route;
  */
 class Localization_Constants implements Filters {
 
-  /**
-   * Key under which all localizations are held. window.${LOCALIZATION_KEY}
-   *
-   * @var string
-   */
   const LOCALIZATION_KEY = 'eightshiftForms';
 
   /**
@@ -33,7 +28,7 @@ class Localization_Constants implements Filters {
   const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
 
   /**
-   * Some variable.
+   * Dynamics CRM route obj.
    *
    * @var Active_Route
    */

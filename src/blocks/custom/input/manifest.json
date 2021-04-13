@@ -46,6 +46,13 @@
     "pattern": {
       "type": "string"
     },
+    "prefillData": {
+      "type": "bool",
+      "default": false
+    },
+    "prefillDataSource": {
+      "type": "string"
+    },
     "customValidityMsg": {
       "type": "string"
     },
