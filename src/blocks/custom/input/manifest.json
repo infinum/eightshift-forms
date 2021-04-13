@@ -75,6 +75,10 @@
     "showName": {
       "type": "boolean",
       "default": true
+    },
+    "showType": {
+      "type": "boolean",
+      "default": true
     }
   }
 }
