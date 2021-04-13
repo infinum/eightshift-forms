@@ -37,10 +37,17 @@ class Blocks extends Lib_Blocks implements Filters {
    */
   public function get_all_allowed_forms_blocks( $allowed_block_types, $post ) {
     if ( $post->post_type === Forms::POST_TYPE_SLUG ) {
+      $forms_blocks = $this->get_all_blocks_list();
+
+      // Remove form from the list to prevent users from adding a new form inside the form.
+      $forms_blocks = array_flip( $forms_blocks );
+      unset( $forms_blocks[ "{$this->config->get_project_name()}/form" ] );
+      $forms_blocks = array_values( array_flip( $forms_blocks ) );
+
       if ( has_filter( self::ALLOWED_BLOCKS ) ) {
-        return apply_filters( self::ALLOWED_BLOCKS, $this->get_all_blocks_list() );
+        return apply_filters( self::ALLOWED_BLOCKS, $forms_blocks );
       } else {
-        return $this->get_all_blocks_list();
+        return $forms_blocks;
       }
     }
 
