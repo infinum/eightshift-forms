@@ -9,6 +9,9 @@
   "keywords": [
     "Form"
   ],
+  "supports": {
+    "multiple": false
+  },
   "hasInnerBlocks": true,
   "attributes": {
     "wrapperUse": {
@@ -159,6 +162,9 @@
     "mailchimpAddExistingMembers": {
       "type": "boolean",
       "default": false
+    },
+    "mailerliteGroupId": {
+      "type": "string"
     },
     "eventNames": {
       "type": "array",

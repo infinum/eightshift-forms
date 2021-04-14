@@ -10,7 +10,7 @@ export class Form {
     this.formWrapper = element;
     this.form = element.querySelector('.js-block-form-form');
     this.formId = element.getAttribute('id');
-    this.spinner = element.querySelector('.js-spinner');
+    this.spinner = element.querySelector('.js-form-spinner');
     this.submits = this.form.querySelectorAll('input[type="submit"]');
     this.formMessageSuccess = this.formWrapper.querySelector('.js-form-message--success');
     this.formErrorMessageWrapper = this.formWrapper.querySelector('.js-form-error-message-wrapper');
@@ -40,6 +40,10 @@ export class Form {
     this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
 
     this.restRouteUrls = {};
+
+    if (window.eightshiftForms.mailerlite) {
+      this.restRouteUrls.mailerliteRestUri = `${this.siteUrl}${window.eightshiftForms.mailerlite.restUri}`;
+    }
 
     if (window.eightshiftForms.mailchimp) {
       this.restRouteUrls.mailchimpRestUri = `${this.siteUrl}${window.eightshiftForms.mailchimp.restUri}`;
@@ -220,6 +224,10 @@ export class Form {
       submitStatus = this.submitForm(this.restRouteUrls.mailchimpRestUri, this.getFormData(this.form));
     }
 
+    if (formType === 'mailerlite') {
+      submitStatus = this.submitForm(this.restRouteUrls.mailerliteRestUri, this.getFormData(this.form));
+    }
+
     if (formType === 'email') {
       submitStatus = this.submitForm(this.restRouteUrls.sendEmailRestUri, this.getFormData(this.form));
     }
@@ -340,7 +348,7 @@ export class Form {
    */
   appendErrorMessage(error) {
     const errorMessageElem = document.createElement('div');
-    errorMessageElem.classList.add(this.errorMessageClasses);
+    errorMessageElem.classList.add(...this.errorMessageClasses);
     errorMessageElem.innerHTML = error;
     this.formErrorMessageWrapper.appendChild(errorMessageElem);
   }

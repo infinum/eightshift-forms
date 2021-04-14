@@ -48,6 +48,13 @@ class Config extends Lib_Config {
   const MAILCHIMP_METHOD = 'mailchimp';
 
   /**
+   * Value for the form type when it's submitting to Mailerlite.
+   *
+   * @var string
+   */
+  const MAILERLITE_METHOD = 'mailerlite';
+
+  /**
    * Value for the form type when it's submitting to Mailchimp.
    *
    * @var string

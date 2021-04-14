@@ -144,6 +144,21 @@ class Main extends Lib_Core {
         Captcha\Basic_Captcha::class,
       ),
 
+      // Mailerlite.
+      Integrations\Mailerlite\Mailerlite::class => array(
+        Integrations\Mailerlite\Mailerlite_Client::class,
+      ),
+      Rest\Mailerlite_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
+        Captcha\Basic_Captcha::class,
+      ),
+      Rest\Mailerlite_Fetch_Groups_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
       // Email.
       Rest\Send_Email_Route::class => array(
         Config::class,
@@ -159,6 +174,8 @@ class Main extends Lib_Core {
         Rest\Send_Email_Route::class,
         Rest\Mailchimp_Route::class,
         Integrations\Mailchimp\Mailchimp::class,
+        Rest\Mailerlite_Route::class,
+        Integrations\Mailerlite\Mailerlite::class,
       ),
       Enqueue\Enqueue_Theme::class => array(
         Lib_Manifest\Manifest::class,
@@ -198,10 +215,15 @@ class Main extends Lib_Core {
       // Authorization.
       Integrations\Authorization\HMAC::class,
 
-      // Integrations.
+      // Integrations Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
         Mocks\MockMailchimpMarketingClient::class,
         Cache\Transient_Cache::class,
+      ),
+
+      // Integrations Mailerlite.
+      Integrations\Mailerlite\Mailerlite::class => array(
+        Mocks\MockMailerliteClient::class,
       ),
 
       // HTTP.
@@ -244,6 +266,13 @@ class Main extends Lib_Core {
       Rest\Mailchimp_Route::class => array(
         Config::class,
         Integrations\Mailchimp\Mailchimp::class,
+        Captcha\Basic_Captcha::class,
+      ),
+
+      // Mailerlite.
+      Rest\Mailerlite_Route::class => array(
+        Config::class,
+        Integrations\Mailerlite\Mailerlite::class,
         Captcha\Basic_Captcha::class,
       ),
     ];

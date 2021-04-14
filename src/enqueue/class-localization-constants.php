@@ -11,6 +11,7 @@ namespace Eightshift_Forms\Enqueue;
 
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
 use Eightshift_Forms\Rest\Active_Route;
 
 /**
@@ -77,6 +78,20 @@ class Localization_Constants implements Filters {
   private $mailchimp;
 
   /**
+   * Mailerlite route object.
+   *
+   * @var Active_Route
+   */
+  private $mailerlite_route;
+
+  /**
+   * Mailerlite client implementation.
+   *
+   * @var Mailerlite
+   */
+  private $mailerlite;
+
+  /**
    * Create a new admin instance.
    *
    * @param Active_Route $dynamics_crm_route          Dynamics CRM route object which holds values we need to localize.
@@ -86,6 +101,8 @@ class Localization_Constants implements Filters {
    * @param Active_Route $send_email_route            Send Email route object which holds values we need to localize.
    * @param Active_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
    * @param Mailchimp    $mailchimp                   Mailchimp implementation.
+   * @param Active_Route $mailerlite_route            Mailerlite route object which holds values we need to localize.
+   * @param Mailerlite   $mailerlite                  Mailerlite implementation.
    */
   public function __construct(
     Active_Route $dynamics_crm_route,
@@ -94,7 +111,9 @@ class Localization_Constants implements Filters {
     Active_Route $buckaroo_pay_by_email_route,
     Active_Route $send_email_route,
     Active_Route $mailchimp_route,
-    Mailchimp $mailchimp
+    Mailchimp $mailchimp,
+    Active_Route $mailerlite_route,
+    Mailerlite $mailerlite
   ) {
     $this->dynamics_crm_route          = $dynamics_crm_route;
     $this->buckaroo_ideal_route        = $buckaroo_ideal_route;
@@ -103,6 +122,8 @@ class Localization_Constants implements Filters {
     $this->send_email_route            = $send_email_route;
     $this->mailchimp_route             = $mailchimp_route;
     $this->mailchimp                   = $mailchimp;
+    $this->mailerlite_route            = $mailerlite_route;
+    $this->mailerlite                  = $mailerlite;
   }
 
   /**
@@ -117,6 +138,7 @@ class Localization_Constants implements Filters {
         'isDynamicsCrmUsed' => has_filter( Filters::DYNAMICS_CRM ),
         'isBuckarooUsed'    => has_filter( Filters::BUCKAROO ),
         'isMailchimpUsed'   => has_filter( Filters::MAILCHIMP ),
+        'isMailerliteUsed'  => has_filter( Filters::MAILERLITE ),
         'hasThemes'         => has_filter( Filters::GENERAL ),
         'content' => [
           'formLoading' => esc_html__( 'Form is submitting, please wait.', 'eightshift-forms' ),
@@ -145,6 +167,10 @@ class Localization_Constants implements Filters {
       $localization = $this->add_mailchimp_constants( $localization );
     }
 
+    if ( has_filter( Filters::MAILERLITE ) ) {
+      $localization = $this->add_mailerlite_constants( $localization );
+    }
+
     if ( has_filter( Filters::PREFILL_GENERIC_MULTI ) ) {
       $localization[ self::LOCALIZATION_KEY ]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
     }
@@ -170,6 +196,10 @@ class Localization_Constants implements Filters {
       $localization = $this->add_mailchimp_admin_constants( $localization );
     }
 
+    if ( has_filter( Filters::MAILERLITE ) ) {
+      $localization = $this->add_mailerlite_constants_admin( $localization );
+    }
+
     return $localization;
   }
 
@@ -179,7 +209,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_general_constants( array $localization ): array {
+  private function add_general_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['themes'] = apply_filters( Filters::GENERAL, 'themes' );
     return $localization;
   }
@@ -191,7 +221,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_dynamics_crm_constants( array $localization ): array {
+  private function add_dynamics_crm_constants( array $localization ): array {
     $entities = apply_filters( Filters::DYNAMICS_CRM, 'available_entities' );
     if ( empty( $entities ) ) {
       $available_entities = [
@@ -215,7 +245,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_buckaroo_constants( array $localization ): array {
+  private function add_buckaroo_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['buckaroo'] = [
       'restUri' => [
         'ideal' => $this->buckaroo_ideal_route->get_route_uri(),
@@ -233,7 +263,7 @@ class Localization_Constants implements Filters {
    * @param  array $localization Existing localizations.
    * @return array
    */
-  protected function add_mailchimp_constants( array $localization ): array {
+  private function add_mailchimp_constants( array $localization ): array {
     $localization[ self::LOCALIZATION_KEY ]['mailchimp'] = [
       'restUri' => $this->mailchimp_route->get_route_uri(),
     ];
@@ -256,12 +286,40 @@ class Localization_Constants implements Filters {
   }
 
   /**
+   * Localize all constants required for Mailerlite integration.
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  private function add_mailerlite_constants( array $localization ): array {
+    $localization[ self::LOCALIZATION_KEY ]['mailerlite'] = [
+      'restUri' => $this->mailerlite_route->get_route_uri(),
+    ];
+
+    return $localization;
+  }
+
+  /**
+   * Localize all constants required for Mailerlite integration.
+   *
+   * @param  array $localization Existing localizations.
+   * @return array
+   */
+  private function add_mailerlite_constants_admin( array $localization ): array {
+    $localization[ self::LOCALIZATION_ADMIN_KEY ]['mailerlite'] = [
+      'groups' => $this->fetch_mailerlite_groups(),
+    ];
+
+    return $localization;
+  }
+
+  /**
    * Reads the list of audiences from Mailchimp. Used in form options to
    * select which audience does this form post to.
    *
    * @return array
    */
-  protected function fetch_mailchimp_audiences(): array {
+  private function fetch_mailchimp_audiences(): array {
     $audiences = [];
 
     try {
@@ -281,11 +339,37 @@ class Localization_Constants implements Filters {
   }
 
   /**
+   * Reads the list of groups from Mailerlite. Used in form options to
+   * select which group does this form post to.
+   *
+   * @return array
+   */
+  private function fetch_mailerlite_groups(): array {
+    $groups = [];
+
+    try {
+      $response = $this->mailerlite->get_all_groups();
+    } catch ( \Exception $e ) {
+      return $groups;
+    }
+
+    foreach ( $response as $list_obj ) {
+      $groups[] = [
+        'value' => $list_obj->id,
+        'label' => $list_obj->name,
+      ];
+    }
+
+    return $groups;
+  }
+
+  /**
+   * Localize all constants required for Dynamics CRM integration.
    * Adds prefill options to multi option blocks (select, radio, etc).
    *
    * @return array
    */
-  protected function add_prefill_generic_multi_constants(): array {
+  private function add_prefill_generic_multi_constants(): array {
     $prefill_multi = apply_filters( Filters::PREFILL_GENERIC_MULTI, [] );
 
     if ( ! is_array( $prefill_multi ) ) {

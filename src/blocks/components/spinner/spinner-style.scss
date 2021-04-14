@@ -2,7 +2,7 @@ $spinner: (
   z-index: map-get-strict($base-z-index, spinner),
 );
 
-.spinner {
+.form-spinner {
   @extend %absolute-center;
   z-index: map-get-strict($spinner, z-index);
   font-size: 90px;

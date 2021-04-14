@@ -66,6 +66,9 @@ $label_classes = Components::classnames([
 <div class="<?php echo esc_attr( $block_classes ); ?>">
   <div class="<?php echo esc_attr( $wrapper_classes ); ?>">
     <label class="<?php echo esc_attr( "{$block_class}__label js-{$block_class}-label" ); ?>">
+      <div class="<?php echo esc_attr( $label_classes ); ?>">
+        <?php echo wp_kses_post( $label ); ?>
+      </div>
       <input
         name="<?php echo esc_attr( $name ); ?>"
         placeholder="<?php echo esc_attr( $placeholder ); ?>"
@@ -80,9 +83,6 @@ $label_classes = Components::classnames([
         <?php ( ! empty( $pattern ) ) ? printf( 'pattern="%s"', esc_attr( $pattern ) ) : ''; ?>
         <?php ( ! empty( $custom_validity_msg ) && ! empty( $pattern ) ) ? printf( 'oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html( $custom_validity_msg ) ) : ''; ?>
       />
-      <div class="<?php echo esc_attr( $label_classes ); ?>">
-        <?php echo wp_kses_post( $label ); ?>
-      </div>
     </label>
   </div>
 </div>
