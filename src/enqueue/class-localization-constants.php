@@ -101,6 +101,8 @@ class Localization_Constants implements Filters {
    * @param Active_Route $send_email_route            Send Email route object which holds values we need to localize.
    * @param Active_Route $mailchimp_route             Mailchimp route object which holds values we need to localize.
    * @param Mailchimp    $mailchimp                   Mailchimp implementation.
+   * @param Active_Route $mailerlite_route            Mailerlite route object which holds values we need to localize.
+   * @param Mailerlite   $mailerlite                  Mailerlite implementation.
    */
   public function __construct(
     Active_Route $dynamics_crm_route,

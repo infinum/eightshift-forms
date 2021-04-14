@@ -56,19 +56,19 @@ class Mailerlite {
   /**
    * Adds a subscriber in Mailerlite.
    *
-   * @param  string $group_id        Group ID.
+   * @param  int    $group_id        Group ID.
    * @param  string $email           Contact's email.
    * @param  array  $subscriber_data List of merge fields to add to request.
-   * @param  array  $params          Additional params
+   * @param  array  $params          Additional params.
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-  public function add_subscriber( string $group_id, string $email, array $subscriber_data, array $params = [] ) {
+  public function add_subscriber( int $group_id, string $email, array $subscriber_data, array $params = [] ) {
     $this->setup_client_config_and_verify();
     $subscriber_data['email'] = $email;
 
-    return $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );;
+    return $this->client->groups()->addSubscriber( $group_id, $subscriber_data, $params );
   }
 
   /**

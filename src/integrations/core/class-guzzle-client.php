@@ -21,7 +21,7 @@ class Guzzle_Client implements Http_Client {
    *
    * @var ClientInterface.
    */
-  protected $client;
+  private $client;
 
   /**
    * Constructs object.

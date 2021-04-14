@@ -12,6 +12,7 @@ namespace Eightshift_Forms\Integrations\Mailchimp;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Client_Interface;
 use \MailchimpMarketing\ApiClient as MarketingApiClient;
+use \MailerLiteApi\MailerLite;
 
 /**
  * Mailchimp integration class.
@@ -23,7 +24,7 @@ class Mailchimp_Marketing_Client implements Client_Interface {
    *
    * @var MarketingApiClient
    */
-  protected $client;
+  private $client;
 
   /**
    * Constructs object
@@ -47,7 +48,7 @@ class Mailchimp_Marketing_Client implements Client_Interface {
   /**
    * Returns the build client
    *
-   * @return MarketingApiClient
+   * @return mixed
    */
   public function get_client() {
     return $this->client;

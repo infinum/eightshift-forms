@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations;
 
 use \MailerLiteApi\MailerLite;
+use \MailchimpMarketing\ApiClient as MarketingApiClient;
 
 /**
  * Client_Interface interface.
@@ -19,7 +20,7 @@ interface Client_Interface {
   /**
    * Returns the build client
    *
-   * @return MailerLite
+   * @return mixed
    */
   public function get_client();
 

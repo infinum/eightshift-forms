@@ -20,14 +20,14 @@ interface Filters {
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/general_info', [ $this, 'getThemes' ], 11 );
+   *     add_filter( 'eightshift_forms/general_info', [ $this, 'get_themes' ], 11 );
    *   }
    *
-   *   public function getThemes(): array
+   *   public function get_themes(): array
    *   {
-   *   	return [
-   *   		'Newsletter',
-   *   	];
+   *     return [
+   *       'Newsletter',
+   *     ];
    *   }
    *
    * @var string

@@ -97,9 +97,10 @@ class Mailerlite_Route extends Base_Route implements Filters {
     }
 
     $email              = ! empty( $params[ self::EMAIL_PARAM ] ) ? strtolower( $params[ self::EMAIL_PARAM ] ) : '';
-    $group_id           = ! empty( $params[ self::GROUP_ID_PARAM ] ) ? strtolower( $params[ self::GROUP_ID_PARAM ] ) : '';
+    $group_id           = ! empty( $params[ self::GROUP_ID_PARAM ] ) ? (int) $params[ self::GROUP_ID_PARAM ] : 0;
     $merge_field_params = $this->unset_irrelevant_params( $params );
     $response           = '';
+    $message            = '';
 
     // Make sure we have the group ID.
     if ( empty( $group_id ) ) {
@@ -110,15 +111,15 @@ class Mailerlite_Route extends Base_Route implements Filters {
     if ( empty( $email ) ) {
       return $this->rest_response_handler( 'mailerlite-missing-email' );
     }
-    
+
     // Retrieve all entities from the "leads" Entity Set.
     try {
       $response = $this->mailerlite->add_subscriber( $group_id, $email, $merge_field_params );
     } catch ( Missing_Filter_Info_Exception $e ) {
       return $this->rest_response_handler( 'mailerlite-missing-keys', [ 'message' => $e->getMessage() ] );
     } catch ( HttpException $e ) {
-      $msg = $e->getResponse()->getBody()->getContents();
-      $message = json_decode($msg, true)['error']['message'];
+      $msg     = $e->getResponse()->getBody()->getContents();
+      $message = json_decode( $msg, true )['error']['message'];
 
       return $this->rest_response_handler( 'mailerlite-blocked-email', [ 'message' => $message ] );
     } catch ( \Exception $e ) {
