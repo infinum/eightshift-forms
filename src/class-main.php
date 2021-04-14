@@ -131,6 +131,7 @@ class Main extends Lib_Core {
       // Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
         Integrations\Mailchimp\Mailchimp_Marketing_Client::class,
+        Cache\Transient_Cache::class,
       ),
       Rest\Mailchimp_Route::class => array(
         Config::class,
@@ -184,6 +185,10 @@ class Main extends Lib_Core {
         Lib_Manifest\Manifest::class,
         Enqueue\Localization_Constants::class,
       ),
+      Enqueue\Enqueue_Admin::class => array(
+        Lib_Manifest\Manifest::class,
+        Enqueue\Localization_Constants::class,
+      ),
 
       // Admin.
       Admin\Forms::class,
@@ -213,6 +218,7 @@ class Main extends Lib_Core {
       // Integrations Mailchimp.
       Integrations\Mailchimp\Mailchimp::class => array(
         Mocks\MockMailchimpMarketingClient::class,
+        Cache\Transient_Cache::class,
       ),
 
       // Integrations Mailerlite.
@@ -230,6 +236,11 @@ class Main extends Lib_Core {
 
       // Base route.
       Mocks\TestRoute::class => array(
+        Config::class,
+        Integrations\Authorization\HMAC::class,
+        Captcha\Basic_Captcha::class,
+      ),
+      Mocks\TestRouteSanitization::class => array(
         Config::class,
         Integrations\Authorization\HMAC::class,
         Captcha\Basic_Captcha::class,

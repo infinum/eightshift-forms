@@ -4,7 +4,7 @@
   "description" : "Select which form you wish to display.",
   "category": "common",
   "icon": {
-    "src": "pressthis"
+    "src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g transform='translate(-272 -140)' fill='none' fill-rule='evenodd'><path fill='none' d='M272 140h20v20h-20z'/><path d='M284.5 151a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5zM284.5 154a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5zM281.5 148a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5z' fill-opacity='.12' fill='currentColor' fill-rule='nonzero'/><circle fill-opacity='.12' fill='currentColor' cx='277' cy='151.75' r='1'/><circle fill-opacity='.12' fill='currentColor' cx='277' cy='154.75' r='1'/><path d='M274 141h16a1 1 0 011 1v4h-18v-4a1 1 0 011-1z' fill-opacity='.12' fill='currentColor'/><path d='M289.5 140.25h-15a2.25 2.25 0 00-2.25 2.25v15a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25zm-15 1.5h15a.75.75 0 01.75.75v15a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-15a.75.75 0 01.75-.75z' fill='currentColor' fill-rule='nonzero'/><path d='M284.5 143a.75.75 0 01.102 1.493l-.102.007h-8a.75.75 0 01-.102-1.493l.102-.007h8zM287.913 150.033a.75.75 0 011.237.842l-.063.092-4.773 6a.75.75 0 01-1.02.145l-.084-.068-2.227-2.118a.75.75 0 01.948-1.158l.086.07 1.633 1.554 4.263-5.359z' fill='currentColor' fill-rule='nonzero'/></g></svg>"
   },
   "keywords": [
     "Forms"

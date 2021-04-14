@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { PanelBody, TextControl, SelectControl, ToggleControl, ExternalLink, BaseControl } from '@wordpress/components';
 import { updateThemeFromTopParent } from '../../../helpers/update-theme-from-top-parent';
+import { getSinglePrefillSources } from '../../../helpers/prefill';
 
 export const InputOptions = (props) => {
   const {
@@ -17,8 +18,14 @@ export const InputOptions = (props) => {
       isReadOnly,
       isRequired,
       preventSending,
+      prefillData,
+      prefillDataSource,
       pattern,
       customValidityMsg,
+      showName,
+      showType,
+      showClasses,
+      showPrefillOptions = true,
     },
     actions: {
       onChangeName,
@@ -34,14 +41,18 @@ export const InputOptions = (props) => {
       onChangePattern,
       onChangeCustomValidityMsg,
       onChangeTheme,
+      onChangePrefillData,
+      onChangePrefillDataSource,
     },
   } = props;
+
+  const prefillSourcesAsValues = getSinglePrefillSources();
 
   updateThemeFromTopParent(clientId, onChangeTheme);
 
   return (
     <PanelBody title={__('Input Settings', 'eightshift-forms')}>
-      {onChangeName &&
+      {onChangeName && showName &&
         <TextControl
           label={__('Name', 'eightshift-forms')}
           value={name}
@@ -65,7 +76,7 @@ export const InputOptions = (props) => {
         />
       }
 
-      {onChangeType &&
+      {onChangeType && showType &&
         <SelectControl
           label={__('Type', 'eightshift-forms')}
           value={type}
@@ -88,6 +99,25 @@ export const InputOptions = (props) => {
             { label: __('Week', 'eightshift-forms'), value: 'week' },
           ]}
           onChange={onChangeType}
+        />
+      }
+
+      {onChangePrefillData && showPrefillOptions &&
+        <ToggleControl
+          label={__('Prefill data?', 'eightshift-forms')}
+          help={__('If enabled, this field\'s select options will be prefilled from a source of your choice.', 'eightshift-forms')}
+          checked={prefillData}
+          onChange={onChangePrefillData}
+        />
+      }
+
+      {onChangePrefillData && showPrefillOptions && prefillData &&
+        <SelectControl
+          label={__('Prefill from?', 'eightshift-forms')}
+          help={__('Please select the source from which to prefill values.', 'eightshift-forms')}
+          value={prefillDataSource}
+          options={prefillSourcesAsValues}
+          onChange={onChangePrefillDataSource}
         />
       }
 
@@ -114,7 +144,7 @@ export const InputOptions = (props) => {
         />
       }
 
-      {onChangeClasses &&
+      {onChangeClasses && showClasses &&
         <TextControl
           label={__('Classes', 'eightshift-forms')}
           value={classes}

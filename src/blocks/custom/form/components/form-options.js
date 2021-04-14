@@ -109,12 +109,12 @@ export const FormOptions = (props) => {
     isMailchimpUsed,
     isMailerliteUsed,
     dynamicsCrm = [],
-    mailchimp = {},
-    mailerlite = {},
   } = window.eightshiftForms;
 
-  const mailchimpAudiences = (mailchimp && mailchimp.audiences) ? mailchimp.audiences : [];
-  const mailerliteGroups = (mailerlite && mailerlite.groups) ? mailerlite.groups : [];
+  const mailchimpAdmin = window.eightshiftFormsAdmin.mailchimp || {};
+  const mailerliteAdmin = window.eightshiftFormsAdmin.mailerlite || {};
+  const mailchimpAudiences = (mailchimpAdmin && mailchimpAdmin.audiences) ? mailchimpAdmin.audiences : [];
+  const mailerliteGroups = (mailerliteAdmin && mailerliteAdmin.groups) ? mailerliteAdmin.groups : [];
 
   const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
