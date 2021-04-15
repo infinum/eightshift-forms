@@ -15,6 +15,9 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms;
 
+use EightshiftBoilerplateVendor\EightshiftLibs\Cli\Cli;
+use EightshiftBoilerplate\Main\Main;
+
 /**
  * If this file is called directly, abort.
  */
@@ -25,7 +28,27 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
-require __DIR__ . '/vendor/autoload.php';
+$loader = require __DIR__ . '/vendor/autoload.php';
+
+/**
+ * The code that runs during plugin activation.
+ */
+register_activation_hook(
+  __FILE__,
+  function() {
+    PluginFactory::activate();
+  }
+);
+
+/**
+ * The code that runs during plugin deactivation.
+ */
+register_deactivation_hook(
+  __FILE__,
+  function() {
+    PluginFactory::deactivate();
+  }
+);
 
 /**
  * The code that runs during plugin activation.
@@ -54,4 +77,13 @@ register_deactivation_hook(
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
-( new Core\Main() )->register();
+if ( class_exists( Main::class ) ) {
+    ( new Main( $loader->getPrefixesPsr4(), __NAMESPACE__ ) )->register();
+}
+
+/**
+ * Run all WPCLI commands.
+ */
+if ( class_exists( Cli::class ) ) {
+    ( new Cli() )->load( 'forms' );
+}

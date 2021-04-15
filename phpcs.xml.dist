@@ -1,23 +1,30 @@
 <?xml version="1.0"?>
 <ruleset name="Eightshift Forms plugin ruleset">
-  <description>This is Eightshift_Forms plugin used for contact forms.</description>
+	<description>Eightshift Forms plugin ruleset.</description>
 
-  <rule ref="Infinum" />
+	<rule ref="Eightshift" />
 
-  <exclude-pattern>*/tests/*</exclude-pattern>
-  <exclude-pattern>*/vendor/*</exclude-pattern>
-  <exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/public/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/storybook/*</exclude-pattern>
 
-  <!-- Additional arguments. -->
-  <arg value="sp"/>
-  <arg name="basepath" value="."/>
-  <arg name="parallel" value="8"/>
-  <arg name="cache"/>
-  <arg name="extensions" value="php"/>
+	<!-- Additional arguments. -->
+	<arg value="sp"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="extensions" value="php"/>
 
-  <file>.</file>
+	<file>.</file>
 
-  <exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
+	<!-- Check for PHP cross-version compatibility. -->
+	<config name="testVersion" value="7.2-"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<config name="minimum_supported_wp_version" value="5.3"/>
+
+	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
   <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
     <severity>0</severity>
@@ -59,4 +66,5 @@
   <rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
     <severity>0</severity>
   </rule>
+
 </ruleset>
