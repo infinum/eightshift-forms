@@ -20,24 +20,24 @@
   },
   "homepage": "https://github.com/infinum/eightshift-forms-plugin#readme",
   "scripts": {
-		"__eslintTheme": "eslint src/**/*.js",
-		"__stylelintTheme": "stylelint src/**/*.scss",
-		"lintStyle": "npm run __stylelintTheme",
-		"lintJs": "npm run __eslintTheme",
-		"lint": "npm run lintJs && npm run lintStyle && composer standards:check -- --filter=gitstaged",
-		"start": "webpack --progress --watch --mode development",
-		"build": "webpack --progress --mode production",
-		"test": "wp boilerplate",
-		"storybookBuild": "build-storybook -s public -o storybook",
-		"storybook": "start-storybook -s public"
-	},
+    "__eslintTheme": "eslint src/**/*.js",
+    "__stylelintTheme": "stylelint src/**/*.scss",
+    "lintStyle": "npm run __stylelintTheme",
+    "lintJs": "npm run __eslintTheme",
+    "lint": "npm run lintJs && npm run lintStyle && composer standards:check -- --filter=gitstaged",
+    "start": "webpack --progress --watch --mode development",
+    "build": "webpack --progress --mode production",
+    "test": "wp boilerplate",
+    "storybookBuild": "build-storybook -s public -o storybook",
+    "storybook": "start-storybook -s public"
+  },
   "devDependencies": {
-		"husky": "^4.3.6",
-		"webpack": "^4.42.0",
-		"webpack-cli": "^4.3.1"
+    "husky": "^4.3.6",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-		"@eightshift/frontend-libs": "^4.0.0",
+    "@eightshift/frontend-libs": "^4.0.0",
     "@wordpress/server-side-render": "^1.16.0"
   },
   "husky": {
