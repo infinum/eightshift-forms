@@ -13,9 +13,9 @@
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms;
+namespace EightshiftForms;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Cli\Cli;
+use EightshiftFormsVendor\EightshiftLibs\Cli\Cli;
 use EightshiftBoilerplate\Main\Main;
 
 /**
@@ -51,26 +51,6 @@ register_deactivation_hook(
 );
 
 /**
- * The code that runs during plugin activation.
- */
-register_activation_hook(
-  __FILE__,
-  function() {
-    ( new Core\Activate() )->activate();
-  }
-);
-
-/**
- * The code that runs during plugin deactivation.
- */
-register_deactivation_hook(
-  __FILE__,
-  function() {
-    ( new Core\Deactivate() )->deactivate();
-  }
-);
-
-/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
@@ -85,5 +65,6 @@ if ( class_exists( Main::class ) ) {
  * Run all WPCLI commands.
  */
 if ( class_exists( Cli::class ) ) {
+  error_log('installed');
     ( new Cli() )->load( 'forms' );
 }
