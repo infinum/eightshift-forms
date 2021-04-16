@@ -2,7 +2,7 @@
 
 namespace EightshiftFormsTests\Integrations\Mailchimp;
 
-use Eightshift_Forms\Core\Main;
+use EightshiftForms\Main\Main;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsTests\BaseTest;
@@ -14,8 +14,8 @@ class MailchimpTest extends BaseTest
   protected function _inject(DataProvider $dataProvider, Main $main)
   {
     $this->dataProvider = $dataProvider;
-    $main->set_test(true);
-    $this->di_container = $main->build_di_container();
+    $main->setTest(true);
+    $this->di_container = $main->buildDiContainer();
     $this->mailchimp = $this->di_container->get( Mailchimp::class);
   }
 

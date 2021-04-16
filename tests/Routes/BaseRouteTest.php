@@ -2,7 +2,7 @@
 
 use EightshiftFormsTests\BaseTest;
 
-use Eightshift_Forms\Core\Main;
+use EightshiftForms\Main\Main;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 
 abstract class BaseRouteTest extends BaseTest
@@ -10,8 +10,8 @@ abstract class BaseRouteTest extends BaseTest
 
   protected function _inject(Main $main, HMAC $hmac)
   {
-    $main->set_test(true);
-    $this->di_container = $main->build_di_container();
+    $main->setTest(true);
+    $this->di_container = $main->buildDiContainer();
     $this->hmac = $hmac;
   }
 

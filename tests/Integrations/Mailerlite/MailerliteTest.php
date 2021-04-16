@@ -2,7 +2,7 @@
 
 namespace EightshiftFormsTests\Integrations\Mailerlite;
 
-use Eightshift_Forms\Core\Main;
+use EightshiftForms\Main\Main;
 use Eightshift_Forms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsTests\BaseTest;
@@ -13,8 +13,8 @@ class MailerliteTest extends BaseTest
   protected function _inject(DataProvider $dataProvider, Main $main)
   {
     $this->dataProvider = $dataProvider;
-    $main->set_test(true);
-    $this->di_container = $main->build_di_container();
+    $main->setTest(true);
+    $this->di_container = $main->buildDiContainer();
     $this->mailerlite = $this->di_container->get( Mailerlite::class );
   }
 
