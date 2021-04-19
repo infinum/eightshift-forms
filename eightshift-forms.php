@@ -66,6 +66,5 @@ if (class_exists(Main::class)) {
  * Run all WPCLI commands.
  */
 if (class_exists(Cli::class)) {
-	error_log('installed');
 	( new Cli() )->load('forms');
 }
