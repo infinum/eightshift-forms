@@ -1,5 +1,5 @@
 $spinner: (
-  z-index: map-get-strict($base-z-index, spinner),
+  z-index: map-get-strict($zindex, spinner),
 );
 
 .form-spinner {

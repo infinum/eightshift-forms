@@ -1,271 +1,533 @@
-import React from 'react'; // eslint-disable-line no-unused-vars
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { PanelBody, TextControl, Dashicon, TabPanel, Icon, ToggleControl } from '@wordpress/components';
-import { ColorPaletteCustom } from '@eightshift/frontend-libs/scripts/components';
-import { icons } from '@eightshift/frontend-libs/scripts/editor';
-import { WrapperResponsiveTabContent } from './wrapper-responsive-tab-content';
+import { PanelBody, TextControl, Icon, ToggleControl, SelectControl, RangeControl } from '@wordpress/components';
+import { ColorPaletteCustom, Responsive, HelpModal } from '@eightshift/frontend-libs/scripts/components';
+import { icons, ucfirst, getOptionColors } from '@eightshift/frontend-libs/scripts/editor';
+import globalSettings from '../../manifest.json';
+import manifest from './../manifest.json';
 
-export const WrapperOptions = ({ attributes, actions }) => {
-  const {
-    wrapperUse,
-    wrapperUseShowControl,
-    wrapperUseSimple,
-    wrapperUseSimpleShowControl,
-    wrapperDisable,
-    wrapperId,
-    wrapperBackgroundColor,
-    wrapperWidth,
-    wrapperOffset,
-    wrapperContainerWidth,
-    wrapperGutter,
-    wrapperSpacingTop,
-    wrapperSpacingBottom,
-    wrapperHideBlock,
-  } = attributes;
+const { attributes: reset, options } = manifest;
+const { globalVariables: defaults } = globalSettings;
 
-  const {
-    onChangeWrapperUse,
-    onChangeWrapperUseSimple,
+export const WrapperOptions = ({ attributes, setAttributes }) => {
+	const {
+		wrapperUse,
+		wrapperUseShowControl,
+		wrapperUseSimple,
+		wrapperUseSimpleShowControl,
+		wrapperDisable,
+		wrapperId,
+		wrapperAnchorId,
+		wrapperBackgroundColor,
 
-    onChangeWrapperWidthLarge,
-    onChangeWrapperOffsetLarge,
-    onChangeWrapperContainerWidthLarge,
-    onChangeWrapperGutterLarge,
-    onChangeWrapperSpacingTopLarge,
-    onChangeWrapperSpacingBottomLarge,
-    onChangeWrapperHideBlockLarge,
+		showWrapperId = true,
+		showWrapperAnchorId = true,
+		showWrapperBackgroundColor = true,
+		showWrapperWidth = true,
+		showWrapperOffset = true,
+		showWrapperContainerWidth = true,
+		showWrapperGutter = true,
+		showWrapperSpacingTop = true,
+		showWrapperSpacingBottom = true,
+		showWrapperSpacingTopIn = true,
+		showWrapperSpacingBottomIn = true,
+		showWrapperDividerTop = true,
+		showWrapperDividerBottom = true,
+		showWrapperHide = true,
+	} = attributes;
 
-    onChangeWrapperWidthDesktop,
-    onChangeWrapperOffsetDesktop,
-    onChangeWrapperContainerWidthDesktop,
-    onChangeWrapperGutterDesktop,
-    onChangeWrapperSpacingTopDesktop,
-    onChangeWrapperSpacingBottomDesktop,
-    onChangeWrapperHideBlockDesktop,
+	const wrapperSpacingTop = [
+		attributes.wrapperSpacingTopLarge,
+		attributes.wrapperSpacingTopDesktop,
+		attributes.wrapperSpacingTopTablet,
+		attributes.wrapperSpacingTopMobile,
+	];
 
-    onChangeWrapperWidthTablet,
-    onChangeWrapperOffsetTablet,
-    onChangeWrapperContainerWidthTablet,
-    onChangeWrapperGutterTablet,
-    onChangeWrapperSpacingTopTablet,
-    onChangeWrapperSpacingBottomTablet,
-    onChangeWrapperHideBlockTablet,
+	const wrapperSpacingBottom = [
+		attributes.wrapperSpacingBottomLarge,
+		attributes.wrapperSpacingBottomDesktop,
+		attributes.wrapperSpacingBottomTablet,
+		attributes.wrapperSpacingBottomMobile,
+	];
 
-    onChangeWrapperWidthMobile,
-    onChangeWrapperOffsetMobile,
-    onChangeWrapperContainerWidthMobile,
-    onChangeWrapperGutterMobile,
-    onChangeWrapperSpacingTopMobile,
-    onChangeWrapperSpacingBottomMobile,
-    onChangeWrapperHideBlockMobile,
+	const wrapperSpacingTopIn = [
+		attributes.wrapperSpacingTopInLarge,
+		attributes.wrapperSpacingTopInDesktop,
+		attributes.wrapperSpacingTopInTablet,
+		attributes.wrapperSpacingTopInMobile,
+	];
 
-    onChangeWrapperBackgroundColor,
-    onChangeWrapperId,
-  } = actions;
+	const wrapperSpacingBottomIn = [
+		attributes.wrapperSpacingBottomInLarge,
+		attributes.wrapperSpacingBottomInDesktop,
+		attributes.wrapperSpacingBottomInTablet,
+		attributes.wrapperSpacingBottomInMobile,
+	];
 
-  const widthObject = (typeof wrapperWidth === 'undefined') || wrapperWidth;
-  const offsetObject = (typeof wrapperOffset === 'undefined') || wrapperOffset;
-  const containerWidthObject = (typeof wrapperContainerWidth === 'undefined') || wrapperContainerWidth;
-  const gutterObject = (typeof wrapperGutter === 'undefined') || wrapperGutter;
-  const spacingTopObject = (typeof wrapperSpacingTop === 'undefined') || wrapperSpacingTop;
-  const spacingBottomObject = (typeof wrapperSpacingBottom === 'undefined') || wrapperSpacingBottom;
-  const hideBlockObject = (typeof wrapperHideBlock === 'undefined') || wrapperHideBlock;
+	const wrapperDividerTop = [
+		attributes.wrapperDividerTopLarge,
+		attributes.wrapperDividerTopDesktop,
+		attributes.wrapperDividerTopTablet,
+		attributes.wrapperDividerTopMobile,
+	];
 
-  return (
-    <Fragment>
-      {!wrapperDisable &&
-        <PanelBody title={__('Wrapper Responsive Layout', 'eightshift-boilerplate')} initialOpen={false}>
+	const wrapperDividerBottom = [
+		attributes.wrapperDividerBottomLarge,
+		attributes.wrapperDividerBottomDesktop,
+		attributes.wrapperDividerBottomTablet,
+		attributes.wrapperDividerBottomMobile,
+	];
 
-          {(onChangeWrapperUse && wrapperUseShowControl) &&
-            <ToggleControl
-              label={wrapperUse ? __('Wrapper Enabled', 'eightshift-boilerplate') : __('Wrapper Disabled', 'eightshift-boilerplate')}
-              help={__('Toggle wrapper options on/off.', 'eightshift-boilerplate')}
-              checked={wrapperUse}
-              onChange={onChangeWrapperUse}
-            />
-          }
+	const wrapperHide = [
+		attributes.wrapperHideLarge,
+		attributes.wrapperHideDesktop,
+		attributes.wrapperHideTablet,
+		attributes.wrapperHideMobile,
+	];
 
-          {(onChangeWrapperUseSimple && wrapperUse && wrapperUseSimpleShowControl) &&
-            <ToggleControl
-              label={wrapperUseSimple ? __('Wrapper Simple Enabled', 'eightshift-boilerplate') : __('Wrapper Simple Disabled', 'eightshift-boilerplate')}
-              help={__('Toggle wrapper Simple options on/off.', 'eightshift-boilerplate')}
-              checked={wrapperUseSimple}
-              onChange={onChangeWrapperUseSimple}
-            />
-          }
+	const wrapperWidth = [
+		attributes.wrapperWidthLarge,
+		attributes.wrapperWidthDesktop,
+		attributes.wrapperWidthTablet,
+		attributes.wrapperWidthMobile,
+	];
 
-          {wrapperUse &&
-            <Fragment>
-              <TabPanel
-                className="custom-button-tabs"
-                activeClass="components-button is-button is-primary"
-                tabs={[
-                  {
-                    name: 'large',
-                    title: <Dashicon icon="desktop" />,
-                    className: 'tab-large components-button is-button is-default custom-button-with-icon',
-                  },
-                  {
-                    name: 'desktop',
-                    title: <Dashicon icon="laptop" />,
-                    className: 'tab-desktop components-button is-button is-default custom-button-with-icon',
-                  },
-                  {
-                    name: 'tablet',
-                    title: <Dashicon icon="tablet" />,
-                    className: 'tab-tablet components-button is-button is-default custom-button-with-icon',
-                  },
-                  {
-                    name: 'mobile',
-                    title: <Dashicon icon="smartphone" />,
-                    className: 'tab-mobile components-button is-button is-default custom-button-with-icon',
-                  },
-                ]
-                }
-              >
-                {(tab) => (
-                  <Fragment>
-                    {tab.name === 'large' && (
-                      <Fragment>
-                        <br />
-                        <strong className="notice-title">{__('Large Layout Options', 'eightshift-boilerplate')}</strong>
-                        <p>{__('This options will only control large screens options.', 'eightshift-boilerplate')}</p>
-                        <br />
-                        <WrapperResponsiveTabContent
-                          type={'large'}
-                          useSimple={wrapperUseSimple}
-                          width={widthObject}
-                          offset={offsetObject}
-                          containerWidth={containerWidthObject}
-                          gutter={gutterObject}
-                          spacingTop={spacingTopObject}
-                          spacingBottom={spacingBottomObject}
-                          hideBlock={hideBlockObject}
-                          onChangeWidth={onChangeWrapperWidthLarge}
-                          onChangeOffset={onChangeWrapperOffsetLarge}
-                          onChangeContainerWidth={onChangeWrapperContainerWidthLarge}
-                          onChangeGutter={onChangeWrapperGutterLarge}
-                          onChangeSpacingTop={onChangeWrapperSpacingTopLarge}
-                          onChangeSpacingBottom={onChangeWrapperSpacingBottomLarge}
-                          onChangeHideBlock={onChangeWrapperHideBlockLarge}
-                        />
-                      </Fragment>
-                    )}
-                    {tab.name === 'desktop' && (
-                      <Fragment>
-                        <br />
-                        <strong className="notice-title">{__('Desktop Layout Options', 'eightshift-boilerplate')}</strong>
-                        <p>{__('This options will only control desktop screens options. If nothing is set, parent options will be used.', 'eightshift-boilerplate')}</p>
-                        <br />
-                        <WrapperResponsiveTabContent
-                          type={'desktop'}
-                          useSimple={wrapperUseSimple}
-                          width={widthObject}
-                          offset={offsetObject}
-                          containerWidth={containerWidthObject}
-                          gutter={gutterObject}
-                          spacingTop={spacingTopObject}
-                          spacingBottom={spacingBottomObject}
-                          hideBlock={hideBlockObject}
-                          onChangeWidth={onChangeWrapperWidthDesktop}
-                          onChangeOffset={onChangeWrapperOffsetDesktop}
-                          onChangeContainerWidth={onChangeWrapperContainerWidthDesktop}
-                          onChangeGutter={onChangeWrapperGutterDesktop}
-                          onChangeSpacingTop={onChangeWrapperSpacingTopDesktop}
-                          onChangeSpacingBottom={onChangeWrapperSpacingBottomDesktop}
-                          onChangeHideBlock={onChangeWrapperHideBlockDesktop}
-                        />
-                      </Fragment>
-                    )}
-                    {tab.name === 'tablet' && (
-                      <Fragment>
-                        <br />
-                        <strong className="notice-title">{__('Tablet Layout Options', 'eightshift-boilerplate')}</strong>
-                        <p>{__('This options will only control tablet screens options. If nothing is set, parent options will be used.', 'eightshift-boilerplate')}</p>
-                        <br />
-                        <WrapperResponsiveTabContent
-                          type={'tablet'}
-                          useSimple={wrapperUseSimple}
-                          width={widthObject}
-                          offset={offsetObject}
-                          containerWidth={containerWidthObject}
-                          gutter={gutterObject}
-                          spacingTop={spacingTopObject}
-                          spacingBottom={spacingBottomObject}
-                          hideBlock={hideBlockObject}
-                          onChangeWidth={onChangeWrapperWidthTablet}
-                          onChangeOffset={onChangeWrapperOffsetTablet}
-                          onChangeContainerWidth={onChangeWrapperContainerWidthTablet}
-                          onChangeGutter={onChangeWrapperGutterTablet}
-                          onChangeSpacingTop={onChangeWrapperSpacingTopTablet}
-                          onChangeSpacingBottom={onChangeWrapperSpacingBottomTablet}
-                          onChangeHideBlock={onChangeWrapperHideBlockTablet}
-                        />
-                      </Fragment>
-                    )}
-                    {tab.name === 'mobile' && (
-                      <Fragment>
-                        <br />
-                        <strong className="notice-title ">{__('Mobile Layout Options', 'eightshift-boilerplate')}</strong>
-                        <p>{__('This options will only control mobile screens options. If nothing is set, parent options will be used.', 'eightshift-boilerplate')}</p>
-                        <br />
-                        <WrapperResponsiveTabContent
-                          type={'mobile'}
-                          useSimple={wrapperUseSimple}
-                          width={widthObject}
-                          offset={offsetObject}
-                          containerWidth={containerWidthObject}
-                          gutter={gutterObject}
-                          spacingTop={spacingTopObject}
-                          spacingBottom={spacingBottomObject}
-                          hideBlock={hideBlockObject}
-                          onChangeWidth={onChangeWrapperWidthMobile}
-                          onChangeOffset={onChangeWrapperOffsetMobile}
-                          onChangeContainerWidth={onChangeWrapperContainerWidthMobile}
-                          onChangeGutter={onChangeWrapperGutterMobile}
-                          onChangeSpacingTop={onChangeWrapperSpacingTopMobile}
-                          onChangeSpacingBottom={onChangeWrapperSpacingBottomMobile}
-                          onChangeHideBlock={onChangeWrapperHideBlockMobile}
-                        />
-                      </Fragment>
-                    )}
-                  </Fragment>
-                )}
-              </TabPanel>
+	const wrapperOffset = [
+		attributes.wrapperOffsetLarge,
+		attributes.wrapperOffsetDesktop,
+		attributes.wrapperOffsetTablet,
+		attributes.wrapperOffsetMobile,
+	];
 
-              {onChangeWrapperBackgroundColor &&
-                <ColorPaletteCustom
-                  label={
-                    <Fragment>
-                      <Icon icon={icons.color} />
-                      {__('Background Color', 'eightshift-boilerplate')}
-                    </Fragment>
-                  }
-                  help={__('Change Block Background color. Block spacing will be included in block background color.', 'eightshift-boilerplate')}
-                  value={wrapperBackgroundColor}
-                  onChange={onChangeWrapperBackgroundColor}
-                />
-              }
+	const wrapperContainerWidth = [
+		attributes.wrapperContainerWidthLarge,
+		attributes.wrapperContainerWidthDesktop,
+		attributes.wrapperContainerWidthTablet,
+		attributes.wrapperContainerWidthMobile,
+	];
 
-              {onChangeWrapperId &&
-                <TextControl
-                  label={
-                    <Fragment>
-                      <Icon icon={icons.id} />
-                      {__('Block ID', 'eightshift-boilerplate')}
-                    </Fragment>
-                  }
-                  help={__('Add Unique ID to the block.', 'eightshift-boilerplate')}
-                  value={wrapperId}
-                  onChange={onChangeWrapperId}
-                />
-              }
+	const wrapperGutter = [
+		attributes.wrapperGutterLarge,
+		attributes.wrapperGutterDesktop,
+		attributes.wrapperGutterTablet,
+		attributes.wrapperGutterMobile,
+	];
 
-            </Fragment>
-          }
-        </PanelBody>
-      }
-    </Fragment>
-  );
+	return (
+		<Fragment>
+			{!wrapperDisable &&
+				<PanelBody title={__('Block Layout', 'EightshiftForms')} initialOpen={false} className="custom-highlighted-panel">
+
+					<HelpModal />
+
+					<br /><br />
+
+					{wrapperUseShowControl &&
+						<ToggleControl
+							label={wrapperUse ? __('Wrapper Enabled', 'EightshiftForms') : __('Wrapper Disabled', 'EightshiftForms')}
+							checked={wrapperUse}
+							onChange={(value) => setAttributes({ wrapperUse: value })}
+						/>
+					}
+
+					{(wrapperUse && wrapperUseSimpleShowControl) &&
+						<ToggleControl
+							label={wrapperUseSimple ? __('Wrapper Simple Enabled', 'EightshiftForms') : __('Wrapper Simple Disabled', 'EightshiftForms')}
+							checked={wrapperUseSimple}
+							onChange={(value) => setAttributes({ wrapperUseSimple: value })}
+						/>
+					}
+
+					{wrapperUse &&
+						<Fragment>
+							<div className="custom-divider"></div>
+
+							{showWrapperSpacingTop &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.spacingTop} />
+											{__('Spacing Top', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperSpacingTop.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperSpacingTop${point}`;
+
+										return (
+											<Fragment key={index}>
+												<RangeControl
+													label={point}
+													allowReset={true}
+													value={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+													min={defaults.sectionSpacing.min}
+													max={defaults.sectionSpacing.max}
+													step={defaults.sectionSpacing.step}
+													resetFallbackValue={reset[attr].default}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							{showWrapperSpacingBottom &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.spacingBottom} />
+											{__('Spacing Bottom', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperSpacingBottom.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperSpacingBottom${point}`;
+
+										return (
+											<Fragment key={index}>
+												<RangeControl
+													label={point}
+													allowReset={true}
+													value={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+													min={defaults.sectionSpacing.min}
+													max={defaults.sectionSpacing.max}
+													step={defaults.sectionSpacing.step}
+													resetFallbackValue={reset[attr].default}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							<div className="custom-divider"></div>
+
+							{showWrapperSpacingTopIn &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.spacingTop} />
+											{__('Spacing Top In', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperSpacingTopIn.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperSpacingTopIn${point}`;
+
+										return (
+											<Fragment key={index}>
+												<RangeControl
+													label={point}
+													allowReset={true}
+													value={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+													min={defaults.sectionInSpacing.min}
+													max={defaults.sectionInSpacing.max}
+													step={defaults.sectionInSpacing.step}
+													resetFallbackValue={reset[attr].default}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							{showWrapperSpacingBottomIn &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.spacingBottom} />
+											{__('Spacing Bottom In', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperSpacingBottomIn.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperSpacingBottomIn${point}`;
+
+										return (
+											<Fragment key={index}>
+												<RangeControl
+													label={point}
+													allowReset={true}
+													value={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+													min={defaults.sectionInSpacing.min}
+													max={defaults.sectionInSpacing.max}
+													step={defaults.sectionInSpacing.step}
+													resetFallbackValue={reset[attr].default}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							<div className="custom-divider"></div>
+
+							{showWrapperDividerTop &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.dividerTop} />
+											{__('Divider Top', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperDividerTop.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperDividerTop${point}`;
+
+										return (
+											<Fragment key={index}>
+												<ToggleControl
+													label={point}
+													checked={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							{showWrapperDividerBottom &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.dividerBottom} />
+											{__('Divider Bottom', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperDividerBottom.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperDividerBottom${point}`;
+
+										return (
+											<Fragment key={index}>
+												<ToggleControl
+													label={point}
+													checked={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							<div className="custom-divider"></div>
+
+							{showWrapperHide &&
+								<Responsive
+									label={
+										<Fragment>
+											<Icon icon={icons.hide} />
+											{__('Hide', 'EightshiftForms')}
+										</Fragment>
+									}
+								>
+									{wrapperHide.map((item, index) => {
+
+										const point = ucfirst(options.breakpoints[index]);
+										const attr = `wrapperHide${point}`;
+
+										return (
+											<Fragment key={index}>
+												<ToggleControl
+													label={point}
+													checked={attributes[attr]}
+													onChange={(value) => setAttributes({ [attr]: value })}
+												/>
+											</Fragment>
+										);
+									})}
+								</Responsive>
+							}
+
+							<div className="custom-divider"></div>
+
+							{!wrapperUseSimple &&
+								<Fragment>
+									{showWrapperWidth &&
+										<Responsive
+											label={
+												<Fragment>
+													<Icon icon={icons.width} />
+													{__('Width', 'EightshiftForms')}
+												</Fragment>
+											}
+										>
+											{wrapperWidth.map((item, index) => {
+
+												const point = ucfirst(options.breakpoints[index]);
+												const attr = `wrapperWidth${point}`;
+
+												return (
+													<Fragment key={index}>
+														<RangeControl
+															label={point}
+															allowReset={true}
+															value={attributes[attr]}
+															onChange={(value) => setAttributes({ [attr]: value })}
+															min={options.widths.min}
+															max={options.widths.max}
+															step={options.widths.step}
+															resetFallbackValue={reset[attr].default}
+														/>
+													</Fragment>
+												);
+											})}
+										</Responsive>
+									}
+
+									{showWrapperOffset &&
+										<Responsive
+											label={
+												<Fragment>
+													<Icon icon={icons.offset} />
+													{__('Offset', 'EightshiftForms')}
+												</Fragment>
+											}
+										>
+											{wrapperOffset.map((item, index) => {
+
+												const point = ucfirst(options.breakpoints[index]);
+												const attr = `wrapperOffset${point}`;
+
+												return (
+													<Fragment key={index}>
+														<RangeControl
+															label={point}
+															allowReset={true}
+															value={attributes[attr]}
+															onChange={(value) => setAttributes({ [attr]: value })}
+															min={options.widths.min}
+															max={options.widths.max}
+															step={options.widths.step}
+															resetFallbackValue={reset[attr].default}
+														/>
+													</Fragment>
+												);
+											})}
+										</Responsive>
+									}
+
+									{showWrapperContainerWidth &&
+										<Responsive
+											label={
+												<Fragment>
+													<Icon icon={icons.containerWidth} />
+													{__('ContainerWidth', 'EightshiftForms')}
+												</Fragment>
+											}
+										>
+											{wrapperContainerWidth.map((item, index) => {
+
+												const point = ucfirst(options.breakpoints[index]);
+												const attr = `wrapperContainerWidth${point}`;
+
+												return (
+													<Fragment key={index}>
+														<SelectControl
+															label={point}
+															options={options.containerWidths}
+															value={attributes[attr]}
+															onChange={(value) => setAttributes({ [attr]: value })}
+														/>
+													</Fragment>
+												);
+											})}
+										</Responsive>
+									}
+
+									{showWrapperGutter &&
+										<Responsive
+											label={
+												<Fragment>
+													<Icon icon={icons.gutter} />
+													{__('Gutter', 'EightshiftForms')}
+												</Fragment>
+											}
+										>
+											{wrapperGutter.map((item, index) => {
+
+												const point = ucfirst(options.breakpoints[index]);
+												const attr = `wrapperGutter${point}`;
+
+												return (
+													<Fragment key={index}>
+														<SelectControl
+															label={point}
+															options={options.gutters}
+															value={attributes[attr]}
+															onChange={(value) => setAttributes({ [attr]: value })}
+														/>
+													</Fragment>
+												);
+											})}
+										</Responsive>
+									}
+
+									{showWrapperBackgroundColor &&
+										<ColorPaletteCustom
+											label={
+												<Fragment>
+													<Icon icon={icons.color} />
+													{__('Background Color', 'EightshiftForms')}
+												</Fragment>
+											}
+											colors={getOptionColors(options.colors)}
+											value={wrapperBackgroundColor}
+											onChange={(value) => setAttributes({ wrapperBackgroundColor: value })}
+										/>
+									}
+								</Fragment>
+							}
+
+							{showWrapperAnchorId &&
+								<TextControl
+									label={
+										<Fragment>
+											<Icon icon={icons.anchor} />
+											{__('Block Anchor ID', 'EightshiftForms')}
+										</Fragment>
+									}
+									value={wrapperAnchorId}
+									onChange={(value) => setAttributes({ wrapperAnchorId: value })}
+								/>
+							}
+
+							{showWrapperId &&
+								<TextControl
+									label={
+										<Fragment>
+											<Icon icon={icons.id} />
+											{__('Block ID', 'EightshiftForms')}
+										</Fragment>
+									}
+									value={wrapperId}
+									onChange={(value) => setAttributes({ wrapperId: value })}
+								/>
+							}
+
+						</Fragment>
+					}
+				</PanelBody>
+			}
+		</Fragment>
+	);
 };

@@ -1,5 +1,5 @@
 $form-overlay: (
-  z-index: map-get-strict($base-z-index, overlay),
+  z-index: map-get-strict($zindex, overlay),
 );
 
 .form-overlay {

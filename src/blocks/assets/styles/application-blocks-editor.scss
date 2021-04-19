@@ -11,6 +11,9 @@
 // Globals.
 @import './../../../../assets/styles/parts/shared';
 
+// Editor styles overrides.
+@import './editor/editor';
+
 // Register Wrapper block styles.
 @import './../../wrapper/wrapper-editor.scss';
 
@@ -19,6 +22,3 @@
 
 // Find all blocks and require block_name-editor.scss inside it.
 @import './../../custom/*/*-editor.scss';
-
-// Placeholders
-@import './placeholders/*.scss';

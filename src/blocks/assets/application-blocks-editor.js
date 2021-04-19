@@ -3,7 +3,6 @@
  * This file registers styles and scripts.
  *
  * Usage: `WordPress admin editor`.
- *
  */
 
 // Styles.
@@ -11,7 +10,3 @@ import './styles/application-blocks-editor.scss';
 
 // Scripts.
 import './scripts/application-blocks-editor';
-
-// Stores.
-import '../stores/all';
-

@@ -48,10 +48,10 @@
 	},
 	"autoload": {
         "classmap": [
-            "src/",
             "tests/WordPressMocks/"
         ],
         "psr-4": {
+            "EightshiftForms\\": "src/",
             "EightshiftFormsTests\\": "tests/"
         }
     },

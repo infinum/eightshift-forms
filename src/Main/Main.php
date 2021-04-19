@@ -96,141 +96,140 @@ class Main extends AbstractMain
 	{
 		return [
 			// Config.
-			Config::class,
+			// Config::class,
 
 			// Manifest.
-			Lib_Manifest\Manifest::class => [ Config::class ],
+			// Lib_Manifest\Manifest::class => [ Config::class ],
 
-			// Authorization.
-			Integrations\Authorization\HMAC::class,
+			// // Authorization.
+			// Integrations\Authorization\HMAC::class,
 
-			// Admin.
-			Admin\Users::class,
+			// // Admin.
+			// Admin\Users::class,
 
-			// Dynamics CRM.
-			Integrations\Core\Guzzle_Client::class => [
-				Client::class,
-			],
-			Integrations\OAuth2_Client::class => [
-				Integrations\Core\Guzzle_Client::class,
-			],
-			Integrations\Dynamics_CRM::class => [
-				Integrations\OAuth2_Client::class,
-			],
-			Rest\Dynamics_Crm_Route::class => [
-				Config::class,
-				Integrations\Dynamics_CRM::class,
-				Captcha\Basic_Captcha::class,
-			],
-			Rest\Dynamics_Crm_Fetch_Entity_Route::class => [
-				Config::class,
-				Integrations\Dynamics_CRM::class,
-				Integrations\Authorization\HMAC::class,
-				Cache\Transient_Cache::class,
-			],
+			// // Dynamics CRM.
+			// Integrations\Core\Guzzle_Client::class => [
+			// 	Client::class,
+			// ],
+			// Integrations\OAuth2_Client::class => [
+			// 	Integrations\Core\Guzzle_Client::class,
+			// ],
+			// Integrations\Dynamics_CRM::class => [
+			// 	Integrations\OAuth2_Client::class,
+			// ],
+			// Rest\Dynamics_Crm_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Dynamics_CRM::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
+			// Rest\Dynamics_Crm_Fetch_Entity_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Dynamics_CRM::class,
+			// 	Integrations\Authorization\HMAC::class,
+			// 	Cache\Transient_Cache::class,
+			// ],
 
-			// Buckaroo.
-			Integrations\Buckaroo\Buckaroo::class => [
-				Integrations\Core\Guzzle_Client::class,
-			],
-			Rest\Buckaroo_Response_Handler_Route::class => [
-				Config::class,
-				Integrations\Buckaroo\Buckaroo::class,
-				Integrations\Authorization\HMAC::class,
-			],
-			Rest\Buckaroo_Ideal_Route::class => [
-				Config::class,
-				Integrations\Buckaroo\Buckaroo::class,
-				Rest\Buckaroo_Response_Handler_Route::class,
-				Integrations\Authorization\HMAC::class,
-				Captcha\Basic_Captcha::class,
-			],
-			Rest\Buckaroo_Emandate_Route::class => [
-				Config::class,
-				Integrations\Buckaroo\Buckaroo::class,
-				Rest\Buckaroo_Response_Handler_Route::class,
-				Integrations\Authorization\HMAC::class,
-				Captcha\Basic_Captcha::class,
-			],
-			Rest\Buckaroo_Pay_By_Email_Route::class => [
-				Config::class,
-				Integrations\Buckaroo\Buckaroo::class,
-				Rest\Buckaroo_Response_Handler_Route::class,
-				Integrations\Authorization\HMAC::class,
-				Captcha\Basic_Captcha::class,
-			],
+			// // Buckaroo.
+			// Integrations\Buckaroo\Buckaroo::class => [
+			// 	Integrations\Core\Guzzle_Client::class,
+			// ],
+			// Rest\Buckaroo_Response_Handler_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Buckaroo\Buckaroo::class,
+			// 	Integrations\Authorization\HMAC::class,
+			// ],
+			// Rest\Buckaroo_Ideal_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Buckaroo\Buckaroo::class,
+			// 	Rest\Buckaroo_Response_Handler_Route::class,
+			// 	Integrations\Authorization\HMAC::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
+			// Rest\Buckaroo_Emandate_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Buckaroo\Buckaroo::class,
+			// 	Rest\Buckaroo_Response_Handler_Route::class,
+			// 	Integrations\Authorization\HMAC::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
+			// Rest\Buckaroo_Pay_By_Email_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Buckaroo\Buckaroo::class,
+			// 	Rest\Buckaroo_Response_Handler_Route::class,
+			// 	Integrations\Authorization\HMAC::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
 
-			// Mailchimp.
-			Integrations\Mailchimp\Mailchimp::class => [
-				Integrations\Mailchimp\Mailchimp_Marketing_Client::class,
-				Cache\Transient_Cache::class,
-			],
-			Rest\Mailchimp_Route::class => [
-				Config::class,
-				Integrations\Mailchimp\Mailchimp::class,
-				Captcha\Basic_Captcha::class,
-			],
-			Rest\Mailchimp_Fetch_Segments_Route::class => [
-				Config::class,
-				Integrations\Mailchimp\Mailchimp::class,
-				Captcha\Basic_Captcha::class,
-			],
+			// // Mailchimp.
+			// Integrations\Mailchimp\Mailchimp::class => [
+			// 	Integrations\Mailchimp\Mailchimp_Marketing_Client::class,
+			// 	Cache\Transient_Cache::class,
+			// ],
+			// Rest\Mailchimp_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Mailchimp\Mailchimp::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
+			// Rest\Mailchimp_Fetch_Segments_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Mailchimp\Mailchimp::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
 
-			// Mailerlite.
-			Integrations\Mailerlite\Mailerlite::class => [
-				Integrations\Mailerlite\Mailerlite_Client::class,
-			],
-			Rest\Mailerlite_Route::class => [
-				Config::class,
-				Integrations\Mailerlite\Mailerlite::class,
-				Captcha\Basic_Captcha::class,
-			],
-			Rest\Mailerlite_Fetch_Groups_Route::class => [
-				Config::class,
-				Integrations\Mailerlite\Mailerlite::class,
-				Captcha\Basic_Captcha::class,
-			],
+			// // Mailerlite.
+			// Integrations\Mailerlite\Mailerlite::class => [
+			// 	Integrations\Mailerlite\Mailerlite_Client::class,
+			// ],
+			// Rest\Mailerlite_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Mailerlite\Mailerlite::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
+			// Rest\Mailerlite_Fetch_Groups_Route::class => [
+			// 	Config::class,
+			// 	Integrations\Mailerlite\Mailerlite::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
 
-			// Email.
-			Rest\Send_Email_Route::class => [
-				Config::class,
-				Captcha\Basic_Captcha::class,
-			],
+			// // Email.
+			// Rest\Send_Email_Route::class => [
+			// 	Config::class,
+			// 	Captcha\Basic_Captcha::class,
+			// ],
 
-			// Enqueue.
-			Localization_Constants::class => [
-				Rest\Dynamics_Crm_Route::class,
-				Rest\Buckaroo_Ideal_Route::class,
-				Rest\Buckaroo_Emandate_Route::class,
-				Rest\Buckaroo_Pay_By_Email_Route::class,
-				Rest\Send_Email_Route::class,
-				Rest\Mailchimp_Route::class,
-				Integrations\Mailchimp\Mailchimp::class,
-				Rest\Mailerlite_Route::class,
-				Integrations\Mailerlite\Mailerlite::class,
-			],
-			Enqueue\Enqueue_Theme::class => [
-				Lib_Manifest\Manifest::class,
-				Enqueue\Localization_Constants::class,
-			],
-			Enqueue\Enqueue_Blocks::class => [
-				Lib_Manifest\Manifest::class,
-				Enqueue\Localization_Constants::class,
-			],
-			Enqueue\Enqueue_Admin::class => [
-				Lib_Manifest\Manifest::class,
-				Enqueue\Localization_Constants::class,
-			],
+			// // Enqueue.
+			// Localization_Constants::class => [
+			// 	Rest\Dynamics_Crm_Route::class,
+			// 	Rest\Buckaroo_Ideal_Route::class,
+			// 	Rest\Buckaroo_Emandate_Route::class,
+			// 	Rest\Buckaroo_Pay_By_Email_Route::class,
+			// 	Rest\Send_Email_Route::class,
+			// 	Rest\Mailchimp_Route::class,
+			// 	Integrations\Mailchimp\Mailchimp::class,
+			// 	Rest\Mailerlite_Route::class,
+			// 	Integrations\Mailerlite\Mailerlite::class,
+			// ],
+			// Enqueue\Enqueue_Theme::class => [
+			// 	Lib_Manifest\Manifest::class,
+			// 	Enqueue\Localization_Constants::class,
+			// ],
+			// Enqueue\Enqueue_Blocks::class => [
+			// 	Lib_Manifest\Manifest::class,
+			// 	Enqueue\Localization_Constants::class,
+			// ],
+			// Enqueue\Enqueue_Admin::class => [
+			// 	Lib_Manifest\Manifest::class,
+			// 	Enqueue\Localization_Constants::class,
+			// ],
 
-			// Admin.
-			Admin\Forms::class,
-			Admin\Content::class,
+			// // Admin.
+			// Admin\Content::class,
 
-			// Blocks.
-			Blocks\Blocks::class => [ Config::class ],
+			// // Blocks.
+			// Blocks\Blocks::class => [ Config::class ],
 
-			// View.
-			View\Post_View_Filter::class,
+			// // View.
+			// View\Post_View_Filter::class,
 		];
 	}
 
