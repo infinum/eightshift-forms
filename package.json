@@ -37,7 +37,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@eightshift/frontend-libs": "^4.0.0",
+    "@eightshift/frontend-libs": "https://github.com/infinum/eightshift-frontend-libs#develop",
     "@wordpress/server-side-render": "^1.16.0"
   },
   "husky": {

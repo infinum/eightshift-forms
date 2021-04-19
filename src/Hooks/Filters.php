@@ -107,14 +107,14 @@ interface Filters
    *
    * You don't need to add the filter in your project, you can just use apply_filters().
    *
-   * All routes currently use HMAC authorization and you should use it like in the example.
+   * All routes currently use Hmac authorization and you should use it like in the example.
    *
    * Example:
    *
-   *  use \Eightshift_Forms\Integrations\Authorization\HMAC;
+   *  use \EightshiftForms\Integrations\Authorization\Hmac;
    *
    *  public function add_authorization_hash_to_params( array $params, string $secret ) {
-   *    $params[ HMAC::AUTHORIZATION_KEY ] = apply_filters( 'eightshift_forms/authorization_generator', $params, $secret )
+   *    $params[ Hmac::AUTHORIZATION_KEY ] = apply_filters( 'eightshift_forms/authorization_generator', $params, $secret )
    *    return $params;
    *  }
    *

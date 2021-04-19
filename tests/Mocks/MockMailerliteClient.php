@@ -3,14 +3,14 @@
 /**
  * Mailerlite client implementation
  *
- * @package Eightshift_Forms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations\Mailchimp
  */
 
 declare( strict_types=1 );
 
 namespace EightshiftFormsTests\Mocks;
 
-use Eightshift_Forms\Integrations\Client_Interface;
+use EightshiftForms\Integrations\ClientInterface;
 use Codeception\Stub;
 use EightshiftFormsTests\Integrations\Mailerlite\DataProvider;
 use \MailerLiteApi\Api\Groups;
@@ -19,7 +19,7 @@ use MailerLiteApi\MailerLite;
 /**
  * Mailerlite integration class.
  */
-class MockMailerliteClient implements Client_Interface {
+class MockMailerliteClient implements ClientInterface {
 
   /**
    * Constructs object
@@ -39,7 +39,7 @@ class MockMailerliteClient implements Client_Interface {
    *
    * @return object
    */
-  public function set_config() {
+  public function setConfig() {
     // do nothing.
   }
 
@@ -48,7 +48,7 @@ class MockMailerliteClient implements Client_Interface {
    *
    * @return object
    */
-  public function get_client() {
+  public function getClient() {
     return $this->client;
   }
 }

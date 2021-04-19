@@ -3,7 +3,7 @@
 /**
  * The file that defines actions on plugin activation.
  *
- * @package Eightshift_Forms
+ * @package EightshiftForms
  */
 
 declare(strict_types=1);

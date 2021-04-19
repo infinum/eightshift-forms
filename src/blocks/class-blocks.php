@@ -2,13 +2,13 @@
 /**
  * Blocks class used to define configurations for blocks.
  *
- * @package Eightshift_Forms\Blocks
+ * @package EightshiftForms\Blocks
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;
-use Eightshift_Forms\Admin\Forms;
+use EightshiftForms\Admin\Forms;
 use EightshiftForms\Hooks\Filters;
 
 /**

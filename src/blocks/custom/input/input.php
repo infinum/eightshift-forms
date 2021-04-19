@@ -2,14 +2,14 @@
 /**
  * Template for the Input Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
-use Eightshift_Forms\Helpers\Forms;
-use Eightshift_Forms\Helpers\Prefill;
+use EightshiftForms\Helpers\Forms;
+use EightshiftForms\Helpers\Prefill;
 use EightshiftForms\Hooks\Filters;
 
 $block_class         = $attributes['blockClass'] ?? '';

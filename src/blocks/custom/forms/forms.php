@@ -2,13 +2,13 @@
 /**
  * Template for the Forms Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
-use Eightshift_Forms\View\Form_View;
-use Eightshift_Forms\Helpers\Forms;
+use EightshiftForms\View\Form_View;
+use EightshiftForms\Helpers\Forms;
 
 $block_class      = $attributes['blockClass'] ?? '';
 $selected_form_id = $attributes['selectedFormId'] ?? 0;

@@ -3,26 +3,26 @@
 /**
  * Mailchimp marketing client implementation
  *
- * @package Eightshift_Forms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations\Mailchimp
  */
 
 declare( strict_types=1 );
 
 namespace EightshiftFormsTests\Mocks;
 
-use Eightshift_Forms\Integrations\Client_Interface;
+use EightshiftForms\Integrations\ClientInterface;
 use \MailchimpMarketing\ApiClient as MarketingApiClient;
 use \MailchimpMarketing\Api\ListsApi;
 use Codeception\Stub;
 use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
 use \GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use EightshiftFormsVendor\GuzzleHttp\Psr7\Request;
+use EightshiftFormsVendor\GuzzleHttp\Psr7\Response;
 
 /**
  * Mailchimp integration class.
  */
-class MockMailchimpMarketingClient implements Client_Interface {
+class MockMailchimpMarketingClient implements ClientInterface {
 
   /**
    * Constructs object
@@ -69,7 +69,7 @@ class MockMailchimpMarketingClient implements Client_Interface {
    *
    * @return object
    */
-  public function set_config() {
+  public function setConfig() {
     $this->client->setConfig([]);
   }
 
@@ -78,7 +78,7 @@ class MockMailchimpMarketingClient implements Client_Interface {
    *
    * @return object
    */
-  public function get_client() {
+  public function getClient() {
     return $this->client;
   }
 }

@@ -2,12 +2,12 @@
 /**
  * Template for the Select Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
-use Eightshift_Forms\Helpers\Components;
+use EightshiftForms\Helpers\Components;
 
 $attributes['innerBlockContent'] = $inner_block_content ?? '';
 

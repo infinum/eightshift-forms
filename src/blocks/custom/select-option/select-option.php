@@ -2,10 +2,10 @@
 /**
  * Template for the Select Option Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 $block_class = $attributes['blockClass'] ?? '';
 $label       = $attributes['label'] ?? '';

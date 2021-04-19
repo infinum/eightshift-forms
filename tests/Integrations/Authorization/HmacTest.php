@@ -1,12 +1,12 @@
 <?php namespace EightshiftFormsTests;
 
-use Eightshift_Forms\Integrations\Authorization\HMAC;
+use EightshiftForms\Integrations\Authorization\Hmac;
 use EightshiftFormsTests\BaseTest;
 
 class HmacTest extends BaseTest
 {
 
-  protected function _inject(HMAC $hmac)
+  protected function _inject(Hmac $hmac)
   {
     $this->hmac = $hmac;
   }

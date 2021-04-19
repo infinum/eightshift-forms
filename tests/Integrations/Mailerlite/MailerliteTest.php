@@ -4,7 +4,7 @@ namespace EightshiftFormsTests\Integrations\Mailerlite;
 
 use EightshiftForms\Main\Main;
 use EightshiftForms\Hooks\Filters;
-use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
+use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsTests\BaseTest;
 
 class MailerliteTest extends BaseTest
@@ -25,14 +25,14 @@ class MailerliteTest extends BaseTest
       'email' => DataProvider::MOCK_EMAIL,
     ];
     $groupId = 12345;
-    $subscriber_data = [
+    $subscriberData = [
       'name' => 'some name',
     ];
 
-    $response = $this->mailerlite->add_subscriber(
+    $response = $this->mailerlite->addSubscriber(
       $groupId,
       DataProvider::MOCK_EMAIL,
-      $subscriber_data,
+      $subscriberData,
       $params
     );
 

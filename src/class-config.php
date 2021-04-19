@@ -5,12 +5,12 @@
  * A class definition that includes attributes and functions used across both the
  * public side of the site and the admin area.
  *
- * @package Eightshift_Forms\Core
+ * @package EightshiftForms\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Core;
+namespace EightshiftForms\Core;
 
 use Eightshift_Libs\Core\Config as Lib_Config;
 

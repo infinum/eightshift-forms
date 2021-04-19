@@ -2,10 +2,10 @@
 /**
  * Template for the Radio Item Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 

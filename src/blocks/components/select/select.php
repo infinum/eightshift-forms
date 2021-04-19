@@ -2,14 +2,14 @@
 /**
  * Template for the Select Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Hooks\Filters;
-use Eightshift_Forms\Helpers\Components;
-use Eightshift_Forms\Helpers\Prefill;
+use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Prefill;
 
 $block_class         = $attributes['blockClass'] ?? '';
 $inner_block_content = $attributes['innerBlockContent'] ?? '';

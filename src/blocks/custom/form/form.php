@@ -2,22 +2,22 @@
 /**
  * Template for the Form Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
-use Eightshift_Forms\Helpers\Components;
-use Eightshift_Forms\Helpers\Forms;
+use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Forms;
 
-use Eightshift_Forms\Core\Config;
+use EightshiftForms\Core\Config;
 use EightshiftForms\Hooks\Actions;
-use Eightshift_Forms\Rest\Dynamics_Crm_Route;
-use Eightshift_Forms\Rest\Send_Email_Route;
-use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;
-use Eightshift_Forms\Rest\Buckaroo_Emandate_Route;
-use Eightshift_Forms\Rest\Mailchimp_Route;
-use Eightshift_Forms\Rest\Mailerlite_Route;
+use EightshiftForms\Rest\DynamicsCrmRoute;
+use EightshiftForms\Rest\SendEmailRoute;
+use EightshiftForms\Rest\AbstractBuckarooRoute as Buckaroo_Route;
+use EightshiftForms\Rest\BuckarooEmandateRoute;
+use EightshiftForms\Rest\MailchimpRoute;
+use EightshiftForms\Rest\MailerliteRoute;
 
 $current_url                  = ! empty( \get_permalink() ) ? \get_permalink() : '';
 $block_class                  = $attributes['blockClass'] ?? '';
@@ -117,17 +117,17 @@ if ( empty( $this ) ) {
     <input type="hidden" name="referral-url" value="<?php echo esc_url( $referral_url ); ?>" />
 
     <?php if ( isset( $used_types[ Config::DYNAMICS_CRM_METHOD ] ) ) { ?>
-      <input type="hidden" name="<?php echo esc_attr( Dynamics_Crm_Route::ENTITY_PARAM ); ?>" value="<?php echo esc_attr( $dynamics_crm_entity ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( DynamicsCrmRoute::ENTITY_PARAM ); ?>" value="<?php echo esc_attr( $dynamics_crm_entity ); ?>" />
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::EMAIL_METHOD ] ) ) { ?>
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::TO_PARAM ); ?>" value="<?php echo esc_attr( $email_to ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo (int) $email_send_confirm_to_sender; ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_subject ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Send_Email_Route::CONFIRMATION_MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_message ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::TO_PARAM ); ?>" value="<?php echo esc_attr( $email_to ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_subject ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_message ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::ADDITIONAL_HEADERS_PARAM ); ?>" value="<?php echo esc_attr( $email_additional_headers ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::SEND_CONFIRMATION_TO_SENDER_PARAM ); ?>" value="<?php echo (int) $email_send_confirm_to_sender; ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::CONFIRMATION_SUBJECT_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_subject ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( SendEmailRoute::CONFIRMATION_MESSAGE_PARAM ); ?>" value="<?php echo esc_attr( $email_confirmation_message ); ?>" />
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::BUCKAROO_METHOD ] ) ) { ?>
@@ -137,10 +137,10 @@ if ( empty( $this ) ) {
       <input type="hidden" name="<?php echo esc_attr( Buckaroo_Route::REDIRECT_URL_REJECT_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_redirect_url_reject ); ?>" />
 
       <?php if ( $buckaroo_service === 'emandate' ) { ?>
-        <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
+        <input type="hidden" name="<?php echo esc_attr( BuckarooEmandateRoute::EMANDATE_DESCRIPTION_PARAM ); ?>" value="<?php echo esc_attr( $buckaroo_emandate_desc ); ?>" />
 
         <?php if ( ! $buckaroo_sequence_type_front && $buckaroo_is_recurring ) { ?>
-          <input type="hidden" name="<?php echo esc_attr( Buckaroo_Emandate_Route::SEQUENCE_TYPE_IS_RECURRING_PARAM ); ?>" value="1" />
+          <input type="hidden" name="<?php echo esc_attr( BuckarooEmandateRoute::SEQUENCE_TYPE_IS_RECURRING_PARAM ); ?>" value="1" />
         <?php } ?>
       <?php } ?>
 
@@ -150,16 +150,16 @@ if ( empty( $this ) ) {
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::MAILCHIMP_METHOD ] ) ) { ?>
-      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
-      <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo (int) $mailchimp_add_existing; ?>" />
+      <input type="hidden" name="<?php echo esc_attr( MailchimpRoute::LIST_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailchimp_list_id ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( MailchimpRoute::ADD_EXISTING_MEMBERS_PARAM ); ?>" value="<?php echo (int) $mailchimp_add_existing; ?>" />
 
       <?php foreach ( $mailchimp_tags as $mailchimp_tag ) { ?>
-        <input type="hidden" name="<?php echo esc_attr( Mailchimp_Route::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
+        <input type="hidden" name="<?php echo esc_attr( MailchimpRoute::TAGS_PARAM ); ?>[]" value="<?php echo esc_attr( $mailchimp_tag ); ?>" />
       <?php } ?>
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::MAILERLITE_METHOD ] ) ) { ?>
-      <input type="hidden" name="<?php echo esc_attr( Mailerlite_Route::GROUP_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailerlite_group_id ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( MailerliteRoute::GROUP_ID_PARAM ); ?>" value="<?php echo esc_attr( $mailerlite_group_id ); ?>" />
     <?php } ?>
 
     <?php if ( isset( $used_types[ Config::CUSTOM_EVENT_METHOD ] ) ) { ?>

@@ -2,14 +2,14 @@
 /**
  * Helpers for components
  *
- * @package Eightshift_Forms\Helpers
+ * @package EightshiftForms\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Helpers;
+namespace EightshiftForms\Helpers;
 
-use Eightshift_Forms\Core\Config;
+use EightshiftForms\Core\Config;
 use Eightshift_Libs\Helpers\Components as Libs_Components;
 
 /**

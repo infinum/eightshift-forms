@@ -3,8 +3,8 @@
 namespace EightshiftFormsTests\Integrations\Buckaroo;
 
 use EightshiftFormsTests\BaseTest;
-use Eightshift_Forms\Buckaroo\Response_Factory;
-use Eightshift_Forms\Buckaroo\Response;
+use EightshiftForms\Buckaroo\Response_Factory;
+use EightshiftForms\Buckaroo\Response;
 
 class BuckarooResponse extends BaseTest
 {

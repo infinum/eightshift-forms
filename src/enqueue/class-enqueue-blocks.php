@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Enqueue;
+namespace EightshiftForms\Enqueue;
 
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Libs\Enqueue\Enqueue_Blocks as Lib_Enqueue_Blocks;
@@ -27,7 +27,7 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
   /**
    * Object which holds all variables that need to be passed to the editor.
    *
-   * @var Localization_Constants
+   * @var LocalizationConstants
    */
   private $localization_constants;
 
@@ -35,9 +35,9 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
    * Create a new admin instance.
    *
    * @param Manifest_Data          $manifest               Inject manifest which holds data about assets from manifest.json.
-   * @param Localization_Constants $localization_constants Injected object which holds all localizations shared between editor and frontend.
+   * @param LocalizationConstants $localization_constants Injected object which holds all localizations shared between editor and frontend.
    */
-  public function __construct( Manifest_Data $manifest, Localization_Constants $localization_constants ) {
+  public function __construct( Manifest_Data $manifest, LocalizationConstants $localization_constants ) {
     $this->manifest               = $manifest;
     $this->localization_constants = $localization_constants;
   }
@@ -59,7 +59,7 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
   public function localize_script() {
     $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-editor-scripts";
 
-    foreach ( $this->get_localizations() as $object_name => $data_array ) {
+    foreach ( $this->getLocalizations() as $object_name => $data_array ) {
       \wp_localize_script( $handler, $object_name, $data_array );
     }
   }
@@ -69,7 +69,7 @@ class Enqueue_Blocks extends Lib_Enqueue_Blocks {
    *
    * @return array
    */
-  public function get_localizations(): array {
-    return $this->localization_constants->get_localizations();
+  public function getLocalizations(): array {
+    return $this->localization_constants->getLocalizations();
   }
 }

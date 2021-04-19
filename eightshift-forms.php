@@ -9,7 +9,7 @@
  * Version: 1.0.0
  * Text Domain: eightshift-forms
  *
- * @package Eightshift_Forms
+ * @package EightshiftForms
  */
 
 declare(strict_types=1);

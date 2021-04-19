@@ -1,8 +1,8 @@
 <?php namespace EightshiftFormsTests\Routes;
 
 use EightshiftFormsTests\Mocks\TestRouteSanitization;
-use Eightshift_Forms\Captcha\Basic_Captcha;
-use Eightshift_Forms\Integrations\Authorization\HMAC;
+use EightshiftForms\Captcha\BasicCaptcha;
+use EightshiftForms\Integrations\Authorization\Hmac;
 
 class RouteSanitizationTest extends BaseRouteTest
 {
@@ -11,13 +11,13 @@ class RouteSanitizationTest extends BaseRouteTest
   }
 
   /**
-   * If we provide $this->get_irrelevant_params(), those params will be unset from the request.
+   * If we provide $this->getIrrelevantParams(), those params will be unset from the request.
    *
    * @return void
    */
   public function testSanitizeFields()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request('GET', $this->route_endpoint->getRouteUri());
     $request->params['GET'] = [
       'param_int' => 123,
       'param_string' => 'some-string',

@@ -2,12 +2,12 @@
 /**
  * Exception for when something is not ok with Buckaroo response.
  *
- * @package Eightshift_Forms\Exception
+ * @package EightshiftForms\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Integrations\Buckaroo\Exceptions;
+namespace EightshiftForms\Integrations\Buckaroo\Exceptions;
 
 use Eightshift_Libs\Exception\General_Exception;
 

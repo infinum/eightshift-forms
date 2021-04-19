@@ -4,7 +4,7 @@ namespace EightshiftFormsTests\Integrations\Mailchimp;
 
 use EightshiftForms\Main\Main;
 use EightshiftForms\Hooks\Filters;
-use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
+use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsTests\BaseTest;
 use \GuzzleHttp\Exception\ClientException;
 

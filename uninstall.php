@@ -2,7 +2,7 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * @package Eightshift_Forms
+ * @package EightshiftForms
  */
 
 declare( strict_types=1 );

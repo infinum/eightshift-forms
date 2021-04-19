@@ -2,12 +2,12 @@
 /**
  * Object representing a response from Buckaroo.
  *
- * @package Eightshift_Forms\Buckaroo
+ * @package EightshiftForms\Buckaroo
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Buckaroo;
+namespace EightshiftForms\Buckaroo;
 
 /**
  * Object representing a response from Buckaroo.

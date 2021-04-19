@@ -2,16 +2,16 @@
 /**
  * Template for the BasicCaptcha Block view.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
-use Eightshift_Forms\Captcha\Basic_Captcha;
+use EightshiftForms\Captcha\BasicCaptcha;
 
 $block_class   = $attributes['blockClass'] ?? '';
-$name          = $attributes['name'] ?? Basic_Captcha::RESULT_KEY;
+$name          = $attributes['name'] ?? BasicCaptcha::RESULT_KEY;
 $theme         = $attributes['theme'] ?? '';
 $first_number  = wp_rand( 1, 15 );
 $second_number = wp_rand( 1, 15 );
@@ -43,12 +43,12 @@ if ( empty( $this ) ) {
   <div class="<?php echo esc_attr( "{$block_class}__content-wrap {$block_class}__theme--{$theme}" ); ?>">
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>" >
       <?php echo intval( $first_number ); ?>
-      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::FIRST_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $first_number ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( BasicCaptcha::FIRST_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $first_number ); ?>" />
     </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-plus" ); ?>"> + </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-number" ); ?>">
       <?php echo intval( $second_number ); ?>
-      <input type="hidden" name="<?php echo esc_attr( Basic_Captcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $second_number ); ?>" />
+      <input type="hidden" name="<?php echo esc_attr( BasicCaptcha::SECOND_NUMBER_KEY ); ?>" readonly value="<?php echo intval( $second_number ); ?>" />
     </div>
     <div class="<?php echo esc_attr( "{$block_class}__captcha-equals" ); ?>"> = </div>
     <input

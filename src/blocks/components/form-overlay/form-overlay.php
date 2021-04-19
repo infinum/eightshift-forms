@@ -2,10 +2,10 @@
 /**
  * Template for the form overlay component. Used for preventing any clicks on form elements while form is submitting.
  *
- * @package Eightshift_Forms\Blocks.
+ * @package EightshiftForms\Blocks.
  */
 
-namespace Eightshift_Forms\Blocks;
+namespace EightshiftForms\Blocks;
 
 use Eightshift_Libs\Helpers\Components;
 

@@ -2,12 +2,12 @@
 /**
  * Modifying capabilities / roles.
  *
- * @package D66\Eightshift_Forms
+ * @package D66\EightshiftForms
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Admin;
+namespace EightshiftForms\Admin;
 
 use EightshiftForms\Hooks\Filters;
 use Eightshift_Libs\Core\Service;

@@ -2,10 +2,10 @@
 /**
  * The Content specific functionality.
  *
- * @package Eightshift_Forms\Admin
+ * @package EightshiftForms\Admin
  */
 
-namespace Eightshift_Forms\Admin;
+namespace EightshiftForms\Admin;
 
 use Eightshift_Libs\Core\Service;
 

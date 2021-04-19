@@ -2,7 +2,7 @@
 
 namespace EightshiftFormsTests\Helpers;
 
-use Eightshift_Forms\Helpers\Forms;
+use EightshiftForms\Helpers\Forms;
 use EightshiftFormsTests\BaseTest;
 
 class FormsTest extends BaseTest

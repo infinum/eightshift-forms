@@ -1,7 +1,7 @@
 <?php namespace EightshiftFormsTests\Routes;
 
 use EightshiftForms\Hooks\Filters;
-use Eightshift_Forms\Rest\Mailchimp_Route;
+use EightshiftForms\Rest\MailchimpRoute;
 use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
 
 class MailchimpRouteTest extends BaseRouteTest
@@ -9,7 +9,7 @@ class MailchimpRouteTest extends BaseRouteTest
   const METHOD = 'POST';
 
   protected function getRouteName(): string {
-    return Mailchimp_Route::class;
+    return MailchimpRoute::class;
   }
 
   protected function _before()
@@ -27,7 +27,7 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingNewMembers()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',
@@ -47,7 +47,7 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallFailsIfInvalidListId()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => DataProvider::INVALID_LIST_ID,
@@ -65,7 +65,7 @@ class MailchimpRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWhenAddingTags()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => 'list-id',

@@ -2,12 +2,12 @@
 /**
  * Invalid_Buckaroo_Response_Exception class.
  *
- * @package Eightshift_Forms\Exception
+ * @package EightshiftForms\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Buckaroo;
+namespace EightshiftForms\Buckaroo;
 
 use Eightshift_Libs\Exception\General_Exception;
 

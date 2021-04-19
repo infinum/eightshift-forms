@@ -2,12 +2,12 @@
 /**
  * Define rule for a form view.
  *
- * @package Eightshift_Forms\View
+ * @package EightshiftForms\View
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\View;
+namespace EightshiftForms\View;
 
 /**
  * Define rule for a form view.

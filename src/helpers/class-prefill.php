@@ -2,12 +2,12 @@
 /**
  * Helpers for prefill
  *
- * @package Eightshift_Forms\Helpers
+ * @package EightshiftForms\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Helpers;
+namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Hooks\Filters;
 

@@ -1,12 +1,12 @@
 <?php namespace EightshiftFormsTests\Routes;
 
-use Eightshift_Forms\Rest\Send_Email_Route;
+use EightshiftForms\Rest\SendEmailRoute;
 class SendEmailRouteTest extends BaseRouteTest
 {
   const METHOD = 'POST';
 
   protected function getRouteName(): string {
-    return Send_Email_Route::class;
+    return SendEmailRoute::class;
   }
 
   /**
@@ -16,7 +16,7 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessful()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'some value',
       $this->route_endpoint::SUBJECT_PARAM => 'some value',
@@ -38,7 +38,7 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWithPlaceholders()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',
@@ -61,7 +61,7 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallFailsIfRequiredParamsEmpty()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::TO_PARAM => 'to param',
       $this->route_endpoint::SUBJECT_PARAM => 'subject',

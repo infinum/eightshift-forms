@@ -2,15 +2,15 @@
 /**
  * File for modifying allowed tags for kses.
  *
- * @package Eightshift_Forms\View
+ * @package EightshiftForms\View
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\View;
+namespace EightshiftForms\View;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Forms\View\Form_View;
+use EightshiftForms\View\Form_View;
 
 /**
  * The project config class.

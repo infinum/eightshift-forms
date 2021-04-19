@@ -2,12 +2,12 @@
 /**
  * File missing data in filter exception
  *
- * @package Eightshift_Forms\Exception
+ * @package EightshiftForms\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Forms\Exception;
+namespace EightshiftForms\Exception;
 
 use Eightshift_Libs\Exception\General_Exception;
 

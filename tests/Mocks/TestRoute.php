@@ -1,11 +1,11 @@
 <?php
 /**
- * Endpoint for testing Base_Route.
+ * Endpoint for testing BaseRoute.
  *
  * Example call:
  * /wp-json/eightshift-forms/v1/test-route
  *
- * @package Eightshift_Forms\Rest
+ * @package EightshiftForms\Rest
  */
 
 declare( strict_types=1 );
@@ -13,16 +13,15 @@ declare( strict_types=1 );
 namespace EightshiftFormsTests\Mocks;
 
 use EightshiftForms\Hooks\Filters;
-use Eightshift_Libs\Core\Config_Data;
-use Eightshift_Forms\Captcha\Basic_Captcha;
-use Eightshift_Forms\Exception\Unverified_Request_Exception;
-use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
-use Eightshift_Forms\Rest\Base_Route;
+use EightshiftForms\Captcha\BasicCaptcha;
+use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
+use EightshiftForms\Rest\BaseRoute;
 
 /**
  * Class TestRoute
  */
-class TestRoute extends Base_Route implements Filters {
+class TestRoute extends BaseRoute implements Filters {
 
   /**
    * Route slug
@@ -50,18 +49,15 @@ class TestRoute extends Base_Route implements Filters {
   /**
    * Construct object
    *
-   * @param Config_Data             $config        Config data obj.
-   * @param Authorization_Interface $hmac          Authorization object.
-   * @param Basic_Captcha           $basic_captcha Basic_Captcha object.
+   * @param AuthorizationInterface $hmac          Authorization object.
+   * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
    */
   public function __construct(
-    Config_Data $config,
-    Authorization_Interface $hmac,
-    Basic_Captcha $basic_captcha
+    AuthorizationInterface $hmac,
+    BasicCaptcha $basicCaptcha
   ) {
-    $this->config        = $config;
-    $this->hmac          = $hmac;
-    $this->basic_captcha = $basic_captcha;
+    $this->hmac = $hmac;
+    $this->basicCaptcha = $basicCaptcha;
   }
 
   /**
@@ -73,15 +69,15 @@ class TestRoute extends Base_Route implements Filters {
    *                                is already an instance, WP_HTTP_Response, otherwise
    *                                returns a new WP_REST_Response instance.
    */
-  public function route_callback( \WP_REST_Request $request ) {
+  public function routeCallback( \WP_REST_Request $request ) {
 
     try {
-      $params = $this->verify_request( $request );
+      $params = $this->verifyRequest( $request );
     } catch ( Unverified_Request_Exception $e ) {
       return rest_ensure_response( $e->get_data() );
     }
 
-    $params = $this->unset_irrelevant_params( $params );
+    $params = $this->unsetIrrelevantParams( $params );
 
     $mock_response = [
       'message' => 'all good',
@@ -101,7 +97,7 @@ class TestRoute extends Base_Route implements Filters {
    *
    * @return string
    */
-  protected function get_authorization_salt(): string {
+  protected function getAuthorizationSalt(): string {
     return self::TEST_SALT;
   }
 
@@ -110,7 +106,7 @@ class TestRoute extends Base_Route implements Filters {
    *
    * @return array
    */
-  protected function get_required_params(): array {
+  protected function getRequiredParams(): array {
     return [
       self::REQUIRED_PARAMETER_1,
       self::REQUIRED_PARAMETER_2,
@@ -122,7 +118,7 @@ class TestRoute extends Base_Route implements Filters {
    *
    * @return array
    */
-  protected function get_irrelevant_params(): array {
+  protected function getIrrelevantParams(): array {
     return [
       self::IRRELEVANT_PARAM,
     ];

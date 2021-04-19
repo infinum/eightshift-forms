@@ -1,7 +1,7 @@
 <?php namespace EightshiftFormsTests\Routes;
 
-use Eightshift_Forms\Integrations\Authorization\HMAC;
-use Eightshift_Forms\Rest\Buckaroo_Response_Handler_Route;
+use EightshiftForms\Integrations\Authorization\Hmac;
+use EightshiftForms\Rest\BuckarooResponseHandlerRoute;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Actions;
 use EightshiftFormsTests\Integrations\Buckaroo\DataProvider;
@@ -12,7 +12,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   const METHOD = 'GET';
 
   protected function getRouteName(): string {
-    return Buckaroo_Response_Handler_Route::class;
+    return BuckarooResponseHandlerRoute::class;
   }
 
   /**
@@ -42,7 +42,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
@@ -55,8 +55,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     // We need to URL encode params before calculating the hash (because that is done in the route before
     // verifying the hash. However we can't send the URLs encoded because that won't work. In the app these are sent
     // (encoded) to Buckaroo which will decode them when redirecting back to the response handler.
-    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
-      $this->urlencode_params($request->get_query_params()),
+    $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+      $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
     $response = $this->route_endpoint->route_callback( $request );
@@ -74,7 +74,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
@@ -82,7 +82,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => 'http://someurl.com',
       $this->route_endpoint::STATUS_PARAM => 'success',
     ];
-    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
+    $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
     $response = $this->route_endpoint->route_callback( $request );
 
     $this->verifyProperlyFormattedError($response);
@@ -98,7 +98,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
@@ -109,8 +109,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
-      $this->urlencode_params($request->get_query_params()),
+    $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+      $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
     $response = $this->route_endpoint->route_callback( $request );
@@ -127,7 +127,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => 'http://someurl.com',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => 'http://someurl.com',
@@ -136,8 +136,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::STATUS_PARAM => rawurlencode('success'),
     ];
     $request->params['POST'] = DataProvider::idealSuccessResponseMock();
-    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
-      $this->urlencode_params($request->get_query_params()),
+    $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+      $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
     $response = $this->route_endpoint->route_callback( $request );
@@ -153,7 +153,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   {
     $this->addHooks();
 
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->get_route_uri());
+    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
     $request->params[self::METHOD] = [
       $this->route_endpoint::REDIRECT_URL_PARAM => '',
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => '',
@@ -164,8 +164,8 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $request->params['POST'] = [
       $this->route_endpoint::BUCKAROO_RESPONSE_CODE_PARAM => 190,
     ];
-    $request->params[self::METHOD][ HMAC::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
-      $this->urlencode_params($request->get_query_params()),
+    $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash(
+      $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
     $response = $this->route_endpoint->route_callback( $request );
@@ -186,7 +186,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::idealSuccessResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::idealSuccessResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -203,7 +203,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::idealErrorResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::idealErrorResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -220,7 +220,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_REJECT_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::idealRejectResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::idealRejectResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -237,7 +237,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::idealCancelledResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::idealCancelledResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -252,7 +252,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::STATUS_PARAM => $this->route_endpoint::STATUS_SUCCESS,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::idealSuccessResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::idealSuccessResponseMock() );
     $this->assertEquals($redirect_url, self::HOME_URL);
   }
 
@@ -270,7 +270,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::emandateSuccessResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::emandateSuccessResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -287,7 +287,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_ERROR_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::emandateFailedResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::emandateFailedResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -304,7 +304,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::REDIRECT_URL_CANCEL_PARAM => $correct_url,
     ];
 
-    $redirect_url = $this->route_endpoint->build_redirect_url( $params, DataProvider::emandateCancelledResponseMock() );
+    $redirect_url = $this->route_endpoint->buildRedirectUrl( $params, DataProvider::emandateCancelledResponseMock() );
     $this->assertEquals($redirect_url, $correct_url);
   }
 
@@ -316,11 +316,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   public function testRedirectUrlWasFilteredIfProvided()
   {
     apply_filters(Filters::BUCKAROO_REDIRECT_URL, 'Filter applied', $this);
-    $this->route_endpoint->build_redirect_url( [], DataProvider::emandateCancelledResponseMock() );
+    $this->route_endpoint->buildRedirectUrl( [], DataProvider::emandateCancelledResponseMock() );
     $this->assertTrue( BrainFilters\applied( Filters::BUCKAROO_REDIRECT_URL ) > 0 );
   }
 
-  private function urlencode_params( array $params ): array {
+  private function urlencodeParams( array $params ): array {
     return array_map( function( $param ) {
       return is_string( $param ) ? rawurlencode( $param ) : $param;
     }, $params);
