@@ -14,7 +14,7 @@ namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
 
 /**

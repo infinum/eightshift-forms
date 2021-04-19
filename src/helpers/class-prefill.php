@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Helpers;
 
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 
 /**
  * Helpers for prefill

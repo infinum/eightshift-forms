@@ -1,6 +1,6 @@
 <?php namespace EightshiftFormsTests\Routes;
 
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Rest\Mailchimp_Route;
 use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
 

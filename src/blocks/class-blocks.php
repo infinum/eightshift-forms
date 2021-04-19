@@ -9,7 +9,7 @@ namespace Eightshift_Forms\Blocks;
 
 use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;
 use Eightshift_Forms\Admin\Forms;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 
 /**
  * Blocks class.
@@ -66,7 +66,7 @@ class Blocks extends Lib_Blocks implements Filters {
    * @param array $categories Array of all blocks categories.
    * @return array
    */
-  public function get_custom_category( $categories ) {
+  public function getCustomCategory( $categories ) {
     return $categories;
   }
 }

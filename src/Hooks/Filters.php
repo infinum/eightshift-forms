@@ -1,18 +1,20 @@
 <?php
+
 /**
  * The Filters class, used for defining available filters
  *
- * @package Eightshift_Forms\Hooks
+ * @package EightshiftForms\Hooks
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-namespace Eightshift_Forms\Hooks;
+namespace EightshiftForms\Hooks;
 
 /**
  * The Filters class, used for defining available filters.
  */
-interface Filters {
+interface Filters
+{
 
   /**
    * Filter used to provide form themes.
@@ -32,7 +34,7 @@ interface Filters {
    *
    * @var string
    */
-  const GENERAL = 'eightshift_forms/general_info';
+	const GENERAL = 'eightshift_forms/general_info';
 
   /**
    * Filter used for defining prefill sources for form blocks which allow user to select one or more things
@@ -67,7 +69,7 @@ interface Filters {
    *
    * @var string
    */
-  const PREFILL_GENERIC_MULTI = 'eightshift_forms/prefill/multi';
+	const PREFILL_GENERIC_MULTI = 'eightshift_forms/prefill/multi';
 
   /**
    * Filter used for defining prefill sources for form blocks which allow user to input a single value
@@ -78,7 +80,7 @@ interface Filters {
    *
    * @var string
    */
-  const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
+	const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
 
   /**
    * Filter used for allowing your own blocks to form to be added inside a form.
@@ -97,7 +99,7 @@ interface Filters {
    *
    * @var string
    */
-  const ALLOWED_BLOCKS = 'eightshift_forms/allowed_blocks';
+	const ALLOWED_BLOCKS = 'eightshift_forms/allowed_blocks';
 
   /**
    * Used for generating authorization hash based on an array of parameters and secret hash. You need this if
@@ -118,7 +120,7 @@ interface Filters {
    *
    * @var string
    */
-  const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
+	const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
 
   /**
    * Filter used for providing Microsoft 365 Dynamics CRM credentials.
@@ -148,7 +150,7 @@ interface Filters {
    *
    * @var string
    */
-  const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
+	const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
 
   /**
    * Filter used for providing Buckaroo credentials.
@@ -171,7 +173,7 @@ interface Filters {
    *
    * @var string
    */
-  const BUCKAROO = 'eightshift_forms/buckaroo';
+	const BUCKAROO = 'eightshift_forms/buckaroo';
 
   /**
    * Filter used for providing Mailchimp credentials.
@@ -194,7 +196,7 @@ interface Filters {
    *
    * @var string
    */
-  const MAILCHIMP = 'eightshift_forms/mailchimp';
+	const MAILCHIMP = 'eightshift_forms/mailchimp';
 
   /**
    * Filter used for providing mailerlite credentials.
@@ -217,7 +219,7 @@ interface Filters {
    *
    * @var string
    */
-  const MAILERLITE = 'eightshift_forms/mailerlite';
+	const MAILERLITE = 'eightshift_forms/mailerlite';
 
   /**
    * Filter used to add additional required parameters to Buckaroo Emandate route
@@ -237,7 +239,7 @@ interface Filters {
    *
    * @var string
    */
-  const REQUIRED_PARAMS_BUCKAROO_EMANDATE = 'eightshift_forms/required_params/buckaroo_emandate';
+	const REQUIRED_PARAMS_BUCKAROO_EMANDATE = 'eightshift_forms/required_params/buckaroo_emandate';
 
 
   /**
@@ -258,7 +260,7 @@ interface Filters {
    *
    * @var string
    */
-  const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
+	const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
 
   /**
    * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
@@ -277,7 +279,7 @@ interface Filters {
    *
    * @var string
    */
-  const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirect_url';
+	const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirect_url';
 
   /**
    * This filter receives the buckaroo params (POST params that Buckaroo sends back to our site after processing the
@@ -302,7 +304,7 @@ interface Filters {
    *
    * @var string
    */
-  const BUCKAROO_FILTER_BUCKAROO_PARAMS = 'eightshift_forms/buckaroo_filter_buckaroo_params';
+	const BUCKAROO_FILTER_BUCKAROO_PARAMS = 'eightshift_forms/buckaroo_filter_buckaroo_params';
 
   /**
    * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
@@ -321,7 +323,7 @@ interface Filters {
    *
    * @var string
    */
-  const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override';
+	const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override';
 
   /**
    * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
@@ -351,5 +353,5 @@ interface Filters {
    *
    * @var string
    */
-  const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
+	const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
 }

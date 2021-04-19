@@ -2,8 +2,8 @@
 
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 use Eightshift_Forms\Rest\Buckaroo_Response_Handler_Route;
-use Eightshift_Forms\Hooks\Filters;
-use Eightshift_Forms\Hooks\Actions;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Actions;
 use EightshiftFormsTests\Integrations\Buckaroo\DataProvider;
 use Brain\Monkey\Filters as BrainFilters;
 

@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Forms\Enqueue;
 
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailchimp\Mailchimp;
 use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
 use Eightshift_Forms\Rest\Active_Route;

@@ -11,7 +11,7 @@ use Eightshift_Forms\Helpers\Components;
 use Eightshift_Forms\Helpers\Forms;
 
 use Eightshift_Forms\Core\Config;
-use Eightshift_Forms\Hooks\Actions;
+use EightshiftForms\Hooks\Actions;
 use Eightshift_Forms\Rest\Dynamics_Crm_Route;
 use Eightshift_Forms\Rest\Send_Email_Route;
 use Eightshift_Forms\Rest\Base_Buckaroo_Route as Buckaroo_Route;

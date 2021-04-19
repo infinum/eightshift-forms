@@ -3,7 +3,7 @@
 namespace EightshiftFormsTests\Integrations\Mailerlite;
 
 use EightshiftForms\Main\Main;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsTests\BaseTest;
 

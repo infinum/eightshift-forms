@@ -1,18 +1,20 @@
 <?php
+
 /**
  * The Filters class, used for defining available filters
  *
- * @package Eightshift_Forms\Hooks
+ * @package EightshiftForms\Hooks
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-namespace Eightshift_Forms\Hooks;
+namespace EightshiftForms\Hooks;
 
 /**
  * The Actions class, used for defining available actions.
  */
-interface Actions {
+interface Actions
+{
 
   /**
    * This action should be used when doing Buckaroo integration. It will run after the user
@@ -23,7 +25,7 @@ interface Actions {
    *
    * @var string
    */
-  const BUCKAROO_RESPONSE_HANDLER = 'eightshift_forms/buckaroo_response_handler';
+	const BUCKAROO_RESPONSE_HANDLER = 'eightshift_forms/buckaroo_response_handler';
 
   /**
    * Use this action if you need to echo extra hidden (or non-hidden) fields to the form specifically for your project.
@@ -44,5 +46,5 @@ interface Actions {
    *
    * @var string
    */
-  const EXTRA_FORM_FIELDS = 'eightshift_forms/extra_form_fields';
+	const EXTRA_FORM_FIELDS = 'eightshift_forms/extra_form_fields';
 }

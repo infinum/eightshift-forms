@@ -10,7 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations\Authorization;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 
 /**
  * HMAC generator class.

@@ -10,7 +10,7 @@ namespace Eightshift_Forms\Blocks;
 use Eightshift_Libs\Helpers\Components;
 use Eightshift_Forms\Helpers\Forms;
 use Eightshift_Forms\Helpers\Prefill;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 
 $block_class         = $attributes['blockClass'] ?? '';
 $name                = $attributes['name'] ?? '';

@@ -12,7 +12,7 @@ namespace Eightshift_Forms\Rest;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Integrations\Authorization\Authorization_Interface;
 use Eightshift_Libs\Core\Config_Data;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Captcha\Basic_Captcha;
 use Eightshift_Forms\Integrations\Authorization\HMAC;
 

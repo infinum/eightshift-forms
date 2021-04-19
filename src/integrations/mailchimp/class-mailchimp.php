@@ -10,7 +10,7 @@ declare( strict_types=1 );
 namespace Eightshift_Forms\Integrations\Mailchimp;
 
 use Eightshift_Forms\Cache\Cache;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Forms\Exception\Missing_Filter_Info_Exception;
 use Eightshift_Forms\Integrations\Client_Interface;
 use \MailchimpMarketing\ApiClient;

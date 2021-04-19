@@ -14,8 +14,8 @@ namespace Eightshift_Forms\Rest;
 
 use Eightshift_Forms\Buckaroo\Invalid_Buckaroo_Response_Exception;
 use Eightshift_Forms\Buckaroo\Response_Factory;
-use Eightshift_Forms\Hooks\Actions;
-use Eightshift_Forms\Hooks\Filters;
+use EightshiftForms\Hooks\Actions;
+use EightshiftForms\Hooks\Filters;
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Forms\Integrations\Buckaroo\Buckaroo;
 use Eightshift_Forms\Exception\Unverified_Request_Exception;
