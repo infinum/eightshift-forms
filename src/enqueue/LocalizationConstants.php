@@ -155,31 +155,31 @@ class LocalizationConstants implements Filters
 		];
 
 		if (has_filter(Filters::GENERAL)) {
-			$localization = $this->add_general_constants($localization);
+			$localization = $this->addGeneralConstants($localization);
 		}
 
 		if (has_filter(Filters::DYNAMICS_CRM)) {
-			$localization = $this->add_dynamics_crm_constants($localization);
+			$localization = $this->addDynamicsCrmConstants($localization);
 		}
 
 		if (has_filter(Filters::BUCKAROO)) {
-			$localization = $this->add_buckaroo_constants($localization);
+			$localization = $this->addBuckarooConstants($localization);
 		}
 
 		if (has_filter(Filters::MAILCHIMP)) {
-			$localization = $this->add_mailchimp_constants($localization);
+			$localization = $this->addMailchimpConstants($localization);
 		}
 
 		if (has_filter(Filters::MAILERLITE)) {
-			$localization = $this->add_mailerlite_constants($localization);
+			$localization = $this->addMailerliteConstants($localization);
 		}
 
 		if (has_filter(Filters::PREFILL_GENERIC_MULTI)) {
-			$localization[self::LOCALIZATION_KEY]['prefill']['multi'] = $this->add_prefill_generic_multi_constants();
+			$localization[self::LOCALIZATION_KEY]['prefill']['multi'] = $this->addPrefillGenericMultiConstants();
 		}
 
 		if (has_filter(Filters::PREFILL_GENERIC_SINGLE)) {
-			$localization[self::LOCALIZATION_KEY]['prefill']['single'] = $this->add_prefill_generic_single_constants();
+			$localization[self::LOCALIZATION_KEY]['prefill']['single'] = $this->addPrefillGenericSingleConstants();
 		}
 
 		return $localization;
@@ -190,18 +190,18 @@ class LocalizationConstants implements Filters
    *
    * @return array
    */
-	public function get_admin_localizations(): array
+	public function getAdminLocalizations(): array
 	{
 		$localization = [
 		self::LOCALIZATION_ADMIN_KEY => [],
 		];
 
 		if (has_filter(Filters::MAILCHIMP)) {
-			$localization = $this->add_mailchimp_admin_constants($localization);
+			$localization = $this->addMailchimpAdminConstants($localization);
 		}
 
 		if (has_filter(Filters::MAILERLITE)) {
-			$localization = $this->add_mailerlite_constants_admin($localization);
+			$localization = $this->addMailerliteConstantsAdmin($localization);
 		}
 
 		return $localization;
@@ -213,7 +213,7 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_general_constants(array $localization): array
+	private function addGeneralConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['themes'] = apply_filters(Filters::GENERAL, 'themes');
 		return $localization;
@@ -226,7 +226,7 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_dynamics_crm_constants(array $localization): array
+	private function addDynamicsCrmConstants(array $localization): array
 	{
 		$entities = apply_filters(Filters::DYNAMICS_CRM, 'available_entities');
 		if (empty($entities)) {
@@ -251,7 +251,7 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_buckaroo_constants(array $localization): array
+	private function addBuckarooConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['buckaroo'] = [
 			'restUri' => [
@@ -270,7 +270,7 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_mailchimp_constants(array $localization): array
+	private function addMailchimpConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailchimp'] = [
 		'restUri' => $this->mailchimpRoute->getRouteUri(),
@@ -285,10 +285,10 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	protected function add_mailchimp_admin_constants(array $localization): array
+	protected function addMailchimpAdminConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailchimp'] = [
-		'audiences' => $this->fetch_mailchimp_audiences(),
+		'audiences' => $this->fetchMailchimpAudiences(),
 		];
 
 		return $localization;
@@ -300,7 +300,7 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_mailerlite_constants(array $localization): array
+	private function addMailerliteConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailerlite'] = [
 		'restUri' => $this->mailerliteRoute->getRouteUri(),
@@ -315,10 +315,10 @@ class LocalizationConstants implements Filters
    * @param  array $localization Existing localizations.
    * @return array
    */
-	private function add_mailerlite_constants_admin(array $localization): array
+	private function addMailerliteConstantsAdmin(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailerlite'] = [
-		'groups' => $this->fetch_mailerlite_groups(),
+		'groups' => $this->fetchMailerliteGroups(),
 		];
 
 		return $localization;
@@ -330,7 +330,7 @@ class LocalizationConstants implements Filters
    *
    * @return array
    */
-	private function fetch_mailchimp_audiences(): array
+	private function fetchMailchimpAudiences(): array
 	{
 		$audiences = [];
 
@@ -356,7 +356,7 @@ class LocalizationConstants implements Filters
    *
    * @return array
    */
-	private function fetch_mailerlite_groups(): array
+	private function fetchMailerliteGroups(): array
 	{
 		$groups = [];
 
@@ -382,7 +382,7 @@ class LocalizationConstants implements Filters
    *
    * @return array
    */
-	private function add_prefill_generic_multi_constants(): array
+	private function addPrefillGenericMultiConstants(): array
 	{
 		$prefill_multi = apply_filters(Filters::PREFILL_GENERIC_MULTI, []);
 
@@ -407,7 +407,7 @@ class LocalizationConstants implements Filters
    *
    * @return array
    */
-	protected function add_prefill_generic_single_constants(): array
+	protected function addPrefillGenericSingleConstants(): array
 	{
 		$prefill_single = apply_filters(Filters::PREFILL_GENERIC_SINGLE, []);
 

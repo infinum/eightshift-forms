@@ -1,24 +1,26 @@
 <?php
 
 /**
- * Enqueue class used to define all script and style enqueues for Gutenberg blocks.
+ * The Admin Enqueue specific functionality.
  *
- * @package EightshiftForms\Enqueue\Blocks
+ * @package EightshiftForms\Enqueue\Admin
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Enqueue\Blocks;
+namespace EightshiftForms\Enqueue\Admin;
 
-use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
- * Enqueue_Blocks class.
+ * Class EnqueueAdmin
+ *
+ * This class handles enqueue scripts and styles.
  */
-class EnqueueBlocks extends AbstractEnqueueBlocks
+class EnqueueAdmin extends AbstractEnqueueAdmin
 {
 
 	/**
@@ -42,20 +44,14 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Register all the hooks
+	 *
+	 * @return void
 	 */
 	public function register(): void
 	{
-		// Editor only script.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
-
-		// Editor only style.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
-
-		// Editor and frontend style.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyle'], 50);
-
-		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScript']);
+		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**
@@ -79,12 +75,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
-	 * Localization array.
+	 * Get localizations.
 	 *
 	 * @return array
 	 */
 	public function getLocalizations(): array
 	{
-		return $this->localizationConstants->getLocalizations();
+		return $this->localizationConstants->getAdminLocalizations();
 	}
 }
