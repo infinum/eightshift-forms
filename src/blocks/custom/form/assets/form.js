@@ -37,7 +37,7 @@ export class Form {
     this.updateAllElements();
 
     this.siteUrl = window.eightshiftForms.siteUrl;
-    this.internalServerErrorMessage = window.eightshiftForms.internalServerError;
+    this.internalServerErrorMessage = window.eightshiftForms.internalServerErrorMessage;
 
     this.restRouteUrls = {};
 

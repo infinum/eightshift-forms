@@ -136,22 +136,22 @@ class LocalizationConstants implements Filters
 	public function getLocalizations(): array
 	{
 		$localization = [
-		self::LOCALIZATION_KEY => [
-		'siteUrl'           => get_site_url(),
-		'isDynamicsCrmUsed' => has_filter(Filters::DYNAMICS_CRM),
-		'isBuckarooUsed'    => has_filter(Filters::BUCKAROO),
-		'isMailchimpUsed'   => has_filter(Filters::MAILCHIMP),
-		'isMailerliteUsed'  => has_filter(Filters::MAILERLITE),
-		'hasThemes'         => has_filter(Filters::GENERAL),
-		'content' => [
-		  'formLoading' => esc_html__('Form is submitting, please wait.', 'eightshift-forms'),
-		  'formSuccess' => esc_html__('Form successfully submitted.', 'eightshift-forms'),
-		],
-		'sendEmail' => [
-		  'restUri' => $this->sendEmailRoute->getRouteUri(),
-		],
-		'internalServerError' => esc_html__('Internal server error', 'eightshift-forms'),
-		],
+			self::LOCALIZATION_KEY => [
+				'siteUrl'           => get_site_url(),
+				'isDynamicsCrmUsed' => has_filter(Filters::DYNAMICS_CRM),
+				'isBuckarooUsed'    => has_filter(Filters::BUCKAROO),
+				'isMailchimpUsed'   => has_filter(Filters::MAILCHIMP),
+				'isMailerliteUsed'  => has_filter(Filters::MAILERLITE),
+				'hasThemes'         => has_filter(Filters::GENERAL),
+				'content' => [
+					'formLoading' => esc_html__('Form is submitting, please wait.', 'eightshift-forms'),
+					'formSuccess' => esc_html__('Form successfully submitted.', 'eightshift-forms'),
+				],
+				'sendEmail' => [
+					'restUri' => $this->sendEmailRoute->getRouteUri(),
+				],
+				'internalServerErrorMessage' => esc_html__('Internal server error', 'eightshift-forms'),
+			],
 		];
 
 		if (has_filter(Filters::GENERAL)) {
