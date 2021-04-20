@@ -10,11 +10,13 @@ use EightshiftFormsTests\BaseTest;
 class MailerliteTest extends BaseTest
 {
 
-  protected function _inject(DataProvider $dataProvider, Main $main)
+  protected function _inject(DataProvider $dataProvider)
   {
     $this->dataProvider = $dataProvider;
-    $main->setTest(true);
-    $this->di_container = $main->buildDiContainer();
+  }
+
+  protected function _before() {
+    parent::_before();
     $this->mailerlite = $this->di_container->get( Mailerlite::class );
   }
 

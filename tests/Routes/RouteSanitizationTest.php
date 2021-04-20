@@ -36,7 +36,7 @@ class RouteSanitizationTest extends BaseRouteTest
         ],
       ],
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message'] ?? 'Unknown error');

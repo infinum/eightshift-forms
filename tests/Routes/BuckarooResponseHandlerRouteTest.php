@@ -59,7 +59,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'], $response->data['message'] ?? 'message not defined');
@@ -83,7 +83,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->route_endpoint::STATUS_PARAM => 'success',
     ];
     $request->params[self::METHOD][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->get_query_params(), \apply_filters( self::BUCKAROO, 'secret_key' ) );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedError($response);
     $this->assertNotEquals(200, $response->data['code'], $response->data['message'] ?? 'message not defined');
@@ -113,7 +113,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->assertSame( 1, did_action( self::BUCKAROO_RESPONSE_HANDLER ), $response->data['message'] ?? 'message not defined' );
   }
@@ -140,7 +140,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ), $response->data['message'] ?? 'message not defined' );
   }
 
@@ -168,7 +168,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
       $this->urlencodeParams($request->get_query_params()),
       \apply_filters( self::BUCKAROO, 'secret_key' )
     );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ), $response->data['message'] ?? 'message not defined' );
   }

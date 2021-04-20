@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Invalid_Buckaroo_Response_Exception class.
+ * InvalidBuckarooResponseException class.
  *
  * @package EightshiftForms\Integrations\Buckaroo\Exceptions
  */
@@ -13,7 +13,7 @@ namespace EightshiftForms\Integrations\Buckaroo\Exceptions;
 use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 
 /**
- * Invalid_Buckaroo_Response_Exception class.
+ * InvalidBuckarooResponseException class.
  */
 class InvalidBuckarooResponseException extends \RuntimeException implements GeneralExceptionInterface
 {
@@ -33,7 +33,7 @@ class InvalidBuckarooResponseException extends \RuntimeException implements Gene
 	public function __construct(string $error_message)
 	{
 		$this->error_message = $error_message;
-		parent::__construct('Invalid_Buckaroo_Response_Exception');
+		parent::__construct('InvalidBuckarooResponseException');
 	}
 
   /**

@@ -34,7 +34,7 @@ class MailchimpRouteTest extends BaseRouteTest
       'nonce' => 'asdb',
       'form-unique-id' => '123'
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
@@ -52,7 +52,7 @@ class MailchimpRouteTest extends BaseRouteTest
       $this->route_endpoint::EMAIL_PARAM => 'someemail@infinum.com',
       $this->route_endpoint::LIST_ID_PARAM => DataProvider::INVALID_LIST_ID,
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );
@@ -77,7 +77,7 @@ class MailchimpRouteTest extends BaseRouteTest
       'nonce' => 'asdb',
       'form-unique-id' => '123'
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );

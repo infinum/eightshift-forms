@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Buckaroo\Invalid_Buckaroo_Response_Exception;
-use EightshiftForms\Buckaroo\Response_Factory;
+use EightshiftForms\Integrations\Buckaroo\Exceptions\InvalidBuckarooResponseException;
+use EightshiftForms\Integrations\Buckaroo\ResponseFactory;
 use EightshiftForms\Hooks\Actions;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Buckaroo\Buckaroo;
@@ -188,7 +188,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 	{
 
 		try {
-			$buckarooResponse = Response_Factory::build($buckarooParams);
+			$buckarooResponse = ResponseFactory::build($buckarooParams);
 
 		  // Get the correct redirect URL (expects them to be urlencoded).
 			switch ($buckarooResponse->get_status()) {
@@ -205,7 +205,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 					$redirectUrl = isset($params[self::REDIRECT_URL_REJECT_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_REJECT_PARAM]) : '';
 					break;
 			}
-		} catch (Invalid_Buckaroo_Response_Exception $e) {
+		} catch (InvalidBuckarooResponseException $e) {
 			$redirectUrl = \add_query_arg('invalid-buckaroo-response', 1, \home_url());
 		}
 

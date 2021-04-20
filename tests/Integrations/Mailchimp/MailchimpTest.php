@@ -6,17 +6,19 @@ use EightshiftForms\Main\Main;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsTests\BaseTest;
-use \GuzzleHttp\Exception\ClientException;
+use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
 
 class MailchimpTest extends BaseTest
 {
 
-  protected function _inject(DataProvider $dataProvider, Main $main)
+  protected function _inject(DataProvider $dataProvider)
   {
     $this->dataProvider = $dataProvider;
-    $main->setTest(true);
-    $this->di_container = $main->buildDiContainer();
-    $this->mailchimp = $this->di_container->get( Mailchimp::class);
+  }
+
+  protected function _before() {
+    parent::_before();
+    $this->mailerlite = $this->di_container->get( Mailerlite::class );
   }
 
   public function testAddOrUpdateMember()

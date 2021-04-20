@@ -3,8 +3,8 @@
 namespace EightshiftFormsTests\Integrations\Buckaroo;
 
 use EightshiftFormsTests\BaseTest;
-use EightshiftForms\Buckaroo\Response_Factory;
-use EightshiftForms\Buckaroo\Response;
+use EightshiftForms\Integrations\Buckaroo\ResponseFactory;
+use EightshiftForms\Integrations\Buckaroo\Response;
 
 class BuckarooResponse extends BaseTest
 {
@@ -16,48 +16,48 @@ class BuckarooResponse extends BaseTest
 
   public function testIdealSuccessfulResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->idealSuccessResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->idealSuccessResponseMock());
     $this->assertTrue( $response->is_ideal());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_SUCCESS );
   }
 
   public function testIdealErrorResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->idealErrorResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->idealErrorResponseMock());
     $this->assertTrue( $response->is_ideal());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_ERROR );
   }
 
   public function testIdealRejectResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->idealRejectResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->idealRejectResponseMock());
     $this->assertTrue( $response->is_ideal());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_REJECT );
   }
 
   public function testIdealCancelledResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->idealCancelledResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->idealCancelledResponseMock());
     $this->assertTrue( $response->is_ideal());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_CANCELLED );
   }
 
   public function testIdealCancelledByBackButtonResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->idealCancelledResponseWhenUserClicksBackMock());
+    $response = ResponseFactory::build( $this->dataProvider->idealCancelledResponseWhenUserClicksBackMock());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_CANCELLED );
   }
 
   public function testEmandateFailResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->emandateFailedResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->emandateFailedResponseMock());
     $this->assertTrue( $response->is_emandate());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_ERROR );
   }
 
   public function testEmandateCancelledResponse()
   {
-    $response = Response_Factory::build( $this->dataProvider->emandateCancelledResponseMock());
+    $response = ResponseFactory::build( $this->dataProvider->emandateCancelledResponseMock());
     $this->assertTrue( $response->is_emandate());
     $this->assertEquals( $response->get_status(), Response::STATUS_CODE_CANCELLED );
   }

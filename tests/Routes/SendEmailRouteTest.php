@@ -24,7 +24,7 @@ class SendEmailRouteTest extends BaseRouteTest
       'nonce' => 'some value',
       'form-unique-id' => 'some-d',
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
@@ -47,7 +47,7 @@ class SendEmailRouteTest extends BaseRouteTest
       'form-unique-id' => 'some-d',
     ];
 
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
@@ -68,7 +68,7 @@ class SendEmailRouteTest extends BaseRouteTest
       $this->route_endpoint::MESSAGE_PARAM => '',
     ];
 
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );
@@ -80,7 +80,7 @@ class SendEmailRouteTest extends BaseRouteTest
       $this->route_endpoint::MESSAGE_PARAM => 'message',
     ];
 
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );
@@ -92,7 +92,7 @@ class SendEmailRouteTest extends BaseRouteTest
       $this->route_endpoint::MESSAGE_PARAM => 'message',
     ];
 
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );

@@ -1,18 +1,20 @@
 <?php
+
 /**
  * Object representing a response from Buckaroo.
  *
- * @package EightshiftForms\Buckaroo
+ * @package EightshiftForms\Integrations\Buckaroo
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-namespace EightshiftForms\Buckaroo;
+namespace EightshiftForms\Integrations\Buckaroo;
 
 /**
  * Factory for generating responses from Buckaroo.
  */
-class Response_Factory {
+class ResponseFactory
+{
 
   /**
    * Build Response object.
@@ -20,7 +22,8 @@ class Response_Factory {
    * @param array $buckaroo_params Array of Buckaroo response params.
    * @return Response
    */
-  public static function build( array $buckaroo_params ): Response {
-    return new Response( $buckaroo_params );
-  }
+	public static function build(array $buckaroo_params): Response
+	{
+		return new Response($buckaroo_params);
+	}
 }

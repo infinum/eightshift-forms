@@ -13,8 +13,8 @@ namespace EightshiftFormsTests\Mocks;
 use EightshiftForms\Integrations\ClientInterface;
 use Codeception\Stub;
 use EightshiftFormsTests\Integrations\Mailerlite\DataProvider;
-use \MailerLiteApi\Api\Groups;
-use MailerLiteApi\MailerLite;
+use EightshiftFormsVendor\MailerLiteApi\Api\Groups;
+use EightshiftFormsVendor\MailerLiteApi\MailerLite;
 
 /**
  * Mailerlite integration class.

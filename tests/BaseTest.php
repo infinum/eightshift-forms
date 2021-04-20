@@ -2,6 +2,7 @@
 
 use \Brain\Monkey;
 use \Brain\Monkey\Functions;
+use EightshiftForms\Main\Main;
 
 class BaseTest extends \Codeception\Test\Unit
 {
@@ -12,6 +13,11 @@ class BaseTest extends \Codeception\Test\Unit
 
   protected function _before()
   {
+    $loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
+    $this->main = new Main($loader->getPrefixesPsr4(), 'EightshiftForms');
+    $this->main->setTest(true);
+    $this->di_container = $this->main->buildDiContainer();
+
     Monkey\setUp();
 
     Functions\stubTranslationFunctions();

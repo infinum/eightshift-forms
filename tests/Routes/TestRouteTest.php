@@ -23,7 +23,7 @@ class TestRouteTest extends BaseRouteTest
       TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
     ];
     $request->params['GET'][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message']);
@@ -41,7 +41,7 @@ class TestRouteTest extends BaseRouteTest
       TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
     ];
     $request->params['GET'][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedError($response);
     $this->assertNotEquals(200, $response->data['code']);
@@ -61,7 +61,7 @@ class TestRouteTest extends BaseRouteTest
       TestRoute::REQUIRED_PARAMETER_1 => 'some-value',
       TestRoute::REQUIRED_PARAMETER_2 => 'some-value',
     ];
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedError($response);
     $this->assertNotEquals(200, $response->data['code']);
@@ -83,7 +83,7 @@ class TestRouteTest extends BaseRouteTest
       BasicCaptcha::RESULT_KEY => 5,
     ];
     $request->params['GET'][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedError($response);
     $this->assertEquals(429, $response->data['code']);
@@ -106,7 +106,7 @@ class TestRouteTest extends BaseRouteTest
       BasicCaptcha::RESULT_KEY => 4,
     ];
     $request->params['GET'][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message']);
@@ -127,7 +127,7 @@ class TestRouteTest extends BaseRouteTest
       TestRoute::IRRELEVANT_PARAM => 'some-irrelevant-value',
     ];
     $request->params['GET'][ Hmac::AUTHORIZATION_KEY ] = $this->hmac->generate_hash($request->params['GET'], TestRoute::TEST_SALT );
-    $response = $this->route_endpoint->route_callback( $request );
+    $response = $this->route_endpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertArrayNotHasKey(TestRoute::IRRELEVANT_PARAM, $response->data['data']['received-params'] );
