@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for the Forms Block view.
  *
@@ -7,23 +8,21 @@
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\View\Form_View;
+use EightshiftForms\View\FormView;
 use EightshiftForms\Helpers\Forms;
 
-$block_class      = $attributes['blockClass'] ?? '';
-$selected_form_id = $attributes['selectedFormId'] ?? 0;
+$blockClass      = $attributes['blockClass'] ?? '';
+$selectedFormId = $attributes['selectedFormId'] ?? 0;
 $theme            = $attributes['theme'] ?? '';
 
-$post_content = get_post_field( 'post_content', $selected_form_id );
+$postContent = get_post_field('post_content', $selectedFormId);
 
-if ( ! empty( $theme ) ) {
-  $post_blocks = Forms::recursively_change_theme_for_all_blocks( parse_blocks( $post_content ), $theme );
+if (! empty($theme)) {
+	$postBlocks = Forms::recursively_change_theme_for_all_blocks(parse_blocks($postContent), $theme);
 } else {
-  $post_blocks = parse_blocks( $post_content );
+	$postBlocks = parse_blocks($postContent);
 }
 
-foreach ( $post_blocks as $post_block ) {
-  echo wp_kses( render_block( $post_block ), Form_View::allowed_tags() );
+foreach ($postBlocks as $postBlock) {
+	echo wp_kses(render_block($postBlock), FormView::allowed_tags());
 }
-
-

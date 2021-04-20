@@ -12,11 +12,15 @@
   "attributes": {
     "wrapperUse": {
       "type": "boolean",
-      "default": false
+      "default": true
     },
-    "wrapperUseShowControl": {
+    "wrapperUseSimple": {
       "type": "boolean",
-      "default": false
+      "default": true
+    },
+    "wrapperBackgroundColor": {
+      "type": "string",
+      "default": ""
     },
     "theme": {
       "type": "string"

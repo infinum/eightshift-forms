@@ -87,17 +87,7 @@ class Main extends AbstractMain
 	 */
 	protected function getProdServiceClasses(): array
 	{
-		return [
-
-			// // Admin.
-			// Admin\Users::class,
-
-			// // Admin.
-			// Admin\Content::class,
-
-			// // View.
-			// View\Post_View_Filter::class,
-		];
+		return [];
 	}
 
 	/**

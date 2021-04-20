@@ -60,7 +60,7 @@ $mailchimp_add_existing       = isset($attributes['mailchimpAddExistingMembers']
 $mailerlite_group_id          = $attributes['mailerliteGroupId'] ?? '';
 $custom_event_names           = $attributes['eventNames'] ?? [];
 $used_types                   = Forms::detect_used_types($is_form_complex, $form_type, $form_types_complex, $form_types_complex_redirect);
-$inner_block_content          = ! empty($inner_block_content) ? $inner_block_content : '';
+$innerBlockContent            = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -99,7 +99,7 @@ if (empty($this)) {
 	  data-form-types-complex-redirect="<?php echo esc_attr(implode(',', $form_types_complex_redirect)); ?>"
 	<?php } ?>
   >
-	<?php echo wp_kses_post($inner_block_content); ?>
+	<?php echo wp_kses_post($innerBlockContent); ?>
 
 	<?php
 

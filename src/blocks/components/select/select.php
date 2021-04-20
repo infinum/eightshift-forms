@@ -12,7 +12,7 @@ use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Prefill;
 
 $block_class         = $attributes['blockClass'] ?? '';
-$inner_block_content = $attributes['innerBlockContent'] ?? '';
+$innerBlockContent = $attributes['innerBlockContent'] ?? '';
 $name                = $attributes['name'] ?? '';
 $select_id           = $attributes['id'] ?? '';
 $classes             = $attributes['classes'] ?? '';
@@ -68,7 +68,7 @@ $select_classes = Components::classnames([
           printf( '<option value="%s">%s</option>', esc_attr( $option['value'] ), esc_html( $option['label'] ) );
         }
       } else {
-        echo wp_kses_post( $inner_block_content );
+        echo wp_kses_post( $innerBlockContent );
       }
       ?>
     </select>

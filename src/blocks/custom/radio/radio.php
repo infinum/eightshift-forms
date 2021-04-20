@@ -18,7 +18,7 @@ $style_class         = $attributes['className'] ?? '';
 $name                = $attributes['name'] ?? '';
 $should_prefill      = $attributes['prefillData'] ?? false;
 $prefill_source      = $attributes['prefillDataSource'] ?? '';
-$inner_block_content = ! empty($inner_block_content) ? $inner_block_content : '';
+$innerBlockContent = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
 $block_classes = Components::classnames([
   $block_class,
@@ -50,7 +50,7 @@ if (empty($this)) {
 			])));
 		}
 	} else {
-		echo wp_kses_post($inner_block_content);
+		echo wp_kses_post($innerBlockContent);
 	}
 	?>
   </div>

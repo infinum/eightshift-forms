@@ -70,6 +70,10 @@
       "items": {
         "type": "object"
       }
+    },
+    "wrapperBackgroundColor": {
+      "type": "string",
+      "default": ""
     }
   }
 }

@@ -11,7 +11,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 // Used to add or remove wrapper.
 $attributes          = ! empty( $attributes ) ? $attributes : [];
-$inner_block_content = ! empty( $inner_block_content ) ? $inner_block_content : '';
+$innerBlockContent = ! empty( $innerBlockContent ) ? $innerBlockContent : '';
 $template_path       = ! empty( $template_path ) ? $template_path : '';
 $wrapper_use         = $attributes['wrapperUse'] ?? true;
 $wrapper_use_simple  = $attributes['wrapperUseSimple'] ?? false;
@@ -25,7 +25,7 @@ if ( ! $wrapper_use || $wrapper_disable ) {
   $this->render_wrapper_view(
     $template_path,
     $attributes ?? [],
-    $inner_block_content
+    $innerBlockContent
   );
 
   return;
@@ -62,7 +62,7 @@ $wrapper_inner_class = Components::classnames([
       $this->render_wrapper_view(
         $template_path,
         $attributes,
-        $inner_block_content
+        $innerBlockContent
       );
     ?>
   <?php } else { ?>
@@ -72,7 +72,7 @@ $wrapper_inner_class = Components::classnames([
           $this->render_wrapper_view(
             $template_path,
             $attributes,
-            $inner_block_content
+            $innerBlockContent
           );
         ?>
       </div>
