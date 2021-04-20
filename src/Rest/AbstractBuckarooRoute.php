@@ -105,7 +105,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
    *
    * @param Buckaroo                     $buckaroo                        Buckaroo integration obj.
    * @param BuckarooResponseHandlerRoute $buckarooResponseHandlerRoute Response handler route obj.
-   * @param AuthorizationInterface      $hmac                            Authorization object.
+   * @param AuthorizationInterface       $hmac                            Authorization object.
    * @param BasicCaptcha                 $basicCaptcha                   BasicCaptcha object.
    */
 	public function __construct(
@@ -152,7 +152,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 		  // As the last step, add the authorization hash which verifies that the request was not tampered with.
 			$url = \add_query_arg(array_merge(
 				$url_params,
-				[ Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generate_hash($url_params, $this->generate_authorization_salt_for_response_handler())) ]
+				[Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generate_hash($url_params, $this->generate_authorization_salt_for_response_handler()))]
 			), $base_url);
 
 			$redirect_urls[] = $url;

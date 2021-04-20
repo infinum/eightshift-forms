@@ -173,8 +173,8 @@ if (empty($this)) {
   </form>
 
   <?php echo wp_kses_post(Components::render('form-overlay')); ?>
-  <?php echo wp_kses_post(Components::render('spinner', [ 'theme' => $form_theme ])); ?>
-  <?php echo wp_kses_post(Components::render('form-message', [ 'message' => $success_message, 'type' => 'success', 'theme' => $form_theme ])); ?>
-  <?php echo wp_kses_post(Components::render('form-error-message-wrapper', [ 'theme' => $form_theme ])); ?>
+  <?php echo wp_kses_post(Components::render('spinner', ['theme' => $form_theme])); ?>
+  <?php echo wp_kses_post(Components::render('form-message', ['message' => $success_message, 'type' => 'success', 'theme' => $form_theme])); ?>
+  <?php echo wp_kses_post(Components::render('form-error-message-wrapper', ['theme' => $form_theme])); ?>
 </div>
 

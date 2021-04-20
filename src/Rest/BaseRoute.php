@@ -113,8 +113,8 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	{
 		return [
 			'methods'  => $this->getMethods(),
-			'callback' => [ $this, 'routeCallback' ],
-			'permission_callback' => [ $this, 'permissionCallback' ],
+			'callback' => [$this, 'routeCallback'],
+			'permission_callback' => [$this, 'permissionCallback'],
 		];
 	}
 
@@ -144,7 +144,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	  // If this route requires a filter defined in project, we need to make sure that is defined.
 		if (! empty($requiredFilter) && ! has_filter($requiredFilter)) {
 			throw new UnverifiedRequestException(
-				$this->restResponseHandler('integration-not-used', [ self::MISSING_FILTER => $requiredFilter ])->data
+				$this->restResponseHandler('integration-not-used', [self::MISSING_FILTER => $requiredFilter])->data
 			);
 		}
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for the form overlay component. Used for preventing any clicks on form elements while form is submitting.
  *
@@ -17,9 +18,9 @@ $block_classes = Components::classnames([
   $component_class,
   "js-{$component_class}",
   'hide-form-overlay',
-  ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
+  ! empty($block_class) ? "{$block_class}__{$component_class}" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr( $block_classes ); ?>" aria-hidden="true"></div>
+<div class="<?php echo esc_attr($block_classes); ?>" aria-hidden="true"></div>

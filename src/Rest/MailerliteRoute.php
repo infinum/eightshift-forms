@@ -111,14 +111,14 @@ class MailerliteRoute extends BaseRoute implements Filters
 		try {
 			$response = $this->mailerlite->addSubscriber($groupId, $email, $mergeFieldParams);
 		} catch (MissingFilterInfoException $e) {
-			return $this->restResponseHandler('mailerlite-missing-keys', [ 'message' => $e->getMessage() ]);
+			return $this->restResponseHandler('mailerlite-missing-keys', ['message' => $e->getMessage()]);
 		} catch (HttpException $e) {
 			$msg     = $e->getResponse()->getBody()->getContents();
 			$message = json_decode($msg, true)['error']['message'];
 
-			return $this->restResponseHandler('mailerlite-blocked-email', [ 'message' => $message ]);
+			return $this->restResponseHandler('mailerlite-blocked-email', ['message' => $message]);
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response([

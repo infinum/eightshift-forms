@@ -26,7 +26,7 @@ class PostViewFilter implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_filter('wp_kses_allowed_html', [ $this, 'modify_kses_post_tags' ], 30, 1);
+		add_filter('wp_kses_allowed_html', [$this, 'modify_kses_post_tags'], 30, 1);
 	}
 
   /**

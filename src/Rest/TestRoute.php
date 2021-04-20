@@ -65,7 +65,7 @@ class TestRoute extends BaseRoute implements Filters
    * Construct object
    *
    * @param AuthorizationInterface $hmac          Authorization object.
-   * @param BasicCaptcha            $basicCaptcha BasicCaptcha object.
+   * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
    */
 	public function __construct(
 		AuthorizationInterface $hmac,

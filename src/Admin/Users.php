@@ -27,7 +27,7 @@ final class Users implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_action('admin_init', [ $this, 'allow_forms_access' ], 10);
+		add_action('admin_init', [$this, 'allow_forms_access'], 10);
 	}
 
   /**

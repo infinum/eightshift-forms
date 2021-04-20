@@ -1,11 +1,12 @@
 <?php
+
 /**
  * File missing data in filter exception
  *
  * @package EightshiftForms\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftForms\Exception;
 
@@ -14,7 +15,8 @@ use EightshiftLibs\Exception\GeneralExceptionInterface;
 /**
  * Class MissingFilterInfoException.
  */
-final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface {
+final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface
+{
 
   /**
    * Create a new instance of the exception if the view file itself created
@@ -27,13 +29,14 @@ final class MissingFilterInfoException extends \RuntimeException implements Gene
    *
    * @since 0.1.0
    */
-  public static function view_exception( $filter, $key ) {
-    $message = sprintf(
-      \esc_html__( 'Missing a required key %1$s in %2$s filter, please provide that as part of return array on that filter', 'eightshift-forms' ),
-      $key,
-      $filter
-    );
+	public static function view_exception($filter, $key)
+	{
+		$message = sprintf(
+			\esc_html__('Missing a required key %1$s in %2$s filter, please provide that as part of return array on that filter', 'eightshift-forms'),
+			$key,
+			$filter
+		);
 
-    return new static( $message, 400 );
-  }
+		return new static($message, 400);
+	}
 }

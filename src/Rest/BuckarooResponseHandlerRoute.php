@@ -128,7 +128,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
   /**
    * Construct object
    *
-   * @param Buckaroo                $buckaroo Buckaroo integration obj.
+   * @param Buckaroo               $buckaroo Buckaroo integration obj.
    * @param AuthorizationInterface $hmac     Authorization object.
    */
 	public function __construct(Buckaroo $buckaroo, AuthorizationInterface $hmac)
@@ -166,7 +166,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 			$redirectUrl = $this->buildRedirectUrl($params, $buckarooParams);
 			\wp_safe_redirect($redirectUrl);
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response([
@@ -258,6 +258,6 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
    */
 	protected function getMethods()
 	{
-		return [ static::READABLE, static::CREATABLE ];
+		return [static::READABLE, static::CREATABLE];
 	}
 }

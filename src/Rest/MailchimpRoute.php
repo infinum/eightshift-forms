@@ -153,12 +153,12 @@ class MailchimpRoute extends BaseRoute implements Filters
 					$response['tags'] = $this->mailchimp->add_member_tags($listId, $email, $tags);
 				}
 			} else {
-				return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+				return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 			}
 		} catch (MissingFilterInfoException $e) {
-			return $this->restResponseHandler('mailchimp-missing-keys', [ 'message' => $e->getMessage() ]);
+			return $this->restResponseHandler('mailchimp-missing-keys', ['message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response([

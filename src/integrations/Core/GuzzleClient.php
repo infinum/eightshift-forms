@@ -26,16 +26,6 @@ class GuzzleClient implements HttpClientInterface
    */
 	private $client;
 
-  // /**
-  //  * Constructs object.
-  //  *
-  //  * @param ClientInterface $guzzleClient DI injected Guzzle client.
-  //  */
-	// public function __construct(Client $guzzleClient)
-	// {
-	// 	$this->client = $guzzleClient;
-	// }
-
   /**
    * Constructs object.
    */

@@ -131,9 +131,9 @@ class Main extends AbstractMain
 			],
 
 			// // Email route.
-			// Rest\SendEmailRoute::class => [
-			// 	Captcha\BasicCaptcha::class,
-			// ],
+			Rest\SendEmailRoute::class => [
+				Captcha\BasicCaptcha::class,
+			],
 
 			// // Buckaroo routes.
 			Integrations\Buckaroo\Buckaroo::class => [
@@ -146,14 +146,14 @@ class Main extends AbstractMain
 
 			// // Mailchimp.
 			// Rest\MailchimpRoute::class => [
-			// 	Integrations\Mailchimp\Mailchimp::class,
-			// 	Captcha\BasicCaptcha::class,
+			// Integrations\Mailchimp\Mailchimp::class,
+			// Captcha\BasicCaptcha::class,
 			// ],
 
 			// // Mailerlite.
 			// Rest\MailerliteRoute::class => [
-			// 	Integrations\Mailerlite\Mailerlite::class,
-			// 	Captcha\BasicCaptcha::class,
+			// Integrations\Mailerlite\Mailerlite::class,
+			// Captcha\BasicCaptcha::class,
 			// ],
 		];
 	}

@@ -86,7 +86,7 @@ class Forms extends AbstractPostType
 	protected function getPostTypeArguments(): array
 	{
 		$template = [
-			[ 'eightshift-forms/form', [], [] ],
+			['eightshift-forms/form', [], []],
 		];
 
 		return [
@@ -94,7 +94,7 @@ class Forms extends AbstractPostType
 			'public'             => true,
 			'menu_position'      => static::MENU_POSITION,
 			'menu_icon'          => static::MENU_ICON,
-			'supports'           => [ 'title', 'editor', 'thumbnail' ],
+			'supports'           => ['title', 'editor', 'thumbnail'],
 			'has_archive'        => false,
 			'show_in_rest'       => true,
 			'publicly_queryable' => false,

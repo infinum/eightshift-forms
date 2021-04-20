@@ -75,11 +75,11 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 				$params[self::PAYMENT_DESCRIPTION_PARAM] ?? ''
 			);
 		} catch (MissingFilterInfoException $e) {
-			return $this->restResponseHandler('buckaroo-missing-keys', [ 'message' => $e->getMessage() ]);
+			return $this->restResponseHandler('buckaroo-missing-keys', ['message' => $e->getMessage()]);
 		} catch (BuckarooRequestException $e) {
 			return $this->restResponseHandler('buckaroo-request-exception', $e->get_exception_for_rest_response());
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response(

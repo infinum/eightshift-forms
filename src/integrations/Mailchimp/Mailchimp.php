@@ -61,7 +61,7 @@ class Mailchimp
    * Constructs object
    *
    * @param ClientInterface $mailchimpMarketingClient Mailchimp marketing client.
-   * @param Cache            $transientCache            Transient cache object.
+   * @param Cache           $transientCache            Transient cache object.
    */
 	public function __construct(ClientInterface $mailchimpMarketingClient, Cache $transientCache)
 	{

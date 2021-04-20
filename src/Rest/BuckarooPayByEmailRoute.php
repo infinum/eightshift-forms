@@ -70,11 +70,11 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 				$redirectUrl = apply_filters(Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE, $redirectUrl);
 			}
 		} catch (MissingFilterInfoException $e) {
-			return $this->restResponseHandler('buckaroo-missing-keys', [ 'message' => $e->getMessage() ]);
+			return $this->restResponseHandler('buckaroo-missing-keys', ['message' => $e->getMessage()]);
 		} catch (BuckarooRequestException $e) {
 			return $this->restResponseHandler('buckaroo-missing-keys', $e->get_exception_for_rest_response());
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response([

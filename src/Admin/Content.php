@@ -21,7 +21,7 @@ class Content implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_action('wp_kses_allowed_html', [ $this, 'set_custom_wpkses_post_tags' ], 10, 2);
+		add_action('wp_kses_allowed_html', [$this, 'set_custom_wpkses_post_tags'], 10, 2);
 	}
 
   /**

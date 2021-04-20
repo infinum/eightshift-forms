@@ -69,7 +69,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
    *
    * @param DynamicsCrm            $dynamicsCrm    Dynamics CRM object.
    * @param AuthorizationInterface $hmac            Authorization object.
-   * @param Cache                   $transientCache Cache object.
+   * @param Cache                  $transientCache Cache object.
    */
 	public function __construct(DynamicsCrm $dynamicsCrm, AuthorizationInterface $hmac, Cache $transientCache)
 	{
@@ -128,9 +128,9 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 			$this->cache->save($cacheKey, (string) wp_json_encode($response), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC);
 		} catch (ClientException $e) {
 			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : esc_html__('Unknown error', 'eightshift-forms');
-			return $this->restResponseHandlerUnknownError([ 'error' => $error ]);
+			return $this->restResponseHandlerUnknownError(['error' => $error]);
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
+			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response(

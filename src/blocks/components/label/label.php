@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for the Label Component.
  *
@@ -19,13 +20,13 @@ $component_class = 'label';
 $component_classes = Components::classnames([
   "{$component_class}__label-wrap",
   "{$block_class}__label-wrap",
-  ! empty( $theme ) ? "{$component_class}__theme--{$theme}" : '',
+  ! empty($theme) ? "{$component_class}__theme--{$theme}" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr( $component_classes ); ?>">
-  <label for="<?php echo esc_attr( $label_id ); ?>" class="<?php echo esc_attr( "{$component_class} {$block_class}__label" ); ?>">
-    <?php echo esc_html( $label ); ?>
+<div class="<?php echo esc_attr($component_classes); ?>">
+  <label for="<?php echo esc_attr($label_id); ?>" class="<?php echo esc_attr("{$component_class} {$block_class}__label"); ?>">
+	<?php echo esc_html($label); ?>
   </label>
 </div>

@@ -90,7 +90,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 		try {
 			$response = $this->extractTagsAndSegments($this->mailchimp->get_all_segments($listId));
 		} catch (MissingFilterInfoException $e) {
-			return $this->restResponseHandler('mailchimp-missing-keys', [ 'message' => $e->getMessage() ]);
+			return $this->restResponseHandler('mailchimp-missing-keys', ['message' => $e->getMessage()]);
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError([
 				'error' => $e->getMessage(),

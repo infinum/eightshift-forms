@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for the Form success / error message component.
  *
@@ -22,12 +23,12 @@ $block_classes = Components::classnames([
   "js-{$component_class}--{$message_type}",
   "{$component_class}__type--{$message_type}",
   'is-form-message-hidden',
-  ! empty( $block_class ) ? "{$block_class}__{$component_class}" : '',
-  ! empty( $theme ) ? "{$component_class}__theme--{$theme}" : '',
+  ! empty($block_class) ? "{$block_class}__{$component_class}" : '',
+  ! empty($theme) ? "{$component_class}__theme--{$theme}" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr( $block_classes ); ?>">
-  <?php echo esc_html( $message ); ?>
+<div class="<?php echo esc_attr($block_classes); ?>">
+  <?php echo esc_html($message); ?>
 </div>

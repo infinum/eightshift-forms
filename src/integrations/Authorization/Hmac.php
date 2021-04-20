@@ -28,7 +28,7 @@ class Hmac implements ServiceInterface, AuthorizationInterface, Filters
    */
 	public function register(): void
 	{
-		\add_filter(self::AUTHORIZATION_GENERATOR, [ $this, 'generate_hash' ], 1, 2);
+		\add_filter(self::AUTHORIZATION_GENERATOR, [$this, 'generate_hash'], 1, 2);
 	}
 
   /**
