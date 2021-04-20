@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Buckaroo;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Exception\Missing_Filter_Info_Exception;
-use EightshiftForms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
+use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Integrations\Buckaroo\Exceptions\BuckarooRequestException;
 use EightshiftForms\Integrations\Core\HttpClientInterface;
 
 /**
@@ -111,7 +111,7 @@ class Buckaroo implements Filters
    * @param  string $emandatereason  Description of the emandate.
    * @return array
    *
-   * @throws Buckaroo_Request_Exception When something is wrong with response we get from Buckaroo.
+   * @throws BuckarooRequestException When something is wrong with response we get from Buckaroo.
    */
 	public function create_emandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
 	{
@@ -130,11 +130,11 @@ class Buckaroo implements Filters
 		$post_response_json = json_decode((string) $post_response->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
-			throw new Buckaroo_Request_Exception(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
+			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
 		if (! isset($post_response_json['RequiredAction']['RedirectURL'])) {
-			throw new Buckaroo_Request_Exception(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
+			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
 		}
 
 		$response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
@@ -152,7 +152,7 @@ class Buckaroo implements Filters
    * @param  string           $description     Description of the payment.
    * @return array
    *
-   * @throws Buckaroo_Request_Exception When something is wrong with JSON we get from Buckaroo.
+   * @throws BuckarooRequestException When something is wrong with JSON we get from Buckaroo.
    */
 	public function send_payment($donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description): array
 	{
@@ -171,11 +171,11 @@ class Buckaroo implements Filters
 		$post_response_json = json_decode((string) $post_response->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
-			throw new Buckaroo_Request_Exception(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
+			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
 		if (! isset($post_response_json['RequiredAction']['RedirectURL'])) {
-			throw new Buckaroo_Request_Exception(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
+			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
 		}
 
 		$response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
@@ -553,18 +553,18 @@ class Buckaroo implements Filters
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws MissingFilterInfoException When not all required keys are set.
    *
    * @return void
    */
 	private function verify_buckaroo_info_exists(): void
 	{
 		if (empty(\apply_filters(self::BUCKAROO, 'website_key'))) {
-			throw Missing_Filter_Info_Exception::view_exception(self::BUCKAROO, 'website_key');
+			throw MissingFilterInfoException::view_exception(self::BUCKAROO, 'website_key');
 		}
 
 		if (empty(\apply_filters(self::BUCKAROO, 'secret_key'))) {
-			throw Missing_Filter_Info_Exception::view_exception(self::BUCKAROO, 'secret_key');
+			throw MissingFilterInfoException::view_exception(self::BUCKAROO, 'secret_key');
 		}
 	}
 

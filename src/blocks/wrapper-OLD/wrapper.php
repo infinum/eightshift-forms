@@ -7,7 +7,7 @@
 
 namespace Eightshift_Boilerplate\Blocks;
 
-use Eightshift_Libs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 // Used to add or remove wrapper.
 $attributes          = ! empty( $attributes ) ? $attributes : [];

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Core;
 
 use EightshiftFormsVendor\GuzzleHttp\ClientInterface;
+use EightshiftFormsVendor\GuzzleHttp\Client;
 
 /**
  * Guzzle client, implementation of HttpClientInterface.
@@ -30,10 +31,18 @@ class GuzzleClient implements HttpClientInterface
    *
    * @param ClientInterface $guzzleClient DI injected Guzzle client.
    */
-	public function __construct(ClientInterface $guzzleClient)
+	public function __construct(Client $guzzleClient)
 	{
 		$this->client = $guzzleClient;
 	}
+
+  /**
+   * Constructs object.
+   */
+	// public function __construct()
+	// {
+	// 	$this->client = GuzzleHttpClientFactory::create();
+	// }
 
   /**
    * Implementation of get request on the HttpClient.

@@ -14,7 +14,7 @@ namespace EightshiftFormsTests\Mocks;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 use EightshiftForms\Rest\BaseRoute;
 
@@ -73,7 +73,7 @@ class TestRoute extends BaseRoute implements Filters {
 
     try {
       $params = $this->verifyRequest( $request );
-    } catch ( Unverified_Request_Exception $e ) {
+    } catch ( UnverifiedRequestException $e ) {
       return rest_ensure_response( $e->get_data() );
     }
 

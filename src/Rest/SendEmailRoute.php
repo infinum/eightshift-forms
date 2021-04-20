@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest;
 
 use EightshiftForms\Captcha\BasicCaptcha;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\UnverifiedRequestException;
 
 /**
  * Class SendEmailRoute
@@ -69,7 +69,7 @@ class SendEmailRoute extends BaseRoute
 
 		try {
 			$params = $this->verifyRequest($request);
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 

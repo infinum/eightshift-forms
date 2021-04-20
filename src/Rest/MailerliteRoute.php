@@ -15,8 +15,8 @@ namespace EightshiftForms\Rest;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
-use EightshiftForms\Exception\Missing_Filter_Info_Exception;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsVendor\Http\Client\Exception\HttpException;
 
@@ -87,7 +87,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 
 		try {
 			$params = $this->verifyRequest($request);
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 
@@ -110,7 +110,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 	  // Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->mailerlite->addSubscriber($groupId, $email, $mergeFieldParams);
-		} catch (Missing_Filter_Info_Exception $e) {
+		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('mailerlite-missing-keys', [ 'message' => $e->getMessage() ]);
 		} catch (HttpException $e) {
 			$msg     = $e->getResponse()->getBody()->getContents();

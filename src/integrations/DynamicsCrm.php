@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations;
 
-use EightshiftForms\Integrations\OAuth2ClientInterface;
 use EightshiftFormsVendor\SaintSystems\OData\ODataClient;
 use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
 use EightshiftFormsVendor\SaintSystems\OData\IODataClient;

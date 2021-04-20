@@ -9,12 +9,12 @@ declare( strict_types=1 );
 
 namespace EightshiftForms\Exception;
 
-use Eightshift_Libs\Exception\General_Exception;
+use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 
 /**
- * Class Missing_Filter_Info_Exception.
+ * Class MissingFilterInfoException.
  */
-final class Missing_Filter_Info_Exception extends \RuntimeException implements General_Exception {
+final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception if the view file itself created

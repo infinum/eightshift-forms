@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Exception\Missing_Filter_Info_Exception;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Buckaroo\Exceptions\Buckaroo_Request_Exception;
+use EightshiftForms\Integrations\Buckaroo\Exceptions\BuckarooRequestException;
 
 /**
  * Class BuckarooIdealRoute
@@ -59,7 +59,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 
 		try {
 			$params = $this->verifyRequest($request, self::BUCKAROO);
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 
@@ -74,9 +74,9 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 				! empty($params[self::IS_RECURRING_PARAM]),
 				$params[self::PAYMENT_DESCRIPTION_PARAM] ?? ''
 			);
-		} catch (Missing_Filter_Info_Exception $e) {
+		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('buckaroo-missing-keys', [ 'message' => $e->getMessage() ]);
-		} catch (Buckaroo_Request_Exception $e) {
+		} catch (BuckarooRequestException $e) {
 			return $this->restResponseHandler('buckaroo-request-exception', $e->get_exception_for_rest_response());
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);

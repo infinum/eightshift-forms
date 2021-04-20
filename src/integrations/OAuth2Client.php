@@ -26,13 +26,6 @@ class OAuth2Client implements OAuth2ClientInterface
 	const HOUR_IN_SECONDS = 3600;
 
   /**
-   * DI injected HttpClientInterface implementation.
-   *
-   * @var HttpClientInterface
-   */
-	protected $httpClient;
-
-  /**
    * Url to which we're submitting.
    *
    * @var string
@@ -61,9 +54,16 @@ class OAuth2Client implements OAuth2ClientInterface
 	protected $scope;
 
   /**
-   * Constructs object.
+   * HTTP client implementation obj which uses Guzzle.
    *
-   * @param HttpClientInterface $guzzleClient DI injected HttpClient implementation.
+   * @var HttpClientInterface.
+   */
+	private $httpClient;
+
+  /**
+   * Constructs object
+   *
+   * @param HttpClientInterface $guzzleClient HTTP client implementation.
    */
 	public function __construct(HttpClientInterface $guzzleClient)
 	{

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Exception\Missing_Filter_Info_Exception;
+use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\MailerLiteApi\MailerLite as MailerLiteClient;
 
@@ -79,18 +79,18 @@ class Mailerlite
   /**
    * Make sure we have the data we need defined as filters.
    *
-   * @throws Missing_Filter_Info_Exception When not all required keys are set.
+   * @throws MissingFilterInfoException When not all required keys are set.
    *
    * @return void
    */
 	private function setupClientConfigAndVerify(): void
 	{
 		if (! has_filter(Filters::MAILERLITE)) {
-			throw Missing_Filter_Info_Exception::view_exception(Filters::MAILERLITE, esc_html__('entire_filter', 'eightshift-forms'));
+			throw MissingFilterInfoException::view_exception(Filters::MAILERLITE, esc_html__('entire_filter', 'eightshift-forms'));
 		}
 
 		if (empty(\apply_filters(Filters::MAILERLITE, 'api_key'))) {
-			throw Missing_Filter_Info_Exception::view_exception(Filters::MAILERLITE, 'api_key');
+			throw MissingFilterInfoException::view_exception(Filters::MAILERLITE, 'api_key');
 		}
 
 		if (empty($this->client)) {

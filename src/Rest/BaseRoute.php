@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\Hmac;
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
@@ -134,7 +134,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
    * @param  \WP_REST_Request $request WP_REST_Request object.
    * @param  string           $requiredFilter (Optional) Filter that needs to exist to verify this request.
    *
-   * @throws Unverified_Request_Exception When we should abort the request for some reason.
+   * @throws UnverifiedRequestException When we should abort the request for some reason.
    *
    * @return array            filtered request params.
    */
@@ -143,7 +143,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 
 	  // If this route requires a filter defined in project, we need to make sure that is defined.
 		if (! empty($requiredFilter) && ! has_filter($requiredFilter)) {
-			throw new Unverified_Request_Exception(
+			throw new UnverifiedRequestException(
 				$this->restResponseHandler('integration-not-used', [ self::MISSING_FILTER => $requiredFilter ])->data
 			);
 		}
@@ -161,7 +161,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 			$params = $this->urlencodeParams($params);
 
 			if (empty($this->hmac) || ! $this->hmac->verify_hash($hash, $params, $this->getAuthorizationSalt())) {
-				throw new Unverified_Request_Exception(
+				throw new UnverifiedRequestException(
 					$this->restResponseHandler('authorization-invalid')->data
 				);
 			}
@@ -174,7 +174,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 				! isset($params['form-unique-id']) ||
 				! wp_verify_nonce($params['nonce'], $params['form-unique-id'])
 			) {
-				throw new Unverified_Request_Exception(
+				throw new UnverifiedRequestException(
 					$this->restResponseHandler('invalid-nonce')->data
 				);
 			}
@@ -182,13 +182,13 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 
 	  // If captcha is used on this route and provided as part of the request, we need to confirm it's true.
 		if (! empty($this->basicCaptcha) && ! $this->basicCaptcha->checkCaptchaFromRequestParams($params)) {
-			throw new Unverified_Request_Exception($this->restResponseHandler('wrong-captcha')->data);
+			throw new UnverifiedRequestException($this->restResponseHandler('wrong-captcha')->data);
 		}
 
 	  // If this route has required parameters, we need to make sure they're all provided.
 		$missingParams = $this->findRequiredMissingParams($params);
 		if (! empty($missingParams)) {
-			throw new Unverified_Request_Exception(
+			throw new UnverifiedRequestException(
 				$this->restResponseHandler('missing-params', $missingParams)->data
 			);
 		}
@@ -196,7 +196,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	  // If this route has required parameters, we need to make sure they're all provided.
 		$missingPostParams = $this->findRequiredMissingParams($postParams, true);
 		if (! empty($missingPostParams)) {
-			throw new Unverified_Request_Exception(
+			throw new UnverifiedRequestException(
 				$this->restResponseHandler('missing-post-params', $missingPostParams)->data
 			);
 		}

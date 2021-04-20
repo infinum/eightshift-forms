@@ -18,7 +18,7 @@ use EightshiftForms\Buckaroo\Response_Factory;
 use EightshiftForms\Hooks\Actions;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Buckaroo\Buckaroo;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 
 /**
@@ -152,7 +152,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		try {
 			$params          = $this->verifyRequest($request, Filters::BUCKAROO);
 			$buckarooParams = $request->get_body_params();
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 

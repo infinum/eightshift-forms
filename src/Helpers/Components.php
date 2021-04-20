@@ -1,21 +1,23 @@
 <?php
+
 /**
  * Helpers for components
  *
  * @package EightshiftForms\Helpers
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Core\Config;
-use Eightshift_Libs\Helpers\Components as Libs_Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as LibsComponents;
 
 /**
  * Helpers for components
  */
-class Components extends Libs_Components {
+class Components extends LibsComponents
+{
 
   /**
    * Wrapper for libs components so we don't have to pass the path each time.
@@ -27,8 +29,9 @@ class Components extends Libs_Components {
    *
    * @throws \Exception When we're unable to find the component by $component.
    */
-  public static function render( string $component, array $attributes = [], string $parent_path = '' ) {
-    $parent_path = Config::get_project_path();
-    return Libs_Components::render( $component, $attributes, $parent_path );
-  }
+	public static function render(string $component, array $attributes = [], string $parent_path = '')
+	{
+		$parent_path = Config::get_project_path();
+		return Libs_Components::render($component, $attributes, $parent_path);
+	}
 }

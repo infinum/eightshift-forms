@@ -19,7 +19,7 @@ use EightshiftForms\Captcha;
 use EightshiftForms\Rest;
 use EightshiftForms\Integrations;
 use EightshiftFormsTests\Mocks;
-use EightshiftFormsVendor\GuzzleHttp\Client;
+
 
 /**
  * The main start class.
@@ -89,11 +89,6 @@ class Main extends AbstractMain
 	{
 		return [
 
-			// Dynamics CRM.
-			Integrations\Core\GuzzleClient::class => [
-				Client::class,
-			],
-
 			// // Admin.
 			// Admin\Users::class,
 
@@ -116,68 +111,61 @@ class Main extends AbstractMain
 	{
 		return [
 
-			// Authorization.
-			Integrations\Authorization\Hmac::class,
+			// // Authorization.
+			// Integrations\Authorization\Hmac::class,
 
-			// Integrations Mailchimp.
-			Integrations\Mailchimp\Mailchimp::class => [
-				Mocks\MockMailchimpMarketingClient::class,
-				Cache\TransientCache::class,
-			],
+			// // Integrations Mailchimp.
+			// Integrations\Mailchimp\Mailchimp::class => [
+			// 	Mocks\MockMailchimpMarketingClient::class,
+			// 	Cache\TransientCache::class,
+			// ],
 
-			// Integrations Mailerlite.
-			Integrations\Mailerlite\Mailerlite::class => [
-				Mocks\MockMailerliteClient::class,
-			],
+			// // Integrations Mailerlite.
+			// Integrations\Mailerlite\Mailerlite::class => [
+			// 	Mocks\MockMailerliteClient::class,
+			// ],
 
-			// HTTP.
-			Integrations\Core\Guzzle_Client::class => [
-				Client::class,
-			],
+			// // HTTP.
+			// Integrations\Core\GuzzleClient::class,
 
-			// Captcha.
-			Captcha\BasicCaptcha::class,
+			// // Captcha.
+			// Captcha\BasicCaptcha::class,
 
-			// Base route.
-			Mocks\TestRoute::class => [
-				Integrations\Authorization\Hmac::class,
-				Captcha\BasicCaptcha::class,
-			],
-			Mocks\TestRouteSanitization::class => [
-				Config::class,
-				Integrations\Authorization\Hmac::class,
-				Captcha\BasicCaptcha::class,
-			],
+			// // Base route.
+			// Mocks\TestRoute::class => [
+			// 	Integrations\Authorization\Hmac::class,
+			// 	Captcha\BasicCaptcha::class,
+			// ],
+			// Mocks\TestRouteSanitization::class => [
+			// 	Integrations\Authorization\Hmac::class,
+			// 	Captcha\BasicCaptcha::class,
+			// ],
 
-			// Email route.
-			Rest\SendEmailRoute::class => [
-				Config::class,
-				Captcha\BasicCaptcha::class,
-			],
+			// // Email route.
+			// Rest\SendEmailRoute::class => [
+			// 	Captcha\BasicCaptcha::class,
+			// ],
 
-			// Buckaroo routes.
-			Integrations\Buckaroo\Buckaroo::class => [
-				Integrations\Core\Guzzle_Client::class,
-			],
-			Rest\BuckarooResponseHandlerRoute::class => [
-				Config::class,
-				Integrations\Buckaroo\Buckaroo::class,
-				Integrations\Authorization\Hmac::class,
-			],
+			// // Buckaroo routes.
+			// Integrations\Buckaroo\Buckaroo::class => [
+			// 	Integrations\Core\Guzzle_Client::class,
+			// ],
+			// Rest\BuckarooResponseHandlerRoute::class => [
+			// 	Integrations\Buckaroo\Buckaroo::class,
+			// 	Integrations\Authorization\Hmac::class,
+			// ],
 
-			// Mailchimp.
-			Rest\MailchimpRoute::class => [
-				Config::class,
-				Integrations\Mailchimp\Mailchimp::class,
-				Captcha\BasicCaptcha::class,
-			],
+			// // Mailchimp.
+			// Rest\MailchimpRoute::class => [
+			// 	Integrations\Mailchimp\Mailchimp::class,
+			// 	Captcha\BasicCaptcha::class,
+			// ],
 
-			// Mailerlite.
-			Rest\MailerliteRoute::class => [
-				Config::class,
-				Integrations\Mailerlite\Mailerlite::class,
-				Captcha\BasicCaptcha::class,
-			],
+			// // Mailerlite.
+			// Rest\MailerliteRoute::class => [
+			// 	Integrations\Mailerlite\Mailerlite::class,
+			// 	Captcha\BasicCaptcha::class,
+			// ],
 		];
 	}
 }

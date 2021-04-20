@@ -17,7 +17,7 @@ use EightshiftForms\Cache\Cache;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\DynamicsCrm;
 use EightshiftForms\Captcha\BasicCaptcha;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
 
@@ -92,7 +92,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 
 		try {
 			$params = $this->verifyRequest($request, self::DYNAMICS_CRM);
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 

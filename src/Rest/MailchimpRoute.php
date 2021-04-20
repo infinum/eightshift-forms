@@ -15,8 +15,8 @@ namespace EightshiftForms\Rest;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
-use EightshiftForms\Exception\Missing_Filter_Info_Exception;
-use EightshiftForms\Exception\Unverified_Request_Exception;
+use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
 
@@ -107,7 +107,7 @@ class MailchimpRoute extends BaseRoute implements Filters
 	{
 		try {
 			$params = $this->verifyRequest($request);
-		} catch (Unverified_Request_Exception $e) {
+		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->get_data());
 		}
 
@@ -155,7 +155,7 @@ class MailchimpRoute extends BaseRoute implements Filters
 			} else {
 				return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
 			}
-		} catch (Missing_Filter_Info_Exception $e) {
+		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('mailchimp-missing-keys', [ 'message' => $e->getMessage() ]);
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError([ 'error' => $e->getMessage() ]);
