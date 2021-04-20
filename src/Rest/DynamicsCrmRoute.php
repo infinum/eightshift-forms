@@ -17,7 +17,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\DynamicsCrm;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class DynamicsCrmRoute

@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
  * Enqueue_Blocks class.

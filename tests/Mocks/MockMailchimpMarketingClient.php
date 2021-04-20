@@ -15,9 +15,9 @@ use \MailchimpMarketing\ApiClient as MarketingApiClient;
 use \MailchimpMarketing\Api\ListsApi;
 use Codeception\Stub;
 use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
-use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
-use EightshiftFormsVendor\GuzzleHttp\Psr7\Request;
-use EightshiftFormsVendor\GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Mailchimp integration class.

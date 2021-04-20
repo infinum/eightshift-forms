@@ -6,6 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Components;
 
 echo \wp_kses_post(Components::render('heading', $attributes));

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CustomPostType;
 
-use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
+use EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
  * Class FormsPostType.

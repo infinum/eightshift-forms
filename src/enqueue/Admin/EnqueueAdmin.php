@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\LocalizationConstants;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
  * Class EnqueueAdmin

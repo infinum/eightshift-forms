@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
+use EightshiftLibs\Plugin\HasActivationInterface;
 
 /**
  * The plugin activation class.

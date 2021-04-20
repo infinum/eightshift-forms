@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\LocalizationConstants;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueTheme

@@ -13,7 +13,7 @@ namespace EightshiftForms\Integrations\Mailerlite;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\MailerLiteApi\MailerLite as MailerLiteClient;
+use MailerLiteApi\MailerLite as MailerLiteClient;
 
 /**
  * Mailerlite integration class.

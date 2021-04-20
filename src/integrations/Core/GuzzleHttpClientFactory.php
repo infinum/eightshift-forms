@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Core;
 
-use EightshiftFormsVendor\GuzzleHttp\Client;
-use EightshiftFormsVendor\GuzzleHttp\ClientInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Guzzle client, implementation of HttpClientInterface.

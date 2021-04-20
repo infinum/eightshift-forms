@@ -12,7 +12,7 @@ namespace EightshiftForms\Admin;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class that modifies user capabilities

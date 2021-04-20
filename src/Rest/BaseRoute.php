@@ -13,8 +13,8 @@ namespace EightshiftForms\Rest;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\Hmac;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use EightshiftLibs\Rest\CallableRouteInterface;
+use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class BaseRoute

@@ -8,7 +8,7 @@
 
 namespace EightshiftForms\Admin;
 
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class Content

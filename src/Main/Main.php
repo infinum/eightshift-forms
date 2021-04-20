@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
-use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
+use EightshiftLibs\Main\AbstractMain;
 use EightshiftForms\Cache;
 use EightshiftForms\Captcha;
 use EightshiftForms\Rest;

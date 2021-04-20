@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Buckaroo\Exceptions;
 
-use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
+use EightshiftLibs\Exception\GeneralExceptionInterface;
 
 /**
  * InvalidBuckarooResponseException class.

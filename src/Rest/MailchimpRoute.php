@@ -18,7 +18,7 @@ use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
-use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class MailchimpRoute

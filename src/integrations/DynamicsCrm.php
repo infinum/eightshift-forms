@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations;
 
-use EightshiftFormsVendor\SaintSystems\OData\ODataClient;
-use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
-use EightshiftFormsVendor\SaintSystems\OData\IODataClient;
-use EightshiftFormsVendor\Illuminate\Support\Collection;
+use SaintSystems\OData\ODataClient;
+use GuzzleHttp\Exception\ClientException;
+use SaintSystems\OData\IODataClient;
+use Illuminate\Support\Collection;
 
 /**
  * Dynamics CRM integration class.

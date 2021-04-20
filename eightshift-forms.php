@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftFormsVendor\EightshiftLibs\Cli\Cli;
+use EightshiftLibs\Cli\Cli;
 use EightshiftForms\Main\Main;
 
 /**

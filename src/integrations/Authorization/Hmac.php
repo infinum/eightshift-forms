@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Authorization;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Hmac generator class.

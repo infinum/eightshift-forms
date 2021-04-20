@@ -7,7 +7,7 @@
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Components;
 
 $block_class = $attributes['blockClass'] ?? '';
 

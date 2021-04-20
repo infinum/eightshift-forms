@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Config;
 
-use EightshiftFormsVendor\EightshiftLibs\Config\AbstractConfigData;
+use EightshiftLibs\Config\AbstractConfigData;
 
 /**
  * The project config class.

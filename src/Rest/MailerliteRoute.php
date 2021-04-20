@@ -18,7 +18,7 @@ use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
-use EightshiftFormsVendor\Http\Client\Exception\HttpException;
+use Http\Client\Exception\HttpException;
 
 /**
  * Class MailerliteRoute

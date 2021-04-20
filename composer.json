@@ -38,7 +38,6 @@
 	"require": {
 		"php": "^7.2 || <8.0",
 		"infinum/eightshift-libs": "dev-release/3.1.0",
-		"typisttech/imposter-plugin": "^0.6.2",
         "mailchimp/marketing": "^3.0",
         "mailerlite/mailerlite-api-v2-php-sdk": "^0.3.0",
         "php-http/guzzle6-adapter": "^2.0",
@@ -68,13 +67,5 @@
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
         "test:all": "@php ./vendor/bin/codecept run --debug",
         "test:unit": "@php ./vendor/bin/codecept run unit --debug"
-	},
-	"extra": {
-		"imposter": {
-			"namespace": "EightshiftFormsVendor",
-            "excludes": [
-                "szepeviktor/phpstan-wordpress"
-            ]
-		}
 	}
 }

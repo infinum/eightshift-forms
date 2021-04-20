@@ -14,7 +14,7 @@ namespace EightshiftForms\Blocks;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
+use EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
  * Class Blocks
@@ -68,12 +68,14 @@ class Blocks extends AbstractBlocks implements Filters
 	{
 		$projectName = Config::getProjectName();
 		if ($post->post_type === Forms::POST_TYPE_SLUG) {
-			$formsBlocks = $this->getAllBlocksList($allowedBlockTypes, $post);
+			$formsBlocks = $this->getAllBlocksList([], $post);
 
 			// Remove form from the list to prevent users from adding a new form inside the form.
-			$formsBlocks = array_flip($formsBlocks);
-			unset($formsBlocks["{$projectName}/form"]);
-			$formsBlocks = array_values(array_flip($formsBlocks));
+			if (is_array($formsBlocks)) {
+				$formsBlocks = array_flip($formsBlocks);
+				unset($formsBlocks["{$projectName}/form"]);
+				$formsBlocks = array_values(array_flip($formsBlocks));
+			}
 
 			if (has_filter(Filters::ALLOWED_BLOCKS)) {
 				return apply_filters(Filters::ALLOWED_BLOCKS, $formsBlocks);

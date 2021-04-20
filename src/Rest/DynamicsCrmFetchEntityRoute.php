@@ -19,7 +19,7 @@ use EightshiftForms\Integrations\DynamicsCrm;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
-use EightshiftFormsVendor\GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class DynamicsCrmFetchEntityRoute

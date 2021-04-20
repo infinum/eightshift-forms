@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\View;
 
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 use EightshiftForms\View\FormView;
 
 /**

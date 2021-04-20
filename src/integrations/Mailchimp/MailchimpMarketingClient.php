@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\MailchimpMarketing\ApiClient;
+use MailchimpMarketing\ApiClient;
 
 /**
  * Mailchimp integration class.
