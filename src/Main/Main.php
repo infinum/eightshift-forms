@@ -20,7 +20,6 @@ use EightshiftForms\Rest;
 use EightshiftForms\Integrations;
 use EightshiftFormsTests\Mocks;
 
-
 /**
  * The main start class.
  *
@@ -101,35 +100,35 @@ class Main extends AbstractMain
 	{
 		return [
 
-			// // Authorization.
-			// Integrations\Authorization\Hmac::class,
+			// Authorization.
+			Integrations\Authorization\Hmac::class,
 
-			// // Integrations Mailchimp.
-			// Integrations\Mailchimp\Mailchimp::class => [
-			// 	Mocks\MockMailchimpMarketingClient::class,
-			// 	Cache\TransientCache::class,
-			// ],
+			// Integrations Mailchimp.
+			Integrations\Mailchimp\Mailchimp::class => [
+				Mocks\MockMailchimpMarketingClient::class,
+				Cache\TransientCache::class,
+			],
 
-			// // Integrations Mailerlite.
-			// Integrations\Mailerlite\Mailerlite::class => [
-			// 	Mocks\MockMailerliteClient::class,
-			// ],
+			// Integrations Mailerlite.
+			Integrations\Mailerlite\Mailerlite::class => [
+				Mocks\MockMailerliteClient::class,
+			],
 
 			// // HTTP.
 			// Integrations\Core\GuzzleClient::class,
 
 			// // Captcha.
-			// Captcha\BasicCaptcha::class,
+			Captcha\BasicCaptcha::class,
 
-			// // Base route.
-			// Mocks\TestRoute::class => [
-			// 	Integrations\Authorization\Hmac::class,
-			// 	Captcha\BasicCaptcha::class,
-			// ],
-			// Mocks\TestRouteSanitization::class => [
-			// 	Integrations\Authorization\Hmac::class,
-			// 	Captcha\BasicCaptcha::class,
-			// ],
+			// Base route.
+			Mocks\TestRoute::class => [
+				Integrations\Authorization\Hmac::class,
+				Captcha\BasicCaptcha::class,
+			],
+			Mocks\TestRouteSanitization::class => [
+				Integrations\Authorization\Hmac::class,
+				Captcha\BasicCaptcha::class,
+			],
 
 			// // Email route.
 			// Rest\SendEmailRoute::class => [
@@ -137,13 +136,13 @@ class Main extends AbstractMain
 			// ],
 
 			// // Buckaroo routes.
-			// Integrations\Buckaroo\Buckaroo::class => [
-			// 	Integrations\Core\Guzzle_Client::class,
-			// ],
-			// Rest\BuckarooResponseHandlerRoute::class => [
-			// 	Integrations\Buckaroo\Buckaroo::class,
-			// 	Integrations\Authorization\Hmac::class,
-			// ],
+			Integrations\Buckaroo\Buckaroo::class => [
+				Integrations\Core\GuzzleClient::class,
+			],
+			Rest\BuckarooResponseHandlerRoute::class => [
+				Integrations\Buckaroo\Buckaroo::class,
+				Integrations\Authorization\Hmac::class,
+			],
 
 			// // Mailchimp.
 			// Rest\MailchimpRoute::class => [

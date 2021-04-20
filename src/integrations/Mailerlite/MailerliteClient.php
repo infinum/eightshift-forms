@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\MailerLiteApi\MailerLite;
-use \GuzzleHttp\Client as GuzzleHttp;
-use EightshiftFormsVendor\Http\Adapter\Guzzle6\Client as Guzzle6;
+use MailerLiteApi\MailerLite;
+use GuzzleHttp\Client as GuzzleHttp;
+use Http\Adapter\Guzzle6\Client as Guzzle6;
 
 /**
  * Mailerlite integration class.

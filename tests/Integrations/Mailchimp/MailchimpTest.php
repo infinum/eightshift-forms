@@ -18,7 +18,7 @@ class MailchimpTest extends BaseTest
 
   protected function _before() {
     parent::_before();
-    $this->mailerlite = $this->di_container->get( Mailerlite::class );
+    $this->mailchimp = $this->di_container->get( Mailchimp::class );
   }
 
   public function testAddOrUpdateMember()

@@ -13,8 +13,8 @@ class BaseTest extends \Codeception\Test\Unit
 
   protected function _before()
   {
-    $loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
-    $this->main = new Main($loader->getPrefixesPsr4(), 'EightshiftForms');
+    // $loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
+    $this->main = new Main([], 'EightshiftFormsTests');
     $this->main->setTest(true);
     $this->di_container = $this->main->buildDiContainer();
 
