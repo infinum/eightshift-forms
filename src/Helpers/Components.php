@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftForms\Core\Config;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as LibsComponents;
 
 /**
@@ -31,7 +31,7 @@ class Components extends LibsComponents
    */
 	public static function render(string $component, array $attributes = [], string $parent_path = '')
 	{
-		$parent_path = Config::get_project_path();
-		return Libs_Components::render($component, $attributes, $parent_path);
+		$parent_path = Config::getProjectPath();
+		return parent::render($component, $attributes, $parent_path);
 	}
 }

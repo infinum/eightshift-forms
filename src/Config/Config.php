@@ -22,6 +22,48 @@ class Config extends AbstractConfigData
 {
 
 	/**
+	 * Value for the form type when it's sending an email
+	 *
+	 * @var string
+	 */
+	public const EMAIL_METHOD = 'email';
+
+  /**
+   * Value for the form type when it's submitting to Dynamics CRM.
+   *
+   * @var string
+   */
+	public const DYNAMICS_CRM_METHOD = 'dynamics-crm';
+
+  /**
+   * Value for the form type when it's submitting to Buckaroo.
+   *
+   * @var string
+   */
+	public const BUCKAROO_METHOD = 'buckaroo';
+
+  /**
+   * Value for the form type when it's submitting to Mailchimp.
+   *
+   * @var string
+   */
+	public const MAILCHIMP_METHOD = 'mailchimp';
+
+  /**
+   * Value for the form type when it's submitting to Mailerlite.
+   *
+   * @var string
+   */
+	public const MAILERLITE_METHOD = 'mailerlite';
+
+  /**
+   * Value for the form type when it's submitting to Mailchimp.
+   *
+   * @var string
+   */
+	public const CUSTOM_EVENT_METHOD = 'custom-event';
+
+	/**
 	 * Method that returns project name.
 	 *
 	 * Generally used for naming assets handlers, languages, etc.

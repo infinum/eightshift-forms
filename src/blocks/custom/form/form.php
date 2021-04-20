@@ -10,7 +10,7 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Forms;
-use EightshiftForms\Core\Config;
+use EightshiftForms\Config\Config;
 use EightshiftForms\Hooks\Actions;
 use EightshiftForms\Rest\DynamicsCrmRoute;
 use EightshiftForms\Rest\SendEmailRoute;
