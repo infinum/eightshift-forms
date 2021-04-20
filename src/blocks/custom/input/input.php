@@ -62,7 +62,6 @@ $label_classes = Components::classnames([
   $input_type === 'hidden' ? "{$block_class}__label-content--hidden" : '',
 ]);
 
-error_log(print_r($attributes, true));
 ?>
 
 <div class="<?php echo esc_attr( $block_classes ); ?>">
