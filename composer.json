@@ -27,14 +27,14 @@
         "source": "https://github.com/infinum/eightshift-forms-plugin"
     },
     "require-dev": {
-		"infinum/eightshift-coding-standards": "^1.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-		"szepeviktor/phpstan-wordpress": "^0.7",
-		"php-stubs/wordpress-stubs": "^5.5",
         "brain/monkey": "^2.5",
         "codeception/codeception": "^4.1",
-        "codeception/module-asserts": "^1.3"
-	},
+        "codeception/module-asserts": "^1.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "infinum/eightshift-coding-standards": "^1.1",
+        "php-stubs/wordpress-stubs": "^5.5",
+        "szepeviktor/phpstan-wordpress": "^0.7"
+    },
 	"require": {
 		"php": "^7.2 || <8.0",
 		"infinum/eightshift-libs": "dev-release/3.1.0",
@@ -65,7 +65,7 @@
 		"analyze": "@php ./vendor/bin/phpstan analyze",
 		"standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
-        "test:all": "@php ./vendor/bin/codecept run --debug",
-        "test:unit": "@php ./vendor/bin/codecept run unit --debug"
+		"test:all": "@php ./vendor/bin/codecept run --debug",
+		"test:unit": "@php ./vendor/bin/codecept run unit --debug"
 	}
 }
