@@ -8,19 +8,19 @@
 
 namespace EightshiftForms\Blocks;
 
-$block_class = $attributes['blockClass'] ?? '';
-$label       = $attributes['label'] ?? '';
-$value       = $attributes['value'] ?? '';
-$is_disabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_selected = isset($attributes['isSelected']) && $attributes['isSelected'] ? 'selected' : '';
+$blockClass = $attributes['blockClass'] ?? '';
+$label = $attributes['label'] ?? '';
+$value = $attributes['value'] ?? '';
+$isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
+$isSelected = isset($attributes['isSelected']) && $attributes['isSelected'] ? 'selected' : '';
 
 ?>
 
 <option
-  class="<?php echo esc_attr("{$block_class}__option"); ?>"
+  class="<?php echo esc_attr("{$blockClass}__option"); ?>"
   value="<?php echo esc_attr($value); ?>"
-  <?php echo esc_attr($is_disabled); ?>
-  <?php echo esc_attr($is_selected); ?>
+  <?php echo esc_attr($isDisabled); ?>
+  <?php echo esc_attr($isSelected); ?>
 >
   <?php echo esc_html($label); ?>
 </option>

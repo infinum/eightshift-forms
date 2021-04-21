@@ -328,7 +328,7 @@ interface Filters
   /**
    * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
    *
-   * You should return an array with the key name == role_name and value as true / false (if you wish to add or remove access)
+   * You should return an array with the key name == roleName and value as true / false (if you wish to add or remove access)
    * [
    *   'administrator' => true,
    *   'editor' => true,

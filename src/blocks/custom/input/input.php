@@ -13,27 +13,27 @@ use EightshiftForms\Helpers\Forms;
 use EightshiftForms\Helpers\Prefill;
 use EightshiftForms\Hooks\Filters;
 
-$block_class         = $attributes['blockClass'] ?? '';
-$name                = $attributes['name'] ?? '';
-$value               = $attributes['value'] ?? '';
-$label               = $attributes['label'] ?? '';
-$input_id            = $attributes['id'] ?? '';
-$placeholder         = $attributes['placeholder'] ?? '';
-$classes             = $attributes['classes'] ?? '';
-$theme               = $attributes['theme'] ?? '';
-$input_type          = $attributes['type'] ?? '';
-$pattern             = $attributes['pattern'] ?? '';
-$prefill_source      = $attributes['prefillDataSource'] ?? '';
-$should_prefill      = isset($attributes['prefillData']) ? filter_var($attributes['prefillData'], FILTER_VALIDATE_BOOLEAN) : false;
-$custom_validity_msg = $attributes['customValidityMsg'] ?? '';
-$is_disabled         = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_read_only        = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
-$is_required         = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
-$prevent_sending     = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
+$blockClass = $attributes['blockClass'] ?? '';
+$name = $attributes['name'] ?? '';
+$value = $attributes['value'] ?? '';
+$label = $attributes['label'] ?? '';
+$inputId = $attributes['id'] ?? '';
+$placeholder = $attributes['placeholder'] ?? '';
+$classes = $attributes['classes'] ?? '';
+$theme = $attributes['theme'] ?? '';
+$inputType = $attributes['type'] ?? '';
+$pattern = $attributes['pattern'] ?? '';
+$prefillSource = $attributes['prefillDataSource'] ?? '';
+$shouldPrefill = isset($attributes['prefillData']) ? filter_var($attributes['prefillData'], FILTER_VALIDATE_BOOLEAN) : false;
+$customValidityMsg = $attributes['customValidityMsg'] ?? '';
+$isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
+$isReadOnly = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
+$isRequired = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
+$preventSending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 // Prefill value if needed.
-if ($should_prefill && ! empty($prefill_source)) {
-	$value = Prefill::get_prefill_source_data_single($prefill_source, Filters::PREFILL_GENERIC_SINGLE);
+if ($shouldPrefill && ! empty($prefillSource)) {
+	$value = Prefill::get_prefill_source_data_single($prefillSource, Filters::PREFILL_GENERIC_SINGLE);
 } else {
 	$value = $attributes['value'] ?? '';
 }
@@ -41,49 +41,49 @@ if ($should_prefill && ! empty($prefill_source)) {
 // Override form value if it's passed from $_GET.
 $value = Forms::maybe_override_value_from_query_string($value, $name);
 
-$block_classes = Components::classnames([
-  $block_class,
-  "js-{$block_class}",
+$blockClasses = Components::classnames([
+  $blockClass,
+  "js-{$blockClass}",
 ]);
 
-$wrapper_classes = Components::classnames([
-  "{$block_class}__content-wrap",
-  ! empty($theme) ? "{$block_class}__theme--{$theme}" : '',
-  "js-{$block_class}",
+$wrapperClasses = Components::classnames([
+  "{$blockClass}__content-wrap",
+  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+  "js-{$blockClass}",
 ]);
 
-$input_classes = Components::classnames([
-  "{$block_class}__input",
+$inputClasses = Components::classnames([
+  "{$blockClass}__input",
   'js-input',
   $classes,
 ]);
 
-$label_classes = Components::classnames([
-  "{$block_class}__label-content",
-  $input_type === 'hidden' ? "{$block_class}__label-content--hidden" : '',
+$labelClasses = Components::classnames([
+  "{$blockClass}__label-content",
+  $inputType === 'hidden' ? "{$blockClass}__label-content--hidden" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr($block_classes); ?>">
-  <div class="<?php echo esc_attr($wrapper_classes); ?>">
-	<label class="<?php echo esc_attr("{$block_class}__label js-{$block_class}-label"); ?>">
-	  <div class="<?php echo esc_attr($label_classes); ?>">
+<div class="<?php echo esc_attr($blockClasses); ?>">
+  <div class="<?php echo esc_attr($wrapperClasses); ?>">
+	<label class="<?php echo esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
+	  <div class="<?php echo esc_attr($labelClasses); ?>">
 		<?php echo wp_kses_post($label); ?>
 	  </div>
 	  <input
 		name="<?php echo esc_attr($name); ?>"
 		placeholder="<?php echo esc_attr($placeholder); ?>"
-		<?php ! empty($input_id) ? printf('id="%s"', esc_attr($input_id)) : ''; ?>
-		class="<?php echo esc_attr($input_classes); ?>"
+		<?php ! empty($inputId) ? printf('id="%s"', esc_attr($inputId)) : ''; ?>
+		class="<?php echo esc_attr($inputClasses); ?>"
 		value="<?php echo esc_attr($value); ?>"
-		type="<?php echo esc_attr($input_type); ?>"
-		<?php echo esc_attr($is_disabled); ?>
-		<?php echo esc_attr($is_read_only); ?>
-		<?php echo esc_attr($is_required); ?>
-		<?php echo esc_attr($prevent_sending); ?>
+		type="<?php echo esc_attr($inputType); ?>"
+		<?php echo esc_attr($isDisabled); ?>
+		<?php echo esc_attr($isReadOnly); ?>
+		<?php echo esc_attr($isRequired); ?>
+		<?php echo esc_attr($preventSending); ?>
 		<?php ( ! empty($pattern) ) ? printf('pattern="%s"', esc_attr($pattern)) : ''; ?>
-		<?php ( ! empty($custom_validity_msg) && ! empty($pattern) ) ? printf('oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html($custom_validity_msg)) : ''; ?>
+		<?php ( ! empty($customValidityMsg) && ! empty($pattern) ) ? printf('oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html($customValidityMsg)) : ''; ?>
 	  />
 	</label>
   </div>

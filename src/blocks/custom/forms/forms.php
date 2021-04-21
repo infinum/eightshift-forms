@@ -11,9 +11,9 @@ namespace EightshiftForms\Blocks;
 use EightshiftForms\View\FormView;
 use EightshiftForms\Helpers\Forms;
 
-$blockClass      = $attributes['blockClass'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
 $selectedFormId = $attributes['selectedFormId'] ?? 0;
-$theme            = $attributes['theme'] ?? '';
+$theme = $attributes['theme'] ?? '';
 
 $postContent = get_post_field('post_content', $selectedFormId);
 

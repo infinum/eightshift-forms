@@ -12,18 +12,18 @@ use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Prefill;
 use EightshiftForms\Hooks\Filters;
 
-$block_class         = $attributes['blockClass'] ?? '';
-$theme               = $attributes['theme'] ?? '';
-$style_class         = $attributes['className'] ?? '';
-$name                = $attributes['name'] ?? '';
-$should_prefill      = $attributes['prefillData'] ?? false;
-$prefill_source      = $attributes['prefillDataSource'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+$theme = $attributes['theme'] ?? '';
+$styleClass = $attributes['className'] ?? '';
+$name = $attributes['name'] ?? '';
+$shouldPrefill = $attributes['prefillData'] ?? false;
+$prefillSource = $attributes['prefillDataSource'] ?? '';
 $innerBlockContent = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
-$block_classes = Components::classnames([
-  $block_class,
-  $style_class,
-  ! empty($theme) ? "{$block_class}__theme--{$theme}" : '',
+$blockClasses = Components::classnames([
+  $blockClass,
+  $styleClass,
+  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
 ]);
 
 if (empty($this)) {
@@ -32,17 +32,17 @@ if (empty($this)) {
 
 ?>
 
-<div class="<?php echo esc_attr($block_classes); ?>">
+<div class="<?php echo esc_attr($blockClasses); ?>">
   <?php
 	echo Components::render('label', [
 	  'blockClass' => $attributes['blockClass'] ?? '',
 	  'label'      => $attributes['label'] ?? '',
 	]);
 	?>
-  <div class="<?php echo esc_attr("{$block_class}__content-wrap"); ?>">
+  <div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<?php
-	if ($should_prefill && ! empty($prefill_source)) {
-		foreach (Prefill::get_prefill_source_data($prefill_source, Filters::PREFILL_GENERIC_MULTI) as $option) {
+	if ($shouldPrefill && ! empty($prefillSource)) {
+		foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
 			echo wp_kses_post(Components::render('src/blocks/custom/radio-item/radio-item.php', array_merge($option, [
 			'blockClass' => 'block-radio-item',
 			'name' => $name,

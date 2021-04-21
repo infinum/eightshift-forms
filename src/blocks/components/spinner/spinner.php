@@ -10,23 +10,23 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftLibs\Helpers\Components;
 
-$block_class = $attributes['blockClass'] ?? '';
-$theme       = $attributes['theme'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+$theme = $attributes['theme'] ?? '';
 
-$component_class = 'form-spinner';
+$componentClass = 'form-spinner';
 
-$component_classes = Components::classnames([
-  $component_class,
-  "js-{$component_class}",
+$componentClasses = Components::classnames([
+  $componentClass,
+  "js-{$componentClass}",
   'hide-spinner',
-  ! empty($block_class) ? "{$block_class}__{$component_class}" : '',
-  ! empty($theme) ? "{$component_class}__theme--{$theme}" : '',
+  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
 ]);
 
 ?>
 
 <div
-  class="<?php echo esc_attr($component_classes); ?>"
+  class="<?php echo esc_attr($componentClasses); ?>"
   role="alert"
   aria-live="assertive"
 >

@@ -21,7 +21,7 @@ class Content implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_action('wp_kses_allowed_html', [$this, 'set_custom_wpkses_post_tags'], 10, 2);
+		add_action('wp_kses_allowed_html', [$this, 'setCustomWpksesPostTags'], 10, 2);
 	}
 
   /**
@@ -31,9 +31,9 @@ class Content implements ServiceInterface
    * @param  string $context Context in which the filter is called.
    * @return array           Modified allowed tags array.
    */
-	public function set_custom_wpkses_post_tags($tags, $context)
+	public function setCustomWpksesPostTags($tags, $context)
 	{
-		$appended_tags = [
+		$appendedTags = [
 			'form' => [
 				'action'      => true,
 				'method'      => true,
@@ -74,7 +74,7 @@ class Content implements ServiceInterface
 			],
 		];
 
-		$tags = array_merge($appended_tags, $tags);
+		$tags = array_merge($appendedTags, $tags);
 
 		return $tags;
 	}

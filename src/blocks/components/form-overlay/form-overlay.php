@@ -10,17 +10,17 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftLibs\Helpers\Components;
 
-$block_class = $attributes['blockClass'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
 
-$component_class = 'form-overlay';
+$componentClass = 'form-overlay';
 
-$block_classes = Components::classnames([
-  $component_class,
-  "js-{$component_class}",
+$blockClasses = Components::classnames([
+  $componentClass,
+  "js-{$componentClass}",
   'hide-form-overlay',
-  ! empty($block_class) ? "{$block_class}__{$component_class}" : '',
+  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr($block_classes); ?>" aria-hidden="true"></div>
+<div class="<?php echo esc_attr($blockClasses); ?>" aria-hidden="true"></div>

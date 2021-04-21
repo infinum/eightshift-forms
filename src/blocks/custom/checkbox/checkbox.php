@@ -10,41 +10,41 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftLibs\Helpers\Components;
 
-$block_class     = $attributes['blockClass'] ?? '';
-$name            = $attributes['name'] ?? '';
-$value           = $attributes['value'] ?? '';
-$label           = $attributes['label'] ?? '';
-$checkbox_id     = $attributes['id'] ?? '';
-$classes         = $attributes['classes'] ?? '';
-$theme           = $attributes['theme'] ?? '';
-$is_checked      = isset($attributes['isChecked']) && $attributes['isChecked'] ? 'checked' : '';
-$is_disabled     = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_read_only    = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
-$is_required     = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
-$prevent_sending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
+$blockClass = $attributes['blockClass'] ?? '';
+$name = $attributes['name'] ?? '';
+$value = $attributes['value'] ?? '';
+$label = $attributes['label'] ?? '';
+$checkboxId = $attributes['id'] ?? '';
+$classes = $attributes['classes'] ?? '';
+$theme = $attributes['theme'] ?? '';
+$isChecked = isset($attributes['isChecked']) && $attributes['isChecked'] ? 'checked' : '';
+$isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
+$isReadOnly = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
+$isRequired = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
+$preventSending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
-$block_classes = Components::classnames([
-  $block_class,
-  ! empty($theme) ? "{$block_class}__theme--{$theme}" : '',
+$blockClasses = Components::classnames([
+  $blockClass,
+  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
 ])
 ?>
 
-<div class="<?php echo esc_attr($block_classes); ?>">
-  <label class="<?php echo esc_attr("{$block_class}__label js-{$block_class}-label"); ?>">
+<div class="<?php echo esc_attr($blockClasses); ?>">
+  <label class="<?php echo esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
 	<input
 	  name="<?php echo esc_attr($name); ?>"
-	  <?php ! empty($checkbox_id) ? printf('id="%s"', esc_attr($checkbox_id)) : ''; ?>
-	  class="<?php echo esc_attr("{$classes} {$block_class}__checkbox js-{$block_class}-checkbox"); ?>"
+	  <?php ! empty($checkboxId) ? printf('id="%s"', esc_attr($checkboxId)) : ''; ?>
+	  class="<?php echo esc_attr("{$classes} {$blockClass}__checkbox js-{$blockClass}-checkbox"); ?>"
 	  value="<?php echo esc_attr($value); ?>"
 	  type="checkbox"
-	  <?php echo esc_attr($is_checked); ?>
-	  <?php echo esc_attr($is_disabled); ?>
-	  <?php echo esc_attr($is_read_only); ?>
-	  <?php echo esc_attr($is_required); ?>
-	  <?php echo esc_attr($prevent_sending); ?>
+	  <?php echo esc_attr($isChecked); ?>
+	  <?php echo esc_attr($isDisabled); ?>
+	  <?php echo esc_attr($isReadOnly); ?>
+	  <?php echo esc_attr($isRequired); ?>
+	  <?php echo esc_attr($preventSending); ?>
 	/>
-	<span class="<?php echo esc_attr("{$block_class}__checkmark js-{$block_class}-checkmark"); ?>"></span>
-	<span class="<?php echo esc_attr("{$block_class}__label-content"); ?>">
+	<span class="<?php echo esc_attr("{$blockClass}__checkmark js-{$blockClass}-checkmark"); ?>"></span>
+	<span class="<?php echo esc_attr("{$blockClass}__label-content"); ?>">
 	  <?php echo wp_kses_post($label); ?>
 	</span>
   </label>

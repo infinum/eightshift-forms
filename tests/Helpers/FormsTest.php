@@ -29,48 +29,48 @@ class FormsTest extends BaseTest
 
   public function testDetectUsedFormTypesSingle()
   {
-    $used_types = Forms::detect_used_types(
+    $usedTypes = Forms::detect_used_types(
       false,
       'mailchimp',
       [],
       []
     );
 
-    $this->assertArrayHasKey('mailchimp', $used_types);
+    $this->assertArrayHasKey('mailchimp', $usedTypes);
 
-    $used_types_2 = Forms::detect_used_types(
+    $usedTypes_2 = Forms::detect_used_types(
       false,
       'mailchimp',
       [ 'some-complex-type', 'another'],
       [ 'redirect-type']
     );
 
-    $this->assertArrayHasKey('mailchimp', $used_types_2);
+    $this->assertArrayHasKey('mailchimp', $usedTypes_2);
   }
 
   public function testDetectUsedFormTypesComplex()
   {
-    $used_types = Forms::detect_used_types(
+    $usedTypes = Forms::detect_used_types(
       true,
       '',
       [ 'some-complex-type', 'another'],
       [ 'redirect-type']
     );
 
-    $this->assertArrayHasKey('some-complex-type', $used_types);
-    $this->assertArrayHasKey('another', $used_types);
-    $this->assertArrayHasKey('redirect-type', $used_types);
+    $this->assertArrayHasKey('some-complex-type', $usedTypes);
+    $this->assertArrayHasKey('another', $usedTypes);
+    $this->assertArrayHasKey('redirect-type', $usedTypes);
 
-    $used_types_2 = Forms::detect_used_types(
+    $usedTypes_2 = Forms::detect_used_types(
       true,
       'mailchimp',
       [ 'some-complex-type', 'another'],
       [ 'redirect-type']
     );
 
-    $this->assertArrayHasKey('some-complex-type', $used_types_2);
-    $this->assertArrayHasKey('another', $used_types_2);
-    $this->assertArrayHasKey('redirect-type', $used_types_2);
+    $this->assertArrayHasKey('some-complex-type', $usedTypes_2);
+    $this->assertArrayHasKey('another', $usedTypes_2);
+    $this->assertArrayHasKey('redirect-type', $usedTypes_2);
   }
 
   public function testAddingThemeToAllBlocks() {

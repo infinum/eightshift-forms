@@ -27,7 +27,7 @@ final class Users implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_action('admin_init', [$this, 'allow_forms_access'], 10);
+		add_action('admin_init', [$this, 'allowFormsAccess'], 10);
 	}
 
   /**
@@ -35,42 +35,42 @@ final class Users implements ServiceInterface
    *
    * @return void
    */
-	public function allow_forms_access()
+	public function allowFormsAccess()
 	{
 		if (has_filter(Filters::ROLES_WITH_FORMS_ACCESS)) {
-			$roles = apply_filters(Filters::ROLES_WITH_FORMS_ACCESS, $this->get_roles_with_forms_access());
+			$roles = apply_filters(Filters::ROLES_WITH_FORMS_ACCESS, $this->getRolesWithFormsAccess());
 		} else {
-			$roles = $this->get_roles_with_forms_access();
+			$roles = $this->getRolesWithFormsAccess();
 		}
 
-		$this->manage_additional_roles($roles);
+		$this->manageAdditionalRoles($roles);
 	}
 
   /**
    * Easy 1 function for managing additional capabilities.
    *
-   * @param array $roles Roles in 'role_name' => true/false format.
+   * @param array $roles Roles in 'roleName' => true/false format.
    * @return void
    */
-	public function manage_additional_roles(array $roles)
+	public function manageAdditionalRoles(array $roles)
 	{
-		foreach ($roles as $role_name => $has_access) {
-			$role_object = get_role($role_name);
+		foreach ($roles as $roleName => $hasAccess) {
+			$roleObject = get_role($roleName);
 
-			if (empty($role_object)) {
+			if (empty($roleObject)) {
 				continue;
 			}
 
-			if ($has_access) {
-				foreach ($this->get_all_post_type_caps(Forms::POST_CAPABILITY_TYPE) as $cap => $value) {
-					if (! $role_object->has_cap($cap)) {
-						$role_object->add_cap($cap);
+			if ($hasAccess) {
+				foreach ($this->getAllPostTypeCaps(Forms::POST_CAPABILITY_TYPE) as $cap => $value) {
+					if (! $roleObject->has_cap($cap)) {
+						$roleObject->add_cap($cap);
 					}
 				}
 			} else {
-				foreach ($this->get_all_post_type_caps(Forms::POST_CAPABILITY_TYPE) as $cap => $value) {
-					if ($role_object->has_cap($cap)) {
-						$role_object->remove_cap($cap);
+				foreach ($this->getAllPostTypeCaps(Forms::POST_CAPABILITY_TYPE) as $cap => $value) {
+					if ($roleObject->has_cap($cap)) {
+						$roleObject->remove_cap($cap);
 					}
 				}
 			}
@@ -82,10 +82,10 @@ final class Users implements ServiceInterface
    *
    * @return array
    */
-	public function get_roles_with_forms_access(): array
+	public function getRolesWithFormsAccess(): array
 	{
 		return [
-		'administrator' => true,
+			'administrator' => true,
 		];
 	}
 
@@ -96,18 +96,18 @@ final class Users implements ServiceInterface
    *
    * @return array
    */
-	private function get_all_post_type_caps(string $type): array
+	private function getAllPostTypeCaps(string $type): array
 	{
 		$output = [
-		"publish_{$type}s"       => true,
-		"edit_{$type}s"          => true,
-		"edit_others_{$type}s"   => true,
-		"delete_{$type}s"        => true,
-		"delete_others_{$type}s" => true,
-		"read_private_{$type}s"  => true,
-		"edit_{$type}"           => true,
-		"delete_{$type}"         => true,
-		"read_{$type}"           => true,
+			"publish_{$type}s"       => true,
+			"edit_{$type}s"          => true,
+			"edit_others_{$type}s"   => true,
+			"delete_{$type}s"        => true,
+			"delete_others_{$type}s" => true,
+			"read_private_{$type}s"  => true,
+			"edit_{$type}"           => true,
+			"delete_{$type}"         => true,
+			"read_{$type}"           => true,
 		];
 
 		return $output;

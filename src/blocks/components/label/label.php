@@ -10,23 +10,23 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftLibs\Helpers\Components;
 
-$block_class = $attributes['blockClass'] ?? '';
-$label       = $attributes['label'] ?? '';
-$label_id    = $attributes['id'] ?? '';
-$theme       = $attributes['theme'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+$label = $attributes['label'] ?? '';
+$labelId = $attributes['id'] ?? '';
+$theme = $attributes['theme'] ?? '';
 
-$component_class = 'label';
+$componentClass = 'label';
 
-$component_classes = Components::classnames([
-  "{$component_class}__label-wrap",
-  "{$block_class}__label-wrap",
-  ! empty($theme) ? "{$component_class}__theme--{$theme}" : '',
+$componentClasses = Components::classnames([
+	"{$componentClass}__label-wrap",
+	"{$blockClass}__label-wrap",
+	! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr($component_classes); ?>">
-  <label for="<?php echo esc_attr($label_id); ?>" class="<?php echo esc_attr("{$component_class} {$block_class}__label"); ?>">
+<div class="<?php echo esc_attr($componentClasses); ?>">
+	<label for="<?php echo esc_attr($labelId); ?>" class="<?php echo esc_attr("{$componentClass} {$blockClass}__label"); ?>">
 	<?php echo esc_html($label); ?>
-  </label>
+	</label>
 </div>

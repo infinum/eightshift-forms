@@ -12,60 +12,60 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Prefill;
 
-$block_class         = $attributes['blockClass'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
 $innerBlockContent = $attributes['innerBlockContent'] ?? '';
-$name                = $attributes['name'] ?? '';
-$select_id           = $attributes['id'] ?? '';
-$classes             = $attributes['classes'] ?? '';
-$theme               = $attributes['theme'] ?? '';
-$prefill_source      = $attributes['prefillDataSource'] ?? '';
-$should_prefill      = isset($attributes['prefillData']) ? filter_var($attributes['prefillData'], FILTER_VALIDATE_BOOLEAN) : false;
-$hide_loading        = isset($attributes['hideLoading']) ? filter_var($attributes['hideLoading'], FILTER_VALIDATE_BOOLEAN) : true;
-$is_disabled         = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
-$prevent_sending     = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
+$name = $attributes['name'] ?? '';
+$selectId = $attributes['id'] ?? '';
+$classes = $attributes['classes'] ?? '';
+$theme = $attributes['theme'] ?? '';
+$prefillSource = $attributes['prefillDataSource'] ?? '';
+$shouldPrefill = isset($attributes['prefillData']) ? filter_var($attributes['prefillData'], FILTER_VALIDATE_BOOLEAN) : false;
+$hideLoading = isset($attributes['hideLoading']) ? filter_var($attributes['hideLoading'], FILTER_VALIDATE_BOOLEAN) : true;
+$isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
+$preventSending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
-$component_class = 'select';
+$componentClass = 'select';
 
-$component_classes = Components::classnames([
-  $component_class,
-  "js-{$component_class}",
-  ! empty($theme) ? "{$component_class}__theme--{$theme}" : '',
-  $hide_loading ? "{$component_class}--has-loader is-loading" : '',
-  ! empty($is_disabled) ? "{$component_class}--is-disabled" : '',
-  "{$block_class}__{$component_class}",
+$componentClasses = Components::classnames([
+  $componentClass,
+  "js-{$componentClass}",
+  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
+  $hideLoading ? "{$componentClass}--has-loader is-loading" : '',
+  ! empty($isDisabled) ? "{$componentClass}--is-disabled" : '',
+  "{$blockClass}__{$componentClass}",
 ]);
 
-$content_wrap_classes = Components::classnames([
-  "{$component_class}__content-wrap",
-  "js-{$component_class}-content-wrap",
+$contentWrapClasses = Components::classnames([
+  "{$componentClass}__content-wrap",
+  "js-{$componentClass}-content-wrap",
 ]);
 
-$select_classes = Components::classnames([
-  "{$component_class}__select",
-  "js-{$component_class}-select",
+$selectClasses = Components::classnames([
+  "{$componentClass}__select",
+  "js-{$componentClass}-select",
   $classes,
 ]);
 
 ?>
 
-<div class="<?php echo esc_attr($component_classes); ?>">
+<div class="<?php echo esc_attr($componentClasses); ?>">
   <?php
 	echo wp_kses_post(Components::render('label', [
 	  'blockClass' => $attributes['blockClass'] ?? '',
 	  'label'      => $attributes['label'] ?? '',
 	]));
 	?>
-  <div class="<?php echo esc_attr($content_wrap_classes); ?>">
+  <div class="<?php echo esc_attr($contentWrapClasses); ?>">
 	<select
-	  <?php ! empty($select_id) ? printf('id="%s"', esc_attr($select_id)) : ''; ?>
+	  <?php ! empty($selectId) ? printf('id="%s"', esc_attr($selectId)) : ''; ?>
 	  name="<?php echo esc_attr($name); ?>"
-	  class="<?php echo esc_attr($select_classes); ?>"
-	  <?php echo esc_attr($is_disabled); ?>
-	  <?php echo esc_attr($prevent_sending); ?>
+	  class="<?php echo esc_attr($selectClasses); ?>"
+	  <?php echo esc_attr($isDisabled); ?>
+	  <?php echo esc_attr($preventSending); ?>
 	>
 	  <?php
-		if ($should_prefill && ! empty($prefill_source)) {
-			foreach (Prefill::get_prefill_source_data($prefill_source, Filters::PREFILL_GENERIC_MULTI) as $option) {
+		if ($shouldPrefill && ! empty($prefillSource)) {
+			foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
 				printf('<option value="%s">%s</option>', esc_attr($option['value']), esc_html($option['label']));
 			}
 		} else {

@@ -46,25 +46,25 @@ class Forms
    * Build a single fast (key based) array for checking which from type(s) is/are used.
    *
    * @param  bool   $is_complex                  Is form complex? (uses multiple types).
-   * @param  string $form_type                   Used form type (used if not complex).
-   * @param  array  $form_types_complex          Used form types.
-   * @param  array  $form_types_complex_redirect Used form types that redirect on success.
+   * @param  string $formType                   Used form type (used if not complex).
+   * @param  array  $formTypesComplex          Used form types.
+   * @param  array  $formTypesComplexRedirect Used form types that redirect on success.
    * @return array
    */
-	public static function detect_used_types(bool $is_complex, string $form_type, array $form_types_complex, array $form_types_complex_redirect): array
+	public static function detect_used_types(bool $is_complex, string $formType, array $formTypesComplex, array $formTypesComplexRedirect): array
 	{
-		$used_types = [];
+		$usedTypes = [];
 
 		if ($is_complex) {
-			$all_complex_types = array_merge($form_types_complex, $form_types_complex_redirect);
+			$all_complex_types = array_merge($formTypesComplex, $formTypesComplexRedirect);
 			foreach ($all_complex_types as $complex_form_type) {
-				$used_types[$complex_form_type] = 1;
+				$usedTypes[$complex_form_type] = 1;
 			}
 		} else {
-			$used_types[$form_type] = 1;
+			$usedTypes[$formType] = 1;
 		}
 
-		return $used_types;
+		return $usedTypes;
 	}
 
   /**

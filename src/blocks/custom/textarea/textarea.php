@@ -10,26 +10,26 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Helpers\Components;
 
-$block_class     = $attributes['blockClass'] ?? '';
-$name            = $attributes['name'] ?? '';
-$value           = $attributes['value'] ?? '';
-$textarea_id     = $attributes['id'] ?? '';
-$placeholder     = $attributes['placeholder'] ?? '';
-$classes         = $attributes['classes'] ?? '';
-$rows            = $attributes['rows'] ?? '';
-$cols            = $attributes['cols'] ?? '';
-$theme           = $attributes['theme'] ?? '';
-$is_required     = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
-$is_disabled     = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
-$is_read_only    = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
-$prevent_sending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
+$blockClass = $attributes['blockClass'] ?? '';
+$name = $attributes['name'] ?? '';
+$value = $attributes['value'] ?? '';
+$textareaId = $attributes['id'] ?? '';
+$placeholder = $attributes['placeholder'] ?? '';
+$classes = $attributes['classes'] ?? '';
+$rows = $attributes['rows'] ?? '';
+$cols = $attributes['cols'] ?? '';
+$theme = $attributes['theme'] ?? '';
+$isRequired = isset($attributes['isRequired']) && $attributes['isRequired'] ? 'required' : '';
+$isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'disabled' : '';
+$isReadOnly = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
+$preventSending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
-$block_classes = Components::classnames([
-  $block_class,
-  ! empty($theme) ? "{$block_class}__theme--{$theme}" : '',
-  ! empty($is_required) ? "{$block_class}--is-required" : '',
-  ! empty($is_disabled) ? "{$block_class}--is-disabled" : '',
-  ! empty($is_read_only) ? "{$block_class}--is-read-only" : '',
+$blockClasses = Components::classnames([
+  $blockClass,
+  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+  ! empty($isRequired) ? "{$blockClass}--is-required" : '',
+  ! empty($isDisabled) ? "{$blockClass}--is-disabled" : '',
+  ! empty($isReadOnly) ? "{$blockClass}--is-read-only" : '',
 ]);
 
 if (empty($this)) {
@@ -38,7 +38,7 @@ if (empty($this)) {
 
 ?>
 
-<div class="<?php echo esc_attr($block_classes); ?>">
+<div class="<?php echo esc_attr($blockClasses); ?>">
   <?php
 	echo Components::render('label', [
 	  'blockClass' => $attributes['blockClass'] ?? '',
@@ -46,19 +46,19 @@ if (empty($this)) {
 	  'id'         => $attributes['id'] ?? '',
 	]);
 	?>
-  <div class="<?php echo esc_attr("{$block_class}__content-wrap"); ?>">
+  <div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<textarea
 	  name="<?php echo esc_attr($name); ?>"
 	  placeholder="<?php echo esc_attr($placeholder); ?>"
-	  <?php ! empty($textarea_id) ? printf('id="%s"', esc_attr($textarea_id)) : ''; ?>
-	  class="<?php echo esc_attr("{$classes} {$block_class}__textarea"); ?>"
+	  <?php ! empty($textareaId) ? printf('id="%s"', esc_attr($textareaId)) : ''; ?>
+	  class="<?php echo esc_attr("{$classes} {$blockClass}__textarea"); ?>"
 	  value="<?php echo esc_attr($value); ?>"
 	  rows="<?php echo esc_attr($rows); ?>"
 	  cols="<?php echo esc_attr($cols); ?>"
-	  <?php echo esc_attr($is_required); ?>
-	  <?php echo esc_attr($is_disabled); ?>
-	  <?php echo esc_attr($is_read_only); ?>
-	  <?php echo esc_attr($prevent_sending); ?>
+	  <?php echo esc_attr($isRequired); ?>
+	  <?php echo esc_attr($isDisabled); ?>
+	  <?php echo esc_attr($isReadOnly); ?>
+	  <?php echo esc_attr($preventSending); ?>
 	></textarea>
   </div>
 </div>
