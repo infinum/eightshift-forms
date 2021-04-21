@@ -98,6 +98,10 @@ class Main extends AbstractMain
 	 */
 	protected function getTestServiceClasses(): array
 	{
+		/**
+		 * Ignoring this rule because this is how PHP-DI expects the dependency tree to be defined.
+		 */
+		/* phpcs:disable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
 		return [
 
 			// Authorization.
@@ -113,9 +117,6 @@ class Main extends AbstractMain
 			Integrations\Mailerlite\Mailerlite::class => [
 				Mocks\MockMailerliteClient::class,
 			],
-
-			// // HTTP.
-			// Integrations\Core\GuzzleClient::class,
 
 			// // Captcha.
 			Captcha\BasicCaptcha::class,
@@ -156,5 +157,6 @@ class Main extends AbstractMain
 			// Captcha\BasicCaptcha::class,
 			// ],
 		];
+		/* phpcs:enable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
 	}
 }

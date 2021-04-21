@@ -58,5 +58,6 @@ if (empty($this)) {
 	/>
 	</div>
 
+	<?php /* translators: %1$d & %2$d is replaced with "int" */ ?>
 	<div id="basic-captcha-description"><?php printf(esc_html__('Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms'), intval($firstNumber), intval($secondNumber)); ?></div>
 </div>

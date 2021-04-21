@@ -31,13 +31,13 @@ class Forms
 	   * ( i.e. you can set any form to post to another form and prefill any field )
 	   * not sure how nonce could be implemented here.
 	   */
-      // phpcs:disable WordPress.Security.NonceVerification.Recommended
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if (isset($_GET["field-$name"])) {
-			$unslashed = \wp_unslash($_GET["field-$name"]);
+			$unslashed = \wp_unslash($_GET["field-$name"]); /* phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, Sanitized 2 lines below */
 			$unslashed = is_array($unslashed) ? implode(' ', $unslashed) : $unslashed;
 			$value     = \sanitize_text_field($unslashed);
 		}
-      // phpcs:enable WordPress.Security.NonceVerification.Recommended
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return $value;
 	}

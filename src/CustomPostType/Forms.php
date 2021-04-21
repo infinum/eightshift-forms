@@ -44,8 +44,7 @@ class Forms extends AbstractPostType
    *
    * @var string
    */
-	public const POST_CAPABILITY_TYPE = 'post';
-	// public const POST_CAPABILITY_TYPE = 'eightshift-form';
+	public const POST_CAPABILITY_TYPE = 'eightshift-form';
 
 	/**
 	 * Browser url slug constant.

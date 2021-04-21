@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 class DynamicsCrm
 {
 
-	const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
+	public const ACCESS_TOKEN_KEY = 'dynamics-crm-access-token';
 
   /**
    * OAuth2 client implementation.

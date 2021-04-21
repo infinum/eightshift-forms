@@ -26,7 +26,7 @@
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
+  <!-- <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
     <severity>0</severity>
   </rule>
 
@@ -60,10 +60,14 @@
 
   <rule ref="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound">
     <severity>0</severity>
-  </rule>
+  </rule> -->
 
   <!-- Added because phpcs was complaining about this even tho it seemed ok. Looks like a bug in phpcs.-->
   <rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
+    <severity>0</severity>
+  </rule>
+
+  <rule ref="Generic.Files.LineLength.TooLong">
     <severity>0</severity>
   </rule>
 

@@ -141,7 +141,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 
 	  // Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
 		$redirectUrls = [];
-		$base_url      = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
+		$baseUrl      = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
 		foreach ($statuses as $statusValue) {
 			$urlParams = $params;
 			$urlParams[BuckarooResponseHandlerRoute::STATUS_PARAM] = $statusValue;

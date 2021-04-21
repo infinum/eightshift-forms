@@ -67,7 +67,7 @@ class Blocks extends AbstractBlocks implements Filters
 	public function getAllAllowedFormBlocks($allowedBlockTypes, $post)
 	{
 		$projectName = Config::getProjectName();
-		if ($post->post_type === Forms::POST_TYPE_SLUG) {
+		if ($post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
 			$formsBlocks = $this->getAllBlocksList([], $post);
 
 			// Remove form from the list to prevent users from adding a new form inside the form.

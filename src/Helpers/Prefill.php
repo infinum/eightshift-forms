@@ -18,7 +18,7 @@ use EightshiftForms\Hooks\Filters;
 class Prefill implements Filters
 {
 
-	const FAILED_TO_PREFILL_LABEL = 'Unable to prefill options';
+	public const FAILED_TO_PREFILL_LABEL = 'Unable to prefill options';
 
   /**
    * Returns the data of project-defined prefill source.
@@ -35,10 +35,10 @@ class Prefill implements Filters
 	{
 		if (! has_filter(self::PREFILL_GENERIC_MULTI)) {
 			return [
-			[
-			'label' => esc_html__('Unable to prefill options, selected options not defined', 'eightshift-forms'),
-			'value' => 'no-value',
-			],
+				[
+					'label' => esc_html__('Unable to prefill options, selected options not defined', 'eightshift-forms'),
+					'value' => 'no-value',
+				],
 			];
 		}
 
@@ -46,10 +46,10 @@ class Prefill implements Filters
 
 		if (! isset($prefillData[$prefillSourceName], $prefillData[$prefillSourceName]['data'])) {
 			return [
-			[
-			'label' => esc_html__('Unable to prefill options, no data defined', 'eightshift-forms'),
-			'value' => 'no-value',
-			],
+				[
+					'label' => esc_html__('Unable to prefill options, no data defined', 'eightshift-forms'),
+					'value' => 'no-value',
+				],
 			];
 		}
 

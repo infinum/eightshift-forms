@@ -21,14 +21,14 @@ use EightshiftForms\Rest\ActiveRouteInterface;
 class LocalizationConstants implements Filters
 {
 
-	const LOCALIZATION_KEY = 'eightshiftForms';
+	public const LOCALIZATION_KEY = 'eightshiftForms';
 
   /**
    * Key under which all localizations are held. window.${LOCALIZATION_KEY}. Only loaded in admin.
    *
    * @var string
    */
-	const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
+	public const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
 
   /**
    * Dynamics CRM route obj.
@@ -230,16 +230,17 @@ class LocalizationConstants implements Filters
 	{
 		$entities = apply_filters(Filters::DYNAMICS_CRM, 'available_entities');
 		if (empty($entities)) {
-			$available_entities = [
+			$availableEntities = [
+				/* translators: %s will be replaced with filter name (string). */
 				sprintf(esc_html__('No options found, please set available options in %s filter as available_entities', 'eightshift-forms'), self::DYNAMICS_CRM),
 			];
 		} else {
-			$available_entities = $entities;
+			$availableEntities = $entities;
 		}
 
 		$localization[self::LOCALIZATION_KEY]['dynamicsCrm'] = [
 			'restUri' => $this->dynamicsCrmRoute->getRouteUri(),
-			'availableEntities' => $available_entities,
+			'availableEntities' => $availableEntities,
 		];
 
 		return $localization;
@@ -335,15 +336,15 @@ class LocalizationConstants implements Filters
 		$audiences = [];
 
 		try {
-			$response = $this->mailchimp->get_all_lists();
+			$response = $this->mailchimp->getAllLists();
 		} catch (\Exception $e) {
 			return $audiences;
 		}
 
-		foreach ($response->lists as $list_obj) {
+		foreach ($response->lists as $listObj) {
 			$audiences[] = [
-			'value' => $list_obj->id,
-			'label' => $list_obj->name,
+			'value' => $listObj->id,
+			'label' => $listObj->name,
 			];
 		}
 
@@ -366,10 +367,10 @@ class LocalizationConstants implements Filters
 			return $groups;
 		}
 
-		foreach ($response as $list_obj) {
+		foreach ($response as $listObj) {
 			$groups[] = [
-			'value' => $list_obj->id,
-			'label' => $list_obj->name,
+			'value' => $listObj->id,
+			'label' => $listObj->name,
 			];
 		}
 
@@ -384,22 +385,22 @@ class LocalizationConstants implements Filters
    */
 	private function addPrefillGenericMultiConstants(): array
 	{
-		$prefill_multi = apply_filters(Filters::PREFILL_GENERIC_MULTI, []);
+		$prefillMulti = apply_filters(Filters::PREFILL_GENERIC_MULTI, []);
 
-		if (! is_array($prefill_multi)) {
+		if (! is_array($prefillMulti)) {
 			return [];
 		}
 
-		$prefill_multi_formatted = [];
-		foreach ($prefill_multi as $source_name => $prefill_multi_source) {
-			if (isset($prefill_multi_source['data'])) {
-				unset($prefill_multi_source['data']);
+		$prefillMultiFormatted = [];
+		foreach ($prefillMulti as $sourceName => $prefillMultiSource) {
+			if (isset($prefillMultiSource['data'])) {
+				unset($prefillMultiSource['data']);
 			}
 
-			$prefill_multi_formatted[] = $prefill_multi_source;
+			$prefillMultiFormatted[] = $prefillMultiSource;
 		}
 
-		return $prefill_multi_formatted;
+		return $prefillMultiFormatted;
 	}
 
   /**
@@ -409,21 +410,21 @@ class LocalizationConstants implements Filters
    */
 	protected function addPrefillGenericSingleConstants(): array
 	{
-		$prefill_single = apply_filters(Filters::PREFILL_GENERIC_SINGLE, []);
+		$prefillSingle = apply_filters(Filters::PREFILL_GENERIC_SINGLE, []);
 
-		if (! is_array($prefill_single)) {
+		if (! is_array($prefillSingle)) {
 			return [];
 		}
 
-		$prefill_single_formatted = [];
-		foreach ($prefill_single as $source_name => $prefill_single_source) {
-			if (isset($prefill_single_source['data'])) {
-				unset($prefill_single_source['data']);
+		$prefillSingleFormatted = [];
+		foreach ($prefillSingle as $sourceName => $prefillSingleSource) {
+			if (isset($prefillSingleSource['data'])) {
+				unset($prefillSingleSource['data']);
 			}
 
-			$prefill_single_formatted[] = $prefill_single_source;
+			$prefillSingleFormatted[] = $prefillSingleSource;
 		}
 
-		return $prefill_single_formatted;
+		return $prefillSingleFormatted;
 	}
 }
