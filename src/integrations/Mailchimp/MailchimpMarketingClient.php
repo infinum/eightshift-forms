@@ -43,8 +43,8 @@ class MailchimpMarketingClient implements ClientInterface
 	public function setConfig()
 	{
 		$this->client->setConfig([
-		'apiKey' => \has_filter(Filters::MAILCHIMP) ? \apply_filters(Filters::MAILCHIMP, 'api_key') : '',
-		'server' => \has_filter(Filters::MAILCHIMP) ? \apply_filters(Filters::MAILCHIMP, 'server') : '',
+			'apiKey' => \has_filter(Filters::MAILCHIMP) ? \apply_filters(Filters::MAILCHIMP, 'apiKey') : '',
+			'server' => \has_filter(Filters::MAILCHIMP) ? \apply_filters(Filters::MAILCHIMP, 'server') : '',
 		]);
 	}
 

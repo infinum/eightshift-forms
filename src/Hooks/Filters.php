@@ -22,10 +22,10 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/general_info', [ $this, 'get_themes' ], 11 );
+   *     add_filter( 'eightshift_forms/general_info', [ $this, 'getThemes' ], 11 );
    *   }
    *
-   *   public function get_themes(): array
+   *   public function getThemes(): array
    *   {
    *     return [
    *       'Newsletter',
@@ -44,12 +44,12 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/prefill/multi', [ $this, 'prefill_multi' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/prefill/multi', [ $this, 'prefillMulti' ], 1, 1 );
    *   }
    *
    *
-   *  public function prefill_multi( array $prefilled_data ): array {
-   *    $prefilled_data[ 'source-key' ] = [
+   *  public function prefillMulti( array $prefilled_data ): array {
+   *    $prefilledData[ 'source-key' ] = [
    *      'value' => 'source-key',
    *      'label' => 'Test source',
    *      'data' => [
@@ -64,7 +64,7 @@ interface Filters
    *      ],
    *    ];
    *
-   *   return $prefilled_data;
+   *   return $prefilledData;
    *  }
    *
    * @var string
@@ -88,10 +88,10 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/allowed_blocks', [ $this, 'add_allowed_blocks' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/allowed_blocks', [ $this, 'addAllowedBlocks' ], 1, 1 );
    *   }
    *
-   *  public function add_allowed_blocks( $allowed_blocks ) {
+   *  public function addAllowedBlocks( $allowed_blocks ) {
    *    $allowed_blocks[] = 'your-namespace/paragraph';
    *    $allowed_blocks[] = 'your-namespace/another-block';
    *    return $allowed_blocks;
@@ -113,7 +113,7 @@ interface Filters
    *
    *  use \EightshiftForms\Integrations\Authorization\Hmac;
    *
-   *  public function add_authorization_hash_to_params( array $params, string $secret ) {
+   *  public function addAuthorizationHashToParams( array $params, string $secret ) {
    *    $params[ Hmac::AUTHORIZATION_KEY ] = apply_filters( 'eightshift_forms/authorization_generator', $params, $secret )
    *    return $params;
    *  }
@@ -129,17 +129,17 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/dynamics_info', [ $this, 'get_info' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/dynamics_info', [ $this, 'getInfo' ], 1, 1 );
    *   }
    *
-   *  public function get_info( string $key ) {
+   *  public function getInfo( string $key ) {
    *    $info = [
-   *      'client_id' => 'client-id',
-   *      'client_secret' => 'client-secret',
-   *      'auth_token_url' => 'https://login.microsoftonline.com/1234-some-hash/oauth2/v2.0/token',
+   *      'clientId' => 'client-id',
+   *      'clientSecret' => 'client-secret',
+   *      'authTokenUrl' => 'https://login.microsoftonline.com/1234-some-hash/oauth2/v2.0/token',
    *      'scope' => 'https://your-crm-api-endpoint.dynamics.com/.default',
-   *      'api_url' => 'https://your-crm-api-endpoint.dynamics.com/api/data/v9.1',
-   *      'available_entities' => [
+   *      'apiUrl' => 'https://your-crm-api-endpoint.dynamics.com/api/data/v9.1',
+   *      'availableEntities' => [
    *        'entity_1',
    *        'entity_2,
    *      ],
@@ -159,10 +159,10 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/buckaroo', [ $this, 'get_info' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/buckaroo', [ $this, 'getInfo' ], 1, 1 );
    *   }
    *
-   *  public function get_info( string $key ) {
+   *  public function getInfo( string $key ) {
    *    $info = [
    *      'websiteKey' => 'websiteKey',
    *      'secretKey' => 'secretKey',
@@ -187,7 +187,7 @@ interface Filters
    *
    *  public function get_info( string $key ) {
    *    $info = [
-   *      'api_key' => 'your-api-key',
+   *      'apiKey' => 'your-api-key',
    *      'server' => 'us2',
    *    ];
    *
@@ -211,7 +211,7 @@ interface Filters
    *  public function get_info( string $key ): string
    *  {
    *    $info = [
-   *      'api_key' => 'your-api-key',
+   *      'apiKey' => 'your-api-key',
    *    ];
    *
    *    return $info[ $key ] ?? '';

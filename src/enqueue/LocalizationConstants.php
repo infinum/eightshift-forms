@@ -228,11 +228,11 @@ class LocalizationConstants implements Filters
    */
 	private function addDynamicsCrmConstants(array $localization): array
 	{
-		$entities = apply_filters(Filters::DYNAMICS_CRM, 'available_entities');
+		$entities = apply_filters(Filters::DYNAMICS_CRM, 'availableEntities');
 		if (empty($entities)) {
 			$availableEntities = [
 				/* translators: %s will be replaced with filter name (string). */
-				sprintf(esc_html__('No options found, please set available options in %s filter as available_entities', 'eightshift-forms'), self::DYNAMICS_CRM),
+				sprintf(esc_html__('No options found, please set available options in %s filter as availableEntities', 'eightshift-forms'), self::DYNAMICS_CRM),
 			];
 		} else {
 			$availableEntities = $entities;
