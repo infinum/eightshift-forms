@@ -50,7 +50,7 @@ if (empty($this)) {
 	<textarea
 		name="<?php echo esc_attr($name); ?>"
 		placeholder="<?php echo esc_attr($placeholder); ?>"
-		<?php ! empty($textareaId) ? printf('id="%s"', esc_attr($textareaId)) : ''; ?>
+		<?php ! empty($textareaId) ? printf('id="%s"', esc_attr($textareaId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		class="<?php echo esc_attr("{$classes} {$blockClass}__textarea"); ?>"
 		value="<?php echo esc_attr($value); ?>"
 		rows="<?php echo esc_attr($rows); ?>"

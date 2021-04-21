@@ -57,7 +57,7 @@ $selectClasses = Components::classnames([
 	?>
 	<div class="<?php echo esc_attr($contentWrapClasses); ?>">
 	<select
-		<?php ! empty($selectId) ? printf('id="%s"', esc_attr($selectId)) : ''; ?>
+		<?php ! empty($selectId) ? printf('id="%s"', esc_attr($selectId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		name="<?php echo esc_attr($name); ?>"
 		class="<?php echo esc_attr($selectClasses); ?>"
 		<?php echo esc_attr($isDisabled); ?>
@@ -66,7 +66,7 @@ $selectClasses = Components::classnames([
 		<?php
 		if ($shouldPrefill && ! empty($prefillSource)) {
 			foreach (Prefill::getPrefillSourceData($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
-				printf('<option value="%s">%s</option>', esc_attr($option['value']), esc_html($option['label']));
+				printf('<option value="%s">%s</option>', esc_attr($option['value']), esc_html($option['label'])); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
 			}
 		} else {
 			echo wp_kses_post($innerBlockContent);

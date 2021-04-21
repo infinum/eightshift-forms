@@ -30,7 +30,7 @@ $blockClasses = Components::classnames([
 	<?php if ($submitType === 'button') { ?>
 	<button
 		name="<?php echo esc_attr($name); ?>"
-		<?php ! empty($submitId) ? printf('id="%s"', esc_attr($submitId)) : ''; ?>
+		<?php ! empty($submitId) ? printf('id="%s"', esc_attr($submitId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		class="<?php echo esc_attr("{$classes} {$blockClass}__button"); ?>"
 		<?php echo esc_attr($isDisabled); ?>
 	>
@@ -39,7 +39,7 @@ $blockClasses = Components::classnames([
 	<?php } else { ?>
 	<input
 		name="<?php echo esc_attr($name); ?>"
-		<?php ! empty($submitId) ? printf('id="%s"', esc_attr($submitId)) : ''; ?>
+		<?php ! empty($submitId) ? printf('id="%s"', esc_attr($submitId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		class="<?php echo esc_attr("{$classes} {$blockClass}__input"); ?>"
 		value="<?php echo esc_attr($value); ?>"
 		type="<?php echo esc_attr($submitType); ?>"

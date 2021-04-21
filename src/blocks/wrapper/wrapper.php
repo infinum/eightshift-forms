@@ -23,6 +23,7 @@ $wrapperUseSimple = Components::checkAttr('wrapperUseSimple', $attributes, $mani
 $wrapperDisable = Components::checkAttr('wrapperDisable', $attributes, $manifest);
 $wrapperParentClass = Components::checkAttr('wrapperParentClass', $attributes, $manifest);
 
+// phpcs:disable Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
 if (! $wrapperUse || $wrapperDisable) {
 	if ($wrapperParentClass) {
 		echo '<div class="' , \esc_attr($wrapperParentClass . '__item') , '">
@@ -39,6 +40,8 @@ if (! $wrapperUse || $wrapperDisable) {
 			echo '</div>
 		</div>';
 	}
+	// phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
+
 
 	return;
 }

@@ -74,7 +74,7 @@ $labelClasses = Components::classnames([
 		<input
 		name="<?php echo esc_attr($name); ?>"
 		placeholder="<?php echo esc_attr($placeholder); ?>"
-		<?php ! empty($inputId) ? printf('id="%s"', esc_attr($inputId)) : ''; ?>
+		<?php ! empty($inputId) ? printf('id="%s"', esc_attr($inputId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		class="<?php echo esc_attr($inputClasses); ?>"
 		value="<?php echo esc_attr($value); ?>"
 		type="<?php echo esc_attr($inputType); ?>"
@@ -82,8 +82,8 @@ $labelClasses = Components::classnames([
 		<?php echo esc_attr($isReadOnly); ?>
 		<?php echo esc_attr($isRequired); ?>
 		<?php echo esc_attr($preventSending); ?>
-		<?php ( ! empty($pattern) ) ? printf('pattern="%s"', esc_attr($pattern)) : ''; ?>
-		<?php ( ! empty($customValidityMsg) && ! empty($pattern) ) ? printf('oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html($customValidityMsg)) : ''; ?>
+		<?php ( ! empty($pattern) ) ? printf('pattern="%s"', esc_attr($pattern)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
+		<?php ( ! empty($customValidityMsg) && ! empty($pattern) ) ? printf('oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html($customValidityMsg)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 		/>
 	</label>
 	</div>

@@ -33,7 +33,7 @@ $blockClasses = Components::classnames([
 	<label class="<?php echo esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
 	<input
 		name="<?php echo esc_attr($name); ?>"
-		<?php ! empty($checkboxId) ? printf('id="%s"', esc_attr($checkboxId)) : ''; ?>
+		<?php ! empty($checkboxId) ? printf('id="%s"', esc_attr($checkboxId)) : ''; // phpcs:ignore ?>
 		class="<?php echo esc_attr("{$classes} {$blockClass}__checkbox js-{$blockClass}-checkbox"); ?>"
 		value="<?php echo esc_attr($value); ?>"
 		type="checkbox"

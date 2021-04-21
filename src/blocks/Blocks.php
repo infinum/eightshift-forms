@@ -140,7 +140,8 @@ class Blocks extends AbstractBlocks implements Filters
 			\esc_html__('Blocks', 'eightshift-libs'),
 			self::REUSABLE_BLOCKS_CAPABILITY,
 			'edit.php?post_type=wp_block',
-			function () {},
+			function () {
+			},
 			'dashicons-editor-table',
 			4
 		);

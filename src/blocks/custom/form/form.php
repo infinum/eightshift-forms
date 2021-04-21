@@ -84,9 +84,9 @@ if (empty($this)) {
 	method="<?php echo esc_attr($formMethod); ?>"
 	target="<?php echo esc_attr($formTarget); ?>"
 	target="<?php echo esc_attr($formTarget); ?>"
-	<?php ! empty($formId) ? printf('id="%s"', esc_attr($formId)) : ''; ?>
-	<?php $isFormComplex ? printf('data-is-form-complex') : ''; ?>
-	<?php $shouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; ?>
+	<?php ! empty($formId) ? printf('id="%s"', esc_attr($formId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
+	<?php $isFormComplex ? printf('data-is-form-complex') : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped  ?>
+	<?php $shouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 
 	<?php if (isset($usedTypes[Config::BUCKAROO_METHOD])) { ?>
 		data-buckaroo-service="<?php echo esc_attr($buckarooService); ?>"
