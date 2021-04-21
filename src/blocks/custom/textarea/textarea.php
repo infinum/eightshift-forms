@@ -25,11 +25,11 @@ $isReadOnly = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'r
 $preventSending = isset($attributes['preventSending']) && $attributes['preventSending'] ? 'data-do-not-send' : '';
 
 $blockClasses = Components::classnames([
-  $blockClass,
-  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
-  ! empty($isRequired) ? "{$blockClass}--is-required" : '',
-  ! empty($isDisabled) ? "{$blockClass}--is-disabled" : '',
-  ! empty($isReadOnly) ? "{$blockClass}--is-read-only" : '',
+	$blockClass,
+	! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+	! empty($isRequired) ? "{$blockClass}--is-required" : '',
+	! empty($isDisabled) ? "{$blockClass}--is-disabled" : '',
+	! empty($isReadOnly) ? "{$blockClass}--is-read-only" : '',
 ]);
 
 if (empty($this)) {
@@ -39,26 +39,26 @@ if (empty($this)) {
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <?php
+	<?php
 	echo Components::render('label', [
-	  'blockClass' => $attributes['blockClass'] ?? '',
-	  'label'      => $attributes['label'] ?? '',
-	  'id'         => $attributes['id'] ?? '',
+		'blockClass' => $attributes['blockClass'] ?? '',
+		'label' => $attributes['label'] ?? '',
+		'id' => $attributes['id'] ?? '',
 	]);
 	?>
-  <div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
+	<div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<textarea
-	  name="<?php echo esc_attr($name); ?>"
-	  placeholder="<?php echo esc_attr($placeholder); ?>"
-	  <?php ! empty($textareaId) ? printf('id="%s"', esc_attr($textareaId)) : ''; ?>
-	  class="<?php echo esc_attr("{$classes} {$blockClass}__textarea"); ?>"
-	  value="<?php echo esc_attr($value); ?>"
-	  rows="<?php echo esc_attr($rows); ?>"
-	  cols="<?php echo esc_attr($cols); ?>"
-	  <?php echo esc_attr($isRequired); ?>
-	  <?php echo esc_attr($isDisabled); ?>
-	  <?php echo esc_attr($isReadOnly); ?>
-	  <?php echo esc_attr($preventSending); ?>
+		name="<?php echo esc_attr($name); ?>"
+		placeholder="<?php echo esc_attr($placeholder); ?>"
+		<?php ! empty($textareaId) ? printf('id="%s"', esc_attr($textareaId)) : ''; ?>
+		class="<?php echo esc_attr("{$classes} {$blockClass}__textarea"); ?>"
+		value="<?php echo esc_attr($value); ?>"
+		rows="<?php echo esc_attr($rows); ?>"
+		cols="<?php echo esc_attr($cols); ?>"
+		<?php echo esc_attr($isRequired); ?>
+		<?php echo esc_attr($isDisabled); ?>
+		<?php echo esc_attr($isReadOnly); ?>
+		<?php echo esc_attr($preventSending); ?>
 	></textarea>
-  </div>
+	</div>
 </div>

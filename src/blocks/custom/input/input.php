@@ -42,36 +42,36 @@ if ($shouldPrefill && ! empty($prefillSource)) {
 $value = Forms::maybe_override_value_from_query_string($value, $name);
 
 $blockClasses = Components::classnames([
-  $blockClass,
-  "js-{$blockClass}",
+	$blockClass,
+	"js-{$blockClass}",
 ]);
 
 $wrapperClasses = Components::classnames([
-  "{$blockClass}__content-wrap",
-  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
-  "js-{$blockClass}",
+	"{$blockClass}__content-wrap",
+	! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+	"js-{$blockClass}",
 ]);
 
 $inputClasses = Components::classnames([
-  "{$blockClass}__input",
-  'js-input',
-  $classes,
+	"{$blockClass}__input",
+	'js-input',
+	$classes,
 ]);
 
 $labelClasses = Components::classnames([
-  "{$blockClass}__label-content",
-  $inputType === 'hidden' ? "{$blockClass}__label-content--hidden" : '',
+	"{$blockClass}__label-content",
+	$inputType === 'hidden' ? "{$blockClass}__label-content--hidden" : '',
 ]);
 
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <div class="<?php echo esc_attr($wrapperClasses); ?>">
+	<div class="<?php echo esc_attr($wrapperClasses); ?>">
 	<label class="<?php echo esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
-	  <div class="<?php echo esc_attr($labelClasses); ?>">
+		<div class="<?php echo esc_attr($labelClasses); ?>">
 		<?php echo wp_kses_post($label); ?>
-	  </div>
-	  <input
+		</div>
+		<input
 		name="<?php echo esc_attr($name); ?>"
 		placeholder="<?php echo esc_attr($placeholder); ?>"
 		<?php ! empty($inputId) ? printf('id="%s"', esc_attr($inputId)) : ''; ?>
@@ -84,7 +84,7 @@ $labelClasses = Components::classnames([
 		<?php echo esc_attr($preventSending); ?>
 		<?php ( ! empty($pattern) ) ? printf('pattern="%s"', esc_attr($pattern)) : ''; ?>
 		<?php ( ! empty($customValidityMsg) && ! empty($pattern) ) ? printf('oninput="setCustomValidity(\'\'); checkValidity(); setCustomValidity(validity.valid ? \'\' : \'%s\');"', esc_html($customValidityMsg)) : ''; ?>
-	  />
+		/>
 	</label>
-  </div>
+	</div>
 </div>

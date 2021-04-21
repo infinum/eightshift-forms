@@ -21,9 +21,9 @@ $prefillSource = $attributes['prefillDataSource'] ?? '';
 $innerBlockContent = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
 $blockClasses = Components::classnames([
-  $blockClass,
-  $styleClass,
-  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+	$blockClass,
+	$styleClass,
+	! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
 ]);
 
 if (empty($this)) {
@@ -33,13 +33,13 @@ if (empty($this)) {
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <?php
+	<?php
 	echo Components::render('label', [
-	  'blockClass' => $attributes['blockClass'] ?? '',
-	  'label'      => $attributes['label'] ?? '',
+		'blockClass' => $attributes['blockClass'] ?? '',
+		'label' => $attributes['label'] ?? '',
 	]);
 	?>
-  <div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
+	<div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<?php
 	if ($shouldPrefill && ! empty($prefillSource)) {
 		foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
@@ -53,5 +53,5 @@ if (empty($this)) {
 		echo wp_kses_post($innerBlockContent);
 	}
 	?>
-  </div>
+	</div>
 </div>

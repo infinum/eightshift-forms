@@ -22,27 +22,27 @@ $isDisabled = isset($attributes['isDisabled']) && $attributes['isDisabled'] ? 'd
 $isReadOnly = isset($attributes['isReadOnly']) && $attributes['isReadOnly'] ? 'readonly' : '';
 
 $blockClasses = Components::classnames([
-  $blockClass,
-  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+	$blockClass,
+	! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
 ]);
 
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <label class="<?php echo esc_attr("{$blockClass}__label"); ?>">
+	<label class="<?php echo esc_attr("{$blockClass}__label"); ?>">
 	<input
-	  name="<?php echo esc_attr($name); ?>"
-	  <?php ! empty($radioItemId) ? printf('id="%s"', esc_attr($radioItemId)) : ''; ?>
-	  class="<?php echo esc_attr("{$classes} {$blockClass}__radio"); ?>"
-	  value="<?php echo esc_attr($value); ?>"
-	  type="radio"
-	  <?php echo esc_attr($isChecked); ?>
-	  <?php echo esc_attr($isDisabled); ?>
-	  <?php echo esc_attr($isReadOnly); ?>
+		name="<?php echo esc_attr($name); ?>"
+		<?php ! empty($radioItemId) ? printf('id="%s"', esc_attr($radioItemId)) : ''; ?>
+		class="<?php echo esc_attr("{$classes} {$blockClass}__radio"); ?>"
+		value="<?php echo esc_attr($value); ?>"
+		type="radio"
+		<?php echo esc_attr($isChecked); ?>
+		<?php echo esc_attr($isDisabled); ?>
+		<?php echo esc_attr($isReadOnly); ?>
 	/>
 	<span class="<?php echo esc_attr("{$blockClass}__radio-icon js-{$blockClass}-radio-icon"); ?>"></span>
 	<span class="<?php echo esc_attr("{$blockClass}__label-content"); ?>">
-	  <?php echo wp_kses_post($label); ?>
+		<?php echo wp_kses_post($label); ?>
 	</span>
-  </label>
+	</label>
 </div>

@@ -18,9 +18,9 @@ $firstNumber = wp_rand(1, 15);
 $secondNumber = wp_rand(1, 15);
 
 $blockClasses = Components::classnames([
-  $blockClass,
-  "js-{$blockClass}",
-  ! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
+	$blockClass,
+	"js-{$blockClass}",
+	! empty($theme) ? "{$blockClass}__theme--{$theme}" : '',
 ]);
 
 if (empty($this)) {
@@ -30,33 +30,33 @@ if (empty($this)) {
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <?php
+	<?php
 	echo Components::render('label', [
 		'blockClass' => $attributes['blockClass'] ?? '',
-		'label'      => $attributes['label'] ?? '',
-		'id'         => $attributes['id'] ?? '',
-		'theme'      => $attributes['theme'] ?? '',
+		'label' => $attributes['label'] ?? '',
+		'id' => $attributes['id'] ?? '',
+		'theme' => $attributes['theme'] ?? '',
 	]);
 	?>
-  <div class="<?php echo esc_attr("{$blockClass}__content-wrap {$blockClass}__theme--{$theme}"); ?>">
+	<div class="<?php echo esc_attr("{$blockClass}__content-wrap {$blockClass}__theme--{$theme}"); ?>">
 	<div class="<?php echo esc_attr("{$blockClass}__captcha-number"); ?>" >
-	  <?php echo intval($firstNumber); ?>
-	  <input type="hidden" name="<?php echo esc_attr(BasicCaptcha::FIRST_NUMBER_KEY); ?>" readonly value="<?php echo intval($firstNumber); ?>" />
+		<?php echo intval($firstNumber); ?>
+		<input type="hidden" name="<?php echo esc_attr(BasicCaptcha::FIRST_NUMBER_KEY); ?>" readonly value="<?php echo intval($firstNumber); ?>" />
 	</div>
 	<div class="<?php echo esc_attr("{$blockClass}__captcha-plus"); ?>"> + </div>
 	<div class="<?php echo esc_attr("{$blockClass}__captcha-number"); ?>">
-	  <?php echo intval($secondNumber); ?>
-	  <input type="hidden" name="<?php echo esc_attr(BasicCaptcha::SECOND_NUMBER_KEY); ?>" readonly value="<?php echo intval($secondNumber); ?>" />
+		<?php echo intval($secondNumber); ?>
+		<input type="hidden" name="<?php echo esc_attr(BasicCaptcha::SECOND_NUMBER_KEY); ?>" readonly value="<?php echo intval($secondNumber); ?>" />
 	</div>
 	<div class="<?php echo esc_attr("{$blockClass}__captcha-equals"); ?>"> = </div>
 	<input
-	  name="<?php echo esc_attr($name); ?>"
-	  class="<?php echo esc_attr("{$blockClass}__captcha"); ?>"
-	  type="text"
-	  required
-	  aria-describedby="basic-captcha-description"
+		name="<?php echo esc_attr($name); ?>"
+		class="<?php echo esc_attr("{$blockClass}__captcha"); ?>"
+		type="text"
+		required
+		aria-describedby="basic-captcha-description"
 	/>
-  </div>
+	</div>
 
-  <div id="basic-captcha-description"><?php printf(esc_html__('Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms'), intval($firstNumber), intval($secondNumber)); ?></div>
+	<div id="basic-captcha-description"><?php printf(esc_html__('Math captcha. Input sum of %1$d and %2$d.', 'eightshift-forms'), intval($firstNumber), intval($secondNumber)); ?></div>
 </div>

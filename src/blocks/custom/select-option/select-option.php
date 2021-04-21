@@ -17,10 +17,10 @@ $isSelected = isset($attributes['isSelected']) && $attributes['isSelected'] ? 's
 ?>
 
 <option
-  class="<?php echo esc_attr("{$blockClass}__option"); ?>"
-  value="<?php echo esc_attr($value); ?>"
-  <?php echo esc_attr($isDisabled); ?>
-  <?php echo esc_attr($isSelected); ?>
+	class="<?php echo esc_attr("{$blockClass}__option"); ?>"
+	value="<?php echo esc_attr($value); ?>"
+	<?php echo esc_attr($isDisabled); ?>
+	<?php echo esc_attr($isSelected); ?>
 >
-  <?php echo esc_html($label); ?>
+	<?php echo esc_html($label); ?>
 </option>
