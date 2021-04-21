@@ -15,10 +15,10 @@ $blockClass = $attributes['blockClass'] ?? '';
 $componentClass = 'form-overlay';
 
 $blockClasses = Components::classnames([
-  $componentClass,
-  "js-{$componentClass}",
-  'hide-form-overlay',
-  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+	$componentClass,
+	"js-{$componentClass}",
+	'hide-form-overlay',
+	! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
 ]);
 
 ?>

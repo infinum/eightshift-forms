@@ -15,11 +15,11 @@ $theme = $attributes['theme'] ?? '';
 $componentClass = 'form-error-message-wrapper';
 
 $blockClasses = Components::classnames([
-  $componentClass,
-  "js-{$componentClass}",
-  'is-form-message-hidden',
-  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
-  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
+	$componentClass,
+	"js-{$componentClass}",
+	'is-form-message-hidden',
+	! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+	! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
 ]);
 
 ?>

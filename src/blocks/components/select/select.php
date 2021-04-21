@@ -27,43 +27,43 @@ $preventSending = isset($attributes['preventSending']) && $attributes['preventSe
 $componentClass = 'select';
 
 $componentClasses = Components::classnames([
-  $componentClass,
-  "js-{$componentClass}",
-  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
-  $hideLoading ? "{$componentClass}--has-loader is-loading" : '',
-  ! empty($isDisabled) ? "{$componentClass}--is-disabled" : '',
-  "{$blockClass}__{$componentClass}",
+	$componentClass,
+	"js-{$componentClass}",
+	! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
+	$hideLoading ? "{$componentClass}--has-loader is-loading" : '',
+	! empty($isDisabled) ? "{$componentClass}--is-disabled" : '',
+	"{$blockClass}__{$componentClass}",
 ]);
 
 $contentWrapClasses = Components::classnames([
-  "{$componentClass}__content-wrap",
-  "js-{$componentClass}-content-wrap",
+	"{$componentClass}__content-wrap",
+	"js-{$componentClass}-content-wrap",
 ]);
 
 $selectClasses = Components::classnames([
-  "{$componentClass}__select",
-  "js-{$componentClass}-select",
-  $classes,
+	"{$componentClass}__select",
+	"js-{$componentClass}-select",
+	$classes,
 ]);
 
 ?>
 
 <div class="<?php echo esc_attr($componentClasses); ?>">
-  <?php
+	<?php
 	echo wp_kses_post(Components::render('label', [
-	  'blockClass' => $attributes['blockClass'] ?? '',
-	  'label'      => $attributes['label'] ?? '',
+		'blockClass' => $attributes['blockClass'] ?? '',
+		'label' => $attributes['label'] ?? '',
 	]));
 	?>
-  <div class="<?php echo esc_attr($contentWrapClasses); ?>">
+	<div class="<?php echo esc_attr($contentWrapClasses); ?>">
 	<select
-	  <?php ! empty($selectId) ? printf('id="%s"', esc_attr($selectId)) : ''; ?>
-	  name="<?php echo esc_attr($name); ?>"
-	  class="<?php echo esc_attr($selectClasses); ?>"
-	  <?php echo esc_attr($isDisabled); ?>
-	  <?php echo esc_attr($preventSending); ?>
+		<?php ! empty($selectId) ? printf('id="%s"', esc_attr($selectId)) : ''; ?>
+		name="<?php echo esc_attr($name); ?>"
+		class="<?php echo esc_attr($selectClasses); ?>"
+		<?php echo esc_attr($isDisabled); ?>
+		<?php echo esc_attr($preventSending); ?>
 	>
-	  <?php
+		<?php
 		if ($shouldPrefill && ! empty($prefillSource)) {
 			foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
 				printf('<option value="%s">%s</option>', esc_attr($option['value']), esc_html($option['label']));
@@ -73,5 +73,5 @@ $selectClasses = Components::classnames([
 		}
 		?>
 	</select>
-  </div>
+	</div>
 </div>

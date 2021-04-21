@@ -16,18 +16,18 @@ $theme = $attributes['theme'] ?? '';
 $componentClass = 'form-spinner';
 
 $componentClasses = Components::classnames([
-  $componentClass,
-  "js-{$componentClass}",
-  'hide-spinner',
-  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
-  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
+	$componentClass,
+	"js-{$componentClass}",
+	'hide-spinner',
+	! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+	! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
 ]);
 
 ?>
 
 <div
-  class="<?php echo esc_attr($componentClasses); ?>"
-  role="alert"
-  aria-live="assertive"
+	class="<?php echo esc_attr($componentClasses); ?>"
+	role="alert"
+	aria-live="assertive"
 >
 </div>

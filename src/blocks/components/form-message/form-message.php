@@ -18,17 +18,17 @@ $theme = $attributes['theme'] ?? '';
 $componentClass = 'form-message';
 
 $blockClasses = Components::classnames([
-  $componentClass,
-  "js-{$componentClass}",
-  "js-{$componentClass}--{$messageType}",
-  "{$componentClass}__type--{$messageType}",
-  'is-form-message-hidden',
-  ! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
-  ! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
+	$componentClass,
+	"js-{$componentClass}",
+	"js-{$componentClass}--{$messageType}",
+	"{$componentClass}__type--{$messageType}",
+	'is-form-message-hidden',
+	! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+	! empty($theme) ? "{$componentClass}__theme--{$theme}" : '',
 ]);
 
 ?>
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
-  <?php echo esc_html($message); ?>
+	<?php echo esc_html($message); ?>
 </div>
