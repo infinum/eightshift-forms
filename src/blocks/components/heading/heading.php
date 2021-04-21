@@ -11,6 +11,10 @@ use EightshiftLibs\Helpers\Components;
 $manifest = Components::getManifest(__DIR__);
 $componentName = $attributes['componentName'] ?? $manifest['componentName'];
 
+if (!isset($attributes)) {
+	return;
+}
+
 $headingUse = Components::checkAttr('headingUse', $attributes, $manifest, $componentName);
 if (!$headingUse) {
 	return;

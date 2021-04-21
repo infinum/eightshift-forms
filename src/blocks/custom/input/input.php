@@ -38,8 +38,8 @@ if ($shouldPrefill && ! empty($prefillSource)) {
 	$value = $attributes['value'] ?? '';
 }
 
-// Override form value if it's passed from $_GET.
-$value = Forms::maybeOverrideValueFromQueryString($value, $name);
+// Override form value if it's passed from $_POST.
+$value = Forms::maybeOverrideValueFromPost($value, $name);
 
 $blockClasses = Components::classnames([
 	$blockClass,

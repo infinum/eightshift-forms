@@ -11,6 +11,10 @@ use EightshiftLibs\Helpers\Components;
 $manifest = Components::getManifest(__DIR__);
 $componentName = $attributes['componentName'] ?? $manifest['componentName'];
 
+if (!isset($attributes)) {
+	return;
+}
+
 $paragraphUse = Components::checkAttr('paragraphUse', $attributes, $manifest, $componentName);
 if (!$paragraphUse) {
 	return;

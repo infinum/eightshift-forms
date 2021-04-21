@@ -94,10 +94,9 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 		try {
 			$response = $this->dynamicsCrm->addRecord($entity, $params);
 		} catch (ClientException $e) {
-			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : esc_html__('Unknown error', 'eightshift-forms');
+			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : '';
+			$error = empty($error) ? $e->getMessage() : $error;
 			return $this->restResponseHandlerUnknownError(['error' => $error]);
-		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
 		return \rest_ensure_response([

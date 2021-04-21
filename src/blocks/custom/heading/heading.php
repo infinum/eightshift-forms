@@ -8,4 +8,4 @@
 
 use EightshiftLibs\Helpers\Components;
 
-echo \wp_kses_post(Components::render('heading', $attributes));
+echo \wp_kses_post(Components::render('heading', $attributes ?? []));

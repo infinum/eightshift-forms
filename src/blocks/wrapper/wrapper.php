@@ -9,6 +9,13 @@
 use EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$templatePath = $templatePath ?? '';
+$innerBlockContent = $innerBlockContent ?? '';
+$attributes = $attributes ?? [];
+
+if (!isset($this)) {
+	return;
+}
 
 // Used to add or remove wrapper.
 $wrapperUse = Components::checkAttr('wrapperUse', $attributes, $manifest);

@@ -69,7 +69,7 @@ class Main extends AbstractMain
 	 *
 	 * A list of classes which contain hooks.
 	 *
-	 * @return array<class-string, string|string[]> Array of fully qualified service class names.
+	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
 	 */
 	protected function getServiceClasses(): array
 	{
@@ -82,7 +82,7 @@ class Main extends AbstractMain
 	 *
 	 * A list of classes which contain hooks.
 	 *
-	 * @return array<class-string, string|string[]> Array of fully qualified service class names.
+	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
 	 */
 	protected function getProdServiceClasses(): array
 	{
@@ -94,7 +94,7 @@ class Main extends AbstractMain
 	 *
 	 * A list of classes which contain hooks.
 	 *
-	 * @return array<class-string, string|string[]> Array of fully qualified service class names.
+	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
 	 */
 	protected function getTestServiceClasses(): array
 	{

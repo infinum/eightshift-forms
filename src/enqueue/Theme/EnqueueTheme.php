@@ -22,6 +22,13 @@ class EnqueueTheme extends AbstractEnqueueTheme
 {
 
 	/**
+	 * Localization constants object.
+	 *
+	 * @var LocalizationConstants
+	 */
+	private $localizationConstants;
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface     $manifest Inject manifest which holds data about assets from manifest.json.

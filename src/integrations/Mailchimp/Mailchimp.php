@@ -225,7 +225,7 @@ class Mailchimp
 		}
 
 		foreach ($response->segments as $segmentObj) {
-			if (! isObject($segmentObj) || ! isset($segmentObj->id, $segmentObj->name, $segmentObj->type)) {
+			if (! is_object($segmentObj) || ! isset($segmentObj->id, $segmentObj->name, $segmentObj->type)) {
 				throw new \Exception('Specific segment response invalid');
 			}
 		}

@@ -23,7 +23,7 @@ class Forms
    * @param  string $name  Field's key / name.
    * @return string
    */
-	public static function maybeOverrideValueFromQueryString(string $value, string $name)
+	public static function maybeOverrideValueFromPost(string $value, string $name)
 	{
 
 	  /**
@@ -31,13 +31,11 @@ class Forms
 	   * ( i.e. you can set any form to post to another form and prefill any field )
 	   * not sure how nonce could be implemented here.
 	   */
-    // phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if (isset($_GET["field-$name"])) {
-			$unslashed = \wp_unslash($_GET["field-$name"]); /* phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, Sanitized 2 lines below */
-			$unslashed = is_array($unslashed) ? implode(' ', $unslashed) : $unslashed;
-			$value     = \sanitize_text_field($unslashed);
+    // phpcs:disable WordPress.Security.NonceVerification.Missing
+		if (isset($_POST["field-$name"])) {
+			$unslashed = sanitize_text_field((string) \wp_unslash($_POST["field-$name"])); /* phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, Sanitized 2 lines below */
 		}
-    // phpcs:enable WordPress.Security.NonceVerification.Recommended
+    // phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return $value;
 	}
