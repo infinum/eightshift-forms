@@ -14,7 +14,9 @@
 	},
 	"attributes": {
 		"type": "email",
-    "showType": false
+		"name": "email",
+    "showType": false,
+    "showName": false
 	},
 	"scope": [
 		"inserter"
