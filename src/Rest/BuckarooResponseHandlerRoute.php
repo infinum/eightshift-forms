@@ -153,7 +153,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 			$params          = $this->verifyRequest($request, Filters::BUCKAROO);
 			$buckarooParams = $request->get_body_params();
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 		try {
@@ -191,7 +191,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 			$buckarooResponse = ResponseFactory::build($buckarooParams);
 
 		  // Get the correct redirect URL (expects them to be urlencoded).
-			switch ($buckarooResponse->get_status()) {
+			switch ($buckarooResponse->getStatus()) {
 				case $buckarooResponse::STATUS_CODE_SUCCESS:
 					$redirectUrl = isset($params[self::REDIRECT_URL_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_PARAM]) : '';
 					break;
@@ -239,7 +239,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 
   /**
    * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
-   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * should be some secret. For example the secretKey for accessing the 3rd party route this route is
    * handling.
    *
    * If this function returns a non-empty value, it is assumed the route requires authorization.
@@ -248,7 +248,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
    */
 	protected function getAuthorizationSalt(): string
 	{
-		return \apply_filters(Filters::BUCKAROO, 'secret_key') ?? 'invalid-salt';
+		return \apply_filters(Filters::BUCKAROO, 'secretKey') ?? 'invalid-salt';
 	}
 
   /**

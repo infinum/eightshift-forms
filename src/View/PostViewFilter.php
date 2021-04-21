@@ -26,18 +26,18 @@ class PostViewFilter implements ServiceInterface
    */
 	public function register(): void
 	{
-		add_filter('wp_kses_allowed_html', [$this, 'modify_kses_post_tags'], 30, 1);
+		add_filter('wp_kses_allowed_html', [$this, 'modifyKsesPostTags'], 30, 1);
 	}
 
   /**
    * Modifies allowed tags in wp_kses_post()
    *
-   * @param  array $allowed_tags Array of allowed tags.
+   * @param  array $allowedTags Array of allowed tags.
    * @return array
    */
-	public function modify_kses_post_tags(array $allowed_tags): array
+	public function modifyKsesPostTags(array $allowedTags): array
 	{
-		$allowed_tags = array_merge($allowed_tags, FormView::extra_allowed_tags($allowed_tags));
-		return $allowed_tags;
+		$allowedTags = array_merge($allowedTags, FormView::extraAllowedTags($allowedTags));
+		return $allowedTags;
 	}
 }

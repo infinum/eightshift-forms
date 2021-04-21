@@ -56,7 +56,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 		try {
 			$params = $this->verifyRequest($request, self::BUCKAROO);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 		try {
@@ -64,7 +64,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 			$this->setTestIfNeeded($params);
 
 		  // Set some default redirect URL. This should be overriden in the filter.
-			$redirectUrl = $this->buckaroo->get_return_url();
+			$redirectUrl = $this->buckaroo->getReturnUrl();
 
 			if (has_filter(Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE)) {
 				$redirectUrl = apply_filters(Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE, $redirectUrl);
@@ -72,7 +72,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('buckaroo-missing-keys', ['message' => $e->getMessage()]);
 		} catch (BuckarooRequestException $e) {
-			return $this->restResponseHandler('buckaroo-missing-keys', $e->get_exception_for_rest_response());
+			return $this->restResponseHandler('buckaroo-missing-keys', $e->getExceptionForRestResponse());
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}

@@ -36,7 +36,7 @@ class MailerliteClient implements ClientInterface
    */
 	public function setConfig()
 	{
-		$apiKey = \has_filter(Filters::MAILERLITE) ? \apply_filters(Filters::MAILERLITE, 'api_key') : '';
+		$apiKey = \has_filter(Filters::MAILERLITE) ? \apply_filters(Filters::MAILERLITE, 'apiKey') : '';
 
 		$guzzle = new GuzzleHttp();
 		$guzzleClient = new Guzzle6($guzzle);

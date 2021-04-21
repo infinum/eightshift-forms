@@ -74,12 +74,12 @@ class TestRoute extends BaseRoute implements Filters {
     try {
       $params = $this->verifyRequest( $request );
     } catch ( UnverifiedRequestException $e ) {
-      return rest_ensure_response( $e->get_data() );
+      return rest_ensure_response( $e->getData() );
     }
 
     $params = $this->unsetIrrelevantParams( $params );
 
-    $mock_response = [
+    $mockResponse = [
       'message' => 'all good',
       'received-params' => $params,
     ];
@@ -87,7 +87,7 @@ class TestRoute extends BaseRoute implements Filters {
     return \rest_ensure_response(
       [
         'code' => 200,
-        'data' => $mock_response,
+        'data' => $mockResponse,
       ]
     );
   }

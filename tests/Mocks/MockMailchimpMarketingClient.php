@@ -30,30 +30,30 @@ class MockMailchimpMarketingClient implements ClientInterface {
   public function __construct() {
     $this->client = Stub::make(MarketingApiClient::class, [
       'lists' => Stub::make(ListsApi::class, [
-        'setListMember' => function( $list_id, $subscriber_hash, $params ) {
-          if ( $list_id === DataProvider::INVALID_LIST_ID ) {
+        'setListMember' => function( $listId, $subscriberHash, $params ) {
+          if ( $listId === DataProvider::INVALID_LIST_ID ) {
             throw new ClientException( 'invalid list id', new Request('GET', 'test'), new Response() );
           }
 
           return DataProvider::getMockAddOrUpdateMemberResponse([
-            'listId' => $list_id,
+            'list_id' => $listId,
             'email' => DataProvider::MOCK_EMAIL,
-            'mergeFields' => $params['merge_fields'],
+            'merge_fields' => $params['merge_fields'],
           ]);
         },
-        'addListMember' => function( $list_id, $params ) {
-          if ( $list_id === DataProvider::INVALID_LIST_ID ) {
+        'addListMember' => function( $listId, $params ) {
+          if ( $listId === DataProvider::INVALID_LIST_ID ) {
             throw new ClientException( 'invalid list id', new Request('GET', 'test'), new Response() );
           }
 
           return DataProvider::getMockAddOrUpdateMemberResponse([
-            'listId' => $list_id,
+            'list_id' => $listId,
             'email' => DataProvider::MOCK_EMAIL,
-            'mergeFields' => $params['merge_fields'],
+            'merge_fields' => $params['merge_fields'],
           ]);
         },
 
-        'updateListMemberTags' => function( $list_id, $subscriber_hash, $tags ) {
+        'updateListMemberTags' => function( $listId, $subscriberHash, $tags ) {
           return '';
         },
 

@@ -29,13 +29,13 @@ class SendEmailRoute extends BaseRoute
    */
 	public const ENDPOINT_SLUG = '/send-email';
 
-	public const TO_PARAM                          = 'email_to';
-	public const SUBJECT_PARAM                     = 'email_subject';
-	public const MESSAGE_PARAM                     = 'email_message';
-	public const ADDITIONAL_HEADERS_PARAM          = 'email_additional_headers';
-	public const SEND_CONFIRMATION_TO_SENDER_PARAM = 'email_send_copy_to_sender';
-	public const CONFIRMATION_SUBJECT_PARAM        = 'email_confirmation_subject';
-	public const CONFIRMATION_MESSAGE_PARAM        = 'email_confirmation_message';
+	public const TO_PARAM                          = 'emailTo';
+	public const SUBJECT_PARAM                     = 'emailSubject';
+	public const MESSAGE_PARAM                     = 'emailMessage';
+	public const ADDITIONAL_HEADERS_PARAM          = 'emailAdditionalHeaders';
+	public const SEND_CONFIRMATION_TO_SENDER_PARAM = 'emailSendCopyToSender';
+	public const CONFIRMATION_SUBJECT_PARAM        = 'emailConfirmationSubject';
+	public const CONFIRMATION_MESSAGE_PARAM        = 'emailConfirmationMessage';
 	public const EMAIL_PARAM                       = 'email';
 
   /**
@@ -70,7 +70,7 @@ class SendEmailRoute extends BaseRoute
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 	  // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.

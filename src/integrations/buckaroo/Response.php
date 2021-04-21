@@ -18,33 +18,33 @@ use EightshiftForms\Integrations\Buckaroo\Exceptions\InvalidBuckarooResponseExce
 class Response
 {
 
-	const SERVICE_IDEAL        = 'ideal';
-	const SERVICE_EMANDATE     = 'emandate';
-	const SERVICE_PAY_BY_EMAIL = 'pay-by-email';
-	const SERVICE_INVALID      = 'unsupported-buckaroo-service';
+	public const SERVICE_IDEAL        = 'ideal';
+	public const SERVICE_EMANDATE     = 'emandate';
+	public const SERVICE_PAY_BY_EMAIL = 'pay-by-email';
+	public const SERVICE_INVALID      = 'unsupported-buckaroo-service';
 
-	const STATUS_CODE_SUCCESS   = 190;
-	const STATUS_CODE_ERROR     = 490;
-	const STATUS_CODE_REJECT    = 690;
-	const STATUS_CODE_CANCELLED = 890;
-	const STATUS_CODE_PENDING   = 791;
-	const STATUS_CODE_INVALID   = -1;
+	public const STATUS_CODE_SUCCESS   = 190;
+	public const STATUS_CODE_ERROR     = 490;
+	public const STATUS_CODE_REJECT    = 690;
+	public const STATUS_CODE_CANCELLED = 890;
+	public const STATUS_CODE_PENDING   = 791;
+	public const STATUS_CODE_INVALID   = -1;
 
-	const TEST_PARAM                  = 'BRQ_TEST';
-	const PRIMARY_SERVICE_PARAM       = 'BRQ_PRIMARY_SERVICE'; // Emandate returns service as this param.
-	const PRIMARY_PAYMENT_METHOD      = 'BRQ_PAYMENT_METHOD'; // iDEAL returns service as this param.
-	const STATUS_CODE_PARAM           = 'BRQ_STATUSCODE';
-	const EMANDATE_ID_PARAM           = 'BRQ_SERVICE_EMANDATE_MANDATEID';
-	const EMANDATE_REFERENCE_ID_PARAM = 'BRQ_SERVICE_EMANDATE_REFERENCE';
-	const EMANDATE_BANK_ID_PARAM      = 'BRQ_SERVICE_EMANDATE_BANKID';
-	const EMANDATE_IBAN_PARAM         = 'BRQ_SERVICE_EMANDATE_IBAN';
-	const IDEAL_BANK_NAME_PARAM       = 'BRQ_SERVICE_IDEAL_CONSUMERISSUER';
-	const IDEAL_BANK_ID_PARAM         = 'BRQ_SERVICE_IDEAL_CONSUMERBIC';
-	const IDEAL_PAYMENT_AMOUNT_PARAM  = 'BRQ_AMOUNT';
-	const IDEAL_PAYMENT_ID_PARAM      = 'BRQ_PAYMENT';
-	const IDEAL_INVOICE_NUMBER_PARAM  = 'BRQ_INVOICENUMBER';
-	const IDEAL_IBAN_PARAM            = 'BRQ_SERVICE_IDEAL_CONSUMERIBAN';
-	const MOCK_PAY_BY_EMAIL_PARAM     = 'BRQ_MOCK_SERVICE';
+	public const TEST_PARAM                  = 'BRQ_TEST';
+	public const PRIMARY_SERVICE_PARAM       = 'BRQ_PRIMARY_SERVICE'; // Emandate returns service as this param.
+	public const PRIMARY_PAYMENT_METHOD      = 'BRQ_PAYMENT_METHOD'; // iDEAL returns service as this param.
+	public const STATUS_CODE_PARAM           = 'BRQ_STATUSCODE';
+	public const EMANDATE_ID_PARAM           = 'BRQ_SERVICE_EMANDATE_MANDATEID';
+	public const EMANDATE_REFERENCE_ID_PARAM = 'BRQ_SERVICE_EMANDATE_REFERENCE';
+	public const EMANDATE_BANK_ID_PARAM      = 'BRQ_SERVICE_EMANDATE_BANKID';
+	public const EMANDATE_IBAN_PARAM         = 'BRQ_SERVICE_EMANDATE_IBAN';
+	public const IDEAL_BANK_NAME_PARAM       = 'BRQ_SERVICE_IDEAL_CONSUMERISSUER';
+	public const IDEAL_BANK_ID_PARAM         = 'BRQ_SERVICE_IDEAL_CONSUMERBIC';
+	public const IDEAL_PAYMENT_AMOUNT_PARAM  = 'BRQ_AMOUNT';
+	public const IDEAL_PAYMENT_ID_PARAM      = 'BRQ_PAYMENT';
+	public const IDEAL_INVOICE_NUMBER_PARAM  = 'BRQ_INVOICENUMBER';
+	public const IDEAL_IBAN_PARAM            = 'BRQ_SERVICE_IDEAL_CONSUMERIBAN';
+	public const MOCK_PAY_BY_EMAIL_PARAM     = 'BRQ_MOCK_SERVICE';
 
   /**
    * Service type of response.
@@ -65,14 +65,14 @@ class Response
    *
    * @var string
    */
-	private $status_as_text = '';
+	private $statusAsText = '';
 
   /**
    * Payer's bank ID.
    *
    * @var string
    */
-	private $bank_id = '';
+	private $bankId = '';
 
   /**
    * Payer's IBAN.
@@ -86,42 +86,42 @@ class Response
    *
    * @var string
    */
-	private $ideal_bank_name = '';
+	private $idealBankName = '';
 
   /**
    * Payment amount when using iDEAL.
    *
    * @var string
    */
-	private $ideal_payment_amount = '';
+	private $idealPaymentAmount = '';
 
   /**
    * Payment ID when using iDEAL.
    *
    * @var string
    */
-	private $ideal_payment_id = '';
+	private $idealPaymentId = '';
 
   /**
    * Invoice number when using iDEAL.
    *
    * @var string
    */
-	private $ideal_invoice_number = '';
+	private $idealInvoiceNumber = '';
 
   /**
    * Emandate ID.
    *
    * @var string
    */
-	private $emandate_id = '';
+	private $emandateId = '';
 
   /**
    * Emandate reference ID.
    *
    * @var string
    */
-	private $emandate_reference_id = '';
+	private $emandateReferenceId = '';
 
   /**
    * Check if this is a test response or not.
@@ -133,41 +133,42 @@ class Response
   /**
    * Construct object.
    *
-   * @param array $buckaroo_params Array of Buckaroo response params.
+   * @param array $buckarooParams Array of Buckaroo response params.
    *
-   * @throws \Exception If unable to construct response.
+   * @throws \Exception If unable to public construct response.
    */
-	public function __construct(array $buckaroo_params)
+	public function __construct(array $buckarooParams)
 	{
-		if (empty($buckaroo_params)) {
-			throw new \Exception('Unable to construct Buckaroo Response, empty array of params given');
+		if (empty($buckarooParams)) {
+			throw new \Exception('Unable to public construct Buckaroo Response, empty array of params given');
 		}
 
-		$status       = $buckaroo_params[self::STATUS_CODE_PARAM] ?? 'invalid';
+
+		$status       = $buckarooParams[self::STATUS_CODE_PARAM] ?? 'invalid';
 		$this->status = is_numeric($status) ? intval($status) : self::STATUS_CODE_INVALID;
 
-		$this->status_as_text = $this->build_status_as_text($this->status);
+		$this->statusAsText = $this->buildStatusAsText($this->status);
 
 	  // Detect if we have any of the known response.
-		$this->service = $this->detect_service($buckaroo_params);
+		$this->service = $this->detectService($buckarooParams);
 
-		if ($this->is_ideal()) {
-			$this->bank_id              = $buckaroo_params[self::IDEAL_BANK_ID_PARAM] ?? '';
-			$this->ideal_bank_name      = $buckaroo_params[self::IDEAL_BANK_NAME_PARAM] ?? '';
-			$this->ideal_payment_amount = $buckaroo_params[self::IDEAL_PAYMENT_AMOUNT_PARAM] ?? '';
-			$this->ideal_payment_id     = $buckaroo_params[self::IDEAL_PAYMENT_ID_PARAM] ?? '';
-			$this->ideal_invoice_number = $buckaroo_params[self::IDEAL_INVOICE_NUMBER_PARAM] ?? '';
-			$this->iban                 = $buckaroo_params[self::IDEAL_IBAN_PARAM] ?? '';
-		} elseif ($this->is_emandate()) {
-			$this->bank_id               = $buckaroo_params[self::EMANDATE_BANK_ID_PARAM] ?? '';
-			$this->emandate_id           = $buckaroo_params[self::EMANDATE_ID_PARAM] ?? '';
-			$this->emandate_reference_id = $buckaroo_params[self::EMANDATE_REFERENCE_ID_PARAM] ?? '';
-			$this->iban                  = $buckaroo_params[self::EMANDATE_IBAN_PARAM] ?? '';
+		if ($this->isIdeal()) {
+			$this->bankId             = $buckarooParams[self::IDEAL_BANK_ID_PARAM] ?? '';
+			$this->idealBankName      = $buckarooParams[self::IDEAL_BANK_NAME_PARAM] ?? '';
+			$this->idealPaymentAmount = $buckarooParams[self::IDEAL_PAYMENT_AMOUNT_PARAM] ?? '';
+			$this->idealPaymentId     = $buckarooParams[self::IDEAL_PAYMENT_ID_PARAM] ?? '';
+			$this->idealInvoiceNumber = $buckarooParams[self::IDEAL_INVOICE_NUMBER_PARAM] ?? '';
+			$this->iban               = $buckarooParams[self::IDEAL_IBAN_PARAM] ?? '';
+		} elseif ($this->isEmandate()) {
+			$this->bankId              = $buckarooParams[self::EMANDATE_BANK_ID_PARAM] ?? '';
+			$this->emandateId          = $buckarooParams[self::EMANDATE_ID_PARAM] ?? '';
+			$this->emandateReferenceId = $buckarooParams[self::EMANDATE_REFERENCE_ID_PARAM] ?? '';
+			$this->iban                = $buckarooParams[self::EMANDATE_IBAN_PARAM] ?? '';
 		}
 
-		$this->test = isset($buckaroo_params[self::TEST_PARAM]) ? filter_var($buckaroo_params[self::TEST_PARAM], FILTER_VALIDATE_BOOL) : false;
+		$this->test = isset($buckarooParams[self::TEST_PARAM]) ? filter_var($buckarooParams[self::TEST_PARAM], FILTER_VALIDATE_BOOL) : false;
 
-		$this->validate_response();
+		$this->validateResponse();
 	}
 
   /**
@@ -175,7 +176,7 @@ class Response
    *
    * @return boolean
    */
-	public function is_ideal(): bool
+	public function isIdeal(): bool
 	{
 		return $this->service === self::SERVICE_IDEAL;
 	}
@@ -185,7 +186,7 @@ class Response
    *
    * @return boolean
    */
-	public function is_emandate(): bool
+	public function isEmandate(): bool
 	{
 		return $this->service === self::SERVICE_EMANDATE;
 	}
@@ -195,7 +196,7 @@ class Response
    *
    * @return boolean
    */
-	public function is_pay_by_email(): bool
+	public function isPayByEmail(): bool
 	{
 		return $this->service === self::SERVICE_PAY_BY_EMAIL;
 	}
@@ -205,7 +206,7 @@ class Response
    *
    * @return boolean
    */
-	public function is_success(): bool
+	public function isSuccess(): bool
 	{
 		return $this->status === self::STATUS_CODE_SUCCESS;
 	}
@@ -215,7 +216,7 @@ class Response
    *
    * @return boolean
    */
-	public function is_cancel(): bool
+	public function isCancel(): bool
 	{
 		return $this->status === self::STATUS_CODE_CANCELLED;
 	}
@@ -225,7 +226,7 @@ class Response
    *
    * @return  string
    */
-	public function get_iban()
+	public function getIban()
 	{
 		return $this->iban;
 	}
@@ -235,9 +236,9 @@ class Response
    *
    * @return  string
    */
-	public function get_emandate_reference_id(): string
+	public function getEmandateReferenceId(): string
 	{
-		return $this->emandate_reference_id;
+		return $this->emandateReferenceId;
 	}
 
   /**
@@ -245,9 +246,9 @@ class Response
    *
    * @return  string
    */
-	public function get_emandate_id(): string
+	public function getEmandateId(): string
 	{
-		return $this->emandate_id;
+		return $this->emandateId;
 	}
 
   /**
@@ -255,9 +256,9 @@ class Response
    *
    * @return  string
    */
-	public function get_ideal_invoice_number(): string
+	public function getIdealInvoiceNumber(): string
 	{
-		return $this->ideal_invoice_number;
+		return $this->idealInvoiceNumber;
 	}
 
   /**
@@ -265,9 +266,9 @@ class Response
    *
    * @return  string
    */
-	public function get_ideal_payment_id(): string
+	public function getIdealPaymentId(): string
 	{
-		return $this->ideal_payment_id;
+		return $this->idealPaymentId;
 	}
 
   /**
@@ -275,9 +276,9 @@ class Response
    *
    * @return  string
    */
-	public function get_ideal_payment_amount()
+	public function getIdealPaymentAmount()
 	{
-		return $this->ideal_payment_amount;
+		return $this->idealPaymentAmount;
 	}
 
   /**
@@ -285,9 +286,9 @@ class Response
    *
    * @return  string
    */
-	public function get_bank_id(): string
+	public function getBankId(): string
 	{
-		return $this->bank_id;
+		return $this->bankId;
 	}
 
   /**
@@ -295,7 +296,7 @@ class Response
    *
    * @return  int
    */
-	public function get_status(): int
+	public function getStatus(): int
 	{
 		return $this->status;
 	}
@@ -305,7 +306,7 @@ class Response
    *
    * @return  string
    */
-	public function get_service(): string
+	public function getService(): string
 	{
 		return $this->service;
 	}
@@ -315,7 +316,7 @@ class Response
    *
    * @return  bool
    */
-	public function get_test(): bool
+	public function getTest(): bool
 	{
 		return $this->test;
 	}
@@ -325,9 +326,9 @@ class Response
    *
    * @return  string
    */
-	public function get_ideal_bank_name(): string
+	public function getIdealBankName(): string
 	{
-		return $this->ideal_bank_name;
+		return $this->idealBankName;
 	}
 
   /**
@@ -335,62 +336,62 @@ class Response
    *
    * @return  string
    */
-	public function get_status_as_text(): string
+	public function getStatusAsText(): string
 	{
-		return $this->status_as_text;
+		return $this->statusAsText;
 	}
 
   /**
    * Detects which service this response belongs to.
    *
-   * @param  int $status_code Status code of response.
+   * @param  int $statusCode Status code of response.
    * @return string
    */
-	private function build_status_as_text(int $status_code): string
+	private function buildStatusAsText(int $statusCode): string
 	{
-		switch ($status_code) {
+		switch ($statusCode) {
 			case self::STATUS_CODE_SUCCESS:
-				$this->status_as_text = esc_html__('Success', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Success', 'eightshift-forms');
 				break;
 			case self::STATUS_CODE_ERROR:
-				$this->status_as_text = esc_html__('Error', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Error', 'eightshift-forms');
 				break;
 			case self::STATUS_CODE_CANCELLED:
-				$this->status_as_text = esc_html__('Payment Cancelled', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Payment Cancelled', 'eightshift-forms');
 				break;
 			case self::STATUS_CODE_REJECT:
-				$this->status_as_text = esc_html__('Payment Rejected', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Payment Rejected', 'eightshift-forms');
 				break;
 			case self::STATUS_CODE_PENDING:
-				$this->status_as_text = esc_html__('Payment Pending', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Payment Pending', 'eightshift-forms');
 				break;
 			case self::STATUS_CODE_INVALID:
-				$this->status_as_text = esc_html__('Invalid status', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Invalid status', 'eightshift-forms');
 				break;
 			default:
-				$this->status_as_text = esc_html__('Unknown', 'eightshift-forms');
+				$this->statusAsText = esc_html__('Unknown', 'eightshift-forms');
 		}
 
-		return $this->status_as_text;
+		return $this->statusAsText;
 	}
 
   /**
    * Detects which service this response belongs to.
    *
-   * @param array $buckaroo_params Array of Buckaroo params.
+   * @param array $buckarooParams Array of Buckaroo params.
    * @return string
    */
-	private function detect_service(array $buckaroo_params): string
+	private function detectService(array $buckarooParams): string
 	{
-		if (isset($buckaroo_params[self::PRIMARY_PAYMENT_METHOD]) && $buckaroo_params[self::PRIMARY_PAYMENT_METHOD] === self::SERVICE_IDEAL) {
+		if (isset($buckarooParams[self::PRIMARY_PAYMENT_METHOD]) && $buckarooParams[self::PRIMARY_PAYMENT_METHOD] === self::SERVICE_IDEAL) {
 			return self::SERVICE_IDEAL;
 		}
 
-		if (isset($buckaroo_params[self::PRIMARY_SERVICE_PARAM]) && $buckaroo_params[self::PRIMARY_SERVICE_PARAM] === self::SERVICE_EMANDATE) {
+		if (isset($buckarooParams[self::PRIMARY_SERVICE_PARAM]) && $buckarooParams[self::PRIMARY_SERVICE_PARAM] === self::SERVICE_EMANDATE) {
 			return self::SERVICE_EMANDATE;
 		}
 
-		if (isset($buckaroo_params[self::MOCK_PAY_BY_EMAIL_PARAM]) && $buckaroo_params[self::MOCK_PAY_BY_EMAIL_PARAM] === self::SERVICE_PAY_BY_EMAIL) {
+		if (isset($buckarooParams[self::MOCK_PAY_BY_EMAIL_PARAM]) && $buckarooParams[self::MOCK_PAY_BY_EMAIL_PARAM] === self::SERVICE_PAY_BY_EMAIL) {
 			return self::SERVICE_PAY_BY_EMAIL;
 		}
 
@@ -404,9 +405,9 @@ class Response
    *
    * @throws InvalidBuckarooResponseException When we're unable to validate response.
    */
-	private function validate_response(): bool
+	private function validateResponse(): bool
 	{
-		if (! $this->is_cancel() && $this->service === self::SERVICE_INVALID) {
+		if (! $this->isCancel() && $this->service === self::SERVICE_INVALID) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, invalid service.', 'eightshift-forms'));
 		}
 
@@ -414,31 +415,31 @@ class Response
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, invalid status code.', 'eightshift-forms'));
 		}
 
-		if (! $this->is_pay_by_email() && $this->is_success() && empty($this->bank_id)) {
+		if (! $this->isPayByEmail() && $this->isSuccess() && empty($this->bankId)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate bank ID.', 'eightshift-forms'));
 		}
 
-		if ($this->is_ideal() && empty($this->ideal_bank_name)) {
+		if ($this->isIdeal() && empty($this->idealBankName)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate bank.', 'eightshift-forms'));
 		}
 
-		if ($this->is_ideal() && empty($this->ideal_payment_amount)) {
+		if ($this->isIdeal() && empty($this->idealPaymentAmount)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate payment amount.', 'eightshift-forms'));
 		}
 
-		if (! $this->is_cancel() && $this->is_ideal() && empty($this->ideal_payment_id)) {
+		if (! $this->isCancel() && $this->isIdeal() && empty($this->idealPaymentId)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate payment ID.', 'eightshift-forms'));
 		}
 
-		if ($this->is_ideal() && empty($this->ideal_invoice_number)) {
+		if ($this->isIdeal() && empty($this->idealInvoiceNumber)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate invoice number.', 'eightshift-forms'));
 		}
 
-		if ($this->is_emandate() && empty($this->emandate_id)) {
+		if ($this->isEmandate() && empty($this->emandateId)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate emandate ID.', 'eightshift-forms'));
 		}
 
-		if ($this->is_emandate() && $this->is_success() && empty($this->emandate_reference_id)) {
+		if ($this->isEmandate() && $this->isSuccess() && empty($this->emandateReferenceId)) {
 			throw new InvalidBuckarooResponseException(esc_html__('Unable to build Buckaroo response, unable to locate emandate reference ID.', 'eightshift-forms'));
 		}
 

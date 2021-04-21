@@ -17,51 +17,51 @@ class RouteSanitizationTest extends BaseRouteTest
    */
   public function testSanitizeFields()
   {
-    $request = new \WP_REST_Request('GET', $this->route_endpoint->getRouteUri());
+    $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
     $request->params['GET'] = [
-      'param_int' => 123,
-      'param_string' => 'some-string',
-      'param_array' => [
+      'paramInt' => 123,
+      'paramString' => 'some-string',
+      'paramArray' => [
         'valid1' => 'string1',
         'valid2' => 'string2',
-        'deep_array' => [
+        'deepArray' => [
           'deep' => 'deep value',
         ],
       ],
-      'param_unsafe1' => '<script>do something evil</script>',
-      'param_unsafe2' => [
-        'deep_unsafe' => '<script>do something evil</script>',
-        'deep_array' => [
-          'deeper_unsafe' => '<script>do something evil</script>',
+      'paramUnsafe1' => '<script>do something evil</script>',
+      'paramUnsafe2' => [
+        'deepUnsafe' => '<script>do something evil</script>',
+        'deepArray' => [
+          'deeperUnsafe' => '<script>do something evil</script>',
         ],
       ],
     ];
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message'] ?? 'Unknown error');
     $this->assertArrayHasKey('received-params', $response->data['data'] );
 
     $params = $response->data['data']['received-params'];
-    $this->assertArrayHasKey('param_int', $params );
-    $this->assertEquals(123, $params['param_int'] );
-    $this->assertArrayHasKey('param_string', $params );
-    $this->assertEquals('some-string', $params['param_string'] );
-    $this->assertArrayHasKey('param_array', $params );
-    $this->assertIsArray( $params['param_array'] );
-    $this->assertArrayHasKey( 'valid1', $params['param_array'] );
-    $this->assertEquals('string1', $params['param_array']['valid1'] );
-    $this->assertIsArray( $params['param_array']['deep_array'] );
-    $this->assertArrayHasKey( 'deep', $params['param_array']['deep_array'] );
-    $this->assertEquals('deep value', $params['param_array']['deep_array']['deep'] );
+    $this->assertArrayHasKey('paramInt', $params );
+    $this->assertEquals(123, $params['paramInt'] );
+    $this->assertArrayHasKey('paramString', $params );
+    $this->assertEquals('some-string', $params['paramString'] );
+    $this->assertArrayHasKey('paramArray', $params );
+    $this->assertIsArray( $params['paramArray'] );
+    $this->assertArrayHasKey( 'valid1', $params['paramArray'] );
+    $this->assertEquals('string1', $params['paramArray']['valid1'] );
+    $this->assertIsArray( $params['paramArray']['deepArray'] );
+    $this->assertArrayHasKey( 'deep', $params['paramArray']['deepArray'] );
+    $this->assertEquals('deep value', $params['paramArray']['deepArray']['deep'] );
 
     // Proper sanitization is achieved
-    $this->assertArrayHasKey('param_unsafe1', $params );
-    $this->assertStringNotContainsString('<script>', $params['param_unsafe1'] );
-    $this->assertArrayHasKey('param_unsafe2', $params );
-    $this->assertArrayHasKey('deep_unsafe', $params['param_unsafe2'] );
-    $this->assertArrayHasKey('deeper_unsafe', $params['param_unsafe2']['deep_array'] );
-    $this->assertStringNotContainsString('<script>', $params['param_unsafe2']['deep_unsafe'] );
-    $this->assertStringNotContainsString('<script>', $params['param_unsafe2']['deep_array']['deeper_unsafe'] );
+    $this->assertArrayHasKey('paramUnsafe1', $params );
+    $this->assertStringNotContainsString('<script>', $params['paramUnsafe1'] );
+    $this->assertArrayHasKey('paramUnsafe2', $params );
+    $this->assertArrayHasKey('deepUnsafe', $params['paramUnsafe2'] );
+    $this->assertArrayHasKey('deeperUnsafe', $params['paramUnsafe2']['deepArray'] );
+    $this->assertStringNotContainsString('<script>', $params['paramUnsafe2']['deepUnsafe'] );
+    $this->assertStringNotContainsString('<script>', $params['paramUnsafe2']['deepArray']['deeperUnsafe'] );
   }
 }

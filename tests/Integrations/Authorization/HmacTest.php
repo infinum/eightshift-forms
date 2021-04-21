@@ -14,26 +14,26 @@ class HmacTest extends BaseTest
   protected function _before()
   {
     parent::_before();
-    $this->valid_salt = '1234';
-    $this->invalid_salt = 'invalid salt';
-    $this->test_case = [
+    $this->validSalt = '1234';
+    $this->invalidSalt = 'invalid salt';
+    $this->testCase = [
       'params' => [
         'aaa' => 1,
         'bbb' => 'some value'
       ],
-      'salt' => $this->valid_salt
+      'salt' => $this->validSalt
     ];
   }
 
   public function testVerificationSuccess()
   {
-    $hash = $this->hmac->generate_hash( $this->test_case['params'], $this->test_case['salt'] );
-    $this->assertTrue($this->hmac->verify_hash($hash, $this->test_case['params'], $this->test_case['salt']));
+    $hash = $this->hmac->generateHash( $this->testCase['params'], $this->testCase['salt'] );
+    $this->assertTrue($this->hmac->verifyHash($hash, $this->testCase['params'], $this->testCase['salt']));
   }
 
   public function testVerificationFailsBecauseSaltIsNotTheSame()
   {
-    $hash = $this->hmac->generate_hash( $this->test_case['params'], $this->test_case['salt'] );
-    $this->assertFalse($this->hmac->verify_hash($hash, $this->test_case['params'], $this->invalid_salt));
+    $hash = $this->hmac->generateHash( $this->testCase['params'], $this->testCase['salt'] );
+    $this->assertFalse($this->hmac->verifyHash($hash, $this->testCase['params'], $this->invalidSalt));
   }
 }

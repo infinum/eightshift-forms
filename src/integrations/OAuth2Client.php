@@ -155,7 +155,7 @@ class OAuth2Client implements OAuth2ClientInterface
    */
 	protected function saveTokenToCache(string $tokenKey, string $token, int $expiration = self::HOUR_IN_SECONDS): bool
 	{
-		return set_transient($tokenKey, $token, $expiration);
+		return setTransient($tokenKey, $token, $expiration);
 	}
 
   /**

@@ -140,25 +140,25 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 		];
 
 	  // Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
-		$redirect_urls = [];
+		$redirectUrls = [];
 		$base_url      = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
-		foreach ($statuses as $status_value) {
-			$url_params = $params;
-			$url_params[BuckarooResponseHandlerRoute::STATUS_PARAM] = $status_value;
+		foreach ($statuses as $statusValue) {
+			$urlParams = $params;
+			$urlParams[BuckarooResponseHandlerRoute::STATUS_PARAM] = $statusValue;
 
 		  // We need to encode all params to ensure they're sent properly.
-			$url_params = $this->urlencodeParams($url_params);
+			$urlParams = $this->urlencodeParams($urlParams);
 
 		  // As the last step, add the authorization hash which verifies that the request was not tampered with.
 			$url = \add_query_arg(array_merge(
-				$url_params,
-				[Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generate_hash($url_params, $this->generate_authorization_salt_for_response_handler()))]
-			), $base_url);
+				$urlParams,
+				[Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generateHash($urlParams, $this->generateAuthorizationSaltForResponseHandler()))]
+			), $baseUrl);
 
-			$redirect_urls[] = $url;
+			$redirectUrls[] = $url;
 		}
 
-		$this->buckaroo->setRedirectUrls(...$redirect_urls);
+		$this->buckaroo->setRedirectUrls(...$redirectUrls);
 
 		return $params;
 	}
@@ -172,7 +172,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 	protected function setTestIfNeeded(array $params): void
 	{
 		if (isset($params[self::TEST_PARAM]) && filter_var($params[self::TEST_PARAM], FILTER_VALIDATE_BOOL)) {
-			$this->buckaroo->set_test();
+			$this->buckaroo->setTest();
 		}
 	}
 
@@ -181,9 +181,9 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
    *
    * @return string
    */
-	protected function generate_authorization_salt_for_response_handler(): string
+	protected function generateAuthorizationSaltForResponseHandler(): string
 	{
-		return \apply_filters(self::BUCKAROO, 'secret_key') ?? 'invalid-salt-for-buckaroo-handler';
+		return \apply_filters(self::BUCKAROO, 'secretKey') ?? 'invalid-salt-for-buckaroo-handler';
 	}
 
   /**

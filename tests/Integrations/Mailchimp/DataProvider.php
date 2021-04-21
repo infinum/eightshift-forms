@@ -30,41 +30,41 @@ class DataProvider
   public static function getMockAddOrUpdateMemberResponse( array $params ): stdClass {
     $response = new \stdClass();
     $response->id = '5ae1cf23294c7b08b5ddd696a454635a';
-    $response->email_address = $params['email'];
-    $response->unique_email_id = '3cdee7fb82';
-    $response->web_id = '205197020';
-    $response->email_type = 'html';
+    $response->emailAddress = $params['email'];
+    $response->uniqueEmailId = '3cdee7fb82';
+    $response->webId = '205197020';
+    $response->emailType = 'html';
     $response->status = $params['status'] ?? 'pending';
-    $response->merge_fields = new \stdClass();
+    $response->mergeFields = new \stdClass();
 
-    $allMergeFields = array_merge( self::defaultMergeFields(), $params['mergeFields'] );
+    $allMergeFields = array_merge( self::defaultMergeFields(), $params['merge_fields'] );
     foreach( $allMergeFields as $key => $value ) {
-      $response->merge_fields->$key = $value;
+      $response->mergeFields->$key = $value;
     }
 
     $response->stats = new \stdClass();
-    $response->stats->avg_open_rate = 0;
-    $response->stats->avg_click_rate = 0;
+    $response->stats->avgOpenRate = 0;
+    $response->stats->avgClickRate = 0;
     
-    $response->ip_signup = '213.186.17.146';
-    $response->timestamp_signup = '2020-10-28T13:46:46+00:00';
-    $response->ip_opt = '';
-    $response->timestamp_opt = '';
-    $response->member_rating = 2;
-    $response->last_changed = '2020-10-28T13:46:46+00:00';
+    $response->ipSignup = '213.186.17.146';
+    $response->timestampSignup = '2020-10-28T13:46:46+00:00';
+    $response->ipOpt = '';
+    $response->timestampOpt = '';
+    $response->memberRating = 2;
+    $response->lastChanged = '2020-10-28T13:46:46+00:00';
     $response->language = '';
     $response->vip = '';
-    $response->email_client = '';
+    $response->emailClient = '';
     $response->location = new \stdClass();
     $response->location->latitude = new \stdClass();
     $response->location->latitude = 0;
     $response->location->longitude = 0;
     $response->location->gmtoff = 0;
     $response->location->dstoff = 0;
-    $response->location->country_code = '';
+    $response->location->countryCode = '';
     $response->location->timezone = '';
     $response->source = 'API - Generic';
-    $response->tags_count = 2;
+    $response->tagsCount = 2;
     $tag_1 = new stdClass();
     $tag_1->id = 280164;
     $tag_1->name = self::MOCK_TAG_1;
@@ -76,7 +76,7 @@ class DataProvider
       $tag_2
     ];
 
-    $response->list_id = $params['listId'] ?? 'invalid-list-id';
+    $response->listId = $params['list_id'] ?? 'invalid-list-id';
     $response->_links = [
       (object) [
         'rel' => 'self',

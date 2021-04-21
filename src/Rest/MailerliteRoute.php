@@ -88,7 +88,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 		$email = ! empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';

@@ -16,15 +16,15 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessful()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
+    $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
-      $this->route_endpoint::TO_PARAM => 'some value',
-      $this->route_endpoint::SUBJECT_PARAM => 'some value',
-      $this->route_endpoint::MESSAGE_PARAM => 'some value',
+      $this->routeEndpoint::TO_PARAM => 'some value',
+      $this->routeEndpoint::SUBJECT_PARAM => 'some value',
+      $this->routeEndpoint::MESSAGE_PARAM => 'some value',
       'nonce' => 'some value',
       'form-unique-id' => 'some-d',
     ];
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
@@ -38,16 +38,16 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallSuccessfulWithPlaceholders()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
+    $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
-      $this->route_endpoint::TO_PARAM => 'to param',
-      $this->route_endpoint::SUBJECT_PARAM => 'subject',
-      $this->route_endpoint::MESSAGE_PARAM => 'Message [[message]]',
+      $this->routeEndpoint::TO_PARAM => 'to param',
+      $this->routeEndpoint::SUBJECT_PARAM => 'subject',
+      $this->routeEndpoint::MESSAGE_PARAM => 'Message [[message]]',
       'nonce' => 'some value',
       'form-unique-id' => 'some-d',
     ];
 
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(200, $response->data['code'] );
@@ -61,38 +61,38 @@ class SendEmailRouteTest extends BaseRouteTest
    */
   public function testRestCallFailsIfRequiredParamsEmpty()
   {
-    $request = new \WP_REST_Request(self::METHOD, $this->route_endpoint->getRouteUri());
+    $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
-      $this->route_endpoint::TO_PARAM => 'to param',
-      $this->route_endpoint::SUBJECT_PARAM => 'subject',
-      $this->route_endpoint::MESSAGE_PARAM => '',
+      $this->routeEndpoint::TO_PARAM => 'to param',
+      $this->routeEndpoint::SUBJECT_PARAM => 'subject',
+      $this->routeEndpoint::MESSAGE_PARAM => '',
     ];
 
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );
     $this->assertSame( 0, did_action( self::WP_MAIL_ACTION ) );
 
     $request->params[self::METHOD] = [
-      $this->route_endpoint::TO_PARAM => 'to param',
-      $this->route_endpoint::SUBJECT_PARAM => '',
-      $this->route_endpoint::MESSAGE_PARAM => 'message',
+      $this->routeEndpoint::TO_PARAM => 'to param',
+      $this->routeEndpoint::SUBJECT_PARAM => '',
+      $this->routeEndpoint::MESSAGE_PARAM => 'message',
     ];
 
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );
     $this->assertSame( 0, did_action( self::WP_MAIL_ACTION ) );
 
     $request->params[self::METHOD] = [
-      $this->route_endpoint::TO_PARAM => '',
-      $this->route_endpoint::SUBJECT_PARAM => 'subject',
-      $this->route_endpoint::MESSAGE_PARAM => 'message',
+      $this->routeEndpoint::TO_PARAM => '',
+      $this->routeEndpoint::SUBJECT_PARAM => 'subject',
+      $this->routeEndpoint::MESSAGE_PARAM => 'message',
     ];
 
-    $response = $this->route_endpoint->routeCallback( $request );
+    $response = $this->routeEndpoint->routeCallback( $request );
 
     $this->verifyProperlyFormattedResponse($response);
     $this->assertEquals(400, $response->data['code'] );

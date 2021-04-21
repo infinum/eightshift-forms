@@ -57,7 +57,7 @@ class WP_REST_Request
 	 * @return array Parameter map of key to value
 	 */
 	public function get_params() {
-		$order = $this->get_parameter_order();
+		$order = $this->getParameterOrder();
     $order = array_reverse( $order, true );
 
     $params = array();
@@ -77,7 +77,7 @@ class WP_REST_Request
 	 *
 	 * @return array
 	 */
-	protected function get_parameter_order() {
+	protected function getParameterOrder() {
 		return [
 			'JSON',
 			'POST',

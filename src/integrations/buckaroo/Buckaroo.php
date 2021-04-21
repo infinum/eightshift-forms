@@ -113,31 +113,31 @@ class Buckaroo implements Filters
    *
    * @throws BuckarooRequestException When something is wrong with response we get from Buckaroo.
    */
-	public function create_emandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
+	public function createEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
 	{
 		$response             = [];
-		$post_array           = $this->build_post_body_for_emandate($debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason);
-		$authorization_header = $this->generate_authorization_header($post_array, $this->get_buckaroo_uri());
+		$postArray           = $this->buildPostBodyForEmandate($debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason);
+		$authorizationHeader = $this->generateAuthorizationHeader($postArray, $this->getBuckarooUri());
 
-		$post_response = $this->guzzleClient->post("https://{$this->get_buckaroo_uri()}", [
-		'headers' => [
-		'Content-Type' => 'application/json',
-		'Authorization' => $authorization_header,
-		],
-		'body' => \wp_json_encode($post_array),
+		$postResponse = $this->guzzleClient->post("https://{$this->getBuckarooUri()}", [
+			'headers' => [
+				'Content-Type' => 'application/json',
+				'Authorization' => $authorizationHeader,
+			],
+			'body' => \wp_json_encode($postArray),
 		]);
 
-		$post_response_json = json_decode((string) $post_response->getBody(), true);
+		$postResponseJson = json_decode((string) $postResponse->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
-		if (! isset($post_response_json['RequiredAction']['RedirectURL'])) {
-			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
+		if (! isset($postResponseJson['RequiredAction']['RedirectURL'])) {
+			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $postResponseJson);
 		}
 
-		$response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
+		$response['redirectUrl'] = $postResponseJson['RequiredAction']['RedirectURL'];
 
 		return $response;
 	}
@@ -145,40 +145,40 @@ class Buckaroo implements Filters
   /**
    * Creates a payment request.
    *
-   * @param  int|float|string $donation_amount Donation amount.
+   * @param  int|float|string $donationAmount Donation amount.
    * @param  string           $invoice         Invoice name.
    * @param  string           $issuer          Issuer (bank) name.
-   * @param  bool             $is_recurring    Is recurring payment.
+   * @param  bool             $isRecurring    Is recurring payment.
    * @param  string           $description     Description of the payment.
    * @return array
    *
    * @throws BuckarooRequestException When something is wrong with JSON we get from Buckaroo.
    */
-	public function send_payment($donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description): array
+	public function sendPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
 	{
 		$response             = [];
-		$post_array           = $this->build_post_body_for_payment($donation_amount, $invoice, $issuer, $is_recurring, $description);
-		$authorization_header = $this->generate_authorization_header($post_array, $this->get_buckaroo_uri());
+		$postArray           = $this->buildPostBodyForPayment($donationAmount, $invoice, $issuer, $isRecurring, $description);
+		$authorizationHeader = $this->generateAuthorizationHeader($postArray, $this->getBuckarooUri());
 
-		$post_response = $this->guzzleClient->post("https://{$this->get_buckaroo_uri()}", [
+		$postResponse = $this->guzzleClient->post("https://{$this->getBuckarooUri()}", [
 		'headers' => [
 		'Content-Type' => 'application/json',
-		'Authorization' => $authorization_header,
+		'Authorization' => $authorizationHeader,
 		],
-		'body' => \wp_json_encode($post_array),
+		'body' => \wp_json_encode($postArray),
 		]);
 
-		$post_response_json = json_decode((string) $post_response->getBody(), true);
+		$postResponseJson = json_decode((string) $postResponse->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
-		if (! isset($post_response_json['RequiredAction']['RedirectURL'])) {
-			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $post_response_json);
+		if (! isset($postResponseJson['RequiredAction']['RedirectURL'])) {
+			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $postResponseJson);
 		}
 
-		$response['redirectUrl'] = $post_response_json['RequiredAction']['RedirectURL'];
+		$response['redirectUrl'] = $postResponseJson['RequiredAction']['RedirectURL'];
 
 		return $response;
 	}
@@ -186,18 +186,18 @@ class Buckaroo implements Filters
   /**
    * Sets all redirect URLs in 1 function
    *
-   * @param string $redirect_url        URL to redirect on success.
-   * @param string $redirect_url_cancel URL to redirect on cancel.
-   * @param string $redirect_url_error  URL to redirect on error.
-   * @param string $redirect_url_reject URL to redirect on reject.
+   * @param string $redirectUrl        URL to redirect on success.
+   * @param string $redirectUrlCancel URL to redirect on cancel.
+   * @param string $redirectUrlError  URL to redirect on error.
+   * @param string $redirectUrlReject URL to redirect on reject.
    * @return void
    */
-	public function setRedirectUrls(string $redirect_url, string $redirect_url_cancel, string $redirect_url_error, string $redirect_url_reject)
+	public function setRedirectUrls(string $redirectUrl, string $redirectUrlCancel, string $redirectUrlError, string $redirectUrlReject)
 	{
-		$this->set_return_url($redirect_url);
-		$this->set_return_url_cancel($redirect_url_cancel);
-		$this->set_return_url_error($redirect_url_error);
-		$this->set_return_url_reject($redirect_url_reject);
+		$this->setReturnUrl($redirectUrl);
+		$this->setReturnUrlCancel($redirectUrlCancel);
+		$this->setReturnUrlError($redirectUrlError);
+		$this->setReturnUrlReject($redirectUrlReject);
 	}
 
   /**
@@ -206,12 +206,12 @@ class Buckaroo implements Filters
    * @param  array $params Parameters from request.
    * @return string
    */
-	public function generate_debtor_reference(array $params)
+	public function generateDebtorReference(array $params)
 	{
 		$prefix      = 'debtor';
-		$data_hash   = hash('crc32', (string) wp_json_encode($params));
-		$random_hash = hash('crc32', uniqid());
-		return "{$prefix}-{$data_hash}-{$random_hash}";
+		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$randomHash = hash('crc32', uniqid());
+		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
   /**
@@ -220,12 +220,12 @@ class Buckaroo implements Filters
    * @param  array $params Parameters from request.
    * @return string
    */
-	public function generate_invoice_name(array $params)
+	public function generateInvoiceName(array $params)
 	{
 		$prefix      = 'invoice';
-		$data_hash   = hash('crc32', (string) wp_json_encode($params));
-		$random_hash = hash('crc32', uniqid());
-		return "{$prefix}-{$data_hash}-{$random_hash}";
+		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$randomHash = hash('crc32', uniqid());
+		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
   /**
@@ -234,12 +234,12 @@ class Buckaroo implements Filters
    * @param  array $params Parameters from request.
    * @return string
    */
-	public function generate_purchase_id(array $params)
+	public function generatePurchaseId(array $params)
 	{
 		$prefix      = 'purchase-id';
-		$data_hash   = hash('crc32', (string) wp_json_encode($params));
-		$random_hash = hash('crc32', uniqid());
-		return "{$prefix}-{$data_hash}-{$random_hash}";
+		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$randomHash = hash('crc32', uniqid());
+		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
   /**
@@ -247,7 +247,7 @@ class Buckaroo implements Filters
    *
    * @return void
    */
-	public function set_test(): void
+	public function setTest(): void
 	{
 		$this->isTestUri = true;
 	}
@@ -257,7 +257,7 @@ class Buckaroo implements Filters
    *
    * @return void
    */
-	public function set_data_request(): void
+	public function setDataRequest(): void
 	{
 		$this->isDataRequest = true;
 	}
@@ -268,7 +268,7 @@ class Buckaroo implements Filters
    * @param  string $currency Currency string.
    * @return void
    */
-	public function set_currency(string $currency): void
+	public function setCurrency(string $currency): void
 	{
 		$this->currency = $currency;
 	}
@@ -278,7 +278,7 @@ class Buckaroo implements Filters
    *
    * @return string
    */
-	public function get_currency(): string
+	public function getCurrency(): string
 	{
 		return $this->currency;
 	}
@@ -288,7 +288,7 @@ class Buckaroo implements Filters
    *
    * @return  string
    */
-	public function get_pay_type()
+	public function getPayType()
 	{
 		return $this->payType;
 	}
@@ -300,7 +300,7 @@ class Buckaroo implements Filters
    *
    * @return  self
    */
-	public function set_pay_type(string $payType)
+	public function setPayType(string $payType)
 	{
 		$this->payType = $payType;
 		return $this;
@@ -311,7 +311,7 @@ class Buckaroo implements Filters
    *
    * @return  string
    */
-	public function get_return_url()
+	public function getReturnUrl()
 	{
 		return $this->returnUrl;
 	}
@@ -323,7 +323,7 @@ class Buckaroo implements Filters
    *
    * @return  self
    */
-	public function set_return_url(string $returnUrl)
+	public function setReturnUrl(string $returnUrl)
 	{
 		$this->returnUrl = $returnUrl;
 
@@ -335,7 +335,7 @@ class Buckaroo implements Filters
    *
    * @return  string
    */
-	public function get_return_url_cancel()
+	public function getReturnUrlCancel()
 	{
 		return $this->returnUrlCancel;
 	}
@@ -346,7 +346,7 @@ class Buckaroo implements Filters
    * @param  string $returnUrlCancel  Return URL after payment cancel.
    * @return  self
    */
-	public function set_return_url_cancel(string $returnUrlCancel)
+	public function setReturnUrlCancel(string $returnUrlCancel)
 	{
 		$this->returnUrlCancel = $returnUrlCancel;
 
@@ -358,7 +358,7 @@ class Buckaroo implements Filters
    *
    * @return  string
    */
-	public function get_return_url_error()
+	public function getReturnUrlError()
 	{
 		return $this->returnUrlError;
 	}
@@ -370,7 +370,7 @@ class Buckaroo implements Filters
    *
    * @return  self
    */
-	public function set_return_url_error(string $returnUrlError)
+	public function setReturnUrlError(string $returnUrlError)
 	{
 		$this->returnUrlError = $returnUrlError;
 
@@ -382,7 +382,7 @@ class Buckaroo implements Filters
    *
    * @return  string
    */
-	public function get_return_url_reject()
+	public function getReturnUrlReject()
 	{
 		return $this->returnUrlReject;
 	}
@@ -394,7 +394,7 @@ class Buckaroo implements Filters
    *
    * @return  self
    */
-	public function set_return_url_reject(string $returnUrlReject)
+	public function setReturnUrlReject(string $returnUrlReject)
 	{
 		$this->returnUrlReject = $returnUrlReject;
 
@@ -404,81 +404,81 @@ class Buckaroo implements Filters
   /**
    * Generates the correct authorization header.
    *
-   * @param array  $post_array   Array of post data we're sending to Buckaroo.
-   * @param string $buckaroo_uri Buckaroo URI we're posting to.
+   * @param array  $postArray   Array of post data we're sending to Buckaroo.
+   * @param string $buckarooUri Buckaroo URI we're posting to.
    * @return string
    */
-	private function generate_authorization_header(array $post_array, string $buckaroo_uri): string
+	private function generateAuthorizationHeader(array $postArray, string $buckarooUri): string
 	{
-		$this->verify_buckaroo_info_exists();
-		$website_key = \apply_filters(self::BUCKAROO, 'website_key');
-		$secret_key  = \apply_filters(self::BUCKAROO, 'secret_key');
-		$post        = (string) \wp_json_encode($post_array);
+		$this->verifyBuckarooInfoExists();
+		$websiteKey = \apply_filters(self::BUCKAROO, 'websiteKey');
+		$secretKey  = \apply_filters(self::BUCKAROO, 'secretKey');
+		$post        = (string) \wp_json_encode($postArray);
 		$md5         = md5($post, true);
 		$post        = base64_encode($md5); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		$uri         = strtolower(rawurlencode($buckaroo_uri));
+		$uri         = strtolower(rawurlencode($buckarooUri));
 		$nonce       = \wp_rand(0000000, 9999999);
 		$time        = time();
 
-		$hmac     = $website_key . 'POST' . $uri . $time . $nonce . $post;
-		$sha_hash = hash_hmac('sha256', $hmac, $secret_key, true);
-		$hmac     = base64_encode($sha_hash); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$hmac     = $websiteKey . 'POST' . $uri . $time . $nonce . $post;
+		$shaHash = hash_hmac('sha256', $hmac, $secretKey, true);
+		$hmac     = base64_encode($shaHash); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
-		return "hmac {$website_key}:{$hmac}:{$nonce}:{$time}";
+		return "hmac {$websiteKey}:{$hmac}:{$nonce}:{$time}";
 	}
 
   /**
    * Builds the body of request
    *
-   * @param  int|float|string $donation_amount Donation amount.
+   * @param  int|float|string $donationAmount Donation amount.
    * @param  string           $invoice         Invoice name.
    * @param  string           $issuer          Issuer (bank) name.
-   * @param  bool             $is_recurring    Is recurring payment.
+   * @param  bool             $isRecurring    Is recurring payment.
    * @param  string           $description     Description of the payment.
    * @return array
    */
-	private function build_post_body_for_payment($donation_amount, string $invoice, string $issuer, bool $is_recurring, string $description): array
+	private function buildPostBodyForPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
 	{
-		$this->verify_buckaroo_info_exists();
+		$this->verifyBuckarooInfoExists();
 
-		$post_array = [
-		'Currency' => $this->get_currency(),
-		'AmountDebit' => $donation_amount,
-		'Invoice' => $invoice,
-		'ContinueOnIncomplete' => 1,
-		'Services' => [
-		'ServiceList' => [],
-		],
-		'Description' => $description,
+		$postArray = [
+			'Currency' => $this->getCurrency(),
+			'AmountDebit' => $donationAmount,
+			'Invoice' => $invoice,
+			'ContinueOnIncomplete' => 1,
+			'Services' => [
+				'ServiceList' => [],
+			],
+			'Description' => $description,
 		];
 
 	  // Set payment to recurring if needed.
-		if ($is_recurring) {
-			$post_array['StartRecurrent'] = 'True';
+		if ($isRecurring) {
+			$postArray['StartRecurrent'] = 'True';
 		}
 
-		$service_array = [
-		'Action' => 'Pay',
-		'Name' => $this->get_pay_type(),
-		'Parameters' => [],
+		$serviceArray = [
+			'Action' => 'Pay',
+			'Name' => $this->getPayType(),
+			'Parameters' => [],
 		];
 
 	  // Add issuing bank if provided as part of request.
 		if (! empty($issuer)) {
-			$service_array['Parameters'][] = [
-			'Name' => 'issuer',
-			'Value' => $issuer,
+			$serviceArray['Parameters'][] = [
+				'Name' => 'issuer',
+				'Value' => $issuer,
 			];
 		}
 
-		$post_array['ReturnURL']       = $this->get_return_url();
-		$post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
-		$post_array['ReturnURLError']  = $this->get_return_url_error();
-		$post_array['ReturnURLReject'] = $this->get_return_url_reject();
+		$postArray['ReturnURL']       = $this->getReturnUrl();
+		$postArray['ReturnURLCancel'] = $this->getReturnUrlCancel();
+		$postArray['ReturnURLError']  = $this->getReturnUrlError();
+		$postArray['ReturnURLReject'] = $this->getReturnUrlReject();
 
-		$post_array['Services']['ServiceList'][] = $service_array;
+		$postArray['Services']['ServiceList'][] = $serviceArray;
 
-		return $post_array;
+		return $postArray;
 	}
 
   /**
@@ -492,62 +492,62 @@ class Buckaroo implements Filters
    * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
    * @return array
    */
-	private function build_post_body_for_emandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
+	private function buildPostBodyForEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
 	{
-		$this->verify_buckaroo_info_exists();
+		$this->verifyBuckarooInfoExists();
 
-		$post_array = [
-		'Currency' => $this->get_currency(),
-		'ContinueOnIncomplete' => 1,
-		'Services' => [
-		'ServiceList' => [],
-		],
+		$postArray = [
+			'Currency' => $this->getCurrency(),
+			'ContinueOnIncomplete' => 1,
+			'Services' => [
+				'ServiceList' => [],
+			],
 		];
 
-		$service_array = [
-		'Action' => 'CreateMandate',
-		'Name' => $this->get_pay_type(),
-		'maxamount' => 15.00,
-		'Parameters' => [
-		[
-		  'Name' => 'debtorreference',
-		  'Value' => $debtorreference,
-		],
-		[
-		  'Name' => 'sequencetype',
-		  'Value' => $sequencetype,
-		],
-		[
-		  'Name' => 'purchaseid',
-		  'Value' => $purchaseid,
-		],
-		[
-		  'Name' => 'language',
-		  'Value' => $language,
-		],
-		[
-		  'Name' => 'emandatereason',
-		  'Value' => $emandatereason,
-		],
-		],
+		$serviceArray = [
+			'Action' => 'CreateMandate',
+			'Name' => $this->getPayType(),
+			'maxamount' => 15.00,
+			'Parameters' => [
+				[
+					'Name' => 'debtorreference',
+					'Value' => $debtorreference,
+				],
+				[
+					'Name' => 'sequencetype',
+					'Value' => $sequencetype,
+				],
+				[
+					'Name' => 'purchaseid',
+					'Value' => $purchaseid,
+				],
+				[
+					'Name' => 'language',
+					'Value' => $language,
+				],
+				[
+					'Name' => 'emandatereason',
+					'Value' => $emandatereason,
+				],
+			],
 		];
 
 	  // Add issuing bank if provided as part of request.
 		if (! empty($issuer)) {
-			$service_array['Parameters'][] = [
-			'Name' => 'debtorbankid',
-			'Value' => $issuer,
+			$serviceArray['Parameters'][] = [
+				'Name' => 'debtorbankid',
+				'Value' => $issuer,
 			];
 		}
 
-		$post_array['ReturnURL']       = $this->get_return_url();
-		$post_array['ReturnURLCancel'] = $this->get_return_url_cancel();
-		$post_array['ReturnURLError']  = $this->get_return_url_error();
-		$post_array['ReturnURLReject'] = $this->get_return_url_reject();
+		$postArray['ReturnURL']       = $this->getReturnUrl();
+		$postArray['ReturnURLCancel'] = $this->getReturnUrlCancel();
+		$postArray['ReturnURLError']  = $this->getReturnUrlError();
+		$postArray['ReturnURLReject'] = $this->getReturnUrlReject();
 
-		$post_array['Services']['ServiceList'][] = $service_array;
+		$postArray['Services']['ServiceList'][] = $serviceArray;
 
-		return $post_array;
+		return $postArray;
 	}
 
   /**
@@ -557,14 +557,14 @@ class Buckaroo implements Filters
    *
    * @return void
    */
-	private function verify_buckaroo_info_exists(): void
+	private function verifyBuckarooInfoExists(): void
 	{
-		if (empty(\apply_filters(self::BUCKAROO, 'website_key'))) {
-			throw MissingFilterInfoException::view_exception(self::BUCKAROO, 'website_key');
+		if (empty(\apply_filters(self::BUCKAROO, 'websiteKey'))) {
+			throw MissingFilterInfoException::viewException(self::BUCKAROO, 'websiteKey');
 		}
 
-		if (empty(\apply_filters(self::BUCKAROO, 'secret_key'))) {
-			throw MissingFilterInfoException::view_exception(self::BUCKAROO, 'secret_key');
+		if (empty(\apply_filters(self::BUCKAROO, 'secretKey'))) {
+			throw MissingFilterInfoException::viewException(self::BUCKAROO, 'secretKey');
 		}
 	}
 
@@ -573,9 +573,9 @@ class Buckaroo implements Filters
    *
    * @return string
    */
-	private function get_buckaroo_uri(): string
+	private function getBuckarooUri(): string
 	{
-		return $this->is_test() ? $this->get_buckaroo_uri_test() : $this->get_buckaroo_uri_live();
+		return $this->isTest() ? $this->getBuckarooUriTest() : $this->getBuckarooUriLive();
 	}
 
   /**
@@ -583,7 +583,7 @@ class Buckaroo implements Filters
    *
    * @return string
    */
-	private function get_buckaroo_uri_live(): string
+	private function getBuckarooUriLive(): string
 	{
 		return $this->isDataRequest() ? self::LIVE_URI_DATA_REQUEST : self::LIVE_URI_TRANSACTION;
 	}
@@ -593,7 +593,7 @@ class Buckaroo implements Filters
    *
    * @return string
    */
-	private function get_buckaroo_uri_test(): string
+	private function getBuckarooUriTest(): string
 	{
 		return $this->isDataRequest() ? self::TEST_URI_DATA_REQUEST : self::TEST_URI_TRANSACTION;
 	}
@@ -603,7 +603,7 @@ class Buckaroo implements Filters
    *
    * @return boolean
    */
-	private function is_test(): bool
+	private function isTest(): bool
 	{
 		return $this->isTestUri;
 	}

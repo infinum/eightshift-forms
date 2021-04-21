@@ -75,24 +75,24 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 		try {
 			$params = $this->verifyRequest($request, self::DYNAMICS_CRM);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 	  // We don't want to send thee entity to CRM or it will reject our request.
 		$entity = $params[self::ENTITY_PARAM];
 		$params = $this->unsetIrrelevantParams($params);
 
-		$this->dynamicsCrm->set_oauth_credentials([
-			'url'           => apply_filters(self::DYNAMICS_CRM, 'auth_token_url'),
-			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'client_id'),
-			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'client_secret'),
+		$this->dynamicsCrm->setOauthCredentials([
+			'url'           => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
+			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'clientId'),
+			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
 			'scope'         => apply_filters(self::DYNAMICS_CRM, 'scope'),
-			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'api_url'),
+			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
 		]);
 
 	  // Retrieve all entities from the "leads" Entity Set.
 		try {
-			$response = $this->dynamicsCrm->add_record($entity, $params);
+			$response = $this->dynamicsCrm->addRecord($entity, $params);
 		} catch (ClientException $e) {
 			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : esc_html__('Unknown error', 'eightshift-forms');
 			return $this->restResponseHandlerUnknownError(['error' => $error]);

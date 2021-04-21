@@ -108,15 +108,15 @@ class MailchimpRoute extends BaseRoute implements Filters
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
-		$listId                     = $params[self::LIST_ID_PARAM] ?? '';
-		$email                       = ! empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
-		$tags                        = $params[self::TAGS_PARAM] ?? [];
+		$listId                   = $params[self::LIST_ID_PARAM] ?? '';
+		$email                    = ! empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
+		$tags                     = $params[self::TAGS_PARAM] ?? [];
 		$shouldAddExistingMembers = isset($params[self::ADD_EXISTING_MEMBERS_PARAM]) ? filter_var($params[self::ADD_EXISTING_MEMBERS_PARAM], FILTER_VALIDATE_BOOL) : false;
-		$mergeFieldParams          = $this->unsetIrrelevantParams($params);
-		$response                    = [];
+		$mergeFieldParams         = $this->unsetIrrelevantParams($params);
+		$response                 = [];
 
 	  // Make sure we have the list ID.
 		if (empty($listId)) {
@@ -131,13 +131,13 @@ class MailchimpRoute extends BaseRoute implements Filters
 	  // Retrieve all entities from the "leads" Entity Set.
 		try {
 			if ($shouldAddExistingMembers) {
-				$response['add'] = $this->mailchimp->add_or_update_member($listId, $email, $mergeFieldParams);
+				$response['add'] = $this->mailchimp->addOrUpdateMember($listId, $email, $mergeFieldParams);
 			} else {
-				$response['add'] = $this->mailchimp->add_member($listId, $email, $mergeFieldParams);
+				$response['add'] = $this->mailchimp->addMember($listId, $email, $mergeFieldParams);
 			}
 
 			if (! empty($tags)) {
-				$response['tags'] = $this->mailchimp->add_member_tags($listId, $email, $tags);
+				$response['tags'] = $this->mailchimp->addMemberTags($listId, $email, $tags);
 			}
 		} catch (ClientException $e) {
 			$decodedException = ! empty($e->getResponse()) ? json_decode($e->getResponse()->getBody()->getContents(), true) : [];
@@ -147,10 +147,10 @@ class MailchimpRoute extends BaseRoute implements Filters
 				$response['add'] = $msgUserExists;
 				$message         = $msgUserExists;
 
-			  // We need to do the "adding tags" call as well (if needed) as the exception in the "add_member" method
+			  // We need to do the "adding tags" call as well (if needed) as the exception in the "addMember" method
 			  // has stopped execution.
 				if (! empty($tags)) {
-					$response['tags'] = $this->mailchimp->add_member_tags($listId, $email, $tags);
+					$response['tags'] = $this->mailchimp->addMemberTags($listId, $email, $tags);
 				}
 			} else {
 				return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);

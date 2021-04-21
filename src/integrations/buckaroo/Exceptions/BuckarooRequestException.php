@@ -50,11 +50,11 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
    *
    * @return array
    */
-	public function get_exception_for_rest_response(): array
+	public function getExceptionForRestResponse(): array
 	{
 		return [
-		'message' => $this->get_message(),
-		'data' => $this->get_data(),
+			'message' => $this->getCustomMessage(),
+			'data' => $this->getData(),
 		];
 	}
 
@@ -63,7 +63,7 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
    *
    * @return array
    */
-	public function get_data(): array
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -73,7 +73,7 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
    *
    * @return string
    */
-	public function get_message(): string
+	public function getCustomMessage(): string
 	{
 		return $this->message;
 	}

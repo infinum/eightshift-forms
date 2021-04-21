@@ -16,7 +16,7 @@ abstract class BaseRouteTest extends BaseTest
   protected function _before()
   {
     parent::_before();
-    $this->route_endpoint = $this->di_container->get($this->getRouteName());
+    $this->routeEndpoint = $this->diContainer->get($this->getRouteName());
     $this->addHooks();
   }
 

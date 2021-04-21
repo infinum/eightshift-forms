@@ -65,7 +65,7 @@ $selectClasses = Components::classnames([
 	>
 		<?php
 		if ($shouldPrefill && ! empty($prefillSource)) {
-			foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
+			foreach (Prefill::getPrefillSourceData($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
 				printf('<option value="%s">%s</option>', esc_attr($option['value']), esc_html($option['label']));
 			}
 		} else {

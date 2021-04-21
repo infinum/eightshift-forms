@@ -59,7 +59,7 @@ $mailchimpTags = $attributes['mailchimpTags'] ?? [];
 $mailchimpAddExisting = isset($attributes['mailchimpAddExistingMembers']) ? filter_var($attributes['mailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL) : false;
 $mailerliteGroupId = $attributes['mailerliteGroupId'] ?? '';
 $customEventNames = $attributes['eventNames'] ?? [];
-$usedTypes = Forms::detect_used_types($isFormComplex, $formType, $formTypesComplex, $formTypesComplexRedirect);
+$usedTypes = Forms::detectUsedTypes($isFormComplex, $formType, $formTypesComplex, $formTypesComplexRedirect);
 $innerBlockContent = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
 $blockClasses = Components::classnames([

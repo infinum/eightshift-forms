@@ -56,18 +56,18 @@ class DynamicsCrm
    *
    * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
    */
-	public function add_record(string $entity, array $data)
+	public function addRecord(string $entity, array $data)
 	{
-		$odata_client = $this->build_odata_client($this->getToken());
+		$odataClient = $this->buildOdataClient($this->getToken());
 
 		try {
-			$odata_client->from($entity)->post($data);
+			$odataClient->from($entity)->post($data);
 		} catch (ClientException $e) {
 		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
 		  // just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
-				$odata_client = $this->build_odata_client($this->getToken(true));
-				$odata_client->from($entity)->post($data);
+				$odataClient = $this->buildOdataClient($this->getToken(true));
+				$odataClient->from($entity)->post($data);
 			} else {
 				throw $e;
 			}
@@ -85,18 +85,18 @@ class DynamicsCrm
    *
    * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
    */
-	public function fetch_all_from_entity(string $entity, array $data = [])
+	public function fetchAllFromEntity(string $entity, array $data = [])
 	{
-		$odata_client = $this->build_odata_client($this->getToken());
+		$odataClient = $this->buildOdataClient($this->getToken());
 
 		try {
-			$response = $odata_client->from($entity)->get($data);
+			$response = $odataClient->from($entity)->get($data);
 		} catch (ClientException $e) {
 		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
 		  // just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
-				$odata_client = $this->build_odata_client($this->getToken(true));
-				$response     = $odata_client->from($entity)->get($data);
+				$odataClient = $this->buildOdataClient($this->getToken(true));
+				$response     = $odataClient->from($entity)->get($data);
 			} else {
 				throw $e;
 			}
@@ -111,26 +111,26 @@ class DynamicsCrm
    * @param  array $credentials Credentials array.
    * @return void
    */
-	public function set_oauth_credentials(array $credentials): void
+	public function setOauthCredentials(array $credentials): void
 	{
 		$this->oAuth2Client->setCredentials($credentials);
-		$this->odataServiceUrl = $credentials['api_url'];
+		$this->odataServiceUrl = $credentials['apiUrl'];
 	}
 
   /**
    * Builds the odata client used for interacting with the CRM
    *
-   * @param  string $access_token OAuth access token for this request.
+   * @param  string $accessToken OAuth access token for this request.
    * @return IODataClient
    */
-	private function build_odata_client(string $access_token): IODataClient
+	private function buildOdataClient(string $accessToken): IODataClient
 	{
 		return new ODataClient(
 			$this->odataServiceUrl,
-			function ($request) use ($access_token) {
+			function ($request) use ($accessToken) {
 
 				// OAuth Bearer Token Authentication.
-				$request->headers['Authorization'] = 'Bearer ' . $access_token;
+				$request->headers['Authorization'] = 'Bearer ' . $accessToken;
 			}
 		);
 	}
@@ -138,11 +138,11 @@ class DynamicsCrm
   /**
    * Fetch / get the Dynamics CRM access token.
    *
-   * @param  bool $should_fetch_new (Optional) pass if you want to force OAuth2 client to fetch new access token.
+   * @param  bool $shouldFetchNew (Optional) pass if you want to force OAuth2 client to fetch new access token.
    * @return string
    */
-	private function getToken($should_fetch_new = false): string
+	private function getToken($shouldFetchNew = false): string
 	{
-		return $this->oAuth2Client->getToken(self::ACCESS_TOKEN_KEY, $should_fetch_new);
+		return $this->oAuth2Client->getToken(self::ACCESS_TOKEN_KEY, $shouldFetchNew);
 	}
 }

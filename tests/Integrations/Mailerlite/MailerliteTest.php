@@ -17,7 +17,7 @@ class MailerliteTest extends BaseTest
 
   protected function _before() {
     parent::_before();
-    $this->mailerlite = $this->di_container->get( Mailerlite::class );
+    $this->mailerlite = $this->diContainer->get( Mailerlite::class );
   }
 
   public function testAddOrUpdateSubscriber()

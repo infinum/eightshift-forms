@@ -29,7 +29,7 @@ final class MissingFilterInfoException extends \RuntimeException implements Gene
    *
    * @since 0.1.0
    */
-	public static function view_exception($filter, $key)
+	public static function viewException($filter, $key)
 	{
 		$message = sprintf(
 			\esc_html__('Missing a required key %1$s in %2$s filter, please provide that as part of return array on that filter', 'eightshift-forms'),

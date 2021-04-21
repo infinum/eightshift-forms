@@ -41,7 +41,7 @@ class UnverifiedRequestException extends \RuntimeException implements GeneralExc
    *
    * @return array
    */
-	public function get_data(): array
+	public function getData(): array
 	{
 		return $this->data;
 	}

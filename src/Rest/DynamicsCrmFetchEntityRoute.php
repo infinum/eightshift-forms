@@ -93,7 +93,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		try {
 			$params = $this->verifyRequest($request, self::DYNAMICS_CRM);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 	  // We don't want to send thee entity to CRM or it will reject our request.
@@ -101,30 +101,26 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		$params = $this->unsetIrrelevantParams($params);
 
 	  // Load the response from cache if possible.
-		$cacheKey = $this->cache->calculate_cache_key_for_request(self::ENDPOINT_SLUG, $this->getRouteUri(), $params);
+		$cacheKey = $this->cache->calculateCacheKeyForRequest(self::ENDPOINT_SLUG, $this->getRouteUri(), $params);
 
 		if ($this->cache->exists($cacheKey)) {
-			return \rest_ensure_response(
-				[
+			return \rest_ensure_response([
 				'code' => 200,
 				'data' => json_decode($this->cache->get($cacheKey), true),
-				]
-			);
+			]);
 		}
 
-		$this->dynamicsCrm->set_oauth_credentials(
-			[
-			'url'           => apply_filters(self::DYNAMICS_CRM, 'auth_token_url'),
-			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'client_id'),
-			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'client_secret'),
+		$this->dynamicsCrm->setOauthCredentials([
+			'url'           => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
+			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'clientId'),
+			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
 			'scope'         => apply_filters(self::DYNAMICS_CRM, 'scope'),
-			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'api_url'),
-			]
-		);
+			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
+		]);
 
 	  // Retrieve all entities from the "leads" Entity Set.
 		try {
-			$response = $this->dynamicsCrm->fetch_all_from_entity($entity, $params);
+			$response = $this->dynamicsCrm->fetchAllFromEntity($entity, $params);
 			$this->cache->save($cacheKey, (string) wp_json_encode($response), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC);
 		} catch (ClientException $e) {
 			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : esc_html__('Unknown error', 'eightshift-forms');
@@ -182,7 +178,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 
   /**
    * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
-   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * should be some secret. For example the secretKey for accessing the 3rd party route this route is
    * handling.
    *
    * If this function returns a non-empty value, it is assumed the route requires authorization.
@@ -191,6 +187,6 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
    */
 	protected function getAuthorizationSalt(): string
 	{
-		return \apply_filters(self::DYNAMICS_CRM, 'client_secret') ?? 'invalid-salt';
+		return \apply_filters(self::DYNAMICS_CRM, 'clientSecret') ?? 'invalid-salt';
 	}
 }

@@ -34,7 +34,7 @@ interface Filters
    *
    * @var string
    */
-	const GENERAL = 'eightshift_forms/general_info';
+	public const GENERAL = 'eightshift_forms/general_info';
 
   /**
    * Filter used for defining prefill sources for form blocks which allow user to select one or more things
@@ -69,7 +69,7 @@ interface Filters
    *
    * @var string
    */
-	const PREFILL_GENERIC_MULTI = 'eightshift_forms/prefill/multi';
+	public const PREFILL_GENERIC_MULTI = 'eightshift_forms/prefill/multi';
 
   /**
    * Filter used for defining prefill sources for form blocks which allow user to input a single value
@@ -80,7 +80,7 @@ interface Filters
    *
    * @var string
    */
-	const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
+	public const PREFILL_GENERIC_SINGLE = 'eightshift_forms/prefill/single';
 
   /**
    * Filter used for allowing your own blocks to form to be added inside a form.
@@ -99,7 +99,7 @@ interface Filters
    *
    * @var string
    */
-	const ALLOWED_BLOCKS = 'eightshift_forms/allowed_blocks';
+	public const ALLOWED_BLOCKS = 'eightshift_forms/allowed_blocks';
 
   /**
    * Used for generating authorization hash based on an array of parameters and secret hash. You need this if
@@ -120,7 +120,7 @@ interface Filters
    *
    * @var string
    */
-	const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
+	public const AUTHORIZATION_GENERATOR = 'eightshift_forms/authorization_generator';
 
   /**
    * Filter used for providing Microsoft 365 Dynamics CRM credentials.
@@ -150,7 +150,7 @@ interface Filters
    *
    * @var string
    */
-	const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
+	public const DYNAMICS_CRM = 'eightshift_forms/dynamics_info';
 
   /**
    * Filter used for providing Buckaroo credentials.
@@ -164,8 +164,8 @@ interface Filters
    *
    *  public function get_info( string $key ) {
    *    $info = [
-   *      'website_key' => 'website_key',
-   *      'secret_key' => 'secret_key',
+   *      'websiteKey' => 'websiteKey',
+   *      'secretKey' => 'secretKey',
    *    ];
    *
    *    return $info[ $key ] ?? '';
@@ -173,7 +173,7 @@ interface Filters
    *
    * @var string
    */
-	const BUCKAROO = 'eightshift_forms/buckaroo';
+	public const BUCKAROO = 'eightshift_forms/buckaroo';
 
   /**
    * Filter used for providing Mailchimp credentials.
@@ -196,7 +196,7 @@ interface Filters
    *
    * @var string
    */
-	const MAILCHIMP = 'eightshift_forms/mailchimp';
+	public const MAILCHIMP = 'eightshift_forms/mailchimp';
 
   /**
    * Filter used for providing mailerlite credentials.
@@ -219,7 +219,7 @@ interface Filters
    *
    * @var string
    */
-	const MAILERLITE = 'eightshift_forms/mailerlite';
+	public const MAILERLITE = 'eightshift_forms/mailerlite';
 
   /**
    * Filter used to add additional required parameters to Buckaroo Emandate route
@@ -239,7 +239,7 @@ interface Filters
    *
    * @var string
    */
-	const REQUIRED_PARAMS_BUCKAROO_EMANDATE = 'eightshift_forms/required_params/buckaroo_emandate';
+	public const REQUIRED_PARAMS_BUCKAROO_EMANDATE = 'eightshift_forms/required_params/buckaroo_emandate';
 
 
   /**
@@ -260,7 +260,7 @@ interface Filters
    *
    * @var string
    */
-	const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
+	public const REQUIRED_PARAMS_BUCKAROO_IDEAL = 'eightshift_forms/required_params/buckaroo_ideal';
 
   /**
    * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
@@ -269,17 +269,17 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/modify_buckaroo_redirect_url', [ $this, 'modify_url' ], 1, 3 );
+   *     add_filter( 'eightshift_forms/modify_buckaroo_redirectUrl', [ $this, 'modify_url' ], 1, 3 );
    *   }
    *
-   *  public function modify_url( string $redirect_url, array $params, Buckaroo_Response $buckaroo_response ) {
-   *    $redirect_url = add_query_arg( 'key', 'value', $redirect_url );
-   *    return $redirect_url;
+   *  public function modify_url( string $redirectUrl, array $params, Buckaroo_Response $buckaroo_response ) {
+   *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
+   *    return $redirectUrl;
    *  }
    *
    * @var string
    */
-	const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirect_url';
+	public const BUCKAROO_REDIRECT_URL = 'eightshift_forms/modify_buckaroo_redirectUrl';
 
   /**
    * This filter receives the buckaroo params (POST params that Buckaroo sends back to our site after processing the
@@ -304,7 +304,7 @@ interface Filters
    *
    * @var string
    */
-	const BUCKAROO_FILTER_BUCKAROO_PARAMS = 'eightshift_forms/buckaroo_filter_buckaroo_params';
+	public const BUCKAROO_FILTER_BUCKAROO_PARAMS = 'eightshift_forms/buckaroo_filter_buckaroo_params';
 
   /**
    * Filter used for providing filtering the Buckaroo redirect URL (the url to which the user is
@@ -313,17 +313,17 @@ interface Filters
    * Example:
    *
    *   public function register(): void {
-   *     add_filter( 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override', [ $this, 'modify_url' ], 1, 1 );
+   *     add_filter( 'eightshift_forms/buckaroo_pay_by_email_redirectUrl_override', [ $this, 'modify_url' ], 1, 1 );
    *   }
    *
-   *  public function modify_url( string $redirect_url ) {
-   *    $redirect_url = add_query_arg( 'key', 'value', $redirect_url );
-   *    return $redirect_url;
+   *  public function modify_url( string $redirectUrl ) {
+   *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
+   *    return $redirectUrl;
    *  }
    *
    * @var string
    */
-	const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override';
+	public const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirectUrl_override';
 
   /**
    * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
@@ -353,5 +353,5 @@ interface Filters
    *
    * @var string
    */
-	const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
+	public const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
 }

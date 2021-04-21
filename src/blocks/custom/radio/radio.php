@@ -42,7 +42,7 @@ if (empty($this)) {
 	<div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<?php
 	if ($shouldPrefill && ! empty($prefillSource)) {
-		foreach (Prefill::get_prefill_source_data($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
+		foreach (Prefill::getPrefillSourceData($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {
 			echo wp_kses_post(Components::render('src/blocks/custom/radio-item/radio-item.php', array_merge($option, [
 			'blockClass' => 'block-radio-item',
 			'name' => $name,

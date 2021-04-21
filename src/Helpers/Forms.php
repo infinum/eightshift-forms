@@ -23,7 +23,7 @@ class Forms
    * @param  string $name  Field's key / name.
    * @return string
    */
-	public static function maybe_override_value_from_query_string(string $value, string $name)
+	public static function maybeOverrideValueFromQueryString(string $value, string $name)
 	{
 
 	  /**
@@ -45,20 +45,20 @@ class Forms
   /**
    * Build a single fast (key based) array for checking which from type(s) is/are used.
    *
-   * @param  bool   $is_complex                  Is form complex? (uses multiple types).
+   * @param  bool   $isComplex                  Is form complex? (uses multiple types).
    * @param  string $formType                   Used form type (used if not complex).
    * @param  array  $formTypesComplex          Used form types.
    * @param  array  $formTypesComplexRedirect Used form types that redirect on success.
    * @return array
    */
-	public static function detect_used_types(bool $is_complex, string $formType, array $formTypesComplex, array $formTypesComplexRedirect): array
+	public static function detectUsedTypes(bool $isComplex, string $formType, array $formTypesComplex, array $formTypesComplexRedirect): array
 	{
 		$usedTypes = [];
 
-		if ($is_complex) {
-			$all_complex_types = array_merge($formTypesComplex, $formTypesComplexRedirect);
-			foreach ($all_complex_types as $complex_form_type) {
-				$usedTypes[$complex_form_type] = 1;
+		if ($isComplex) {
+			$allComplexTypes = array_merge($formTypesComplex, $formTypesComplexRedirect);
+			foreach ($allComplexTypes as $complexFormType) {
+				$usedTypes[$complexFormType] = 1;
 			}
 		} else {
 			$usedTypes[$formType] = 1;
@@ -74,13 +74,13 @@ class Forms
    * @param string $theme Theme name.
    * @return array
    */
-	public static function recursively_change_theme_for_all_blocks(array $blocks, string $theme)
+	public static function recursivelyChangeThemeForAllBlocks(array $blocks, string $theme)
 	{
 		foreach ($blocks as $key => $block) {
 			$blocks[$key]['attrs']['theme'] = $theme;
 
 			if (! empty($block['innerBlocks'])) {
-				$blocks[$key]['innerBlocks'] = self::recursively_change_theme_for_all_blocks($block['innerBlocks'], $theme);
+				$blocks[$key]['innerBlocks'] = self::recursivelyChangeThemeForAllBlocks($block['innerBlocks'], $theme);
 			}
 		}
 

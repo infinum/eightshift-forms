@@ -19,12 +19,12 @@ class FormView
   /**
    * Add extra allowed tags specifically for forms.
    *
-   * @param  array $allowed_tags Already allowed tags.
+   * @param  array $allowedTags Already allowed tags.
    * @return array
    */
-	public static function extra_allowed_tags($allowed_tags): array
+	public static function extraAllowedTags($allowedTags): array
 	{
-		$allowed_tags['form'] = [
+		$allowedTags['form'] = [
 			'class'                            => 1,
 			'id'                               => 1,
 			'action'                           => 1,
@@ -47,50 +47,50 @@ class FormView
 		];
 
 	  // Append additional allowed tags.
-		$allowed_tags['input']['type']                = 1;
-		$allowed_tags['input']['class']               = 1;
-		$allowed_tags['input']['id']                  = 1;
-		$allowed_tags['input']['required']            = 1;
-		$allowed_tags['input']['checked']             = 1;
-		$allowed_tags['input']['tabindex']            = 1;
-		$allowed_tags['input']['pattern']             = 1;
-		$allowed_tags['input']['data-opens-popup']    = 1;
-		$allowed_tags['input']['data-do-not-send']    = 1;
-		$allowed_tags['input']['oninput']             = 1;
-		$allowed_tags['input']['min']                 = 1;
-		$allowed_tags['input']['max']                 = 1;
-		$allowed_tags['input']['maxlength']           = 1;
-		$allowed_tags['input']['aria-labelledby']     = 1;
-		$allowed_tags['input']['aria-describedby']    = 1;
-		$allowed_tags['input']['disabled']            = 1;
-		$allowed_tags['textarea']['required']         = 1;
-		$allowed_tags['textarea']['data-do-not-send'] = 1;
-		$allowed_tags['textarea']['aria-labelledby']  = 1;
-		$allowed_tags['textarea']['aria-describedby'] = 1;
-		$allowed_tags['textarea']['disabled']         = 1;
-		$allowed_tags['textarea']['placeholder']      = 1;
-		$allowed_tags['select']['required']           = 1;
-		$allowed_tags['select']['data-do-not-send']   = 1;
-		$allowed_tags['select']['aria-describedby']   = 1;
-		$allowed_tags['select']['aria-labelledby']    = 1;
-		$allowed_tags['select']['disabled']           = 1;
-		$allowed_tags['button']['aria-label']         = 1;
-		$allowed_tags['button']['role']               = 1;
-		$allowed_tags['button']['aria-describedby']   = 1;
-		$allowed_tags['button']['aria-labelledby']    = 1;
-		$allowed_tags['button']['disabled']           = 1;
-		$allowed_tags['radio']['aria-describedby']    = 1;
-		$allowed_tags['radio']['aria-labelledby']     = 1;
-		$allowed_tags['radio']['disabled']            = 1;
+		$allowedTags['input']['type']                = 1;
+		$allowedTags['input']['class']               = 1;
+		$allowedTags['input']['id']                  = 1;
+		$allowedTags['input']['required']            = 1;
+		$allowedTags['input']['checked']             = 1;
+		$allowedTags['input']['tabindex']            = 1;
+		$allowedTags['input']['pattern']             = 1;
+		$allowedTags['input']['data-opens-popup']    = 1;
+		$allowedTags['input']['data-do-not-send']    = 1;
+		$allowedTags['input']['oninput']             = 1;
+		$allowedTags['input']['min']                 = 1;
+		$allowedTags['input']['max']                 = 1;
+		$allowedTags['input']['maxlength']           = 1;
+		$allowedTags['input']['aria-labelledby']     = 1;
+		$allowedTags['input']['aria-describedby']    = 1;
+		$allowedTags['input']['disabled']            = 1;
+		$allowedTags['textarea']['required']         = 1;
+		$allowedTags['textarea']['data-do-not-send'] = 1;
+		$allowedTags['textarea']['aria-labelledby']  = 1;
+		$allowedTags['textarea']['aria-describedby'] = 1;
+		$allowedTags['textarea']['disabled']         = 1;
+		$allowedTags['textarea']['placeholder']      = 1;
+		$allowedTags['select']['required']           = 1;
+		$allowedTags['select']['data-do-not-send']   = 1;
+		$allowedTags['select']['aria-describedby']   = 1;
+		$allowedTags['select']['aria-labelledby']    = 1;
+		$allowedTags['select']['disabled']           = 1;
+		$allowedTags['button']['aria-label']         = 1;
+		$allowedTags['button']['role']               = 1;
+		$allowedTags['button']['aria-describedby']   = 1;
+		$allowedTags['button']['aria-labelledby']    = 1;
+		$allowedTags['button']['disabled']           = 1;
+		$allowedTags['radio']['aria-describedby']    = 1;
+		$allowedTags['radio']['aria-labelledby']     = 1;
+		$allowedTags['radio']['disabled']            = 1;
 
-		return $allowed_tags;
+		return $allowedTags;
 	}
 
   /**
    * Returns an array of tags for wp_kses(). Less strict than the usual wp_kses_post().
    */
-	public static function allowed_tags(): array
+	public static function allowedTags(): array
 	{
-		return self::extra_allowed_tags(wp_kses_allowed_html('post'));
+		return self::extraAllowedTags(wp_kses_allowed_html('post'));
 	}
 }

@@ -18,24 +18,24 @@ class MailchimpTest extends BaseTest
 
   protected function _before() {
     parent::_before();
-    $this->mailchimp = $this->di_container->get( Mailchimp::class );
+    $this->mailchimp = $this->diContainer->get( Mailchimp::class );
   }
 
   public function testAddOrUpdateMember()
   {
     $this->addHooks();
     $params = [
-      'listId' => 'list-id',
+      'list_id' => 'list-id',
       'email' => DataProvider::MOCK_EMAIL,
-      'mergeFields' => [
+      'merge_fields' => [
         'FNAME' => 'some name',
       ],
     ];
 
-    $response = $this->mailchimp->add_or_update_member(
-      $params['listId'],
+    $response = $this->mailchimp->addOrUpdateMember(
+      $params['list_id'],
       $params['email'],
-      $params['mergeFields'],
+      $params['merge_fields'],
       []
     );
 
@@ -46,19 +46,19 @@ class MailchimpTest extends BaseTest
   {
     $this->addHooks();
     $params = [
-      'listId' => DataProvider::INVALID_LIST_ID,
+      'list_id' => DataProvider::INVALID_LIST_ID,
       'email' => DataProvider::MOCK_EMAIL,
-      'mergeFields' => [
+      'merge_fields' => [
         'FNAME' => 'some name',
       ],
     ];
 
     try {      
-      $this->mailchimp->add_or_update_member(
-        $params['listId'],
+      $this->mailchimp->addOrUpdateMember(
+        $params['list_id'],
         $params['email'],
-        $params['mergeFields'],
-        []
+        $params['merge_fields'],
+          []
       );
 
       $this->assertEquals(1,0);

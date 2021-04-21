@@ -33,13 +33,13 @@ $preventSending = isset($attributes['preventSending']) && $attributes['preventSe
 
 // Prefill value if needed.
 if ($shouldPrefill && ! empty($prefillSource)) {
-	$value = Prefill::get_prefill_source_data_single($prefillSource, Filters::PREFILL_GENERIC_SINGLE);
+	$value = Prefill::getPrefillSourceDataSingle($prefillSource, Filters::PREFILL_GENERIC_SINGLE);
 } else {
 	$value = $attributes['value'] ?? '';
 }
 
 // Override form value if it's passed from $_GET.
-$value = Forms::maybe_override_value_from_query_string($value, $name);
+$value = Forms::maybeOverrideValueFromQueryString($value, $name);
 
 $blockClasses = Components::classnames([
 	$blockClass,

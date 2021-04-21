@@ -86,11 +86,11 @@ class Mailerlite
 	private function setupClientConfigAndVerify(): void
 	{
 		if (! has_filter(Filters::MAILERLITE)) {
-			throw MissingFilterInfoException::view_exception(Filters::MAILERLITE, esc_html__('entire_filter', 'eightshift-forms'));
+			throw MissingFilterInfoException::viewException(Filters::MAILERLITE, esc_html__('entire_filter', 'eightshift-forms'));
 		}
 
-		if (empty(\apply_filters(Filters::MAILERLITE, 'api_key'))) {
-			throw MissingFilterInfoException::view_exception(Filters::MAILERLITE, 'api_key');
+		if (empty(\apply_filters(Filters::MAILERLITE, 'apiKey'))) {
+			throw MissingFilterInfoException::viewException(Filters::MAILERLITE, 'apiKey');
 		}
 
 		if (empty($this->client)) {

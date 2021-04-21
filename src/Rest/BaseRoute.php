@@ -160,7 +160,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 		  // We need to URLencode all params before verifying them.
 			$params = $this->urlencodeParams($params);
 
-			if (empty($this->hmac) || ! $this->hmac->verify_hash($hash, $params, $this->getAuthorizationSalt())) {
+			if (empty($this->hmac) || ! $this->hmac->verifyHash($hash, $params, $this->getAuthorizationSalt())) {
 				throw new UnverifiedRequestException(
 					$this->restResponseHandler('authorization-invalid')->data
 				);
@@ -283,7 +283,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 
   /**
    * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
-   * should be some secret. For example the secret_key for accessing the 3rd party route this route is
+   * should be some secret. For example the secretKey for accessing the 3rd party route this route is
    * handling.
    *
    * If this function returns a non-empty value, it is assumed the route requires authorization.

@@ -25,7 +25,7 @@ interface Actions
    *
    * @var string
    */
-	const BUCKAROO_RESPONSE_HANDLER = 'eightshift_forms/buckaroo_response_handler';
+	public const BUCKAROO_RESPONSE_HANDLER = 'eightshift_forms/buckaroo_response_handler';
 
   /**
    * Use this action if you need to echo extra hidden (or non-hidden) fields to the form specifically for your project.
@@ -46,5 +46,5 @@ interface Actions
    *
    * @var string
    */
-	const EXTRA_FORM_FIELDS = 'eightshift_forms/extra_form_fields';
+	public const EXTRA_FORM_FIELDS = 'eightshift_forms/extra_form_fields';
 }

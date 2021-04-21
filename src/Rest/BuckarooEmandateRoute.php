@@ -62,20 +62,20 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 		try {
 			$params = $this->verifyRequest($request, self::BUCKAROO);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 		try {
 			$params = $this->setRedirectUrls($params);
 
 			$this->setTestIfNeeded($params);
-			$this->buckaroo->set_data_request();
+			$this->buckaroo->setDataRequest();
 
-			$this->buckaroo->set_pay_type('emandate');
-			$response = $this->buckaroo->create_emandate(
-				$this->buckaroo->generate_debtor_reference($params),
+			$this->buckaroo->setPayType('emandate');
+			$response = $this->buckaroo->createEmandate(
+				$this->buckaroo->generateDebtorReference($params),
 				! empty($params[self::SEQUENCE_TYPE_IS_RECURRING_PARAM]) ? self::SEQUENCE_TYPE_RECURRING_VALUE : self::SEQUENCE_TYPE_ONE_TIME_VALUE,
-				$this->buckaroo->generate_purchase_id($params),
+				$this->buckaroo->generatePurchaseId($params),
 				'nl',
 				$params[self::ISSUER_PARAM] ?? '',
 				$params[self::EMANDATE_DESCRIPTION_PARAM] ?? ''
@@ -83,7 +83,7 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('buckaroo-missing-keys', ['message' => $e->getMessage()]);
 		} catch (BuckarooRequestException $e) {
-			return $this->restResponseHandler('buckaroo-missing-keys', $e->get_exception_for_rest_response());
+			return $this->restResponseHandler('buckaroo-missing-keys', $e->getExceptionForRestResponse());
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}

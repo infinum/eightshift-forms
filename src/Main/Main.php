@@ -42,7 +42,7 @@ class Main extends AbstractMain
 	/**
 	 * Register the project with the WordPress system.
 	 *
-	 * The register_service method will call the register() method in every service class,
+	 * The registerService method will call the register() method in every service class,
 	 * which holds the actions and filters - effectively replacing the need to manually add
 	 * them in one place.
 	 *

@@ -19,7 +19,7 @@ use EightshiftLibs\Services\ServiceInterface;
 class Hmac implements ServiceInterface, AuthorizationInterface, Filters
 {
 
-	const AUTHORIZATION_KEY = 'authorization_hmac';
+	public const AUTHORIZATION_KEY = 'authorizationHmac';
 
   /**
    * Provide filter that allows the project to generate the hash.
@@ -28,7 +28,7 @@ class Hmac implements ServiceInterface, AuthorizationInterface, Filters
    */
 	public function register(): void
 	{
-		\add_filter(self::AUTHORIZATION_GENERATOR, [$this, 'generate_hash'], 1, 2);
+		\add_filter(self::AUTHORIZATION_GENERATOR, [$this, 'generateHash'], 1, 2);
 	}
 
   /**
@@ -38,7 +38,7 @@ class Hmac implements ServiceInterface, AuthorizationInterface, Filters
    * @param  string $salt   Salt used to generate the hash.
    * @return string
    */
-	public function generate_hash(array $params, string $salt): string
+	public function generateHash(array $params, string $salt): string
 	{
 		return 'hmac ' . hash_hmac('sha512', (string) \wp_json_encode($params), $salt);
 	}
@@ -51,8 +51,8 @@ class Hmac implements ServiceInterface, AuthorizationInterface, Filters
    * @param  string $salt   Salt used to generate the hash.
    * @return bool
    */
-	public function verify_hash(string $hash, array $params, string $salt): bool
+	public function verifyHash(string $hash, array $params, string $salt): bool
 	{
-		return $hash === $this->generate_hash($params, $salt);
+		return $hash === $this->generateHash($params, $salt);
 	}
 }

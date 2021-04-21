@@ -72,26 +72,26 @@ class Mailchimp
   /**
    * Adds or updates a member in Mailchimp.
    *
-   * @param  string $list_id      Audience list ID.
+   * @param  string $listId      Audience list ID.
    * @param  string $email        Contact's email.
-   * @param  array  $merge_fields List of merge fields to add to request.
+   * @param  array  $mergeFields List of merge fields to add to request.
    * @param  array  $params       (Optional) list of params from request.
    * @param  string $status       (Optional) Member's status (if new).
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-	public function add_or_update_member(string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending')
+	public function addOrUpdateMember(string $listId, string $email, array $mergeFields, array $params = [], string $status = 'pending')
 	{
 		$this->setupClientConfigAndVerify();
 
 		$params['email_address'] = $email;
 		$params['status_if_new'] = $status;
-		$params['merge_fields']  = $merge_fields;
+		$params['merge_fields']  = $mergeFields;
 
-		$response = $this->client->lists->setListMember($list_id, $this->calculate_subscriber_hash($email), $params);
+		$response = $this->client->lists->setListMember($listId, $this->calculateSubscriberHash($email), $params);
 
-		if (! is_object($response) || ! isset($response->id, $response->email_address)) {
+		if (! is_object($response) || ! isset($response->id, $response->emailAddress)) {
 			throw new \Exception('setListMember response invalid');
 		}
 
@@ -101,26 +101,26 @@ class Mailchimp
   /**
    * Adds a member in Mailchimp.
    *
-   * @param  string $list_id      Audience list ID.
+   * @param  string $listId      Audience list ID.
    * @param  string $email        Contact's email.
-   * @param  array  $merge_fields List of merge fields to add to request.
+   * @param  array  $mergeFields List of merge fields to add to request.
    * @param  array  $params       (Optional) list of params from request.
    * @param  string $status       (Optional) Member's status (if new).
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-	public function add_member(string $list_id, string $email, array $merge_fields, array $params = [], string $status = 'pending')
+	public function addMember(string $listId, string $email, array $mergeFields, array $params = [], string $status = 'pending')
 	{
 		$this->setupClientConfigAndVerify();
 
 		$params['email_address'] = $email;
 		$params['status']        = $status;
-		$params['merge_fields']  = $merge_fields;
+		$params['merge_fields']  = $mergeFields;
 
-		$response = $this->client->lists->addListMember($list_id, $params);
+		$response = $this->client->lists->addListMember($listId, $params);
 
-		if (! is_object($response) || ! isset($response->id, $response->email_address)) {
+		if (! is_object($response) || ! isset($response->id, $response->emailAddress)) {
 			throw new \Exception('setListMember response invalid');
 		}
 
@@ -130,62 +130,62 @@ class Mailchimp
   /**
    * Add a tag to a member.
    *
-   * @param  string $list_id   Audience list ID.
+   * @param  string $listId   Audience list ID.
    * @param  string $email     Contact's email.
-   * @param  array  $tag_names Just a 1d array of tag names. Other processing is done inside.
+   * @param  array  $tagNames Just a 1d array of tag names. Other processing is done inside.
    * @return bool
    *
    * @throws \Exception When response is invalid.
    */
-	public function add_member_tags(string $list_id, string $email, array $tag_names): bool
+	public function addMemberTags(string $listId, string $email, array $tagNames): bool
 	{
 		$this->setupClientConfigAndVerify();
 
 	  // This call requires a very specific format for tags.
-		$tags_request = [
-		'tags' => array_map(function ($tag_name) {
+		$tagsRequest = [
+		'tags' => array_map(function ($tagName) {
 			return [
-			'name' => $tag_name,
-			'status' => 'active',
+				'name' => $tagName,
+				'status' => 'active',
 			];
-		}, $tag_names),
+		}, $tagNames),
 		];
 
-		$update_response = $this->client->lists->updateListMemberTags($list_id, md5($email), $tags_request);
+		$updateResponse = $this->client->lists->updateListMemberTags($listId, md5($email), $tagsRequest);
 
 	  // This call is weird in that an empty (204) response means success. If something went very wrong it
 	  // will throw an exception. If something is slightly off (such as not having the correct format for
 	  // tags array), it will also return an empty response.
-		return ! empty($update_response);
+		return ! empty($updateResponse);
 	}
 
   /**
    * List a member
    *
-   * @param  string $list_id Audience list ID.
+   * @param  string $listId Audience list ID.
    * @param  string $email   Contact's email.
    * @return mixed
    */
-	public function get_list_member(string $list_id, string $email)
+	public function getListMember(string $listId, string $email)
 	{
 		$this->setupClientConfigAndVerify();
-		return $this->client->lists->getListMember($list_id, $this->calculate_subscriber_hash($email));
+		return $this->client->lists->getListMember($listId, $this->calculateSubscriberHash($email));
 	}
 
   /**
    * Get information about all lists in the account.
    *
-   * @param bool $is_fresh Set to true if you want to fetch the lists regardless if we already have them cached.
+   * @param bool $isFresh Set to true if you want to fetch the lists regardless if we already have them cached.
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-	public function get_all_lists(bool $is_fresh = false)
+	public function getAllLists(bool $isFresh = false)
 	{
 
-		$cached_response = $this->cache->get(self::CACHE_LISTS);
+		$cachedResponse = $this->cache->get(self::CACHE_LISTS);
 
-		if ($is_fresh || empty($cached_response)) {
+		if ($isFresh || empty($cachedResponse)) {
 			$this->setupClientConfigAndVerify();
 			$response = $this->client->lists->getAllLists();
 
@@ -193,15 +193,15 @@ class Mailchimp
 				throw new \Exception('Lists response invalid');
 			}
 
-			foreach ($response->lists as $list_obj) {
-				if (! is_object($list_obj) || ! isset($list_obj->id, $list_obj->name)) {
+			foreach ($response->lists as $listObj) {
+				if (! is_object($listObj) || ! isset($listObj->id, $listObj->name)) {
 					throw new \Exception('Lists response invalid');
 				}
 			}
 
 			$this->cache->save(self::CACHE_LISTS, (string) wp_json_encode($response), self::CACHE_LIST_TIMEOUT);
 		} else {
-			$response = json_decode($cached_response);
+			$response = json_decode($cachedResponse);
 		}
 
 		return $response;
@@ -210,22 +210,22 @@ class Mailchimp
   /**
    * Get information about all tags & segments in the account.
    *
-   * @param  string $list_id Audience list ID.
+   * @param  string $listId Audience list ID.
    * @return mixed
    *
    * @throws \Exception When response is invalid.
    */
-	public function get_all_segments(string $list_id)
+	public function getAllSegments(string $listId)
 	{
 		$this->setupClientConfigAndVerify();
-		$response = $this->client->lists->listSegments($list_id);
+		$response = $this->client->lists->listSegments($listId);
 
 		if (! isset($response, $response->segments) && ! is_array($response->segments)) {
 			throw new \Exception('Segments response invalid');
 		}
 
-		foreach ($response->segments as $segment_obj) {
-			if (! is_object($segment_obj) || ! isset($segment_obj->id, $segment_obj->name, $segment_obj->type)) {
+		foreach ($response->segments as $segmentObj) {
+			if (! isObject($segmentObj) || ! isset($segmentObj->id, $segmentObj->name, $segmentObj->type)) {
 				throw new \Exception('Specific segment response invalid');
 			}
 		}
@@ -238,7 +238,7 @@ class Mailchimp
    * @param  string $email Contact's email.
    * @return string
    */
-	private function calculate_subscriber_hash(string $email): string
+	private function calculateSubscriberHash(string $email): string
 	{
 		return md5($email);
 	}
@@ -253,15 +253,15 @@ class Mailchimp
 	private function setupClientConfigAndVerify(): void
 	{
 		if (! has_filter(Filters::MAILCHIMP)) {
-			throw MissingFilterInfoException::view_exception(Filters::MAILCHIMP, esc_html__('entire_filter', 'eightshift-forms'));
+			throw MissingFilterInfoException::viewException(Filters::MAILCHIMP, esc_html__('entire_filter', 'eightshift-forms'));
 		}
 
-		if (empty(\apply_filters(Filters::MAILCHIMP, 'api_key'))) {
-			throw MissingFilterInfoException::view_exception(Filters::MAILCHIMP, 'api_key');
+		if (empty(\apply_filters(Filters::MAILCHIMP, 'apiKey'))) {
+			throw MissingFilterInfoException::viewException(Filters::MAILCHIMP, 'apiKey');
 		}
 
 		if (empty(\apply_filters(Filters::MAILCHIMP, 'server'))) {
-			throw MissingFilterInfoException::view_exception(Filters::MAILCHIMP, 'server');
+			throw MissingFilterInfoException::viewException(Filters::MAILCHIMP, 'server');
 		}
 
 		if (empty($this->client)) {

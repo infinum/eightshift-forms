@@ -19,11 +19,11 @@ class ResponseFactory
   /**
    * Build Response object.
    *
-   * @param array $buckaroo_params Array of Buckaroo response params.
+   * @param array $buckarooParams Array of Buckaroo response params.
    * @return Response
    */
-	public static function build(array $buckaroo_params): Response
+	public static function build(array $buckarooParams): Response
 	{
-		return new Response($buckaroo_params);
+		return new Response($buckarooParams);
 	}
 }

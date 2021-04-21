@@ -23,7 +23,7 @@ interface AuthorizationInterface
    * @param  string $salt   Salt used to generate the hash.
    * @return string
    */
-	public function generate_hash(array $params, string $salt): string;
+	public function generateHash(array $params, string $salt): string;
 
   /**
    * Verifies a hash.
@@ -33,5 +33,5 @@ interface AuthorizationInterface
    * @param  string $salt   Salt used to generate the hash.
    * @return bool
    */
-	public function verify_hash(string $hash, array $params, string $salt): bool;
+	public function verifyHash(string $hash, array $params, string $salt): bool;
 }

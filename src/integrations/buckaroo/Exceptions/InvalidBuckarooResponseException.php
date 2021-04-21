@@ -23,26 +23,26 @@ class InvalidBuckarooResponseException extends \RuntimeException implements Gene
    *
    * @var string
    */
-	private $error_message = '';
+	private $errorMessage = '';
 
   /**
    * Constructs object
    *
-   * @param string $error_message Message to throw.
+   * @param string $errorMessage Message to throw.
    */
-	public function __construct(string $error_message)
+	public function __construct(string $errorMessage)
 	{
-		$this->error_message = $error_message;
+		$this->errorMessage = $errorMessage;
 		parent::__construct('InvalidBuckarooResponseException');
 	}
 
   /**
-   * $this->error_message getter.
+   * $this->errorMessage getter.
    *
    * @return string
    */
-	public function get_error_message(): string
+	public function getErrorMessage(): string
 	{
-		return $this->error_message;
+		return $this->errorMessage;
 	}
 }

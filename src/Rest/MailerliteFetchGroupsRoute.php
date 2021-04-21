@@ -72,7 +72,7 @@ class MailerliteFetchGroupsRoute extends BaseRoute implements Filters
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 	  // Retrieve all entities from the "leads" Entity Set.

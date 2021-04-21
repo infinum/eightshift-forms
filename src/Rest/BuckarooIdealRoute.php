@@ -60,16 +60,16 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 		try {
 			$params = $this->verifyRequest($request, self::BUCKAROO);
 		} catch (UnverifiedRequestException $e) {
-			return rest_ensure_response($e->get_data());
+			return rest_ensure_response($e->getData());
 		}
 
 		try {
 			$this->setTestIfNeeded($params);
 			$params = $this->setRedirectUrls($params);
 
-			$response = $this->buckaroo->send_payment(
+			$response = $this->buckaroo->sendPayment(
 				$params[self::DONATION_AMOUNT_PARAM],
-				$this->buckaroo->generate_purchase_id($params),
+				$this->buckaroo->generatePurchaseId($params),
 				$params[self::ISSUER_PARAM] ?? '',
 				! empty($params[self::IS_RECURRING_PARAM]),
 				$params[self::PAYMENT_DESCRIPTION_PARAM] ?? ''
@@ -77,7 +77,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('buckaroo-missing-keys', ['message' => $e->getMessage()]);
 		} catch (BuckarooRequestException $e) {
-			return $this->restResponseHandler('buckaroo-request-exception', $e->get_exception_for_rest_response());
+			return $this->restResponseHandler('buckaroo-request-exception', $e->getExceptionForRestResponse());
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}

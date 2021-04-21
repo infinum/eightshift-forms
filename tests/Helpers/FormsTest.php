@@ -16,20 +16,20 @@ class FormsTest extends BaseTest
   public function testOverridingValueFromQueryString()
   {
     $_GET['field-test'] = 'expected';
-    $result = Forms::maybe_override_value_from_query_string( 'not-expected', 'test' );
+    $result = Forms::maybeOverrideValueFromQueryString( 'not-expected', 'test' );
     $this->assertEquals('expected', $result);
   }
 
   public function testNotOverridingValueFromQueryStringBecauseItsNotFound()
   {
     $_GET['field-test'] = 'not-expected';
-    $result = Forms::maybe_override_value_from_query_string( 'expected', 'non-existent-key' );
+    $result = Forms::maybeOverrideValueFromQueryString( 'expected', 'non-existent-key' );
     $this->assertEquals('expected', $result);
   }
 
   public function testDetectUsedFormTypesSingle()
   {
-    $usedTypes = Forms::detect_used_types(
+    $usedTypes = Forms::detectUsedTypes(
       false,
       'mailchimp',
       [],
@@ -38,7 +38,7 @@ class FormsTest extends BaseTest
 
     $this->assertArrayHasKey('mailchimp', $usedTypes);
 
-    $usedTypes_2 = Forms::detect_used_types(
+    $usedTypes_2 = Forms::detectUsedTypes(
       false,
       'mailchimp',
       [ 'some-complex-type', 'another'],
@@ -50,7 +50,7 @@ class FormsTest extends BaseTest
 
   public function testDetectUsedFormTypesComplex()
   {
-    $usedTypes = Forms::detect_used_types(
+    $usedTypes = Forms::detectUsedTypes(
       true,
       '',
       [ 'some-complex-type', 'another'],
@@ -61,7 +61,7 @@ class FormsTest extends BaseTest
     $this->assertArrayHasKey('another', $usedTypes);
     $this->assertArrayHasKey('redirect-type', $usedTypes);
 
-    $usedTypes_2 = Forms::detect_used_types(
+    $usedTypes_2 = Forms::detectUsedTypes(
       true,
       'mailchimp',
       [ 'some-complex-type', 'another'],
@@ -75,19 +75,19 @@ class FormsTest extends BaseTest
 
   public function testAddingThemeToAllBlocks() {
     $theme = 'test-theme-name';
-    $blocks_with_theme = Forms::recursively_change_theme_for_all_blocks($this->DataProvider->parsedBlocksMock(), $theme);
+    $blocksWithTheme = Forms::recursivelyChangeThemeForAllBlocks($this->DataProvider->parsedBlocksMock(), $theme);
 
-    $this->checkThemeInBlocks($blocks_with_theme, $theme);
+    $this->checkThemeInBlocks($blocksWithTheme, $theme);
   }
 
   private function checkThemeInBlocks(array $blocks, string $theme) {
-    foreach( $blocks as $block_with_theme ) {
-      $this->assertArrayHasKey('attrs', $block_with_theme );
-      $this->assertArrayHasKey('theme', $block_with_theme['attrs'] );
-      $this->assertEquals($theme, $block_with_theme['attrs']['theme']);
+    foreach( $blocks as $blockWithTheme ) {
+      $this->assertArrayHasKey('attrs', $blockWithTheme );
+      $this->assertArrayHasKey('theme', $blockWithTheme['attrs'] );
+      $this->assertEquals($theme, $blockWithTheme['attrs']['theme']);
 
-      if ( ! empty( $block_with_theme['innerBlocks'] ) ) {
-        $this->checkThemeInBlocks($block_with_theme['innerBlocks'], $theme);
+      if ( ! empty( $blockWithTheme['innerBlocks'] ) ) {
+        $this->checkThemeInBlocks($blockWithTheme['innerBlocks'], $theme);
       }
     }
   }
