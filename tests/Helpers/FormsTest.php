@@ -15,15 +15,15 @@ class FormsTest extends BaseTest
 
   public function testOverridingValueFromQueryString()
   {
-    $_GET['field-test'] = 'expected';
-    $result = Forms::maybeOverrideValueFromQueryString( 'not-expected', 'test' );
+    $_POST['field-test'] = 'not-expected';
+    $result = Forms::maybeOverrideValueFromPost( 'expected', 'test' );
     $this->assertEquals('expected', $result);
   }
 
   public function testNotOverridingValueFromQueryStringBecauseItsNotFound()
   {
-    $_GET['field-test'] = 'not-expected';
-    $result = Forms::maybeOverrideValueFromQueryString( 'expected', 'non-existent-key' );
+    $_POST['field-test'] = 'not-expected';
+    $result = Forms::maybeOverrideValueFromPost( 'expected', 'non-existent-key' );
     $this->assertEquals('expected', $result);
   }
 
