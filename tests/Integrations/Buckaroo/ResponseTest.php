@@ -6,7 +6,7 @@ use EightshiftFormsTests\BaseTest;
 use EightshiftForms\Integrations\Buckaroo\ResponseFactory;
 use EightshiftForms\Integrations\Buckaroo\Response;
 
-class BuckarooResponse extends BaseTest
+class ResponseTest extends BaseTest
 {
 
   protected function _inject(DataProvider $dataProvider)

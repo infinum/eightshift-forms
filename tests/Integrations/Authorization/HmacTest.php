@@ -1,4 +1,4 @@
-<?php namespace EightshiftFormsTests;
+<?php namespace EightshiftFormsTests\Integrations\Authorization;
 
 use EightshiftForms\Integrations\Authorization\Hmac;
 use EightshiftFormsTests\BaseTest;
