@@ -59,12 +59,12 @@ register_deactivation_hook(
  * not affect the page life cycle.
  */
 if (class_exists(Main::class)) {
-	( new Main($loader->getPrefixesPsr4(), __NAMESPACE__) )->register();
+	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__) )->register();
 }
 
 /**
  * Run all WPCLI commands.
  */
 if (class_exists(Cli::class)) {
-	( new Cli() )->load('eightshift-forms');
+	(new Cli() )->load('eightshift-forms');
 }
