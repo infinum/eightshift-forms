@@ -6,13 +6,13 @@ use EightshiftFormsTests\Integrations\Mailchimp\DataProvider;
 
 class MailchimpRouteTest extends BaseRouteTest
 {
-  const METHOD = 'POST';
+	public const METHOD = 'POST';
 
-  protected function getRouteName(): string {
+	protected function getRouteName(): string {
     return MailchimpRoute::class;
   }
 
-  protected function _before()
+	protected function _before()
   {
     parent::_before();
     add_filter( Filters::MAILCHIMP, function($key) {
@@ -25,7 +25,7 @@ class MailchimpRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessfulWhenAddingNewMembers()
+	public function testRestCallSuccessfulWhenAddingNewMembers()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
@@ -45,7 +45,7 @@ class MailchimpRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsIfInvalidListId()
+	public function testRestCallFailsIfInvalidListId()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
@@ -63,7 +63,7 @@ class MailchimpRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessfulWhenAddingTags()
+	public function testRestCallSuccessfulWhenAddingTags()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [

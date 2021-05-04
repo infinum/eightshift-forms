@@ -10,17 +10,17 @@ use EightshiftFormsTests\BaseTest;
 class MailerliteTest extends BaseTest
 {
 
-  protected function _inject(DataProvider $dataProvider)
+	protected function _inject(DataProvider $dataProvider)
   {
     $this->dataProvider = $dataProvider;
   }
 
-  protected function _before() {
+	protected function _before() {
     parent::_before();
     $this->mailerlite = $this->diContainer->get( Mailerlite::class );
   }
 
-  public function testAddOrUpdateSubscriber()
+	public function testAddOrUpdateSubscriber()
   {
     $this->addHooks();
     $params = [
@@ -49,7 +49,7 @@ class MailerliteTest extends BaseTest
 	 *
 	 * @return void
 	 */
-  protected function addHooks() {
+	protected function addHooks() {
     add_filter( Filters::MAILERLITE, function($key) {
       return $key;
     }, 1, 1);

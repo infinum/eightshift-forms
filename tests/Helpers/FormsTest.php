@@ -8,26 +8,26 @@ use EightshiftFormsTests\BaseTest;
 class FormsTest extends BaseTest
 {
 
-  protected function _inject(HelpersDataProvider $HelpersDataProvider)
+	protected function _inject(HelpersDataProvider $HelpersDataProvider)
   {
     $this->DataProvider = $HelpersDataProvider;
   }
 
-  public function testOverridingValueFromQueryString()
+	public function testOverridingValueFromQueryString()
   {
     $_POST['field-test'] = 'not-expected';
     $result = Forms::maybeOverrideValueFromPost( 'expected', 'test' );
     $this->assertEquals('expected', $result);
   }
 
-  public function testNotOverridingValueFromQueryStringBecauseItsNotFound()
+	public function testNotOverridingValueFromQueryStringBecauseItsNotFound()
   {
     $_POST['field-test'] = 'not-expected';
     $result = Forms::maybeOverrideValueFromPost( 'expected', 'non-existent-key' );
     $this->assertEquals('expected', $result);
   }
 
-  public function testDetectUsedFormTypesSingle()
+	public function testDetectUsedFormTypesSingle()
   {
     $usedTypes = Forms::detectUsedTypes(
       false,
@@ -48,7 +48,7 @@ class FormsTest extends BaseTest
     $this->assertArrayHasKey('mailchimp', $usedTypes_2);
   }
 
-  public function testDetectUsedFormTypesComplex()
+	public function testDetectUsedFormTypesComplex()
   {
     $usedTypes = Forms::detectUsedTypes(
       true,
@@ -73,14 +73,14 @@ class FormsTest extends BaseTest
     $this->assertArrayHasKey('redirect-type', $usedTypes_2);
   }
 
-  public function testAddingThemeToAllBlocks() {
+	public function testAddingThemeToAllBlocks() {
     $theme = 'test-theme-name';
     $blocksWithTheme = Forms::recursivelyChangeThemeForAllBlocks($this->DataProvider->parsedBlocksMock(), $theme);
 
     $this->checkThemeInBlocks($blocksWithTheme, $theme);
   }
 
-  private function checkThemeInBlocks(array $blocks, string $theme) {
+	private function checkThemeInBlocks(array $blocks, string $theme) {
     foreach( $blocks as $blockWithTheme ) {
       $this->assertArrayHasKey('attrs', $blockWithTheme );
       $this->assertArrayHasKey('theme', $blockWithTheme['attrs'] );

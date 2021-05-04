@@ -3,9 +3,9 @@
 use EightshiftForms\Rest\SendEmailRoute;
 class SendEmailRouteTest extends BaseRouteTest
 {
-  const METHOD = 'POST';
+	public const METHOD = 'POST';
 
-  protected function getRouteName(): string {
+	protected function getRouteName(): string {
     return SendEmailRoute::class;
   }
 
@@ -14,7 +14,7 @@ class SendEmailRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessful()
+	public function testRestCallSuccessful()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
@@ -36,7 +36,7 @@ class SendEmailRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessfulWithPlaceholders()
+	public function testRestCallSuccessfulWithPlaceholders()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [
@@ -59,7 +59,7 @@ class SendEmailRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsIfRequiredParamsEmpty()
+	public function testRestCallFailsIfRequiredParamsEmpty()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
     $request->params[self::METHOD] = [

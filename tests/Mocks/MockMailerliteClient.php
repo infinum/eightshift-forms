@@ -24,7 +24,7 @@ class MockMailerliteClient implements ClientInterface {
 	/**
 	 * Constructs object
 	 */
-  public function __construct() {
+	public function __construct() {
     $this->client = Stub::make(MailerLite::class, [
       'groups' => Stub::make(Groups::class, [
         'addSubscriber' => function ($groupId, $subscriberData = [], $params = []) {
@@ -39,7 +39,7 @@ class MockMailerliteClient implements ClientInterface {
 	 *
 	 * @return object
 	 */
-  public function setConfig() {
+	public function setConfig() {
     // do nothing.
   }
 
@@ -48,7 +48,7 @@ class MockMailerliteClient implements ClientInterface {
 	 *
 	 * @return object
 	 */
-  public function getClient() {
+	public function getClient() {
     return $this->client;
   }
 }

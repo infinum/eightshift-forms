@@ -6,7 +6,7 @@ use EightshiftForms\Integrations\Authorization\Hmac;
 
 class TestRouteTest extends BaseRouteTest
 {
-  protected function getRouteName(): string {
+	protected function getRouteName(): string {
     return TestRoute::class;
   }
 
@@ -15,7 +15,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessful()
+	public function testRestCallSuccessful()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
     $request->params['GET'] = [
@@ -34,7 +34,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsBecauseMissingRequiredParams()
+	public function testRestCallFailsBecauseMissingRequiredParams()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
     $request->params['GET'] = [
@@ -53,7 +53,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsBecauseMissingAuthorization()
+	public function testRestCallFailsBecauseMissingAuthorization()
   {
 
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
@@ -72,7 +72,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsBecauseWrongCaptchaAnswer()
+	public function testRestCallFailsBecauseWrongCaptchaAnswer()
   {
 
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
@@ -94,7 +94,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRestCallSucceedsOnCorrectCaptchaAnswer()
+	public function testRestCallSucceedsOnCorrectCaptchaAnswer()
   {
 
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
@@ -117,7 +117,7 @@ class TestRouteTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testRouteUnsetsIrrelevantParams()
+	public function testRouteUnsetsIrrelevantParams()
   {
 
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());

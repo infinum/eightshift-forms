@@ -11,17 +11,17 @@ use GuzzleHttp\Exception\ClientException;
 class MailchimpTest extends BaseTest
 {
 
-  protected function _inject(DataProvider $dataProvider)
+	protected function _inject(DataProvider $dataProvider)
   {
     $this->dataProvider = $dataProvider;
   }
 
-  protected function _before() {
+	protected function _before() {
     parent::_before();
     $this->mailchimp = $this->diContainer->get( Mailchimp::class );
   }
 
-  public function testAddOrUpdateMember()
+	public function testAddOrUpdateMember()
   {
     $this->addHooks();
     $params = [
@@ -42,7 +42,7 @@ class MailchimpTest extends BaseTest
     $this->assertEquals($response, $this->dataProvider->getMockAddOrUpdateMemberResponse( $params ));
   }
 
-  public function testAddOrUpdateMemberIfMissingListId()
+	public function testAddOrUpdateMemberIfMissingListId()
   {
     $this->addHooks();
     $params = [
@@ -75,7 +75,7 @@ class MailchimpTest extends BaseTest
 	 *
 	 * @return void
 	 */
-  protected function addHooks() {
+	protected function addHooks() {
     add_filter( Filters::MAILCHIMP, function($key) {
       return $key;
     }, 1, 1);

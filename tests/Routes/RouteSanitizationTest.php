@@ -6,7 +6,7 @@ use EightshiftForms\Integrations\Authorization\Hmac;
 
 class RouteSanitizationTest extends BaseRouteTest
 {
-  protected function getRouteName(): string {
+	protected function getRouteName(): string {
     return TestRouteSanitization::class;
   }
 
@@ -15,7 +15,7 @@ class RouteSanitizationTest extends BaseRouteTest
 	 *
 	 * @return void
 	 */
-  public function testSanitizeFields()
+	public function testSanitizeFields()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
     $request->params['GET'] = [

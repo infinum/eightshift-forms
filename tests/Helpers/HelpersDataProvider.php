@@ -9,7 +9,7 @@ class HelpersDataProvider
 	 *
 	 * @return array
 	 */
-  public function parsedBlocksMock() {
+	public function parsedBlocksMock() {
     return [
       [
           'blockName' => 'eightshift-forms/form',

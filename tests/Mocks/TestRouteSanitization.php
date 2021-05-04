@@ -28,7 +28,7 @@ class TestRouteSanitization extends BaseRoute implements Filters {
 	 *
 	 * @var string
 	 */
-  const ENDPOINT_SLUG = '/test-route-sanitization';
+	public const ENDPOINT_SLUG = '/test-route-sanitization';
 
 
 	/**
@@ -38,7 +38,7 @@ class TestRouteSanitization extends BaseRoute implements Filters {
 	 * @param AuthorizationInterface $hmac          Authorization object.
 	 * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
 	 */
-  public function __construct(
+	public function __construct(
     AuthorizationInterface $hmac,
     BasicCaptcha $basicCaptcha
   ) {
@@ -55,7 +55,7 @@ class TestRouteSanitization extends BaseRoute implements Filters {
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-  public function routeCallback( \WP_REST_Request $request ) {
+	public function routeCallback( \WP_REST_Request $request ) {
 
     try {
       $params = $this->verifyRequest( $request );

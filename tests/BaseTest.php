@@ -7,11 +7,11 @@ use EightshiftForms\Main\Main;
 class BaseTest extends \Codeception\Test\Unit
 {
 
-  const HOME_URL = 'https://homeurl.com';
-  const WP_REDIRECT_ACTION = 'eightshift_forms_test/wp_safe_redirect_happened';
-  const WP_MAIL_ACTION = 'eightshift_forms_test/wp_mail_happened';
+	public const HOME_URL = 'https://homeurl.com';
+	public const WP_REDIRECT_ACTION = 'eightshift_forms_test/wp_safe_redirect_happened';
+	public const WP_MAIL_ACTION = 'eightshift_forms_test/wp_mail_happened';
 
-  protected function _before()
+	protected function _before()
   {
     // $loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
     $this->main = new Main([], 'EightshiftFormsTests');
@@ -134,7 +134,7 @@ class BaseTest extends \Codeception\Test\Unit
     ]);
   }
 
-  protected function _after()
+	protected function _after()
   {
     Monkey\tearDown();
   }

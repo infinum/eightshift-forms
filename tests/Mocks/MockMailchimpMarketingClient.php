@@ -27,7 +27,7 @@ class MockMailchimpMarketingClient implements ClientInterface {
 	/**
 	 * Constructs object
 	 */
-  public function __construct() {
+	public function __construct() {
     $this->client = Stub::make(MarketingApiClient::class, [
       'lists' => Stub::make(ListsApi::class, [
         'setListMember' => function( $listId, $subscriberHash, $params ) {
@@ -69,7 +69,7 @@ class MockMailchimpMarketingClient implements ClientInterface {
 	 *
 	 * @return object
 	 */
-  public function setConfig() {
+	public function setConfig() {
     $this->client->setConfig([]);
   }
 
@@ -78,7 +78,7 @@ class MockMailchimpMarketingClient implements ClientInterface {
 	 *
 	 * @return object
 	 */
-  public function getClient() {
+	public function getClient() {
     return $this->client;
   }
 }

@@ -28,23 +28,23 @@ class TestRoute extends BaseRoute implements Filters {
 	 *
 	 * @var string
 	 */
-  const ENDPOINT_SLUG = '/test-route';
+	public const ENDPOINT_SLUG = '/test-route';
 
 	/**
 	 * Test salt used for this route.
 	 *
 	 * @var string
 	 */
-  const TEST_SALT = '1234-test-salt';
+	public const TEST_SALT = '1234-test-salt';
 
 	/**
 	 * Mock of required parameters.
 	 *
 	 * @var array
 	 */
-  const REQUIRED_PARAMETER_1 = 'required-param';
-  const REQUIRED_PARAMETER_2 = 'required-param-2';
-  const IRRELEVANT_PARAM     = 'irrelevant-param';
+	public const REQUIRED_PARAMETER_1 = 'required-param';
+	public const REQUIRED_PARAMETER_2 = 'required-param-2';
+	public const IRRELEVANT_PARAM     = 'irrelevant-param';
 
 	/**
 	 * Construct object
@@ -52,7 +52,7 @@ class TestRoute extends BaseRoute implements Filters {
 	 * @param AuthorizationInterface $hmac          Authorization object.
 	 * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
 	 */
-  public function __construct(
+	public function __construct(
     AuthorizationInterface $hmac,
     BasicCaptcha $basicCaptcha
   ) {
@@ -69,7 +69,7 @@ class TestRoute extends BaseRoute implements Filters {
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-  public function routeCallback( \WP_REST_Request $request ) {
+	public function routeCallback( \WP_REST_Request $request ) {
 
     try {
       $params = $this->verifyRequest( $request );
@@ -97,7 +97,7 @@ class TestRoute extends BaseRoute implements Filters {
 	 *
 	 * @return string
 	 */
-  protected function getAuthorizationSalt(): string {
+	protected function getAuthorizationSalt(): string {
     return self::TEST_SALT;
   }
 
@@ -106,7 +106,7 @@ class TestRoute extends BaseRoute implements Filters {
 	 *
 	 * @return array
 	 */
-  protected function getRequiredParams(): array {
+	protected function getRequiredParams(): array {
     return [
       self::REQUIRED_PARAMETER_1,
       self::REQUIRED_PARAMETER_2,
@@ -118,7 +118,7 @@ class TestRoute extends BaseRoute implements Filters {
 	 *
 	 * @return array
 	 */
-  protected function getIrrelevantParams(): array {
+	protected function getIrrelevantParams(): array {
     return [
       self::IRRELEVANT_PARAM,
     ];

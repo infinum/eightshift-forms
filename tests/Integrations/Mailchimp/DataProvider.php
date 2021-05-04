@@ -6,12 +6,12 @@ use stdClass;
 
 class DataProvider
 {
-  const INVALID_LIST_ID = 'invalid-list-id';
-  const MOCK_EMAIL = 'someemail@infinum.com';
-  const MOCK_TAG_1 = 'aaa';
-  const MOCK_TAG_2 = 'bbb';
+	public const INVALID_LIST_ID = 'invalid-list-id';
+	public const MOCK_EMAIL = 'someemail@infinum.com';
+	public const MOCK_TAG_1 = 'aaa';
+	public const MOCK_TAG_2 = 'bbb';
 
-  public static function defaultMergeFields() {
+	public static function defaultMergeFields() {
     return [
       'FNAME' => '',
       'LNAME' => '',
@@ -27,7 +27,7 @@ class DataProvider
 	 *
 	 * @return stdClass
 	 */
-  public static function getMockAddOrUpdateMemberResponse( array $params ): stdClass {
+	public static function getMockAddOrUpdateMemberResponse( array $params ): stdClass {
     $response = new \stdClass();
     $response->id = '5ae1cf23294c7b08b5ddd696a454635a';
     $response->emailAddress = $params['email'];

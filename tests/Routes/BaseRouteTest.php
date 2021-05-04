@@ -8,26 +8,26 @@ use EightshiftForms\Integrations\Authorization\Hmac;
 abstract class BaseRouteTest extends BaseTest
 {
 
-  protected function _inject(Hmac $hmac)
+	protected function _inject(Hmac $hmac)
   {
     $this->hmac = $hmac;
   }
 
-  protected function _before()
+	protected function _before()
   {
     parent::_before();
     $this->routeEndpoint = $this->diContainer->get($this->getRouteName());
     $this->addHooks();
   }
 
-  protected function verifyProperlyFormattedResponse($response) {
+	protected function verifyProperlyFormattedResponse($response) {
     $this->assertInstanceOf('WP_REST_Response', $response);
     $this->assertObjectHasAttribute('data', $response);
     $this->assertArrayHasKey('code', $response->data);
     $this->assertArrayHasKey('data', $response->data);
   }
 
-  protected function verifyProperlyFormattedError($response) {
+	protected function verifyProperlyFormattedError($response) {
     $this->assertInstanceOf('WP_REST_Response', $response);
     $this->assertObjectHasAttribute('data', $response);
     $this->assertArrayHasKey('code', $response->data);
@@ -44,7 +44,7 @@ abstract class BaseRouteTest extends BaseTest
 	 *
 	 * @return void
 	 */
-  protected function addHooks() {
+	protected function addHooks() {
   }
 
 	/**

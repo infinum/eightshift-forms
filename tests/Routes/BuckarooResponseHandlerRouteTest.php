@@ -9,9 +9,9 @@ use Brain\Monkey\Filters as BrainFilters;
 
 class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters, Actions
 {
-  const METHOD = 'GET';
+	public const METHOD = 'GET';
 
-  protected function getRouteName(): string {
+	protected function getRouteName(): string {
     return BuckarooResponseHandlerRoute::class;
   }
 
@@ -23,7 +23,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  protected function addHooks() {
+	protected function addHooks() {
     add_filter( self::BUCKAROO, function($key) {
       return $key;
     }, 1, 1);
@@ -38,7 +38,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRestCallSuccessful()
+	public function testRestCallSuccessful()
   {
     $this->addHooks();
 
@@ -71,7 +71,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRestCallFailsWhenMissingBuckarooKeys()
+	public function testRestCallFailsWhenMissingBuckarooKeys()
   {
     $this->addHooks();
 
@@ -95,7 +95,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testCustomActionRanWhenDefined()
+	public function testCustomActionRanWhenDefined()
   {
     $this->addHooks();
 
@@ -124,7 +124,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testUserWasRedirectedIfRequestWasOk()
+	public function testUserWasRedirectedIfRequestWasOk()
   {
     $this->addHooks();
 
@@ -150,7 +150,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testUserWasRedirectedIfRedirectUrlsMissing()
+	public function testUserWasRedirectedIfRedirectUrlsMissing()
   {
     $this->addHooks();
 
@@ -179,7 +179,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnIdealSuccess()
+	public function testRedirectUrlBuildingWorksOnIdealSuccess()
   {
     $correctUrl = 'http://success.com';
     $params = [
@@ -196,7 +196,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnIdeaelError()
+	public function testRedirectUrlBuildingWorksOnIdeaelError()
   {
     $correctUrl = 'http://error.com';
     $params = [
@@ -213,7 +213,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnIdealReject()
+	public function testRedirectUrlBuildingWorksOnIdealReject()
   {
     $correctUrl = 'http://reject.com';
     $params = [
@@ -230,7 +230,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnIdealCancel()
+	public function testRedirectUrlBuildingWorksOnIdealCancel()
   {
     $correctUrl = 'http://cancel.com';
     $params = [
@@ -247,7 +247,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksWhenUrlNotProvided()
+	public function testRedirectUrlBuildingWorksWhenUrlNotProvided()
   {
     $params = [
       $this->routeEndpoint::STATUS_PARAM => $this->routeEndpoint::STATUS_SUCCESS,
@@ -263,7 +263,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnEmandateSuccess()
+	public function testRedirectUrlBuildingWorksOnEmandateSuccess()
   {
     $correctUrl = 'http://success.com';
     $params = [
@@ -280,7 +280,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnEmandatelError()
+	public function testRedirectUrlBuildingWorksOnEmandatelError()
   {
     $correctUrl = 'http://error.com';
     $params = [
@@ -297,7 +297,7 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlBuildingWorksOnEmandateCancel()
+	public function testRedirectUrlBuildingWorksOnEmandateCancel()
   {
     $correctUrl = 'http://cancel.com';
     $params = [
@@ -314,14 +314,14 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
 	 *
 	 * @return void
 	 */
-  public function testRedirectUrlWasFilteredIfProvided()
+	public function testRedirectUrlWasFilteredIfProvided()
   {
     apply_filters(Filters::BUCKAROO_REDIRECT_URL, 'Filter applied', $this);
     $this->routeEndpoint->buildRedirectUrl( [], DataProvider::emandateCancelledResponseMock() );
     $this->assertTrue( BrainFilters\applied( Filters::BUCKAROO_REDIRECT_URL ) > 0 );
   }
 
-  private function urlencodeParams( array $params ): array {
+	private function urlencodeParams( array $params ): array {
     return array_map( function( $param ) {
       return is_string( $param ) ? rawurlencode( $param ) : $param;
     }, $params);
