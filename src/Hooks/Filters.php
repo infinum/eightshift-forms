@@ -21,11 +21,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/general_info', [ $this, 'getThemes' ], 11 );
 	 *   }
 	 *
-	 * 	public function getThemes(): array
+	 *  public function getThemes(): array
 	 *   {
 	 *     return [
 	 *       'Newsletter',
@@ -43,12 +43,12 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/prefill/multi', [ $this, 'prefillMulti' ], 1, 1 );
 	 *   }
 	 *
 	 *
-	 *	public function prefillMulti( array $prefilled_data ): array {
+	 *  public function prefillMulti( array $prefilled_data ): array {
 	 *    $prefilledData[ 'source-key' ] = [
 	 *      'value' => 'source-key',
 	 *      'label' => 'Test source',
@@ -87,11 +87,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/allowed_blocks', [ $this, 'addAllowedBlocks' ], 1, 1 );
 	 *   }
 	 *
-	 *	public function addAllowedBlocks( $allowed_blocks ) {
+	 *  public function addAllowedBlocks( $allowed_blocks ) {
 	 *    $allowed_blocks[] = 'your-namespace/paragraph';
 	 *    $allowed_blocks[] = 'your-namespace/another-block';
 	 *    return $allowed_blocks;
@@ -113,7 +113,7 @@ interface Filters
 	 *
 	 *  use \EightshiftForms\Integrations\Authorization\Hmac;
 	 *
-	 *	public function addAuthorizationHashToParams( array $params, string $secret ) {
+	 *  public function addAuthorizationHashToParams( array $params, string $secret ) {
 	 *    $params[ Hmac::AUTHORIZATION_KEY ] = apply_filters( 'eightshift_forms/authorization_generator', $params, $secret )
 	 *    return $params;
 	 *  }
@@ -128,11 +128,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/dynamics_info', [ $this, 'getInfo' ], 1, 1 );
 	 *   }
 	 *
-	 *	public function getInfo( string $key ) {
+	 *  public function getInfo( string $key ) {
 	 *    $info = [
 	 *      'clientId' => 'client-id',
 	 *      'clientSecret' => 'client-secret',
@@ -158,11 +158,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/buckaroo', [ $this, 'getInfo' ], 1, 1 );
 	 *   }
 	 *
-	 *	public function getInfo( string $key ) {
+	 *  public function getInfo( string $key ) {
 	 *    $info = [
 	 *      'websiteKey' => 'websiteKey',
 	 *      'secretKey' => 'secretKey',
@@ -181,11 +181,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/mailchimp', [ $this, 'get_info' ], 1, 1 );
 	 *   }
 	 *
-	 *	public function get_info( string $key ) {
+	 *  public function get_info( string $key ) {
 	 *    $info = [
 	 *      'apiKey' => 'your-api-key',
 	 *      'server' => 'us2',
@@ -204,11 +204,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1 );
 	 *   }
 	 *
-	 *	public function get_info( string $key ): string
+	 *  public function get_info( string $key ): string
 	 *  {
 	 *    $info = [
 	 *      'apiKey' => 'your-api-key',
@@ -228,11 +228,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/required_params/buckaroo_emandate', [ $this, 'add_required_params' ], 11, 1 );
 	 *   }
 	 *
-	 * 	public function get_info( array $required_params ) {
+	 *  public function get_info( array $required_params ) {
 	 *     $required_params[] = 'new-key';
 	 *     return $required_params;
 	 *   }
@@ -249,11 +249,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/required_params/buckaroo_ideal', [ $this, 'add_required_params' ], 11, 1 );
 	 *   }
 	 *
-	 * 	public function get_info( array $required_params ) {
+	 *  public function get_info( array $required_params ) {
 	 *     $required_params[] = 'new-key';
 	 *     return $required_params;
 	 *   }
@@ -268,11 +268,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/modify_buckaroo_redirectUrl', [ $this, 'modify_url' ], 1, 3 );
 	 *   }
 	 *
-	 *	public function modify_url( string $redirectUrl, array $params, Buckaroo_Response $buckaroo_response ) {
+	 *  public function modify_url( string $redirectUrl, array $params, Buckaroo_Response $buckaroo_response ) {
 	 *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
 	 *    return $redirectUrl;
 	 *  }
@@ -289,11 +289,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/buckaroo_filter_buckaroo_params', [ $this, 'modify_params' ], 1, 2 );
 	 *   }
 	 *
-	 *	public function modify_params( array $params, array $buckaroo_params ) {
+	 *  public function modify_params( array $params, array $buckaroo_params ) {
 	 *    if ( $params['test-enabled-field'] === '1' ) {
 	 *      $buckaroo_params['BRQ_STATUSCODE'] = 123;
 	 *      $buckaroo_params['BRQ_MOCK'] = true;
@@ -312,11 +312,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/buckaroo_pay_by_email_redirectUrl_override', [ $this, 'modify_url' ], 1, 1 );
 	 *   }
 	 *
-	 *	public function modify_url( string $redirectUrl ) {
+	 *  public function modify_url( string $redirectUrl ) {
 	 *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
 	 *    return $redirectUrl;
 	 *  }
@@ -342,11 +342,11 @@ interface Filters
 	 *
 	 * Example:
 	 *
-	 * 	public function register(): void {
+	 *  public function register(): void {
 	 *     add_filter( 'eightshift_forms/roles_with_access_to_forms', [ $this, 'modify_roles_with_access' ], 11, 1 );
 	 *   }
 	 *
-	 * 	public function modify_roles_with_access( array $existing_roles ) {
+	 *  public function modify_roles_with_access( array $existing_roles ) {
 	 *     $existing_roles['editor'] = true;
 	 *     return $existing_roles;
 	 *   }
