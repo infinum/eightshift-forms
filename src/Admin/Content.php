@@ -16,21 +16,21 @@ use EightshiftLibs\Services\ServiceInterface;
 class Content implements ServiceInterface
 {
 
-  /**
-   * Register all the hooks
-   */
+	/**
+	 * Register all the hooks
+	 */
 	public function register(): void
 	{
 		add_action('wp_kses_allowed_html', [$this, 'setCustomWpksesPostTags'], 10, 2);
 	}
 
-  /**
-   * Add tags to default wp_kses_post
-   *
-   * @param  array  $tags    Allowed tags array.
-   * @param  string $context Context in which the filter is called.
-   * @return array           Modified allowed tags array.
-   */
+	/**
+	 * Add tags to default wp_kses_post
+	 *
+	 * @param  array  $tags    Allowed tags array.
+	 * @param  string $context Context in which the filter is called.
+	 * @return array           Modified allowed tags array.
+	 */
 	public function setCustomWpksesPostTags($tags, $context)
 	{
 		$appendedTags = [

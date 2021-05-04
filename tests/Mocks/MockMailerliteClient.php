@@ -21,9 +21,9 @@ use MailerLiteApi\MailerLite;
  */
 class MockMailerliteClient implements ClientInterface {
 
-  /**
-   * Constructs object
-   */
+	/**
+	 * Constructs object
+	 */
   public function __construct() {
     $this->client = Stub::make(MailerLite::class, [
       'groups' => Stub::make(Groups::class, [
@@ -34,20 +34,20 @@ class MockMailerliteClient implements ClientInterface {
     ]);
   }
 
-  /**
-   * Mock setting config.
-   *
-   * @return object
-   */
+	/**
+	 * Mock setting config.
+	 *
+	 * @return object
+	 */
   public function setConfig() {
     // do nothing.
   }
 
-  /**
-   * Returns the build client
-   *
-   * @return object
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return object
+	 */
   public function getClient() {
     return $this->client;
   }

@@ -22,11 +22,11 @@ class DataProvider
       'DON' => '',
     ];
   }
-  /**
-   * Example of successful transaction Buckaroo response.
-   *
-   * @return stdClass
-   */
+	/**
+	 * Example of successful transaction Buckaroo response.
+	 *
+	 * @return stdClass
+	 */
   public static function getMockAddOrUpdateMemberResponse( array $params ): stdClass {
     $response = new \stdClass();
     $response->id = '5ae1cf23294c7b08b5ddd696a454635a';

@@ -18,17 +18,17 @@ use EightshiftLibs\Exception\GeneralExceptionInterface;
 final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface
 {
 
-  /**
-   * Create a new instance of the exception if the view file itself created
-   * an exception.
-   *
-   * @param string $filter Which filter doesn't have all info.
-   * @param string $key    Which key is missing in info provided by filter.
-   *
-   * @return static
-   *
-   * @since 0.1.0
-   */
+	/**
+	 * Create a new instance of the exception if the view file itself created
+	 * an exception.
+	 *
+	 * @param string $filter Which filter doesn't have all info.
+	 * @param string $key    Which key is missing in info provided by filter.
+	 *
+	 * @return static
+	 *
+	 * @since 0.1.0
+	 */
 	public static function viewException($filter, $key)
 	{
 		$message = sprintf(

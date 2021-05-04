@@ -46,97 +46,97 @@ class Response
 	public const IDEAL_IBAN_PARAM            = 'BRQ_SERVICE_IDEAL_CONSUMERIBAN';
 	public const MOCK_PAY_BY_EMAIL_PARAM     = 'BRQ_MOCK_SERVICE';
 
-  /**
-   * Service type of response.
-   *
-   * @var string
-   */
+	/**
+	 * Service type of response.
+	 *
+	 * @var string
+	 */
 	private $service = '';
 
-  /**
-   * Status code of response.
-   *
-   * @var int
-   */
+	/**
+	 * Status code of response.
+	 *
+	 * @var int
+	 */
 	private $status;
 
-  /**
-   * Status code as readable text.
-   *
-   * @var string
-   */
+	/**
+	 * Status code as readable text.
+	 *
+	 * @var string
+	 */
 	private $statusAsText = '';
 
-  /**
-   * Payer's bank ID.
-   *
-   * @var string
-   */
+	/**
+	 * Payer's bank ID.
+	 *
+	 * @var string
+	 */
 	private $bankId = '';
 
-  /**
-   * Payer's IBAN.
-   *
-   * @var string
-   */
+	/**
+	 * Payer's IBAN.
+	 *
+	 * @var string
+	 */
 	private $iban = '';
 
-  /**
-   * Payer's bank name.
-   *
-   * @var string
-   */
+	/**
+	 * Payer's bank name.
+	 *
+	 * @var string
+	 */
 	private $idealBankName = '';
 
-  /**
-   * Payment amount when using iDEAL.
-   *
-   * @var string
-   */
+	/**
+	 * Payment amount when using iDEAL.
+	 *
+	 * @var string
+	 */
 	private $idealPaymentAmount = '';
 
-  /**
-   * Payment ID when using iDEAL.
-   *
-   * @var string
-   */
+	/**
+	 * Payment ID when using iDEAL.
+	 *
+	 * @var string
+	 */
 	private $idealPaymentId = '';
 
-  /**
-   * Invoice number when using iDEAL.
-   *
-   * @var string
-   */
+	/**
+	 * Invoice number when using iDEAL.
+	 *
+	 * @var string
+	 */
 	private $idealInvoiceNumber = '';
 
-  /**
-   * Emandate ID.
-   *
-   * @var string
-   */
+	/**
+	 * Emandate ID.
+	 *
+	 * @var string
+	 */
 	private $emandateId = '';
 
-  /**
-   * Emandate reference ID.
-   *
-   * @var string
-   */
+	/**
+	 * Emandate reference ID.
+	 *
+	 * @var string
+	 */
 	private $emandateReferenceId = '';
 
-  /**
-   * Check if this is a test response or not.
-   *
-   * @var bool
-   */
+	/**
+	 * Check if this is a test response or not.
+	 *
+	 * @var bool
+	 */
 	private $test;
 
-  /**
-   * Construct object.
-   *
-   * @param array $buckarooParams Array of Buckaroo response params.
-   *
-   * @throws \Exception If unable to public construct response.
-   */
+	/**
+	 * Construct object.
+	 *
+	 * @param array $buckarooParams Array of Buckaroo response params.
+	 *
+	 * @throws \Exception If unable to public construct response.
+	 */
 	public function __construct(array $buckarooParams)
 	{
 		if (empty($buckarooParams)) {
@@ -171,182 +171,182 @@ class Response
 		$this->validateResponse();
 	}
 
-  /**
-   * Check if response is an iDEAL response.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if response is an iDEAL response.
+	 *
+	 * @return boolean
+	 */
 	public function isIdeal(): bool
 	{
 		return $this->service === self::SERVICE_IDEAL;
 	}
 
-  /**
-   * Check if response is an iDEAL response.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if response is an iDEAL response.
+	 *
+	 * @return boolean
+	 */
 	public function isEmandate(): bool
 	{
 		return $this->service === self::SERVICE_EMANDATE;
 	}
 
-  /**
-   * Check if response is an Pay By Email (Mocked) response.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if response is an Pay By Email (Mocked) response.
+	 *
+	 * @return boolean
+	 */
 	public function isPayByEmail(): bool
 	{
 		return $this->service === self::SERVICE_PAY_BY_EMAIL;
 	}
 
-  /**
-   * Check if response is an success.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if response is an success.
+	 *
+	 * @return boolean
+	 */
 	public function isSuccess(): bool
 	{
 		return $this->status === self::STATUS_CODE_SUCCESS;
 	}
 
-  /**
-   * Check if response is an cancel.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if response is an cancel.
+	 *
+	 * @return boolean
+	 */
 	public function isCancel(): bool
 	{
 		return $this->status === self::STATUS_CODE_CANCELLED;
 	}
 
-  /**
-   * Get payer's IBAN.
-   *
-   * @return  string
-   */
+	/**
+	 * Get payer's IBAN.
+	 *
+	 * @return  string
+	 */
 	public function getIban()
 	{
 		return $this->iban;
 	}
 
-  /**
-   * Get emandate reference ID.
-   *
-   * @return  string
-   */
+	/**
+	 * Get emandate reference ID.
+	 *
+	 * @return  string
+	 */
 	public function getEmandateReferenceId(): string
 	{
 		return $this->emandateReferenceId;
 	}
 
-  /**
-   * Get emandate ID.
-   *
-   * @return  string
-   */
+	/**
+	 * Get emandate ID.
+	 *
+	 * @return  string
+	 */
 	public function getEmandateId(): string
 	{
 		return $this->emandateId;
 	}
 
-  /**
-   * Get invoice number when using iDEAL.
-   *
-   * @return  string
-   */
+	/**
+	 * Get invoice number when using iDEAL.
+	 *
+	 * @return  string
+	 */
 	public function getIdealInvoiceNumber(): string
 	{
 		return $this->idealInvoiceNumber;
 	}
 
-  /**
-   * Get payment ID when using iDEAL.
-   *
-   * @return  string
-   */
+	/**
+	 * Get payment ID when using iDEAL.
+	 *
+	 * @return  string
+	 */
 	public function getIdealPaymentId(): string
 	{
 		return $this->idealPaymentId;
 	}
 
-  /**
-   * Get payment amount when using iDEAL.
-   *
-   * @return  string
-   */
+	/**
+	 * Get payment amount when using iDEAL.
+	 *
+	 * @return  string
+	 */
 	public function getIdealPaymentAmount()
 	{
 		return $this->idealPaymentAmount;
 	}
 
-  /**
-   * Get payer's bank ID.
-   *
-   * @return  string
-   */
+	/**
+	 * Get payer's bank ID.
+	 *
+	 * @return  string
+	 */
 	public function getBankId(): string
 	{
 		return $this->bankId;
 	}
 
-  /**
-   * Get status code of response.
-   *
-   * @return  int
-   */
+	/**
+	 * Get status code of response.
+	 *
+	 * @return  int
+	 */
 	public function getStatus(): int
 	{
 		return $this->status;
 	}
 
-  /**
-   * Get service type of response.
-   *
-   * @return  string
-   */
+	/**
+	 * Get service type of response.
+	 *
+	 * @return  string
+	 */
 	public function getService(): string
 	{
 		return $this->service;
 	}
 
-  /**
-   * Get check if this is a test response or not.
-   *
-   * @return  bool
-   */
+	/**
+	 * Get check if this is a test response or not.
+	 *
+	 * @return  bool
+	 */
 	public function getTest(): bool
 	{
 		return $this->test;
 	}
 
-  /**
-   * Get payer's bank name.
-   *
-   * @return  string
-   */
+	/**
+	 * Get payer's bank name.
+	 *
+	 * @return  string
+	 */
 	public function getIdealBankName(): string
 	{
 		return $this->idealBankName;
 	}
 
-  /**
-   * Get status code as readable text.
-   *
-   * @return  string
-   */
+	/**
+	 * Get status code as readable text.
+	 *
+	 * @return  string
+	 */
 	public function getStatusAsText(): string
 	{
 		return $this->statusAsText;
 	}
 
-  /**
-   * Detects which service this response belongs to.
-   *
-   * @param  int $statusCode Status code of response.
-   * @return string
-   */
+	/**
+	 * Detects which service this response belongs to.
+	 *
+	 * @param  int $statusCode Status code of response.
+	 * @return string
+	 */
 	private function buildStatusAsText(int $statusCode): string
 	{
 		switch ($statusCode) {
@@ -375,12 +375,12 @@ class Response
 		return $this->statusAsText;
 	}
 
-  /**
-   * Detects which service this response belongs to.
-   *
-   * @param array $buckarooParams Array of Buckaroo params.
-   * @return string
-   */
+	/**
+	 * Detects which service this response belongs to.
+	 *
+	 * @param array $buckarooParams Array of Buckaroo params.
+	 * @return string
+	 */
 	private function detectService(array $buckarooParams): string
 	{
 		if (isset($buckarooParams[self::PRIMARY_PAYMENT_METHOD]) && $buckarooParams[self::PRIMARY_PAYMENT_METHOD] === self::SERVICE_IDEAL) {
@@ -398,13 +398,13 @@ class Response
 		return self::SERVICE_INVALID;
 	}
 
-  /**
-   * Validates that we've successfully built the response.
-   *
-   * @return bool
-   *
-   * @throws InvalidBuckarooResponseException When we're unable to validate response.
-   */
+	/**
+	 * Validates that we've successfully built the response.
+	 *
+	 * @return bool
+	 *
+	 * @throws InvalidBuckarooResponseException When we're unable to validate response.
+	 */
 	private function validateResponse(): bool
 	{
 		if (! $this->isCancel() && $this->service === self::SERVICE_INVALID) {

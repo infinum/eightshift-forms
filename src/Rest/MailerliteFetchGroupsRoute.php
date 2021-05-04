@@ -24,48 +24,48 @@ use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 class MailerliteFetchGroupsRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/mailerlite-fetch-groups';
 
-  /**
-   * Mailerlite object.
-   *
-   * @var Mailerlite
-   */
+	/**
+	 * Mailerlite object.
+	 *
+	 * @var Mailerlite
+	 */
 	protected $mailerlite;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param Mailerlite   $mailerlite    Mailerlite object.
-   * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Mailerlite   $mailerlite    Mailerlite object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(Mailerlite $mailerlite, BasicCaptcha $basicCaptcha)
 	{
 		$this->mailerlite   = $mailerlite;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 

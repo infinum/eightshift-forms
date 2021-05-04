@@ -22,65 +22,65 @@ use MailchimpMarketing\ApiClient;
 class Mailchimp
 {
 
-  /**
-   * Lists transient name
-   *
-   * @var string
-   */
+	/**
+	 * Lists transient name
+	 *
+	 * @var string
+	 */
 	public const CACHE_LISTS = 'eightshift-forms-mailchimp-lists';
 
-  /**
-   * Lists transient expiration time.
-   *
-   * @var int
-   */
+	/**
+	 * Lists transient expiration time.
+	 *
+	 * @var int
+	 */
 	public const CACHE_LIST_TIMEOUT = 60 * 15; // 15 min
 
-  /**
-   * Mailchimp Marketing Api client.
-   *
-   * @var ApiClient
-   */
+	/**
+	 * Mailchimp Marketing Api client.
+	 *
+	 * @var ApiClient
+	 */
 	private $client;
 
-  /**
-   * Our own implementation of Mailchimp Marketing Client.
-   *
-   * @var ClientInterface
-   */
+	/**
+	 * Our own implementation of Mailchimp Marketing Client.
+	 *
+	 * @var ClientInterface
+	 */
 	private $mailchimpMarketingClient;
 
-  /**
-   * Cache object used for caching Mailchimp responses.
-   *
-   * @var Cache
-   */
+	/**
+	 * Cache object used for caching Mailchimp responses.
+	 *
+	 * @var Cache
+	 */
 	private $cache;
 
-  /**
-   * Constructs object
-   *
-   * @param ClientInterface $mailchimpMarketingClient Mailchimp marketing client.
-   * @param Cache           $transientCache            Transient cache object.
-   */
+	/**
+	 * Constructs object
+	 *
+	 * @param ClientInterface $mailchimpMarketingClient Mailchimp marketing client.
+	 * @param Cache           $transientCache            Transient cache object.
+	 */
 	public function __construct(ClientInterface $mailchimpMarketingClient, Cache $transientCache)
 	{
 		$this->mailchimpMarketingClient = $mailchimpMarketingClient;
 		$this->cache = $transientCache;
 	}
 
-  /**
-   * Adds or updates a member in Mailchimp.
-   *
-   * @param  string $listId      Audience list ID.
-   * @param  string $email        Contact's email.
-   * @param  array  $mergeFields List of merge fields to add to request.
-   * @param  array  $params       (Optional) list of params from request.
-   * @param  string $status       (Optional) Member's status (if new).
-   * @return mixed
-   *
-   * @throws \Exception When response is invalid.
-   */
+	/**
+	 * Adds or updates a member in Mailchimp.
+	 *
+	 * @param  string $listId      Audience list ID.
+	 * @param  string $email        Contact's email.
+	 * @param  array  $mergeFields List of merge fields to add to request.
+	 * @param  array  $params       (Optional) list of params from request.
+	 * @param  string $status       (Optional) Member's status (if new).
+	 * @return mixed
+	 *
+	 * @throws \Exception When response is invalid.
+	 */
 	public function addOrUpdateMember(string $listId, string $email, array $mergeFields, array $params = [], string $status = 'pending')
 	{
 		$this->setupClientConfigAndVerify();
@@ -98,18 +98,18 @@ class Mailchimp
 		return $response;
 	}
 
-  /**
-   * Adds a member in Mailchimp.
-   *
-   * @param  string $listId      Audience list ID.
-   * @param  string $email        Contact's email.
-   * @param  array  $mergeFields List of merge fields to add to request.
-   * @param  array  $params       (Optional) list of params from request.
-   * @param  string $status       (Optional) Member's status (if new).
-   * @return mixed
-   *
-   * @throws \Exception When response is invalid.
-   */
+	/**
+	 * Adds a member in Mailchimp.
+	 *
+	 * @param  string $listId      Audience list ID.
+	 * @param  string $email        Contact's email.
+	 * @param  array  $mergeFields List of merge fields to add to request.
+	 * @param  array  $params       (Optional) list of params from request.
+	 * @param  string $status       (Optional) Member's status (if new).
+	 * @return mixed
+	 *
+	 * @throws \Exception When response is invalid.
+	 */
 	public function addMember(string $listId, string $email, array $mergeFields, array $params = [], string $status = 'pending')
 	{
 		$this->setupClientConfigAndVerify();
@@ -127,16 +127,16 @@ class Mailchimp
 		return $response;
 	}
 
-  /**
-   * Add a tag to a member.
-   *
-   * @param  string $listId   Audience list ID.
-   * @param  string $email     Contact's email.
-   * @param  array  $tagNames Just a 1d array of tag names. Other processing is done inside.
-   * @return bool
-   *
-   * @throws \Exception When response is invalid.
-   */
+	/**
+	 * Add a tag to a member.
+	 *
+	 * @param  string $listId   Audience list ID.
+	 * @param  string $email     Contact's email.
+	 * @param  array  $tagNames Just a 1d array of tag names. Other processing is done inside.
+	 * @return bool
+	 *
+	 * @throws \Exception When response is invalid.
+	 */
 	public function addMemberTags(string $listId, string $email, array $tagNames): bool
 	{
 		$this->setupClientConfigAndVerify();
@@ -159,27 +159,27 @@ class Mailchimp
 		return ! empty($updateResponse);
 	}
 
-  /**
-   * List a member
-   *
-   * @param  string $listId Audience list ID.
-   * @param  string $email   Contact's email.
-   * @return mixed
-   */
+	/**
+	 * List a member
+	 *
+	 * @param  string $listId Audience list ID.
+	 * @param  string $email   Contact's email.
+	 * @return mixed
+	 */
 	public function getListMember(string $listId, string $email)
 	{
 		$this->setupClientConfigAndVerify();
 		return $this->client->lists->getListMember($listId, $this->calculateSubscriberHash($email));
 	}
 
-  /**
-   * Get information about all lists in the account.
-   *
-   * @param bool $isFresh Set to true if you want to fetch the lists regardless if we already have them cached.
-   * @return mixed
-   *
-   * @throws \Exception When response is invalid.
-   */
+	/**
+	 * Get information about all lists in the account.
+	 *
+	 * @param bool $isFresh Set to true if you want to fetch the lists regardless if we already have them cached.
+	 * @return mixed
+	 *
+	 * @throws \Exception When response is invalid.
+	 */
 	public function getAllLists(bool $isFresh = false)
 	{
 
@@ -207,14 +207,14 @@ class Mailchimp
 		return $response;
 	}
 
-  /**
-   * Get information about all tags & segments in the account.
-   *
-   * @param  string $listId Audience list ID.
-   * @return mixed
-   *
-   * @throws \Exception When response is invalid.
-   */
+	/**
+	 * Get information about all tags & segments in the account.
+	 *
+	 * @param  string $listId Audience list ID.
+	 * @return mixed
+	 *
+	 * @throws \Exception When response is invalid.
+	 */
 	public function getAllSegments(string $listId)
 	{
 		$this->setupClientConfigAndVerify();
@@ -232,24 +232,24 @@ class Mailchimp
 		return $response;
 	}
 
-  /**
-   * Calculates the subscriber hash from email.
-   *
-   * @param  string $email Contact's email.
-   * @return string
-   */
+	/**
+	 * Calculates the subscriber hash from email.
+	 *
+	 * @param  string $email Contact's email.
+	 * @return string
+	 */
 	private function calculateSubscriberHash(string $email): string
 	{
 		return md5($email);
 	}
 
-  /**
-   * Make sure we have the data we need defined as filters.
-   *
-   * @throws MissingFilterInfoException When not all required keys are set.
-   *
-   * @return void
-   */
+	/**
+	 * Make sure we have the data we need defined as filters.
+	 *
+	 * @throws MissingFilterInfoException When not all required keys are set.
+	 *
+	 * @return void
+	 */
 	private function setupClientConfigAndVerify(): void
 	{
 		if (! has_filter(Filters::MAILCHIMP)) {

@@ -22,11 +22,11 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 class SendEmailRoute extends BaseRoute
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/send-email';
 
 	public const TO_PARAM                          = 'emailTo';
@@ -38,32 +38,32 @@ class SendEmailRoute extends BaseRoute
 	public const CONFIRMATION_MESSAGE_PARAM        = 'emailConfirmationMessage';
 	public const EMAIL_PARAM                       = 'email';
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object.
-   *
-   * @param BasicCaptcha $basicCaptcha Basic captcha object.
-   */
+	/**
+	 * Construct object.
+	 *
+	 * @param BasicCaptcha $basicCaptcha Basic captcha object.
+	 */
 	public function __construct(BasicCaptcha $basicCaptcha)
 	{
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response.
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response.
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -105,12 +105,12 @@ class SendEmailRoute extends BaseRoute
 		]);
 	}
 
-  /**
-   * Adds default email headers so email is interpreted as HTML.
-   *
-   * @param  string $headers Existing headers.
-   * @return string
-   */
+	/**
+	 * Adds default email headers so email is interpreted as HTML.
+	 *
+	 * @param  string $headers Existing headers.
+	 * @return string
+	 */
 	protected function addDefaultHeaders(string $headers): string
 	{
 		$headers .= "MIME-Version: 1.0\r\n";
@@ -118,40 +118,40 @@ class SendEmailRoute extends BaseRoute
 		return $headers;
 	}
 
-  /**
-   * Check if we received a parameter to send an email confirmation to user.
-   *
-   * @param  array $params Query parameters sent to route.
-   * @return bool
-   */
+	/**
+	 * Check if we received a parameter to send an email confirmation to user.
+	 *
+	 * @param  array $params Query parameters sent to route.
+	 * @return bool
+	 */
 	protected function shouldSendEmailCopyToUser(array $params): bool
 	{
 		return isset($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM]) && filter_var($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM], FILTER_VALIDATE_BOOL);
 	}
 
-  /**
-   * Check if email param is set and valid.
-   *
-   * @param  array $params Query parameters sent to route.
-   * @return boolean
-   */
+	/**
+	 * Check if email param is set and valid.
+	 *
+	 * @param  array $params Query parameters sent to route.
+	 * @return boolean
+	 */
 	protected function isEmailSetAndValid(array $params): bool
 	{
 		return isset($params[self::EMAIL_PARAM]) && filter_var($params[self::EMAIL_PARAM], FILTER_VALIDATE_EMAIL);
 	}
 
-  /**
-   * Takes all parameters received in request and builds all subject / message info needed to send the email.
-   * Must return array with the following keys:
-   * - to
-   * - subject
-   * - message
-   * - headers
-   *
-   * @param  array $params              Params received in request.
-   * @param  bool  $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
-   * @return array
-   */
+	/**
+	 * Takes all parameters received in request and builds all subject / message info needed to send the email.
+	 * Must return array with the following keys:
+	 * - to
+	 * - subject
+	 * - message
+	 * - headers
+	 *
+	 * @param  array $params              Params received in request.
+	 * @param  bool  $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
+	 * @return array
+	 */
 	protected function buildEmailInfoFromParams(array $params, bool $isForConfirmation = false): array
 	{
 		$subjectParam = $isForConfirmation ? self::CONFIRMATION_SUBJECT_PARAM : self::SUBJECT_PARAM;
@@ -165,11 +165,11 @@ class SendEmailRoute extends BaseRoute
 		];
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -179,21 +179,21 @@ class SendEmailRoute extends BaseRoute
 		];
 	}
 
-  /**
-   * Toggle if this route requires nonce verification
-   *
-   * @return bool
-   */
+	/**
+	 * Toggle if this route requires nonce verification
+	 *
+	 * @return bool
+	 */
 	protected function requiresNonceVerification(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return static::CREATABLE;

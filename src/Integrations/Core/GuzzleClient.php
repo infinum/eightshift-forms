@@ -19,52 +19,52 @@ use GuzzleHttp\Client;
 class GuzzleClient implements HttpClientInterface
 {
 
-  /**
-   * Guzzle client object usd for making requests.
-   *
-   * @var ClientInterface.
-   */
+	/**
+	 * Guzzle client object usd for making requests.
+	 *
+	 * @var ClientInterface.
+	 */
 	private $client;
 
-  /**
-   * Constructs object.
-   */
+	/**
+	 * Constructs object.
+	 */
 	public function __construct()
 	{
 		$this->client = GuzzleHttpClientFactory::create();
 	}
 
-  /**
-   * Implementation of get request on the HttpClient.
-   *
-   * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request.
-   * @return mixed
-   */
+	/**
+	 * Implementation of get request on the HttpClient.
+	 *
+	 * @param  string $url        Url to ping.
+	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @return mixed
+	 */
 	public function get(string $url, array $parameters = [])
 	{
 		return $this->client->request('GET', $url, $parameters);
 	}
 
-  /**
-   * Implementation of post request on the HttpClient.
-   *
-   * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request.
-   * @return mixed
-   */
+	/**
+	 * Implementation of post request on the HttpClient.
+	 *
+	 * @param  string $url        Url to ping.
+	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @return mixed
+	 */
 	public function post(string $url, array $parameters = [])
 	{
 		return $this->client->request('POST', $url, $parameters);
 	}
 
-  /**
-   * Implementation of post request on the HttpClient.
-   *
-   * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request.
-   * @return mixed
-   */
+	/**
+	 * Implementation of post request on the HttpClient.
+	 *
+	 * @param  string $url        Url to ping.
+	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @return mixed
+	 */
 	public function patch(string $url, array $parameters = [])
 	{
 		return $this->client->request('PATCH', $url, $parameters);

@@ -20,21 +20,21 @@ use EightshiftLibs\Services\ServiceInterface;
 final class Users implements ServiceInterface
 {
 
-  /**
-   * Register all the hooks
-   *
-   * @return void
-   */
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
 	public function register(): void
 	{
 		add_action('admin_init', [$this, 'allowFormsAccess'], 10);
 	}
 
-  /**
-   * Easy 1 function for managing additional capabilities.
-   *
-   * @return void
-   */
+	/**
+	 * Easy 1 function for managing additional capabilities.
+	 *
+	 * @return void
+	 */
 	public function allowFormsAccess()
 	{
 		if (has_filter(Filters::ROLES_WITH_FORMS_ACCESS)) {
@@ -46,12 +46,12 @@ final class Users implements ServiceInterface
 		$this->manageAdditionalRoles($roles);
 	}
 
-  /**
-   * Easy 1 function for managing additional capabilities.
-   *
-   * @param array $roles Roles in 'roleName' => true/false format.
-   * @return void
-   */
+	/**
+	 * Easy 1 function for managing additional capabilities.
+	 *
+	 * @param array $roles Roles in 'roleName' => true/false format.
+	 * @return void
+	 */
 	public function manageAdditionalRoles(array $roles)
 	{
 		foreach ($roles as $roleName => $hasAccess) {
@@ -77,11 +77,11 @@ final class Users implements ServiceInterface
 		}
 	}
 
-  /**
-   * Returns the default array of roles which can access Forms CPT:
-   *
-   * @return array
-   */
+	/**
+	 * Returns the default array of roles which can access Forms CPT:
+	 *
+	 * @return array
+	 */
 	public function getRolesWithFormsAccess(): array
 	{
 		return [
@@ -89,13 +89,13 @@ final class Users implements ServiceInterface
 		];
 	}
 
-  /**
-   * Get all post type caps.
-   *
-   * @param string $type      Name of post type.
-   *
-   * @return array
-   */
+	/**
+	 * Get all post type caps.
+	 *
+	 * @param string $type      Name of post type.
+	 *
+	 * @return array
+	 */
 	private function getAllPostTypeCaps(string $type): array
 	{
 		return [

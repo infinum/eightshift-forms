@@ -27,50 +27,50 @@ use GuzzleHttp\Exception\ClientException;
 class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * This is how long this route's response will be cached.
-   *
-   * @var int
-   */
+	/**
+	 * This is how long this route's response will be cached.
+	 *
+	 * @var int
+	 */
 	public const HOW_LONG_TO_CACHE_RESPONSE_IN_SEC = 3600;
 
 	public const ENTITY_PARAM = 'dynamics-crm-entity';
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/dynamics-crm-fetch-entity';
 
-  /**
-   * Dynamics CRM object.
-   *
-   * @var DynamicsCrm
-   */
+	/**
+	 * Dynamics CRM object.
+	 *
+	 * @var DynamicsCrm
+	 */
 	protected $dynamicsCrm;
 
-  /**
-   * Implementation of the Authorization obj.
-   *
-   * @var AuthorizationInterface
-   */
+	/**
+	 * Implementation of the Authorization obj.
+	 *
+	 * @var AuthorizationInterface
+	 */
 	protected $hmac;
 
-  /**
-   * Cache implementation obj.
-   *
-   * @var Cache
-   */
+	/**
+	 * Cache implementation obj.
+	 *
+	 * @var Cache
+	 */
 	protected $cache;
 
-  /**
-   * Construct object
-   *
-   * @param DynamicsCrm            $dynamicsCrm    Dynamics CRM object.
-   * @param AuthorizationInterface $hmac            Authorization object.
-   * @param Cache                  $transientCache Cache object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param DynamicsCrm            $dynamicsCrm    Dynamics CRM object.
+	 * @param AuthorizationInterface $hmac            Authorization object.
+	 * @param Cache                  $transientCache Cache object.
+	 */
 	public function __construct(DynamicsCrm $dynamicsCrm, AuthorizationInterface $hmac, Cache $transientCache)
 	{
 		$this->dynamicsCrm = $dynamicsCrm;
@@ -78,15 +78,15 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		$this->cache        = $transientCache;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -137,21 +137,21 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		);
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return bool
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return bool
+	 */
 	public function permissionCallback(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return array
+	 */
 	protected function getIrrelevantParams(): array
 	{
 		return [
@@ -164,11 +164,11 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -176,15 +176,15 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
-   * should be some secret. For example the secretKey for accessing the 3rd party route this route is
-   * handling.
-   *
-   * If this function returns a non-empty value, it is assumed the route requires authorization.
-   *
-   * @return string
-   */
+	/**
+	 * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
+	 * should be some secret. For example the secretKey for accessing the 3rd party route this route is
+	 * handling.
+	 *
+	 * If this function returns a non-empty value, it is assumed the route requires authorization.
+	 *
+	 * @return string
+	 */
 	protected function getAuthorizationSalt(): string
 	{
 		return \apply_filters(self::DYNAMICS_CRM, 'clientSecret') ?? 'invalid-salt';

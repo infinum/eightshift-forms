@@ -22,92 +22,92 @@ use EightshiftForms\Integrations\Authorization\Hmac;
 abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Issuer, bank code.
-   *
-   * @var string
-   */
+	/**
+	 * Issuer, bank code.
+	 *
+	 * @var string
+	 */
 	public const ISSUER_PARAM = 'issuer';
 
-  /**
-   * Param for description of this transaction. Not used in Emandates because Emandates
-   * has it's own field / param for this: (see buckaroo-emandate-route).
-   *
-   * @var string
-   */
+	/**
+	 * Param for description of this transaction. Not used in Emandates because Emandates
+	 * has it's own field / param for this: (see buckaroo-emandate-route).
+	 *
+	 * @var string
+	 */
 	public const PAYMENT_DESCRIPTION_PARAM = 'payment-description';
 
-  /**
-   * Test param, set if you wish to Test Buckaroo implementation.
-   *
-   * @var string
-   */
+	/**
+	 * Test param, set if you wish to Test Buckaroo implementation.
+	 *
+	 * @var string
+	 */
 	public const TEST_PARAM = 'test';
 
-  /**
-   * Name of the required parameter for redirect url.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_PARAM = 'redirect-url';
 
-  /**
-   * Name of the required parameter for redirect url cancel.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url cancel.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_CANCEL_PARAM = 'redirect-url-cancel';
 
-  /**
-   * Name of the required parameter for redirect url error.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url error.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_ERROR_PARAM = 'redirect-url-error';
 
-  /**
-   * Name of the required parameter for redirect url reject.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url reject.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_REJECT_PARAM = 'redirect-url-reject';
 
-  /**
-   * Buckaroo integration obj.
-   *
-   * @var Buckaroo
-   */
+	/**
+	 * Buckaroo integration obj.
+	 *
+	 * @var Buckaroo
+	 */
 	protected $buckaroo;
 
-  /**
-   * Buckaroo Response Handler Route obj.
-   *
-   * @var BuckarooResponseHandlerRoute
-   */
+	/**
+	 * Buckaroo Response Handler Route obj.
+	 *
+	 * @var BuckarooResponseHandlerRoute
+	 */
 	protected $buckarooResponseHandlerRoute;
 
-  /**
-   * Implementation of the Authorization obj.
-   *
-   * @var AuthorizationInterface
-   */
+	/**
+	 * Implementation of the Authorization obj.
+	 *
+	 * @var AuthorizationInterface
+	 */
 	protected $hmac;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param Buckaroo                     $buckaroo                        Buckaroo integration obj.
-   * @param BuckarooResponseHandlerRoute $buckarooResponseHandlerRoute Response handler route obj.
-   * @param AuthorizationInterface       $hmac                            Authorization object.
-   * @param BasicCaptcha                 $basicCaptcha                   BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Buckaroo                     $buckaroo                        Buckaroo integration obj.
+	 * @param BuckarooResponseHandlerRoute $buckarooResponseHandlerRoute Response handler route obj.
+	 * @param AuthorizationInterface       $hmac                            Authorization object.
+	 * @param BasicCaptcha                 $basicCaptcha                   BasicCaptcha object.
+	 */
 	public function __construct(
 		Buckaroo $buckaroo,
 		BuckarooResponseHandlerRoute $buckarooResponseHandlerRoute,
@@ -120,14 +120,14 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * We need to define redirect URLs so that Buckaroo redirects the user to our buckaroo-response-handler route
-   * which might run some custom logic and then redirect the user to the actual redirect URL as defined in the form's
-   * options.
-   *
-   * @param array $params Array of WP_REST_Request params.
-   * @return array
-   */
+	/**
+	 * We need to define redirect URLs so that Buckaroo redirects the user to our buckaroo-response-handler route
+	 * which might run some custom logic and then redirect the user to the actual redirect URL as defined in the form's
+	 * options.
+	 *
+	 * @param array $params Array of WP_REST_Request params.
+	 * @return array
+	 */
 	protected function setRedirectUrls(array $params): array
 	{
 
@@ -163,12 +163,12 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 		return $params;
 	}
 
-  /**
-   * Set Buckaroo to test mode if test param provided.
-   *
-   * @param array $params Request params.
-   * @return void
-   */
+	/**
+	 * Set Buckaroo to test mode if test param provided.
+	 *
+	 * @param array $params Request params.
+	 * @return void
+	 */
 	protected function setTestIfNeeded(array $params): void
 	{
 		if (isset($params[self::TEST_PARAM]) && filter_var($params[self::TEST_PARAM], FILTER_VALIDATE_BOOL)) {
@@ -176,44 +176,44 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 		}
 	}
 
-  /**
-   * Define authorization salt used for request to response handler.
-   *
-   * @return string
-   */
+	/**
+	 * Define authorization salt used for request to response handler.
+	 *
+	 * @return string
+	 */
 	protected function generateAuthorizationSaltForResponseHandler(): string
 	{
 		return \apply_filters(self::BUCKAROO, 'secretKey') ?? 'invalid-salt-for-buckaroo-handler';
 	}
 
-  /**
-   * Toggle if this route requires nonce verification
-   *
-   * @return bool
-   */
+	/**
+	 * Toggle if this route requires nonce verification
+	 *
+	 * @return bool
+	 */
 	protected function requiresNonceVerification(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return static::CREATABLE;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	abstract public function routeCallback(\WP_REST_Request $request);
 }

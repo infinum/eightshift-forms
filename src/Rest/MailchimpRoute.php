@@ -26,83 +26,83 @@ use GuzzleHttp\Exception\ClientException;
 class MailchimpRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/mailchimp';
 
-  /**
-   * Parameter for email.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for email.
+	 *
+	 * @var string
+	 */
 	public const EMAIL_PARAM = 'email';
 
-  /**
-   * Parameter for list ID.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for list ID.
+	 *
+	 * @var string
+	 */
 	public const LIST_ID_PARAM = 'list-id';
 
-  /**
-   * Parameter for member tag.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for member tag.
+	 *
+	 * @var string
+	 */
 	public const TAGS_PARAM = 'tags';
 
-  /**
-   * Parameter for toggle if we modify Mailchimp user data if they already exist.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for toggle if we modify Mailchimp user data if they already exist.
+	 *
+	 * @var string
+	 */
 	public const ADD_EXISTING_MEMBERS_PARAM = 'add-existing-members';
 
-  /**
-   * Error if user exists
-   *
-   * @var string
-   */
+	/**
+	 * Error if user exists
+	 *
+	 * @var string
+	 */
 	public const ERROR_USER_EXISTS = 'Member Exists';
 
-  /**
-   * Mailchimp object.
-   *
-   * @var Mailchimp
-   */
+	/**
+	 * Mailchimp object.
+	 *
+	 * @var Mailchimp
+	 */
 	protected $mailchimp;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param Mailchimp    $mailchimp     Mailchimp object.
-   * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Mailchimp    $mailchimp     Mailchimp object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(Mailchimp $mailchimp, BasicCaptcha $basicCaptcha)
 	{
 		$this->mailchimp = $mailchimp;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 		try {
@@ -168,11 +168,11 @@ class MailchimpRoute extends BaseRoute implements Filters
 		]);
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -181,11 +181,11 @@ class MailchimpRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return array
+	 */
 	protected function getIrrelevantParams(): array
 	{
 		return [
@@ -198,21 +198,21 @@ class MailchimpRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Toggle if this route requires nonce verification
-   *
-   * @return bool
-   */
+	/**
+	 * Toggle if this route requires nonce verification
+	 *
+	 * @return bool
+	 */
 	protected function requiresNonceVerification(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return static::CREATABLE;

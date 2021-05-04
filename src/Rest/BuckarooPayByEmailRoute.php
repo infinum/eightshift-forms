@@ -28,29 +28,29 @@ use EightshiftForms\Integrations\Buckaroo\Exceptions\BuckarooRequestException;
 class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/buckaroo-pay-by-email';
 
-  /**
-   * Field to make the Pay by Email payment recurring
-   *
-   * @var string
-   */
+	/**
+	 * Field to make the Pay by Email payment recurring
+	 *
+	 * @var string
+	 */
 	public const IS_RECURRING_PARAM = 'is-recurring';
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 		try {

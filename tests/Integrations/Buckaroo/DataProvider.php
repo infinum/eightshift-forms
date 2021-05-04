@@ -5,11 +5,11 @@ namespace EightshiftFormsTests\Integrations\Buckaroo;
 class DataProvider
 {
 
-  /**
-   * Example of successful transaction Buckaroo response.
-   *
-   * @return array
-   */
+	/**
+	 * Example of successful transaction Buckaroo response.
+	 *
+	 * @return array
+	 */
   public static function idealSuccessResponseMock(): array {
     return [
         'BRQ_AMOUNT' => 5.00,
@@ -35,11 +35,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of error on transaction response from Buckaroo (failed transaction).
-   *
-   * @return array
-   */
+	/**
+	 * Example of error on transaction response from Buckaroo (failed transaction).
+	 *
+	 * @return array
+	 */
   public static function idealErrorResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
@@ -60,11 +60,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "transaction rejected" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "transaction rejected" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function idealRejectResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
@@ -85,11 +85,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "transaction cancelled by user" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "transaction cancelled by user" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function idealCancelledResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
@@ -110,11 +110,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "transaction cancelled by user" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "transaction cancelled by user" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function idealCancelledResponseWhenUserClicksBackMock(): array {
     return [
       'BRQ_AMOUNT' => '5.00',
@@ -131,11 +131,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "pending processing" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "pending processing" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function idealPendingResponseMock(): array {
     return [
       'BRQ_AMOUNT' => 5.00,
@@ -155,11 +155,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "Emandate success" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "Emandate success" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function emandateSuccessResponseMock(): array {
     return [
         'BRQ_DATAREQUEST' => '47AB5D6FD7A94B11B5DF94D688BE23B9',
@@ -185,11 +185,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "Emandate failed" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "Emandate failed" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function emandateFailedResponseMock(): array {
     return [
       'BRQ_DATAREQUEST' => '2CE5C53079244252A4DABBBDA3C552B5',
@@ -207,11 +207,11 @@ class DataProvider
     ];
   }
 
-  /**
-   * Example of "Emandate failed" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "Emandate failed" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public static function emandateCancelledResponseMock(): array {
     return [
       'BRQ_DATAREQUEST' => '2D2AF2ECC2BD4BDBB94222DF72C03B6A',

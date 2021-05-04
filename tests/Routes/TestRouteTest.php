@@ -10,11 +10,11 @@ class TestRouteTest extends BaseRouteTest
     return TestRoute::class;
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessful()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
@@ -29,11 +29,11 @@ class TestRouteTest extends BaseRouteTest
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message']);
   }
 
-  /**
-   * We expect an error response if we're didn't include all required params.
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error response if we're didn't include all required params.
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsBecauseMissingRequiredParams()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());
@@ -47,12 +47,12 @@ class TestRouteTest extends BaseRouteTest
     $this->assertNotEquals(200, $response->data['code']);
   }
 
-  /**
-   * We expect an error response if we're didn't send the correct authorization param (and authorization
-   * is enabled for the route)
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error response if we're didn't send the correct authorization param (and authorization
+	 * is enabled for the route)
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsBecauseMissingAuthorization()
   {
 
@@ -67,11 +67,11 @@ class TestRouteTest extends BaseRouteTest
     $this->assertNotEquals(200, $response->data['code']);
   }
 
-  /**
-   * If any of the basic captcha fields is sent but the math does not add up, we expect an error response.
-   *
-   * @return void
-   */
+	/**
+	 * If any of the basic captcha fields is sent but the math does not add up, we expect an error response.
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsBecauseWrongCaptchaAnswer()
   {
 
@@ -89,11 +89,11 @@ class TestRouteTest extends BaseRouteTest
     $this->assertEquals(429, $response->data['code']);
   }
 
-  /**
-   * If any of the basic captcha fields is sent and the math adds up, we expect everything to be ok.
-   *
-   * @return void
-   */
+	/**
+	 * If any of the basic captcha fields is sent and the math adds up, we expect everything to be ok.
+	 *
+	 * @return void
+	 */
   public function testRestCallSucceedsOnCorrectCaptchaAnswer()
   {
 
@@ -112,11 +112,11 @@ class TestRouteTest extends BaseRouteTest
     $this->assertEquals(200, $response->data['code'], $response->data['data']['message']);
   }
 
-  /**
-   * If we provide $this->getIrrelevantParams(), those params will be unset from the request.
-   *
-   * @return void
-   */
+	/**
+	 * If we provide $this->getIrrelevantParams(), those params will be unset from the request.
+	 *
+	 * @return void
+	 */
   public function testRouteUnsetsIrrelevantParams()
   {
 

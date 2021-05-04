@@ -4,11 +4,11 @@ namespace EightshiftFormsTests\Helpers;
 
 class HelpersDataProvider
 {
-  /**
-   * Example of "Parsed blocks content" response from Buckaroo.
-   *
-   * @return array
-   */
+	/**
+	 * Example of "Parsed blocks content" response from Buckaroo.
+	 *
+	 * @return array
+	 */
   public function parsedBlocksMock() {
     return [
       [

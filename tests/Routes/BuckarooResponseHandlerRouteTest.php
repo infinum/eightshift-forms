@@ -15,14 +15,14 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     return BuckarooResponseHandlerRoute::class;
   }
 
-  /**
-   * Mocking that a certain filter exists. See documentation of Brain Monkey:
-   * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
-   *
-   * We can't return any actual value, we can just "mock register" this filter.
-   *
-   * @return void
-   */
+	/**
+	 * Mocking that a certain filter exists. See documentation of Brain Monkey:
+	 * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
+	 *
+	 * We can't return any actual value, we can just "mock register" this filter.
+	 *
+	 * @return void
+	 */
   protected function addHooks() {
     add_filter( self::BUCKAROO, function($key) {
       return $key;
@@ -33,11 +33,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     }, 1, 1);
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessful()
   {
     $this->addHooks();
@@ -66,11 +66,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals(200, $response->data['code'], $response->data['message'] ?? 'message not defined');
   }
 
-  /**
-   * We expect an error when we're missing Buckaroo required keys
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error when we're missing Buckaroo required keys
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsWhenMissingBuckarooKeys()
   {
     $this->addHooks();
@@ -90,11 +90,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertNotEquals(200, $response->data['code'], $response->data['message'] ?? 'message not defined');
   }
 
-  /**
-   * We expect an error when we're missing Buckaroo required keys
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error when we're missing Buckaroo required keys
+	 *
+	 * @return void
+	 */
   public function testCustomActionRanWhenDefined()
   {
     $this->addHooks();
@@ -119,11 +119,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertSame( 1, did_action( self::BUCKAROO_RESPONSE_HANDLER ), $response->data['message'] ?? 'message not defined' );
   }
 
-  /**
-   * We expect an error when we're missing Buckaroo required keys
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error when we're missing Buckaroo required keys
+	 *
+	 * @return void
+	 */
   public function testUserWasRedirectedIfRequestWasOk()
   {
     $this->addHooks();
@@ -145,11 +145,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ), $response->data['message'] ?? 'message not defined' );
   }
 
-  /**
-   * We expect an error when we're missing Buckaroo required keys
-   *
-   * @return void
-   */
+	/**
+	 * We expect an error when we're missing Buckaroo required keys
+	 *
+	 * @return void
+	 */
   public function testUserWasRedirectedIfRedirectUrlsMissing()
   {
     $this->addHooks();
@@ -174,11 +174,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertSame( 1, did_action( self::WP_REDIRECT_ACTION ), $response->data['message'] ?? 'message not defined' );
   }
 
-  /**
-   * Test redirection works on iDEAL success
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on iDEAL success
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnIdealSuccess()
   {
     $correctUrl = 'http://success.com';
@@ -191,11 +191,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection works on iDEAL error
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on iDEAL error
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnIdeaelError()
   {
     $correctUrl = 'http://error.com';
@@ -208,11 +208,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection works on iDEAL reject
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on iDEAL reject
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnIdealReject()
   {
     $correctUrl = 'http://reject.com';
@@ -225,11 +225,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection works on iDEAL cancel
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on iDEAL cancel
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnIdealCancel()
   {
     $correctUrl = 'http://cancel.com';
@@ -242,11 +242,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection redirects back to homepage if url isn't provided.
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection redirects back to homepage if url isn't provided.
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksWhenUrlNotProvided()
   {
     $params = [
@@ -258,11 +258,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
   }
 
 
-  /**
-   * Test redirection works on Emandate success
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on Emandate success
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnEmandateSuccess()
   {
     $correctUrl = 'http://success.com';
@@ -275,11 +275,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection works on Emandate error
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on Emandate error
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnEmandatelError()
   {
     $correctUrl = 'http://error.com';
@@ -292,11 +292,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test redirection works on Emandate cancel
-   *
-   * @return void
-   */
+	/**
+	 * Test redirection works on Emandate cancel
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlBuildingWorksOnEmandateCancel()
   {
     $correctUrl = 'http://cancel.com';
@@ -309,11 +309,11 @@ class BuckarooResponseHandlerRouteTest extends BaseRouteTest implements Filters,
     $this->assertEquals($redirectUrl, $correctUrl);
   }
 
-  /**
-   * Test url was filtered if filter is set in project
-   *
-   * @return void
-   */
+	/**
+	 * Test url was filtered if filter is set in project
+	 *
+	 * @return void
+	 */
   public function testRedirectUrlWasFilteredIfProvided()
   {
     apply_filters(Filters::BUCKAROO_REDIRECT_URL, 'Filter applied', $this);

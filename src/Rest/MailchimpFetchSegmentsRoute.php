@@ -25,56 +25,56 @@ use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/mailchimp-fetch-segments';
 
-  /**
-   * Parameter for list ID.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for list ID.
+	 *
+	 * @var string
+	 */
 	public const LIST_ID_PARAM = 'list-id';
 
 
-  /**
-   * Mailchimp object.
-   *
-   * @var Mailchimp
-   */
+	/**
+	 * Mailchimp object.
+	 *
+	 * @var Mailchimp
+	 */
 	protected $mailchimp;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param Mailchimp    $mailchimp     Mailchimp object.
-   * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Mailchimp    $mailchimp     Mailchimp object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(Mailchimp $mailchimp, BasicCaptcha $basicCaptcha)
 	{
 		$this->mailchimp = $mailchimp;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -104,11 +104,11 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 			'message' => esc_html__('success', 'eightshift-forms'),
 		]);
 	}
-  /**
-   * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -116,12 +116,12 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Extracts segments and tags from the segments response depending on their type
-   *
-   * @param  Object $response Mailchimp API call response.
-   * @return array
-   */
+	/**
+	 * Extracts segments and tags from the segments response depending on their type
+	 *
+	 * @param  Object $response Mailchimp API call response.
+	 * @return array
+	 */
 	private function extractTagsAndSegments($response): array
 	{
 		$tagsSegments = [

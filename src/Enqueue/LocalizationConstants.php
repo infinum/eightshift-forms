@@ -23,89 +23,89 @@ class LocalizationConstants implements Filters
 
 	public const LOCALIZATION_KEY = 'eightshiftForms';
 
-  /**
-   * Key under which all localizations are held. window.${LOCALIZATION_KEY}. Only loaded in admin.
-   *
-   * @var string
-   */
+	/**
+	 * Key under which all localizations are held. window.${LOCALIZATION_KEY}. Only loaded in admin.
+	 *
+	 * @var string
+	 */
 	public const LOCALIZATION_ADMIN_KEY = 'eightshiftFormsAdmin';
 
-  /**
-   * Dynamics CRM route obj.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Dynamics CRM route obj.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $dynamicsCrmRoute;
 
-  /**
-   * Buckaroo iDEAL route obj.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Buckaroo iDEAL route obj.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $buckarooIdealRoute;
 
-  /**
-   * Buckaroo Emandate route obj.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Buckaroo Emandate route obj.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $buckarooEmandateRoute;
 
-  /**
-   * Buckaroo Pay By Email route obj.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Buckaroo Pay By Email route obj.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $buckarooPayByEmailRoute;
 
-  /**
-   * Send email route object.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Send email route object.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $sendEmailRoute;
 
-  /**
-   * Mailchimp route object.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Mailchimp route object.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $mailchimpRoute;
 
-  /**
-   * Mailchimp client implementation.
-   *
-   * @var Mailchimp
-   */
+	/**
+	 * Mailchimp client implementation.
+	 *
+	 * @var Mailchimp
+	 */
 	private $mailchimp;
 
-  /**
-   * Mailerlite route object.
-   *
-   * @var ActiveRouteInterface
-   */
+	/**
+	 * Mailerlite route object.
+	 *
+	 * @var ActiveRouteInterface
+	 */
 	private $mailerliteRoute;
 
-  /**
-   * Mailerlite client implementation.
-   *
-   * @var Mailerlite
-   */
+	/**
+	 * Mailerlite client implementation.
+	 *
+	 * @var Mailerlite
+	 */
 	private $mailerlite;
 
-  /**
-   * Create a new admin instance.
-   *
-   * @param ActiveRouteInterface $dynamicsCrmRoute          Dynamics CRM route object which holds values we need to localize.
-   * @param ActiveRouteInterface $buckarooIdealRoute        Buckaroo (Ideal) route object which holds values we need to localize.
-   * @param ActiveRouteInterface $buckarooEmandateRoute     Buckaroo (Emandate) route object which holds values we need to localize.
-   * @param ActiveRouteInterface $buckarooPayByEmailRoute Buckaroo (Pay By Email) route object which holds values we need to localize.
-   * @param ActiveRouteInterface $sendEmailRoute            Send Email route object which holds values we need to localize.
-   * @param ActiveRouteInterface $mailchimpRoute             Mailchimp route object which holds values we need to localize.
-   * @param Mailchimp            $mailchimp                   Mailchimp implementation.
-   * @param ActiveRouteInterface $mailerliteRoute            Mailerlite route object which holds values we need to localize.
-   * @param Mailerlite           $mailerlite                  Mailerlite implementation.
-   */
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param ActiveRouteInterface $dynamicsCrmRoute          Dynamics CRM route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $buckarooIdealRoute        Buckaroo (Ideal) route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $buckarooEmandateRoute     Buckaroo (Emandate) route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $buckarooPayByEmailRoute Buckaroo (Pay By Email) route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $sendEmailRoute            Send Email route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $mailchimpRoute             Mailchimp route object which holds values we need to localize.
+	 * @param Mailchimp            $mailchimp                   Mailchimp implementation.
+	 * @param ActiveRouteInterface $mailerliteRoute            Mailerlite route object which holds values we need to localize.
+	 * @param Mailerlite           $mailerlite                  Mailerlite implementation.
+	 */
 	public function __construct(
 		ActiveRouteInterface $dynamicsCrmRoute,
 		ActiveRouteInterface $buckarooIdealRoute,
@@ -128,11 +128,11 @@ class LocalizationConstants implements Filters
 		$this->mailerlite = $mailerlite;
 	}
 
-  /**
-   * Define all variables we need in both editor and frontend.
-   *
-   * @return array
-   */
+	/**
+	 * Define all variables we need in both editor and frontend.
+	 *
+	 * @return array
+	 */
 	public function getLocalizations(): array
 	{
 		$localization = [
@@ -185,11 +185,11 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Define all variables we need in both editor and frontend.
-   *
-   * @return array
-   */
+	/**
+	 * Define all variables we need in both editor and frontend.
+	 *
+	 * @return array
+	 */
 	public function getAdminLocalizations(): array
 	{
 		$localization = [
@@ -207,12 +207,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Dynamics CRM integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Dynamics CRM integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addGeneralConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['themes'] = apply_filters(Filters::GENERAL, 'themes');
@@ -220,12 +220,12 @@ class LocalizationConstants implements Filters
 	}
 
 
-  /**
-   * Localize all constants required for Dynamics CRM integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Dynamics CRM integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addDynamicsCrmConstants(array $localization): array
 	{
 		$entities = apply_filters(Filters::DYNAMICS_CRM, 'availableEntities');
@@ -246,12 +246,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Buckaroo integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Buckaroo integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addBuckarooConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['buckaroo'] = [
@@ -265,12 +265,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Mailchimp integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Mailchimp integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addMailchimpConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailchimp'] = [
@@ -280,12 +280,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Mailchimp integration (only available in admin)
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Mailchimp integration (only available in admin)
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	protected function addMailchimpAdminConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailchimp'] = [
@@ -295,12 +295,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Mailerlite integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Mailerlite integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addMailerliteConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailerlite'] = [
@@ -310,12 +310,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Localize all constants required for Mailerlite integration.
-   *
-   * @param  array $localization Existing localizations.
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Mailerlite integration.
+	 *
+	 * @param  array $localization Existing localizations.
+	 * @return array
+	 */
 	private function addMailerliteConstantsAdmin(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailerlite'] = [
@@ -325,12 +325,12 @@ class LocalizationConstants implements Filters
 		return $localization;
 	}
 
-  /**
-   * Reads the list of audiences from Mailchimp. Used in form options to
-   * select which audience does this form post to.
-   *
-   * @return array
-   */
+	/**
+	 * Reads the list of audiences from Mailchimp. Used in form options to
+	 * select which audience does this form post to.
+	 *
+	 * @return array
+	 */
 	private function fetchMailchimpAudiences(): array
 	{
 		$audiences = [];
@@ -351,12 +351,12 @@ class LocalizationConstants implements Filters
 		return $audiences;
 	}
 
-  /**
-   * Reads the list of groups from Mailerlite. Used in form options to
-   * select which group does this form post to.
-   *
-   * @return array
-   */
+	/**
+	 * Reads the list of groups from Mailerlite. Used in form options to
+	 * select which group does this form post to.
+	 *
+	 * @return array
+	 */
 	private function fetchMailerliteGroups(): array
 	{
 		$groups = [];
@@ -377,12 +377,12 @@ class LocalizationConstants implements Filters
 		return $groups;
 	}
 
-  /**
-   * Localize all constants required for Dynamics CRM integration.
-   * Adds prefill options to multi option blocks (select, radio, etc).
-   *
-   * @return array
-   */
+	/**
+	 * Localize all constants required for Dynamics CRM integration.
+	 * Adds prefill options to multi option blocks (select, radio, etc).
+	 *
+	 * @return array
+	 */
 	private function addPrefillGenericMultiConstants(): array
 	{
 		$prefillMulti = apply_filters(Filters::PREFILL_GENERIC_MULTI, []);
@@ -403,11 +403,11 @@ class LocalizationConstants implements Filters
 		return $prefillMultiFormatted;
 	}
 
-  /**
-   * Adds prefill options to single option blocks (input, etc).
-   *
-   * @return array
-   */
+	/**
+	 * Adds prefill options to single option blocks (input, etc).
+	 *
+	 * @return array
+	 */
 	protected function addPrefillGenericSingleConstants(): array
 	{
 		$prefillSingle = apply_filters(Filters::PREFILL_GENERIC_SINGLE, []);

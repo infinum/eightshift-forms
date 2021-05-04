@@ -18,65 +18,65 @@ use EightshiftForms\Integrations\Core\HttpClientInterface;
 class OAuth2Client implements OAuth2ClientInterface
 {
 
-  /**
-   * How much is hour in seconds.
-   *
-   * @var int
-   */
+	/**
+	 * How much is hour in seconds.
+	 *
+	 * @var int
+	 */
 	public const HOUR_IN_SECONDS = 3600;
 
-  /**
-   * Url to which we're submitting.
-   *
-   * @var string
-   */
+	/**
+	 * Url to which we're submitting.
+	 *
+	 * @var string
+	 */
 	protected $url;
 
-  /**
-   * Oauth2 client id.
-   *
-   * @var string
-   */
+	/**
+	 * Oauth2 client id.
+	 *
+	 * @var string
+	 */
 	protected $clientId;
 
-  /**
-   * Oauth2 client secret.
-   *
-   * @var string
-   */
+	/**
+	 * Oauth2 client secret.
+	 *
+	 * @var string
+	 */
 	protected $clientSecret;
 
-  /**
-   * Oauth2 scope.
-   *
-   * @var string
-   */
+	/**
+	 * Oauth2 scope.
+	 *
+	 * @var string
+	 */
 	protected $scope;
 
-  /**
-   * HTTP client implementation obj which uses Guzzle.
-   *
-   * @var HttpClientInterface.
-   */
+	/**
+	 * HTTP client implementation obj which uses Guzzle.
+	 *
+	 * @var HttpClientInterface.
+	 */
 	private $httpClient;
 
-  /**
-   * Constructs object
-   *
-   * @param HttpClientInterface $guzzleClient HTTP client implementation.
-   */
+	/**
+	 * Constructs object
+	 *
+	 * @param HttpClientInterface $guzzleClient HTTP client implementation.
+	 */
 	public function __construct(HttpClientInterface $guzzleClient)
 	{
 		$this->httpClient = $guzzleClient;
 	}
 
-  /**
-   * Returns the access token, either from cache or fetches a new one.
-   *
-   * @param  string $tokenKey        Token's transient key.
-   * @param  bool   $shouldFetchNew Pass true to skip fetching content for transient. Useful for when you want to make sure your access token is fresh.
-   * @return string
-   */
+	/**
+	 * Returns the access token, either from cache or fetches a new one.
+	 *
+	 * @param  string $tokenKey        Token's transient key.
+	 * @param  bool   $shouldFetchNew Pass true to skip fetching content for transient. Useful for when you want to make sure your access token is fresh.
+	 * @return string
+	 */
 	public function getToken(string $tokenKey, bool $shouldFetchNew = false): string
 	{
 		if (! $shouldFetchNew) {
@@ -90,12 +90,12 @@ class OAuth2Client implements OAuth2ClientInterface
 		return $token;
 	}
 
-  /**
-   * Set credentials, used when we can't set credentials during DI services building.
-   *
-   * @param  array $credentials OAuth2 credentials.
-   * @return void
-   */
+	/**
+	 * Set credentials, used when we can't set credentials during DI services building.
+	 *
+	 * @param  array $credentials OAuth2 credentials.
+	 * @return void
+	 */
 	public function setCredentials(array $credentials): void
 	{
 		$this->url           = $credentials['url'];
@@ -104,18 +104,18 @@ class OAuth2Client implements OAuth2ClientInterface
 		$this->scope         = $credentials['scope'];
 	}
 
-  /**
-   * Fetches token from provider using Client Credentials method
-   * https://oauth.net/2/grant-types/client-credentials/
-   *
-   * @param  string $url           Url to authenticate against.
-   * @param  string $clientId     Client ID, used for getting access token.
-   * @param  string $clientSecret Client secret, used for getting access token.
-   * @param  string $scope         Scope for which to request access token.
-   * @return string
-   *
-   * @throws \Exception      When the response isn't as expected.
-   */
+	/**
+	 * Fetches token from provider using Client Credentials method
+	 * https://oauth.net/2/grant-types/client-credentials/
+	 *
+	 * @param  string $url           Url to authenticate against.
+	 * @param  string $clientId     Client ID, used for getting access token.
+	 * @param  string $clientSecret Client secret, used for getting access token.
+	 * @param  string $scope         Scope for which to request access token.
+	 * @return string
+	 *
+	 * @throws \Exception      When the response isn't as expected.
+	 */
 	protected function fetchToken(string $url, string $clientId, string $clientSecret, string $scope)
 	{
 		$body = [
@@ -145,25 +145,25 @@ class OAuth2Client implements OAuth2ClientInterface
 		return $jsonBody['access_token'];
 	}
 
-  /**
-   * Returns token from currently implemented cache.
-   *
-   * @param  string $tokenKey  Token's transient key.
-   * @param  string $token      Token's value.
-   * @param  int    $expiration Cache's expiration in seconds.
-   * @return bool
-   */
+	/**
+	 * Returns token from currently implemented cache.
+	 *
+	 * @param  string $tokenKey  Token's transient key.
+	 * @param  string $token      Token's value.
+	 * @param  int    $expiration Cache's expiration in seconds.
+	 * @return bool
+	 */
 	protected function saveTokenToCache(string $tokenKey, string $token, int $expiration = self::HOUR_IN_SECONDS): bool
 	{
 		return set_transient($tokenKey, $token, $expiration);
 	}
 
-  /**
-   * Returns token from currently implemented cache.
-   *
-   * @param  string $tokenKey Token's transient key.
-   * @return string|bool
-   */
+	/**
+	 * Returns token from currently implemented cache.
+	 *
+	 * @param  string $tokenKey Token's transient key.
+	 * @return string|bool
+	 */
 	protected function getTokenFromCache(string $tokenKey)
 	{
 		return get_transient($tokenKey);

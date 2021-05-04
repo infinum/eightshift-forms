@@ -16,33 +16,33 @@ namespace EightshiftForms\Captcha;
 class BasicCaptcha
 {
 
-  /**
-   * Key for the first number in the sum
-   *
-   * @var string
-   */
+	/**
+	 * Key for the first number in the sum
+	 *
+	 * @var string
+	 */
 	public const FIRST_NUMBER_KEY = 'cap_first';
 
-  /**
-   * Key for the second number in the sum
-   *
-   * @var string
-   */
+	/**
+	 * Key for the second number in the sum
+	 *
+	 * @var string
+	 */
 	public const SECOND_NUMBER_KEY = 'cap_second';
 
-  /**
-   * Key for the captcha result
-   *
-   * @var string
-   */
+	/**
+	 * Key for the captcha result
+	 *
+	 * @var string
+	 */
 	public const RESULT_KEY = 'cap_result';
 
-  /**
-   * If any of the captcha fields are submitted and inside $params array, check that the math adds up.
-   *
-   * @param  array $params Request parameters.
-   * @return boolean
-   */
+	/**
+	 * If any of the captcha fields are submitted and inside $params array, check that the math adds up.
+	 *
+	 * @param  array $params Request parameters.
+	 * @return boolean
+	 */
 	public function checkCaptchaFromRequestParams(array $params): bool
 	{
 

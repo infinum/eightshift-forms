@@ -24,36 +24,36 @@ use EightshiftForms\Integrations\Buckaroo\Exceptions\BuckarooRequestException;
 class BuckarooIdealRoute extends AbstractBuckarooRoute
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/buckaroo-ideal';
 
-  /**
-   * Name of the required parameter for donation amount.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for donation amount.
+	 *
+	 * @var string
+	 */
 	public const DONATION_AMOUNT_PARAM = 'donation-amount';
 
-  /**
-   * Field to make the iDEAL payment recurring
-   *
-   * @var string
-   */
+	/**
+	 * Field to make the iDEAL payment recurring
+	 *
+	 * @var string
+	 */
 	public const IS_RECURRING_PARAM = 'is-recurring';
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -91,11 +91,11 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 		);
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -103,11 +103,11 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 		];
 	}
 
-  /**
-   * Define name of the filter used for filtering required GET params.
-   *
-   * @return string
-   */
+	/**
+	 * Define name of the filter used for filtering required GET params.
+	 *
+	 * @return string
+	 */
 	protected function getRequiredParamsFilter(): string
 	{
 		return Filters::REQUIRED_PARAMS_BUCKAROO_IDEAL;

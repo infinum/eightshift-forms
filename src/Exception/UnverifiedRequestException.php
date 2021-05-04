@@ -18,29 +18,29 @@ use EightshiftLibs\Exception\GeneralExceptionInterface;
 class UnverifiedRequestException extends \RuntimeException implements GeneralExceptionInterface
 {
 
-  /**
-   * Data to expose.
-   *
-   * @var array
-   */
+	/**
+	 * Data to expose.
+	 *
+	 * @var array
+	 */
 	private $data = [];
 
-  /**
-   * Constructs object
-   *
-   * @param array $data Rest response array to expose.
-   */
+	/**
+	 * Constructs object
+	 *
+	 * @param array $data Rest response array to expose.
+	 */
 	public function __construct(array $data = [])
 	{
 		$this->data = $data;
 		parent::__construct('UnverifiedRequestException');
 	}
 
-  /**
-   * $this->data getter.
-   *
-   * @return array
-   */
+	/**
+	 * $this->data getter.
+	 *
+	 * @return array
+	 */
 	public function getData(): array
 	{
 		return $this->data;

@@ -24,9 +24,9 @@ use GuzzleHttp\Psr7\Response;
  */
 class MockMailchimpMarketingClient implements ClientInterface {
 
-  /**
-   * Constructs object
-   */
+	/**
+	 * Constructs object
+	 */
   public function __construct() {
     $this->client = Stub::make(MarketingApiClient::class, [
       'lists' => Stub::make(ListsApi::class, [
@@ -64,20 +64,20 @@ class MockMailchimpMarketingClient implements ClientInterface {
     ]);
   }
 
-  /**
-   * Mock setting config.
-   *
-   * @return object
-   */
+	/**
+	 * Mock setting config.
+	 *
+	 * @return object
+	 */
   public function setConfig() {
     $this->client->setConfig([]);
   }
 
-  /**
-   * Returns the build client
-   *
-   * @return object
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return object
+	 */
   public function getClient() {
     return $this->client;
   }

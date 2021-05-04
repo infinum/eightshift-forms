@@ -16,12 +16,12 @@ namespace EightshiftForms\Integrations\Buckaroo;
 class ResponseFactory
 {
 
-  /**
-   * Build Response object.
-   *
-   * @param array $buckarooParams Array of Buckaroo response params.
-   * @return Response
-   */
+	/**
+	 * Build Response object.
+	 *
+	 * @param array $buckarooParams Array of Buckaroo response params.
+	 * @return Response
+	 */
 	public static function build(array $buckarooParams): Response
 	{
 		return new Response($buckarooParams);

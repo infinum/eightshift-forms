@@ -16,21 +16,21 @@ namespace EightshiftForms\Integrations\Core;
 interface HttpClientInterface
 {
 
-  /**
-   * Implementation of get request on the HttpClient.
-   *
-   * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request.
-   * @return mixed
-   */
+	/**
+	 * Implementation of get request on the HttpClient.
+	 *
+	 * @param  string $url        Url to ping.
+	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @return mixed
+	 */
 	public function get(string $url, array $parameters = []);
 
-  /**
-   * Implementation of post request on the HttpClient.
-   *
-   * @param  string $url        Url to ping.
-   * @param  array  $parameters (Optional) parameters for the request.
-   * @return mixed
-   */
+	/**
+	 * Implementation of post request on the HttpClient.
+	 *
+	 * @param  string $url        Url to ping.
+	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @return mixed
+	 */
 	public function post(string $url, array $parameters = []);
 }

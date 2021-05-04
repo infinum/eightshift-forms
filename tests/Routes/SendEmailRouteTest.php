@@ -9,11 +9,11 @@ class SendEmailRouteTest extends BaseRouteTest
     return SendEmailRoute::class;
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessful()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
@@ -31,11 +31,11 @@ class SendEmailRouteTest extends BaseRouteTest
     $this->assertSame( 1, did_action( self::WP_MAIL_ACTION ) );
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessfulWithPlaceholders()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
@@ -54,11 +54,11 @@ class SendEmailRouteTest extends BaseRouteTest
     $this->assertSame( 1, did_action( self::WP_MAIL_ACTION ) );
   }
 
-  /**
-   * If any of the required params (to, subject, message) is empty, wp_mail will fail.
-   *
-   * @return void
-   */
+	/**
+	 * If any of the required params (to, subject, message) is empty, wp_mail will fail.
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsIfRequiredParamsEmpty()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());

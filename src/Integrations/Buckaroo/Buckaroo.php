@@ -27,92 +27,92 @@ class Buckaroo implements Filters
 	public const LIVE_URI_TRANSACTION  = 'checkout.buckaroo.nl/json/Transaction';
 	public const TEST_URI_TRANSACTION  = 'testcheckout.buckaroo.nl/json/Transaction';
 
-  /**
-   * Currency of the payment
-   *
-   * @var string
-   */
+	/**
+	 * Currency of the payment
+	 *
+	 * @var string
+	 */
 	protected $currency = 'EUR';
 
-  /**
-   * Type of payment. Defaults to iDEAL.
-   *
-   * @var string
-   */
+	/**
+	 * Type of payment. Defaults to iDEAL.
+	 *
+	 * @var string
+	 */
 	protected $payType = 'ideal';
 
-  /**
-   * Return URL after payment.
-   *
-   * @var string
-   */
+	/**
+	 * Return URL after payment.
+	 *
+	 * @var string
+	 */
 	protected $returnUrl;
 
-  /**
-   * Return URL after payment cancel.
-   *
-   * @var string
-   */
+	/**
+	 * Return URL after payment cancel.
+	 *
+	 * @var string
+	 */
 	protected $returnUrlCancel;
 
-  /**
-   * Return URL after payment error.
-   *
-   * @var string
-   */
+	/**
+	 * Return URL after payment error.
+	 *
+	 * @var string
+	 */
 	protected $returnUrlError;
 
-  /**
-   * Return URL after payment reject.
-   *
-   * @var string
-   */
+	/**
+	 * Return URL after payment reject.
+	 *
+	 * @var string
+	 */
 	protected $returnUrlReject;
 
-  /**
-   * Set if we want to use the test URI instead of the live one.
-   *
-   * @var boolean
-   */
+	/**
+	 * Set if we want to use the test URI instead of the live one.
+	 *
+	 * @var boolean
+	 */
 	protected $isTestUri = false;
 
-  /**
-   * Set if we want to the /DataRequest endpoint instead of /Transaction.
-   *
-   * @var boolean
-   */
+	/**
+	 * Set if we want to the /DataRequest endpoint instead of /Transaction.
+	 *
+	 * @var boolean
+	 */
 	protected $isDataRequest = false;
 
-  /**
-   * HTTP client implementation obj which uses Guzzle.
-   *
-   * @var HttpClientInterface.
-   */
+	/**
+	 * HTTP client implementation obj which uses Guzzle.
+	 *
+	 * @var HttpClientInterface.
+	 */
 	private $guzzleClient;
 
-  /**
-   * Constructs object
-   *
-   * @param HttpClientInterface $guzzleClient HTTP client implementation.
-   */
+	/**
+	 * Constructs object
+	 *
+	 * @param HttpClientInterface $guzzleClient HTTP client implementation.
+	 */
 	public function __construct(HttpClientInterface $guzzleClient)
 	{
 		$this->guzzleClient = $guzzleClient;
 	}
 
-  /**
-   * Creates a payment request.
-   *
-   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
-   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
-   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
-   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
-   * @param  string $issuer          Issuer (bank) name.
-   * @param  string $emandatereason  Description of the emandate.
-   * @return array
-   *
-   * @throws BuckarooRequestException When something is wrong with response we get from Buckaroo.
-   */
+	/**
+	 * Creates a payment request.
+	 *
+	 * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+	 * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+	 * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+	 * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+	 * @param  string $issuer          Issuer (bank) name.
+	 * @param  string $emandatereason  Description of the emandate.
+	 * @return array
+	 *
+	 * @throws BuckarooRequestException When something is wrong with response we get from Buckaroo.
+	 */
 	public function createEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
 	{
 		$response             = [];
@@ -142,18 +142,18 @@ class Buckaroo implements Filters
 		return $response;
 	}
 
-  /**
-   * Creates a payment request.
-   *
-   * @param  int|float|string $donationAmount Donation amount.
-   * @param  string           $invoice         Invoice name.
-   * @param  string           $issuer          Issuer (bank) name.
-   * @param  bool             $isRecurring    Is recurring payment.
-   * @param  string           $description     Description of the payment.
-   * @return array
-   *
-   * @throws BuckarooRequestException When something is wrong with JSON we get from Buckaroo.
-   */
+	/**
+	 * Creates a payment request.
+	 *
+	 * @param  int|float|string $donationAmount Donation amount.
+	 * @param  string           $invoice         Invoice name.
+	 * @param  string           $issuer          Issuer (bank) name.
+	 * @param  bool             $isRecurring    Is recurring payment.
+	 * @param  string           $description     Description of the payment.
+	 * @return array
+	 *
+	 * @throws BuckarooRequestException When something is wrong with JSON we get from Buckaroo.
+	 */
 	public function sendPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
 	{
 		$response             = [];
@@ -183,15 +183,15 @@ class Buckaroo implements Filters
 		return $response;
 	}
 
-  /**
-   * Sets all redirect URLs in 1 function
-   *
-   * @param string $redirectUrl        URL to redirect on success.
-   * @param string $redirectUrlCancel URL to redirect on cancel.
-   * @param string $redirectUrlError  URL to redirect on error.
-   * @param string $redirectUrlReject URL to redirect on reject.
-   * @return void
-   */
+	/**
+	 * Sets all redirect URLs in 1 function
+	 *
+	 * @param string $redirectUrl        URL to redirect on success.
+	 * @param string $redirectUrlCancel URL to redirect on cancel.
+	 * @param string $redirectUrlError  URL to redirect on error.
+	 * @param string $redirectUrlReject URL to redirect on reject.
+	 * @return void
+	 */
 	public function setRedirectUrls(string $redirectUrl, string $redirectUrlCancel, string $redirectUrlError, string $redirectUrlReject)
 	{
 		$this->setReturnUrl($redirectUrl);
@@ -200,12 +200,12 @@ class Buckaroo implements Filters
 		$this->setReturnUrlReject($redirectUrlReject);
 	}
 
-  /**
-   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
-   *
-   * @param  array $params Parameters from request.
-   * @return string
-   */
+	/**
+	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+	 *
+	 * @param  array $params Parameters from request.
+	 * @return string
+	 */
 	public function generateDebtorReference(array $params)
 	{
 		$prefix      = 'debtor';
@@ -214,12 +214,12 @@ class Buckaroo implements Filters
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
-  /**
-   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
-   *
-   * @param  array $params Parameters from request.
-   * @return string
-   */
+	/**
+	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+	 *
+	 * @param  array $params Parameters from request.
+	 * @return string
+	 */
 	public function generateInvoiceName(array $params)
 	{
 		$prefix      = 'invoice';
@@ -228,12 +228,12 @@ class Buckaroo implements Filters
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
-  /**
-   * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
-   *
-   * @param  array $params Parameters from request.
-   * @return string
-   */
+	/**
+	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
+	 *
+	 * @param  array $params Parameters from request.
+	 * @return string
+	 */
 	public function generatePurchaseId(array $params)
 	{
 		$prefix      = 'purchase-id';
@@ -242,87 +242,87 @@ class Buckaroo implements Filters
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
 
-  /**
-   * Set if you need to use the test URI instead of live one.
-   *
-   * @return void
-   */
+	/**
+	 * Set if you need to use the test URI instead of live one.
+	 *
+	 * @return void
+	 */
 	public function setTest(): void
 	{
 		$this->isTestUri = true;
 	}
 
-  /**
-   * Set if you need to use the test URI instead of live one.
-   *
-   * @return void
-   */
+	/**
+	 * Set if you need to use the test URI instead of live one.
+	 *
+	 * @return void
+	 */
 	public function setDataRequest(): void
 	{
 		$this->isDataRequest = true;
 	}
 
-  /**
-   * Set's currency as uppercase 3-letter string (example: EUR)
-   *
-   * @param  string $currency Currency string.
-   * @return void
-   */
+	/**
+	 * Set's currency as uppercase 3-letter string (example: EUR)
+	 *
+	 * @param  string $currency Currency string.
+	 * @return void
+	 */
 	public function setCurrency(string $currency): void
 	{
 		$this->currency = $currency;
 	}
 
-  /**
-   * Getter for $this->currency.
-   *
-   * @return string
-   */
+	/**
+	 * Getter for $this->currency.
+	 *
+	 * @return string
+	 */
 	public function getCurrency(): string
 	{
 		return $this->currency;
 	}
 
-  /**
-   * Get type of payment. Defaults to iDEAL.
-   *
-   * @return  string
-   */
+	/**
+	 * Get type of payment. Defaults to iDEAL.
+	 *
+	 * @return  string
+	 */
 	public function getPayType()
 	{
 		return $this->payType;
 	}
 
-  /**
-   * Set type of payment. Defaults to iDEAL.
-   *
-   * @param  string $payType  Type of payment. Defaults to iDEAL.
-   *
-   * @return  self
-   */
+	/**
+	 * Set type of payment. Defaults to iDEAL.
+	 *
+	 * @param  string $payType  Type of payment. Defaults to iDEAL.
+	 *
+	 * @return  self
+	 */
 	public function setPayType(string $payType)
 	{
 		$this->payType = $payType;
 		return $this;
 	}
 
-  /**
-   * Get return URL after payment.
-   *
-   * @return  string
-   */
+	/**
+	 * Get return URL after payment.
+	 *
+	 * @return  string
+	 */
 	public function getReturnUrl()
 	{
 		return $this->returnUrl;
 	}
 
-  /**
-   * Set return URL after payment.
-   *
-   * @param  string $returnUrl  Return URL after payment.
-   *
-   * @return  self
-   */
+	/**
+	 * Set return URL after payment.
+	 *
+	 * @param  string $returnUrl  Return URL after payment.
+	 *
+	 * @return  self
+	 */
 	public function setReturnUrl(string $returnUrl)
 	{
 		$this->returnUrl = $returnUrl;
@@ -330,22 +330,22 @@ class Buckaroo implements Filters
 		return $this;
 	}
 
-  /**
-   * Get return URL after payment cancel.
-   *
-   * @return  string
-   */
+	/**
+	 * Get return URL after payment cancel.
+	 *
+	 * @return  string
+	 */
 	public function getReturnUrlCancel()
 	{
 		return $this->returnUrlCancel;
 	}
 
-  /**
-   * Set return URL after payment cancel.
-   *
-   * @param  string $returnUrlCancel  Return URL after payment cancel.
-   * @return  self
-   */
+	/**
+	 * Set return URL after payment cancel.
+	 *
+	 * @param  string $returnUrlCancel  Return URL after payment cancel.
+	 * @return  self
+	 */
 	public function setReturnUrlCancel(string $returnUrlCancel)
 	{
 		$this->returnUrlCancel = $returnUrlCancel;
@@ -353,23 +353,23 @@ class Buckaroo implements Filters
 		return $this;
 	}
 
-  /**
-   * Get return URL after payment error.
-   *
-   * @return  string
-   */
+	/**
+	 * Get return URL after payment error.
+	 *
+	 * @return  string
+	 */
 	public function getReturnUrlError()
 	{
 		return $this->returnUrlError;
 	}
 
-  /**
-   * Set return URL after payment error.
-   *
-   * @param  string $returnUrlError  Return URL after payment error.
-   *
-   * @return  self
-   */
+	/**
+	 * Set return URL after payment error.
+	 *
+	 * @param  string $returnUrlError  Return URL after payment error.
+	 *
+	 * @return  self
+	 */
 	public function setReturnUrlError(string $returnUrlError)
 	{
 		$this->returnUrlError = $returnUrlError;
@@ -377,23 +377,23 @@ class Buckaroo implements Filters
 		return $this;
 	}
 
-  /**
-   * Get return URL after payment reject.
-   *
-   * @return  string
-   */
+	/**
+	 * Get return URL after payment reject.
+	 *
+	 * @return  string
+	 */
 	public function getReturnUrlReject()
 	{
 		return $this->returnUrlReject;
 	}
 
-  /**
-   * Set return URL after payment reject.
-   *
-   * @param  string $returnUrlReject  Return URL after payment reject.
-   *
-   * @return  self
-   */
+	/**
+	 * Set return URL after payment reject.
+	 *
+	 * @param  string $returnUrlReject  Return URL after payment reject.
+	 *
+	 * @return  self
+	 */
 	public function setReturnUrlReject(string $returnUrlReject)
 	{
 		$this->returnUrlReject = $returnUrlReject;
@@ -401,13 +401,13 @@ class Buckaroo implements Filters
 		return $this;
 	}
 
-  /**
-   * Generates the correct authorization header.
-   *
-   * @param array  $postArray   Array of post data we're sending to Buckaroo.
-   * @param string $buckarooUri Buckaroo URI we're posting to.
-   * @return string
-   */
+	/**
+	 * Generates the correct authorization header.
+	 *
+	 * @param array  $postArray   Array of post data we're sending to Buckaroo.
+	 * @param string $buckarooUri Buckaroo URI we're posting to.
+	 * @return string
+	 */
 	private function generateAuthorizationHeader(array $postArray, string $buckarooUri): string
 	{
 		$this->verifyBuckarooInfoExists();
@@ -427,16 +427,16 @@ class Buckaroo implements Filters
 		return "hmac {$websiteKey}:{$hmac}:{$nonce}:{$time}";
 	}
 
-  /**
-   * Builds the body of request
-   *
-   * @param  int|float|string $donationAmount Donation amount.
-   * @param  string           $invoice         Invoice name.
-   * @param  string           $issuer          Issuer (bank) name.
-   * @param  bool             $isRecurring    Is recurring payment.
-   * @param  string           $description     Description of the payment.
-   * @return array
-   */
+	/**
+	 * Builds the body of request
+	 *
+	 * @param  int|float|string $donationAmount Donation amount.
+	 * @param  string           $invoice         Invoice name.
+	 * @param  string           $issuer          Issuer (bank) name.
+	 * @param  bool             $isRecurring    Is recurring payment.
+	 * @param  string           $description     Description of the payment.
+	 * @return array
+	 */
 	private function buildPostBodyForPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
 	{
 		$this->verifyBuckarooInfoExists();
@@ -481,17 +481,17 @@ class Buckaroo implements Filters
 		return $postArray;
 	}
 
-  /**
-   * Builds the body of request
-   *
-   * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
-   * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
-   * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
-   * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
-   * @param  string $issuer          Issuer (bank) name.
-   * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
-   * @return array
-   */
+	/**
+	 * Builds the body of request
+	 *
+	 * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+	 * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+	 * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+	 * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+	 * @param  string $issuer          Issuer (bank) name.
+	 * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
+	 * @return array
+	 */
 	private function buildPostBodyForEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
 	{
 		$this->verifyBuckarooInfoExists();
@@ -550,13 +550,13 @@ class Buckaroo implements Filters
 		return $postArray;
 	}
 
-  /**
-   * Make sure we have the data we need defined as filters.
-   *
-   * @throws MissingFilterInfoException When not all required keys are set.
-   *
-   * @return void
-   */
+	/**
+	 * Make sure we have the data we need defined as filters.
+	 *
+	 * @throws MissingFilterInfoException When not all required keys are set.
+	 *
+	 * @return void
+	 */
 	private function verifyBuckarooInfoExists(): void
 	{
 		if (empty(\apply_filters(self::BUCKAROO, 'websiteKey'))) {
@@ -568,51 +568,51 @@ class Buckaroo implements Filters
 		}
 	}
 
-  /**
-   * Get the correct url depending on if we're testing or not.
-   *
-   * @return string
-   */
+	/**
+	 * Get the correct url depending on if we're testing or not.
+	 *
+	 * @return string
+	 */
 	private function getBuckarooUri(): string
 	{
 		return $this->isTest() ? $this->getBuckarooUriTest() : $this->getBuckarooUriLive();
 	}
 
-  /**
-   * Returns correct Buckaroo live uri.
-   *
-   * @return string
-   */
+	/**
+	 * Returns correct Buckaroo live uri.
+	 *
+	 * @return string
+	 */
 	private function getBuckarooUriLive(): string
 	{
 		return $this->isDataRequest() ? self::LIVE_URI_DATA_REQUEST : self::LIVE_URI_TRANSACTION;
 	}
 
-  /**
-   * Returns correct Buckaroo test uri.
-   *
-   * @return string
-   */
+	/**
+	 * Returns correct Buckaroo test uri.
+	 *
+	 * @return string
+	 */
 	private function getBuckarooUriTest(): string
 	{
 		return $this->isDataRequest() ? self::TEST_URI_DATA_REQUEST : self::TEST_URI_TRANSACTION;
 	}
 
-  /**
-   * Check if we're running a test or not.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if we're running a test or not.
+	 *
+	 * @return boolean
+	 */
 	private function isTest(): bool
 	{
 		return $this->isTestUri;
 	}
 
-  /**
-   * Check if we're running a test or not.
-   *
-   * @return boolean
-   */
+	/**
+	 * Check if we're running a test or not.
+	 *
+	 * @return boolean
+	 */
 	private function isDataRequest(): bool
 	{
 		return $this->isDataRequest;

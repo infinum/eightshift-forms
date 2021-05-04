@@ -22,18 +22,18 @@ use Http\Adapter\Guzzle6\Client as Guzzle6;
 class MailerliteClient implements ClientInterface
 {
 
-  /**
-   * Mailerlite client object.
-   *
-   * @var MailerLite
-   */
+	/**
+	 * Mailerlite client object.
+	 *
+	 * @var MailerLite
+	 */
 	private $client;
 
-  /**
-   * Sets the config because we can't set config during construction (filters aren't yet registered)
-   *
-   * @return void
-   */
+	/**
+	 * Sets the config because we can't set config during construction (filters aren't yet registered)
+	 *
+	 * @return void
+	 */
 	public function setConfig()
 	{
 		$apiKey = \has_filter(Filters::MAILERLITE) ? \apply_filters(Filters::MAILERLITE, 'apiKey') : '';
@@ -44,11 +44,11 @@ class MailerliteClient implements ClientInterface
 		$this->client = new MailerLite($apiKey, $guzzleClient);
 	}
 
-  /**
-   * Returns the build client
-   *
-   * @return mixed
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return mixed
+	 */
 	public function getClient()
 	{
 		return $this->client;

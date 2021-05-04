@@ -19,11 +19,11 @@ use GuzzleHttp\ClientInterface;
 class GuzzleHttpClientFactory
 {
 
-  /**
-   * Creates the Guzzle http client.
-   *
-   * @return ClientInterface
-   */
+	/**
+	 * Creates the Guzzle http client.
+	 *
+	 * @return ClientInterface
+	 */
 	public static function create(): ClientInterface
 	{
 		return new Client();

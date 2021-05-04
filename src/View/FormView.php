@@ -16,12 +16,12 @@ namespace EightshiftForms\View;
 class FormView
 {
 
-  /**
-   * Add extra allowed tags specifically for forms.
-   *
-   * @param  array $allowedTags Already allowed tags.
-   * @return array
-   */
+	/**
+	 * Add extra allowed tags specifically for forms.
+	 *
+	 * @param  array $allowedTags Already allowed tags.
+	 * @return array
+	 */
 	public static function extraAllowedTags($allowedTags): array
 	{
 		$allowedTags['form'] = [
@@ -86,9 +86,9 @@ class FormView
 		return $allowedTags;
 	}
 
-  /**
-   * Returns an array of tags for wp_kses(). Less strict than the usual wp_kses_post().
-   */
+	/**
+	 * Returns an array of tags for wp_kses(). Less strict than the usual wp_kses_post().
+	 */
 	public static function allowedTags(): array
 	{
 		return self::extraAllowedTags(wp_kses_allowed_html('post'));

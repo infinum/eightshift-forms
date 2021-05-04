@@ -20,17 +20,17 @@ class Prefill implements Filters
 
 	public const FAILED_TO_PREFILL_LABEL = 'Unable to prefill options';
 
-  /**
-   * Returns the data of project-defined prefill source.
-   *
-   * Needs to return array with the following 2 keys:
-   * - label
-   * - value
-   *
-   * @param  string $prefillSourceName Name of the prefill source as defined in project.
-   * @param  string $filterName         Name of the filter we're getting data for.
-   * @return array
-   */
+	/**
+	 * Returns the data of project-defined prefill source.
+	 *
+	 * Needs to return array with the following 2 keys:
+	 * - label
+	 * - value
+	 *
+	 * @param  string $prefillSourceName Name of the prefill source as defined in project.
+	 * @param  string $filterName         Name of the filter we're getting data for.
+	 * @return array
+	 */
 	public static function getPrefillSourceData(string $prefillSourceName, string $filterName): array
 	{
 		if (! has_filter(self::PREFILL_GENERIC_MULTI)) {
@@ -56,15 +56,15 @@ class Prefill implements Filters
 		return $prefillData[$prefillSourceName]['data'];
 	}
 
-  /**
-   * Returns the data of project-defined prefill source (used for single input blocks - such as <input>)
-   *
-   * Needs to return a string.
-   *
-   * @param  string $prefillSourceName Name of the prefill source as defined in project.
-   * @param  string $filterName         Name of the filter we're getting data for.
-   * @return mixed
-   */
+	/**
+	 * Returns the data of project-defined prefill source (used for single input blocks - such as <input>)
+	 *
+	 * Needs to return a string.
+	 *
+	 * @param  string $prefillSourceName Name of the prefill source as defined in project.
+	 * @param  string $filterName         Name of the filter we're getting data for.
+	 * @return mixed
+	 */
 	public static function getPrefillSourceDataSingle(string $prefillSourceName, string $filterName)
 	{
 		if (! has_filter(self::PREFILL_GENERIC_SINGLE)) {

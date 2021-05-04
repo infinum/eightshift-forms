@@ -36,21 +36,21 @@ abstract class BaseRouteTest extends BaseTest
     $this->assertNotEquals($response->data['code'], 200);
   }
 
-  /**
-   * Mocking that a certain filter exists. See documentation of Brain Monkey:
-   * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
-   *
-   * We can't return any actual value, we can just "mock register" this filter.
-   *
-   * @return void
-   */
+	/**
+	 * Mocking that a certain filter exists. See documentation of Brain Monkey:
+	 * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
+	 *
+	 * We can't return any actual value, we can just "mock register" this filter.
+	 *
+	 * @return void
+	 */
   protected function addHooks() {
   }
 
-  /**
-   * Define route class you're testing.
-   *
-   * @return string
-   */
+	/**
+	 * Define route class you're testing.
+	 *
+	 * @return string
+	 */
   abstract protected function getRouteName(): string;
 }

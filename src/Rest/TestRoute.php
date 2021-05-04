@@ -24,49 +24,49 @@ use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 class TestRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/test-route';
 
-  /**
-   * Test salt used for this route.
-   *
-   * @var string
-   */
+	/**
+	 * Test salt used for this route.
+	 *
+	 * @var string
+	 */
 	public const TEST_SALT = '1234-test-salt';
 
-  /**
-   * Mock of required parameters.
-   *
-   * @var array
-   */
+	/**
+	 * Mock of required parameters.
+	 *
+	 * @var array
+	 */
 	public const REQUIRED_PARAMETER_1 = 'required-param';
 	public const REQUIRED_PARAMETER_2 = 'required-param-2';
 	public const IRRELEVANT_PARAM     = 'irrelevant-param';
 
-  /**
-   * Implementation of the Authorization obj.
-   *
-   * @var AuthorizationInterface
-   */
+	/**
+	 * Implementation of the Authorization obj.
+	 *
+	 * @var AuthorizationInterface
+	 */
 	protected $hmac;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param AuthorizationInterface $hmac          Authorization object.
-   * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param AuthorizationInterface $hmac          Authorization object.
+	 * @param BasicCaptcha           $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(
 		AuthorizationInterface $hmac,
 		BasicCaptcha $basicCaptcha
@@ -75,15 +75,15 @@ class TestRoute extends BaseRoute implements Filters
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -106,21 +106,21 @@ class TestRoute extends BaseRoute implements Filters
 		]);
 	}
 
-  /**
-   * Define authorization salt used for request to response handler.
-   *
-   * @return string
-   */
+	/**
+	 * Define authorization salt used for request to response handler.
+	 *
+	 * @return string
+	 */
 	protected function getAuthorizationSalt(): string
 	{
 		return self::TEST_SALT;
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -129,11 +129,11 @@ class TestRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return array
+	 */
 	protected function getIrrelevantParams(): array
 	{
 		return [

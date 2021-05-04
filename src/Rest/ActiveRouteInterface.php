@@ -16,10 +16,10 @@ namespace EightshiftForms\Rest;
 interface ActiveRouteInterface
 {
 
-  /**
-   * Returns the build client
-   *
-   * @return string
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return string
+	 */
 	public function getRouteUri(): string;
 }

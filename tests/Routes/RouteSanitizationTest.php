@@ -10,11 +10,11 @@ class RouteSanitizationTest extends BaseRouteTest
     return TestRouteSanitization::class;
   }
 
-  /**
-   * If we provide $this->getIrrelevantParams(), those params will be unset from the request.
-   *
-   * @return void
-   */
+	/**
+	 * If we provide $this->getIrrelevantParams(), those params will be unset from the request.
+	 *
+	 * @return void
+	 */
   public function testSanitizeFields()
   {
     $request = new \WP_REST_Request('GET', $this->routeEndpoint->getRouteUri());

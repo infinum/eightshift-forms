@@ -26,62 +26,62 @@ use Http\Client\Exception\HttpException;
 class MailerliteRoute extends BaseRoute implements Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/mailerlite';
 
-  /**
-   * Parameter for email.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for email.
+	 *
+	 * @var string
+	 */
 	public const EMAIL_PARAM = 'email';
 
-  /**
-   * Parameter for group id.
-   *
-   * @var string
-   */
+	/**
+	 * Parameter for group id.
+	 *
+	 * @var string
+	 */
 	public const GROUP_ID_PARAM = 'groupId';
 
-  /**
-   * Mailerlite object.
-   *
-   * @var Mailerlite
-   */
+	/**
+	 * Mailerlite object.
+	 *
+	 * @var Mailerlite
+	 */
 	protected $mailerlite;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param Mailerlite   $mailerlite    Mailerlite object.
-   * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Mailerlite   $mailerlite    Mailerlite object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(Mailerlite $mailerlite, BasicCaptcha $basicCaptcha)
 	{
 		$this->mailerlite = $mailerlite;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -128,11 +128,11 @@ class MailerliteRoute extends BaseRoute implements Filters
 		]);
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -141,11 +141,11 @@ class MailerliteRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return array
+	 */
 	protected function getIrrelevantParams(): array
 	{
 		return [
@@ -155,21 +155,21 @@ class MailerliteRoute extends BaseRoute implements Filters
 		];
 	}
 
-  /**
-   * Toggle if this route requires nonce verification
-   *
-   * @return bool
-   */
+	/**
+	 * Toggle if this route requires nonce verification
+	 *
+	 * @return bool
+	 */
 	protected function requiresNonceVerification(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return static::CREATABLE;

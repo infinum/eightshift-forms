@@ -20,26 +20,26 @@ use MailchimpMarketing\ApiClient;
 class MailchimpMarketingClient implements ClientInterface
 {
 
-  /**
-   * Mailchimp API's Marketing client object.
-   *
-   * @var ApiClient
-   */
+	/**
+	 * Mailchimp API's Marketing client object.
+	 *
+	 * @var ApiClient
+	 */
 	private $client;
 
-  /**
-   * Constructs object
-   */
+	/**
+	 * Constructs object
+	 */
 	public function __construct()
 	{
 		$this->client = new ApiClient();
 	}
 
-  /**
-   * Sets the config because we can't set config during construction (filters aren't yet registered)
-   *
-   * @return void
-   */
+	/**
+	 * Sets the config because we can't set config during construction (filters aren't yet registered)
+	 *
+	 * @return void
+	 */
 	public function setConfig()
 	{
 		$this->client->setConfig([
@@ -48,11 +48,11 @@ class MailchimpMarketingClient implements ClientInterface
 		]);
 	}
 
-  /**
-   * Returns the build client
-   *
-   * @return mixed
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return mixed
+	 */
 	public function getClient()
 	{
 		return $this->client;

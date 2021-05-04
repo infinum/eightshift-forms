@@ -27,125 +27,125 @@ use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 {
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/buckaroo-response-handler';
 
-  /**
-   * Name of the required parameter for redirect URLs.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect URLs.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URLS_PARAM = 'redirect-urls';
 
-  /**
-   * Name of the required parameter for status of Buckaroo transaction.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for status of Buckaroo transaction.
+	 *
+	 * @var string
+	 */
 	public const STATUS_PARAM = 'status';
 
-  /**
-   * Value of the status param.
-   *
-   * @var string
-   */
+	/**
+	 * Value of the status param.
+	 *
+	 * @var string
+	 */
 	public const STATUS_SUCCESS = 'success';
 
-  /**
-   * Value of the status param.
-   *
-   * @var string
-   */
+	/**
+	 * Value of the status param.
+	 *
+	 * @var string
+	 */
 	public const STATUS_CANCELED = 'canceled';
 
-  /**
-   * Value of the status param for error.
-   *
-   * @var string
-   */
+	/**
+	 * Value of the status param for error.
+	 *
+	 * @var string
+	 */
 	public const STATUS_ERROR = 'error';
 
-  /**
-   * Value of the status param for reject.
-   *
-   * @var string
-   */
+	/**
+	 * Value of the status param for reject.
+	 *
+	 * @var string
+	 */
 	public const STATUS_REJECT = 'reject';
 
-  /**
-   * Name of the required parameter for redirect url.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_PARAM = 'redirect-url';
 
-  /**
-   * Name of the required parameter for redirect url cancel.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url cancel.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_CANCEL_PARAM = 'redirect-url-cancel';
 
-  /**
-   * Name of the required parameter for redirect url error.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url error.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_ERROR_PARAM = 'redirect-url-error';
 
-  /**
-   * Name of the required parameter for redirect url reject.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter for redirect url reject.
+	 *
+	 * @var string
+	 */
 	public const REDIRECT_URL_REJECT_PARAM = 'redirect-url-reject';
 
-  /**
-   * Name of the required parameter (provided by Buckaroo) indicating response status.
-   *
-   * @var string
-   */
+	/**
+	 * Name of the required parameter (provided by Buckaroo) indicating response status.
+	 *
+	 * @var string
+	 */
 	public const BUCKAROO_RESPONSE_CODE_PARAM = 'BRQ_STATUSCODE';
 
-  /**
-   * Buckaroo integration obj.
-   *
-   * @var Buckaroo
-   */
+	/**
+	 * Buckaroo integration obj.
+	 *
+	 * @var Buckaroo
+	 */
 	protected $buckaroo;
 
-  /**
-   * Implementation of the Authorization obj.
-   *
-   * @var AuthorizationInterface
-   */
+	/**
+	 * Implementation of the Authorization obj.
+	 *
+	 * @var AuthorizationInterface
+	 */
 	protected $hmac;
 
-  /**
-   * Construct object
-   *
-   * @param Buckaroo               $buckaroo Buckaroo integration obj.
-   * @param AuthorizationInterface $hmac     Authorization object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param Buckaroo               $buckaroo Buckaroo integration obj.
+	 * @param AuthorizationInterface $hmac     Authorization object.
+	 */
 	public function __construct(Buckaroo $buckaroo, AuthorizationInterface $hmac)
 	{
 		$this->buckaroo = $buckaroo;
 		$this->hmac     = $hmac;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -177,13 +177,13 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		]);
 	}
 
-  /**
-   * Builds the final redirect URL depending on response
-   *
-   * @param array $params          GET params passed from original Buckaroo route.
-   * @param array $buckarooParams POST params received from Buckaroo (indicating the payment status).
-   * @return string
-   */
+	/**
+	 * Builds the final redirect URL depending on response
+	 *
+	 * @param array $params          GET params passed from original Buckaroo route.
+	 * @param array $buckarooParams POST params received from Buckaroo (indicating the payment status).
+	 * @return string
+	 */
 	public function buildRedirectUrl(array $params, array $buckarooParams): string
 	{
 
@@ -221,11 +221,11 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		return $redirectUrl;
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -237,25 +237,25 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		];
 	}
 
-  /**
-   * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
-   * should be some secret. For example the secretKey for accessing the 3rd party route this route is
-   * handling.
-   *
-   * If this function returns a non-empty value, it is assumed the route requires authorization.
-   *
-   * @return string
-   */
+	/**
+	 * Provide the expected salt ($this->getAuthorizationSalt()) for this route. This
+	 * should be some secret. For example the secretKey for accessing the 3rd party route this route is
+	 * handling.
+	 *
+	 * If this function returns a non-empty value, it is assumed the route requires authorization.
+	 *
+	 * @return string
+	 */
 	protected function getAuthorizationSalt(): string
 	{
 		return \apply_filters(Filters::BUCKAROO, 'secretKey') ?? 'invalid-salt';
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return [static::READABLE, static::CREATABLE];

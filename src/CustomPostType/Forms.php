@@ -39,11 +39,11 @@ class Forms extends AbstractPostType
 	 */
 	public const REST_API_ENDPOINT_SLUG = 'forms';
 
-  /**
-   * Post type slug constant.
-   *
-   * @var string
-   */
+	/**
+	 * Post type slug constant.
+	 *
+	 * @var string
+	 */
 	public const POST_CAPABILITY_TYPE = 'eightshift-form';
 
 	/**

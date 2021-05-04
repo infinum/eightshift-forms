@@ -18,26 +18,26 @@ use EightshiftLibs\Exception\GeneralExceptionInterface;
 class BuckarooRequestException extends \RuntimeException implements GeneralExceptionInterface
 {
 
-  /**
-   * Message to throw.
-   *
-   * @var string
-   */
+	/**
+	 * Message to throw.
+	 *
+	 * @var string
+	 */
 	protected $message = '';
 
-  /**
-   * Data to expose.
-   *
-   * @var array
-   */
+	/**
+	 * Data to expose.
+	 *
+	 * @var array
+	 */
 	private $data = [];
 
-  /**
-   * Constructs object
-   *
-   * @param string $message Exception message.
-   * @param array  $data (Optional) additional data we can provide.
-   */
+	/**
+	 * Constructs object
+	 *
+	 * @param string $message Exception message.
+	 * @param array  $data (Optional) additional data we can provide.
+	 */
 	public function __construct(string $message = '', array $data = [])
 	{
 		$this->message = $message;
@@ -45,11 +45,11 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
 		parent::__construct('BuckarooRequestException');
 	}
 
-  /**
-   * Returns message and data from exception. Used in rest apis.
-   *
-   * @return array
-   */
+	/**
+	 * Returns message and data from exception. Used in rest apis.
+	 *
+	 * @return array
+	 */
 	public function getExceptionForRestResponse(): array
 	{
 		return [
@@ -58,21 +58,21 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
 		];
 	}
 
-  /**
-   * $this->data getter.
-   *
-   * @return array
-   */
+	/**
+	 * $this->data getter.
+	 *
+	 * @return array
+	 */
 	public function getData(): array
 	{
 		return $this->data;
 	}
 
-  /**
-   * $this->message getter.
-   *
-   * @return string
-   */
+	/**
+	 * $this->message getter.
+	 *
+	 * @return string
+	 */
 	public function getCustomMessage(): string
 	{
 		return $this->message;

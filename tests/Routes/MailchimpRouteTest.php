@@ -20,11 +20,11 @@ class MailchimpRouteTest extends BaseRouteTest
     }, 1, 1);
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessfulWhenAddingNewMembers()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
@@ -40,11 +40,11 @@ class MailchimpRouteTest extends BaseRouteTest
     $this->assertEquals(200, $response->data['code'] );
   }
 
-  /**
-   * Invalid list ID should trigger an error response.
-   *
-   * @return void
-   */
+	/**
+	 * Invalid list ID should trigger an error response.
+	 *
+	 * @return void
+	 */
   public function testRestCallFailsIfInvalidListId()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
@@ -58,11 +58,11 @@ class MailchimpRouteTest extends BaseRouteTest
     $this->assertEquals(400, $response->data['code'] );
   }
 
-  /**
-   * Correct request should result in 200 response
-   *
-   * @return void
-   */
+	/**
+	 * Correct request should result in 200 response
+	 *
+	 * @return void
+	 */
   public function testRestCallSuccessfulWhenAddingTags()
   {
     $request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());

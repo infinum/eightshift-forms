@@ -27,48 +27,48 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 
 	public const ENTITY_PARAM = 'dynamics-crm-entity';
 
-  /**
-   * Route slug
-   *
-   * @var string
-   */
+	/**
+	 * Route slug
+	 *
+	 * @var string
+	 */
 	public const ENDPOINT_SLUG = '/dynamics-crm';
 
-  /**
-   * Dynamics CRM object.
-   *
-   * @var DynamicsCrm
-   */
+	/**
+	 * Dynamics CRM object.
+	 *
+	 * @var DynamicsCrm
+	 */
 	protected $dynamicsCrm;
 
-  /**
-   * Basic Captcha object.
-   *
-   * @var BasicCaptcha
-   */
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
 	protected $basicCaptcha;
 
-  /**
-   * Construct object
-   *
-   * @param DynamicsCrm  $dynamicsCrm Dynamics CRM object.
-   * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
-   */
+	/**
+	 * Construct object
+	 *
+	 * @param DynamicsCrm  $dynamicsCrm Dynamics CRM object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
+	 */
 	public function __construct(DynamicsCrm $dynamicsCrm, BasicCaptcha $basicCaptcha)
 	{
 		$this->dynamicsCrm  = $dynamicsCrm;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request $request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
+	/**
+	 * Method that returns rest response
+	 *
+	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
+	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
@@ -105,11 +105,11 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 		]);
 	}
 
-  /**
-   * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
-   *
-   * @return array
-   */
+	/**
+	 * Returns keys of irrelevant params which we don't want to send to CRM (even tho they're in form).
+	 *
+	 * @return array
+	 */
 	protected function getIrrelevantParams(): array
 	{
 		return [
@@ -122,11 +122,11 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 		];
 	}
 
-  /**
-   * Defines a list of required parameters which must be present in the request or it will error out.
-   *
-   * @return array
-   */
+	/**
+	 * Defines a list of required parameters which must be present in the request or it will error out.
+	 *
+	 * @return array
+	 */
 	protected function getRequiredParams(): array
 	{
 		return [
@@ -134,21 +134,21 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 		];
 	}
 
-  /**
-   * Toggle if this route requires nonce verification
-   *
-   * @return bool
-   */
+	/**
+	 * Toggle if this route requires nonce verification
+	 *
+	 * @return bool
+	 */
 	protected function requiresNonceVerification(): bool
 	{
 		return true;
 	}
 
-  /**
-   * Returns allowed methods for this route.
-   *
-   * @return string|array
-   */
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string|array
+	 */
 	protected function getMethods()
 	{
 		return static::CREATABLE;

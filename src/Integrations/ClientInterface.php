@@ -16,17 +16,17 @@ namespace EightshiftForms\Integrations;
 interface ClientInterface
 {
 
-  /**
-   * Returns the build client
-   *
-   * @return mixed
-   */
+	/**
+	 * Returns the build client
+	 *
+	 * @return mixed
+	 */
 	public function getClient();
 
-  /**
-   * Sets the config because we can't set config during construction (filters aren't yet registered)
-   *
-   * @return void
-   */
+	/**
+	 * Sets the config because we can't set config during construction (filters aren't yet registered)
+	 *
+	 * @return void
+	 */
 	public function setConfig();
 }
