@@ -98,7 +98,7 @@ final class Users implements ServiceInterface
    */
 	private function getAllPostTypeCaps(string $type): array
 	{
-		$output = [
+		return [
 			"publish_{$type}s"       => true,
 			"edit_{$type}s"          => true,
 			"edit_others_{$type}s"   => true,
@@ -109,7 +109,5 @@ final class Users implements ServiceInterface
 			"delete_{$type}"         => true,
 			"read_{$type}"           => true,
 		];
-
-		return $output;
 	}
 }
