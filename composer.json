@@ -33,7 +33,7 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
 		"infinum/eightshift-coding-standards": "^1.1",
 		"php-stubs/wordpress-stubs": "^5.5",
-		"szepeviktor/phpstan-wordpress": "^0.7"
+		"szepeviktor/phpstan-wordpress": "^0.7.1"
 	},
 	"require": {
 		"php": "^7.2 || <8.0",
@@ -41,17 +41,21 @@
 		"mailchimp/marketing": "^3.0",
 		"mailerlite/mailerlite-api-v2-php-sdk": "^0.3.0",
 		"php-http/guzzle6-adapter": "^2.0",
-		"saintsystems/odata-client": "^0.4.2",
-		"szepeviktor/phpstan-wordpress": "^0.7.1"
+		"saintsystems/odata-client": "^0.4.2"
 	},
 	"autoload": {
+		"psr-4": {
+			"EightshiftForms\\": "src/"
+		}
+	},
+	"autoload-dev": {
 		"classmap": [
 			"tests/WordPressMocks/"
 		],
 		"psr-4": {
-			"EightshiftForms\\": "src/",
 			"EightshiftFormsTests\\": "tests/"
 		}
+
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
