@@ -39,7 +39,7 @@ interface Actions
 	 *     add_action( 'eightshift_forms/extra_form_fields', [ $this, 'add_additional_fields' ], 1, 1 );
 	 *   }
 	 *
-	 *   @param $attributes Array of form's attributes.
+	 * @param $attributes Array of form's attributes.
 	 *   public function add_additional_fields( array $attributes ) {
 	 *     echo '<input type="hidden" name="some-extra-field" value="your-value" />';
 	 *   }

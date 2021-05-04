@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
-use EightshiftLibs\Main\AbstractMain;
 use EightshiftForms\Cache;
 use EightshiftForms\Captcha;
-use EightshiftForms\Rest;
 use EightshiftForms\Integrations;
+use EightshiftForms\Rest;
 use EightshiftFormsTests\Mocks;
+use EightshiftLibs\Main\AbstractMain;
 
 /**
  * The main start class.
@@ -56,7 +56,7 @@ class Main extends AbstractMain
 	/**
 	 * Provides additional / different services depending on if we're in test or not.
 	 *
-	 * @param   boolean $isTest Set to true if running tests.
+	 * @param boolean $isTest Set to true if running tests.
 	 * @return void
 	 */
 	public function setTest(bool $isTest): void

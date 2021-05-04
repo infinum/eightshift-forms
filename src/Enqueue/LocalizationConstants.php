@@ -96,15 +96,15 @@ class LocalizationConstants implements Filters
 	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ActiveRouteInterface $dynamicsCrmRoute          Dynamics CRM route object which holds values we need to localize.
-	 * @param ActiveRouteInterface $buckarooIdealRoute        Buckaroo (Ideal) route object which holds values we need to localize.
-	 * @param ActiveRouteInterface $buckarooEmandateRoute     Buckaroo (Emandate) route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $dynamicsCrmRoute Dynamics CRM route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $buckarooIdealRoute Buckaroo (Ideal) route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $buckarooEmandateRoute Buckaroo (Emandate) route object which holds values we need to localize.
 	 * @param ActiveRouteInterface $buckarooPayByEmailRoute Buckaroo (Pay By Email) route object which holds values we need to localize.
-	 * @param ActiveRouteInterface $sendEmailRoute            Send Email route object which holds values we need to localize.
-	 * @param ActiveRouteInterface $mailchimpRoute             Mailchimp route object which holds values we need to localize.
-	 * @param Mailchimp            $mailchimp                   Mailchimp implementation.
-	 * @param ActiveRouteInterface $mailerliteRoute            Mailerlite route object which holds values we need to localize.
-	 * @param Mailerlite           $mailerlite                  Mailerlite implementation.
+	 * @param ActiveRouteInterface $sendEmailRoute Send Email route object which holds values we need to localize.
+	 * @param ActiveRouteInterface $mailchimpRoute Mailchimp route object which holds values we need to localize.
+	 * @param Mailchimp $mailchimp Mailchimp implementation.
+	 * @param ActiveRouteInterface $mailerliteRoute Mailerlite route object which holds values we need to localize.
+	 * @param Mailerlite $mailerlite Mailerlite implementation.
 	 */
 	public function __construct(
 		ActiveRouteInterface $dynamicsCrmRoute,
@@ -137,20 +137,20 @@ class LocalizationConstants implements Filters
 	{
 		$localization = [
 			self::LOCALIZATION_KEY => [
-				'siteUrl'           => get_site_url(),
+				'siteUrl' => get_site_url(),
 				'isDynamicsCrmUsed' => has_filter(Filters::DYNAMICS_CRM),
-				'isBuckarooUsed'    => has_filter(Filters::BUCKAROO),
-				'isMailchimpUsed'   => has_filter(Filters::MAILCHIMP),
-				'isMailerliteUsed'  => has_filter(Filters::MAILERLITE),
-				'hasThemes'         => has_filter(Filters::GENERAL),
+				'isBuckarooUsed' => has_filter(Filters::BUCKAROO),
+				'isMailchimpUsed' => has_filter(Filters::MAILCHIMP),
+				'isMailerliteUsed' => has_filter(Filters::MAILERLITE),
+				'hasThemes' => has_filter(Filters::GENERAL),
 				'content' => [
-					'formLoading' => esc_html__('Form is submitting, please wait.', 'eightshift-forms'),
-					'formSuccess' => esc_html__('Form successfully submitted.', 'eightshift-forms'),
+					'formLoading' => \esc_html__('Form is submitting, please wait.', 'eightshift-forms'),
+					'formSuccess' => \esc_html__('Form successfully submitted.', 'eightshift-forms'),
 				],
 				'sendEmail' => [
 					'restUri' => $this->sendEmailRoute->getRouteUri(),
 				],
-				'internalServerErrorMessage' => esc_html__('Internal server error', 'eightshift-forms'),
+				'internalServerErrorMessage' => \esc_html__('Internal server error', 'eightshift-forms'),
 			],
 		];
 
@@ -193,7 +193,7 @@ class LocalizationConstants implements Filters
 	public function getAdminLocalizations(): array
 	{
 		$localization = [
-		self::LOCALIZATION_ADMIN_KEY => [],
+			self::LOCALIZATION_ADMIN_KEY => [],
 		];
 
 		if (has_filter(Filters::MAILCHIMP)) {
@@ -210,7 +210,7 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Dynamics CRM integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addGeneralConstants(array $localization): array
@@ -223,7 +223,7 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Dynamics CRM integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addDynamicsCrmConstants(array $localization): array
@@ -231,8 +231,14 @@ class LocalizationConstants implements Filters
 		$entities = apply_filters(Filters::DYNAMICS_CRM, 'availableEntities');
 		if (empty($entities)) {
 			$availableEntities = [
-				/* translators: %s will be replaced with filter name (string). */
-				sprintf(esc_html__('No options found, please set available options in %s filter as availableEntities', 'eightshift-forms'), self::DYNAMICS_CRM),
+				sprintf(
+					/* translators: %s will be replaced with filter name (string). */
+					\esc_html__(
+						'No options found, please set available options in %s filter as availableEntities',
+						'eightshift-forms'
+					),
+					self::DYNAMICS_CRM
+				),
 			];
 		} else {
 			$availableEntities = $entities;
@@ -249,7 +255,7 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Buckaroo integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addBuckarooConstants(array $localization): array
@@ -268,13 +274,13 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Mailchimp integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addMailchimpConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailchimp'] = [
-		'restUri' => $this->mailchimpRoute->getRouteUri(),
+			'restUri' => $this->mailchimpRoute->getRouteUri(),
 		];
 
 		return $localization;
@@ -283,13 +289,13 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Mailchimp integration (only available in admin)
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	protected function addMailchimpAdminConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailchimp'] = [
-		'audiences' => $this->fetchMailchimpAudiences(),
+			'audiences' => $this->fetchMailchimpAudiences(),
 		];
 
 		return $localization;
@@ -298,13 +304,13 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Mailerlite integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addMailerliteConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailerlite'] = [
-		'restUri' => $this->mailerliteRoute->getRouteUri(),
+			'restUri' => $this->mailerliteRoute->getRouteUri(),
 		];
 
 		return $localization;
@@ -313,13 +319,13 @@ class LocalizationConstants implements Filters
 	/**
 	 * Localize all constants required for Mailerlite integration.
 	 *
-	 * @param  array $localization Existing localizations.
+	 * @param array $localization Existing localizations.
 	 * @return array
 	 */
 	private function addMailerliteConstantsAdmin(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailerlite'] = [
-		'groups' => $this->fetchMailerliteGroups(),
+			'groups' => $this->fetchMailerliteGroups(),
 		];
 
 		return $localization;
@@ -343,8 +349,8 @@ class LocalizationConstants implements Filters
 
 		foreach ($response->lists as $listObj) {
 			$audiences[] = [
-			'value' => $listObj->id,
-			'label' => $listObj->name,
+				'value' => $listObj->id,
+				'label' => $listObj->name,
 			];
 		}
 
@@ -369,8 +375,8 @@ class LocalizationConstants implements Filters
 
 		foreach ($response as $listObj) {
 			$groups[] = [
-			'value' => $listObj->id,
-			'label' => $listObj->name,
+				'value' => $listObj->id,
+				'label' => $listObj->name,
 			];
 		}
 
@@ -387,7 +393,7 @@ class LocalizationConstants implements Filters
 	{
 		$prefillMulti = apply_filters(Filters::PREFILL_GENERIC_MULTI, []);
 
-		if (! is_array($prefillMulti)) {
+		if (!is_array($prefillMulti)) {
 			return [];
 		}
 
@@ -412,7 +418,7 @@ class LocalizationConstants implements Filters
 	{
 		$prefillSingle = apply_filters(Filters::PREFILL_GENERIC_SINGLE, []);
 
-		if (! is_array($prefillSingle)) {
+		if (!is_array($prefillSingle)) {
 			return [];
 		}
 

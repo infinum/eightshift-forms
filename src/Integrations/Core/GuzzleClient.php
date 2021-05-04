@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Core;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Client;
 
 /**
  * Guzzle client, implementation of HttpClientInterface.
@@ -37,8 +36,8 @@ class GuzzleClient implements HttpClientInterface
 	/**
 	 * Implementation of get request on the HttpClient.
 	 *
-	 * @param  string $url        Url to ping.
-	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @param string $url Url to ping.
+	 * @param array $parameters (Optional) parameters for the request.
 	 * @return mixed
 	 */
 	public function get(string $url, array $parameters = [])
@@ -49,8 +48,8 @@ class GuzzleClient implements HttpClientInterface
 	/**
 	 * Implementation of post request on the HttpClient.
 	 *
-	 * @param  string $url        Url to ping.
-	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @param string $url Url to ping.
+	 * @param array $parameters (Optional) parameters for the request.
 	 * @return mixed
 	 */
 	public function post(string $url, array $parameters = [])
@@ -61,8 +60,8 @@ class GuzzleClient implements HttpClientInterface
 	/**
 	 * Implementation of post request on the HttpClient.
 	 *
-	 * @param  string $url        Url to ping.
-	 * @param  array  $parameters (Optional) parameters for the request.
+	 * @param string $url Url to ping.
+	 * @param array $parameters (Optional) parameters for the request.
 	 * @return mixed
 	 */
 	public function patch(string $url, array $parameters = [])

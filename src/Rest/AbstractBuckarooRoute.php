@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Integrations\Buckaroo\Buckaroo;
-use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 use EightshiftForms\Integrations\Authorization\Hmac;
+use EightshiftForms\Integrations\Buckaroo\Buckaroo;
 
 /**
  * Class AbstractBuckarooRoute
@@ -103,10 +103,10 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 	/**
 	 * Construct object
 	 *
-	 * @param Buckaroo                     $buckaroo                        Buckaroo integration obj.
+	 * @param Buckaroo $buckaroo Buckaroo integration obj.
 	 * @param BuckarooResponseHandlerRoute $buckarooResponseHandlerRoute Response handler route obj.
-	 * @param AuthorizationInterface       $hmac                            Authorization object.
-	 * @param BasicCaptcha                 $basicCaptcha                   BasicCaptcha object.
+	 * @param AuthorizationInterface $hmac Authorization object.
+	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
 	 */
 	public function __construct(
 		Buckaroo $buckaroo,
@@ -130,8 +130,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 	 */
 	protected function setRedirectUrls(array $params): array
 	{
-
-	  // Now let's define all Buckaroo-recognized statuses for which we need to provide redirect URLs.
+		// Now let's define all Buckaroo-recognized statuses for which we need to provide redirect URLs.
 		$statuses = [
 			BuckarooResponseHandlerRoute::STATUS_SUCCESS,
 			BuckarooResponseHandlerRoute::STATUS_CANCELED,
@@ -139,21 +138,28 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 			BuckarooResponseHandlerRoute::STATUS_REJECT,
 		];
 
-	  // Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
+		// Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
 		$redirectUrls = [];
-		$baseUrl      = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
+		$baseUrl = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
 		foreach ($statuses as $statusValue) {
 			$urlParams = $params;
 			$urlParams[BuckarooResponseHandlerRoute::STATUS_PARAM] = $statusValue;
 
-		  // We need to encode all params to ensure they're sent properly.
+			// We need to encode all params to ensure they're sent properly.
 			$urlParams = $this->urlencodeParams($urlParams);
 
-		  // As the last step, add the authorization hash which verifies that the request was not tampered with.
-			$url = \add_query_arg(array_merge(
-				$urlParams,
-				[Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generateHash($urlParams, $this->generateAuthorizationSaltForResponseHandler()))]
-			), $baseUrl);
+			// As the last step, add the authorization hash which verifies that the request was not tampered with.
+			$url = \add_query_arg(
+				array_merge(
+					$urlParams,
+					[
+						Hmac::AUTHORIZATION_KEY => rawurlencode(
+							$this->hmac->generateHash($urlParams, $this->generateAuthorizationSaltForResponseHandler())
+						)
+					]
+				),
+				$baseUrl
+			);
 
 			$redirectUrls[] = $url;
 		}
@@ -209,7 +215,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise

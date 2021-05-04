@@ -27,16 +27,19 @@ class Prefill implements Filters
 	 * - label
 	 * - value
 	 *
-	 * @param  string $prefillSourceName Name of the prefill source as defined in project.
-	 * @param  string $filterName         Name of the filter we're getting data for.
+	 * @param string $prefillSourceName Name of the prefill source as defined in project.
+	 * @param string $filterName Name of the filter we're getting data for.
 	 * @return array
 	 */
 	public static function getPrefillSourceData(string $prefillSourceName, string $filterName): array
 	{
-		if (! has_filter(self::PREFILL_GENERIC_MULTI)) {
+		if (!has_filter(self::PREFILL_GENERIC_MULTI)) {
 			return [
 				[
-					'label' => esc_html__('Unable to prefill options, selected options not defined', 'eightshift-forms'),
+					'label' => \esc_html__(
+						'Unable to prefill options, selected options not defined',
+						'eightshift-forms'
+					),
 					'value' => 'no-value',
 				],
 			];
@@ -44,10 +47,10 @@ class Prefill implements Filters
 
 		$prefillData = apply_filters($filterName, []);
 
-		if (! isset($prefillData[$prefillSourceName], $prefillData[$prefillSourceName]['data'])) {
+		if (!isset($prefillData[$prefillSourceName], $prefillData[$prefillSourceName]['data'])) {
 			return [
 				[
-					'label' => esc_html__('Unable to prefill options, no data defined', 'eightshift-forms'),
+					'label' => \esc_html__('Unable to prefill options, no data defined', 'eightshift-forms'),
 					'value' => 'no-value',
 				],
 			];
@@ -61,20 +64,20 @@ class Prefill implements Filters
 	 *
 	 * Needs to return a string.
 	 *
-	 * @param  string $prefillSourceName Name of the prefill source as defined in project.
-	 * @param  string $filterName         Name of the filter we're getting data for.
+	 * @param string $prefillSourceName Name of the prefill source as defined in project.
+	 * @param string $filterName Name of the filter we're getting data for.
 	 * @return mixed
 	 */
 	public static function getPrefillSourceDataSingle(string $prefillSourceName, string $filterName)
 	{
-		if (! has_filter(self::PREFILL_GENERIC_SINGLE)) {
-			return esc_html__('Unable to prefill options, no data defined', 'eightshift-forms');
+		if (!has_filter(self::PREFILL_GENERIC_SINGLE)) {
+			return \esc_html__('Unable to prefill options, no data defined', 'eightshift-forms');
 		}
 
 		$prefillData = apply_filters($filterName, []);
 
-		if (! isset($prefillData[$prefillSourceName], $prefillData[$prefillSourceName]['data'])) {
-			return esc_html__('Unable to prefill options, no data defined', 'eightshift-forms');
+		if (!isset($prefillData[$prefillSourceName], $prefillData[$prefillSourceName]['data'])) {
+			return \esc_html__('Unable to prefill options, no data defined', 'eightshift-forms');
 		}
 
 		return $prefillData[$prefillSourceName]['data'];

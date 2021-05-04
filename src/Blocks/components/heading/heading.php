@@ -30,18 +30,24 @@ $headingColor = Components::checkAttr('headingColor', $attributes, $manifest, $c
 $headingSize = Components::checkAttr('headingSize', $attributes, $manifest, $componentName);
 $headingAlign = Components::checkAttr('headingAlign', $attributes, $manifest, $componentName);
 
-$headingClass = Components::classnames([
-	$componentClass,
-	Components::selector($headingColor, $componentClass, 'color', $headingColor),
-	Components::selector($headingSize, $componentClass, 'size', $headingSize),
-	Components::selector($headingAlign, $componentClass, 'align', $headingAlign),
-	Components::selector($blockClass, $blockClass, $selectorClass),
-]);
+$headingClass = Components::classnames(
+	[
+		$componentClass,
+		Components::selector($headingColor, $componentClass, 'color', $headingColor),
+		Components::selector($headingSize, $componentClass, 'size', $headingSize),
+		Components::selector($headingAlign, $componentClass, 'align', $headingAlign),
+		Components::selector($blockClass, $blockClass, $selectorClass),
+	]
+);
 
 $headingLevel = $headingLevel ? "h{$headingLevel}" : 'h2';
 
 ?>
 
-<<?php echo esc_attr($headingLevel); ?> class="<?php echo esc_attr($headingClass); ?>">
-	<?php echo wp_kses_post($headingContent); ?>
-</<?php echo esc_attr($headingLevel); ?>>
+<<?php
+echo \esc_attr($headingLevel); ?> class="<?php
+echo \esc_attr($headingClass); ?>">
+<?php
+echo wp_kses_post($headingContent); ?>
+</<?php
+echo \esc_attr($headingLevel); ?>>

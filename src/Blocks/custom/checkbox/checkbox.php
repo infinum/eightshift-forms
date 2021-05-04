@@ -29,22 +29,22 @@ $blockClasses = Components::classnames([
 ])
 ?>
 
-<div class="<?php echo esc_attr($blockClasses); ?>">
-	<label class="<?php echo esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
+<div class="<?php echo \esc_attr($blockClasses); ?>">
+	<label class="<?php echo \esc_attr("{$blockClass}__label js-{$blockClass}-label"); ?>">
 	<input
-		name="<?php echo esc_attr($name); ?>"
-		<?php ! empty($checkboxId) ? printf('id="%s"', esc_attr($checkboxId)) : ''; // phpcs:ignore ?>
-		class="<?php echo esc_attr("{$classes} {$blockClass}__checkbox js-{$blockClass}-checkbox"); ?>"
-		value="<?php echo esc_attr($value); ?>"
+		name="<?php echo \esc_attr($name); ?>"
+		<?php ! empty($checkboxId) ? printf('id="%s"', \esc_attr($checkboxId)) : ''; // phpcs:ignore ?>
+		class="<?php echo \esc_attr("{$classes} {$blockClass}__checkbox js-{$blockClass}-checkbox"); ?>"
+		value="<?php echo \esc_attr($value); ?>"
 		type="checkbox"
-		<?php echo esc_attr($isChecked); ?>
-		<?php echo esc_attr($isDisabled); ?>
-		<?php echo esc_attr($isReadOnly); ?>
-		<?php echo esc_attr($isRequired); ?>
-		<?php echo esc_attr($preventSending); ?>
+		<?php echo \esc_attr($isChecked); ?>
+		<?php echo \esc_attr($isDisabled); ?>
+		<?php echo \esc_attr($isReadOnly); ?>
+		<?php echo \esc_attr($isRequired); ?>
+		<?php echo \esc_attr($preventSending); ?>
 	/>
-	<span class="<?php echo esc_attr("{$blockClass}__checkmark js-{$blockClass}-checkmark"); ?>"></span>
-	<span class="<?php echo esc_attr("{$blockClass}__label-content"); ?>">
+	<span class="<?php echo \esc_attr("{$blockClass}__checkmark js-{$blockClass}-checkmark"); ?>"></span>
+	<span class="<?php echo \esc_attr("{$blockClass}__label-content"); ?>">
 		<?php echo wp_kses_post($label); ?>
 	</span>
 	</label>

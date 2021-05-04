@@ -2,7 +2,7 @@
 <ruleset name="Eightshift Forms plugin ruleset">
 	<description>Eightshift Forms plugin ruleset.</description>
 
-	<rule ref="Eightshift" />
+	<rule ref="Eightshift"/>
 
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -26,49 +26,19 @@
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
-  <!-- <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
-    <severity>0</severity>
-  </rule>
+	<!-- Enforce PSR-12 style file comments. -->
+	<rule ref="Squiz.Commenting.FileComment">
+		<exclude name="Squiz.Commenting.FileComment.SpacingAfterOpen"/>
+		<exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+	</rule>
 
-  <rule ref="WordPress.WP.EnqueuedResourceParameters.NotInFooter">
-    <severity>0</severity>
-  </rule>
+	<!-- Added because phpcs was complaining about this even tho it seemed ok. Looks like a bug in phpcs.-->
+	<rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
+		<severity>0</severity>
+	</rule>
 
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="WordPress.WP.GlobalVariablesOverride.OverrideProhibited">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.MultipleArguments">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound">
-    <severity>0</severity>
-  </rule> -->
-
-  <!-- Added because phpcs was complaining about this even tho it seemed ok. Looks like a bug in phpcs.-->
-  <rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.Files.LineLength.TooLong">
-    <severity>0</severity>
-  </rule>
+	<rule ref="Generic.Files.LineLength.TooLong">
+		<severity>0</severity>
+	</rule>
 
 </ruleset>

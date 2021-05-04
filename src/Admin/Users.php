@@ -63,7 +63,7 @@ final class Users implements ServiceInterface
 
 			if ($hasAccess) {
 				foreach ($this->getAllPostTypeCaps(Forms::POST_CAPABILITY_TYPE) as $cap => $value) {
-					if (! $roleObject->has_cap($cap)) {
+					if (!$roleObject->has_cap($cap)) {
 						$roleObject->add_cap($cap);
 					}
 				}
@@ -92,22 +92,22 @@ final class Users implements ServiceInterface
 	/**
 	 * Get all post type caps.
 	 *
-	 * @param string $type      Name of post type.
+	 * @param string $type Name of post type.
 	 *
 	 * @return array
 	 */
 	private function getAllPostTypeCaps(string $type): array
 	{
 		return [
-			"publish_{$type}s"       => true,
-			"edit_{$type}s"          => true,
-			"edit_others_{$type}s"   => true,
-			"delete_{$type}s"        => true,
+			"publish_{$type}s" => true,
+			"edit_{$type}s" => true,
+			"edit_others_{$type}s" => true,
+			"delete_{$type}s" => true,
 			"delete_others_{$type}s" => true,
-			"read_private_{$type}s"  => true,
-			"edit_{$type}"           => true,
-			"delete_{$type}"         => true,
-			"read_{$type}"           => true,
+			"read_private_{$type}s" => true,
+			"edit_{$type}" => true,
+			"delete_{$type}" => true,
+			"read_{$type}" => true,
 		];
 	}
 }

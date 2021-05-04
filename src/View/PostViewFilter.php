@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\View;
 
 use EightshiftLibs\Services\ServiceInterface;
-use EightshiftForms\View\FormView;
 
 /**
  * The project config class.
@@ -32,7 +31,7 @@ class PostViewFilter implements ServiceInterface
 	/**
 	 * Modifies allowed tags in wp_kses_post()
 	 *
-	 * @param  array $allowedTags Array of allowed tags.
+	 * @param array $allowedTags Array of allowed tags.
 	 * @return array
 	 */
 	public function modifyKsesPostTags(array $allowedTags): array

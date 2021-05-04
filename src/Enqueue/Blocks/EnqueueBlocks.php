@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Blocks;
 
-use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftForms\Config\Config;
-use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Enqueue_Blocks class.
@@ -31,7 +31,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestInterface     $manifest Inject manifest which holds data about assets from manifest.json.
+	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 * @param LocalizationConstants $localizationConstants Localization constants object.
 	 */
 	public function __construct(ManifestInterface $manifest, LocalizationConstants $localizationConstants)

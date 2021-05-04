@@ -29,14 +29,14 @@ class SendEmailRoute extends BaseRoute
 	 */
 	public const ENDPOINT_SLUG = '/send-email';
 
-	public const TO_PARAM                          = 'emailTo';
-	public const SUBJECT_PARAM                     = 'emailSubject';
-	public const MESSAGE_PARAM                     = 'emailMessage';
-	public const ADDITIONAL_HEADERS_PARAM          = 'emailAdditionalHeaders';
+	public const TO_PARAM = 'emailTo';
+	public const SUBJECT_PARAM = 'emailSubject';
+	public const MESSAGE_PARAM = 'emailMessage';
+	public const ADDITIONAL_HEADERS_PARAM = 'emailAdditionalHeaders';
 	public const SEND_CONFIRMATION_TO_SENDER_PARAM = 'emailSendCopyToSender';
-	public const CONFIRMATION_SUBJECT_PARAM        = 'emailConfirmationSubject';
-	public const CONFIRMATION_MESSAGE_PARAM        = 'emailConfirmationMessage';
-	public const EMAIL_PARAM                       = 'email';
+	public const CONFIRMATION_SUBJECT_PARAM = 'emailConfirmationSubject';
+	public const CONFIRMATION_MESSAGE_PARAM = 'emailConfirmationMessage';
+	public const EMAIL_PARAM = 'email';
 
 	/**
 	 * Basic Captcha object.
@@ -58,7 +58,7 @@ class SendEmailRoute extends BaseRoute
 	/**
 	 * Method that returns rest response.
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -66,49 +66,54 @@ class SendEmailRoute extends BaseRoute
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->getData());
 		}
 
-	  // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
+		// If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
 		if (
 			$this->shouldSendEmailCopyToUser($params) &&
-			! $this->isEmailSetAndValid($params)
+			!$this->isEmailSetAndValid($params)
 		) {
 			return $this->restResponseHandler('invalid-email-error');
 		}
 
-		$emailInfo            = $this->buildEmailInfoFromParams($params);
+		$emailInfo = $this->buildEmailInfoFromParams($params);
 		$emailInfo['headers'] = $this->addDefaultHeaders($emailInfo['headers']);
-		$response              = wp_mail($emailInfo['to'], $emailInfo['subject'], $emailInfo['message'], $emailInfo['headers']);
+		$response = wp_mail($emailInfo['to'], $emailInfo['subject'], $emailInfo['message'], $emailInfo['headers']);
 
-	  // If we need to send copy to sender.
+		// If we need to send copy to sender.
 		if ($this->shouldSendEmailCopyToUser($params)) {
 			$emailConfirmationInfo = $this->buildEmailInfoFromParams($params, true);
-			$responseConfirmation   = wp_mail($params[self::EMAIL_PARAM], $emailConfirmationInfo['subject'], $emailConfirmationInfo['message']);
+			$responseConfirmation = wp_mail(
+				$params[self::EMAIL_PARAM],
+				$emailConfirmationInfo['subject'],
+				$emailConfirmationInfo['message']
+			);
 		}
 
 		if (
-			! $response ||
-			( $this->shouldSendEmailCopyToUser($params) && empty($responseConfirmation) )
+			!$response ||
+			($this->shouldSendEmailCopyToUser($params) && empty($responseConfirmation))
 		) {
 			return $this->restResponseHandler('send-email-error');
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'message' => esc_html__('Email sent', 'eightshift-forms'),
-			'data' => [],
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'message' => \esc_html__('Email sent', 'eightshift-forms'),
+				'data' => [],
+			]
+		);
 	}
 
 	/**
 	 * Adds default email headers so email is interpreted as HTML.
 	 *
-	 * @param  string $headers Existing headers.
+	 * @param string $headers Existing headers.
 	 * @return string
 	 */
 	protected function addDefaultHeaders(string $headers): string
@@ -121,18 +126,22 @@ class SendEmailRoute extends BaseRoute
 	/**
 	 * Check if we received a parameter to send an email confirmation to user.
 	 *
-	 * @param  array $params Query parameters sent to route.
+	 * @param array $params Query parameters sent to route.
 	 * @return bool
 	 */
 	protected function shouldSendEmailCopyToUser(array $params): bool
 	{
-		return isset($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM]) && filter_var($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM], FILTER_VALIDATE_BOOL);
+		return isset($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM]) &&
+			filter_var(
+				$params[self::SEND_CONFIRMATION_TO_SENDER_PARAM],
+				FILTER_VALIDATE_BOOL
+			);
 	}
 
 	/**
 	 * Check if email param is set and valid.
 	 *
-	 * @param  array $params Query parameters sent to route.
+	 * @param array $params Query parameters sent to route.
 	 * @return boolean
 	 */
 	protected function isEmailSetAndValid(array $params): bool
@@ -148,8 +157,8 @@ class SendEmailRoute extends BaseRoute
 	 * - message
 	 * - headers
 	 *
-	 * @param  array $params              Params received in request.
-	 * @param  bool  $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
+	 * @param array $params Params received in request.
+	 * @param bool $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
 	 * @return array
 	 */
 	protected function buildEmailInfoFromParams(array $params, bool $isForConfirmation = false): array
@@ -158,7 +167,9 @@ class SendEmailRoute extends BaseRoute
 		$messageParam = $isForConfirmation ? self::CONFIRMATION_MESSAGE_PARAM : self::MESSAGE_PARAM;
 
 		return [
-			'to' => ! empty($params[self::TO_PARAM]) ? wp_unslash(sanitize_text_field(strtolower($params[self::TO_PARAM]))) : '',
+			'to' => !empty($params[self::TO_PARAM]) ?
+				wp_unslash(sanitize_text_field(strtolower($params[self::TO_PARAM]))) :
+				'',
 			'subject' => $this->replacePlaceholdersWithContent($params[$subjectParam], $params),
 			'message' => $this->replacePlaceholdersWithContent($params[$messageParam], $params),
 			'headers' => $params[self::ADDITIONAL_HEADERS_PARAM] ?? '',

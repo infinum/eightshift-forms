@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\Hmac;
-use EightshiftForms\Config\Config;
 use EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
 
@@ -46,7 +46,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -112,7 +112,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'methods'  => $this->getMethods(),
+			'methods' => $this->getMethods(),
 			'callback' => [$this, 'routeCallback'],
 			'permission_callback' => [$this, 'permissionCallback'],
 		];
@@ -131,48 +131,46 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Verifies everything is ok with request
 	 *
-	 * @param  \WP_REST_Request $request WP_REST_Request object.
-	 * @param  string           $requiredFilter (Optional) Filter that needs to exist to verify this request.
-	 *
-	 * @throws UnverifiedRequestException When we should abort the request for some reason.
+	 * @param \WP_REST_Request $request WP_REST_Request object.
+	 * @param string $requiredFilter (Optional) Filter that needs to exist to verify this request.
 	 *
 	 * @return array            filtered request params.
+	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 */
 	protected function verifyRequest(\WP_REST_Request $request, string $requiredFilter = ''): array
 	{
-
-	  // If this route requires a filter defined in project, we need to make sure that is defined.
-		if (! empty($requiredFilter) && ! has_filter($requiredFilter)) {
+		// If this route requires a filter defined in project, we need to make sure that is defined.
+		if (!empty($requiredFilter) && !has_filter($requiredFilter)) {
 			throw new UnverifiedRequestException(
 				$this->restResponseHandler('integration-not-used', [self::MISSING_FILTER => $requiredFilter])->data
 			);
 		}
 
-		$params      = $this->sanitizeFields($request->get_query_params());
-		$params      = $this->fixDotUnderscoreReplacement($params);
+		$params = $this->sanitizeFields($request->get_query_params());
+		$params = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
 
-	  // Authorized routes need to provide the correct authorization hash to do anything.
-		if (! empty($this->getAuthorizationSalt())) {
+		// Authorized routes need to provide the correct authorization hash to do anything.
+		if (!empty($this->getAuthorizationSalt())) {
 			$hash = $params[Hmac::AUTHORIZATION_KEY] ?? 'invalid-hash';
 			unset($params[Hmac::AUTHORIZATION_KEY]);
 
-		  // We need to URLencode all params before verifying them.
+			// We need to URLencode all params before verifying them.
 			$params = $this->urlencodeParams($params);
 
-			if (empty($this->hmac) || ! $this->hmac->verifyHash($hash, $params, $this->getAuthorizationSalt())) {
+			if (empty($this->hmac) || !$this->hmac->verifyHash($hash, $params, $this->getAuthorizationSalt())) {
 				throw new UnverifiedRequestException(
 					$this->restResponseHandler('authorization-invalid')->data
 				);
 			}
 		}
 
-	  // Verify nonce if submitted.
+		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
 			if (
-				! isset($params['nonce']) ||
-				! isset($params['form-unique-id']) ||
-				! wp_verify_nonce($params['nonce'], $params['form-unique-id'])
+				!isset($params['nonce']) ||
+				!isset($params['form-unique-id']) ||
+				!wp_verify_nonce($params['nonce'], $params['form-unique-id'])
 			) {
 				throw new UnverifiedRequestException(
 					$this->restResponseHandler('invalid-nonce')->data
@@ -180,22 +178,22 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 			}
 		}
 
-	  // If captcha is used on this route and provided as part of the request, we need to confirm it's true.
-		if (! empty($this->basicCaptcha) && ! $this->basicCaptcha->checkCaptchaFromRequestParams($params)) {
+		// If captcha is used on this route and provided as part of the request, we need to confirm it's true.
+		if (!empty($this->basicCaptcha) && !$this->basicCaptcha->checkCaptchaFromRequestParams($params)) {
 			throw new UnverifiedRequestException($this->restResponseHandler('wrong-captcha')->data);
 		}
 
-	  // If this route has required parameters, we need to make sure they're all provided.
+		// If this route has required parameters, we need to make sure they're all provided.
 		$missingParams = $this->findRequiredMissingParams($params);
-		if (! empty($missingParams)) {
+		if (!empty($missingParams)) {
 			throw new UnverifiedRequestException(
 				$this->restResponseHandler('missing-params', $missingParams)->data
 			);
 		}
 
-	  // If this route has required parameters, we need to make sure they're all provided.
+		// If this route has required parameters, we need to make sure they're all provided.
 		$missingPostParams = $this->findRequiredMissingParams($postParams, true);
-		if (! empty($missingPostParams)) {
+		if (!empty($missingPostParams)) {
 			throw new UnverifiedRequestException(
 				$this->restResponseHandler('missing-post-params', $missingPostParams)->data
 			);
@@ -247,38 +245,45 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * URLencode all string params in request.
 	 *
-	 * @param  array $params Array of request params.
+	 * @param array $params Array of request params.
 	 * @return array
 	 */
 	protected function urlencodeParams(array $params): array
 	{
-		return array_map(function ($param) {
-			return is_string($param) ? rawurlencode($param) : $param;
-		}, $params);
+		return array_map(
+			function ($param) {
+				return is_string($param) ? rawurlencode($param) : $param;
+			},
+			$params
+		);
 	}
 
 	/**
 	 * Replaces all placeholders inside a string with actual content from $params (if possible). If not just
 	 * leave the placeholder in text.
 	 *
-	 * @param  string $haystack String in which to look for placeholders.
-	 * @param  array  $params   Array of params which should hold content for placeholders.
+	 * @param string $haystack String in which to look for placeholders.
+	 * @param array $params Array of params which should hold content for placeholders.
 	 * @return string
 	 */
 	protected function replacePlaceholdersWithContent(string $haystack, array $params): string
 	{
 		$content = $haystack;
 
-		$content = preg_replace_callback('/\[\[(?<placeholder_key>.+?)\]\]/', function ($match) use ($params) {
-			$output = $match[0];
-			if (isset($params[$match['placeholder_key']])) {
-				$output = $params[$match['placeholder_key']];
-			}
+		$content = preg_replace_callback(
+			'/\[\[(?<placeholder_key>.+?)\]\]/',
+			function ($match) use ($params) {
+				$output = $match[0];
+				if (isset($params[$match['placeholder_key']])) {
+					$output = $params[$match['placeholder_key']];
+				}
 
-			return $output;
-		}, $haystack);
+				return $output;
+			},
+			$haystack
+		);
 
-		return (string) $content;
+		return (string)$content;
 	}
 
 	/**
@@ -318,16 +323,16 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Removes some params we don't want to send to CRM from request.
 	 *
-	 * @param  array $params Params received in request.
+	 * @param array $params Params received in request.
 	 * @return array
 	 */
 	protected function unsetIrrelevantParams(array $params): array
 	{
-		$filteredParams   = [];
+		$filteredParams = [];
 		$irrelevantParams = array_flip($this->getIrrelevantParams());
 
 		foreach ($params as $key => $param) {
-			if (! isset($irrelevantParams[$key])) {
+			if (!isset($irrelevantParams[$key])) {
 				$filteredParams[$key] = $param;
 			}
 		}
@@ -338,16 +343,16 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Response handler for unknown errors
 	 *
-	 * @param  array $data (Optional) data to output.
+	 * @param array $data (Optional) data to output.
 	 * @return \WP_REST_Response|WP_Error|WP_HTTP_Response|mixed
 	 */
 	protected function restResponseHandlerUnknownError(array $data = [])
 	{
 		return \rest_ensure_response(
 			[
-			'code' => 400,
-			'message' => esc_html__('Unknown error', 'eightshift-forms'),
-			'data' => $data,
+				'code' => 400,
+				'message' => \esc_html__('Unknown error', 'eightshift-forms'),
+				'data' => $data,
 			]
 		);
 	}
@@ -355,8 +360,8 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Ensure correct response for rest using error handler function.
 	 *
-	 * @param  string $responseKey Which response to get.
-	 * @param  array  $data         (Optional) Data to pass to response handler.
+	 * @param string $responseKey Which response to get.
+	 * @param array $data (Optional) Data to pass to response handler.
 	 *
 	 * @return \WP_REST_Response|WP_Error|WP_HTTP_Response|mixed
 	 */
@@ -365,9 +370,9 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 		$responses = array_merge($this->routeResponses(), $this->allResponses());
 
 		$response = $responses[$responseKey] ?? [
-		'code' => 400,
-		'message' => esc_html__('Undefined response', 'eightshift-forms'),
-		];
+				'code' => 400,
+				'message' => \esc_html__('Undefined response', 'eightshift-forms'),
+			];
 
 		$response['data'] = $data;
 		return \rest_ensure_response($response);
@@ -393,82 +398,96 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 		return [
 			'invalid-nonce' => [
 				'code' => 400,
-				'message' => esc_html__('Invalid nonce.', 'eightshift-forms'),
+				'message' => \esc_html__('Invalid nonce.', 'eightshift-forms'),
 			],
-				'wrong-captcha' => [
+			'wrong-captcha' => [
 				'code' => 429,
-				'message' => esc_html__('Wrong captcha answer.', 'eightshift-forms'),
+				'message' => \esc_html__('Wrong captcha answer.', 'eightshift-forms'),
 			],
-				'send-email-error' => [
+			'send-email-error' => [
 				'code' => 400,
-				'message' => esc_html__('Error while sending an email.', 'eightshift-forms'),
+				'message' => \esc_html__('Error while sending an email.', 'eightshift-forms'),
 			],
-				'missing-params' => [
+			'missing-params' => [
 				'code' => 400,
-				'message' => esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
+				'message' => \esc_html__(
+					'Missing one or more required GET parameters to process the request.',
+					'eightshift-forms'
+				),
 			],
-				'missing-post-params' => [
+			'missing-post-params' => [
 				'code' => 400,
-				'message' => esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+				'message' => \esc_html__(
+					'Missing one or more required POST parameters to process the request.',
+					'eightshift-forms'
+				),
 			],
-				'integration-not-used' => [
+			'integration-not-used' => [
 				'code' => 400,
-				'message' => sprintf(esc_html__('This form integration is not used, please add a filter returning all necessary info.', 'eightshift-forms')),
+				'message' => sprintf(
+					\esc_html__(
+						'This form integration is not used, please add a filter returning all necessary info.',
+						'eightshift-forms'
+					)
+				),
 			],
-				'authorization-invalid' => [
+			'authorization-invalid' => [
 				'code' => 400,
-				'message' => sprintf(esc_html__('Unauthorized request', 'eightshift-forms')),
+				'message' => sprintf(\esc_html__('Unauthorized request', 'eightshift-forms')),
 			],
-				'invalid-email-error' => [
+			'invalid-email-error' => [
 				'code' => 400,
-				'message' => sprintf(esc_html__('Please enter a valid email.', 'eightshift-forms')),
+				'message' => sprintf(\esc_html__('Please enter a valid email.', 'eightshift-forms')),
 			],
 
 			// Buckaroo specific.
 			'buckaroo-missing-keys' => [
 				'code' => 400,
-				'message' => esc_html__('Not all Buckaroo keys are set', 'eightshift-forms'),
+				'message' => \esc_html__('Not all Buckaroo keys are set', 'eightshift-forms'),
 			],
 			'buckaroo-request-exception' => [
 				'code' => 400,
-				'message' => esc_html__('Error ocurred, unable to redirect to Buckaroo', 'eightshift-forms'),
+				'message' => \esc_html__('Error ocurred, unable to redirect to Buckaroo', 'eightshift-forms'),
 			],
 
 			// Mailchimp specific.
 			'mailchimp-missing-keys' => [
 				'code' => 400,
-				'message' => esc_html__('Not all Mailchimp API info is set', 'eightshift-forms'),
+				'message' => \esc_html__('Not all Mailchimp API info is set', 'eightshift-forms'),
 			],
 
 			'mailchimp-missing-list-id' => [
 				'code' => 400,
-				'message' => esc_html__('Please set a valid List ID in Form options in editor.', 'eightshift-forms'),
+				'message' => \esc_html__('Please set a valid List ID in Form options in editor.', 'eightshift-forms'),
 			],
 
 			'mailchimp-missing-email' => [
 				'code' => 400,
-				'message' => esc_html__('Please enter your email.', 'eightshift-forms'),
+				'message' => \esc_html__('Please enter your email.', 'eightshift-forms'),
 			],
 
 			// Mailerlite specific.
 			'mailerlite-missing-keys' => [
 				'code' => 400,
-				'message' => esc_html__('Not all Mailerlite API info is set', 'eightshift-forms'),
+				'message' => \esc_html__('Not all Mailerlite API info is set', 'eightshift-forms'),
 			],
 
 			'mailerlite-missing-group-id' => [
 				'code' => 400,
-				'message' => esc_html__('Please set a valid Group ID.', 'eightshift-forms'),
+				'message' => \esc_html__('Please set a valid Group ID.', 'eightshift-forms'),
 			],
 
 			'mailerlite-blocked-email' => [
 				'code' => 400,
-				'message' => esc_html__('Provided email looks suspicious and it is flagged as spam. Please provide a different email or contact administrator.', 'eightshift-forms'),
+				'message' => \esc_html__(
+					'Provided email looks suspicious and it is flagged as spam. Please provide a different email or contact administrator.',
+					'eightshift-forms'
+				),
 			],
 
 			'mailerlite-missing-email' => [
 				'code' => 400,
-				'message' => esc_html__('Please enter your email.', 'eightshift-forms'),
+				'message' => \esc_html__('Please enter your email.', 'eightshift-forms'),
 			],
 		];
 	}
@@ -476,20 +495,26 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	/**
 	 * Checks if all required parameters are present in request.
 	 *
-	 * @param  array $parameters Array of request parameters.
-	 * @param  bool  $isPost    (Optional) True if we're checking POST params instead of GET params.
+	 * @param array $parameters Array of request parameters.
+	 * @param bool $isPost (Optional) True if we're checking POST params instead of GET params.
 	 * @return array Returns array of missing parameters to pass in response.
 	 */
 	private function findRequiredMissingParams(array $parameters, bool $isPost = false): array
 	{
-		$missingParams       = [];
-		$requiredParamsGet  = has_filter($this->getRequiredParamsFilter()) ? apply_filters($this->getRequiredParamsFilter(), $this->getRequiredParams()) : $this->getRequiredParams();
-		$requiredParamsPost = has_filter($this->getRequiredPostParamsFilter()) ? apply_filters($this->getRequiredPostParamsFilter(), $this->getRequiredPostParams()) : $this->getRequiredPostParams();
-		$requiredParams      = $isPost ? $requiredParamsPost : $requiredParamsGet;
+		$missingParams = [];
+		$requiredParamsGet = has_filter($this->getRequiredParamsFilter()) ? apply_filters(
+			$this->getRequiredParamsFilter(),
+			$this->getRequiredParams()
+		) : $this->getRequiredParams();
+		$requiredParamsPost = has_filter($this->getRequiredPostParamsFilter()) ? apply_filters(
+			$this->getRequiredPostParamsFilter(),
+			$this->getRequiredPostParams()
+		) : $this->getRequiredPostParams();
+		$requiredParams = $isPost ? $requiredParamsPost : $requiredParamsGet;
 
 		$this->getRequiredParams();
 		foreach ($requiredParams as $requiredParam) {
-			if (! isset($parameters[$requiredParam])) {
+			if (!isset($parameters[$requiredParam])) {
 				$missingParams[self::MISSING_KEYS][] = $requiredParam;
 			}
 		}
@@ -523,7 +548,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	 * Sanitizes all received fields recursively. If a field is something we don't need to
 	 * sanitize then we don't touch it.
 	 *
-	 * @param  array $params Array of params.
+	 * @param array $params Array of params.
 	 * @return array
 	 */
 	private function sanitizeFields(array $params)

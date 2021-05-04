@@ -40,23 +40,22 @@ class BasicCaptcha
 	/**
 	 * If any of the captcha fields are submitted and inside $params array, check that the math adds up.
 	 *
-	 * @param  array $params Request parameters.
+	 * @param array $params Request parameters.
 	 * @return boolean
 	 */
 	public function checkCaptchaFromRequestParams(array $params): bool
 	{
-
-	  // First let's see if captcha fields are in request params. If not, just return true.
+		// First let's see if captcha fields are in request params. If not, just return true.
 		if (
-			! isset($params[self::FIRST_NUMBER_KEY])
-			&& ! isset($params[self::SECOND_NUMBER_KEY])
-			&& ! isset($params[self::RESULT_KEY])
+			!isset($params[self::FIRST_NUMBER_KEY])
+			&& !isset($params[self::SECOND_NUMBER_KEY])
+			&& !isset($params[self::RESULT_KEY])
 		) {
 			return true;
 		}
 
-	  // Now let's make sure we have all the required fields otherwise there is some tampering of form params
-	  // going on and we consider the captcha as failed.
+		// Now let's make sure we have all the required fields otherwise there is some tampering of form params
+		// going on and we consider the captcha as failed.
 		if (
 			empty($params[self::FIRST_NUMBER_KEY])
 			|| empty($params[self::SECOND_NUMBER_KEY])
@@ -65,8 +64,8 @@ class BasicCaptcha
 			return false;
 		}
 
-	  // Now let's make sure the captcha is correct.
-		if ((int) $params[self::FIRST_NUMBER_KEY] + (int) $params[self::SECOND_NUMBER_KEY] === (int) $params[self::RESULT_KEY]) {
+		// Now let's make sure the captcha is correct.
+		if ((int)$params[self::FIRST_NUMBER_KEY] + (int)$params[self::SECOND_NUMBER_KEY] === (int)$params[self::RESULT_KEY]) {
 			return true;
 		}
 

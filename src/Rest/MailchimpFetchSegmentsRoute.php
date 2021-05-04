@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 
 /**
@@ -57,7 +57,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 	/**
 	 * Construct object
 	 *
-	 * @param Mailchimp    $mailchimp     Mailchimp object.
+	 * @param Mailchimp $mailchimp Mailchimp object.
 	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
 	 */
 	public function __construct(Mailchimp $mailchimp, BasicCaptcha $basicCaptcha)
@@ -69,7 +69,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -77,7 +77,6 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
@@ -86,24 +85,29 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 
 		$listId = $params[self::LIST_ID_PARAM] ?? '';
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->extractTagsAndSegments($this->mailchimp->getAllSegments($listId));
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('mailchimp-missing-keys', ['message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return $this->restResponseHandlerUnknownError([
-				'error' => $e->getMessage(),
-				'list-id' => $listId,
-			]);
+			return $this->restResponseHandlerUnknownError(
+				[
+					'error' => $e->getMessage(),
+					'list-id' => $listId,
+				]
+			);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'data' => $response,
-			'message' => esc_html__('success', 'eightshift-forms'),
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'data' => $response,
+				'message' => \esc_html__('success', 'eightshift-forms'),
+			]
+		);
 	}
+
 	/**
 	 * Defines a list of required parameters which must be present in the request as GET parameters or it will error out.
 	 *
@@ -119,7 +123,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 	/**
 	 * Extracts segments and tags from the segments response depending on their type
 	 *
-	 * @param  Object $response Mailchimp API call response.
+	 * @param Object $response Mailchimp API call response.
 	 * @return array
 	 */
 	private function extractTagsAndSegments($response): array
@@ -129,7 +133,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 			'segments' => [],
 		];
 
-		if (! isset($response->segments)) {
+		if (!isset($response->segments)) {
 			return $tagsSegments;
 		}
 

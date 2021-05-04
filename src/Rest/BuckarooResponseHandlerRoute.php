@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Integrations\Buckaroo\Exceptions\InvalidBuckarooResponseException;
-use EightshiftForms\Integrations\Buckaroo\ResponseFactory;
+use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Actions;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Buckaroo\Buckaroo;
-use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
+use EightshiftForms\Integrations\Buckaroo\Buckaroo;
+use EightshiftForms\Integrations\Buckaroo\Exceptions\InvalidBuckarooResponseException;
+use EightshiftForms\Integrations\Buckaroo\ResponseFactory;
 
 /**
  * Class BuckarooResponseHandlerRoute
@@ -128,19 +128,19 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 	/**
 	 * Construct object
 	 *
-	 * @param Buckaroo               $buckaroo Buckaroo integration obj.
-	 * @param AuthorizationInterface $hmac     Authorization object.
+	 * @param Buckaroo $buckaroo Buckaroo integration obj.
+	 * @param AuthorizationInterface $hmac Authorization object.
 	 */
 	public function __construct(Buckaroo $buckaroo, AuthorizationInterface $hmac)
 	{
 		$this->buckaroo = $buckaroo;
-		$this->hmac     = $hmac;
+		$this->hmac = $hmac;
 	}
 
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -148,9 +148,8 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
-			$params          = $this->verifyRequest($request, Filters::BUCKAROO);
+			$params = $this->verifyRequest($request, Filters::BUCKAROO);
 			$buckarooParams = $request->get_body_params();
 		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->getData());
@@ -169,47 +168,56 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'data' => [
-			  'message' => esc_html__('Something went wrong, you should have been redirected.'),
-			],
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'data' => [
+					'message' => \esc_html__('Something went wrong, you should have been redirected.'),
+				],
+			]
+		);
 	}
 
 	/**
 	 * Builds the final redirect URL depending on response
 	 *
-	 * @param array $params          GET params passed from original Buckaroo route.
+	 * @param array $params GET params passed from original Buckaroo route.
 	 * @param array $buckarooParams POST params received from Buckaroo (indicating the payment status).
 	 * @return string
 	 */
 	public function buildRedirectUrl(array $params, array $buckarooParams): string
 	{
-
 		try {
 			$buckarooResponse = ResponseFactory::build($buckarooParams);
 
-		  // Get the correct redirect URL (expects them to be urlencoded).
+			// Get the correct redirect URL (expects them to be urlencoded).
 			switch ($buckarooResponse->getStatus()) {
 				case $buckarooResponse::STATUS_CODE_SUCCESS:
-					$redirectUrl = isset($params[self::REDIRECT_URL_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_PARAM]) : '';
+					$redirectUrl = isset($params[self::REDIRECT_URL_PARAM]) ? rawurldecode(
+						$params[self::REDIRECT_URL_PARAM]
+					) : '';
 					break;
 				case $buckarooResponse::STATUS_CODE_ERROR:
-					$redirectUrl = isset($params[self::REDIRECT_URL_ERROR_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_ERROR_PARAM]) : '';
+					$redirectUrl = isset($params[self::REDIRECT_URL_ERROR_PARAM]) ? rawurldecode(
+						$params[self::REDIRECT_URL_ERROR_PARAM]
+					) : '';
 					break;
 				case $buckarooResponse::STATUS_CODE_CANCELLED:
-					$redirectUrl = isset($params[self::REDIRECT_URL_CANCEL_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_CANCEL_PARAM]) : '';
+					$redirectUrl = isset($params[self::REDIRECT_URL_CANCEL_PARAM]) ? rawurldecode(
+						$params[self::REDIRECT_URL_CANCEL_PARAM]
+					) : '';
 					break;
 				case $buckarooResponse::STATUS_CODE_REJECT:
-					$redirectUrl = isset($params[self::REDIRECT_URL_REJECT_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_REJECT_PARAM]) : '';
+					$redirectUrl = isset($params[self::REDIRECT_URL_REJECT_PARAM]) ? rawurldecode(
+						$params[self::REDIRECT_URL_REJECT_PARAM]
+					) : '';
 					break;
 			}
 		} catch (InvalidBuckarooResponseException $e) {
 			$redirectUrl = \add_query_arg('invalid-buckaroo-response', 1, \home_url());
 		}
 
-	  // If the redirect URL wasn't provided, just default to home.
+		// If the redirect URL wasn't provided, just default to home.
 		if (empty($redirectUrl)) {
 			$redirectUrl = \home_url();
 		}

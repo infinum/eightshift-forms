@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest;
 
 use EightshiftForms\Cache\Cache;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\DynamicsCrm;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
+use EightshiftForms\Integrations\DynamicsCrm;
 use GuzzleHttp\Exception\ClientException;
 
 /**
@@ -67,21 +67,21 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	/**
 	 * Construct object
 	 *
-	 * @param DynamicsCrm            $dynamicsCrm    Dynamics CRM object.
-	 * @param AuthorizationInterface $hmac            Authorization object.
-	 * @param Cache                  $transientCache Cache object.
+	 * @param DynamicsCrm $dynamicsCrm Dynamics CRM object.
+	 * @param AuthorizationInterface $hmac Authorization object.
+	 * @param Cache $transientCache Cache object.
 	 */
 	public function __construct(DynamicsCrm $dynamicsCrm, AuthorizationInterface $hmac, Cache $transientCache)
 	{
 		$this->dynamicsCrm = $dynamicsCrm;
-		$this->hmac         = $hmac;
-		$this->cache        = $transientCache;
+		$this->hmac = $hmac;
+		$this->cache = $transientCache;
 	}
 
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -89,41 +89,47 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request, self::DYNAMICS_CRM);
 		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->getData());
 		}
 
-	  // We don't want to send thee entity to CRM or it will reject our request.
+		// We don't want to send thee entity to CRM or it will reject our request.
 		$entity = $params[self::ENTITY_PARAM];
 		$params = $this->unsetIrrelevantParams($params);
 
-	  // Load the response from cache if possible.
+		// Load the response from cache if possible.
 		$cacheKey = $this->cache->calculateCacheKeyForRequest(self::ENDPOINT_SLUG, $this->getRouteUri(), $params);
 
 		if ($this->cache->exists($cacheKey)) {
-			return \rest_ensure_response([
-				'code' => 200,
-				'data' => json_decode($this->cache->get($cacheKey), true),
-			]);
+			return \rest_ensure_response(
+				[
+					'code' => 200,
+					'data' => json_decode($this->cache->get($cacheKey), true),
+				]
+			);
 		}
 
-		$this->dynamicsCrm->setOauthCredentials([
-			'url'           => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
-			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'clientId'),
-			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
-			'scope'         => apply_filters(self::DYNAMICS_CRM, 'scope'),
-			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
-		]);
+		$this->dynamicsCrm->setOauthCredentials(
+			[
+				'url' => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
+				'client_id' => apply_filters(self::DYNAMICS_CRM, 'clientId'),
+				'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
+				'scope' => apply_filters(self::DYNAMICS_CRM, 'scope'),
+				'api_url' => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
+			]
+		);
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->dynamicsCrm->fetchAllFromEntity($entity, $params);
-			$this->cache->save($cacheKey, (string) wp_json_encode($response), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC);
+			$this->cache->save($cacheKey, (string)wp_json_encode($response), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC);
 		} catch (ClientException $e) {
-			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : esc_html__('Unknown error', 'eightshift-forms');
+			$error = !empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : \esc_html__(
+				'Unknown error',
+				'eightshift-forms'
+			);
 			return $this->restResponseHandlerUnknownError(['error' => $error]);
 		} catch (\Exception $e) {
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
@@ -131,8 +137,8 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 
 		return \rest_ensure_response(
 			[
-			'code' => 200,
-			'data' => json_decode((string) wp_json_encode($response), true),
+				'code' => 200,
+				'data' => json_decode((string)wp_json_encode($response), true),
 			]
 		);
 	}
@@ -155,12 +161,12 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	protected function getIrrelevantParams(): array
 	{
 		return [
-		self::ENTITY_PARAM,
-		BasicCaptcha::FIRST_NUMBER_KEY,
-		BasicCaptcha::SECOND_NUMBER_KEY,
-		BasicCaptcha::RESULT_KEY,
-		'privacy',
-		'privacy-policy',
+			self::ENTITY_PARAM,
+			BasicCaptcha::FIRST_NUMBER_KEY,
+			BasicCaptcha::SECOND_NUMBER_KEY,
+			BasicCaptcha::RESULT_KEY,
+			'privacy',
+			'privacy-policy',
 		];
 	}
 
@@ -172,7 +178,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	protected function getRequiredParams(): array
 	{
 		return [
-		self::ENTITY_PARAM,
+			self::ENTITY_PARAM,
 		];
 	}
 

@@ -32,14 +32,14 @@ if (empty($this)) {
 
 ?>
 
-<div class="<?php echo esc_attr($blockClasses); ?>">
+<div class="<?php echo \esc_attr($blockClasses); ?>">
 	<?php
 	echo Components::render('label', [
 		'blockClass' => $attributes['blockClass'] ?? '',
 		'label' => $attributes['label'] ?? '',
 	]);
 	?>
-	<div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
+	<div class="<?php echo \esc_attr("{$blockClass}__content-wrap"); ?>">
 	<?php
 	if ($shouldPrefill && ! empty($prefillSource)) {
 		foreach (Prefill::getPrefillSourceData($prefillSource, Filters::PREFILL_GENERIC_MULTI) as $option) {

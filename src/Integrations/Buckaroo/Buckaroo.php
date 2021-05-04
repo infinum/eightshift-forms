@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Buckaroo;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Buckaroo\Exceptions\BuckarooRequestException;
 use EightshiftForms\Integrations\Core\HttpClientInterface;
 
@@ -21,11 +21,11 @@ use EightshiftForms\Integrations\Core\HttpClientInterface;
 class Buckaroo implements Filters
 {
 
-	public const TYPE_IDEAL            = 'ideal';
+	public const TYPE_IDEAL = 'ideal';
 	public const LIVE_URI_DATA_REQUEST = 'checkout.buckaroo.nl/json/DataRequest';
 	public const TEST_URI_DATA_REQUEST = 'testcheckout.buckaroo.nl/json/DataRequest';
-	public const LIVE_URI_TRANSACTION  = 'checkout.buckaroo.nl/json/Transaction';
-	public const TEST_URI_TRANSACTION  = 'testcheckout.buckaroo.nl/json/Transaction';
+	public const LIVE_URI_TRANSACTION = 'checkout.buckaroo.nl/json/Transaction';
+	public const TEST_URI_TRANSACTION = 'testcheckout.buckaroo.nl/json/Transaction';
 
 	/**
 	 * Currency of the payment
@@ -103,38 +103,57 @@ class Buckaroo implements Filters
 	/**
 	 * Creates a payment request.
 	 *
-	 * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
-	 * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
-	 * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
-	 * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
-	 * @param  string $issuer          Issuer (bank) name.
-	 * @param  string $emandatereason  Description of the emandate.
+	 * @param string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+	 * @param string $sequencetype Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+	 * @param string $purchaseid An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+	 * @param string $language The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+	 * @param string $issuer Issuer (bank) name.
+	 * @param string $emandatereason Description of the emandate.
 	 * @return array
 	 *
 	 * @throws BuckarooRequestException When something is wrong with response we get from Buckaroo.
 	 */
-	public function createEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
-	{
-		$response             = [];
-		$postArray           = $this->buildPostBodyForEmandate($debtorreference, $sequencetype, $purchaseid, $language, $issuer, $emandatereason);
+	public function createEmandate(
+		string $debtorreference,
+		string $sequencetype,
+		string $purchaseid,
+		string $language,
+		string $issuer,
+		string $emandatereason
+	): array {
+		$response = [];
+		$postArray = $this->buildPostBodyForEmandate(
+			$debtorreference,
+			$sequencetype,
+			$purchaseid,
+			$language,
+			$issuer,
+			$emandatereason
+		);
 		$authorizationHeader = $this->generateAuthorizationHeader($postArray, $this->getBuckarooUri());
 
-		$postResponse = $this->guzzleClient->post("https://{$this->getBuckarooUri()}", [
-			'headers' => [
-				'Content-Type' => 'application/json',
-				'Authorization' => $authorizationHeader,
-			],
-			'body' => \wp_json_encode($postArray),
-		]);
+		$postResponse = $this->guzzleClient->post(
+			"https://{$this->getBuckarooUri()}",
+			[
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'Authorization' => $authorizationHeader,
+				],
+				'body' => \wp_json_encode($postArray),
+			]
+		);
 
-		$postResponseJson = json_decode((string) $postResponse->getBody(), true);
+		$postResponseJson = json_decode((string)$postResponse->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
-			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
+			throw new BuckarooRequestException(\esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
-		if (! isset($postResponseJson['RequiredAction']['RedirectURL'])) {
-			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $postResponseJson);
+		if (!isset($postResponseJson['RequiredAction']['RedirectURL'])) {
+			throw new BuckarooRequestException(
+				\esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'),
+				$postResponseJson
+			);
 		}
 
 		$response['redirectUrl'] = $postResponseJson['RequiredAction']['RedirectURL'];
@@ -145,37 +164,48 @@ class Buckaroo implements Filters
 	/**
 	 * Creates a payment request.
 	 *
-	 * @param  int|float|string $donationAmount Donation amount.
-	 * @param  string           $invoice         Invoice name.
-	 * @param  string           $issuer          Issuer (bank) name.
-	 * @param  bool             $isRecurring    Is recurring payment.
-	 * @param  string           $description     Description of the payment.
+	 * @param int|float|string $donationAmount Donation amount.
+	 * @param string $invoice Invoice name.
+	 * @param string $issuer Issuer (bank) name.
+	 * @param bool $isRecurring Is recurring payment.
+	 * @param string $description Description of the payment.
 	 * @return array
 	 *
 	 * @throws BuckarooRequestException When something is wrong with JSON we get from Buckaroo.
 	 */
-	public function sendPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
-	{
-		$response             = [];
-		$postArray           = $this->buildPostBodyForPayment($donationAmount, $invoice, $issuer, $isRecurring, $description);
+	public function sendPayment(
+		$donationAmount,
+		string $invoice,
+		string $issuer,
+		bool $isRecurring,
+		string $description
+	): array {
+		$response = [];
+		$postArray = $this->buildPostBodyForPayment($donationAmount, $invoice, $issuer, $isRecurring, $description);
 		$authorizationHeader = $this->generateAuthorizationHeader($postArray, $this->getBuckarooUri());
 
-		$postResponse = $this->guzzleClient->post("https://{$this->getBuckarooUri()}", [
-		'headers' => [
-		'Content-Type' => 'application/json',
-		'Authorization' => $authorizationHeader,
-		],
-		'body' => \wp_json_encode($postArray),
-		]);
+		$postResponse = $this->guzzleClient->post(
+			"https://{$this->getBuckarooUri()}",
+			[
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'Authorization' => $authorizationHeader,
+				],
+				'body' => \wp_json_encode($postArray),
+			]
+		);
 
-		$postResponseJson = json_decode((string) $postResponse->getBody(), true);
+		$postResponseJson = json_decode((string)$postResponse->getBody(), true);
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
-			throw new BuckarooRequestException(esc_html__('Invalid JSON in response body', 'eightshift-forms'));
+			throw new BuckarooRequestException(\esc_html__('Invalid JSON in response body', 'eightshift-forms'));
 		}
 
-		if (! isset($postResponseJson['RequiredAction']['RedirectURL'])) {
-			throw new BuckarooRequestException(esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'), $postResponseJson);
+		if (!isset($postResponseJson['RequiredAction']['RedirectURL'])) {
+			throw new BuckarooRequestException(
+				\esc_html__('Missing redirect URL in Buckaroo response', 'eightshift-forms'),
+				$postResponseJson
+			);
 		}
 
 		$response['redirectUrl'] = $postResponseJson['RequiredAction']['RedirectURL'];
@@ -186,14 +216,18 @@ class Buckaroo implements Filters
 	/**
 	 * Sets all redirect URLs in 1 function
 	 *
-	 * @param string $redirectUrl        URL to redirect on success.
+	 * @param string $redirectUrl URL to redirect on success.
 	 * @param string $redirectUrlCancel URL to redirect on cancel.
-	 * @param string $redirectUrlError  URL to redirect on error.
+	 * @param string $redirectUrlError URL to redirect on error.
 	 * @param string $redirectUrlReject URL to redirect on reject.
 	 * @return void
 	 */
-	public function setRedirectUrls(string $redirectUrl, string $redirectUrlCancel, string $redirectUrlError, string $redirectUrlReject)
-	{
+	public function setRedirectUrls(
+		string $redirectUrl,
+		string $redirectUrlCancel,
+		string $redirectUrlError,
+		string $redirectUrlReject
+	) {
 		$this->setReturnUrl($redirectUrl);
 		$this->setReturnUrlCancel($redirectUrlCancel);
 		$this->setReturnUrlError($redirectUrlError);
@@ -203,13 +237,13 @@ class Buckaroo implements Filters
 	/**
 	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
 	 *
-	 * @param  array $params Parameters from request.
+	 * @param array $params Parameters from request.
 	 * @return string
 	 */
 	public function generateDebtorReference(array $params)
 	{
-		$prefix      = 'debtor';
-		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$prefix = 'debtor';
+		$dataHash = hash('crc32', (string)wp_json_encode($params));
 		$randomHash = hash('crc32', uniqid());
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
@@ -217,13 +251,13 @@ class Buckaroo implements Filters
 	/**
 	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
 	 *
-	 * @param  array $params Parameters from request.
+	 * @param array $params Parameters from request.
 	 * @return string
 	 */
 	public function generateInvoiceName(array $params)
 	{
-		$prefix      = 'invoice';
-		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$prefix = 'invoice';
+		$dataHash = hash('crc32', (string)wp_json_encode($params));
 		$randomHash = hash('crc32', uniqid());
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
@@ -231,13 +265,13 @@ class Buckaroo implements Filters
 	/**
 	 * Generates the invoice name based on submitted data + salted with time (meaning it should always be unique)-
 	 *
-	 * @param  array $params Parameters from request.
+	 * @param array $params Parameters from request.
 	 * @return string
 	 */
 	public function generatePurchaseId(array $params)
 	{
-		$prefix      = 'purchase-id';
-		$dataHash   = hash('crc32', (string) wp_json_encode($params));
+		$prefix = 'purchase-id';
+		$dataHash = hash('crc32', (string)wp_json_encode($params));
 		$randomHash = hash('crc32', uniqid());
 		return "{$prefix}-{$dataHash}-{$randomHash}";
 	}
@@ -265,7 +299,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set's currency as uppercase 3-letter string (example: EUR)
 	 *
-	 * @param  string $currency Currency string.
+	 * @param string $currency Currency string.
 	 * @return void
 	 */
 	public function setCurrency(string $currency): void
@@ -296,7 +330,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set type of payment. Defaults to iDEAL.
 	 *
-	 * @param  string $payType  Type of payment. Defaults to iDEAL.
+	 * @param string $payType Type of payment. Defaults to iDEAL.
 	 *
 	 * @return  self
 	 */
@@ -319,7 +353,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set return URL after payment.
 	 *
-	 * @param  string $returnUrl  Return URL after payment.
+	 * @param string $returnUrl Return URL after payment.
 	 *
 	 * @return  self
 	 */
@@ -343,7 +377,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set return URL after payment cancel.
 	 *
-	 * @param  string $returnUrlCancel  Return URL after payment cancel.
+	 * @param string $returnUrlCancel Return URL after payment cancel.
 	 * @return  self
 	 */
 	public function setReturnUrlCancel(string $returnUrlCancel)
@@ -366,7 +400,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set return URL after payment error.
 	 *
-	 * @param  string $returnUrlError  Return URL after payment error.
+	 * @param string $returnUrlError Return URL after payment error.
 	 *
 	 * @return  self
 	 */
@@ -390,7 +424,7 @@ class Buckaroo implements Filters
 	/**
 	 * Set return URL after payment reject.
 	 *
-	 * @param  string $returnUrlReject  Return URL after payment reject.
+	 * @param string $returnUrlReject Return URL after payment reject.
 	 *
 	 * @return  self
 	 */
@@ -404,7 +438,7 @@ class Buckaroo implements Filters
 	/**
 	 * Generates the correct authorization header.
 	 *
-	 * @param array  $postArray   Array of post data we're sending to Buckaroo.
+	 * @param array $postArray Array of post data we're sending to Buckaroo.
 	 * @param string $buckarooUri Buckaroo URI we're posting to.
 	 * @return string
 	 */
@@ -412,17 +446,17 @@ class Buckaroo implements Filters
 	{
 		$this->verifyBuckarooInfoExists();
 		$websiteKey = \apply_filters(self::BUCKAROO, 'websiteKey');
-		$secretKey  = \apply_filters(self::BUCKAROO, 'secretKey');
-		$post        = (string) \wp_json_encode($postArray);
-		$md5         = md5($post, true);
-		$post        = base64_encode($md5); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		$uri         = strtolower(rawurlencode($buckarooUri));
-		$nonce       = \wp_rand(0000000, 9999999);
-		$time        = time();
+		$secretKey = \apply_filters(self::BUCKAROO, 'secretKey');
+		$post = (string)\wp_json_encode($postArray);
+		$md5 = md5($post, true);
+		$post = base64_encode($md5); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$uri = strtolower(rawurlencode($buckarooUri));
+		$nonce = \wp_rand(0000000, 9999999);
+		$time = time();
 
-		$hmac     = $websiteKey . 'POST' . $uri . $time . $nonce . $post;
+		$hmac = $websiteKey . 'POST' . $uri . $time . $nonce . $post;
 		$shaHash = hash_hmac('sha256', $hmac, $secretKey, true);
-		$hmac     = base64_encode($shaHash); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$hmac = base64_encode($shaHash); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
 		return "hmac {$websiteKey}:{$hmac}:{$nonce}:{$time}";
 	}
@@ -430,15 +464,20 @@ class Buckaroo implements Filters
 	/**
 	 * Builds the body of request
 	 *
-	 * @param  int|float|string $donationAmount Donation amount.
-	 * @param  string           $invoice         Invoice name.
-	 * @param  string           $issuer          Issuer (bank) name.
-	 * @param  bool             $isRecurring    Is recurring payment.
-	 * @param  string           $description     Description of the payment.
+	 * @param int|float|string $donationAmount Donation amount.
+	 * @param string $invoice Invoice name.
+	 * @param string $issuer Issuer (bank) name.
+	 * @param bool $isRecurring Is recurring payment.
+	 * @param string $description Description of the payment.
 	 * @return array
 	 */
-	private function buildPostBodyForPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
-	{
+	private function buildPostBodyForPayment(
+		$donationAmount,
+		string $invoice,
+		string $issuer,
+		bool $isRecurring,
+		string $description
+	): array {
 		$this->verifyBuckarooInfoExists();
 
 		$postArray = [
@@ -452,7 +491,7 @@ class Buckaroo implements Filters
 			'Description' => $description,
 		];
 
-	  // Set payment to recurring if needed.
+		// Set payment to recurring if needed.
 		if ($isRecurring) {
 			$postArray['StartRecurrent'] = 'True';
 		}
@@ -463,17 +502,17 @@ class Buckaroo implements Filters
 			'Parameters' => [],
 		];
 
-	  // Add issuing bank if provided as part of request.
-		if (! empty($issuer)) {
+		// Add issuing bank if provided as part of request.
+		if (!empty($issuer)) {
 			$serviceArray['Parameters'][] = [
 				'Name' => 'issuer',
 				'Value' => $issuer,
 			];
 		}
 
-		$postArray['ReturnURL']       = $this->getReturnUrl();
+		$postArray['ReturnURL'] = $this->getReturnUrl();
 		$postArray['ReturnURLCancel'] = $this->getReturnUrlCancel();
-		$postArray['ReturnURLError']  = $this->getReturnUrlError();
+		$postArray['ReturnURLError'] = $this->getReturnUrlError();
 		$postArray['ReturnURLReject'] = $this->getReturnUrlReject();
 
 		$postArray['Services']['ServiceList'][] = $serviceArray;
@@ -484,16 +523,22 @@ class Buckaroo implements Filters
 	/**
 	 * Builds the body of request
 	 *
-	 * @param  string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
-	 * @param  string $sequencetype    Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
-	 * @param  string $purchaseid      An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
-	 * @param  string $language        The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
-	 * @param  string $issuer          Issuer (bank) name.
-	 * @param  string $emandatereason  A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
+	 * @param string $debtorreference An ID that identifies the debtor to creditor, which is issued by the creditor. For example: a customer number/ID. Max. 35 characters.
+	 * @param string $sequencetype Indicates type of eMandate: one-off or recurring direct debit. 0 = recurring, 1 = one off.
+	 * @param string $purchaseid An ID that identifies the emandate with a purchase order. This will be shown in the emandate information of the customers' bank account. Max. 35 characters.
+	 * @param string $language The consumer language code in lowercase letters. For example `nl`, not `NL` or `nl-NL`.
+	 * @param string $issuer Issuer (bank) name.
+	 * @param string $emandatereason A description of the (purpose) of the emandate. This will be shown in the emandate information of the customers' bank account. Max 70 characters.
 	 * @return array
 	 */
-	private function buildPostBodyForEmandate(string $debtorreference, string $sequencetype, string $purchaseid, string $language, string $issuer, string $emandatereason): array
-	{
+	private function buildPostBodyForEmandate(
+		string $debtorreference,
+		string $sequencetype,
+		string $purchaseid,
+		string $language,
+		string $issuer,
+		string $emandatereason
+	): array {
 		$this->verifyBuckarooInfoExists();
 
 		$postArray = [
@@ -532,17 +577,17 @@ class Buckaroo implements Filters
 			],
 		];
 
-	  // Add issuing bank if provided as part of request.
-		if (! empty($issuer)) {
+		// Add issuing bank if provided as part of request.
+		if (!empty($issuer)) {
 			$serviceArray['Parameters'][] = [
 				'Name' => 'debtorbankid',
 				'Value' => $issuer,
 			];
 		}
 
-		$postArray['ReturnURL']       = $this->getReturnUrl();
+		$postArray['ReturnURL'] = $this->getReturnUrl();
 		$postArray['ReturnURLCancel'] = $this->getReturnUrlCancel();
-		$postArray['ReturnURLError']  = $this->getReturnUrlError();
+		$postArray['ReturnURLError'] = $this->getReturnUrlError();
 		$postArray['ReturnURLReject'] = $this->getReturnUrlReject();
 
 		$postArray['Services']['ServiceList'][] = $serviceArray;
@@ -553,9 +598,8 @@ class Buckaroo implements Filters
 	/**
 	 * Make sure we have the data we need defined as filters.
 	 *
-	 * @throws MissingFilterInfoException When not all required keys are set.
-	 *
 	 * @return void
+	 * @throws MissingFilterInfoException When not all required keys are set.
 	 */
 	private function verifyBuckarooInfoExists(): void
 	{

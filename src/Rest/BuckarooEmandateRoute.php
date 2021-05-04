@@ -46,12 +46,12 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 	public const SEQUENCE_TYPE_IS_RECURRING_PARAM = 'is-recurring';
 
 	public const SEQUENCE_TYPE_RECURRING_VALUE = '0';
-	public const SEQUENCE_TYPE_ONE_TIME_VALUE  = '1';
+	public const SEQUENCE_TYPE_ONE_TIME_VALUE = '1';
 
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -74,7 +74,7 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 			$this->buckaroo->setPayType('emandate');
 			$response = $this->buckaroo->createEmandate(
 				$this->buckaroo->generateDebtorReference($params),
-				! empty($params[self::SEQUENCE_TYPE_IS_RECURRING_PARAM]) ? self::SEQUENCE_TYPE_RECURRING_VALUE : self::SEQUENCE_TYPE_ONE_TIME_VALUE,
+				!empty($params[self::SEQUENCE_TYPE_IS_RECURRING_PARAM]) ? self::SEQUENCE_TYPE_RECURRING_VALUE : self::SEQUENCE_TYPE_ONE_TIME_VALUE,
 				$this->buckaroo->generatePurchaseId($params),
 				'nl',
 				$params[self::ISSUER_PARAM] ?? '',
@@ -90,9 +90,9 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 
 		return \rest_ensure_response(
 			[
-			'code' => 200,
-			'message' => esc_html__('Successfully started emandate creation process', 'eightshift-forms'),
-			'data' => $response,
+				'code' => 200,
+				'message' => \esc_html__('Successfully started emandate creation process', 'eightshift-forms'),
+				'data' => $response,
 			]
 		);
 	}
@@ -105,7 +105,7 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 	protected function getRequiredParams(): array
 	{
 		return [
-		self::EMANDATE_DESCRIPTION_PARAM,
+			self::EMANDATE_DESCRIPTION_PARAM,
 		];
 	}
 

@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use GuzzleHttp\Exception\ClientException;
 
@@ -85,7 +85,7 @@ class MailchimpRoute extends BaseRoute implements Filters
 	/**
 	 * Construct object
 	 *
-	 * @param Mailchimp    $mailchimp     Mailchimp object.
+	 * @param Mailchimp $mailchimp Mailchimp object.
 	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
 	 */
 	public function __construct(Mailchimp $mailchimp, BasicCaptcha $basicCaptcha)
@@ -97,7 +97,7 @@ class MailchimpRoute extends BaseRoute implements Filters
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -111,24 +111,27 @@ class MailchimpRoute extends BaseRoute implements Filters
 			return rest_ensure_response($e->getData());
 		}
 
-		$listId                   = $params[self::LIST_ID_PARAM] ?? '';
-		$email                    = ! empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
-		$tags                     = $params[self::TAGS_PARAM] ?? [];
-		$shouldAddExistingMembers = isset($params[self::ADD_EXISTING_MEMBERS_PARAM]) ? filter_var($params[self::ADD_EXISTING_MEMBERS_PARAM], FILTER_VALIDATE_BOOL) : false;
-		$mergeFieldParams         = $this->unsetIrrelevantParams($params);
-		$response                 = [];
+		$listId = $params[self::LIST_ID_PARAM] ?? '';
+		$email = !empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
+		$tags = $params[self::TAGS_PARAM] ?? [];
+		$shouldAddExistingMembers = isset($params[self::ADD_EXISTING_MEMBERS_PARAM]) ? filter_var(
+			$params[self::ADD_EXISTING_MEMBERS_PARAM],
+			FILTER_VALIDATE_BOOL
+		) : false;
+		$mergeFieldParams = $this->unsetIrrelevantParams($params);
+		$response = [];
 
-	  // Make sure we have the list ID.
+		// Make sure we have the list ID.
 		if (empty($listId)) {
 			return $this->restResponseHandler('mailchimp-missing-list-id');
 		}
 
-	  // Make sure we have an email.
+		// Make sure we have an email.
 		if (empty($email)) {
 			return $this->restResponseHandler('mailchimp-missing-email');
 		}
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			if ($shouldAddExistingMembers) {
 				$response['add'] = $this->mailchimp->addOrUpdateMember($listId, $email, $mergeFieldParams);
@@ -136,20 +139,23 @@ class MailchimpRoute extends BaseRoute implements Filters
 				$response['add'] = $this->mailchimp->addMember($listId, $email, $mergeFieldParams);
 			}
 
-			if (! empty($tags)) {
+			if (!empty($tags)) {
 				$response['tags'] = $this->mailchimp->addMemberTags($listId, $email, $tags);
 			}
 		} catch (ClientException $e) {
-			$decodedException = ! empty($e->getResponse()) ? json_decode($e->getResponse()->getBody()->getContents(), true) : [];
+			$decodedException = !empty($e->getResponse()) ? json_decode(
+				$e->getResponse()->getBody()->getContents(),
+				true
+			) : [];
 
-			if (! $shouldAddExistingMembers && isset($decodedException['title']) && $decodedException['title'] === self::ERROR_USER_EXISTS) {
+			if (!$shouldAddExistingMembers && isset($decodedException['title']) && $decodedException['title'] === self::ERROR_USER_EXISTS) {
 				$msgUserExists = \esc_html__('User already exists', 'eightshift-forms');
 				$response['add'] = $msgUserExists;
-				$message         = $msgUserExists;
+				$message = $msgUserExists;
 
-			  // We need to do the "adding tags" call as well (if needed) as the exception in the "addMember" method
-			  // has stopped execution.
-				if (! empty($tags)) {
+				// We need to do the "adding tags" call as well (if needed) as the exception in the "addMember" method
+				// has stopped execution.
+				if (!empty($tags)) {
 					$response['tags'] = $this->mailchimp->addMemberTags($listId, $email, $tags);
 				}
 			} else {
@@ -161,11 +167,13 @@ class MailchimpRoute extends BaseRoute implements Filters
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'data' => $response,
-			'message' => ! empty($message) ? $message : \esc_html__('Successfully added ', 'eightshift-forms'),
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'data' => $response,
+				'message' => !empty($message) ? $message : \esc_html__('Successfully added ', 'eightshift-forms'),
+			]
+		);
 	}
 
 	/**

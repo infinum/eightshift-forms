@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\DynamicsCrm;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\DynamicsCrm;
 use GuzzleHttp\Exception\ClientException;
 
 /**
@@ -51,19 +51,19 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 	/**
 	 * Construct object
 	 *
-	 * @param DynamicsCrm  $dynamicsCrm Dynamics CRM object.
+	 * @param DynamicsCrm $dynamicsCrm Dynamics CRM object.
 	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
 	 */
 	public function __construct(DynamicsCrm $dynamicsCrm, BasicCaptcha $basicCaptcha)
 	{
-		$this->dynamicsCrm  = $dynamicsCrm;
+		$this->dynamicsCrm = $dynamicsCrm;
 		$this->basicCaptcha = $basicCaptcha;
 	}
 
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -71,38 +71,41 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request, self::DYNAMICS_CRM);
 		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->getData());
 		}
 
-	  // We don't want to send thee entity to CRM or it will reject our request.
+		// We don't want to send thee entity to CRM or it will reject our request.
 		$entity = $params[self::ENTITY_PARAM];
 		$params = $this->unsetIrrelevantParams($params);
 
-		$this->dynamicsCrm->setOauthCredentials([
-			'url'           => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
-			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'clientId'),
-			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
-			'scope'         => apply_filters(self::DYNAMICS_CRM, 'scope'),
-			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
-		]);
+		$this->dynamicsCrm->setOauthCredentials(
+			[
+				'url' => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
+				'client_id' => apply_filters(self::DYNAMICS_CRM, 'clientId'),
+				'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
+				'scope' => apply_filters(self::DYNAMICS_CRM, 'scope'),
+				'api_url' => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
+			]
+		);
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->dynamicsCrm->addRecord($entity, $params);
 		} catch (ClientException $e) {
-			$error = ! empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : '';
+			$error = !empty($e->getResponse()) ? $e->getResponse()->getBody()->getContents() : '';
 			$error = empty($error) ? $e->getMessage() : $error;
 			return $this->restResponseHandlerUnknownError(['error' => $error]);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'data' => $response,
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'data' => $response,
+			]
+		);
 	}
 
 	/**

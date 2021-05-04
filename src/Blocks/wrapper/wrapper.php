@@ -23,11 +23,11 @@ $wrapperUseSimple = Components::checkAttr('wrapperUseSimple', $attributes, $mani
 $wrapperDisable = Components::checkAttr('wrapperDisable', $attributes, $manifest);
 $wrapperParentClass = Components::checkAttr('wrapperParentClass', $attributes, $manifest);
 
-// phpcs:disable Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
-if (! $wrapperUse || $wrapperDisable) {
+// phpcs:disable Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+if (!$wrapperUse || $wrapperDisable) {
 	if ($wrapperParentClass) {
-		echo '<div class="' , \esc_attr($wrapperParentClass . '__item') , '">
-			<div class="' , \esc_attr($wrapperParentClass . '__item-inner') , '">';
+		echo '<div class="', \esc_attr($wrapperParentClass . '__item'), '">
+			<div class="', \esc_attr($wrapperParentClass . '__item-inner'), '">';
 	}
 
 	$this->renderWrapperView(
@@ -37,11 +37,10 @@ if (! $wrapperUse || $wrapperDisable) {
 	);
 
 	if ($wrapperParentClass) {
-			echo '</div>
+		echo '</div>
 		</div>';
 	}
-	// phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
-
+	// phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 
 	return;
 }
@@ -129,46 +128,55 @@ $wrapperOffset = [
 
 $wrapperMainClass = 'wrapper';
 
-$wrapperClass = Components::classnames([
-	$wrapperMainClass,
-	Components::selector($wrapperMainClass, $wrapperMainClass, 'bg-color', $wrapperBackgroundColor),
-	Components::responsiveSelectors($wrapperSpacingTop, 'spacing-top', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperSpacingBottom, 'spacing-bottom', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperSpacingTopIn, 'spacing-top-in', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperSpacingBottomIn, 'spacing-bottom-in', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperDividerTop, 'divider-top', $wrapperMainClass, false),
-	Components::responsiveSelectors($wrapperDividerBottom, 'divider-bottom', $wrapperMainClass, false),
-	Components::responsiveSelectors($wrapperHide, 'hide', $wrapperMainClass, false),
-]);
+$wrapperClass = Components::classnames(
+	[
+		$wrapperMainClass,
+		Components::selector($wrapperMainClass, $wrapperMainClass, 'bg-color', $wrapperBackgroundColor),
+		Components::responsiveSelectors($wrapperSpacingTop, 'spacing-top', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperSpacingBottom, 'spacing-bottom', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperSpacingTopIn, 'spacing-top-in', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperSpacingBottomIn, 'spacing-bottom-in', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperDividerTop, 'divider-top', $wrapperMainClass, false),
+		Components::responsiveSelectors($wrapperDividerBottom, 'divider-bottom', $wrapperMainClass, false),
+		Components::responsiveSelectors($wrapperHide, 'hide', $wrapperMainClass, false),
+	]
+);
 
-$wrapperContainerClass = Components::classnames([
-	"{$wrapperMainClass}__container",
-	Components::responsiveSelectors($wrapperContainerWidth, 'container-width', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperGutter, 'gutter', $wrapperMainClass),
-]);
+$wrapperContainerClass = Components::classnames(
+	[
+		"{$wrapperMainClass}__container",
+		Components::responsiveSelectors($wrapperContainerWidth, 'container-width', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperGutter, 'gutter', $wrapperMainClass),
+	]
+);
 
-$wrapperInnerClass = Components::classnames([
-	"{$wrapperMainClass}__inner",
-	Components::responsiveSelectors($wrapperWidth, 'width', $wrapperMainClass),
-	Components::responsiveSelectors($wrapperOffset, 'offset', $wrapperMainClass),
-]);
+$wrapperInnerClass = Components::classnames(
+	[
+		"{$wrapperMainClass}__inner",
+		Components::responsiveSelectors($wrapperWidth, 'width', $wrapperMainClass),
+		Components::responsiveSelectors($wrapperOffset, 'offset', $wrapperMainClass),
+	]
+);
 
 ?>
-<div class="<?php echo \esc_attr($wrapperClass); ?>" <?php echo \esc_attr(($wrapperId) ? 'id=" ' . $wrapperId . '"' : ''); ?>>
+<div class="<?php echo \esc_attr($wrapperClass); ?>"
+	<?php echo \esc_attr(($wrapperId) ? 'id=" ' . $wrapperId . '"' : ''); ?>>
 
-	<?php if ($wrapperAnchorId) { ?>
-		<div class="<?php echo \esc_attr("{$wrapperMainClass}__anchor"); ?>" id="<?php echo \esc_attr($wrapperAnchorId); ?>"></div>
-	<?php } ?>
+	<?php
+	if ($wrapperAnchorId) { ?>
+		<div class="<?php echo \esc_attr("{$wrapperMainClass}__anchor"); ?>"
+			id="<?php echo \esc_attr($wrapperAnchorId); ?>"></div>
+		<?php
+	}
 
-	<?php if ($wrapperUseSimple) { ?>
+	if ($wrapperUseSimple) { ?>
 		<?php
 		$this->renderWrapperView(
 			$templatePath,
 			$attributes,
 			$innerBlockContent
 		);
-		?>
-	<?php } else { ?>
+	} else { ?>
 		<div class="<?php echo \esc_attr($wrapperContainerClass); ?>">
 			<div class="<?php echo \esc_attr($wrapperInnerClass); ?>">
 				<?php
@@ -180,5 +188,6 @@ $wrapperInnerClass = Components::classnames([
 				?>
 			</div>
 		</div>
-	<?php } ?>
+		<?php
+	} ?>
 </div>

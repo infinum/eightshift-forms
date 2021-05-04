@@ -36,12 +36,12 @@ class BuckarooRequestException extends \RuntimeException implements GeneralExcep
 	 * Constructs object
 	 *
 	 * @param string $message Exception message.
-	 * @param array  $data (Optional) additional data we can provide.
+	 * @param array $data (Optional) additional data we can provide.
 	 */
 	public function __construct(string $message = '', array $data = [])
 	{
 		$this->message = $message;
-		$this->data    = $data;
+		$this->data = $data;
 		parent::__construct('BuckarooRequestException');
 	}
 

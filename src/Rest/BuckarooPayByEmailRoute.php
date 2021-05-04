@@ -45,7 +45,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -63,7 +63,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 			$params = $this->setRedirectUrls($params);
 			$this->setTestIfNeeded($params);
 
-		  // Set some default redirect URL. This should be overriden in the filter.
+			// Set some default redirect URL. This should be overriden in the filter.
 			$redirectUrl = $this->buckaroo->getReturnUrl();
 
 			if (has_filter(Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE)) {
@@ -77,12 +77,14 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'message' => esc_html__('Pay by email started', 'eightshift-forms'),
-			'data' => [
-			  'redirectUrl' => $redirectUrl,
-			],
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'message' => \esc_html__('Pay by email started', 'eightshift-forms'),
+				'data' => [
+					'redirectUrl' => $redirectUrl,
+				],
+			]
+		);
 	}
 }

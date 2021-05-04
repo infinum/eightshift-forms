@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations;
 
-use SaintSystems\OData\ODataClient;
 use GuzzleHttp\Exception\ClientException;
-use SaintSystems\OData\IODataClient;
 use Illuminate\Support\Collection;
+use SaintSystems\OData\IODataClient;
+use SaintSystems\OData\ODataClient;
 
 /**
  * Dynamics CRM integration class.
@@ -50,8 +50,8 @@ class DynamicsCrm
 	/**
 	 * Injects a record into CRM.
 	 *
-	 * @param  string $entity Entity to which we're adding records.
-	 * @param  array  $data   Data representing a record.
+	 * @param string $entity Entity to which we're adding records.
+	 * @param array $data Data representing a record.
 	 * @return bool
 	 *
 	 * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
@@ -63,8 +63,8 @@ class DynamicsCrm
 		try {
 			$odataClient->from($entity)->post($data);
 		} catch (ClientException $e) {
-		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
-		  // just throw because we don't know how to handle it.
+			// 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
+			// just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
 				$odataClient = $this->buildOdataClient($this->getToken(true));
 				$odataClient->from($entity)->post($data);
@@ -79,8 +79,8 @@ class DynamicsCrm
 	/**
 	 * Reads all records for a single entity from CRM.
 	 *
-	 * @param  string $entity Entity to which we're adding records.
-	 * @param  array  $data   Optional data / params we're using while fetching. If this is empty all records in an entity will be returned.
+	 * @param string $entity Entity to which we're adding records.
+	 * @param array $data Optional data / params we're using while fetching. If this is empty all records in an entity will be returned.
 	 * @return Collection
 	 *
 	 * @throws ClientException When adding a record fails BUT it's not because of an invalid token (which we know how to handle).
@@ -92,11 +92,11 @@ class DynamicsCrm
 		try {
 			$response = $odataClient->from($entity)->get($data);
 		} catch (ClientException $e) {
-		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
-		  // just throw because we don't know how to handle it.
+			// 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
+			// just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
 				$odataClient = $this->buildOdataClient($this->getToken(true));
-				$response     = $odataClient->from($entity)->get($data);
+				$response = $odataClient->from($entity)->get($data);
 			} else {
 				throw $e;
 			}
@@ -108,7 +108,7 @@ class DynamicsCrm
 	/**
 	 * Set OAuth credentials, used when we can't inject it in DI.
 	 *
-	 * @param  array $credentials Credentials array.
+	 * @param array $credentials Credentials array.
 	 * @return void
 	 */
 	public function setOauthCredentials(array $credentials): void
@@ -120,7 +120,7 @@ class DynamicsCrm
 	/**
 	 * Builds the odata client used for interacting with the CRM
 	 *
-	 * @param  string $accessToken OAuth access token for this request.
+	 * @param string $accessToken OAuth access token for this request.
 	 * @return IODataClient
 	 */
 	private function buildOdataClient(string $accessToken): IODataClient
@@ -128,7 +128,6 @@ class DynamicsCrm
 		return new ODataClient(
 			$this->odataServiceUrl,
 			function ($request) use ($accessToken) {
-
 				// OAuth Bearer Token Authentication.
 				$request->headers['Authorization'] = 'Bearer ' . $accessToken;
 			}
@@ -138,7 +137,7 @@ class DynamicsCrm
 	/**
 	 * Fetch / get the Dynamics CRM access token.
 	 *
-	 * @param  bool $shouldFetchNew (Optional) pass if you want to force OAuth2 client to fetch new access token.
+	 * @param bool $shouldFetchNew (Optional) pass if you want to force OAuth2 client to fetch new access token.
 	 * @return string
 	 */
 	private function getToken($shouldFetchNew = false): string

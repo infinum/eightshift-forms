@@ -14,13 +14,16 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $componentClass = 'form-overlay';
 
-$blockClasses = Components::classnames([
-	$componentClass,
-	"js-{$componentClass}",
-	'hide-form-overlay',
-	! empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
-]);
+$blockClasses = Components::classnames(
+	[
+		$componentClass,
+		"js-{$componentClass}",
+		'hide-form-overlay',
+		!empty($blockClass) ? "{$blockClass}__{$componentClass}" : '',
+	]
+);
 
 ?>
 
-<div class="<?php echo esc_attr($blockClasses); ?>" aria-hidden="true"></div>
+<div class="<?php
+echo \esc_attr($blockClasses); ?>" aria-hidden="true"></div>

@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Exception\MissingFilterInfoException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use MailerLiteApi\MailerLite as MailerLiteClient;
 
@@ -60,10 +60,10 @@ class Mailerlite
 	/**
 	 * Adds a subscriber in Mailerlite.
 	 *
-	 * @param  int    $groupId        Group ID.
-	 * @param  string $email           Contact's email.
-	 * @param  array  $subscriberData List of merge fields to add to request.
-	 * @param  array  $params          Additional params.
+	 * @param int $groupId Group ID.
+	 * @param string $email Contact's email.
+	 * @param array $subscriberData List of merge fields to add to request.
+	 * @param array $params Additional params.
 	 * @return mixed
 	 *
 	 * @throws \Exception When response is invalid.
@@ -79,14 +79,18 @@ class Mailerlite
 	/**
 	 * Make sure we have the data we need defined as filters.
 	 *
-	 * @throws MissingFilterInfoException When not all required keys are set.
-	 *
 	 * @return void
-	 */
+	 * // phpcs:disable
+	 * @throws MissingFilterInfoException When not all required keys are set.
+	 * // phpcs:enable
+s	 */
 	private function setupClientConfigAndVerify(): void
 	{
-		if (! has_filter(Filters::MAILERLITE)) {
-			throw MissingFilterInfoException::viewException(Filters::MAILERLITE, esc_html__('entire_filter', 'eightshift-forms'));
+		if (!has_filter(Filters::MAILERLITE)) {
+			throw MissingFilterInfoException::viewException(
+				Filters::MAILERLITE,
+				\esc_html__('entire_filter', 'eightshift-forms')
+			);
 		}
 
 		if (empty(\apply_filters(Filters::MAILERLITE, 'apiKey'))) {

@@ -48,7 +48,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -56,7 +56,6 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request, self::BUCKAROO);
 		} catch (UnverifiedRequestException $e) {
@@ -71,7 +70,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 				$params[self::DONATION_AMOUNT_PARAM],
 				$this->buckaroo->generatePurchaseId($params),
 				$params[self::ISSUER_PARAM] ?? '',
-				! empty($params[self::IS_RECURRING_PARAM]),
+				!empty($params[self::IS_RECURRING_PARAM]),
 				$params[self::PAYMENT_DESCRIPTION_PARAM] ?? ''
 			);
 		} catch (MissingFilterInfoException $e) {
@@ -84,9 +83,9 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 
 		return \rest_ensure_response(
 			[
-			'code' => 200,
-			'message' => esc_html__('Successfully started ideal payment process', 'eightshift-forms'),
-			'data' => $response,
+				'code' => 200,
+				'message' => \esc_html__('Successfully started ideal payment process', 'eightshift-forms'),
+				'data' => $response,
 			]
 		);
 	}
@@ -99,7 +98,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 	protected function getRequiredParams(): array
 	{
 		return [
-		self::DONATION_AMOUNT_PARAM,
+			self::DONATION_AMOUNT_PARAM,
 		];
 	}
 

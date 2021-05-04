@@ -29,16 +29,20 @@ $paragraphColor = Components::checkAttr('paragraphColor', $attributes, $manifest
 $paragraphSize = Components::checkAttr('paragraphSize', $attributes, $manifest, $componentName);
 $paragraphAlign = Components::checkAttr('paragraphAlign', $attributes, $manifest, $componentName);
 
-$paragraphClass = Components::classnames([
-	$componentClass,
-	Components::selector($paragraphColor, $componentClass, 'color', $paragraphColor),
-	Components::selector($paragraphSize, $componentClass, 'size', $paragraphSize),
-	Components::selector($paragraphAlign, $componentClass, 'align', $paragraphAlign),
-	Components::selector($blockClass, $blockClass, $selectorClass),
-]);
+$paragraphClass = Components::classnames(
+	[
+		$componentClass,
+		Components::selector($paragraphColor, $componentClass, 'color', $paragraphColor),
+		Components::selector($paragraphSize, $componentClass, 'size', $paragraphSize),
+		Components::selector($paragraphAlign, $componentClass, 'align', $paragraphAlign),
+		Components::selector($blockClass, $blockClass, $selectorClass),
+	]
+);
 
 ?>
 
-<p class="<?php echo \esc_attr($paragraphClass); ?>">
-	<?php echo \wp_kses_post($paragraphContent); ?>
+<p class="<?php
+echo \esc_attr($paragraphClass); ?>">
+	<?php
+	echo \wp_kses_post($paragraphContent); ?>
 </p>

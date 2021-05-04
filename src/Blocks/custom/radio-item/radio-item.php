@@ -28,20 +28,20 @@ $blockClasses = Components::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($blockClasses); ?>">
-	<label class="<?php echo esc_attr("{$blockClass}__label"); ?>">
+<div class="<?php echo \esc_attr($blockClasses); ?>">
+	<label class="<?php echo \esc_attr("{$blockClass}__label"); ?>">
 	<input
-		name="<?php echo esc_attr($name); ?>"
-		<?php ! empty($radioItemId) ? printf('id="%s"', esc_attr($radioItemId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
-		class="<?php echo esc_attr("{$classes} {$blockClass}__radio"); ?>"
-		value="<?php echo esc_attr($value); ?>"
+		name="<?php echo \esc_attr($name); ?>"
+		<?php ! empty($radioItemId) ? printf('id="%s"', \esc_attr($radioItemId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
+		class="<?php echo \esc_attr("{$classes} {$blockClass}__radio"); ?>"
+		value="<?php echo \esc_attr($value); ?>"
 		type="radio"
-		<?php echo esc_attr($isChecked); ?>
-		<?php echo esc_attr($isDisabled); ?>
-		<?php echo esc_attr($isReadOnly); ?>
+		<?php echo \esc_attr($isChecked); ?>
+		<?php echo \esc_attr($isDisabled); ?>
+		<?php echo \esc_attr($isReadOnly); ?>
 	/>
-	<span class="<?php echo esc_attr("{$blockClass}__radio-icon js-{$blockClass}-radio-icon"); ?>"></span>
-	<span class="<?php echo esc_attr("{$blockClass}__label-content"); ?>">
+	<span class="<?php echo \esc_attr("{$blockClass}__radio-icon js-{$blockClass}-radio-icon"); ?>"></span>
+	<span class="<?php echo \esc_attr("{$blockClass}__label-content"); ?>">
 		<?php echo wp_kses_post($label); ?>
 	</span>
 	</label>

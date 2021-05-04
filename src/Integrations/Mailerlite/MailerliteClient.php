@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
-use MailerLiteApi\MailerLite;
 use GuzzleHttp\Client as GuzzleHttp;
 use Http\Adapter\Guzzle6\Client as Guzzle6;
+use MailerLiteApi\MailerLite;
 
 /**
  * Mailerlite integration class.
@@ -33,6 +33,7 @@ class MailerliteClient implements ClientInterface
 	 * Sets the config because we can't set config during construction (filters aren't yet registered)
 	 *
 	 * @return void
+	 * @throws \MailerLiteApi\Exceptions\MailerLiteSdkException MailerliteSdk Exception.
 	 */
 	public function setConfig()
 	{

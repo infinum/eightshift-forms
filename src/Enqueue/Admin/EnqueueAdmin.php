@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\LocalizationConstants;
-use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueAdmin
@@ -33,7 +33,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestInterface     $manifest Inject manifest which holds data about assets from manifest.json.
+	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 * @param LocalizationConstants $localizationConstants Localization constants object.
 	 */
 	public function __construct(ManifestInterface $manifest, LocalizationConstants $localizationConstants)

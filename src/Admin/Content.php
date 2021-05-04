@@ -27,50 +27,50 @@ class Content implements ServiceInterface
 	/**
 	 * Add tags to default wp_kses_post
 	 *
-	 * @param  array  $tags    Allowed tags array.
-	 * @param  string $context Context in which the filter is called.
+	 * @param array $tags Allowed tags array.
+	 * @param string $context Context in which the filter is called.
 	 * @return array           Modified allowed tags array.
 	 */
 	public function setCustomWpksesPostTags($tags, $context)
 	{
 		$appendedTags = [
 			'form' => [
-				'action'      => true,
-				'method'      => true,
-				'target'      => true,
-				'id'          => true,
-				'class'       => true,
+				'action' => true,
+				'method' => true,
+				'target' => true,
+				'id' => true,
+				'class' => true,
 			],
 			'input' => [
-				'name'        => true,
-				'value'       => true,
-				'type'        => true,
-				'id'          => true,
-				'class'       => true,
-				'disabled'    => true,
-				'checked'     => true,
-				'readonly'    => true,
+				'name' => true,
+				'value' => true,
+				'type' => true,
+				'id' => true,
+				'class' => true,
+				'disabled' => true,
+				'checked' => true,
+				'readonly' => true,
 				'placeholder' => true,
 			],
 			'button' => [
-				'name'        => true,
-				'value'       => true,
-				'type'        => true,
-				'id'          => true,
-				'class'       => true,
-				'disabled'    => true,
+				'name' => true,
+				'value' => true,
+				'type' => true,
+				'id' => true,
+				'class' => true,
+				'disabled' => true,
 			],
 			'select' => [
-				'name'        => true,
-				'id'          => true,
-				'class'       => true,
-				'disabled'    => true,
+				'name' => true,
+				'id' => true,
+				'class' => true,
+				'disabled' => true,
 			],
 			'option' => [
-				'value'       => true,
-				'class'       => true,
-				'selected'    => true,
-				'disabled'    => true,
+				'value' => true,
+				'class' => true,
+				'selected' => true,
+				'disabled' => true,
 			],
 		];
 

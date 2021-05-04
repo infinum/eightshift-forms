@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Captcha\BasicCaptcha;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use Http\Client\Exception\HttpException;
 
@@ -64,7 +64,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 	/**
 	 * Construct object
 	 *
-	 * @param Mailerlite   $mailerlite    Mailerlite object.
+	 * @param Mailerlite $mailerlite Mailerlite object.
 	 * @param BasicCaptcha $basicCaptcha BasicCaptcha object.
 	 */
 	public function __construct(Mailerlite $mailerlite, BasicCaptcha $basicCaptcha)
@@ -76,7 +76,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param  \WP_REST_Request $request Data got from endpoint url.
+	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -84,36 +84,35 @@ class MailerliteRoute extends BaseRoute implements Filters
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		try {
 			$params = $this->verifyRequest($request);
 		} catch (UnverifiedRequestException $e) {
 			return rest_ensure_response($e->getData());
 		}
 
-		$email = ! empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
-		$groupId = ! empty($params[self::GROUP_ID_PARAM]) ? (int) $params[self::GROUP_ID_PARAM] : 0;
+		$email = !empty($params[self::EMAIL_PARAM]) ? strtolower($params[self::EMAIL_PARAM]) : '';
+		$groupId = !empty($params[self::GROUP_ID_PARAM]) ? (int)$params[self::GROUP_ID_PARAM] : 0;
 		$mergeFieldParams = $this->unsetIrrelevantParams($params);
 		$response = '';
 		$message = '';
 
-	  // Make sure we have the group ID.
+		// Make sure we have the group ID.
 		if (empty($groupId)) {
 			return $this->restResponseHandler('mailerlite-missing-group-id');
 		}
 
-	  // Make sure we have an email.
+		// Make sure we have an email.
 		if (empty($email)) {
 			return $this->restResponseHandler('mailerlite-missing-email');
 		}
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->mailerlite->addSubscriber($groupId, $email, $mergeFieldParams);
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('mailerlite-missing-keys', ['message' => $e->getMessage()]);
 		} catch (HttpException $e) {
-			$msg     = $e->getResponse()->getBody()->getContents();
+			$msg = $e->getResponse()->getBody()->getContents();
 			$message = json_decode($msg, true)['error']['message'];
 
 			return $this->restResponseHandler('mailerlite-blocked-email', ['message' => $message]);
@@ -121,11 +120,13 @@ class MailerliteRoute extends BaseRoute implements Filters
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'data' => $response,
-			'message' => ! empty($message) ? $message : \esc_html__('Successfully added', 'eightshift-forms'),
-		]);
+		return \rest_ensure_response(
+			[
+				'code' => 200,
+				'data' => $response,
+				'message' => !empty($message) ? $message : \esc_html__('Successfully added', 'eightshift-forms'),
+			]
+		);
 	}
 
 	/**
