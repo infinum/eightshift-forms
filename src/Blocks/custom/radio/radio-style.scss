@@ -1,0 +1,10 @@
+.block-radio {
+  $this: &;
+
+  &.is-style-inline {
+
+    #{$this}__content-wrap {
+      display: flex;
+    }
+  }
+}

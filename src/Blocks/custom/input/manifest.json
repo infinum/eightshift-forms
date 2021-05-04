@@ -1,0 +1,88 @@
+{
+  "blockName": "input",
+  "title": "Input",
+  "description" : "Input field",
+  "category": "common",
+  "icon": {
+    "src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><path fill='none' d='M0 0h20v20H0z'/><path d='M17.5 5.25h-15A2.25 2.25 0 00.25 7.5v5a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-5a2.25 2.25 0 00-2.25-2.25zm-15 1.5h15a.75.75 0 01.75.75v5a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-5a.75.75 0 01.75-.75z' fill='currentColor' fill-rule='nonzero'/><path d='M10.5 9.25a.75.75 0 01.102 1.493l-.102.007H4a.75.75 0 01-.102-1.493L4 9.25h6.5z' fill='currentColor' fill-rule='nonzero'/><path d='M2.75 14h-1V6h1v6.25h16v1h-16V14z' fill-opacity='.12' fill='currentColor'/></g></svg>"
+  },
+  "keywords": [
+    "Input"
+  ],
+  "attributes": {
+    "wrapperUse": {
+      "type": "boolean",
+      "default": true
+    },
+    "wrapperUseSimple": {
+      "type": "boolean",
+      "default": true
+    },
+    "wrapperBackgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "theme": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "classes": {
+      "type": "string"
+    },
+    "placeholder": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "default": "text"
+    },
+    "label": {
+      "type": "string"
+    },
+    "pattern": {
+      "type": "string"
+    },
+    "prefillData": {
+      "type": "boolean",
+      "default": false
+    },
+    "prefillDataSource": {
+      "type": "string"
+    },
+    "customValidityMsg": {
+      "type": "string"
+    },
+    "isDisabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "isReadOnly": {
+      "type": "boolean",
+      "default": false
+    },
+    "isRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "preventSending": {
+      "type": "boolean",
+      "default": false
+    },
+    "showName": {
+      "type": "boolean",
+      "default": true
+    },
+    "showType": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
