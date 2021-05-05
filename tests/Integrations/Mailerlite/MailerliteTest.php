@@ -2,7 +2,6 @@
 
 namespace EightshiftFormsTests\Integrations\Mailerlite;
 
-use EightshiftForms\Main\Main;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsTests\BaseTest;
@@ -11,35 +10,36 @@ class MailerliteTest extends BaseTest
 {
 
 	protected function _inject(DataProvider $dataProvider)
-  {
-    $this->dataProvider = $dataProvider;
-  }
+	{
+		$this->dataProvider = $dataProvider;
+	}
 
-	protected function _before() {
-    parent::_before();
-    $this->mailerlite = $this->diContainer->get( Mailerlite::class );
-  }
+	protected function _before()
+	{
+		parent::_before();
+		$this->mailerlite = $this->diContainer->get(Mailerlite::class);
+	}
 
 	public function testAddOrUpdateSubscriber()
-  {
-    $this->addHooks();
-    $params = [
-      'email' => DataProvider::MOCK_EMAIL,
-    ];
-    $groupId = 12345;
-    $subscriberData = [
-      'name' => 'some name',
-    ];
+	{
+		$this->addHooks();
+		$params = [
+			'email' => DataProvider::MOCK_EMAIL,
+		];
+		$groupId = 12345;
+		$subscriberData = [
+			'name' => 'some name',
+		];
 
-    $response = $this->mailerlite->addSubscriber(
-      $groupId,
-      DataProvider::MOCK_EMAIL,
-      $subscriberData,
-      $params
-    );
+		$response = $this->mailerlite->addSubscriber(
+			$groupId,
+			DataProvider::MOCK_EMAIL,
+			$subscriberData,
+			$params
+		);
 
-    $this->assertEquals($response, $this->dataProvider->getMockAddSubscriberResponse( $params ));
-  }
+		$this->assertEquals($response, $this->dataProvider->getMockAddSubscriberResponse($params));
+	}
 
 	/**
 	 * Mocking that a certain filter exists. See documentation of Brain Monkey:
@@ -49,9 +49,15 @@ class MailerliteTest extends BaseTest
 	 *
 	 * @return void
 	 */
-	protected function addHooks() {
-    add_filter( Filters::MAILERLITE, function($key) {
-      return $key;
-    }, 1, 1);
-  }
+	protected function addHooks()
+	{
+		add_filter(
+			Filters::MAILERLITE,
+			function ($key) {
+				return $key;
+			},
+			1,
+			1
+		);
+	}
 }

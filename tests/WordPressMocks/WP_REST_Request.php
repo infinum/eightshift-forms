@@ -5,29 +5,30 @@ class WP_REST_Request
 	/**
 	 * Constructor.
 	 *
+	 * @param string $method Optional. Request method. Default empty.
+	 * @param string $route Optional. Request route. Default empty.
+	 * @param array $attributes Optional. Request attributes. Default empty array.
 	 * @since 4.4.0
 	 *
-	 * @param string $method     Optional. Request method. Default empty.
-	 * @param string $route      Optional. Request route. Default empty.
-	 * @param array  $attributes Optional. Request attributes. Default empty array.
 	 */
-	public function __construct( $method = '', $route = '', $attributes = array() ) {
+	public function __construct($method = '', $route = '', $attributes = array())
+	{
 		$this->params = array(
-			'URL'      => array(),
-			'GET'      => array(),
-			'POST'     => array(),
-			'FILES'    => array(),
+			'URL' => array(),
+			'GET' => array(),
+			'POST' => array(),
+			'FILES' => array(),
 
 			// See parse_json_params.
-			'JSON'     => null,
+			'JSON' => null,
 
 			'defaults' => array(),
 		);
 
 		$this->method = $method;
-    $this->route = $route;
+		$this->route = $route;
 		$this->attributes = $attributes;
-  }
+	}
 
 	/**
 	 * Retrieves parameters from the query string.
@@ -36,7 +37,8 @@ class WP_REST_Request
 	 *
 	 * @return array Parameter map of key to value
 	 */
-	public function get_query_params() {
+	public function get_query_params()
+	{
 		return $this->method === 'POST' ? $this->params['POST'] : $this->params['GET'];
 	}
 
@@ -47,7 +49,8 @@ class WP_REST_Request
 	 *
 	 * @return array Parameter map of key to value
 	 */
-	public function get_body_params() {
+	public function get_body_params()
+	{
 		return $this->params['POST'];
 	}
 
@@ -56,20 +59,21 @@ class WP_REST_Request
 	 *
 	 * @return array Parameter map of key to value
 	 */
-	public function get_params() {
+	public function get_params()
+	{
 		$order = $this->getParameterOrder();
-    $order = array_reverse( $order, true );
+		$order = array_reverse($order, true);
 
-    $params = array();
-    foreach ( $order as $type ) {
-        // array_merge() / the "+" operator will mess up
-        // numeric keys, so instead do a manual foreach.
-        foreach ( (array) $this->params[ $type ] as $key => $value ) {
-            $params[ $key ] = $value;
-        }
-    }
+		$params = array();
+		foreach ($order as $type) {
+			// array_merge() / the "+" operator will mess up
+			// numeric keys, so instead do a manual foreach.
+			foreach ((array)$this->params[$type] as $key => $value) {
+				$params[$key] = $value;
+			}
+		}
 
-    return $params;
+		return $params;
 	}
 
 	/**
@@ -77,7 +81,8 @@ class WP_REST_Request
 	 *
 	 * @return array
 	 */
-	protected function getParameterOrder() {
+	protected function getParameterOrder()
+	{
 		return [
 			'JSON',
 			'POST',

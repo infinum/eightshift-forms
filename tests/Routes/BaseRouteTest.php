@@ -1,40 +1,41 @@
-<?php namespace EightshiftFormsTests\Routes;
+<?php
+namespace EightshiftFormsTests\Routes;
 
-use EightshiftFormsTests\BaseTest;
-
-use EightshiftForms\Main\Main;
 use EightshiftForms\Integrations\Authorization\Hmac;
+use EightshiftFormsTests\BaseTest;
 
 abstract class BaseRouteTest extends BaseTest
 {
 
 	protected function _inject(Hmac $hmac)
-  {
-    $this->hmac = $hmac;
-  }
+	{
+		$this->hmac = $hmac;
+	}
 
 	protected function _before()
-  {
-    parent::_before();
-    $this->routeEndpoint = $this->diContainer->get($this->getRouteName());
-    $this->addHooks();
-  }
+	{
+		parent::_before();
+		$this->routeEndpoint = $this->diContainer->get($this->getRouteName());
+		$this->addHooks();
+	}
 
-	protected function verifyProperlyFormattedResponse($response) {
-    $this->assertInstanceOf('WP_REST_Response', $response);
-    $this->assertObjectHasAttribute('data', $response);
-    $this->assertArrayHasKey('code', $response->data);
-    $this->assertArrayHasKey('data', $response->data);
-  }
+	protected function verifyProperlyFormattedResponse($response)
+	{
+		$this->assertInstanceOf('WP_REST_Response', $response);
+		$this->assertObjectHasAttribute('data', $response);
+		$this->assertArrayHasKey('code', $response->data);
+		$this->assertArrayHasKey('data', $response->data);
+	}
 
-	protected function verifyProperlyFormattedError($response) {
-    $this->assertInstanceOf('WP_REST_Response', $response);
-    $this->assertObjectHasAttribute('data', $response);
-    $this->assertArrayHasKey('code', $response->data);
-    $this->assertArrayHasKey('data', $response->data);
-    $this->assertArrayHasKey('message', $response->data);
-    $this->assertNotEquals($response->data['code'], 200);
-  }
+	protected function verifyProperlyFormattedError($response)
+	{
+		$this->assertInstanceOf('WP_REST_Response', $response);
+		$this->assertObjectHasAttribute('data', $response);
+		$this->assertArrayHasKey('code', $response->data);
+		$this->assertArrayHasKey('data', $response->data);
+		$this->assertArrayHasKey('message', $response->data);
+		$this->assertNotEquals($response->data['code'], 200);
+	}
 
 	/**
 	 * Mocking that a certain filter exists. See documentation of Brain Monkey:
@@ -44,13 +45,14 @@ abstract class BaseRouteTest extends BaseTest
 	 *
 	 * @return void
 	 */
-	protected function addHooks() {
-  }
+	protected function addHooks()
+	{
+	}
 
 	/**
 	 * Define route class you're testing.
 	 *
 	 * @return string
 	 */
-  abstract protected function getRouteName(): string;
+	abstract protected function getRouteName(): string;
 }

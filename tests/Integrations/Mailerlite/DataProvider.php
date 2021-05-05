@@ -9,9 +9,10 @@ class DataProvider
 	public const MOCK_TAG_1 = 'aaa';
 	public const MOCK_TAG_2 = 'bbb';
 
-	public static function getMockAddSubscriberResponse($params) {
-    return [
-      'email' => $params['email'] ?? '',
-    ];
-  }
+	public static function getMockAddSubscriberResponse($params)
+	{
+		return [
+			'email' => $params['email'] ?? '',
+		];
+	}
 }
