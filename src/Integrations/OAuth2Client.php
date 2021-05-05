@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations;
 
+use EightshiftForms\Cache\Cache;
 use EightshiftForms\Integrations\Core\HttpClientInterface;
 
 /**
@@ -54,13 +55,22 @@ class OAuth2Client implements OAuth2ClientInterface
 	private $httpClient;
 
 	/**
+	 * Transient cache object.
+	 *
+	 * @var Cache.
+	 */
+	private $cache;
+
+	/**
 	 * Constructs object
 	 *
 	 * @param HttpClientInterface $guzzleClient HTTP client implementation.
+	 * @param Cache               $transientCache Cache implementation.
 	 */
-	public function __construct(HttpClientInterface $guzzleClient)
+	public function __construct(HttpClientInterface $guzzleClient, Cache $transientCache)
 	{
 		$this->httpClient = $guzzleClient;
+		$this->cache = $transientCache;
 	}
 
 	/**
@@ -148,7 +158,7 @@ class OAuth2Client implements OAuth2ClientInterface
 	 */
 	protected function saveTokenToCache(string $tokenKey, string $token, int $expiration = HOUR_IN_SECONDS): bool
 	{
-		return set_transient($tokenKey, $token, $expiration);
+		return $this->cache->save($tokenKey, $token, $expiration);
 	}
 
 	/**
@@ -159,6 +169,6 @@ class OAuth2Client implements OAuth2ClientInterface
 	 */
 	protected function getTokenFromCache(string $tokenKey)
 	{
-		return get_transient($tokenKey);
+		return $this->cache->get($tokenKey);
 	}
 }
