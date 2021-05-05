@@ -139,7 +139,7 @@ class SendEmailRoute extends BaseRoute
 		return static::CREATABLE;
 	}
 
-		/**
+	/**
 	 * Adds default email headers so email is interpreted as HTML.
 	 *
 	 * @param  string $headers Existing headers.
