@@ -88,13 +88,11 @@ class BuckarooEmandateRoute extends AbstractBuckarooRoute
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response(
-			[
+		return \rest_ensure_response([
 			'code' => 200,
 			'message' => esc_html__('Successfully started emandate creation process', 'eightshift-forms'),
 			'data' => $response,
-			]
-		);
+		]);
 	}
 
 	/**

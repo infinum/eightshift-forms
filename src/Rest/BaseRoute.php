@@ -360,9 +360,9 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	{
 		return \rest_ensure_response(
 			[
-			'code' => 400,
-			'message' => esc_html__('Unknown error', 'eightshift-forms'),
-			'data' => $data,
+				'code' => 400,
+				'message' => esc_html__('Unknown error', 'eightshift-forms'),
+				'data' => $data,
 			]
 		);
 	}

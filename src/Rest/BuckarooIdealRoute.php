@@ -82,13 +82,11 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 			return $this->restResponseHandlerUnknownError(['error' => $e->getMessage()]);
 		}
 
-		return \rest_ensure_response(
-			[
+		return \rest_ensure_response([
 			'code' => 200,
 			'message' => esc_html__('Successfully started ideal payment process', 'eightshift-forms'),
 			'data' => $response,
-			]
-		);
+		]);
 	}
 
 	/**
@@ -99,7 +97,7 @@ class BuckarooIdealRoute extends AbstractBuckarooRoute
 	protected function getRequiredParams(): array
 	{
 		return [
-		self::DONATION_AMOUNT_PARAM,
+			self::DONATION_AMOUNT_PARAM,
 		];
 	}
 

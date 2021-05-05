@@ -34,6 +34,11 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	 */
 	public const HOW_LONG_TO_CACHE_RESPONSE_IN_SEC = 3600;
 
+	/**
+	 * Dynamics CRM entity param.
+	 *
+	 * @var string
+	 */
 	public const ENTITY_PARAM = 'dynamics-crm-entity';
 
 	/**
@@ -48,21 +53,14 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	 *
 	 * @var DynamicsCrm
 	 */
-	protected $dynamicsCrm;
-
-	/**
-	 * Implementation of the Authorization obj.
-	 *
-	 * @var AuthorizationInterface
-	 */
-	protected $hmac;
+	private $dynamicsCrm;
 
 	/**
 	 * Cache implementation obj.
 	 *
 	 * @var Cache
 	 */
-	protected $cache;
+	private $cache;
 
 	/**
 	 * Construct object
@@ -155,12 +153,12 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	protected function getIrrelevantParams(): array
 	{
 		return [
-		self::ENTITY_PARAM,
-		BasicCaptcha::FIRST_NUMBER_KEY,
-		BasicCaptcha::SECOND_NUMBER_KEY,
-		BasicCaptcha::RESULT_KEY,
-		'privacy',
-		'privacy-policy',
+			self::ENTITY_PARAM,
+			BasicCaptcha::FIRST_NUMBER_KEY,
+			BasicCaptcha::SECOND_NUMBER_KEY,
+			BasicCaptcha::RESULT_KEY,
+			'privacy',
+			'privacy-policy',
 		];
 	}
 
@@ -172,7 +170,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	protected function getRequiredParams(): array
 	{
 		return [
-		self::ENTITY_PARAM,
+			self::ENTITY_PARAM,
 		];
 	}
 

@@ -141,21 +141,8 @@ class Main extends AbstractMain
 				Integrations\Core\GuzzleClient::class,
 			],
 			Rest\BuckarooResponseHandlerRoute::class => [
-				Integrations\Buckaroo\Buckaroo::class,
 				Integrations\Authorization\Hmac::class,
 			],
-
-			// // Mailchimp.
-			// Rest\MailchimpRoute::class => [
-			// Integrations\Mailchimp\Mailchimp::class,
-			// Captcha\BasicCaptcha::class,
-			// ],
-
-			// // Mailerlite.
-			// Rest\MailerliteRoute::class => [
-			// Integrations\Mailerlite\Mailerlite::class,
-			// Captcha\BasicCaptcha::class,
-			// ],
 		];
 		/* phpcs:enable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
 	}
