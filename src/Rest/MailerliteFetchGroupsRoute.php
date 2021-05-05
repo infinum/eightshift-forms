@@ -75,7 +75,7 @@ class MailerliteFetchGroupsRoute extends BaseRoute implements Filters
 			return rest_ensure_response($e->getData());
 		}
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->mailerlite->getAllGroups();
 		} catch (\Exception $e) {

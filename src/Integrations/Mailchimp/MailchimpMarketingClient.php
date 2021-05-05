@@ -32,7 +32,7 @@ class MailchimpMarketingClient implements ClientInterface
 	 */
 	public function __construct()
 	{
-		$this->client = new ApiClient();
+		$this->client = ApiClientFactory::build();
 	}
 
 	/**

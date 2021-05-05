@@ -52,14 +52,7 @@ class MailerliteRoute extends BaseRoute implements Filters
 	 *
 	 * @var Mailerlite
 	 */
-	protected $mailerlite;
-
-	/**
-	 * Basic Captcha object.
-	 *
-	 * @var BasicCaptcha
-	 */
-	protected $basicCaptcha;
+	private $mailerlite;
 
 	/**
 	 * Construct object
@@ -97,17 +90,17 @@ class MailerliteRoute extends BaseRoute implements Filters
 		$response = '';
 		$message = '';
 
-	  // Make sure we have the group ID.
+		// Make sure we have the group ID.
 		if (empty($groupId)) {
 			return $this->restResponseHandler('mailerlite-missing-group-id');
 		}
 
-	  // Make sure we have an email.
+		// Make sure we have an email.
 		if (empty($email)) {
 			return $this->restResponseHandler('mailerlite-missing-email');
 		}
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->mailerlite->addSubscriber($groupId, $email, $mergeFieldParams);
 		} catch (MissingFilterInfoException $e) {

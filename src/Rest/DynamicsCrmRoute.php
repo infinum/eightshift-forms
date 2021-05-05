@@ -78,7 +78,7 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 			return rest_ensure_response($e->getData());
 		}
 
-	  // We don't want to send thee entity to CRM or it will reject our request.
+		// We don't want to send thee entity to CRM or it will reject our request.
 		$entity = $params[self::ENTITY_PARAM];
 		$params = $this->unsetIrrelevantParams($params);
 
@@ -90,7 +90,7 @@ class DynamicsCrmRoute extends BaseRoute implements Filters, ActiveRouteInterfac
 			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
 		]);
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->dynamicsCrm->addRecord($entity, $params);
 		} catch (ClientException $e) {

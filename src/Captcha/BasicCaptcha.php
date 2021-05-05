@@ -46,7 +46,7 @@ class BasicCaptcha
 	public function checkCaptchaFromRequestParams(array $params): bool
 	{
 
-	  // First let's see if captcha fields are in request params. If not, just return true.
+		// First let's see if captcha fields are in request params. If not, just return true.
 		if (
 			! isset($params[self::FIRST_NUMBER_KEY])
 			&& ! isset($params[self::SECOND_NUMBER_KEY])
@@ -55,8 +55,8 @@ class BasicCaptcha
 			return true;
 		}
 
-	  // Now let's make sure we have all the required fields otherwise there is some tampering of form params
-	  // going on and we consider the captcha as failed.
+		// Now let's make sure we have all the required fields otherwise there is some tampering of form params
+		// going on and we consider the captcha as failed.
 		if (
 			empty($params[self::FIRST_NUMBER_KEY])
 			|| empty($params[self::SECOND_NUMBER_KEY])
@@ -65,7 +65,7 @@ class BasicCaptcha
 			return false;
 		}
 
-	  // Now let's make sure the captcha is correct.
+		// Now let's make sure the captcha is correct.
 		if ((int) $params[self::FIRST_NUMBER_KEY] + (int) $params[self::SECOND_NUMBER_KEY] === (int) $params[self::RESULT_KEY]) {
 			return true;
 		}

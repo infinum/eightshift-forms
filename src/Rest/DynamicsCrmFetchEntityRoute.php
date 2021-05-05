@@ -96,11 +96,11 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 			return rest_ensure_response($e->getData());
 		}
 
-	  // We don't want to send thee entity to CRM or it will reject our request.
+		// We don't want to send thee entity to CRM or it will reject our request.
 		$entity = $params[self::ENTITY_PARAM];
 		$params = $this->unsetIrrelevantParams($params);
 
-	  // Load the response from cache if possible.
+		// Load the response from cache if possible.
 		$cacheKey = $this->cache->calculateCacheKeyForRequest(self::ENDPOINT_SLUG, $this->getRouteUri(), $params);
 
 		if ($this->cache->exists($cacheKey)) {
@@ -118,7 +118,7 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
 		]);
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->dynamicsCrm->fetchAllFromEntity($entity, $params);
 			$this->cache->save($cacheKey, (string) wp_json_encode($response), self::HOW_LONG_TO_CACHE_RESPONSE_IN_SEC);

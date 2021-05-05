@@ -118,17 +118,17 @@ class MailchimpRoute extends BaseRoute implements Filters
 		$mergeFieldParams         = $this->unsetIrrelevantParams($params);
 		$response                 = [];
 
-	  // Make sure we have the list ID.
+		// Make sure we have the list ID.
 		if (empty($listId)) {
 			return $this->restResponseHandler('mailchimp-missing-list-id');
 		}
 
-	  // Make sure we have an email.
+		// Make sure we have an email.
 		if (empty($email)) {
 			return $this->restResponseHandler('mailchimp-missing-email');
 		}
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			if ($shouldAddExistingMembers) {
 				$response['add'] = $this->mailchimp->addOrUpdateMember($listId, $email, $mergeFieldParams);
@@ -147,8 +147,8 @@ class MailchimpRoute extends BaseRoute implements Filters
 				$response['add'] = $msgUserExists;
 				$message         = $msgUserExists;
 
-			  // We need to do the "adding tags" call as well (if needed) as the exception in the "addMember" method
-			  // has stopped execution.
+				// We need to do the "adding tags" call as well (if needed) as the exception in the "addMember" method
+				// has stopped execution.
 				if (! empty($tags)) {
 					$response['tags'] = $this->mailchimp->addMemberTags($listId, $email, $tags);
 				}

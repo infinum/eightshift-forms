@@ -73,7 +73,7 @@ class SendEmailRoute extends BaseRoute
 			return rest_ensure_response($e->getData());
 		}
 
-	  // If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
+		// If email was sent (and sending a copy back to sender is enabled) we need to validate this email is correct.
 		if (
 			$this->shouldSendEmailCopyToUser($params) &&
 			! $this->isEmailSetAndValid($params)
@@ -85,7 +85,7 @@ class SendEmailRoute extends BaseRoute
 		$emailInfo['headers'] = $this->addDefaultHeaders($emailInfo['headers']);
 		$response              = wp_mail($emailInfo['to'], $emailInfo['subject'], $emailInfo['message'], $emailInfo['headers']);
 
-	  // If we need to send copy to sender.
+		// If we need to send copy to sender.
 		if ($this->shouldSendEmailCopyToUser($params)) {
 			$emailConfirmationInfo = $this->buildEmailInfoFromParams($params, true);
 			$responseConfirmation   = wp_mail($params[self::EMAIL_PARAM], $emailConfirmationInfo['subject'], $emailConfirmationInfo['message']);
@@ -103,66 +103,6 @@ class SendEmailRoute extends BaseRoute
 			'message' => esc_html__('Email sent', 'eightshift-forms'),
 			'data' => [],
 		]);
-	}
-
-	/**
-	 * Adds default email headers so email is interpreted as HTML.
-	 *
-	 * @param  string $headers Existing headers.
-	 * @return string
-	 */
-	protected function addDefaultHeaders(string $headers): string
-	{
-		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-		return $headers;
-	}
-
-	/**
-	 * Check if we received a parameter to send an email confirmation to user.
-	 *
-	 * @param  array $params Query parameters sent to route.
-	 * @return bool
-	 */
-	protected function shouldSendEmailCopyToUser(array $params): bool
-	{
-		return isset($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM]) && filter_var($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM], FILTER_VALIDATE_BOOL);
-	}
-
-	/**
-	 * Check if email param is set and valid.
-	 *
-	 * @param  array $params Query parameters sent to route.
-	 * @return boolean
-	 */
-	protected function isEmailSetAndValid(array $params): bool
-	{
-		return isset($params[self::EMAIL_PARAM]) && filter_var($params[self::EMAIL_PARAM], FILTER_VALIDATE_EMAIL);
-	}
-
-	/**
-	 * Takes all parameters received in request and builds all subject / message info needed to send the email.
-	 * Must return array with the following keys:
-	 * - to
-	 * - subject
-	 * - message
-	 * - headers
-	 *
-	 * @param  array $params              Params received in request.
-	 * @param  bool  $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
-	 * @return array
-	 */
-	protected function buildEmailInfoFromParams(array $params, bool $isForConfirmation = false): array
-	{
-		$subjectParam = $isForConfirmation ? self::CONFIRMATION_SUBJECT_PARAM : self::SUBJECT_PARAM;
-		$messageParam = $isForConfirmation ? self::CONFIRMATION_MESSAGE_PARAM : self::MESSAGE_PARAM;
-
-		return [
-			'to' => ! empty($params[self::TO_PARAM]) ? wp_unslash(sanitize_text_field(strtolower($params[self::TO_PARAM]))) : '',
-			'subject' => $this->replacePlaceholdersWithContent($params[$subjectParam], $params),
-			'message' => $this->replacePlaceholdersWithContent($params[$messageParam], $params),
-			'headers' => $params[self::ADDITIONAL_HEADERS_PARAM] ?? '',
-		];
 	}
 
 	/**
@@ -197,5 +137,65 @@ class SendEmailRoute extends BaseRoute
 	protected function getMethods()
 	{
 		return static::CREATABLE;
+	}
+
+		/**
+	 * Adds default email headers so email is interpreted as HTML.
+	 *
+	 * @param  string $headers Existing headers.
+	 * @return string
+	 */
+	private function addDefaultHeaders(string $headers): string
+	{
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+		return $headers;
+	}
+
+	/**
+	 * Check if we received a parameter to send an email confirmation to user.
+	 *
+	 * @param  array $params Query parameters sent to route.
+	 * @return bool
+	 */
+	private function shouldSendEmailCopyToUser(array $params): bool
+	{
+		return isset($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM]) && filter_var($params[self::SEND_CONFIRMATION_TO_SENDER_PARAM], FILTER_VALIDATE_BOOL);
+	}
+
+	/**
+	 * Check if email param is set and valid.
+	 *
+	 * @param  array $params Query parameters sent to route.
+	 * @return boolean
+	 */
+	private function isEmailSetAndValid(array $params): bool
+	{
+		return isset($params[self::EMAIL_PARAM]) && filter_var($params[self::EMAIL_PARAM], FILTER_VALIDATE_EMAIL);
+	}
+
+	/**
+	 * Takes all parameters received in request and builds all subject / message info needed to send the email.
+	 * Must return array with the following keys:
+	 * - to
+	 * - subject
+	 * - message
+	 * - headers
+	 *
+	 * @param  array $params              Params received in request.
+	 * @param  bool  $isForConfirmation (Optional) If true, we build info for confirmation email sent to user rather than for the admin email.
+	 * @return array
+	 */
+	private function buildEmailInfoFromParams(array $params, bool $isForConfirmation = false): array
+	{
+		$subjectParam = $isForConfirmation ? self::CONFIRMATION_SUBJECT_PARAM : self::SUBJECT_PARAM;
+		$messageParam = $isForConfirmation ? self::CONFIRMATION_MESSAGE_PARAM : self::MESSAGE_PARAM;
+
+		return [
+			'to' => ! empty($params[self::TO_PARAM]) ? wp_unslash(sanitize_text_field(strtolower($params[self::TO_PARAM]))) : '',
+			'subject' => $this->replacePlaceholdersWithContent($params[$subjectParam], $params),
+			'message' => $this->replacePlaceholdersWithContent($params[$messageParam], $params),
+			'headers' => $params[self::ADDITIONAL_HEADERS_PARAM] ?? '',
+		];
 	}
 }

@@ -156,16 +156,16 @@ class Buckaroo implements Filters
 	 */
 	public function sendPayment($donationAmount, string $invoice, string $issuer, bool $isRecurring, string $description): array
 	{
-		$response             = [];
+		$response            = [];
 		$postArray           = $this->buildPostBodyForPayment($donationAmount, $invoice, $issuer, $isRecurring, $description);
 		$authorizationHeader = $this->generateAuthorizationHeader($postArray, $this->getBuckarooUri());
 
 		$postResponse = $this->guzzleClient->post("https://{$this->getBuckarooUri()}", [
-		'headers' => [
-		'Content-Type' => 'application/json',
-		'Authorization' => $authorizationHeader,
-		],
-		'body' => \wp_json_encode($postArray),
+			'headers' => [
+				'Content-Type' => 'application/json',
+				'Authorization' => $authorizationHeader,
+			],
+			'body' => \wp_json_encode($postArray),
 		]);
 
 		$postResponseJson = json_decode((string) $postResponse->getBody(), true);
@@ -452,7 +452,7 @@ class Buckaroo implements Filters
 			'Description' => $description,
 		];
 
-	  // Set payment to recurring if needed.
+		// Set payment to recurring if needed.
 		if ($isRecurring) {
 			$postArray['StartRecurrent'] = 'True';
 		}
@@ -463,7 +463,7 @@ class Buckaroo implements Filters
 			'Parameters' => [],
 		];
 
-	  // Add issuing bank if provided as part of request.
+		// Add issuing bank if provided as part of request.
 		if (! empty($issuer)) {
 			$serviceArray['Parameters'][] = [
 				'Name' => 'issuer',
@@ -532,7 +532,7 @@ class Buckaroo implements Filters
 			],
 		];
 
-	  // Add issuing bank if provided as part of request.
+		// Add issuing bank if provided as part of request.
 		if (! empty($issuer)) {
 			$serviceArray['Parameters'][] = [
 				'Name' => 'debtorbankid',

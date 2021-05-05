@@ -48,20 +48,6 @@ class TestRoute extends BaseRoute implements Filters
 	public const IRRELEVANT_PARAM     = 'irrelevant-param';
 
 	/**
-	 * Implementation of the Authorization obj.
-	 *
-	 * @var AuthorizationInterface
-	 */
-	protected $hmac;
-
-	/**
-	 * Basic Captcha object.
-	 *
-	 * @var BasicCaptcha
-	 */
-	protected $basicCaptcha;
-
-	/**
 	 * Construct object
 	 *
 	 * @param AuthorizationInterface $hmac          Authorization object.

@@ -131,7 +131,7 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 	protected function setRedirectUrls(array $params): array
 	{
 
-	  // Now let's define all Buckaroo-recognized statuses for which we need to provide redirect URLs.
+		// Now let's define all Buckaroo-recognized statuses for which we need to provide redirect URLs.
 		$statuses = [
 			BuckarooResponseHandlerRoute::STATUS_SUCCESS,
 			BuckarooResponseHandlerRoute::STATUS_CANCELED,
@@ -139,17 +139,17 @@ abstract class AbstractBuckarooRoute extends BaseRoute implements Filters
 			BuckarooResponseHandlerRoute::STATUS_REJECT,
 		];
 
-	  // Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
+		// Now let's build redirect URLs (to buckaroo-response-handler middleware route) for each status.
 		$redirectUrls = [];
 		$baseUrl      = \home_url($this->buckarooResponseHandlerRoute->getRouteUri());
 		foreach ($statuses as $statusValue) {
 			$urlParams = $params;
 			$urlParams[BuckarooResponseHandlerRoute::STATUS_PARAM] = $statusValue;
 
-		  // We need to encode all params to ensure they're sent properly.
+			// We need to encode all params to ensure they're sent properly.
 			$urlParams = $this->urlencodeParams($urlParams);
 
-		  // As the last step, add the authorization hash which verifies that the request was not tampered with.
+			// As the last step, add the authorization hash which verifies that the request was not tampered with.
 			$url = \add_query_arg(array_merge(
 				$urlParams,
 				[Hmac::AUTHORIZATION_KEY => rawurlencode($this->hmac->generateHash($urlParams, $this->generateAuthorizationSaltForResponseHandler()))]

@@ -37,7 +37,6 @@ class PostViewFilter implements ServiceInterface
 	 */
 	public function modifyKsesPostTags(array $allowedTags): array
 	{
-		$allowedTags = array_merge($allowedTags, FormView::extraAllowedTags($allowedTags));
-		return $allowedTags;
+		return array_merge($allowedTags, FormView::extraAllowedTags($allowedTags));
 	}
 }

@@ -46,7 +46,7 @@ class FormView
 			'data-buckaroo-service'            => 1,
 		];
 
-	  // Append additional allowed tags.
+		// Append additional allowed tags.
 		$allowedTags['input']['type']                = 1;
 		$allowedTags['input']['class']               = 1;
 		$allowedTags['input']['id']                  = 1;

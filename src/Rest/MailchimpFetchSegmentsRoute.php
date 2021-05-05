@@ -86,7 +86,7 @@ class MailchimpFetchSegmentsRoute extends BaseRoute implements Filters
 
 		$listId = $params[self::LIST_ID_PARAM] ?? '';
 
-	  // Retrieve all entities from the "leads" Entity Set.
+		// Retrieve all entities from the "leads" Entity Set.
 		try {
 			$response = $this->extractTagsAndSegments($this->mailchimp->getAllSegments($listId));
 		} catch (MissingFilterInfoException $e) {

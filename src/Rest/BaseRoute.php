@@ -15,12 +15,27 @@ use EightshiftForms\Integrations\Authorization\Hmac;
 use EightshiftForms\Config\Config;
 use EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
+use EightshiftForms\Captcha\BasicCaptcha;
+use EightshiftForms\Integrations\Authorization\AuthorizationInterface;
 
 /**
  * Class BaseRoute
  */
 abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface, ActiveRouteInterface
 {
+	/**
+	 * Basic Captcha object.
+	 *
+	 * @var BasicCaptcha
+	 */
+	protected $basicCaptcha;
+
+	/**
+	 * Implementation of the Authorization obj.
+	 *
+	 * @var AuthorizationInterface
+	 */
+	protected $hmac;
 
 	/**
 	 * Endpoint slug for the implementing class. Needs to be overriden.
@@ -141,7 +156,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	protected function verifyRequest(\WP_REST_Request $request, string $requiredFilter = ''): array
 	{
 
-	  // If this route requires a filter defined in project, we need to make sure that is defined.
+		// If this route requires a filter defined in project, we need to make sure that is defined.
 		if (! empty($requiredFilter) && ! has_filter($requiredFilter)) {
 			throw new UnverifiedRequestException(
 				$this->restResponseHandler('integration-not-used', [self::MISSING_FILTER => $requiredFilter])->data
@@ -152,12 +167,12 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 		$params      = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
 
-	  // Authorized routes need to provide the correct authorization hash to do anything.
+		// Authorized routes need to provide the correct authorization hash to do anything.
 		if (! empty($this->getAuthorizationSalt())) {
 			$hash = $params[Hmac::AUTHORIZATION_KEY] ?? 'invalid-hash';
 			unset($params[Hmac::AUTHORIZATION_KEY]);
 
-		  // We need to URLencode all params before verifying them.
+			// We need to URLencode all params before verifying them.
 			$params = $this->urlencodeParams($params);
 
 			if (empty($this->hmac) || ! $this->hmac->verifyHash($hash, $params, $this->getAuthorizationSalt())) {
@@ -167,7 +182,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 			}
 		}
 
-	  // Verify nonce if submitted.
+		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
 			if (
 				! isset($params['nonce']) ||
@@ -180,12 +195,12 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 			}
 		}
 
-	  // If captcha is used on this route and provided as part of the request, we need to confirm it's true.
+		// If captcha is used on this route and provided as part of the request, we need to confirm it's true.
 		if (! empty($this->basicCaptcha) && ! $this->basicCaptcha->checkCaptchaFromRequestParams($params)) {
 			throw new UnverifiedRequestException($this->restResponseHandler('wrong-captcha')->data);
 		}
 
-	  // If this route has required parameters, we need to make sure they're all provided.
+		// If this route has required parameters, we need to make sure they're all provided.
 		$missingParams = $this->findRequiredMissingParams($params);
 		if (! empty($missingParams)) {
 			throw new UnverifiedRequestException(
@@ -193,7 +208,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 			);
 		}
 
-	  // If this route has required parameters, we need to make sure they're all provided.
+		// If this route has required parameters, we need to make sure they're all provided.
 		$missingPostParams = $this->findRequiredMissingParams($postParams, true);
 		if (! empty($missingPostParams)) {
 			throw new UnverifiedRequestException(

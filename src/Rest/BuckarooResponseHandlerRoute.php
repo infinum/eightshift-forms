@@ -172,7 +172,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		return \rest_ensure_response([
 			'code' => 200,
 			'data' => [
-			  'message' => esc_html__('Something went wrong, you should have been redirected.'),
+				'message' => esc_html__('Something went wrong, you should have been redirected.'),
 			],
 		]);
 	}
@@ -190,7 +190,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 		try {
 			$buckarooResponse = ResponseFactory::build($buckarooParams);
 
-		  // Get the correct redirect URL (expects them to be urlencoded).
+			// Get the correct redirect URL (expects them to be urlencoded).
 			switch ($buckarooResponse->getStatus()) {
 				case $buckarooResponse::STATUS_CODE_SUCCESS:
 					$redirectUrl = isset($params[self::REDIRECT_URL_PARAM]) ? rawurldecode($params[self::REDIRECT_URL_PARAM]) : '';
@@ -209,7 +209,7 @@ class BuckarooResponseHandlerRoute extends BaseRoute implements Actions, Filters
 			$redirectUrl = \add_query_arg('invalid-buckaroo-response', 1, \home_url());
 		}
 
-	  // If the redirect URL wasn't provided, just default to home.
+		// If the redirect URL wasn't provided, just default to home.
 		if (empty($redirectUrl)) {
 			$redirectUrl = \home_url();
 		}

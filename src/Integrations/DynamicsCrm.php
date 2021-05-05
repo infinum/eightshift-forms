@@ -63,8 +63,8 @@ class DynamicsCrm
 		try {
 			$odataClient->from($entity)->post($data);
 		} catch (ClientException $e) {
-		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
-		  // just throw because we don't know how to handle it.
+			// 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
+			// just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
 				$odataClient = $this->buildOdataClient($this->getToken(true));
 				$odataClient->from($entity)->post($data);
@@ -92,8 +92,8 @@ class DynamicsCrm
 		try {
 			$response = $odataClient->from($entity)->get($data);
 		} catch (ClientException $e) {
-		  // 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
-		  // just throw because we don't know how to handle it.
+			// 401 exception should indicate access token was invalid, in this case let's try again with a fresh token. If it's not that,
+			// just throw because we don't know how to handle it.
 			if ($e->getCode() === 401) {
 				$odataClient = $this->buildOdataClient($this->getToken(true));
 				$response     = $odataClient->from($entity)->get($data);

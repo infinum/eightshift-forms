@@ -149,7 +149,7 @@ class Response
 
 		$this->statusAsText = $this->buildStatusAsText($this->status);
 
-	  // Detect if we have any of the known response.
+		// Detect if we have any of the known response.
 		$this->service = $this->detectService($buckarooParams);
 
 		if ($this->isIdeal()) {

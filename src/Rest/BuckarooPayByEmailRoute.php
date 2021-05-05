@@ -63,7 +63,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 			$params = $this->setRedirectUrls($params);
 			$this->setTestIfNeeded($params);
 
-		  // Set some default redirect URL. This should be overriden in the filter.
+			// Set some default redirect URL. This should be overriden in the filter.
 			$redirectUrl = $this->buckaroo->getReturnUrl();
 
 			if (has_filter(Filters::BUCKAROO_PAY_BY_EMAIL_OVERRIDE)) {
@@ -81,7 +81,7 @@ class BuckarooPayByEmailRoute extends AbstractBuckarooRoute
 			'code' => 200,
 			'message' => esc_html__('Pay by email started', 'eightshift-forms'),
 			'data' => [
-			  'redirectUrl' => $redirectUrl,
+				'redirectUrl' => $redirectUrl,
 			],
 		]);
 	}

@@ -141,7 +141,7 @@ class Mailchimp
 	{
 		$this->setupClientConfigAndVerify();
 
-	  // This call requires a very specific format for tags.
+		// This call requires a very specific format for tags.
 		$tagsRequest = [
 		'tags' => array_map(function ($tagName) {
 			return [
@@ -153,9 +153,9 @@ class Mailchimp
 
 		$updateResponse = $this->client->lists->updateListMemberTags($listId, md5($email), $tagsRequest);
 
-	  // This call is weird in that an empty (204) response means success. If something went very wrong it
-	  // will throw an exception. If something is slightly off (such as not having the correct format for
-	  // tags array), it will also return an empty response.
+		// This call is weird in that an empty (204) response means success. If something went very wrong it
+		// will throw an exception. If something is slightly off (such as not having the correct format for
+		// tags array), it will also return an empty response.
 		return ! empty($updateResponse);
 	}
 
