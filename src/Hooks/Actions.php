@@ -36,11 +36,10 @@ interface Actions
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_action( 'eightshift_forms/extra_form_fields', [ $this, 'add_additional_fields' ], 1, 1 );
+	 *     add_action('eightshift_forms/extra_form_fields', [$this, 'addAdditionalFields' ], 1, 1);
 	 *   }
 	 *
-	 *   @param $attributes Array of form's attributes.
-	 *  public function add_additional_fields( array $attributes ) {
+	 *  public function addAdditionalFields(array $attributes) {
 	 *     echo '<input type="hidden" name="some-extra-field" value="your-value" />';
 	 *   }
 	 *

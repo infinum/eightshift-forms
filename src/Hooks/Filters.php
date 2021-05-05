@@ -182,10 +182,10 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/mailchimp', [ $this, 'get_info' ], 1, 1 );
+	 *     add_filter( 'eightshift_forms/mailchimp', [ $this, 'getInfo' ], 1, 1 );
 	 *   }
 	 *
-	 *  public function get_info( string $key ) {
+	 *  public function getInfo( string $key ) {
 	 *    $info = [
 	 *      'apiKey' => 'your-api-key',
 	 *      'server' => 'us2',
@@ -205,10 +205,10 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'get_info' ], 1 );
+	 *     add_filter( 'eightshift_forms/mailerlite', [ $this, 'getInfo' ], 1 );
 	 *   }
 	 *
-	 *  public function get_info( string $key ): string
+	 *  public function getInfo( string $key ): string
 	 *  {
 	 *    $info = [
 	 *      'apiKey' => 'your-api-key',
@@ -229,12 +229,12 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/required_params/buckaroo_emandate', [ $this, 'add_required_params' ], 11, 1 );
+	 *     add_filter('eightshift_forms/required_params/buckaroo_emandate', [$this, 'addRequiredParams'], 11, 1);
 	 *   }
 	 *
-	 *  public function get_info( array $required_params ) {
-	 *     $required_params[] = 'new-key';
-	 *     return $required_params;
+	 *  public function getInfo(array $requiredParams) {
+	 *     $requiredParams[] = 'new-key';
+	 *     return $requiredParams;
 	 *   }
 	 *
 	 * @var string
@@ -250,12 +250,12 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/required_params/buckaroo_ideal', [ $this, 'add_required_params' ], 11, 1 );
+	 *     add_filter('eightshift_forms/required_params/buckaroo_ideal', [$this, 'addRequiredParams'], 11, 1);
 	 *   }
 	 *
-	 *  public function get_info( array $required_params ) {
-	 *     $required_params[] = 'new-key';
-	 *     return $required_params;
+	 *  public function getInfo(array $requiredParams) {
+	 *     $requiredParams[] = 'new-key';
+	 *     return $requiredParams;
 	 *   }
 	 *
 	 * @var string
@@ -269,10 +269,10 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/modify_buckaroo_redirectUrl', [ $this, 'modify_url' ], 1, 3 );
+	 *     add_filter( 'eightshift_forms/modify_buckaroo_redirect_url', [ $this, 'modifyUrl' ], 1, 3 );
 	 *   }
 	 *
-	 *  public function modify_url( string $redirectUrl, array $params, Buckaroo_Response $buckaroo_response ) {
+	 *  public function modifyUrl(string $redirectUrl, array $params, BuckarooResponse buckarooResponse) {
 	 *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
 	 *    return $redirectUrl;
 	 *  }
@@ -290,16 +290,16 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/buckaroo_filter_buckaroo_params', [ $this, 'modify_params' ], 1, 2 );
+	 *     add_filter('eightshift_forms/buckaroo_filter_buckaroo_params', [$this, 'modifyParams'], 1, 2);
 	 *   }
 	 *
-	 *  public function modify_params( array $params, array $buckaroo_params ) {
-	 *    if ( $params['test-enabled-field'] === '1' ) {
-	 *      $buckaroo_params['BRQ_STATUSCODE'] = 123;
-	 *      $buckaroo_params['BRQ_MOCK'] = true;
+	 *  public function modifyParams( array $params, array $buckarooParams ) {
+	 *    if ($params['test-enabled-field'] === '1') {
+	 *      $buckarooParams['BRQ_STATUSCODE'] = 123;
+	 *      $buckarooParams['BRQ_MOCK'] = true;
 	 *    }
 	 *
-	 *    return $buckaroo_params;
+	 *    return $buckarooParams;
 	 *  }
 	 *
 	 * @var string
@@ -313,17 +313,17 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/buckaroo_pay_by_email_redirectUrl_override', [ $this, 'modify_url' ], 1, 1 );
+	 *     add_filter('eightshift_forms/buckaroo_pay_by_email_redirect_url_override', [$this, 'modifyUrl'], 1, 1);
 	 *   }
 	 *
-	 *  public function modify_url( string $redirectUrl ) {
-	 *    $redirectUrl = add_query_arg( 'key', 'value', $redirectUrl );
+	 *  public function modifyUrl(string $redirectUrl) {
+	 *    $redirectUrl = add_query_arg('key', 'value', $redirectUrl);
 	 *    return $redirectUrl;
 	 *  }
 	 *
 	 * @var string
 	 */
-	public const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirectUrl_override';
+	public const BUCKAROO_PAY_BY_EMAIL_OVERRIDE = 'eightshift_forms/buckaroo_pay_by_email_redirect_url_override';
 
 	/**
 	 * Filter used to modify which roles have access to Forms CPT (by default it's just admins).
@@ -343,12 +343,12 @@ interface Filters
 	 * Example:
 	 *
 	 *  public function register(): void {
-	 *     add_filter( 'eightshift_forms/roles_with_access_to_forms', [ $this, 'modify_roles_with_access' ], 11, 1 );
+	 *     add_filter('eightshift_forms/roles_with_access_to_forms', [$this, 'modifyRolesWithAccess'], 11, 1);
 	 *   }
 	 *
-	 *  public function modify_roles_with_access( array $existing_roles ) {
-	 *     $existing_roles['editor'] = true;
-	 *     return $existing_roles;
+	 *  public function modifyRolesWithAccess(array $existingRoles) {
+	 *     $existingRoles['editor'] = true;
+	 *     return $existingRoles;
 	 *   }
 	 *
 	 * @var string
