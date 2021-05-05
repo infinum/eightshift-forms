@@ -19,13 +19,6 @@ class OAuth2Client implements OAuth2ClientInterface
 {
 
 	/**
-	 * How much is hour in seconds.
-	 *
-	 * @var int
-	 */
-	public const HOUR_IN_SECONDS = 3600;
-
-	/**
 	 * Url to which we're submitting.
 	 *
 	 * @var string
@@ -153,7 +146,7 @@ class OAuth2Client implements OAuth2ClientInterface
 	 * @param  int    $expiration Cache's expiration in seconds.
 	 * @return bool
 	 */
-	protected function saveTokenToCache(string $tokenKey, string $token, int $expiration = self::HOUR_IN_SECONDS): bool
+	protected function saveTokenToCache(string $tokenKey, string $token, int $expiration = HOUR_IN_SECONDS): bool
 	{
 		return set_transient($tokenKey, $token, $expiration);
 	}
