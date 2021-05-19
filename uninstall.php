@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Fired when the plugin is uninstalled.
  *
- * @package Eightshift_Forms
+ * @package EightshiftForms
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-if ( ! current_user_can( 'activate_plugins' ) ) {
-  return;
+if (! current_user_can('activate_plugins')) {
+	return;
 }
 
 // If uninstall is not called from WordPress, then exit.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-  exit;
+if (! defined('WP_UNINSTALL_PLUGIN')) {
+	exit;
 }

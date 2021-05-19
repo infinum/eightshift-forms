@@ -11,7 +11,7 @@ parameters:
     ignoreErrors:
         -
             message: '~^Access to an undefined property MailchimpMarketing\\ApiClient~'
-            path: src/integrations/mailchimp/class-mailchimp.php
+            path: src/Integrations/Mailchimp/Mailchimp.php
         -
             message: '~^Function apply_filters invoked with [0-9] parameters~'
-            path: src/routes/class-buckaroo-response-handler-route.php
+            path: src/Rest/BuckarooResponseHandlerRoute.php

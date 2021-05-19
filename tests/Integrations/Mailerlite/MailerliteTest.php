@@ -2,54 +2,62 @@
 
 namespace EightshiftFormsTests\Integrations\Mailerlite;
 
-use Eightshift_Forms\Core\Main;
-use Eightshift_Forms\Hooks\Filters;
-use Eightshift_Forms\Integrations\Mailerlite\Mailerlite;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftFormsTests\BaseTest;
 
 class MailerliteTest extends BaseTest
 {
 
-  protected function _inject(DataProvider $dataProvider, Main $main)
-  {
-    $this->dataProvider = $dataProvider;
-    $main->set_test(true);
-    $this->di_container = $main->build_di_container();
-    $this->mailerlite = $this->di_container->get( Mailerlite::class );
-  }
+	protected function _inject(DataProvider $dataProvider)
+	{
+		$this->dataProvider = $dataProvider;
+	}
 
-  public function testAddOrUpdateSubscriber()
-  {
-    $this->addHooks();
-    $params = [
-      'email' => DataProvider::MOCK_EMAIL,
-    ];
-    $groupId = 12345;
-    $subscriber_data = [
-      'name' => 'some name',
-    ];
+	protected function _before()
+	{
+		parent::_before();
+		$this->mailerlite = $this->diContainer->get(Mailerlite::class);
+	}
 
-    $response = $this->mailerlite->add_subscriber(
-      $groupId,
-      DataProvider::MOCK_EMAIL,
-      $subscriber_data,
-      $params
-    );
+	public function testAddOrUpdateSubscriber()
+	{
+		$this->addHooks();
+		$params = [
+			'email' => DataProvider::MOCK_EMAIL,
+		];
+		$groupId = 12345;
+		$subscriberData = [
+			'name' => 'some name',
+		];
 
-    $this->assertEquals($response, $this->dataProvider->getMockAddSubscriberResponse( $params ));
-  }
+		$response = $this->mailerlite->addSubscriber(
+			$groupId,
+			DataProvider::MOCK_EMAIL,
+			$subscriberData,
+			$params
+		);
 
-  /**
-   * Mocking that a certain filter exists. See documentation of Brain Monkey:
-   * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
-   *
-   * We can't return any actual value, we can just "mock register" this filter.
-   *
-   * @return void
-   */
-  protected function addHooks() {
-    add_filter( Filters::MAILERLITE, function($key) {
-      return $key;
-    }, 1, 1);
-  }
+		$this->assertEquals($response, $this->dataProvider->getMockAddSubscriberResponse($params));
+	}
+
+	/**
+	 * Mocking that a certain filter exists. See documentation of Brain Monkey:
+	 * https://brain-wp.github.io/BrainMonkey/docs/wordpress-hooks-added.html
+	 *
+	 * We can't return any actual value, we can just "mock register" this filter.
+	 *
+	 * @return void
+	 */
+	protected function addHooks()
+	{
+		add_filter(
+			Filters::MAILERLITE,
+			function ($key) {
+				return $key;
+			},
+			1,
+			1
+		);
+	}
 }

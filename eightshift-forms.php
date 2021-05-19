@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Eightshift forms (new)
  * Plugin URI:
@@ -8,43 +9,46 @@
  * Version: 1.0.0
  * Text Domain: eightshift-forms
  *
- * @package Eightshift_Forms
+ * @package EightshiftForms
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-namespace Eightshift_Forms;
+namespace EightshiftForms;
+
+use EightshiftLibs\Cli\Cli;
+use EightshiftForms\Main\Main;
 
 /**
  * If this file is called directly, abort.
  */
-if ( ! \defined( 'WPINC' ) ) {
-  die;
+if (! \defined('WPINC')) {
+	die;
 }
 
 /**
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
-require __DIR__ . '/vendor/autoload.php';
+$loader = require __DIR__ . '/vendor/autoload.php';
 
 /**
  * The code that runs during plugin activation.
  */
 register_activation_hook(
-  __FILE__,
-  function() {
-    ( new Core\Activate() )->activate();
-  }
+	__FILE__,
+	function () {
+		PluginFactory::activate();
+	}
 );
 
 /**
  * The code that runs during plugin deactivation.
  */
 register_deactivation_hook(
-  __FILE__,
-  function() {
-    ( new Core\Deactivate() )->deactivate();
-  }
+	__FILE__,
+	function () {
+		PluginFactory::deactivate();
+	}
 );
 
 /**
@@ -54,4 +58,13 @@ register_deactivation_hook(
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
-( new Core\Main() )->register();
+if (class_exists(Main::class)) {
+	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
+}
+
+/**
+ * Run all WPCLI commands.
+ */
+if (class_exists(Cli::class)) {
+	(new Cli())->load('eightshift-forms');
+}
