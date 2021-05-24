@@ -1,0 +1,72 @@
+name: Build assets on release and create archive
+on: 
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+          node: [14]
+
+    steps:
+    - name: 'Checkout master branch'
+      uses: actions/checkout@master
+
+    - name: PHP setup
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        coverage: pcov
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    - name: Install composer packages
+      run: composer install --no-progress
+
+    - name: Set Node.js version
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+
+    - name: Cache node modules
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-build-${{ env.cache-name }}-
+          ${{ runner.OS }}-build-
+          ${{ runner.OS }}-
+
+    - name: Install node packages
+      run: npm install
+
+    - name: Install node packages
+      run: npm run build --no-dev --no-progress
+
+    - name: Archive Release
+      uses: thedoctor0/zip-release@master
+      with:
+        filename: 'release.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+
+    - name: Add artifacts to release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
