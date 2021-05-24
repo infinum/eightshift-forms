@@ -2,7 +2,7 @@ name: Build assets on release and create archive
 on: 
   push:
     tags:
-      - 'v*.*.*'
+      - '*.*.*'
 jobs:
   release:
     runs-on: ubuntu-latest
