@@ -20,7 +20,6 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: 7.4
-        coverage: pcov
 
     - name: Get composer cache directory
       id: composer-cache
