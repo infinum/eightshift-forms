@@ -17,6 +17,12 @@ Clone the project + build to get started:
 
 **For more details about this and all other eightshift-boilerplate based plugins follow [this link](https://infinum.github.io/eightshift-docs).**
 
+## Tagging releases
+
+All releases should be tagged with the version in the following format:
+`v*.*.*` (for example `v1.2.23`)
+
+This is required for the github action which builds assets on new releases and adds them to the release as a zip file (so the plugin can be installed without manually building it)
 ## :mailbox: Who do I talk to?
 
 If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms-plugin/issues) on github and we will do our best to give you a timely answer.
