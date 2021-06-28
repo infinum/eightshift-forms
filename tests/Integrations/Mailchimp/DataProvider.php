@@ -33,7 +33,7 @@ class DataProvider
 	{
 		$response = new \stdClass();
 		$response->id = '5ae1cf23294c7b08b5ddd696a454635a';
-		$response->emailAddress = $params['email'];
+		$response->email_address = $params['email'];
 		$response->uniqueEmailId = '3cdee7fb82';
 		$response->webId = '205197020';
 		$response->emailType = 'html';

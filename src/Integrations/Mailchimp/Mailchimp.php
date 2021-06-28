@@ -91,7 +91,7 @@ class Mailchimp
 
 		$response = $this->client->lists->setListMember($listId, $this->calculateSubscriberHash($email), $params);
 
-		if (! is_object($response) || ! isset($response->id, $response->emailAddress)) {
+		if (! is_object($response) || ! isset($response->id, $response->email_address)) {
 			throw new \Exception('setListMember response invalid');
 		}
 
@@ -120,7 +120,7 @@ class Mailchimp
 
 		$response = $this->client->lists->addListMember($listId, $params);
 
-		if (! is_object($response) || ! isset($response->id, $response->emailAddress)) {
+		if (! is_object($response) || ! isset($response->id, $response->email_address)) {
 			throw new \Exception('setListMember response invalid');
 		}
 
