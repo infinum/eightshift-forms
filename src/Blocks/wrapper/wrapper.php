@@ -42,7 +42,6 @@ if (! $wrapperUse || $wrapperDisable) {
 	}
 	// phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped 
 
-
 	return;
 }
 
@@ -127,7 +126,7 @@ $wrapperOffset = [
 	'mobile' => Components::checkAttr('wrapperOffsetMobile', $attributes, $manifest),
 ];
 
-$wrapperMainClass = 'wrapper';
+$wrapperMainClass = 'ef-wrapper';
 
 $wrapperClass = Components::classnames([
 	$wrapperMainClass,

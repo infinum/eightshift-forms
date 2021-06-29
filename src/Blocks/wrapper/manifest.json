@@ -1,7 +1,7 @@
 {
 	"componentName": "wrapper",
 	"title": "Wrapper",
-	"componentClass": "wrapper",
+	"componentClass": "ef-wrapper",
 	"example": {
 		"attributes": {
 			"wrapperId": "This a custom ID",
