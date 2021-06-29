@@ -228,7 +228,7 @@ class LocalizationConstants implements Filters
 	 */
 	private function addDynamicsCrmConstants(array $localization): array
 	{
-		$entities = apply_filters(Filters::DYNAMICS_CRM, 'availableEntities');
+		$entities = apply_filters(Filters::DYNAMICS_CRM, 'available_entities');
 		if (empty($entities)) {
 			$availableEntities = [
 				/* translators: %s will be replaced with filter name (string). */
@@ -240,7 +240,7 @@ class LocalizationConstants implements Filters
 
 		$localization[self::LOCALIZATION_KEY]['dynamicsCrm'] = [
 			'restUri' => $this->dynamicsCrmRoute->getRouteUri(),
-			'availableEntities' => $availableEntities,
+			'available_entities' => $availableEntities,
 		];
 
 		return $localization;
