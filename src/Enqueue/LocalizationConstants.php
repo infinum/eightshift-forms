@@ -240,7 +240,7 @@ class LocalizationConstants implements Filters
 
 		$localization[self::LOCALIZATION_KEY]['dynamicsCrm'] = [
 			'restUri' => $this->dynamicsCrmRoute->getRouteUri(),
-			'available_entities' => $availableEntities,
+			'availableEntities' => $availableEntities,
 		];
 
 		return $localization;
