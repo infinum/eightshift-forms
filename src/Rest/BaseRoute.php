@@ -513,6 +513,17 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	}
 
 	/**
+	 * Strips URLs from fields.
+	 *
+	 * @param string $param Param to sanitize.
+	 * @return string
+	 */
+	protected function removeAnythingNotAlphanumeric(string $param): string
+	{
+		return preg_replace('/[\W]/', '', $param);
+	}
+
+	/**
 	 * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
 	 * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
 	 *
