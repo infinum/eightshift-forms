@@ -520,7 +520,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	 */
 	protected function removeAnythingNotAlphanumeric(string $param): string
 	{
-		return preg_replace('/[\W]/', '', $param);
+		return (string) preg_replace('/[\W]/', '', $param);
 	}
 
 	/**

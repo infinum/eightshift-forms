@@ -120,7 +120,7 @@ class MailchimpRoute extends BaseRoute implements Filters
 
 		// Filter all URLs from merge fields.
 		foreach ($mergeFieldParams as $key => $mergeFieldParam) {
-			if (!is_string($mergeFieldParams)) {
+			if (!is_string($mergeFieldParam)) {
 				continue;
 			}
 
