@@ -38,7 +38,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	protected $hmac;
 
 	/**
-	 * Endpoint slug for the implementing class. Needs to be overriden.
+	 * Endpoint slug for the implementing class. Needs to be overridden.
 	 *
 	 * @var string
 	 */
