@@ -109,11 +109,11 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 		}
 
 		$this->dynamicsCrm->setOauthCredentials([
-			'url'           => apply_filters(self::DYNAMICS_CRM, 'authTokenUrl'),
-			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'clientId'),
-			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'clientSecret'),
+			'url'           => apply_filters(self::DYNAMICS_CRM, 'auth_token_url'),
+			'client_id'     => apply_filters(self::DYNAMICS_CRM, 'client_id'),
+			'client_secret' => apply_filters(self::DYNAMICS_CRM, 'client_secret'),
 			'scope'         => apply_filters(self::DYNAMICS_CRM, 'scope'),
-			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'apiUrl'),
+			'api_url'       => apply_filters(self::DYNAMICS_CRM, 'api_url'),
 		]);
 
 		// Retrieve all entities from the "leads" Entity Set.
@@ -185,6 +185,6 @@ class DynamicsCrmFetchEntityRoute extends BaseRoute implements Filters
 	 */
 	protected function getAuthorizationSalt(): string
 	{
-		return \apply_filters(self::DYNAMICS_CRM, 'clientSecret') ?? 'invalid-salt';
+		return \apply_filters(self::DYNAMICS_CRM, 'client_secret') ?? 'invalid-salt';
 	}
 }

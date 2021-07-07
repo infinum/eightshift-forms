@@ -31,12 +31,15 @@ if (empty($this)) {
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
 	<?php
-	echo Components::render('label', [
-		'blockClass' => $attributes['blockClass'] ?? '',
-		'label' => $attributes['label'] ?? '',
-		'id' => $attributes['id'] ?? '',
-		'theme' => $attributes['theme'] ?? '',
-	]);
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'label',
+		[
+			'blockClass' => $attributes['blockClass'] ?? '',
+			'label' => $attributes['label'] ?? '',
+			'id' => $attributes['id'] ?? '',
+			'theme' => $attributes['theme'] ?? '',
+		]
+	);
 	?>
 	<div class="<?php echo esc_attr("{$blockClass}__content-wrap {$blockClass}__theme--{$theme}"); ?>">
 	<div class="<?php echo esc_attr("{$blockClass}__captcha-number"); ?>" >

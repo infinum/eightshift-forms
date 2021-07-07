@@ -228,7 +228,7 @@ class LocalizationConstants implements Filters
 	 */
 	private function addDynamicsCrmConstants(array $localization): array
 	{
-		$entities = apply_filters(Filters::DYNAMICS_CRM, 'availableEntities');
+		$entities = apply_filters(Filters::DYNAMICS_CRM, 'available_entities');
 		if (empty($entities)) {
 			$availableEntities = [
 				/* translators: %s will be replaced with filter name (string). */
@@ -274,7 +274,7 @@ class LocalizationConstants implements Filters
 	private function addMailchimpConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailchimp'] = [
-		'restUri' => $this->mailchimpRoute->getRouteUri(),
+			'restUri' => $this->mailchimpRoute->getRouteUri(),
 		];
 
 		return $localization;
@@ -289,7 +289,7 @@ class LocalizationConstants implements Filters
 	protected function addMailchimpAdminConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailchimp'] = [
-		'audiences' => $this->fetchMailchimpAudiences(),
+			'audiences' => $this->fetchMailchimpAudiences(),
 		];
 
 		return $localization;
@@ -304,7 +304,7 @@ class LocalizationConstants implements Filters
 	private function addMailerliteConstants(array $localization): array
 	{
 		$localization[self::LOCALIZATION_KEY]['mailerlite'] = [
-		'restUri' => $this->mailerliteRoute->getRouteUri(),
+			'restUri' => $this->mailerliteRoute->getRouteUri(),
 		];
 
 		return $localization;
@@ -319,7 +319,7 @@ class LocalizationConstants implements Filters
 	private function addMailerliteConstantsAdmin(array $localization): array
 	{
 		$localization[self::LOCALIZATION_ADMIN_KEY]['mailerlite'] = [
-		'groups' => $this->fetchMailerliteGroups(),
+			'groups' => $this->fetchMailerliteGroups(),
 		];
 
 		return $localization;
@@ -343,8 +343,8 @@ class LocalizationConstants implements Filters
 
 		foreach ($response->lists as $listObj) {
 			$audiences[] = [
-			'value' => $listObj->id,
-			'label' => $listObj->name,
+				'value' => $listObj->id,
+				'label' => $listObj->name,
 			];
 		}
 
@@ -369,8 +369,8 @@ class LocalizationConstants implements Filters
 
 		foreach ($response as $listObj) {
 			$groups[] = [
-			'value' => $listObj->id,
-			'label' => $listObj->name,
+				'value' => $listObj->id,
+				'label' => $listObj->name,
 			];
 		}
 

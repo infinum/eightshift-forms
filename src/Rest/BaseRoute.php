@@ -38,7 +38,7 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 	protected $hmac;
 
 	/**
-	 * Endpoint slug for the implementing class. Needs to be overriden.
+	 * Endpoint slug for the implementing class. Needs to be overridden.
 	 *
 	 * @var string
 	 */
@@ -510,6 +510,17 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 		}
 
 		return $missingParams;
+	}
+
+	/**
+	 * Strips URLs from fields.
+	 *
+	 * @param string $param Param to sanitize.
+	 * @return string
+	 */
+	protected function removeAnythingNotAlphanumeric(string $param): string
+	{
+		return (string) preg_replace('/[\W]/', '', $param);
 	}
 
 	/**

@@ -134,12 +134,12 @@ interface Filters
 	 *
 	 *  public function getInfo( string $key ) {
 	 *    $info = [
-	 *      'clientId' => 'client-id',
-	 *      'clientSecret' => 'client-secret',
-	 *      'authTokenUrl' => 'https://login.microsoftonline.com/1234-some-hash/oauth2/v2.0/token',
+	 *      'client_id' => 'client-id',
+	 *      'client_secret' => 'client-secret',
+	 *      'auth_token_url' => 'https://login.microsoftonline.com/1234-some-hash/oauth2/v2.0/token',
 	 *      'scope' => 'https://your-crm-api-endpoint.dynamics.com/.default',
-	 *      'apiUrl' => 'https://your-crm-api-endpoint.dynamics.com/api/data/v9.1',
-	 *      'availableEntities' => [
+	 *      'api_url' => 'https://your-crm-api-endpoint.dynamics.com/api/data/v9.1',
+	 *      'available_entities' => [
 	 *        'entity_1',
 	 *        'entity_2,
 	 *      ],

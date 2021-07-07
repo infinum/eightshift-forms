@@ -118,6 +118,22 @@ class MailchimpRoute extends BaseRoute implements Filters
 		$mergeFieldParams         = $this->unsetIrrelevantParams($params);
 		$response                 = [];
 
+		// Filter all URLs from merge fields.
+		foreach ($mergeFieldParams as $key => $mergeFieldParam) {
+			if (!is_string($mergeFieldParam)) {
+				continue;
+			}
+
+			switch ($key) {
+				case 'FNAME':
+					$mergeFieldParams[$key] = $this->removeAnythingNotAlphanumeric($mergeFieldParam);
+					break;
+				case 'LNAME':
+					$mergeFieldParams[$key] = $this->removeAnythingNotAlphanumeric($mergeFieldParam);
+					break;
+			}
+		}
+
 		// Make sure we have the list ID.
 		if (empty($listId)) {
 			return $this->restResponseHandler('mailchimp-missing-list-id');

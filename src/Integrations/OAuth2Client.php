@@ -102,8 +102,8 @@ class OAuth2Client implements OAuth2ClientInterface
 	public function setCredentials(array $credentials): void
 	{
 		$this->url           = $credentials['url'];
-		$this->clientId     = $credentials['clientId'];
-		$this->clientSecret = $credentials['clientSecret'];
+		$this->clientId     = $credentials['client_id'];
+		$this->clientSecret = $credentials['client_secret'];
 		$this->scope         = $credentials['scope'];
 	}
 
@@ -123,8 +123,8 @@ class OAuth2Client implements OAuth2ClientInterface
 	{
 		$body = [
 			'grant_type' => 'client_credentials',
-			'clientId' => $clientId,
-			'clientSecret' => $clientSecret,
+			'client_id' => $clientId,
+			'client_secret' => $clientSecret,
 			'scope' => $scope,
 		];
 

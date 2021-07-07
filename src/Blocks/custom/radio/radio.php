@@ -34,10 +34,13 @@ if (empty($this)) {
 
 <div class="<?php echo esc_attr($blockClasses); ?>">
 	<?php
-	echo Components::render('label', [
-		'blockClass' => $attributes['blockClass'] ?? '',
-		'label' => $attributes['label'] ?? '',
-	]);
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'label',
+		[
+			'blockClass' => $attributes['blockClass'] ?? '',
+			'label' => $attributes['label'] ?? '',
+		]
+	);
 	?>
 	<div class="<?php echo esc_attr("{$blockClass}__content-wrap"); ?>">
 	<?php

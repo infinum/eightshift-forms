@@ -114,7 +114,7 @@ class DynamicsCrm
 	public function setOauthCredentials(array $credentials): void
 	{
 		$this->oAuth2Client->setCredentials($credentials);
-		$this->odataServiceUrl = $credentials['apiUrl'];
+		$this->odataServiceUrl = $credentials['api_url'];
 	}
 
 	/**

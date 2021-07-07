@@ -70,7 +70,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return 'eightshift-libs';
+		return 'eightshift-forms';
 	}
 
 	/**
