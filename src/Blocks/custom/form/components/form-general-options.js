@@ -134,8 +134,8 @@ export const FormGeneralOptions = (props) => {
   const {
     blockClass,
     type,
-    typesComplex,
-    typesComplexRedirect,
+    typesComplex = [],
+    typesComplexRedirect = [],
     isComplexType,
     formTypes,
     richTextClass,
