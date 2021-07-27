@@ -79,6 +79,6 @@ class Validation
 		$fileExtension = explode('.', $fileName);
 		$validTypes = explode(',', str_replace(' ', '', $fileTypes));
 
-		return in_array(end($fileExtension), $validTypes, true) ? true : false;
+		return in_array(end($fileExtension), $validTypes, true);
 	}
 }
