@@ -47,7 +47,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['success'], 'Candidate saved successfully');
+		$this->assertSame($response['success'], 'Candidate saved successfully');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Invalid attributes: first_name');
+		$this->assertSame($response['error'], 'Invalid attributes: first_name');
 	}
 
 	/**
@@ -106,7 +106,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Invalid attributes: last_name');
+		$this->assertSame($response['error'], 'Invalid attributes: last_name');
 	}
 
 	/**
@@ -135,7 +135,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Invalid attributes: email');
+		$this->assertSame($response['error'], 'Invalid attributes: email');
 	}
 
 	/**
@@ -166,7 +166,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Invalid attributes: first_name,last_name,email');
+		$this->assertSame($response['error'], 'Invalid attributes: first_name,last_name,email');
 	}
 
 	/**
@@ -195,7 +195,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Invalid attributes: first_name');
+		$this->assertSame($response['error'], 'Invalid attributes: first_name');
 	}
 
 	/**
@@ -224,7 +224,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response['error'], 'Failed to save person');
+		$this->assertSame($response['error'], 'Failed to save person');
 	}
 
 	/**
@@ -253,7 +253,7 @@ class GreenhouseTest extends BaseTest
 			$params
 		);
 
-		$this->assertEquals($response, []);
+		$this->assertSame($response, []);
 	}
 
 	/**
@@ -278,11 +278,11 @@ class GreenhouseTest extends BaseTest
 		$this->assertIsArray($response);
 		$this->assertArrayHasKey('title', $response[0]);
 		$this->assertArrayHasKey('id', $response[0]);
-		$this->assertEquals($response[0]['title'], 'Android Engineer');
+		$this->assertSame($response[0]['title'], 'Android Engineer');
 		$this->assertArrayHasKey('questions', $response[0]);
 		$this->assertIsArray($response[0]['questions']);
 		$this->assertArrayHasKey('label', $response[0]['questions'][0]);
-		$this->assertEquals($response[0]['questions'][0]['label'], 'First Name');
+		$this->assertSame($response[0]['questions'][0]['label'], 'First Name');
 		$this->assertArrayHasKey('options', $response[0]['questions'][0]);
 	}
 
@@ -320,11 +320,11 @@ class GreenhouseTest extends BaseTest
 		$this->assertIsArray($response);
 		$this->assertArrayHasKey('title', $response[0]);
 		$this->assertArrayHasKey('id', $response[0]);
-		$this->assertEquals($response[0]['title'], 'Android Engineer');
+		$this->assertSame($response[0]['title'], 'Android Engineer');
 		$this->assertArrayHasKey('questions', $response[0]);
 		$this->assertIsArray($response[0]['questions']);
 		$this->assertArrayHasKey('label', $response[0]['questions'][0]);
-		$this->assertEquals($response[0]['questions'][0]['label'], 'First Name');
+		$this->assertSame($response[0]['questions'][0]['label'], 'First Name');
 		$this->assertArrayHasKey('options', $response[0]['questions'][0]);
 	}
 
@@ -390,11 +390,11 @@ class GreenhouseTest extends BaseTest
 		$this->assertIsArray($response);
 		$this->assertArrayHasKey('title', $response);
 		$this->assertArrayHasKey('id', $response);
-		$this->assertEquals($response['title'], 'Android Engineer');
+		$this->assertSame($response['title'], 'Android Engineer');
 		$this->assertArrayHasKey('questions', $response);
 		$this->assertIsArray($response['questions']);
 		$this->assertArrayHasKey('label', $response['questions'][0]);
-		$this->assertEquals($response['questions'][0]['label'], 'First Name');
+		$this->assertSame($response['questions'][0]['label'], 'First Name');
 		$this->assertArrayHasKey('options', $response['questions'][0]);
 	}
 
