@@ -34,6 +34,8 @@ class Blocks extends AbstractBlocks implements Filters
 	 */
 	public function register(): void
 	{
+		global $wp_version; // phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+
 		// Register all custom blocks.
 		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
 		\add_action('init', [$this, 'registerBlocks'], 11);
@@ -42,7 +44,11 @@ class Blocks extends AbstractBlocks implements Filters
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories', [$this, 'getCustomCategory'], 10, 2);
+		if ($wp_version >= 5.8) {
+			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		} else {
+			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+		}
 
 		// Register custom theme support options.
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
@@ -53,7 +59,47 @@ class Blocks extends AbstractBlocks implements Filters
 		// Register Reusable blocks side menu.
 		\add_action('admin_menu', [$this, 'addReusableBlocks']);
 
-		\add_filter('allowed_block_types', [$this, 'getAllAllowedFormBlocks'], 20, 2);
+		if ($wp_version >= 5.8) {
+			\add_filter('allowed_block_types_all', [$this, 'getAllAllowedFormBlocks'], 20, 2);
+		} else {
+			\add_filter('allowed_block_types', [$this, 'getAllAllowedFormBlocksOld'], 20, 2);
+		}
+	}
+
+	/**
+	 * Limit block on forms post type to internal plugin blocks
+	 *
+	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Block_Editor_Context $blockEditorContext Block editor context.
+	 *
+	 * @return array|bool
+	 */
+	public function getAllAllowedFormBlocks($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
+	{
+		$projectName = Config::getProjectName();
+		if ($blockEditorContext->post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
+			$formsBlocks = $this->getAllBlocksList([], $blockEditorContext);
+
+			// Remove form from the list to prevent users from adding a new form inside the form.
+			if (is_array($formsBlocks)) {
+				$formsBlocks = array_flip($formsBlocks);
+				unset($formsBlocks["{$projectName}/form"]);
+				$formsBlocks = array_values(array_flip($formsBlocks));
+			}
+
+			if (has_filter(Filters::ALLOWED_BLOCKS)) {
+				return apply_filters(Filters::ALLOWED_BLOCKS, $formsBlocks);
+			} else {
+				return $formsBlocks;
+			}
+		}
+
+		// If this filter is the first to run, $allowedBlockTypes will be === true.
+		if (is_array($allowedBlockTypes)) {
+			$allowedBlockTypes[] = "{$projectName}/forms";
+		}
+
+		return $allowedBlockTypes;
 	}
 
 	/**
@@ -64,11 +110,11 @@ class Blocks extends AbstractBlocks implements Filters
 	 *
 	 * @return array|bool
 	 */
-	public function getAllAllowedFormBlocks($allowedBlockTypes, $post)
+	public function getAllAllowedFormBlocksOld($allowedBlockTypes, $post)
 	{
 		$projectName = Config::getProjectName();
 		if ($post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
-			$formsBlocks = $this->getAllBlocksList([], $post);
+			$formsBlocks = $this->getAllBlocksListOld([], $post);
 
 			// Remove form from the list to prevent users from adding a new form inside the form.
 			if (is_array($formsBlocks)) {
@@ -98,11 +144,35 @@ class Blocks extends AbstractBlocks implements Filters
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
 	 * @param array[]  $categories Array of all block categories.
-	 * @param \WP_Post $post Post being loaded.
+	 * @param \WP_Block_Editor_Context $blockEditorContext blockEditorContext.
 	 *
 	 * @return array[] Array of block categories.
 	 */
-	public function getCustomCategory(array $categories, \WP_Post $post): array
+	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
+	{
+		return array_merge(
+			$categories,
+			[
+				[
+					'slug' => 'eightshift-forms',
+					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
+					'icon' => 'admin-settings',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @param array[]  $categories Array of all block categories.
+	 * @param \WP_Post $post WP_Post object.
+	 *
+	 * @return array[] Array of block categories.
+	 */
+	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{
 		return array_merge(
 			$categories,

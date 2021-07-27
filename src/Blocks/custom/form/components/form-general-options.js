@@ -3,6 +3,8 @@ import { Fragment, useState } from '@wordpress/element';
 import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice, TextControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 import { CantHaveMultipleRedirects } from './cant-have-multiple-redirects-notice';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import manifest from '../manifest.json';
 
 /**
  * Single checkbox for form type.
@@ -12,15 +14,15 @@ import { CantHaveMultipleRedirects } from './cant-have-multiple-redirects-notice
 const TypeCheckbox = (props) => {
 
   const {
-    onChangeTypes,
-    onChangeTypesRedirect,
+    attributes,
+    setAttributes,
     value,
     selectedTypes,
     selectedTypesRedirect,
     isChecked,
     isRedirect,
     setIsError,
-    shouldRedirectOnSuccess,
+    formShouldRedirectOnSuccess,
     setIsErrorOnComplexTypeSelect,
   } = props;
 
@@ -35,18 +37,18 @@ const TypeCheckbox = (props) => {
         // Redirects have an array of their own.
         if (!isRedirect) {
           if (isNowChecked && !selectedTypes.includes(value)) {
-            onChangeTypes([...selectedTypes, value]);
+            setAttributes({ [getAttrKey('formTypesComplex', attributes, manifest)]: [...selectedTypes, value] });
           }
 
           if (!isNowChecked && selectedTypes.includes(value)) {
-            onChangeTypes(selectedTypes.filter((type) => type !== value));
+            setAttributes({ [getAttrKey('formTypesComplex', attributes, manifest)]: selectedTypes.filter((type) => type !== value) });
           }
 
         } else {
           if (isNowChecked && !selectedTypesRedirect.includes(value)) {
 
             // Prevent checking if new value is redirect but we already have redirection enabled.
-            if (shouldRedirectOnSuccess) {
+            if (formShouldRedirectOnSuccess) {
               setIsErrorOnComplexTypeSelect(true);
               return null;
             }
@@ -55,11 +57,12 @@ const TypeCheckbox = (props) => {
               setIsError(true);
               return null;
             }
-            onChangeTypesRedirect([...selectedTypesRedirect, value]);
+
+            setAttributes({ [getAttrKey('formTypesComplexRedirect', attributes, manifest)]: [...selectedTypesRedirect, value] });
           }
 
           if (!isNowChecked && selectedTypesRedirect.includes(value)) {
-            onChangeTypesRedirect(selectedTypesRedirect.filter((type) => type !== value));
+            setAttributes({ [getAttrKey('formTypesComplexRedirect', attributes, manifest)]: selectedTypesRedirect.filter((type) => type !== value) });
           }
         }
 
@@ -78,16 +81,16 @@ const TypeCheckbox = (props) => {
  */
 const ComplexTypeSelector = (props) => {
   const {
+    attributes,
+    setAttributes,
     blockClass,
     label,
-    typesComplex,
-    typesComplexRedirect,
+    formTypesComplex,
+    formTypesComplexRedirect,
     types,
     help,
-    onChangeTypes,
-    onChangeTypesRedirect,
     setIsErrorOnComplexTypeSelect,
-    shouldRedirectOnSuccess,
+    formShouldRedirectOnSuccess,
   } = props;
 
   const [isError, setIsError] = useState(false);
@@ -109,18 +112,18 @@ const ComplexTypeSelector = (props) => {
         {types.map((type, key) => {
           return (
             <TypeCheckbox
+              attributes={attributes}
+              setAttributes={setAttributes}
               key={key}
               value={type.value}
               label={type.label}
               isRedirect={type.redirects || false}
-              isChecked={typesComplex.includes(type.value) || typesComplexRedirect.includes(type.value)}
-              selectedTypes={typesComplex}
-              selectedTypesRedirect={typesComplexRedirect}
-              onChangeTypes={onChangeTypes}
-              onChangeTypesRedirect={onChangeTypesRedirect}
+              isChecked={formTypesComplex.includes(type.value) || formTypesComplexRedirect.includes(type.value)}
+              selectedTypes={formTypesComplex}
+              selectedTypesRedirect={formTypesComplexRedirect}
               setIsError={setIsError}
               setIsErrorOnComplexTypeSelect={setIsErrorOnComplexTypeSelect}
-              shouldRedirectOnSuccess={shouldRedirectOnSuccess}
+              formShouldRedirectOnSuccess={formShouldRedirectOnSuccess}
             />
           );
         })}
@@ -130,39 +133,32 @@ const ComplexTypeSelector = (props) => {
 
 };
 
-export const FormGeneralOptions = (props) => {
+export const FormGeneralOptions = (attributes) => {
   const {
     blockClass,
-    type,
-    typesComplex = [],
-    typesComplexRedirect = [],
-    isComplexType,
+    formType,
+    formTypesComplex = [],
+    formTypesComplexRedirect = [],
+    formIsComplexType,
     formTypes,
     richTextClass,
-    successMessage,
-    errorMessage,
-    shouldRedirectOnSuccess,
-    redirectSuccess,
-    onChangeType,
-    onChangeTypesComplex,
-    onChangeTypesComplexRedirect,
-    onChangeIsComplexType,
-    onChangeSuccessMessage,
-    onChangeErrorMessage,
-    onChangeShouldRedirectOnSuccess,
-    onChangeRedirectSuccess,
-  } = props;
+    formSuccessMessage,
+    formErrorMessage,
+    formShouldRedirectOnSuccess,
+    formRedirectSuccess,
+    setAttributes,
+  } = attributes;
 
   const doesTypeRedirect = formTypes.filter((curType) => {
-    if (curType.value !== type || !curType.redirects) {
+    if (curType.value !== formType || !curType.redirects) {
       return false;
     }
 
     return true;
   }).length > 0;
 
-  const doesOneOfComplexTypesRedirects = typesComplexRedirect.length > 0;
-  const hasRedirectTypes = (!isComplexType && doesTypeRedirect) || (isComplexType && doesOneOfComplexTypesRedirects);
+  const doesOneOfComplexTypesRedirects = formTypesComplexRedirect.length > 0;
+  const hasRedirectTypes = (!formIsComplexType && doesTypeRedirect) || (formIsComplexType && doesOneOfComplexTypesRedirects);
   const [isErrorOnRedirectToggle, setIsErrorOnRedirectToggle] = useState(false);
   const [isErrorOnTypeSelect, seIsErrorOnTypeSelect] = useState(false);
   const [isErrorOnComplexTypeSelect, setIsErrorOnComplexTypeSelect] = useState(false);
@@ -182,26 +178,25 @@ export const FormGeneralOptions = (props) => {
   return (
     <Fragment>
 
-      {onChangeIsComplexType &&
-        <ToggleControl
-          label={__('Multiple types?', 'eightshift-forms')}
-          help={__('Enabled if your form needs to do multiple things on submit.', 'eightshift-forms')}
-          checked={isComplexType}
-          onChange={onChangeIsComplexType}
-        />
-      }
+      <ToggleControl
+        label={__('Multiple types?', 'eightshift-forms')}
+        help={__('Enabled if your form needs to do multiple things on submit.', 'eightshift-forms')}
+        checked={formIsComplexType}
+        onChange={(value) => setAttributes({ [getAttrKey('formIsComplexType', attributes, manifest)]: value })}
+      />
+
       {isErrorOnTypeSelect &&
         <CantHaveMultipleRedirects dismissError={dismissErrorOnTypeSelect} forSelects={true} />
       }
-      {onChangeType && !isComplexType &&
+      {!formIsComplexType &&
         <SelectControl
           label={__('Type', 'eightshift-forms')}
-          value={type}
+          value={formType}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
           options={formTypes}
           onChange={(newValue) => {
-            if (!shouldRedirectOnSuccess) {
-              onChangeType(newValue);
+            if (!formShouldRedirectOnSuccess) {
+              setAttributes({ [getAttrKey('formType', attributes, manifest)]: newValue });
             } else {
               seIsErrorOnTypeSelect(true);
             }
@@ -212,74 +207,68 @@ export const FormGeneralOptions = (props) => {
       {isErrorOnComplexTypeSelect &&
         <CantHaveMultipleRedirects dismissError={dismissErrorOnComplexTypeSelect} forSelects={true} />
       }
-      {onChangeTypesComplex && isComplexType &&
+      {formIsComplexType &&
         <ComplexTypeSelector
+          setAttributes={setAttributes}
+          attributes={attributes}
           blockClass={blockClass}
           label={__('Types (Multiple)', 'eightshift-forms')}
           help={__('Choose what will this form do on submit', 'eightshift-forms')}
-          typesComplex={typesComplex}
-          typesComplexRedirect={typesComplexRedirect}
+          formTypesComplex={formTypesComplex}
+          formTypesComplexRedirect={formTypesComplexRedirect}
           types={formTypes}
-          onChangeTypes={onChangeTypesComplex}
-          onChangeTypesRedirect={onChangeTypesComplexRedirect}
           setIsErrorOnComplexTypeSelect={setIsErrorOnComplexTypeSelect}
-          shouldRedirectOnSuccess={shouldRedirectOnSuccess}
+          formShouldRedirectOnSuccess={formShouldRedirectOnSuccess}
         />
       }
 
-      {onChangeSuccessMessage &&
-        <BaseControl
-          label={__('Success message', 'eightshift-forms')}
-          help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
-        >
-          <RichText
-            className={richTextClass}
-            placeholder={__('Add your success message', 'eightshift-forms')}
-            onChange={onChangeSuccessMessage}
-            value={successMessage}
-          />
-        </BaseControl>
-      }
+      <BaseControl
+        label={__('Success message', 'eightshift-forms')}
+        help={__('Message that the user will see if forms successfully submits.', 'eightshift-forms')}
+      >
+        <RichText
+          className={richTextClass}
+          placeholder={__('Add your success message', 'eightshift-forms')}
+          onChange={(value) => setAttributes({ [getAttrKey('formSuccessMessage', attributes, manifest)]: value })}
+          value={formSuccessMessage}
+        />
+      </BaseControl>
 
-      {onChangeErrorMessage &&
-        <BaseControl
-          label={__('Error message', 'eightshift-forms')}
-          help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
-        >
-          <RichText
-            className={richTextClass}
-            placeholder={__('Add your error message', 'eightshift-forms')}
-            onChange={onChangeErrorMessage}
-            value={errorMessage}
-          />
-        </BaseControl>
-      }
+      <BaseControl
+        label={__('Error message', 'eightshift-forms')}
+        help={__('Message that the user will see if forms fails to submit for whatever reason.', 'eightshift-forms')}
+      >
+        <RichText
+          className={richTextClass}
+          placeholder={__('Add your error message', 'eightshift-forms')}
+          onChange={(value) => setAttributes({ [getAttrKey('formErrorMessage', attributes, manifest)]: value })}
+          value={formErrorMessage}
+        />
+      </BaseControl>
 
       {isErrorOnRedirectToggle &&
         <CantHaveMultipleRedirects dismissError={dismissErrorOnRedirectToggle} />
       }
 
-      {onChangeShouldRedirectOnSuccess &&
-        <ToggleControl
-          label={__('Redirect on success?', 'eightshift-forms')}
-          help={__('Enable if you wish for the user to be redirected to success page after submitting form. Cannot be used if your form type redirects.', 'eightshift-forms')}
-          checked={shouldRedirectOnSuccess}
-          onChange={(newValue) => {
-            if (!hasRedirectTypes) {
-              onChangeShouldRedirectOnSuccess(newValue);
-            } else {
-              setIsErrorOnRedirectToggle(true);
-            }
-          }}
-        />
-      }
+      <ToggleControl
+        label={__('Redirect on success?', 'eightshift-forms')}
+        help={__('Enable if you wish for the user to be redirected to success page after submitting form. Cannot be used if your form type redirects.', 'eightshift-forms')}
+        checked={formShouldRedirectOnSuccess}
+        onChange={(newValue) => {
+          if (!hasRedirectTypes) {
+            setAttributes({ [getAttrKey('formShouldRedirectOnSuccess', attributes, manifest)]: newValue });
+          } else {
+            setIsErrorOnRedirectToggle(true);
+          }
+        }}
+      />
 
-      {onChangeRedirectSuccess && shouldRedirectOnSuccess &&
+      {formShouldRedirectOnSuccess &&
         <TextControl
           label={__('Redirect URL', 'eightshift-forms')}
           help={__('Redirect to which user will be redirected on success. Needs to be on the same domain.', 'eightshift-forms')}
-          value={redirectSuccess}
-          onChange={onChangeRedirectSuccess}
+          value={formRedirectSuccess}
+          onChange={(value) => setAttributes({ [getAttrKey('formRedirectSuccess', attributes, manifest)]: value })}
         />
       }
 

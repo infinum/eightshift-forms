@@ -35,8 +35,8 @@ class Components extends LibsComponents
 		array $attributes = [],
 		string $parentPath = '',
 		bool $useComponentDefaults = false
-	) {
+	): string {
 		$parentPath = Config::getProjectPath();
-		return parent::render($component, $attributes, $parentPath);
+		return parent::render($component, $attributes, $parentPath, $useComponentDefaults);
 	}
 }

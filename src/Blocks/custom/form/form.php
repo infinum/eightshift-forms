@@ -21,21 +21,21 @@ use EightshiftForms\Rest\MailerliteRoute;
 
 $currentUrl = ! empty(\get_permalink()) ? \get_permalink() : '';
 $blockClass = $attributes['blockClass'] ?? '';
-$formAction = $attributes['action'] ?? '';
-$formMethod = $attributes['method'] ?? '';
-$formTarget = $attributes['target'] ?? '';
-$formClasses = $attributes['classes'] ?? '';
-$formId = $attributes['id'] ?? 'form-' . hash('crc32', time() . wp_rand(0, 10000));
-$formType = $attributes['type'] ?? '';
-$formTypesComplex = $attributes['typesComplex'] ?? [];
-$formTypesComplexRedirect = $attributes['typesComplexRedirect'] ?? [];
-$isFormComplex = isset($attributes['isComplexType']) ? filter_var($attributes['isComplexType'], FILTER_VALIDATE_BOOL) : false;
+$formAction = $attributes['formAction'] ?? '';
+$formMethod = $attributes['formMethod'] ?? '';
+$formTarget = $attributes['formTarget'] ?? '';
+$formClasses = $attributes['formClasses'] ?? '';
+$formId = $attributes['formId'] ?? 'form-' . hash('crc32', time() . wp_rand(0, 10000));
+$formType = $attributes['formType'] ?? '';
+$formTypesComplex = $attributes['formTypesComplex'] ?? [];
+$formTypesComplexRedirect = $attributes['formTypesComplexRedirect'] ?? [];
+$isFormComplex = isset($attributes['formIsComplexType']) ? filter_var($attributes['formIsComplexType'], FILTER_VALIDATE_BOOL) : false;
 $formTheme = $attributes['theme'] ?? '';
-$successMessage = $attributes['successMessage'] ?? '';
-$errorMessage = $attributes['errorMessage'] ?? '';
+$formSuccessMessage = $attributes['formSuccessMessage'] ?? '';
+$formErrorMessage = $attributes['formErrorMessage'] ?? '';
 $referralUrl = isset($attributes['referralUrl']) ? $attributes['referralUrl'] : $currentUrl;
-$shouldRedirectOnSuccess = isset($attributes['shouldRedirectOnSuccess']) ? filter_var($attributes['shouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL) : false;
-$redirectUrlSuccess = $attributes['redirectSuccess'] ?? '';
+$formShouldRedirectOnSuccess = isset($attributes['formShouldRedirectOnSuccess']) ? filter_var($attributes['formShouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL) : false;
+$redirectUrlSuccess = $attributes['formRedirectSuccess'] ?? '';
 $dynamicsCrmEntity = $attributes['dynamicsEntity'] ?? '';
 $emailTo = $attributes['emailTo'] ?? '';
 $emailSubject = $attributes['emailSubject'] ?? '';
@@ -86,7 +86,7 @@ if (empty($this)) {
 	target="<?php echo esc_attr($formTarget); ?>"
 	<?php ! empty($formId) ? printf('id="%s"', esc_attr($formId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 	<?php $isFormComplex ? printf('data-is-form-complex') : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped  ?>
-	<?php $shouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
+	<?php $formShouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 
 	<?php if (isset($usedTypes[Config::BUCKAROO_METHOD])) { ?>
 		data-buckaroo-service="<?php echo esc_attr($buckarooService); ?>"
@@ -174,7 +174,7 @@ if (empty($this)) {
 
 	<?php echo wp_kses_post(Components::render('form-overlay')); ?>
 	<?php echo wp_kses_post(Components::render('spinner', ['theme' => $formTheme])); ?>
-	<?php echo wp_kses_post(Components::render('form-message', ['message' => $successMessage, 'type' => 'success', 'theme' => $formTheme])); ?>
+	<?php echo wp_kses_post(Components::render('form-message', ['message' => $formSuccessMessage, 'type' => 'success', 'theme' => $formTheme])); ?>
 	<?php echo wp_kses_post(Components::render('form-error-message-wrapper', ['theme' => $formTheme])); ?>
 </div>
 

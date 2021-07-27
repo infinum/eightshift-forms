@@ -6,26 +6,14 @@ import { FormEditor } from './components/form-editor';
 import { FormOptions } from './components/form-options';
 
 export const Form = (props) => {
-  const {
-    clientId,
-    attributes,
-  } = props;
-
   const actions = getActions(props, manifest);
 
   return (
     <Fragment>
       <InspectorControls>
-        <FormOptions
-          attributes={attributes}
-          actions={actions}
-        />
+        <FormOptions {...props}/>
       </InspectorControls>
-      <FormEditor
-        clientId={clientId}
-        attributes={attributes}
-        actions={actions}
-      />
+      <FormEditor {...props} />
     </Fragment>
   );
 };

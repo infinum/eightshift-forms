@@ -31,57 +31,57 @@
     "theme": {
       "type": "string"
     },
-    "successMessage": {
+    "formSuccessMessage": {
       "type": "string",
       "default": "Form successfully submitted"
     },
-    "errorMessage": {
+    "formErrorMessage": {
       "type": "string",
       "default": "There was a problem submitting your form"
     },
-    "action": {
+    "formAction": {
       "type": "string"
     },
-    "method": {
+    "formMethod": {
       "type": "string",
       "default": "POST"
     },
-    "target": {
+    "formTarget": {
       "type": "string"
     },
-    "id": {
+    "formId": {
       "type": "string"
     },
-    "classes": {
+    "formClasses": {
       "type": "string"
     },
-    "isComplexType": {
+    "formIsComplexType": {
       "type": "boolean",
       "default": false
     },
-    "type": {
+    "formType": {
       "type": "string",
       "default": "email"
     },
-    "typesComplex": {
+    "formTypesComplex": {
       "type": "array",
       "items": {
         "type": "string"
       },
       "default": []
     },
-    "typesComplexRedirect": {
+    "formTypesComplexRedirect": {
       "type": "array",
       "items": {
         "type": "string"
       },
       "default": []
     },
-    "shouldRedirectOnSuccess": {
+    "formShouldRedirectOnSuccess": {
       "type": "boolean",
       "default": false
     },
-    "redirectSuccess": {
+    "formRedirectSuccess": {
       "type": "string",
       "default": "/thank-you"
     },

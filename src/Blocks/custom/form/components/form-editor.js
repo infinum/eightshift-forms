@@ -1,8 +1,11 @@
+import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { Placeholder } from '@wordpress/components';
+import { checkAttr } from '@eightshift/frontend-libs/scripts/helpers';
+import manifest from '../manifest.json';
 
 /**
  * Form editor.
@@ -10,15 +13,18 @@ import { Placeholder } from '@wordpress/components';
  * @param {object} props Props.
  */
 
-export const FormEditor = (props) => {
-  const {
-    clientId,
-    attributes: {
-      blockClass,
-      classes,
-      id,
-    },
-  } = props;
+export const FormEditor = ({ attributes, clientId }) => {
+	const {
+		blockClass,
+	} = manifest;
+
+	const classes = checkAttr('formClasses', attributes, manifest);
+	const id = checkAttr('formId', attributes, manifest);
+
+	const blockClasses = classnames(
+		blockClass,
+		classes
+	);
 
   const [hasInnerBlocks, setHasInnerBlocks] = useState(false);
 
@@ -34,7 +40,7 @@ export const FormEditor = (props) => {
   });
 
   return (
-    <form className={`${blockClass} ${classes}`} id={id}>
+    <form className={blockClasses} id={id}>
       {!hasInnerBlocks &&
         <Placeholder
           icon="welcome-write-blog"

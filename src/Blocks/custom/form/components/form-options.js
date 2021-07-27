@@ -12,23 +12,24 @@ import { FormCustomOptions } from './form-custom-options';
 
 export const FormOptions = (props) => {
   const {
+		setAttributes,
     attributes: {
       blockClass,
-      action,
-      method,
-      target,
+      formAction,
+      formMethod,
+      formTarget,
       id,
       classes,
-      type,
-      typesComplex,
-      typesComplexRedirect,
-      isComplexType,
+      formType,
+      formTypesComplex,
+      formTypesComplexRedirect,
+      formIsComplexType,
       dynamicsEntity,
       theme,
-      successMessage,
-      errorMessage,
-      shouldRedirectOnSuccess,
-      redirectSuccess,
+      formSuccessMessage,
+      formErrorMessage,
+      formShouldRedirectOnSuccess,
+      formRedirectSuccess,
       emailTo,
       emailSubject,
       emailMessage,
@@ -90,7 +91,7 @@ export const FormOptions = (props) => {
       onChangeMailchimpAddExistingMembers,
       onChangeMailerliteGroupId,
       onChangeEventNames,
-    },
+    } = {},
   } = props;
 
   const richTextClass = `${blockClass}__rich-text`;
@@ -116,7 +117,7 @@ export const FormOptions = (props) => {
   const mailchimpAudiences = (mailchimpAdmin && mailchimpAdmin.audiences) ? mailchimpAdmin.audiences : [];
   const mailerliteGroups = (mailerliteAdmin && mailerliteAdmin.groups) ? mailerliteAdmin.groups : [];
 
-  const themeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
+  const formThemeAsOptions = hasThemes ? themes.map((tempTheme) => ({ label: tempTheme, value: tempTheme })) : [];
 
   let crmEntitiesAsOptions = [];
   if (isDynamicsCrmUsed) {
@@ -147,7 +148,7 @@ export const FormOptions = (props) => {
     },
   ];
 
-  if ((!isComplexType && type === 'email') || (isComplexType && typesComplex.includes('email'))) {
+  if ((!formIsComplexType && formType === 'email') || (formIsComplexType && formTypesComplex.includes('email'))) {
     tabs.push({
       name: 'email',
       title: <Dashicon icon="email" />,
@@ -156,7 +157,7 @@ export const FormOptions = (props) => {
   }
 
   if (isDynamicsCrmUsed && (
-    (!isComplexType && type === 'dynamics-crm') || (isComplexType && typesComplex.includes('dynamics-crm'))
+    (!formIsComplexType && formType === 'dynamics-crm') || (formIsComplexType && formTypesComplex.includes('dynamics-crm'))
   )) {
     tabs.push({
       name: 'dynamics-crm',
@@ -166,7 +167,7 @@ export const FormOptions = (props) => {
   }
 
   if (isBuckarooUsed && (
-    (!isComplexType && type === 'buckaroo') || (isComplexType && typesComplexRedirect.includes('buckaroo'))
+    (!formIsComplexType && formType === 'buckaroo') || (formIsComplexType && formTypesComplexRedirect.includes('buckaroo'))
   )) {
     tabs.push({
       name: 'buckaroo',
@@ -176,7 +177,7 @@ export const FormOptions = (props) => {
   }
 
   if (isMailchimpUsed && (
-    (!isComplexType && type === 'mailchimp') || (isComplexType && typesComplex.includes('mailchimp'))
+    (!formIsComplexType && formType === 'mailchimp') || (formIsComplexType && formTypesComplex.includes('mailchimp'))
   )) {
     tabs.push({
       name: 'mailchimp',
@@ -186,7 +187,7 @@ export const FormOptions = (props) => {
   }
 
   if (isMailerliteUsed && (
-    (!isComplexType && type === 'mailerlite') || (isComplexType && typesComplex.includes('mailerlite'))
+    (!formIsComplexType && formType === 'mailerlite') || (formIsComplexType && formTypesComplex.includes('mailerlite'))
   )) {
     tabs.push({
       name: 'mailerlite',
@@ -195,7 +196,7 @@ export const FormOptions = (props) => {
     });
   }
 
-  if ((!isComplexType && type === 'custom') || (isComplexType && typesComplexRedirect.includes('custom'))) {
+  if ((!formIsComplexType && formType === 'custom') || (formIsComplexType && formTypesComplexRedirect.includes('custom'))) {
     tabs.push({
       name: 'custom',
       title: <Dashicon icon="arrow-right-alt" />,
@@ -203,7 +204,7 @@ export const FormOptions = (props) => {
     });
   }
 
-  if ((!isComplexType && type === 'custom-event') || (isComplexType && typesComplex.includes('custom-event'))) {
+  if ((!formIsComplexType && formType === 'custom-event') || (formIsComplexType && formTypesComplex.includes('custom-event'))) {
     tabs.push({
       name: 'custom-event',
       title: <Dashicon icon="megaphone" />,
@@ -228,28 +229,20 @@ export const FormOptions = (props) => {
                 <br />
                 <FormGeneralOptions
                   blockClass={blockClass}
-                  type={type}
-                  isComplexType={isComplexType}
-                  typesComplex={typesComplex}
-                  typesComplexRedirect={typesComplexRedirect}
+                  formType={formType}
+                  formIsComplexType={formIsComplexType}
+                  formTypesComplex={formTypesComplex}
+                  formTypesComplexRedirect={formTypesComplexRedirect}
                   formTypes={formTypes}
                   theme={theme}
-                  themeAsOptions={themeAsOptions}
+                  formThemeAsOptions={formThemeAsOptions}
                   hasThemes={hasThemes}
                   richTextClass={richTextClass}
-                  successMessage={successMessage}
-                  errorMessage={errorMessage}
-                  shouldRedirectOnSuccess={shouldRedirectOnSuccess}
-                  redirectSuccess={redirectSuccess}
-                  onChangeType={onChangeType}
-                  onChangeTypesComplex={onChangeTypesComplex}
-                  onChangeTypesComplexRedirect={onChangeTypesComplexRedirect}
-                  onChangeIsComplexType={onChangeIsComplexType}
-                  onChangeTheme={onChangeTheme}
-                  onChangeSuccessMessage={onChangeSuccessMessage}
-                  onChangeErrorMessage={onChangeErrorMessage}
-                  onChangeShouldRedirectOnSuccess={onChangeShouldRedirectOnSuccess}
-                  onChangeRedirectSuccess={onChangeRedirectSuccess}
+                  formSuccessMessage={formSuccessMessage}
+                  formErrorMessage={formErrorMessage}
+                  formShouldRedirectOnSuccess={formShouldRedirectOnSuccess}
+                  formRedirectSuccess={formRedirectSuccess}
+									setAttributes={setAttributes}
                 />
               </Fragment>
             )}
@@ -285,7 +278,7 @@ export const FormOptions = (props) => {
                 <p>{__('These are options for when your form is sending data to Dynamics CRM.', 'eightshift-forms')}</p>
                 <br />
                 <FormDynamicsCrmOptions
-                  type={type}
+                  formType={formType}
                   crmEntitiesAsOptions={crmEntitiesAsOptions}
                   dynamicsEntity={dynamicsEntity}
                   isDynamicsCrmUsed={isDynamicsCrmUsed}
@@ -301,7 +294,7 @@ export const FormOptions = (props) => {
                 <br />
                 <FormBuckarooOptions
                   blockClass={blockClass}
-                  type={type}
+                  formType={formType}
                   service={buckarooService}
                   paymentDescription={buckarooPaymentDescription}
                   emandateDescription={buckarooEmandateDescription}
@@ -332,7 +325,7 @@ export const FormOptions = (props) => {
                 <br />
                 <FormMailchimpOptions
                   blockClass={blockClass}
-                  type={type}
+                  formType={formType}
                   listId={mailchimpListId}
                   audiences={mailchimpAudiences}
                   addTag={mailchimpAddTag}
@@ -354,7 +347,7 @@ export const FormOptions = (props) => {
                 <br />
                 <FormMailerliteOptions
                   blockClass={blockClass}
-                  type={type}
+                  formType={formType}
                   groupId={mailerliteGroupId}
                   groups={mailerliteGroups}
                   onChangeGroupId={onChangeMailerliteGroupId}
@@ -369,12 +362,9 @@ export const FormOptions = (props) => {
                 <p>{__('These are options for when your form is triggering a custom PHP action.', 'eightshift-forms')}</p>
                 <br />
                 <FormCustomOptions
-                  action={action}
-                  method={method}
-                  target={target}
-                  onChangeAction={onChangeAction}
-                  onChangeMethod={onChangeMethod}
-                  onChangeTarget={onChangeTarget}
+                  formAction={formAction}
+                  formMethod={formMethod}
+                  formTarget={formTarget}
                 />
 
               </Fragment>
@@ -387,7 +377,7 @@ export const FormOptions = (props) => {
                 <br />
                 <FormCustomEventOptions
                   blockClass={blockClass}
-                  type={type}
+                  formType={formType}
                   eventNames={eventNames}
                   onChangeEventNames={onChangeEventNames}
                 />
