@@ -63,7 +63,7 @@ class Validation
 	 */
 	public static function isFileMinSizeValid(int $fileSize): bool
 	{
-		return $fileSize >= static::MIN_FILE_SIZE ? true : false;
+		return $fileSize >= static::MIN_FILE_SIZE;
 	}
 
 	/**
