@@ -88,30 +88,30 @@
     "dynamicsEntity": {
       "type": "string"
     },
-    "emailTo": {
+    "formEmailTo": {
       "type": "string",
       "default": "administrator@yoursite.com"
     },
-    "emailSubject": {
+    "formEmailSubject": {
       "type": "string",
       "default": "New email from your website"
     },
-    "emailMessage": {
+    "formEmailMessage": {
       "type": "string",
       "default": "Message from user [[name]]: [[message]]"
     },
-    "emailAdditionalHeaders": {
+    "formEmailAdditionalHeaders": {
       "type": "string"
     },
-    "emailSendConfirmationToSender": {
+    "formEmailSendConfirmationToSender": {
       "type": "boolean",
       "default": false
     },
-    "emailConfirmationSubject": {
+    "formEmailConfirmationSubject": {
       "type": "string",
       "default": "Thank you for contacting us"
     },
-    "emailConfirmationMessage": {
+    "formEmailConfirmationMessage": {
       "type": "string",
       "default": "We have received your query and will get back to you as soon as possible."
     },

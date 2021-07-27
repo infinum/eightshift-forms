@@ -30,13 +30,13 @@ export const FormOptions = (props) => {
       formErrorMessage,
       formShouldRedirectOnSuccess,
       formRedirectSuccess,
-      emailTo,
-      emailSubject,
-      emailMessage,
-      emailAdditionalHeaders,
-      emailSendConfirmationToSender,
-      emailConfirmationSubject,
-      emailConfirmationMessage,
+      formEmailTo,
+      formEmailSubject,
+      formEmailMessage,
+      formEmailAdditionalHeaders,
+      formEmailSendConfirmationToSender,
+      formEmailConfirmationSubject,
+      formEmailConfirmationMessage,
       buckarooService,
       buckarooPaymentDescription,
       buckarooEmandateDescription,
@@ -92,6 +92,7 @@ export const FormOptions = (props) => {
       onChangeMailerliteGroupId,
       onChangeEventNames,
     } = {},
+		attributes,
   } = props;
 
   const richTextClass = `${blockClass}__rich-text`;
@@ -228,6 +229,8 @@ export const FormOptions = (props) => {
                 <p>{__('These are general form options.', 'eightshift-forms')}</p>
                 <br />
                 <FormGeneralOptions
+									attributes={attributes}
+									props={props}
                   blockClass={blockClass}
                   formType={formType}
                   formIsComplexType={formIsComplexType}
@@ -253,21 +256,16 @@ export const FormOptions = (props) => {
                 <p>{__('These are options for when your form is sending emails. You can use form fields by name as placeholders in Subject and Message fields in the following format [[field_name]]. These will be replace with actual field values before sending.', 'eightshift-forms')}</p>
                 <br />
                 <FormEmailOptions
+									attributes={attributes}
+									setAttributes={setAttributes}
                   richTextClass={richTextClass}
-                  to={emailTo}
-                  subject={emailSubject}
-                  message={emailMessage}
-                  additionalHeaders={emailAdditionalHeaders}
-                  sendConfirmationToSender={emailSendConfirmationToSender}
-                  confirmationMessage={emailConfirmationMessage}
-                  confirmationSubject={emailConfirmationSubject}
-                  onChangeTo={onChangeEmailTo}
-                  onChangeSubject={onChangeEmailSubject}
-                  onChangeMessage={onChangeEmailMessage}
-                  onChangeAdditionalHeaders={onChangeEmailAdditionalHeaders}
-                  onChangeSendConfirmationToSender={onChangeEmailSendConfirmationToSender}
-                  onChangeConfirmationSubject={onChangeEmailConfirmationSubject}
-                  onChangeConfirmationMessage={onChangeEmailConfirmationMessage}
+                  formEmailTo={formEmailTo}
+                  formEmailSubject={formEmailSubject}
+                  formEmailMessage={formEmailMessage}
+                  formEmailAdditionalHeaders={formEmailAdditionalHeaders}
+                  formEmailSendConfirmationToSender={formEmailSendConfirmationToSender}
+                  formEmailConfirmationMessage={formEmailConfirmationMessage}
+                  formEmailConfirmationSubject={formEmailConfirmationSubject}
                 />
               </Fragment>
             )}

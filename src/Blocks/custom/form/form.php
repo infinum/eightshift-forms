@@ -37,13 +37,13 @@ $referralUrl = isset($attributes['referralUrl']) ? $attributes['referralUrl'] : 
 $formShouldRedirectOnSuccess = isset($attributes['formShouldRedirectOnSuccess']) ? filter_var($attributes['formShouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL) : false;
 $redirectUrlSuccess = $attributes['formRedirectSuccess'] ?? '';
 $dynamicsCrmEntity = $attributes['dynamicsEntity'] ?? '';
-$emailTo = $attributes['emailTo'] ?? '';
-$emailSubject = $attributes['emailSubject'] ?? '';
-$emailMessage = $attributes['emailMessage'] ?? '';
-$emailAdditionalHeaders = $attributes['emailAdditionalHeaders'] ?? '';
-$emailSendConfirmToSender = isset($attributes['emailSendConfirmationToSender']) ? filter_var($attributes['emailSendConfirmationToSender'], FILTER_VALIDATE_BOOL) : false;
-$emailConfirmationSubject = $attributes['emailConfirmationSubject'] ?? '';
-$emailConfirmationMessage = $attributes['emailConfirmationMessage'] ?? '';
+$formEmailTo = $attributes['formEmailTo'] ?? '';
+$formEmailSubject = $attributes['formEmailSubject'] ?? '';
+$formEmailMessage = $attributes['formEmailMessage'] ?? '';
+$formEmailAdditionalHeaders = $attributes['formEmailAdditionalHeaders'] ?? '';
+$emailSendConfirmToSender = isset($attributes['formEmailSendConfirmationToSender']) ? filter_var($attributes['formEmailSendConfirmationToSender'], FILTER_VALIDATE_BOOL) : false;
+$formEmailConfirmationSubject = $attributes['formEmailConfirmationSubject'] ?? '';
+$formEmailConfirmationMessage = $attributes['formEmailConfirmationMessage'] ?? '';
 $buckarooRedirectUrl = $attributes['buckarooRedirectUrl'] ?? '';
 $buckarooRedirectUrlCancel = ! empty($currentUrl) ? $currentUrl : \home_url();
 $buckarooRedirectUrlError = $attributes['buckarooRedirectUrlError'] ?? '';
@@ -121,13 +121,13 @@ if (empty($this)) {
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::EMAIL_METHOD])) { ?>
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::TO_PARAM); ?>" value="<?php echo esc_attr($emailTo); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SUBJECT_PARAM); ?>" value="<?php echo esc_attr($emailSubject); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::MESSAGE_PARAM); ?>" value="<?php echo esc_attr($emailMessage); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::ADDITIONAL_HEADERS_PARAM); ?>" value="<?php echo esc_attr($emailAdditionalHeaders); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::TO_PARAM); ?>" value="<?php echo esc_attr($formEmailTo); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SUBJECT_PARAM); ?>" value="<?php echo esc_attr($formEmailSubject); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::MESSAGE_PARAM); ?>" value="<?php echo esc_attr($formEmailMessage); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::ADDITIONAL_HEADERS_PARAM); ?>" value="<?php echo esc_attr($formEmailAdditionalHeaders); ?>" />
 		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SEND_CONFIRMATION_TO_SENDER_PARAM); ?>" value="<?php echo (int) $emailSendConfirmToSender; ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_SUBJECT_PARAM); ?>" value="<?php echo esc_attr($emailConfirmationSubject); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_MESSAGE_PARAM); ?>" value="<?php echo esc_attr($emailConfirmationMessage); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_SUBJECT_PARAM); ?>" value="<?php echo esc_attr($formEmailConfirmationSubject); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_MESSAGE_PARAM); ?>" value="<?php echo esc_attr($formEmailConfirmationMessage); ?>" />
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::BUCKAROO_METHOD])) { ?>
