@@ -346,7 +346,7 @@ class GreenhouseTest extends BaseTest
 					return true;
 				},
 				'wp_remote_get' => function() {
-					return [];
+					return '';
 				},
 			]
 		);

@@ -121,7 +121,7 @@ class Greenhouse implements GreenhouseClientInterface
 			return [];
 		}
 
-		return json_decode($body, true);
+		return json_decode(\wp_remote_retrieve_body($response), true);
 	}
 
 	/**
@@ -240,17 +240,7 @@ class Greenhouse implements GreenhouseClientInterface
 			]
 		);
 
-		if (is_wp_error($response)) {
-			return [];
-		}
-
-		$body = $response['body'] ?? '';
-
-		if (!$body) {
-			return [];
-		}
-
-		return json_decode($body, true)['jobs'];
+		return json_decode(\wp_remote_retrieve_body($response), true)['jobs'] ?? [];
 	}
 
 	/**
@@ -271,17 +261,7 @@ class Greenhouse implements GreenhouseClientInterface
 			]
 		);
 
-		if (is_wp_error($response)) {
-			return [];
-		}
-
-		$body = $response['body'] ?? '';
-
-		if (!$body) {
-			return [];
-		}
-
-		return json_decode($body, true);
+		return json_decode(\wp_remote_retrieve_body($response), true);
 	}
 
 	/**

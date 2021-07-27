@@ -391,7 +391,7 @@ class GreenhouseRouteTest extends BaseRouteTest
 					return '';
 				},
 				'wp_remote_get' => function() {
-					return [];
+					return '';
 				},
 				'set_transient' => function () {
 					return true;
@@ -412,71 +412,6 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$this->assertEquals(400, $response->data['code']);
 		$this->assertEquals($response->data['message'], 'Not all Greenhouse API info is set');
 	}
-
-	// /**
-	//  * Error request should result in 400 response
-	//  *
-	//  * @return void
-	//  */
-	// public function testRestCallErrorWhenGettingAllJobs()
-	// {
-	// 	$this->addHooks();
-
-	// 	Functions\stubs(
-	// 		[
-	// 			'get_transient' => function () {
-	// 				return '';
-	// 			},
-	// 			'wp_remote_get' => function() {
-	// 				return [];
-	// 			},
-	// 			'set_transient' => function () {
-	// 				return true;
-	// 			},
-	// 		]
-	// 	);
-
-	// 	$request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
-
-	// 	$response = $this->routeEndpoint->routeCallback($request);
-
-	// 	$this->verifyProperlyFormattedResponse($response);
-	// 	$this->assertEquals(200, $response->data['code']);
-	// 	$this->assertEquals($response->data['data'], []);
-	// }
-
-	// /**
-	//  * Error request should result in 400 response
-	//  *
-	//  * @return void
-	//  */
-	// public function testRestCallErrorWhenMissingApiKeys()
-	// {
-	// 	Functions\stubs(
-	// 		[
-	// 			'get_transient' => function () {
-	// 				return '';
-	// 			},
-	// 			'wp_remote_get' => function() {
-	// 				return [];
-	// 			},
-	// 			'set_transient' => function () {
-	// 				return true;
-	// 			},
-	// 			'has_filter' => function () {
-	// 				return false;
-	// 			}
-	// 		]
-	// 	);
-
-	// 	$request = new \WP_REST_Request(self::METHOD, $this->routeEndpoint->getRouteUri());
-
-	// 	$response = $this->routeEndpoint->routeCallback($request);
-
-	// 	$this->verifyProperlyFormattedResponse($response);
-	// 	$this->assertEquals(400, $response->data['code']);
-	// 	$this->assertEquals($response->data['message'], 'Not all Greenhouse API info is set');
-	// }
 
 	/**
 	 * Mocking that a certain filter exists. See documentation of Brain Monkey:

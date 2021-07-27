@@ -56,7 +56,7 @@ class GreenhouseJobsFetchRouteTest extends BaseRouteTest
 					return '';
 				},
 				'wp_remote_get' => function() {
-					return [];
+					return '';
 				},
 				'set_transient' => function () {
 					return true;
@@ -86,7 +86,7 @@ class GreenhouseJobsFetchRouteTest extends BaseRouteTest
 					return '';
 				},
 				'wp_remote_get' => function() {
-					return [];
+					return '';
 				},
 				'set_transient' => function () {
 					return true;

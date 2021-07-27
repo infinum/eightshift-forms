@@ -145,6 +145,13 @@ class BaseTest extends \Codeception\Test\Unit
 						'url' => 'test',
 						'type' => 'application/pdf',
 					];
+				},
+				'wp_remote_retrieve_body' => function($response) {
+					if ( is_wp_error( $response ) || ! isset( $response['body'] ) ) {
+						return '';
+					}
+			
+					return $response['body'];
 				}
 			]
 		);
