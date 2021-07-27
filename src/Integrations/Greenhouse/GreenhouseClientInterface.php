@@ -47,7 +47,7 @@ interface GreenhouseClientInterface
 	 */
 	public function getConfirmationName(): string;
 
-		/**
+	/**
 	 * Get confirmation email, email key from filter data.
 	 *
 	 * @return string
