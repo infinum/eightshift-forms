@@ -1,4 +1,9 @@
 namespace: EightshiftFormsTests
+bootstrap: bootstrap.php
+coverage:
+    enabled: true
+    include:
+        - src/*
 suites:
     unit:
         path: .

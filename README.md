@@ -2,6 +2,11 @@
   <img alt="Eightshift Boilerplate Plugin" src="https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/package/logo.svg?raw=true&sanitize=true" />
 </p>
 
+[![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
+[![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-forms.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-forms)
+[![license](https://img.shields.io/github/license/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
+[![codecov](https://codecov.io/gh/infinum/eightshift-forms/branch/develop/graph/badge.svg?token=02Lfa2jjoK)](https://codecov.io/gh/infinum/eightshift-forms)
+
 # Eightshift Forms Plugin
 
 This is a form builder plugin by Eightshift.

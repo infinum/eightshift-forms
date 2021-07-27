@@ -354,4 +354,101 @@ interface Filters
 	 * @var string
 	 */
 	public const ROLES_WITH_FORMS_ACCESS = 'eightshift_forms/roles_with_access_to_forms';
+
+	/**
+	 * Filter used for providing greenhouse credentials.
+	 * IMPORTANT - Make sure to always return a string, even if $key isn't set.
+	 *
+	 * Example:
+	 *
+	 *  $info = [
+	 *    'apiKey' => '',
+	 *    'apiBoardToken' => '',
+	 *    'jobBoardUrl' => '',
+	 *  ];
+	 *
+	 * @var string
+	 */
+	public const GREENHOUSE = 'eightshift_forms/greenhouse';
+
+	/**
+	 * Filter used to provide greenhouse config for confirmation email.
+	 *
+	 * Example:
+	 *
+	 *  public function register(): void
+	 *  {
+	 *    \add_filter('eightshift_forms/greenhouse_confirmation', [$this, 'getGreenhouseConfirmationConfig'], 1);
+	 *  }
+	 *
+	 *  public function getGreenhouseConfirmationConfig(string $key): string
+	 *  {
+	 *    $info = [
+	 *      'name' => '',
+	 *      'email' => '',
+	 *      'subject' => '',
+	 *    ];
+	 *
+	 *    return $info[$key] ?? '';
+	 *  }
+	 */
+	public const GREENHOUSE_CONFIRMATION = 'eightshift_forms/greenhouse_confirmation';
+
+	/**
+	 * Filter used to provide greenhouse confirmation email tamplete.
+	 * Filter provides one array of all prepared form fields to iterate and return the populated email template to be sent.
+	 *
+	 * Example:
+	 *
+	 *  public function register(): void
+	 *  {
+	 *    \add_filter('eightshift_forms/greenhouse_confirmation_template', [$this, 'getGreenhouseConfirmationTemplate'], 1);
+	 *  }
+	 *
+	 *  public function getGreenhouseConfirmationTemplate(array $data): string
+	 *  {
+	 *    return '';
+	 *  }
+	 */
+	public const GREENHOUSE_CONFIRMATION_TEMPLATE = 'eightshift_forms/greenhouse_confirmation_template';
+
+	/**
+	 * Filter used to provide greenhouse config for fallback email.
+	 *
+	 * Example:
+	 *
+	 *  public function register(): void
+	 *  {
+	 *    \add_filter('eightshift_forms/greenhouse_fallback', [$this, 'getGreenhouseFallbackConfig'], 1);
+	 *  }
+	 *
+	 *  public function getGreenhouseFallbackConfig(string $key): string
+	 *  {
+	 *    $info = [
+	 *      'email' => '',
+	 *      'subject' => '',
+	 *    ];
+	 *
+	 *    return $info[$key] ?? '';
+	 *  }
+	 */
+	public const GREENHOUSE_FALLBACK = 'eightshift_forms/greenhouse_fallback';
+
+	/**
+	 * Filter used to provide greenhouse fallback email tamplete.
+	 * Filter provides one array of all prepared form fields to iterate and return the populated email template to be sent.
+	 *
+	 * Example:
+	 *
+	 *  public function register(): void
+	 *  {
+	 *    \add_filter('eightshift_forms/greenhouse_fallback_template', [$this, 'getGreenhouseFallbackTemplate'], 1);
+	 *  }
+	 *
+	 *  public function getGreenhouseFallbackTemplate(array $data): string
+	 *  {
+	 *    return '';
+	 *  }
+	 */
+	public const GREENHOUSE_FALLBACK_TEMPLATE = 'eightshift_forms/greenhouse_fallback_template';
 }

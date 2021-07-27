@@ -35,7 +35,8 @@ class BaseTest extends \Codeception\Test\Unit
 				'esc_html_x',
 				'esc_attr_x',
 				'wp_unslash',
-				'wp_check_invalid_utf8'
+				'wp_check_invalid_utf8',
+				'wp_delete_file'
 			]
 		);
 
@@ -75,6 +76,9 @@ class BaseTest extends \Codeception\Test\Unit
 				},
 				'wp_verify_nonce' => function () {
 					return true;
+				},
+				'is_email' => function (string $email) {
+					return $email === 'invalid' ? false : true;
 				},
 				'wp_pre_kses_less_than' => function ($text) {
 					return preg_replace_callback(
@@ -135,7 +139,13 @@ class BaseTest extends \Codeception\Test\Unit
 
 					return $filtered;
 				},
-
+				'wp_handle_upload' => function() {
+					return [
+						'file' => 'test',
+						'url' => 'test',
+						'type' => 'application/pdf',
+					];
+				}
 			]
 		);
 	}

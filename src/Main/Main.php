@@ -107,6 +107,11 @@ class Main extends AbstractMain
 			// Authorization.
 			Integrations\Authorization\Hmac::class,
 
+			// Integrations Greenhouse.
+			Mocks\MockGreenhouse::class => [
+				Cache\TransientCache::class,
+			],
+
 			// Integrations Mailchimp.
 			Integrations\Mailchimp\Mailchimp::class => [
 				Mocks\MockMailchimpMarketingClient::class,
@@ -142,6 +147,15 @@ class Main extends AbstractMain
 			],
 			Rest\BuckarooResponseHandlerRoute::class => [
 				Integrations\Authorization\Hmac::class,
+			],
+
+			// Greenhouse routes.
+			Rest\GreenhouseJobsFetchRoute::class => [
+				Mocks\MockGreenhouse::class,
+			],
+
+			Rest\GreenhouseRoute::class => [
+				Mocks\MockGreenhouse::class,
 			],
 		];
 		/* phpcs:enable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
