@@ -268,7 +268,7 @@ class Greenhouse implements GreenhouseClientInterface
 				$job = $this->getGreenhouseJob((string) $jobId);
 
 				if (!$job) {
-					return;
+					return [];
 				}
 
 				$title = $job['title'] ?? '';
