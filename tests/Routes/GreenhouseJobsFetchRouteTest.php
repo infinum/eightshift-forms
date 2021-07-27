@@ -37,8 +37,8 @@ class GreenhouseJobsFetchRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(200, $response->data['code']);
-		$this->assertEquals($response->data['data'], json_decode(DataProvider::getJobsFullMock(), true));
+		$this->assertSame(200, $response->data['code']);
+		$this->assertSame($response->data['data'], json_decode(DataProvider::getJobsFullMock(), true));
 	}
 
 	/**
@@ -69,8 +69,8 @@ class GreenhouseJobsFetchRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(200, $response->data['code']);
-		$this->assertEquals($response->data['data'], []);
+		$this->assertSame(200, $response->data['code']);
+		$this->assertSame($response->data['data'], []);
 	}
 
 	/**
@@ -102,8 +102,8 @@ class GreenhouseJobsFetchRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Not all Greenhouse API info is set');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Not all Greenhouse API info is set');
 	}
 
 	/**

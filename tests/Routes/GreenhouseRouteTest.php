@@ -34,12 +34,12 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Missing one or more required POST parameters to process the request.');
-		$this->assertEquals($response->data['data']['missing-keys'][0], 'email');
-		$this->assertEquals($response->data['data']['missing-keys'][1], 'first_name');
-		$this->assertEquals($response->data['data']['missing-keys'][2], 'last_name');
-		$this->assertEquals($response->data['data']['missing-keys'][3], 'job_id');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Missing one or more required POST parameters to process the request.');
+		$this->assertSame($response->data['data']['missing-keys'][0], 'email');
+		$this->assertSame($response->data['data']['missing-keys'][1], 'first_name');
+		$this->assertSame($response->data['data']['missing-keys'][2], 'last_name');
+		$this->assertSame($response->data['data']['missing-keys'][3], 'job_id');
 	}
 
 	/**
@@ -70,8 +70,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(200, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Application successfully saved to Greenhouse.');
+		$this->assertSame(200, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Application successfully saved to Greenhouse.');
 	}
 
 	/**
@@ -100,8 +100,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Please enter your first name.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Please enter your first name.');
 	}
 
 	/**
@@ -130,8 +130,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Please enter your last name.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Please enter your last name.');
 	}
 
 	/**
@@ -160,8 +160,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Please enter your email.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Please enter your email.');
 	}
 
 	/**
@@ -190,8 +190,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Missing JobId.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Missing JobId.');
 	}
 
 	/**
@@ -220,8 +220,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'First Name, Last Name and Phone fields must not contain a URL.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'First Name, Last Name and Phone fields must not contain a URL.');
 	}
 
 	/**
@@ -250,8 +250,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Email is not an valid format.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Email is not an valid format.');
 	}
 
 	/**
@@ -281,8 +281,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Provided resume is not an valid format.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Provided resume is not an valid format.');
 	}
 
 	/**
@@ -311,8 +311,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Provided resume is not an valid size.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Provided resume is not an valid size.');
 	}
 
 	/**
@@ -342,8 +342,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Provided cover letter is not an valid format.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Provided cover letter is not an valid format.');
 	}
 
 	/**
@@ -372,8 +372,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Provided cover letter is not an valid size.');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Provided cover letter is not an valid size.');
 	}
 
 	/**
@@ -409,8 +409,8 @@ class GreenhouseRouteTest extends BaseRouteTest
 		$response = $this->routeEndpoint->routeCallback($request);
 
 		$this->verifyProperlyFormattedResponse($response);
-		$this->assertEquals(400, $response->data['code']);
-		$this->assertEquals($response->data['message'], 'Not all Greenhouse API info is set');
+		$this->assertSame(400, $response->data['code']);
+		$this->assertSame($response->data['message'], 'Not all Greenhouse API info is set');
 	}
 
 	/**
