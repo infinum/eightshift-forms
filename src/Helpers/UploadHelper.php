@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 /**
- * Class UploadHelper
+ * Trait UploadHelper
  */
 trait UploadHelper
 {
