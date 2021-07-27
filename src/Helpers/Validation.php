@@ -51,7 +51,7 @@ class Validation
 	 */
 	public static function isFileMaxSizeValid(int $fileSize): bool
 	{
-		return $fileSize <= static::MAX_FILE_SIZE ? true : false;
+		return $fileSize <= static::MAX_FILE_SIZE;
 	}
 
 	/**
