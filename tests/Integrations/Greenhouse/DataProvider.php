@@ -134,7 +134,7 @@ class DataProvider
 
 	public static function errorMissingJobIdGreenhouseApplicationResponse() {
 		return [
-			'body' => []
+			'body' => ''
 		];
 	}
 
