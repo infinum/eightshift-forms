@@ -32,10 +32,10 @@ class SendEmailRoute extends BaseRoute
 	public const TO_PARAM                          = 'emailTo';
 	public const SUBJECT_PARAM                     = 'emailSubject';
 	public const MESSAGE_PARAM                     = 'emailMessage';
-	public const ADDITIONAL_HEADERS_PARAM          = 'formEmailAdditionalHeaders';
+	public const ADDITIONAL_HEADERS_PARAM          = 'emailAdditionalHeaders';
 	public const SEND_CONFIRMATION_TO_SENDER_PARAM = 'emailSendCopyToSender';
-	public const CONFIRMATION_SUBJECT_PARAM        = 'formEmailConfirmationSubject';
-	public const CONFIRMATION_MESSAGE_PARAM        = 'formEmailConfirmationMessage';
+	public const CONFIRMATION_SUBJECT_PARAM        = 'emailConfirmationSubject';
+	public const CONFIRMATION_MESSAGE_PARAM        = 'emailConfirmationMessage';
 	public const EMAIL_PARAM                       = 'email';
 
 	/**
