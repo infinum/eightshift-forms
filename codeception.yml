@@ -7,7 +7,6 @@ coverage:
 suites:
     unit:
         path: .
-
 settings:
     shuffle: true
     lint: true
