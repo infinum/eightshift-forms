@@ -39,4 +39,41 @@ interface GreenhouseClientInterface
 	 * @return array
 	 */
 	public function postGreenhouseApplication(string $jobId, array $body): array;
+
+	/**
+	 * Get confirmation email name key from filter data.
+	 *
+	 * @return string
+	 */
+	public function getConfirmationName(): string;
+
+		/**
+	 * Get confirmation email, email key from filter data.
+	 *
+	 * @return string
+	 */
+	public function getConfirmationEmail(): string;
+
+	/**
+	 * Get confirmation email subject key from filter data.
+	 *
+	 * @return string
+	 */
+	public function getConfirmationSubject(): string;
+
+
+	/**
+	 * Get Fallback email, email key from filter data.
+	 *
+	 * @return string
+	 */
+	public function getFallbackEmail(): string;
+
+
+	/**
+	 * Get Fallback email subject key from filter data.
+	 *
+	 * @return string
+	 */
+	public function getFallbackSubject(): string;
 }

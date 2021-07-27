@@ -87,7 +87,7 @@ class Greenhouse implements GreenhouseClientInterface
 			}
 		);
 
-		return (array) array_values($output)[0] ?? [];
+		return (array) array_values($output)[0];
 	}
 
 	/**
@@ -110,6 +110,10 @@ class Greenhouse implements GreenhouseClientInterface
 				'data_format' => 'body',
 			]
 		);
+
+		if (is_wp_error($response)) {
+			return [];
+		}
 
 		$body = $response['body'] ?? '';
 
@@ -236,6 +240,10 @@ class Greenhouse implements GreenhouseClientInterface
 			]
 		);
 
+		if (is_wp_error($response)) {
+			return [];
+		}
+
 		$body = $response['body'] ?? '';
 
 		if (!$body) {
@@ -263,6 +271,10 @@ class Greenhouse implements GreenhouseClientInterface
 			]
 		);
 
+		if (is_wp_error($response)) {
+			return [];
+		}
+
 		$body = $response['body'] ?? '';
 
 		if (!$body) {
@@ -283,7 +295,7 @@ class Greenhouse implements GreenhouseClientInterface
 			function ($job) {
 				$jobId = $job['id'];
 
-				$job = $this->getGreenhouseJob((string) $jobId) ?? [];
+				$job = $this->getGreenhouseJob((string) $jobId);
 
 				if (!$job) {
 					return;
@@ -301,7 +313,7 @@ class Greenhouse implements GreenhouseClientInterface
 				];
 			},
 			$this->getGreenhouseJobs()
-		) ?? [];
+		);
 
 		return empty($output[0]) ? [] : $output;
 	}

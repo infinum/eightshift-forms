@@ -96,9 +96,9 @@ class GreenhouseRoute extends BaseRoute implements Filters
 	/**
 	 * Instance variable of GreenhouseClientInterface data.
 	 *
-	 * @var object
+	 * @var GreenhouseClientInterface
 	 */
-	protected $greenhouse;
+	public $greenhouse;
 
 	/**
 	 * Create a new instance that injects classes
@@ -128,8 +128,8 @@ class GreenhouseRoute extends BaseRoute implements Filters
 			// Validate request.
 			$this->verifyRequest($request);
 
-			$postParms = $request->get_body_params() ?? [];
-			$fileParms = $request->get_file_params() ?? [];
+			$postParms = $request->get_body_params();
+			$fileParms = $request->get_file_params();
 
 			// Validate Fields and files.
 			$this->validateFields($postParms, $fileParms);
@@ -187,7 +187,7 @@ class GreenhouseRoute extends BaseRoute implements Filters
 
 				// Send failback email.
 				$this->sendFailMail(
-					$this->prepareEmailFields($postParms),
+					$this->prepareEmailFields($postParms ?? []),
 					$files,
 					$e->getMessage()
 				);
@@ -405,7 +405,7 @@ class GreenhouseRoute extends BaseRoute implements Filters
 			}
 
 			// Get Current job questions detail by key.
-			$detail = $this->getJobQuestionDetails($job, $key);
+			$detail = $this->getJobQuestionDetails($job, (string) $key);
 
 			if ($detail) {
 				// Greenhouse stores every select value as ID so we need to find the option label based on that ID.
@@ -450,8 +450,8 @@ class GreenhouseRoute extends BaseRoute implements Filters
 
 		$headers[] = 'Content-Type: text/html; charset=UTF-8';
 
-		if (!($email)) {
-			if (!($name)) {
+		if (!empty($email)) {
+			if (!empty($name)) {
 				$headers[] = "From: {$name} <{$email}>";
 			} else {
 				$headers[] = "From: {$email}";
@@ -568,7 +568,7 @@ class GreenhouseRoute extends BaseRoute implements Filters
 		foreach ($files as $key => $value) {
 			$name = explode('/', $value);
 
-			$output["{$key}_content"] = base64_encode(file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$output["{$key}_content"] = base64_encode((string) file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			$output["{$key}_content_filename"] = end($name);
 		}
 

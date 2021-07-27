@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest;
 
 use EightshiftForms\Exception\MissingFilterInfoException;
-use EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 
@@ -34,7 +33,7 @@ class GreenhouseJobsFetchRoute extends BaseRoute implements Filters
 	/**
 	 * Instance variable of GreenhouseClientInterface data.
 	 *
-	 * @var object
+	 * @var GreenhouseClientInterface
 	 */
 	protected $greenhouse;
 
@@ -63,7 +62,7 @@ class GreenhouseJobsFetchRoute extends BaseRoute implements Filters
 			return \rest_ensure_response([
 				'code' => 200,
 				'data' => $this->greenhouse->getJobs(),
-				'message' => ! empty($message) ? $message : \esc_html__('Success', 'eightshift-forms'),
+				'message' => \esc_html__('Success', 'eightshift-forms'),
 			]);
 		} catch (MissingFilterInfoException $e) {
 			return $this->restResponseHandler('greenhouse-missing-keys', ['message' => $e->getMessage()]);
