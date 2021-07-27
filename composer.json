@@ -70,7 +70,7 @@
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
 		"test:all": "@php ./vendor/bin/codecept run --debug",
 		"test:unit": "@php ./vendor/bin/codecept run unit --debug",
-		"test:coverage": "@php ./vendor/bin/codecept run --coverage --coverage-xml --coverage-html",
+		"test:coverage": "@php ./vendor/bin/codecept run --coverage",
 		"check:all": "composer standards:check && composer analyze && composer test:all"
 	}
 }
