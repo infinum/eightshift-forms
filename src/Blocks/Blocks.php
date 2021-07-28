@@ -34,8 +34,6 @@ class Blocks extends AbstractBlocks implements Filters
 	 */
 	public function register(): void
 	{
-		global $wp_version; // phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-
 		// Register all custom blocks.
 		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
 		\add_action('init', [$this, 'registerBlocks'], 11);
