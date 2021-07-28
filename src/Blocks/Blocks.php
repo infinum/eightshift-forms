@@ -44,7 +44,7 @@ class Blocks extends AbstractBlocks implements Filters
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		if ($wp_version >= 5.8) {
+		if (\is_wp_version_compatible('5.8')) {
 			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
 		} else {
 			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
@@ -59,7 +59,7 @@ class Blocks extends AbstractBlocks implements Filters
 		// Register Reusable blocks side menu.
 		\add_action('admin_menu', [$this, 'addReusableBlocks']);
 
-		if ($wp_version >= 5.8) {
+		if (\is_wp_version_compatible('5.8')) {
 			\add_filter('allowed_block_types_all', [$this, 'getAllAllowedFormBlocks'], 20, 2);
 		} else {
 			\add_filter('allowed_block_types', [$this, 'getAllAllowedFormBlocksOld'], 20, 2);
@@ -77,7 +77,7 @@ class Blocks extends AbstractBlocks implements Filters
 	public function getAllAllowedFormBlocks($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
 	{
 		$projectName = Config::getProjectName();
-		if ($blockEditorContext->post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
+		if ($blockEditorContext->post && $blockEditorContext->post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
 			$formsBlocks = $this->getAllBlocksList([], $blockEditorContext);
 
 			// Remove form from the list to prevent users from adding a new form inside the form.
