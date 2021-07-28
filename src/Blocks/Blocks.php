@@ -21,12 +21,6 @@ use EightshiftLibs\Blocks\AbstractBlocks;
  */
 class Blocks extends AbstractBlocks implements Filters
 {
-
-	/**
-	 * Reusable blocks Capability Name.
-	 */
-	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
-
 	/**
 	 * Register all the hooks
 	 *
@@ -53,9 +47,6 @@ class Blocks extends AbstractBlocks implements Filters
 
 		// Register custom project color palette.
 		\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
-
-		// Register Reusable blocks side menu.
-		\add_action('admin_menu', [$this, 'addReusableBlocks']);
 
 		if (\is_wp_version_compatible('5.8')) {
 			\add_filter('allowed_block_types_all', [$this, 'getAllAllowedFormBlocks'], 20, 2);
@@ -194,24 +185,5 @@ class Blocks extends AbstractBlocks implements Filters
 	protected function getBlocksPath(): string
 	{
 		return Config::getProjectPath() . '/src/Blocks';
-	}
-
-	/**
-	 * Add Reusable Blocks as a part of a sidebar menu.
-	 *
-	 * @return void
-	 */
-	public function addReusableBlocks(): void
-	{
-		\add_menu_page(
-			\esc_html__('Blocks', 'eightshift-libs'),
-			\esc_html__('Blocks', 'eightshift-libs'),
-			self::REUSABLE_BLOCKS_CAPABILITY,
-			'edit.php?post_type=wp_block',
-			function () {
-			},
-			'dashicons-editor-table',
-			4
-		);
 	}
 }
