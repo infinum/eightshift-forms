@@ -78,7 +78,7 @@ class BaseTest extends \Codeception\Test\Unit
 					return true;
 				},
 				'is_email' => function (string $email) {
-					return $email === 'invalid' ? false : true;
+					return $email !== 'invalid';
 				},
 				'wp_pre_kses_less_than' => function ($text) {
 					return preg_replace_callback(
