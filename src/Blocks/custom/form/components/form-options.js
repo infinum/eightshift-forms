@@ -9,58 +9,59 @@ import { FormMailchimpOptions } from './form-mailchimp-options';
 import { FormMailerliteOptions } from './form-mailerlite-options';
 import { FormCustomEventOptions } from './form-custom-event-options';
 import { FormCustomOptions } from './form-custom-options';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FormOptions = ({ setAttributes, attributes }) => {
 	const {
 		blockClass,
-		formAction,
-		formMethod,
-		formTarget,
-		formId,
-		formClasses,
-		formType,
-		formTypesComplex,
-		formTypesComplexRedirect,
-		formIsComplexType,
-		formDynamicsEntity,
 		theme,
-		formSuccessMessage,
-		formErrorMessage,
-		formShouldRedirectOnSuccess,
-		formRedirectSuccess,
-		formEmailTo,
-		formEmailSubject,
-		formEmailMessage,
-		formEmailAdditionalHeaders,
-		formEmailSendConfirmationToSender,
-		formEmailConfirmationSubject,
-		formEmailConfirmationMessage,
-		formBuckarooService,
-		formBuckarooPaymentDescription,
-		formBuckarooEmandateDescription,
-		formBuckarooSequenceType,
-		formBuckarooIsSequenceTypeOnFrontend,
-		formBuckarooRedirectUrl,
-		formBuckarooRedirectUrlCancel,
-		formBuckarooRedirectUrlError,
-		formBuckarooRedirectUrlReject,
-		formMailchimpListId,
-		formMailchimpAddTag,
-		formMailchimpTags,
-		formMailchimpAddExistingMembers,
-		formMailerliteGroupId,
-		formEventNames,
 	} = attributes;
 
-	const richTextClass = `${blockClass}__rich-text`;
+	const formAction = checkAttr('formAction', attributes, manifest);
+	const formMethod = checkAttr('formMethod', attributes, manifest);
+	const formTarget = checkAttr('formTarget', attributes, manifest);
+	const formId = checkAttr('formId', attributes, manifest);
+	const formClasses = checkAttr('formClasses', attributes, manifest);
+	const formType = checkAttr('formType', attributes, manifest);
+	const formTypesComplex = checkAttr('formTypesComplex', attributes, manifest);
+	const formTypesComplexRedirect = checkAttr('formTypesComplexRedirect', attributes, manifest);
+	const formIsComplexType = checkAttr('formIsComplexType', attributes, manifest);
+	const formDynamicsEntity = checkAttr('formDynamicsEntity', attributes, manifest);
+	const formSuccessMessage = checkAttr('formSuccessMessage', attributes, manifest);
+	const formErrorMessage = checkAttr('formErrorMessage', attributes, manifest);
+	const formShouldRedirectOnSuccess = checkAttr('formShouldRedirectOnSuccess', attributes, manifest);
+	const formRedirectSuccess = checkAttr('formRedirectSuccess', attributes, manifest);
+	const formEmailTo = checkAttr('formEmailTo', attributes, manifest);
+	const formEmailSubject = checkAttr('formEmailSubject', attributes, manifest);
+	const formEmailMessage = checkAttr('formEmailMessage', attributes, manifest);
+	const formEmailAdditionalHeaders = checkAttr('formEmailAdditionalHeaders', attributes, manifest);
+	const formEmailSendConfirmationToSender = checkAttr('formEmailSendConfirmationToSender', attributes, manifest);
+	const formEmailConfirmationSubject = checkAttr('formEmailConfirmationSubject', attributes, manifest);
+	const formEmailConfirmationMessage = checkAttr('formEmailConfirmationMessage', attributes, manifest);
+	const formBuckarooService = checkAttr('formBuckarooService', attributes, manifest);
+	const formBuckarooPaymentDescription = checkAttr('formBuckarooPaymentDescription', attributes, manifest);
+	const formBuckarooEmandateDescription = checkAttr('formBuckarooEmandateDescription', attributes, manifest);
+	const formBuckarooSequenceType = checkAttr('formBuckarooSequenceType', attributes, manifest);
+	const formBuckarooIsSequenceTypeOnFrontend = checkAttr('formBuckarooIsSequenceTypeOnFrontend', attributes, manifest);
+	const formBuckarooRedirectUrl = checkAttr('formBuckarooRedirectUrl', attributes, manifest);
+	const formBuckarooRedirectUrlCancel = checkAttr('formBuckarooRedirectUrlCancel', attributes, manifest);
+	const formBuckarooRedirectUrlError = checkAttr('formBuckarooRedirectUrlError', attributes, manifest);
+	const formBuckarooRedirectUrlReject = checkAttr('formBuckarooRedirectUrlReject', attributes, manifest);
+	const formMailchimpListId = checkAttr('formMailchimpListId', attributes, manifest);
+	const formMailchimpAddTag = checkAttr('formMailchimpAddTag', attributes, manifest);
+	const formMailchimpTags = checkAttr('formMailchimpTags', attributes, manifest);
+	const formMailchimpAddExistingMembers = checkAttr('formMailchimpAddExistingMembers', attributes, manifest);
+	const formMailerliteGroupId = checkAttr('formMailerliteGroupId', attributes, manifest);
+	const formEventNames = checkAttr('formEventNames', attributes, manifest);
 
-	const formTypes = [
+	const formTypeOptions = [
 		{ label: __('Email', 'eightshift-forms'), value: 'email' },
 		{ label: __('Custom (PHP)', 'eightshift-forms'), value: 'custom', redirects: true },
 		{ label: __('Custom (Event)', 'eightshift-forms'), value: 'custom-event' },
 	];
+
+	const richTextClass = `${blockClass}__rich-text`;
 
 	const {
 		hasThemes,
@@ -85,19 +86,19 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 			{ label: __('Select CRM entity', 'eightshift-forms'), value: 'select-please' },
 			...dynamicsCrm.availableEntities.map((entity) => ({ label: entity, value: entity })),
 		];
-		formTypes.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
+		formTypeOptions.push({ label: __('Microsoft Dynamics CRM 365', 'eightshift-forms'), value: 'dynamics-crm' });
 	}
 
 	if (isBuckarooUsed) {
-		formTypes.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo', redirects: true });
+		formTypeOptions.push({ label: __('Buckaroo', 'eightshift-forms'), value: 'buckaroo', redirects: true });
 	}
 
 	if (isMailchimpUsed) {
-		formTypes.push({ label: __('Mailchimp', 'eightshift-forms'), value: 'mailchimp' });
+		formTypeOptions.push({ label: __('Mailchimp', 'eightshift-forms'), value: 'mailchimp' });
 	}
 
 	if (isMailerliteUsed) {
-		formTypes.push({ label: __('Mailerlite', 'eightshift-forms'), value: 'mailerlite' });
+		formTypeOptions.push({ label: __('Mailerlite', 'eightshift-forms'), value: 'mailerlite' });
 	}
 
 	const tabs = [
@@ -189,21 +190,21 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 								<br />
 								<FormGeneralOptions
 									attributes={attributes}
+									setAttributes={setAttributes}
 									blockClass={blockClass}
 									formType={formType}
 									formIsComplexType={formIsComplexType}
 									formTypesComplex={formTypesComplex}
 									formTypesComplexRedirect={formTypesComplexRedirect}
-									formTypes={formTypes}
-									theme={theme}
+									formTypeOptions={formTypeOptions}
 									formThemeAsOptions={formThemeAsOptions}
-									hasThemes={hasThemes}
-									richTextClass={richTextClass}
 									formSuccessMessage={formSuccessMessage}
 									formErrorMessage={formErrorMessage}
 									formShouldRedirectOnSuccess={formShouldRedirectOnSuccess}
 									formRedirectSuccess={formRedirectSuccess}
-									setAttributes={setAttributes}
+									hasThemes={hasThemes}
+									theme={theme}
+									richTextClass={richTextClass}
 								/>
 
 								<TextControl
@@ -336,7 +337,6 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 								<FormCustomEventOptions
 									attributes={attributes}
 									setAttributes={setAttributes}
-									blockClass={blockClass}
 									formEventNames={formEventNames}
 								/>
 

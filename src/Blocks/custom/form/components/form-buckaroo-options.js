@@ -1,35 +1,25 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl, TextControl, TextareaControl, BaseControl, ToggleControl } from '@wordpress/components';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, getOption } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FormBuckarooOptions = (props) => {
-	const {
-		attributes,
-		setAttributes,
-		blockClass,
-		formBuckarooService,
-		formBuckarooPaymentDescription,
-		formBuckarooEmandateDescription,
-		formBuckarooSequenceType,
-		formBuckarooIsSequenceTypeOnFrontend,
-		redirectUrl,
-		redirectUrlError,
-		redirectUrlReject,
-	} = props;
+export const FormBuckarooOptions = ({
+	attributes,
+	setAttributes,
+	blockClass,
+	redirectUrl,
+	redirectUrlError,
+	redirectUrlReject,
+}) => {
+
+	const formBuckarooService = checkAttr('formBuckarooService', attributes, manifest);
+	const formBuckarooPaymentDescription = checkAttr('formBuckarooPaymentDescription', attributes, manifest);
+	const formBuckarooEmandateDescription = checkAttr('formBuckarooEmandateDescription', attributes, manifest);
+	const formBuckarooSequenceType = checkAttr('formBuckarooSequenceType', attributes, manifest);
+	const formBuckarooIsSequenceTypeOnFrontend = checkAttr('formBuckarooIsSequenceTypeOnFrontend', attributes, manifest);
 
 	const MAX_CHARS_IN_EMANDATE_DESCRIPTION_FIELD = 70;
-
-	const buckarooOptions = [
-		{ label: 'iDEAL', value: 'ideal' },
-		{ label: 'Emandate', value: 'emandate' },
-	];
-
-	const sequenceTypeOptions = [
-		{ label: __('Recurring', 'eightshift-forms'), value: '0' },
-		{ label: __('One Off', 'eightshift-forms'), value: '1' },
-	];
 
 	const fieldsForService = {
 		ideal: [
@@ -49,12 +39,12 @@ export const FormBuckarooOptions = (props) => {
 	};
 
 	return (
-		<Fragment>
+		<>
 			<SelectControl
 				label={__('Service', 'eightshift-forms')}
 				help={__('Please select which Buckaroo formBuckarooService you wish to use', 'eightshift-forms')}
 				value={formBuckarooService}
-				options={buckarooOptions}
+				options={getOption('formBuckarooService', attributes, manifest)}
 				onChange={(value) => setAttributes({ [getAttrKey('formBuckarooService', attributes, manifest)]: value })}
 			/>
 			{fieldsForService[formBuckarooService] &&
@@ -84,7 +74,7 @@ export const FormBuckarooOptions = (props) => {
 					label={__('Recurring / One off?', 'eightshift-forms')}
 					help={__('Set if this form will create a recurring or one-off emandate.', 'eightshift-forms')}
 					value={formBuckarooSequenceType}
-					options={sequenceTypeOptions}
+					options={getOption('formBuckarooSequenceType', attributes, manifest)}
 					onChange={(value) => setAttributes({ [getAttrKey('formBuckarooSequenceType', attributes, manifest)]: value })}
 				/>
 			}
@@ -127,6 +117,6 @@ export const FormBuckarooOptions = (props) => {
 					/>
 			}
 
-		</Fragment>
+		</>
 	);
 };

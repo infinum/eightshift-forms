@@ -2,20 +2,18 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
 import manifest from '../manifest.json';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 
 /**
  * Options component
  *
  * @param {object} props Component props.
  */
-export const FormCustomOptions = (attributes) => {
-	const {
-		setAttributes,
-		formAction,
-		formMethod,
-		formTarget,
-	} = attributes;
+export const FormCustomOptions = ({attributes, setAttributes}) => {
+
+	const formAction = checkAttr('formAction', attributes, manifest);
+	const formMethod = checkAttr('formMethod', attributes, manifest);
+	const formTarget = checkAttr('formTarget', attributes, manifest);
 
 	return (
 		<>

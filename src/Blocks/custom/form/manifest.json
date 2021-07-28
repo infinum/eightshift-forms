@@ -1,198 +1,198 @@
 {
-  "blockName": "form",
-  "title": "Form",
-  "description": "Form",
-  "category": "common",
-  "icon": {
-    "src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g transform='translate(-272 -101)' fill='none' fill-rule='evenodd'><path fill='none' d='M272 101h20v20h-20z'/><path d='M284.5 112a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5zM284.5 115a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5z' fill-opacity='.12' fill='currentColor' fill-rule='nonzero'/><path d='M281.5 109a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5z' fill='currentColor' fill-rule='nonzero'/><circle fill='currentColor' cx='277' cy='112.75' r='1'/><circle fill='currentColor' cx='277' cy='115.75' r='1'/><path d='M274 102h16a1 1 0 011 1v4h-18v-4a1 1 0 011-1z' fill-opacity='.12' fill='currentColor'/><path d='M289.5 101.25h-15a2.25 2.25 0 00-2.25 2.25v15a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25zm-15 1.5h15a.75.75 0 01.75.75v15a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-15a.75.75 0 01.75-.75z' fill='currentColor' fill-rule='nonzero'/><path d='M284.5 104a.75.75 0 01.102 1.493l-.102.007h-8a.75.75 0 01-.102-1.493l.102-.007h8z' fill='currentColor' fill-rule='nonzero'/></g></svg>"
-  },
-  "keywords": [
-    "Form"
-  ],
-  "supports": {
-    "multiple": false
-  },
-  "hasInnerBlocks": true,
-  "attributes": {
-    "wrapperUse": {
-      "type": "boolean",
-      "default": false
-    },
-    "wrapperUseShowControl": {
-      "type": "boolean",
-      "default": false
-    },
-    "allowedBlocks": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "theme": {
-      "type": "string"
-    },
-    "formSuccessMessage": {
-      "type": "string",
-      "default": "Form successfully submitted"
-    },
-    "formErrorMessage": {
-      "type": "string",
-      "default": "There was a problem submitting your form"
-    },
-    "formAction": {
-      "type": "string"
-    },
-    "formMethod": {
-      "type": "string",
-      "default": "POST"
-    },
-    "formTarget": {
-      "type": "string"
-    },
-    "formId": {
-      "type": "string"
-    },
-    "formClasses": {
-      "type": "string"
-    },
-    "formIsComplexType": {
-      "type": "boolean",
-      "default": false
-    },
-    "formType": {
-      "type": "string",
-      "default": "email"
-    },
-    "formTypesComplex": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": []
-    },
-    "formTypesComplexRedirect": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": []
-    },
-    "formShouldRedirectOnSuccess": {
-      "type": "boolean",
-      "default": false
-    },
-    "formRedirectSuccess": {
-      "type": "string",
-      "default": "/thank-you"
-    },
-    "formDynamicsEntity": {
-      "type": "string"
-    },
-    "formEmailTo": {
-      "type": "string",
-      "default": "administrator@yoursite.com"
-    },
-    "formEmailSubject": {
-      "type": "string",
-      "default": "New email from your website"
-    },
-    "formEmailMessage": {
-      "type": "string",
-      "default": "Message from user [[name]]: [[message]]"
-    },
-    "formEmailAdditionalHeaders": {
-      "type": "string"
-    },
-    "formEmailSendConfirmationToSender": {
-      "type": "boolean",
-      "default": false
-    },
-    "formEmailConfirmationSubject": {
-      "type": "string",
-      "default": "Thank you for contacting us"
-    },
-    "formEmailConfirmationMessage": {
-      "type": "string",
-      "default": "We have received your query and will get back to you as soon as possible."
-    },
-    "formBuckarooService": {
-      "type": "string",
-      "default": "ideal"
-    },
-    "formBuckarooEmandateDescription": {
-      "type": "string",
-      "default": "Emandate reason"
-    },
-    "formBuckarooSequenceType": {
-      "type": "string",
-      "default": "0"
-    },
-    "formBuckarooPaymentDescription": {
-      "type": "string",
-      "default": "Description of the payment"
-    },
-    "formBuckarooIsSequenceTypeOnFrontend": {
-      "type": "boolean",
-      "default": false
-    },
-    "formBuckarooRedirectUrl": {
-      "type": "string"
-    },
-    "formBuckarooRedirectUrlCancel": {
-      "type": "string"
-    },
-    "formBuckarooRedirectUrlError": {
-      "type": "string"
-    },
-    "formBuckarooRedirectUrlReject": {
-      "type": "string"
-    },
-    "formMailchimpListId": {
-      "type": "string"
-    },
-    "formMailchimpAddTag": {
-      "type": "boolean"
-    },
-    "formMailchimpTags": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "formMailchimpAddExistingMembers": {
-      "type": "boolean",
-      "default": false
-    },
-    "formMailerliteGroupId": {
-      "type": "string"
-    },
-    "formEventNames": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
-  },
+	"blockName": "form",
+	"title": "Form",
+	"description": "Form",
+	"category": "common",
+	"icon": {
+		"src": "<svg width='20' height='20' xmlns='http://www.w3.org/2000/svg'><g transform='translate(-272 -101)' fill='none' fill-rule='evenodd'><path fill='none' d='M272 101h20v20h-20z'/><path d='M284.5 112a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5zM284.5 115a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5z' fill-opacity='.12' fill='currentColor' fill-rule='nonzero'/><path d='M281.5 109a.75.75 0 01.102 1.493l-.102.007h-5a.75.75 0 01-.102-1.493l.102-.007h5z' fill='currentColor' fill-rule='nonzero'/><circle fill='currentColor' cx='277' cy='112.75' r='1'/><circle fill='currentColor' cx='277' cy='115.75' r='1'/><path d='M274 102h16a1 1 0 011 1v4h-18v-4a1 1 0 011-1z' fill-opacity='.12' fill='currentColor'/><path d='M289.5 101.25h-15a2.25 2.25 0 00-2.25 2.25v15a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25zm-15 1.5h15a.75.75 0 01.75.75v15a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-15a.75.75 0 01.75-.75z' fill='currentColor' fill-rule='nonzero'/><path d='M284.5 104a.75.75 0 01.102 1.493l-.102.007h-8a.75.75 0 01-.102-1.493l.102-.007h8z' fill='currentColor' fill-rule='nonzero'/></g></svg>"
+	},
+	"keywords": [
+		"Form"
+	],
+	"supports": {
+		"multiple": false
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUseShowControl": {
+			"type": "boolean",
+			"default": false
+		},
+		"allowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"theme": {
+			"type": "string"
+		},
+		"formSuccessMessage": {
+			"type": "string",
+			"default": "Form successfully submitted"
+		},
+		"formErrorMessage": {
+			"type": "string",
+			"default": "There was a problem submitting your form"
+		},
+		"formAction": {
+			"type": "string"
+		},
+		"formMethod": {
+			"type": "string",
+			"default": "POST"
+		},
+		"formTarget": {
+			"type": "string"
+		},
+		"formId": {
+			"type": "string"
+		},
+		"formClasses": {
+			"type": "string"
+		},
+		"formIsComplexType": {
+			"type": "boolean",
+			"default": false
+		},
+		"formType": {
+			"type": "string",
+			"default": "email"
+		},
+		"formTypesComplex": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
+		},
+		"formTypesComplexRedirect": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
+		},
+		"formShouldRedirectOnSuccess": {
+			"type": "boolean",
+			"default": false
+		},
+		"formRedirectSuccess": {
+			"type": "string",
+			"default": "/thank-you"
+		},
+		"formDynamicsEntity": {
+			"type": "string"
+		},
+		"formEmailTo": {
+			"type": "string",
+			"default": "administrator@yoursite.com"
+		},
+		"formEmailSubject": {
+			"type": "string",
+			"default": "New email from your website"
+		},
+		"formEmailMessage": {
+			"type": "string",
+			"default": "Message from user [[name]]: [[message]]"
+		},
+		"formEmailAdditionalHeaders": {
+			"type": "string"
+		},
+		"formEmailSendConfirmationToSender": {
+			"type": "boolean",
+			"default": false
+		},
+		"formEmailConfirmationSubject": {
+			"type": "string",
+			"default": "Thank you for contacting us"
+		},
+		"formEmailConfirmationMessage": {
+			"type": "string",
+			"default": "We have received your query and will get back to you as soon as possible."
+		},
+		"formBuckarooService": {
+			"type": "string",
+			"default": "ideal"
+		},
+		"formBuckarooEmandateDescription": {
+			"type": "string",
+			"default": "Emandate reason"
+		},
+		"formBuckarooSequenceType": {
+			"type": "string",
+			"default": "0"
+		},
+		"formBuckarooPaymentDescription": {
+			"type": "string",
+			"default": "Description of the payment"
+		},
+		"formBuckarooIsSequenceTypeOnFrontend": {
+			"type": "boolean",
+			"default": false
+		},
+		"formBuckarooRedirectUrl": {
+			"type": "string"
+		},
+		"formBuckarooRedirectUrlCancel": {
+			"type": "string"
+		},
+		"formBuckarooRedirectUrlError": {
+			"type": "string"
+		},
+		"formBuckarooRedirectUrlReject": {
+			"type": "string"
+		},
+		"formMailchimpListId": {
+			"type": "string"
+		},
+		"formMailchimpAddTag": {
+			"type": "boolean"
+		},
+		"formMailchimpTags": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"formMailchimpAddExistingMembers": {
+			"type": "boolean",
+			"default": false
+		},
+		"formMailerliteGroupId": {
+			"type": "string"
+		},
+		"formEventNames": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	},
 	"options": {
-			"formBuckarooService": [
-				{
-					"label": "iDEAL",
-					"value": "ideal"
-				},
-				{
-					"label": "Emandate",
-					"value": "emandate"
-				}
-			],
-			"formBuckarooSequenceType": [
-				{
-					"label": "Recurring",
-					"value": "0"
-				},
-				{
-					"label": "One Off",
-					"value": "1"
-				}
-			]
+		"formBuckarooService": [
+			{
+				"label": "iDEAL",
+				"value": "ideal"
+			},
+			{
+				"label": "Emandate",
+				"value": "emandate"
+			}
+		],
+		"formBuckarooSequenceType": [
+			{
+				"label": "Recurring",
+				"value": "0"
+			},
+			{
+				"label": "One Off",
+				"value": "1"
+			}
+		]
 	}
 }

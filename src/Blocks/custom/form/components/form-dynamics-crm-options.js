@@ -1,18 +1,18 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FormDynamicsCrmOptions = (props) => {
-  const {
-		attributes,
-		setAttributes,
-    formType,
-    formDynamicsEntity,
-    crmEntitiesAsOptions,
-    isDynamicsCrmUsed,
-  } = props;
+export const FormDynamicsCrmOptions = ({
+	attributes,
+	setAttributes,
+	crmEntitiesAsOptions,
+	isDynamicsCrmUsed,
+}) => {
+
+	const formType = checkAttr('formType', attributes, manifest);
+	const formDynamicsEntity = checkAttr('formDynamicsEntity', attributes, manifest);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**
@@ -9,13 +9,9 @@ import manifest from '../manifest.json';
  *
  * @param {object} props Component props.
  */
-export const FormMailerliteOptions = (props) => {
-	const {
-		attributes,
-		setAttributes,
-		formMailerliteGroupId,
-		formMailerliteGroups,
-	} = props;
+export const FormMailerliteOptions = ({attributes, setAttributes}) => {
+	const formMailerliteGroupId = checkAttr('formMailerliteGroupId', attributes, manifest);
+	const formMailerliteGroups = checkAttr('formMailerliteGroups', attributes, manifest);
 
 	const groupsOptions = formMailerliteGroups.length && [
 		{

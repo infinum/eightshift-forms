@@ -3,22 +3,18 @@ import { Fragment } from '@wordpress/element';
 import { TextControl, BaseControl, ToggleControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 import { NewSection } from '../../../components/new-section/new-section';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FormEmailOptions = (props) => {
-	const {
-		attributes,
-		setAttributes,
-		richTextClass,
-		formEmailTo,
-		formEmailSubject,
-		formEmailMessage = '',
-		formEmailAdditionalHeaders,
-		formEmailSendConfirmationToSender,
-		formEmailConfirmationMessage,
-		formEmailConfirmationSubject,
-	} = props;
+export const FormEmailOptions = ({attributes, setAttributes, richTextClass}) => {
+
+	const formEmailTo = checkAttr('formEmailTo', attributes, manifest);
+	const formEmailSubject = checkAttr('formEmailSubject', attributes, manifest);
+	const formEmailMessage = checkAttr('formEmailMessage', attributes, manifest);
+	const formEmailAdditionalHeaders = checkAttr('formEmailAdditionalHeaders', attributes, manifest);
+	const formEmailSendConfirmationToSender = checkAttr('formEmailSendConfirmationToSender', attributes, manifest);
+	const formEmailConfirmationMessage = checkAttr('formEmailConfirmationMessage', attributes, manifest);
+	const formEmailConfirmationSubject = checkAttr('formEmailConfirmationSubject', attributes, manifest);
 
 	return (
 		<>

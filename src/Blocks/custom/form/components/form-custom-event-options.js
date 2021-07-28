@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**
@@ -9,14 +9,13 @@ import manifest from '../manifest.json';
  *
  * @param {object} props Component props.
  */
-export const FormCustomEventOptions = (props) => {
-  const {
-		attributes,
-		setAttributes,
-    formEventNames,
-    suggestions,
-    isLoading = false,
-  } = props;
+export const FormCustomEventOptions = ({
+	attributes,
+	setAttributes,
+	suggestions,
+	isLoading = false,
+}) => {
+	const formEventNames = checkAttr('formEventNames', attributes, manifest);
 
   return (
     <>

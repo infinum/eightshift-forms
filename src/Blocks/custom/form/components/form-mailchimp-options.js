@@ -5,7 +5,7 @@ import { SelectControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**
@@ -42,16 +42,13 @@ const getTags = (formMailchimpListLid) => {
  *
  * @param {object} props Component props.
  */
-export const FormMailchimpOptions = (props) => {
-	const {
-		attributes,
-		setAttributes,
-		formMailchimpListLid,
-		formMailchimpAudiences,
-		formMailchimpAddTag,
-		formMailchimpTags,
-		formMailchimpAddExistingMembers,
-	} = props;
+export const FormMailchimpOptions = ({attributes, setAttributes}) => {
+
+	const formMailchimpListLid = checkAttr('formMailchimpListLid', attributes, manifest);
+	const formMailchimpAudiences = checkAttr('formMailchimpAudiences', attributes, manifest);
+	const formMailchimpAddTag = checkAttr('formMailchimpAddTag', attributes, manifest);
+	const formMailchimpTags = checkAttr('formMailchimpTags', attributes, manifest);
+	const formMailchimpAddExistingMembers = checkAttr('formMailchimpAddExistingMembers', attributes, manifest);
 
 	const {
 		isLoading,
