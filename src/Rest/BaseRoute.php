@@ -485,6 +485,62 @@ abstract class BaseRoute extends AbstractRoute implements CallableRouteInterface
 				'code' => 400,
 				'message' => esc_html__('Please enter your email.', 'eightshift-forms'),
 			],
+
+			// Greenhouse specific.
+			'greenhouse-missing-keys' => [
+				'code' => 400,
+				'message' => esc_html__('Not all Greenhouse API info is set', 'eightshift-forms'),
+			],
+
+			'greenhouse-missing-job-id' => [
+				'code' => 400,
+				'message' => esc_html__('Missing JobId.', 'eightshift-forms'),
+			],
+
+			'greenhouse-missing-first-name' => [
+				'code' => 400,
+				'message' => esc_html__('Please enter your first name.', 'eightshift-forms'),
+			],
+
+			'greenhouse-missing-last-name' => [
+				'code' => 400,
+				'message' => esc_html__('Please enter your last name.', 'eightshift-forms'),
+			],
+
+			'greenhouse-missing-email' => [
+				'code' => 400,
+				'message' => esc_html__('Please enter your email.', 'eightshift-forms'),
+			],
+
+			'greenhouse-contains-url' => [
+				'code' => 400,
+				'message' => esc_html__('First Name, Last Name and Phone fields must not contain a URL.', 'eightshift-forms'),
+			],
+
+			'greenhouse-invalid-email' => [
+				'code' => 400,
+				'message' => esc_html__('Email is not an valid format.', 'eightshift-forms'),
+			],
+
+			'greenhouse-file-invalid-format-resume' => [
+				'code' => 400,
+				'message' => esc_html__('Provided resume is not an valid format.', 'eightshift-forms'),
+			],
+
+			'greenhouse-file-invalid-format-cover-letter' => [
+				'code' => 400,
+				'message' => esc_html__('Provided cover letter is not an valid format.', 'eightshift-forms'),
+			],
+
+			'greenhouse-file-invalid-size-resume' => [
+				'code' => 400,
+				'message' => esc_html__('Provided resume is not an valid size.', 'eightshift-forms'),
+			],
+
+			'greenhouse-file-invalid-size-cover-letter' => [
+				'code' => 400,
+				'message' => esc_html__('Provided cover letter is not an valid size.', 'eightshift-forms'),
+			],
 		];
 	}
 
