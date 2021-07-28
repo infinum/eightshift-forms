@@ -7,7 +7,7 @@
  *
  * Usage: `WordPress frontend screen`.
  */
-import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs/scripts';
 
 import "@babel/polyfill";
 

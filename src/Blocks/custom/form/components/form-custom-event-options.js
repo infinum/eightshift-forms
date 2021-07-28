@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**

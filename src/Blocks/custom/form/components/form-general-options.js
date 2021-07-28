@@ -3,7 +3,7 @@ import { Fragment, useState } from '@wordpress/element';
 import { SelectControl, BaseControl, ToggleControl, CheckboxControl, Notice, TextControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 import { CantHaveMultipleRedirects } from './cant-have-multiple-redirects-notice';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**

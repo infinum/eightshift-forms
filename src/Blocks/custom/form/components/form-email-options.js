@@ -3,7 +3,7 @@ import { Fragment } from '@wordpress/element';
 import { TextControl, BaseControl, ToggleControl } from '@wordpress/components';
 import { RichText } from '@wordpress/block-editor';
 import { NewSection } from '../../../components/new-section/new-section';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FormEmailOptions = (props) => {

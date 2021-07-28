@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
 import manifest from '../manifest.json';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 
 /**
  * Options component

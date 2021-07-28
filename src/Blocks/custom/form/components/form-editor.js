@@ -4,7 +4,7 @@ import { InnerBlocks } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { Placeholder } from '@wordpress/components';
-import { checkAttr } from '@eightshift/frontend-libs/scripts/helpers';
+import { checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**

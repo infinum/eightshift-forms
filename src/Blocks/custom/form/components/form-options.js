@@ -9,7 +9,7 @@ import { FormMailchimpOptions } from './form-mailchimp-options';
 import { FormMailerliteOptions } from './form-mailerlite-options';
 import { FormCustomEventOptions } from './form-custom-event-options';
 import { FormCustomOptions } from './form-custom-options';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FormOptions = ({ setAttributes, attributes }) => {

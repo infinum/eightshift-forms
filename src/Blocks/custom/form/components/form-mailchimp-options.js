@@ -5,7 +5,7 @@ import { SelectControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
 import { MAILCHIMP_FETCH_SEGMENTS_STORE } from '../../../stores/all';
-import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import { getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 /**
