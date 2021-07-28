@@ -1,17 +1,16 @@
 .block-radio {
-  $this: &;
+	$this: &;
 
-  &.is-style-inline {
-    .block-editor-block-list {
-      &__layout {
-        display: flex;
-        flex-wrap: wrap;
-      }
+	&.is-style-inline {
+		.block-editor-block-list {
+			&__layout {
+				display: flex;
+				flex-wrap: wrap;
+			}
 
-      &.block-list-appender {
-        flex: 0 0 100%;
-      }
-    }
-  }
-
+			&.block-list-appender {
+				flex: 0 0 100%;
+			}
+		}
+	}
 }

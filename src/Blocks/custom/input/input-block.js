@@ -9,33 +9,33 @@ import { InputEditor } from './components/input-editor';
 import { InputOptions } from './components/input-options';
 
 export const Input = (props) => {
-  const {
-    clientId,
-    attributes,
-    attributes: {
-      label,
-    },
-  } = props;
+	const {
+		clientId,
+		attributes,
+		attributes: {
+			label,
+		},
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <LabelOptions
-          label={label}
-          onChangeLabel={actions.onChangeLabel}
-        />
-        <InputOptions
-          attributes={attributes}
-          actions={actions}
-          clientId={clientId}
-        />
-      </InspectorControls>
-      <InputEditor
-        attributes={attributes}
-        actions={actions}
-      />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<LabelOptions
+					label={label}
+					onChangeLabel={actions.onChangeLabel}
+				/>
+				<InputOptions
+					attributes={attributes}
+					actions={actions}
+					clientId={clientId}
+				/>
+			</InspectorControls>
+			<InputEditor
+				attributes={attributes}
+				actions={actions}
+			/>
+		</>
+	);
 };

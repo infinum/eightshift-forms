@@ -42,7 +42,7 @@ const getTags = (formMailchimpListLid) => {
  *
  * @param {object} props Component props.
  */
-export const FormMailchimpOptions = ({attributes, setAttributes}) => {
+export const FormMailchimpOptions = ({ attributes, setAttributes }) => {
 
 	const formMailchimpListLid = checkAttr('formMailchimpListLid', attributes, manifest);
 	const formMailchimpAudiences = checkAttr('formMailchimpAudiences', attributes, manifest);
@@ -95,14 +95,14 @@ export const FormMailchimpOptions = ({attributes, setAttributes}) => {
 					suggestions={suggestions}
 					isLoading={isLoading}
 					onChange={(value) => setAttributes({ [getAttrKey('formMailchimpTags', attributes, manifest)]: value })}
-					/>
+				/>
 			}
 			<ToggleControl
 				label={__('Modify existing Mailchimp information on submit?', 'eightshift-forms')}
 				help={__('If enabled, the form will modify existing user\'s Mailchimp information on submit. If disabled, it will only add new users to the list.', 'eightshift-forms')}
 				checked={formMailchimpAddExistingMembers}
 				onChange={(value) => setAttributes({ [getAttrKey('formMailchimpAddExistingMembers', attributes, manifest)]: value })}
-				/>
+			/>
 		</>
 	);
 };

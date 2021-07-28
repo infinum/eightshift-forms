@@ -26,30 +26,30 @@ export const FormEditor = ({ attributes, clientId }) => {
 		classes
 	);
 
-  const [hasInnerBlocks, setHasInnerBlocks] = useState(false);
+	const [hasInnerBlocks, setHasInnerBlocks] = useState(false);
 
-  useSelect((select) => {
-    const hasInner = select('core/block-editor').getBlock(clientId).innerBlocks.length > 0;
+	useSelect((select) => {
+		const hasInner = select('core/block-editor').getBlock(clientId).innerBlocks.length > 0;
 
-    if (
-      (!hasInnerBlocks && hasInner) ||
-      (hasInnerBlocks && !hasInner)
-    ) {
-      setHasInnerBlocks(hasInner);
-    }
-  });
+		if (
+			(!hasInnerBlocks && hasInner) ||
+			(hasInnerBlocks && !hasInner)
+		) {
+			setHasInnerBlocks(hasInner);
+		}
+	});
 
-  return (
-    <form className={blockClasses} id={id}>
-      {!hasInnerBlocks &&
-        <Placeholder
-          icon="welcome-write-blog"
-          label={__('This is an empty form. Click on me to start building your form.', 'eightshift-forms')}
-        />
-      }
-      <InnerBlocks
-        templateLock={false}
-      />
-    </form>
-  );
+	return (
+		<form className={blockClasses} id={id}>
+			{!hasInnerBlocks &&
+				<Placeholder
+					icon="welcome-write-blog"
+					label={__('This is an empty form. Click on me to start building your form.', 'eightshift-forms')}
+				/>
+			}
+			<InnerBlocks
+				templateLock={false}
+			/>
+		</form>
+	);
 };

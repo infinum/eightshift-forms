@@ -1,13 +1,13 @@
 $block-forms: (
-  horizontal-spacing: $base-gutter-size,
+	horizontal-spacing: $base-gutter-size,
 );
 
 .block-forms {
-  display: flex;
-  flex-wrap: wrap;
-  overflow: hidden;
-  margin: {
-    left: -(map-get-strict($block-forms, horizontal-spacing));
-    right: -(map-get-strict($block-forms, horizontal-spacing));
-  }
+	display: flex;
+	flex-wrap: wrap;
+	overflow: hidden;
+	margin: {
+		left: -(map-get-strict($block-forms, horizontal-spacing));
+		right: -(map-get-strict($block-forms, horizontal-spacing));
+	}
 }

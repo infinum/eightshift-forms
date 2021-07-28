@@ -4,12 +4,12 @@ import { FormEditor } from './components/form-editor';
 import { FormOptions } from './components/form-options';
 
 export const Form = (props) => {
-  return (
-    <>
-      <InspectorControls>
-        <FormOptions {...props}/>
-      </InspectorControls>
-      <FormEditor {...props} />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<FormOptions {...props} />
+			</InspectorControls>
+			<FormEditor {...props} />
+		</>
+	);
 };

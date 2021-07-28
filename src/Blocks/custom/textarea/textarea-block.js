@@ -9,31 +9,31 @@ import { TextareaEditor } from './components/textarea-editor';
 import { TextareaOptions } from './components/textarea-options';
 
 export const Textarea = (props) => {
-  const {
-    attributes,
-    attributes: {
-      label,
-    },
-  } = props;
+	const {
+		attributes,
+		attributes: {
+			label,
+		},
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <LabelOptions
-          label={label}
-          onChangeLabel={actions.onChangeLabel}
-        />
-        <TextareaOptions
-          attributes={attributes}
-          actions={actions}
-        />
-      </InspectorControls>
-      <TextareaEditor
-        attributes={attributes}
-        actions={actions}
-      />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<LabelOptions
+					label={label}
+					onChangeLabel={actions.onChangeLabel}
+				/>
+				<TextareaOptions
+					attributes={attributes}
+					actions={actions}
+				/>
+			</InspectorControls>
+			<TextareaEditor
+				attributes={attributes}
+				actions={actions}
+			/>
+		</>
+	);
 };

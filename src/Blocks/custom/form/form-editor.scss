@@ -1,57 +1,57 @@
 $block-form: (
-  horizontal-spacing: $base-gutter-size,
-  fields-for-service: (
-    mobile: (
-      border: 1px solid global-settings(colors, black),
-      border-radius: 5px,
-      border-color: global-settings(colors, primary),
-      padding: 5px,
-    )
-  ),
-  rich-text: (
-    mobile: (
-      background: global-settings(colors, white),
-      border: 1px solid global-settings(colors, black),
-      border-radius: 5px,
-      padding: 5px,
-    )
-  ),
-  types-wrapper: (
-    mobile: (
-      border: 1px solid,
-      border-radius: 4px,
-      background: global-settings(colors, white),
-      padding: 8px,
-    ),
-  )
+	horizontal-spacing: $base-gutter-size,
+	fields-for-service: (
+		mobile: (
+			border: 1px solid global-settings(colors, black),
+			border-radius: 5px,
+			border-color: global-settings(colors, primary),
+			padding: 5px,
+		),
+	),
+	rich-text: (
+		mobile: (
+			background: global-settings(colors, white),
+			border: 1px solid global-settings(colors, black),
+			border-radius: 5px,
+			padding: 5px,
+		),
+	),
+	types-wrapper: (
+		mobile: (
+			border: 1px solid,
+			border-radius: 4px,
+			background: global-settings(colors, white),
+			padding: 8px,
+		),
+	),
 );
 
 .block-form {
-  display: block;
-  margin: 0;
-  overflow: visible;
+	display: block;
+	margin: 0;
+	overflow: visible;
 
-  .editor-block-list__layout {
-    margin: {
-      left: -(map-get-strict($block-form, horizontal-spacing));
-      right: -(map-get-strict($block-form, horizontal-spacing));
-    }
-  }
+	.editor-block-list__layout {
+		margin: {
+			left: -(map-get-strict($block-form, horizontal-spacing));
+			right: -(map-get-strict($block-form, horizontal-spacing));
+		}
+	}
 
-  &__rich-text {
-    @include responsive($block-form, rich-text);
-  }
+	&__rich-text {
+		@include responsive($block-form, rich-text);
+	}
 
-  &__fields-for-service {
-    @include responsive($block-form, fields-for-service);
-  }
+	&__fields-for-service {
+		@include responsive($block-form, fields-for-service);
+	}
 
-  &__fields-for-service-list {
-    list-style: initial;
-    padding-left: 20px;
-  }
+	&__fields-for-service-list {
+		list-style: initial;
+		padding-left: 20px;
+	}
 
-  &__types-wrapper {
-    @include responsive($block-form, types-wrapper);
-  }
+	&__types-wrapper {
+		@include responsive($block-form, types-wrapper);
+	}
 }

@@ -9,30 +9,30 @@ import { SelectOptions } from '../../components/select/components/select-options
 import { SelectEditor } from '../../components/select/components/select-editor';
 
 export const Select = (props) => {
-  const {
-    attributes,
-    attributes: {
-      label,
-    },
-    clientId,
-  } = props;
+	const {
+		attributes,
+		attributes: {
+			label,
+		},
+		clientId,
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <LabelOptions
-          label={label}
-          onChangeLabel={actions.onChangeLabel}
-        />
-        <SelectOptions
-          attributes={attributes}
-          actions={actions}
-          clientId={clientId}
-        />
-      </InspectorControls>
-      <SelectEditor {...props} actions={actions} />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<LabelOptions
+					label={label}
+					onChangeLabel={actions.onChangeLabel}
+				/>
+				<SelectOptions
+					attributes={attributes}
+					actions={actions}
+					clientId={clientId}
+				/>
+			</InspectorControls>
+			<SelectEditor {...props} actions={actions} />
+		</>
+	);
 };
