@@ -12,7 +12,7 @@ export const FormsEditor = (props) => {
   const isFormSelected = selectedFormId && selectedFormId !== '0';
 
   return (
-    <Fragment>
+    <>
       {!isFormSelected &&
         <Placeholder
           icon="media-document"
@@ -25,6 +25,6 @@ export const FormsEditor = (props) => {
           label={__('Form will be rendered here.', 'eightshift-forms')}
         />
       }
-    </Fragment>
+    </>
   );
 };

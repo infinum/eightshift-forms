@@ -15,7 +15,7 @@ export const RadioItem = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <RadioItemOptions
           attributes={attributes}
@@ -26,6 +26,6 @@ export const RadioItem = (props) => {
         attributes={attributes}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };

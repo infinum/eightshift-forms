@@ -18,7 +18,7 @@ export const AsyncFormTokenField = withState()((props) => {
   } = props;
 
   return (
-    <Fragment>
+    <>
       {isLoading &&
         <EditorSpinner label={label} help={help} />
       }
@@ -35,7 +35,7 @@ export const AsyncFormTokenField = withState()((props) => {
           }}
         />
       }
-    </Fragment>
+    </>
 
   );
 });

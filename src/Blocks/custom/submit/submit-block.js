@@ -15,7 +15,7 @@ export const Submit = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <SubmitOptions
           attributes={attributes}
@@ -26,6 +26,6 @@ export const Submit = (props) => {
         attributes={attributes}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };

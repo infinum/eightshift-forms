@@ -20,7 +20,7 @@ export const Select = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <LabelOptions
           label={label}
@@ -33,6 +33,6 @@ export const Select = (props) => {
         />
       </InspectorControls>
       <SelectEditor {...props} actions={actions} />
-    </Fragment>
+    </>
   );
 };

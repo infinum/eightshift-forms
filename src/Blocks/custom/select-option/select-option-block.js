@@ -15,7 +15,7 @@ export const SelectOption = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <SelectOptionOptions
           attributes={attributes}
@@ -26,6 +26,6 @@ export const SelectOption = (props) => {
         {...props}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };

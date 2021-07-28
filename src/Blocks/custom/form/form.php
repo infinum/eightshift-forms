@@ -21,44 +21,44 @@ use EightshiftForms\Rest\MailerliteRoute;
 
 $currentUrl = ! empty(\get_permalink()) ? \get_permalink() : '';
 $blockClass = $attributes['blockClass'] ?? '';
-$formAction = $attributes['action'] ?? '';
-$formMethod = $attributes['method'] ?? '';
-$formTarget = $attributes['target'] ?? '';
-$formClasses = $attributes['classes'] ?? '';
-$formId = $attributes['id'] ?? 'form-' . hash('crc32', time() . wp_rand(0, 10000));
-$formType = $attributes['type'] ?? '';
-$formTypesComplex = $attributes['typesComplex'] ?? [];
-$formTypesComplexRedirect = $attributes['typesComplexRedirect'] ?? [];
-$isFormComplex = isset($attributes['isComplexType']) ? filter_var($attributes['isComplexType'], FILTER_VALIDATE_BOOL) : false;
+$formAction = $attributes['formAction'] ?? '';
+$formMethod = $attributes['formMethod'] ?? '';
+$formTarget = $attributes['formTarget'] ?? '';
+$formClasses = $attributes['formClasses'] ?? '';
+$formId = $attributes['formId'] ?? 'form-' . hash('crc32', time() . wp_rand(0, 10000));
+$formType = $attributes['formType'] ?? '';
+$formTypesComplex = $attributes['formTypesComplex'] ?? [];
+$formTypesComplexRedirect = $attributes['formTypesComplexRedirect'] ?? [];
+$isFormComplex = isset($attributes['formIsComplexType']) ? filter_var($attributes['formIsComplexType'], FILTER_VALIDATE_BOOL) : false;
 $formTheme = $attributes['theme'] ?? '';
-$successMessage = $attributes['successMessage'] ?? '';
-$errorMessage = $attributes['errorMessage'] ?? '';
+$formSuccessMessage = $attributes['formSuccessMessage'] ?? '';
+$formErrorMessage = $attributes['formErrorMessage'] ?? '';
 $referralUrl = isset($attributes['referralUrl']) ? $attributes['referralUrl'] : $currentUrl;
-$shouldRedirectOnSuccess = isset($attributes['shouldRedirectOnSuccess']) ? filter_var($attributes['shouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL) : false;
-$redirectUrlSuccess = $attributes['redirectSuccess'] ?? '';
-$dynamicsCrmEntity = $attributes['dynamicsEntity'] ?? '';
-$emailTo = $attributes['emailTo'] ?? '';
-$emailSubject = $attributes['emailSubject'] ?? '';
-$emailMessage = $attributes['emailMessage'] ?? '';
-$emailAdditionalHeaders = $attributes['emailAdditionalHeaders'] ?? '';
-$emailSendConfirmToSender = isset($attributes['emailSendConfirmationToSender']) ? filter_var($attributes['emailSendConfirmationToSender'], FILTER_VALIDATE_BOOL) : false;
-$emailConfirmationSubject = $attributes['emailConfirmationSubject'] ?? '';
-$emailConfirmationMessage = $attributes['emailConfirmationMessage'] ?? '';
-$buckarooRedirectUrl = $attributes['buckarooRedirectUrl'] ?? '';
-$buckarooRedirectUrlCancel = ! empty($currentUrl) ? $currentUrl : \home_url();
-$buckarooRedirectUrlError = $attributes['buckarooRedirectUrlError'] ?? '';
-$buckarooRedirectUrlReject = $attributes['buckarooRedirectUrlReject'] ?? '';
-$buckarooService = $attributes['buckarooService'] ?? '';
-$buckarooPaymentDesc = $attributes['buckarooPaymentDescription'] ?? '';
-$buckarooEmandateDesc = $attributes['buckarooEmandateDescription'] ?? '';
-$buckarooSequenceType = $attributes['buckarooSequenceType'] ?? '';
-$buckarooIsRecurring = $buckarooSequenceType === '0';
-$buckarooSequenceTypeFront = isset($attributes['buckarooIsSequenceTypeOnFrontend']) ? filter_var($attributes['buckarooIsSequenceTypeOnFrontend'], FILTER_VALIDATE_BOOLEAN) : false;
-$mailchimpListId = $attributes['mailchimpListId'] ?? '';
-$mailchimpTags = $attributes['mailchimpTags'] ?? [];
-$mailchimpAddExisting = isset($attributes['mailchimpAddExistingMembers']) ? filter_var($attributes['mailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL) : false;
-$mailerliteGroupId = $attributes['mailerliteGroupId'] ?? '';
-$customEventNames = $attributes['eventNames'] ?? [];
+$formShouldRedirectOnSuccess = isset($attributes['formShouldRedirectOnSuccess']) ? filter_var($attributes['formShouldRedirectOnSuccess'], FILTER_VALIDATE_BOOL) : false;
+$redirectUrlSuccess = $attributes['formRedirectSuccess'] ?? '';
+$dynamicsCrmEntity = $attributes['formDynamicsEntity'] ?? '';
+$formEmailTo = $attributes['formEmailTo'] ?? '';
+$formEmailSubject = $attributes['formEmailSubject'] ?? '';
+$formEmailMessage = $attributes['formEmailMessage'] ?? '';
+$formEmailAdditionalHeaders = $attributes['formEmailAdditionalHeaders'] ?? '';
+$emailSendConfirmToSender = isset($attributes['formEmailSendConfirmationToSender']) ? filter_var($attributes['formEmailSendConfirmationToSender'], FILTER_VALIDATE_BOOL) : false;
+$formEmailConfirmationSubject = $attributes['formEmailConfirmationSubject'] ?? '';
+$formEmailConfirmationMessage = $attributes['formEmailConfirmationMessage'] ?? '';
+$formBuckarooRedirectUrl = $attributes['formBuckarooRedirectUrl'] ?? '';
+$formBuckarooRedirectUrlCancel = ! empty($currentUrl) ? $currentUrl : \home_url();
+$formBuckarooRedirectUrlError = $attributes['formBuckarooRedirectUrlError'] ?? '';
+$formBuckarooRedirectUrlReject = $attributes['formBuckarooRedirectUrlReject'] ?? '';
+$formBuckarooService = $attributes['formBuckarooService'] ?? '';
+$buckarooPaymentDesc = $attributes['formBuckarooPaymentDescription'] ?? '';
+$buckarooEmandateDesc = $attributes['formBuckarooEmandateDescription'] ?? '';
+$formBuckarooSequenceType = $attributes['formBuckarooSequenceType'] ?? '';
+$buckarooIsRecurring = $formBuckarooSequenceType === '0';
+$buckarooSequenceTypeFront = isset($attributes['formBuckarooIsSequenceTypeOnFrontend']) ? filter_var($attributes['formBuckarooIsSequenceTypeOnFrontend'], FILTER_VALIDATE_BOOLEAN) : false;
+$formMailchimpListId = $attributes['formMailchimpListId'] ?? '';
+$formMailchimpTags = $attributes['formMailchimpTags'] ?? [];
+$mailchimpAddExisting = isset($attributes['formMailchimpAddExistingMembers']) ? filter_var($attributes['formMailchimpAddExistingMembers'], FILTER_VALIDATE_BOOL) : false;
+$formMailerliteGroupId = $attributes['formMailerliteGroupId'] ?? '';
+$customEventNames = $attributes['formEventNames'] ?? [];
 $usedTypes = Forms::detectUsedTypes($isFormComplex, $formType, $formTypesComplex, $formTypesComplexRedirect);
 $innerBlockContent = ! empty($innerBlockContent) ? $innerBlockContent : '';
 
@@ -86,10 +86,10 @@ if (empty($this)) {
 	target="<?php echo esc_attr($formTarget); ?>"
 	<?php ! empty($formId) ? printf('id="%s"', esc_attr($formId)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 	<?php $isFormComplex ? printf('data-is-form-complex') : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped  ?>
-	<?php $shouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
+	<?php $formShouldRedirectOnSuccess ? printf('data-redirect-on-success="%s"', esc_url($redirectUrlSuccess)) : ''; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped ?>
 
 	<?php if (isset($usedTypes[Config::BUCKAROO_METHOD])) { ?>
-		data-buckaroo-service="<?php echo esc_attr($buckarooService); ?>"
+		data-buckaroo-service="<?php echo esc_attr($formBuckarooService); ?>"
 	<?php } ?>
 
 	<?php if (! $isFormComplex) { ?>
@@ -121,22 +121,22 @@ if (empty($this)) {
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::EMAIL_METHOD])) { ?>
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::TO_PARAM); ?>" value="<?php echo esc_attr($emailTo); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SUBJECT_PARAM); ?>" value="<?php echo esc_attr($emailSubject); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::MESSAGE_PARAM); ?>" value="<?php echo esc_attr($emailMessage); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::ADDITIONAL_HEADERS_PARAM); ?>" value="<?php echo esc_attr($emailAdditionalHeaders); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::TO_PARAM); ?>" value="<?php echo esc_attr($formEmailTo); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SUBJECT_PARAM); ?>" value="<?php echo esc_attr($formEmailSubject); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::MESSAGE_PARAM); ?>" value="<?php echo esc_attr($formEmailMessage); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::ADDITIONAL_HEADERS_PARAM); ?>" value="<?php echo esc_attr($formEmailAdditionalHeaders); ?>" />
 		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::SEND_CONFIRMATION_TO_SENDER_PARAM); ?>" value="<?php echo (int) $emailSendConfirmToSender; ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_SUBJECT_PARAM); ?>" value="<?php echo esc_attr($emailConfirmationSubject); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_MESSAGE_PARAM); ?>" value="<?php echo esc_attr($emailConfirmationMessage); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_SUBJECT_PARAM); ?>" value="<?php echo esc_attr($formEmailConfirmationSubject); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(SendEmailRoute::CONFIRMATION_MESSAGE_PARAM); ?>" value="<?php echo esc_attr($formEmailConfirmationMessage); ?>" />
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::BUCKAROO_METHOD])) { ?>
-		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_PARAM); ?>" value="<?php echo esc_attr($buckarooRedirectUrl); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_CANCEL_PARAM); ?>" value="<?php echo esc_attr($buckarooRedirectUrlCancel); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_ERROR_PARAM); ?>" value="<?php echo esc_attr($buckarooRedirectUrlError); ?>" />
-		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_REJECT_PARAM); ?>" value="<?php echo esc_attr($buckarooRedirectUrlReject); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_PARAM); ?>" value="<?php echo esc_attr($formBuckarooRedirectUrl); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_CANCEL_PARAM); ?>" value="<?php echo esc_attr($formBuckarooRedirectUrlCancel); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_ERROR_PARAM); ?>" value="<?php echo esc_attr($formBuckarooRedirectUrlError); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::REDIRECT_URL_REJECT_PARAM); ?>" value="<?php echo esc_attr($formBuckarooRedirectUrlReject); ?>" />
 
-		<?php if ($buckarooService === 'emandate') { ?>
+		<?php if ($formBuckarooService === 'emandate') { ?>
 		<input type="hidden" name="<?php echo esc_attr(BuckarooEmandateRoute::EMANDATE_DESCRIPTION_PARAM); ?>" value="<?php echo esc_attr($buckarooEmandateDesc); ?>" />
 
 			<?php if (! $buckarooSequenceTypeFront && $buckarooIsRecurring) { ?>
@@ -144,22 +144,22 @@ if (empty($this)) {
 			<?php } ?>
 		<?php } ?>
 
-		<?php if ($buckarooService === 'ideal') { ?>
+		<?php if ($formBuckarooService === 'ideal') { ?>
 		<input type="hidden" name="<?php echo esc_attr(Buckaroo_Route::PAYMENT_DESCRIPTION_PARAM); ?>" value="<?php echo esc_attr($buckarooPaymentDesc); ?>" />
 		<?php } ?>
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::MAILCHIMP_METHOD])) { ?>
-		<input type="hidden" name="<?php echo esc_attr(MailchimpRoute::LIST_ID_PARAM); ?>" value="<?php echo esc_attr($mailchimpListId); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(MailchimpRoute::LIST_ID_PARAM); ?>" value="<?php echo esc_attr($formMailchimpListId); ?>" />
 		<input type="hidden" name="<?php echo esc_attr(MailchimpRoute::ADD_EXISTING_MEMBERS_PARAM); ?>" value="<?php echo (int) $mailchimpAddExisting; ?>" />
 
-		<?php foreach ($mailchimpTags as $mailchimpTag) { ?>
+		<?php foreach ($formMailchimpTags as $mailchimpTag) { ?>
 		<input type="hidden" name="<?php echo esc_attr(MailchimpRoute::TAGS_PARAM); ?>[]" value="<?php echo esc_attr($mailchimpTag); ?>" />
 		<?php } ?>
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::MAILERLITE_METHOD])) { ?>
-		<input type="hidden" name="<?php echo esc_attr(MailerliteRoute::GROUP_ID_PARAM); ?>" value="<?php echo esc_attr($mailerliteGroupId); ?>" />
+		<input type="hidden" name="<?php echo esc_attr(MailerliteRoute::GROUP_ID_PARAM); ?>" value="<?php echo esc_attr($formMailerliteGroupId); ?>" />
 	<?php } ?>
 
 	<?php if (isset($usedTypes[Config::CUSTOM_EVENT_METHOD])) { ?>
@@ -174,7 +174,7 @@ if (empty($this)) {
 
 	<?php echo wp_kses_post(Components::render('form-overlay')); ?>
 	<?php echo wp_kses_post(Components::render('spinner', ['theme' => $formTheme])); ?>
-	<?php echo wp_kses_post(Components::render('form-message', ['message' => $successMessage, 'type' => 'success', 'theme' => $formTheme])); ?>
+	<?php echo wp_kses_post(Components::render('form-message', ['message' => $formSuccessMessage, 'type' => 'success', 'theme' => $formTheme])); ?>
 	<?php echo wp_kses_post(Components::render('form-error-message-wrapper', ['theme' => $formTheme])); ?>
 </div>
 

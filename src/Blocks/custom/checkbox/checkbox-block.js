@@ -19,7 +19,7 @@ export const Checkbox = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <LabelOptions
           label={label}
@@ -34,6 +34,6 @@ export const Checkbox = (props) => {
         attributes={attributes}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };
