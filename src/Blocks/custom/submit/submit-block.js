@@ -8,24 +8,24 @@ import { SubmitEditor } from './components/submit-editor';
 import { SubmitOptions } from './components/submit-options';
 
 export const Submit = (props) => {
-  const {
-    attributes,
-  } = props;
+	const {
+		attributes,
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <SubmitOptions
-          attributes={attributes}
-          actions={actions}
-        />
-      </InspectorControls>
-      <SubmitEditor
-        attributes={attributes}
-        actions={actions}
-      />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<SubmitOptions
+					attributes={attributes}
+					actions={actions}
+				/>
+			</InspectorControls>
+			<SubmitEditor
+				attributes={attributes}
+				actions={actions}
+			/>
+		</>
+	);
 };

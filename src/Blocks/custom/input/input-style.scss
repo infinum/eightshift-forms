@@ -1,7 +1,7 @@
 .block-input {
-  &__label-content {
-    &--hidden {
-      @extend %visually-hidden;
-    }
-  }
+	&__label-content {
+		&--hidden {
+			@extend %visually-hidden;
+		}
+	}
 }

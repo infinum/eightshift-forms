@@ -8,18 +8,18 @@ import { useSelect } from '@wordpress/data';
  */
 export const updateThemeFromTopParent = (clientId, onChange) => {
 
-  const parentClientId = useSelect((select) => {
-    const parents = select('core/block-editor').getBlockParents(clientId);
-    return parents[0] || '';
-  });
+	const parentClientId = useSelect((select) => {
+		const parents = select('core/block-editor').getBlockParents(clientId);
+		return parents[0] || '';
+	});
 
-  const {
-    attributes: {
-      theme = '',
-    },
-  } = useSelect((select) => {
-    return select('core/block-editor').getBlocksByClientId(parentClientId)[0] || {};
-  });
+	const {
+		attributes: {
+			theme = '',
+		},
+	} = useSelect((select) => {
+		return select('core/block-editor').getBlocksByClientId(parentClientId)[0] || {};
+	});
 
-  onChange(theme);
+	onChange(theme);
 };

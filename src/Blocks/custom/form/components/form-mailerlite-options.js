@@ -9,7 +9,7 @@ import manifest from '../manifest.json';
  *
  * @param {object} props Component props.
  */
-export const FormMailerliteOptions = ({attributes, setAttributes}) => {
+export const FormMailerliteOptions = ({ attributes, setAttributes }) => {
 	const formMailerliteGroupId = checkAttr('formMailerliteGroupId', attributes, manifest);
 	const formMailerliteGroups = checkAttr('formMailerliteGroups', attributes, manifest);
 
@@ -29,7 +29,7 @@ export const FormMailerliteOptions = ({attributes, setAttributes}) => {
 				value={formMailerliteGroupId}
 				options={groupsOptions}
 				onChange={(value) => setAttributes({ [getAttrKey('formMailerliteGroupId', attributes, manifest)]: value })}
-				/>
+			/>
 		</>
 	);
 };

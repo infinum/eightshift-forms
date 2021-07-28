@@ -9,7 +9,7 @@ import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
  *
  * @param {object} props Component props.
  */
-export const FormCustomOptions = ({attributes, setAttributes}) => {
+export const FormCustomOptions = ({ attributes, setAttributes }) => {
 
 	const formAction = checkAttr('formAction', attributes, manifest);
 	const formMethod = checkAttr('formMethod', attributes, manifest);

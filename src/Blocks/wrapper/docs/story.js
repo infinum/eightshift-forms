@@ -7,7 +7,7 @@ import { WrapperOptions } from '../components/wrapper-options';
 export default {
 	title: `Wrapper/${manifest.title}`,
 	parameters: {
-		docs: { 
+		docs: {
 			page: readme
 		}
 	},

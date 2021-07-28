@@ -1,12 +1,12 @@
 .block-basic-captcha {
-  &__captcha-number {
-    @extend %input-reset;
-    background: none;
-    outline: 0;
-  }
+	&__captcha-number {
+		@extend %input-reset;
+		background: none;
+		outline: 0;
+	}
 
-  &__content-wrap {
-    display: flex;
-    align-items: center;
-  }
+	&__content-wrap {
+		display: flex;
+		align-items: center;
+	}
 }

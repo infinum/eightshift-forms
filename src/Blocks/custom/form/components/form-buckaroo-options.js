@@ -114,7 +114,7 @@ export const FormBuckarooOptions = ({
 					label={__('Redirect url (when payment rejected)', 'eightshift-forms')}
 					value={redirectUrlReject}
 					onChange={(value) => setAttributes({ [getAttrKey('formBuckarooRedirectUrlReject', attributes, manifest)]: value })}
-					/>
+				/>
 			}
 
 		</>

@@ -8,24 +8,24 @@ import { SelectOptionEditor } from './components/select-option-editor';
 import { SelectOptionOptions } from './components/select-option-options';
 
 export const SelectOption = (props) => {
-  const {
-    attributes,
-  } = props;
+	const {
+		attributes,
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <SelectOptionOptions
-          attributes={attributes}
-          actions={actions}
-        />
-      </InspectorControls>
-      <SelectOptionEditor
-        {...props}
-        actions={actions}
-      />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<SelectOptionOptions
+					attributes={attributes}
+					actions={actions}
+				/>
+			</InspectorControls>
+			<SelectOptionEditor
+				{...props}
+				actions={actions}
+			/>
+		</>
+	);
 };

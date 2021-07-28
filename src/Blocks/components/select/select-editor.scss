@@ -1,10 +1,10 @@
 $select-editor: (
-  background-color: global-settings(colors, sea),
+	background-color: global-settings(colors, sea),
 );
 
 .select {
-  &__editor {
-    padding: 20px;
-    background-color: map-get-strict($select-editor, background-color);
-  }
+	&__editor {
+		padding: 20px;
+		background-color: map-get-strict($select-editor, background-color);
+	}
 }

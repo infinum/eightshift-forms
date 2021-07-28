@@ -6,7 +6,7 @@ import { NewSection } from '../../../components/new-section/new-section';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FormEmailOptions = ({attributes, setAttributes, richTextClass}) => {
+export const FormEmailOptions = ({ attributes, setAttributes, richTextClass }) => {
 
 	const formEmailTo = checkAttr('formEmailTo', attributes, manifest);
 	const formEmailSubject = checkAttr('formEmailSubject', attributes, manifest);
@@ -63,14 +63,14 @@ export const FormEmailOptions = ({attributes, setAttributes, richTextClass}) => 
 				help={__('If enabled, an email will be sent to the user after filling out this form.', 'eightshift-forms')}
 				checked={formEmailSendConfirmationToSender}
 				onChange={(value) => setAttributes({ [getAttrKey('formEmailSendConfirmationToSender', attributes, manifest)]: value })}
-				/>
+			/>
 			{formEmailSendConfirmationToSender &&
 				<TextControl
 					label={__('Subject', 'eightshift-forms')}
 					help={__('Subject of the confirmation email.', 'eightshift-forms')}
 					value={formEmailConfirmationSubject}
 					onChange={(value) => setAttributes({ [getAttrKey('formEmailConfirmationSubject', attributes, manifest)]: value })}
-					/>
+				/>
 			}
 			{formEmailSendConfirmationToSender &&
 				<BaseControl

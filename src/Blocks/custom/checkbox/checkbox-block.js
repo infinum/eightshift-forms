@@ -9,31 +9,31 @@ import { CheckboxEditor } from './components/checkbox-editor';
 import { CheckboxOptions } from './components/checkbox-options';
 
 export const Checkbox = (props) => {
-  const {
-    attributes,
-    attributes: {
-      label,
-    },
-  } = props;
+	const {
+		attributes,
+		attributes: {
+			label,
+		},
+	} = props;
 
-  const actions = getActions(props, manifest);
+	const actions = getActions(props, manifest);
 
-  return (
-    <>
-      <InspectorControls>
-        <LabelOptions
-          label={label}
-          onChangeLabel={actions.onChangeLabel}
-        />
-        <CheckboxOptions
-          attributes={attributes}
-          actions={actions}
-        />
-      </InspectorControls>
-      <CheckboxEditor
-        attributes={attributes}
-        actions={actions}
-      />
-    </>
-  );
+	return (
+		<>
+			<InspectorControls>
+				<LabelOptions
+					label={label}
+					onChangeLabel={actions.onChangeLabel}
+				/>
+				<CheckboxOptions
+					attributes={attributes}
+					actions={actions}
+				/>
+			</InspectorControls>
+			<CheckboxEditor
+				attributes={attributes}
+				actions={actions}
+			/>
+		</>
+	);
 };
