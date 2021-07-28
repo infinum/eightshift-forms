@@ -55,6 +55,19 @@ class WP_REST_Request
 	}
 
 	/**
+	* Retrieves multipart file parameters from the body.
+	*
+	* These are the parameters you'd typically find in `$_FILES`.
+	*
+	* @since 4.4.0
+	*
+	* @return array Parameter map of key to value
+	*/
+	public function get_file_params() {
+		return $this->params['FILES'];
+	}
+
+	/**
 	 * Retrieves all params merged into 1 array.
 	 *
 	 * @return array Parameter map of key to value
