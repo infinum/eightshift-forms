@@ -85,7 +85,7 @@
       "type": "string",
       "default": "/thank-you"
     },
-    "dynamicsEntity": {
+    "formDynamicsEntity": {
       "type": "string"
     },
     "formEmailTo": {
@@ -115,58 +115,58 @@
       "type": "string",
       "default": "We have received your query and will get back to you as soon as possible."
     },
-    "buckarooService": {
+    "formBuckarooService": {
       "type": "string",
       "default": "ideal"
     },
-    "buckarooEmandateDescription": {
+    "formBuckarooEmandateDescription": {
       "type": "string",
       "default": "Emandate reason"
     },
-    "buckarooSequenceType": {
+    "formBuckarooSequenceType": {
       "type": "string",
       "default": "0"
     },
-    "buckarooPaymentDescription": {
+    "formBuckarooPaymentDescription": {
       "type": "string",
       "default": "Description of the payment"
     },
-    "buckarooIsSequenceTypeOnFrontend": {
+    "formBuckarooIsSequenceTypeOnFrontend": {
       "type": "boolean",
       "default": false
     },
-    "buckarooRedirectUrl": {
+    "formBuckarooRedirectUrl": {
       "type": "string"
     },
-    "buckarooRedirectUrlCancel": {
+    "formBuckarooRedirectUrlCancel": {
       "type": "string"
     },
-    "buckarooRedirectUrlError": {
+    "formBuckarooRedirectUrlError": {
       "type": "string"
     },
-    "buckarooRedirectUrlReject": {
+    "formBuckarooRedirectUrlReject": {
       "type": "string"
     },
-    "mailchimpListId": {
+    "formMailchimpListId": {
       "type": "string"
     },
-    "mailchimpAddTag": {
+    "formMailchimpAddTag": {
       "type": "boolean"
     },
-    "mailchimpTags": {
+    "formMailchimpTags": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "mailchimpAddExistingMembers": {
+    "formMailchimpAddExistingMembers": {
       "type": "boolean",
       "default": false
     },
-    "mailerliteGroupId": {
+    "formMailerliteGroupId": {
       "type": "string"
     },
-    "eventNames": {
+    "formEventNames": {
       "type": "array",
       "items": {
         "type": "string"

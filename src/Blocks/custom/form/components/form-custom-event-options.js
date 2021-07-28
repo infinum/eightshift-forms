@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { AsyncFormTokenField } from '../../../components/async-form-token-field/async-form-token-field';
-
+import { getAttrKey } from '@eightshift/frontend-libs/scripts/helpers';
+import manifest from '../manifest.json';
 
 /**
  * Options component
@@ -10,8 +11,9 @@ import { AsyncFormTokenField } from '../../../components/async-form-token-field/
  */
 export const FormCustomEventOptions = (props) => {
   const {
-    eventNames,
-    onChangeEventNames,
+		attributes,
+		setAttributes,
+    formEventNames,
     suggestions,
     isLoading = false,
   } = props;
@@ -21,10 +23,10 @@ export const FormCustomEventOptions = (props) => {
       <AsyncFormTokenField
         label={__('Events', 'eightshift-forms')}
         placeholder={__('Start typing to add events', 'eightshift-forms')}
-        value={eventNames}
+        value={formEventNames}
         suggestions={suggestions}
         isLoading={isLoading}
-        onChange={onChangeEventNames}
+				onChange={(value) => setAttributes({ [getAttrKey('formEventNames', attributes, manifest)]: value })}
       />
       <p>{__('Add custom JS events which will be fired when this form is submitted', 'eightshift-forms')}</p>
     </Fragment>

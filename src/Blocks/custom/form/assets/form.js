@@ -194,10 +194,10 @@ export class Form {
     }
 
     if (formType === 'buckaroo') {
-      const buckarooService = this.form.getAttribute(this.DATA_ATTR_BUCKAROO_SERVICE);
+      const formBuckarooService = this.form.getAttribute(this.DATA_ATTR_BUCKAROO_SERVICE);
       let restUrl = '';
 
-      switch (buckarooService) {
+      switch (formBuckarooService) {
         case 'ideal':
           restUrl = this.restRouteUrls.buckarooIdealRestUri;
           break;
