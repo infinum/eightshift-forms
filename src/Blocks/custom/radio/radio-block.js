@@ -20,7 +20,7 @@ export const Radio = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <LabelOptions
           label={label}
@@ -36,6 +36,6 @@ export const Radio = (props) => {
         attributes={attributes}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };

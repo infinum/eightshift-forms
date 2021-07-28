@@ -30,7 +30,7 @@ export const AsyncSelectControl = (props) => {
   ];
 
   return (
-    <Fragment>
+    <>
       {isLoading &&
         <EditorSpinner label={label} help={help} />
       }
@@ -45,7 +45,7 @@ export const AsyncSelectControl = (props) => {
         />
       }
 
-    </Fragment>
+    </>
   );
 };
 

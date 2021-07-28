@@ -15,7 +15,7 @@ export const Forms = (props) => {
   const actions = getActions(props, manifest);
 
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <FormsOptions
           attributes={attributes}
@@ -26,6 +26,6 @@ export const Forms = (props) => {
         attributes={attributes}
         actions={actions}
       />
-    </Fragment>
+    </>
   );
 };

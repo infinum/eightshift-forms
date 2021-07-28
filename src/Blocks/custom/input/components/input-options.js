@@ -122,7 +122,7 @@ export const InputOptions = (props) => {
       }
 
       {onChangePattern &&
-        <Fragment>
+        <>
           <TextControl
             label={__('Custom pattern', 'eightshift-forms')}
             help={__('Set a custom pattern that the user must match in order for this field to be valid', 'eightshift-forms')}
@@ -132,7 +132,7 @@ export const InputOptions = (props) => {
           <BaseControl>
             <ExternalLink href="https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#Validating_against_a_regular_expression">{__('More info on regular expressions', 'eightshift-forms')}</ExternalLink>
           </BaseControl>
-        </Fragment>
+        </>
       }
 
       {onChangeCustomValidityMsg && pattern &&

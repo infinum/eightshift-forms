@@ -176,7 +176,7 @@ export const FormGeneralOptions = (attributes) => {
   };
 
   return (
-    <Fragment>
+    <>
 
       <ToggleControl
         label={__('Multiple types?', 'eightshift-forms')}
@@ -272,6 +272,6 @@ export const FormGeneralOptions = (attributes) => {
         />
       }
 
-    </Fragment>
+    </>
   );
 };

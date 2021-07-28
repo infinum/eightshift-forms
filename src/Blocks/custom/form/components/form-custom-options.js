@@ -18,7 +18,7 @@ export const FormCustomOptions = (attributes) => {
 	} = attributes;
 
 	return (
-		<Fragment>
+		<>
 			<TextControl
 				label={__('Action', 'eightshift-forms')}
 				value={formAction}
@@ -36,6 +36,6 @@ export const FormCustomOptions = (attributes) => {
 				value={formTarget}
 				onChange={(value) => setAttributes({ [getAttrKey('formTarget', attributes, manifest)]: value })}
 			/>
-		</Fragment>
+		</>
 	);
 };

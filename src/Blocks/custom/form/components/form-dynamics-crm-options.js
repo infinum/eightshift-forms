@@ -15,7 +15,7 @@ export const FormDynamicsCrmOptions = (props) => {
   } = props;
 
   return (
-    <Fragment>
+    <>
       {isDynamicsCrmUsed && formType === 'dynamics-crm' &&
         <SelectControl
           label={__('CRM Entity', 'eightshift-forms')}
@@ -26,6 +26,6 @@ export const FormDynamicsCrmOptions = (props) => {
         />
       }
 
-    </Fragment>
+    </>
   );
 };

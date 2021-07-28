@@ -21,7 +21,7 @@ export const FormEmailOptions = (props) => {
 	} = props;
 
 	return (
-		<Fragment>
+		<>
 			<NewSection
 				label={__('Admin email settings', 'eightshift-forms')}
 			/>
@@ -89,6 +89,6 @@ export const FormEmailOptions = (props) => {
 					/>
 				</BaseControl>
 			}
-		</Fragment>
+		</>
 	);
 };

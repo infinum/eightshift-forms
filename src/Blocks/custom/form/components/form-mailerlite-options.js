@@ -26,7 +26,7 @@ export const FormMailerliteOptions = (props) => {
 	];
 
 	return (
-		<Fragment>
+		<>
 			<SelectControl
 				label={__('Group ID', 'eightshift-forms')}
 				help={__('Please select to which group does this form add members to', 'eightshift-forms')}
@@ -34,6 +34,6 @@ export const FormMailerliteOptions = (props) => {
 				options={groupsOptions}
 				onChange={(value) => setAttributes({ [getAttrKey('formMailerliteGroupId', attributes, manifest)]: value })}
 				/>
-		</Fragment>
+		</>
 	);
 };

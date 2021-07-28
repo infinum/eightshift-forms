@@ -25,7 +25,7 @@ export const RadioEditor = (props) => {
   const isPrefillUsed = prefillData && prefillDataSource;
 
   return (
-    <Fragment>
+    <>
 
       {isPrefillUsed &&
         <ServerSideRender
@@ -50,6 +50,6 @@ export const RadioEditor = (props) => {
           </div>
         </div>
       }
-    </Fragment>
+    </>
   );
 };

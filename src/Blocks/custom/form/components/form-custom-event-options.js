@@ -19,7 +19,7 @@ export const FormCustomEventOptions = (props) => {
   } = props;
 
   return (
-    <Fragment>
+    <>
       <AsyncFormTokenField
         label={__('Events', 'eightshift-forms')}
         placeholder={__('Start typing to add events', 'eightshift-forms')}
@@ -29,6 +29,6 @@ export const FormCustomEventOptions = (props) => {
 				onChange={(value) => setAttributes({ [getAttrKey('formEventNames', attributes, manifest)]: value })}
       />
       <p>{__('Add custom JS events which will be fired when this form is submitted', 'eightshift-forms')}</p>
-    </Fragment>
+    </>
   );
 };

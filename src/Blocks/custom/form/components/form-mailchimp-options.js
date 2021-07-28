@@ -72,7 +72,7 @@ export const FormMailchimpOptions = (props) => {
 	];
 
 	return (
-		<Fragment>
+		<>
 			<SelectControl
 				label={__('List ID (Audience)', 'eightshift-forms')}
 				help={__('Please select which list does this form add members to', 'eightshift-forms')}
@@ -106,6 +106,6 @@ export const FormMailchimpOptions = (props) => {
 				checked={formMailchimpAddExistingMembers}
 				onChange={(value) => setAttributes({ [getAttrKey('formMailchimpAddExistingMembers', attributes, manifest)]: value })}
 				/>
-		</Fragment>
+		</>
 	);
 };

@@ -14,7 +14,7 @@ export const Wrapper = (props) => {
 	} = props;
 
 	return (
-		<Fragment>
+		<>
 			<InspectorControls>
 				<WrapperOptions
 					attributes={attributes}
@@ -26,6 +26,6 @@ export const Wrapper = (props) => {
 				attributes={attributes}
 				children={children}
 			/>
-		</Fragment>
+		</>
 	);
 };

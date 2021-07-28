@@ -5,11 +5,11 @@ import { FormOptions } from './components/form-options';
 
 export const Form = (props) => {
   return (
-    <Fragment>
+    <>
       <InspectorControls>
         <FormOptions {...props}/>
       </InspectorControls>
       <FormEditor {...props} />
-    </Fragment>
+    </>
   );
 };

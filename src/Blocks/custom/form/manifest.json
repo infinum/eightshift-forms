@@ -172,5 +172,27 @@
         "type": "string"
       }
     }
-  }
+  },
+	"options": {
+			"formBuckarooService": [
+				{
+					"label": "iDEAL",
+					"value": "ideal"
+				},
+				{
+					"label": "Emandate",
+					"value": "emandate"
+				}
+			],
+			"formBuckarooSequenceType": [
+				{
+					"label": "Recurring",
+					"value": "0"
+				},
+				{
+					"label": "One Off",
+					"value": "1"
+				}
+			]
+	}
 }

@@ -40,7 +40,7 @@ export const SelectEditor = (props) => {
   const isPrefillUsed = prefillData && prefillDataSource;
 
   return (
-    <Fragment>
+    <>
 
       {isPrefillUsed &&
         <ServerSideRender
@@ -86,6 +86,6 @@ export const SelectEditor = (props) => {
           </div>
         </div>
       }
-    </Fragment>
+    </>
   );
 };

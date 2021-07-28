@@ -180,9 +180,9 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 				tabs={tabs}
 			>
 				{(tab) => (
-					<Fragment>
+					<>
 						{tab.name === 'general' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('General Options', 'eightshift-forms')}</strong>
 								<p>{__('These are general form options.', 'eightshift-forms')}</p>
@@ -217,10 +217,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									value={formId}
 									onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
 								/>
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'email' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Email Options', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is sending emails. You can use form fields by name as placeholders in Subject and Message fields in the following format [[field_name]]. These will be replace with actual field values before sending.', 'eightshift-forms')}</p>
@@ -237,10 +237,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									formEmailConfirmationMessage={formEmailConfirmationMessage}
 									formEmailConfirmationSubject={formEmailConfirmationSubject}
 								/>
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'dynamics-crm' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Dynamics CRM Options', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is sending data to Dynamics CRM.', 'eightshift-forms')}</p>
@@ -253,10 +253,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									crmEntitiesAsOptions={crmEntitiesAsOptions}
 									isDynamicsCrmUsed={isDynamicsCrmUsed}
 								/>
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'buckaroo' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Buckaroo Options', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is sending data to Buckaroo.', 'eightshift-forms')}</p>
@@ -276,10 +276,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									redirectUrlReject={formBuckarooRedirectUrlReject}
 								/>
 
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'mailchimp' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Mailchimp Options', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is sending data to Mailchimp.', 'eightshift-forms')}</p>
@@ -294,10 +294,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									formMailchimpAddExistingMembers={formMailchimpAddExistingMembers}
 								/>
 
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'mailerlite' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('MailerLite Options', 'eightshift-forms')}</strong>
 								<p>{__('These are the options for when your form is sending data to MailerLite.', 'eightshift-forms')}</p>
@@ -309,10 +309,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									formMailerliteGroups={formMailerliteGroups}
 								/>
 
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'custom' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Custom PHP action', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is triggering a custom PHP action.', 'eightshift-forms')}</p>
@@ -325,10 +325,10 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									formTarget={formTarget}
 								/>
 
-							</Fragment>
+							</>
 						)}
 						{tab.name === 'custom-event' && (
-							<Fragment>
+							<>
 								<br />
 								<strong className="notice-title">{__('Custom event options', 'eightshift-forms')}</strong>
 								<p>{__('These are options for when your form is triggering a custom event.', 'eightshift-forms')}</p>
@@ -340,9 +340,9 @@ export const FormOptions = ({ setAttributes, attributes }) => {
 									formEventNames={formEventNames}
 								/>
 
-							</Fragment>
+							</>
 						)}
-					</Fragment>
+					</>
 				)}
 			</TabPanel>
 		</PanelBody>
