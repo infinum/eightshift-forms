@@ -1,11 +1,11 @@
 <p align="center">
-  <img alt="Eightshift Boilerplate Plugin" src="https://raw.githubusercontent.com/infinum/eightshift-forms/develop/package/intro.png" />
+  <img alt="Eightshift Boilerplate Plugin" src="https://repository-images.githubusercontent.com/204961525/c62d0e69-e816-48bc-95fc-263c7e450573" />
 </p>
 
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-forms.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-forms)
 [![license](https://img.shields.io/github/license/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
-[![codecov](https://codecov.io/gh/infinum/eightshift-forms/branch/develop/graph/badge.svg?token=02Lfa2jjoK)](https://codecov.io/gh/infinum/eightshift-forms)
+[![codecov](https://img.shields.io/codecov/c/gh/infinum/eightshift-forms/branch/develop?label=Codecov&style=for-the-badge&token=02Lfa2jjoK)](https://codecov.io/gh/infinum/eightshift-forms)
 
 # Eightshift Forms Plugin
 
