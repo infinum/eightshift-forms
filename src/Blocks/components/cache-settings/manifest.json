@@ -1,0 +1,19 @@
+{
+	"title": "Cache Settings",
+	"componentClass": "cache-settings",
+	"componentJsClass": "js-cache-settings",
+	"attributes": {
+		"cacheSettingsPageTitle": {
+			"type": "string"
+		},
+		"cacheSettingsSubTitle": {
+			"type": "string"
+		},
+		"cacheSettingsAjaxAction": {
+			"type": "string"
+		},
+		"cacheSettingsAjaxTypes": {
+			"type": "array"
+		}
+	}
+}
