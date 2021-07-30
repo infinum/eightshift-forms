@@ -25,14 +25,14 @@ class Greenhouse implements GreenhouseClientInterface
 	 *
 	 * @var string
 	 */
-	public const TRANSIENT_JOBS = 'ef_greenhouse_jobs';
+	public const CACHE_JOBS = 'ef_greenhouse_jobs';
 
 	/**
 	 * Transient LIFESPAN for storing GH Jobs. Default 6 hours like WP Rocket cache.
 	 *
 	 * @var string
 	 */
-	public const TRANSIENT_JOBS_LIFESPAN = 21600;
+	public const CACHE_JOBS_LIFESPAN = 21600;
 
 	/**
 	 * Cache object used for caching Mailchimp responses.
@@ -58,12 +58,12 @@ class Greenhouse implements GreenhouseClientInterface
 	 */
 	public function getJobs(): array
 	{
-		$output = $this->cache->get(static::TRANSIENT_JOBS);
+		$output = $this->cache->get(static::CACHE_JOBS);
 
 		if (!$output) {
 			$output = (string) wp_json_encode($this->getJobsRaw());
 
-			$this->cache->save(static::TRANSIENT_JOBS, $output, static::TRANSIENT_JOBS_LIFESPAN);
+			$this->cache->save(static::CACHE_JOBS, $output, static::CACHE_JOBS_LIFESPAN);
 		}
 
 		return json_decode($output, true);
