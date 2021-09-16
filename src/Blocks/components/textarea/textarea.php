@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the textarea Component.
+ * Template for the Textarea Component.
  *
  * @package EightshiftForms
  */

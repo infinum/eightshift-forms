@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the Form sBlock view.
+ * Template for the Forms Block view.
  *
  * @package EightshiftForms
  */

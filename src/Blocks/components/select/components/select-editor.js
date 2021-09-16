@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import { InnerBlocks } from '@wordpress/editor';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -16,7 +15,7 @@ export const SelectEditor = (attributes) => {
 	} = attributes;
 
 	const selectId = checkAttr('selectId', attributes, manifest);
-	const selectAllowedBlocks = checkAttr('selectAllowedBlocks', attributes, manifest);
+	const selectOptions = checkAttr('selectOptions', attributes, manifest);
 
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
@@ -31,9 +30,7 @@ export const SelectEditor = (attributes) => {
 				id={selectId}
 			>
 				Select
-					<InnerBlocks
-						allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
-					/>
+				{selectOptions}
 			</div>
 		</>
 	);

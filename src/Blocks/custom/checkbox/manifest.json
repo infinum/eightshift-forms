@@ -15,5 +15,16 @@
 	},
 	"parent": [
 		"eightshift/form"
-	]
+	],
+	"attributes": {
+		"checkboxAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-forms/choice"
+			]
+		}
+	}
 }

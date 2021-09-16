@@ -15,5 +15,16 @@
 	},
 	"parent": [
 		"eightshift/form"
-	]
+	],
+	"attributes": {
+		"selectAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-forms/select-option"
+			]
+		}
+	}
 }

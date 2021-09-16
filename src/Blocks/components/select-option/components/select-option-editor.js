@@ -4,6 +4,7 @@ import { checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const SelectOptionEditor = (attributes) => {
+
 	const selectOptionLabel = checkAttr('selectOptionLabel', attributes, manifest);
 
 	return (

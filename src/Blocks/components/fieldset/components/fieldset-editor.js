@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import { InnerBlocks } from '@wordpress/editor';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -17,8 +16,8 @@ export const FieldsetEditor = (attributes) => {
 
 	const fieldsetLegend = checkAttr('fieldsetLegend', attributes, manifest);
 	const fieldsetId = checkAttr('fieldsetId', attributes, manifest);
-	const fieldsetAllowedBlocks = checkAttr('fieldsetAllowedBlocks', attributes, manifest);
 	const fieldsetName = checkAttr('fieldsetName', attributes, manifest);
+	const fieldsetContent = checkAttr('fieldsetContent', attributes, manifest);
 
 	const fieldsetClass = classnames([
 		selector(componentClass, componentClass),
@@ -37,9 +36,7 @@ export const FieldsetEditor = (attributes) => {
 					{fieldsetLegend}
 				</legend>
 			}
-			<InnerBlocks
-				allowedBlocks={(typeof fieldsetAllowedBlocks === 'undefined') || fieldsetAllowedBlocks}
-			/>
+			{fieldsetContent}
 		</fieldset>
 	);
 };

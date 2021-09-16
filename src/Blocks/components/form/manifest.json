@@ -13,17 +13,6 @@
 		}
 	},
 	"attributes": {
-		"formAllowedBlocks": {
-			"type": "array",
-			"default": [
-				"eightshift-forms/checkbox",
-				"eightshift-forms/input",
-				"eightshift-forms/radio",
-				"eightshift-forms/select",
-				"eightshift-forms/submit",
-				"eightshift-forms/textarea"
-			]
-		},
 		"formContent": {
 			"type": "string"
 		},

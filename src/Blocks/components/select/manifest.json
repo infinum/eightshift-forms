@@ -6,7 +6,8 @@
 		"attributes": {
 			"selectName": "Name",
 			"selectId": "Id",
-			"selectIsDisabled": false
+			"selectIsDisabled": false,
+			"selectOptions": ""
 		},
 		"innerBlocks": [
 			{
@@ -33,14 +34,8 @@
 		]
 	},
 	"attributes": {
-		"selectAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": [
-				"eightshift-forms/select-option"
-			]
+		"selectOptions": {
+			"type": "string"
 		},
 		"selectName": {
 			"type": "string"

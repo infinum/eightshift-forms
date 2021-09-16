@@ -40,8 +40,9 @@ $submitClass = Components::classnames([
 	</button>
 <?php } else { ?>
 	<input
-		class="<?php echo esc_attr($submitClass); ?>"
+		type="submit"
 		value="<?php echo esc_attr($submitValue); ?>"
+		class="<?php echo esc_attr($submitClass); ?>"
 		name="<?php echo esc_attr($submitName); ?>"
 		id="<?php echo esc_attr($submitId); ?>"
 		<?php $submitIsDisabled ? 'disabled': ''; ?>

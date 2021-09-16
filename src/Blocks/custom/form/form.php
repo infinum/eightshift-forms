@@ -9,6 +9,8 @@
 use EightshiftForms\Helpers\Components;
 
 $blockClass = $attributes['blockClass'] ?? '';
+
+var_dump($innerBlockContent);
 ?>
 
 <div class="<?php echo esc_attr($blockClass); ?>">
@@ -16,7 +18,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'form',
 		Components::props('form', $attributes, [
-			'formContent' => $innerBlockContent,
+			'formFormContent' => $innerBlockContent,
 		])
 	);
 	?>

@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import { InnerBlocks } from '@wordpress/editor';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -20,7 +19,7 @@ export const FormEditor = (attributes) => {
 	const formMethod = checkAttr('formMethod', attributes, manifest);
 	const formTarget = checkAttr('formTarget', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
-	const formAllowedBlocks = checkAttr('formAllowedBlocks', attributes, manifest);
+	const formContent = checkAttr('formContent', attributes, manifest);
 
 	const formClass = classnames([
 		selector(componentClass, componentClass),
@@ -38,10 +37,7 @@ export const FormEditor = (attributes) => {
 				method={formMethod}
 				target={formTarget}
 			>
-					<InnerBlocks
-						allowedBlocks={(typeof formAllowedBlocks === 'undefined') || formAllowedBlocks}
-						templateLock={false}
-					/>
+				{formContent}
 			</form>
 		</>
 	);

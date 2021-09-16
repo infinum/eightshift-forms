@@ -17,8 +17,8 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fieldsetLegend = Components::checkAttr('fieldsetLegend', $attributes, $manifest);
 $fieldsetId = Components::checkAttr('fieldsetId', $attributes, $manifest);
-$fieldsetAllowedBlocks = Components::checkAttr('fieldsetAllowedBlocks', $attributes, $manifest);
 $fieldsetName = Components::checkAttr('fieldsetName', $attributes, $manifest);
+$fieldsetContent = Components::checkAttr('fieldsetContent', $attributes, $manifest);
 
 $fieldsetClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -33,4 +33,5 @@ $fieldsetClass = Components::classnames([
 	name="<?php echo esc_attr($fieldsetName); ?>"
 	id="<?php echo esc_attr($fieldsetId); ?>"
 >
+	<?php echo $fieldsetContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </fieldset>

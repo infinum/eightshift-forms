@@ -4,20 +4,15 @@
 	"componentClass": "fieldset",
 	"example": {
 		"attributes": {
+			"fieldsetContent": "Content",
 			"fieldsetId": "Id",
 			"fieldsetLegend": "Legend",
 			"fieldsetName": "Name"
 		}
 	},
 	"attributes": {
-		"fieldsetAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": [
-				"eightshift-forms/choice"
-			]
+		"fieldsetContent": {
+			"type": "string"
 		},
 		"fieldsetId": {
 			"type": "string"
