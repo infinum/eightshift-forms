@@ -27,24 +27,34 @@ $submitClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-?>
+$submitIsDisabled = $submitIsDisabled ? 'disabled' : '';
 
-<?php if ($submitType === 'button') { ?>
-	<button
-		class="<?php echo esc_attr($submitClass); ?>"
-		name="<?php echo esc_attr($submitName); ?>"
-		id="<?php echo esc_attr($submitId); ?>"
-		<?php $submitIsDisabled ? 'disabled': ''; ?>
-	>
-		<?php echo esc_html($submitValue); ?>
-	</button>
-<?php } else { ?>
+$submit = '
 	<input
 		type="submit"
-		value="<?php echo esc_attr($submitValue); ?>"
-		class="<?php echo esc_attr($submitClass); ?>"
-		name="<?php echo esc_attr($submitName); ?>"
-		id="<?php echo esc_attr($submitId); ?>"
-		<?php $submitIsDisabled ? 'disabled': ''; ?>
+		value="' . esc_attr($submitValue) . '"
+		class="' . esc_attr($submitClass) . '"
+		name="' . esc_attr($submitName) . '"
+		id="' . esc_attr($submitId) . '"
+		' . $submitIsDisabled . '
 	/>
-<?php } ?>
+';
+
+$button = '
+	<button
+		class="' . esc_attr($submitClass) . '"
+		name="' . esc_attr($submitName) . '"
+		id="' . esc_attr($submitId) . '"
+		' . $submitIsDisabled . '
+	>
+		' . esc_attr($submitValue) . '
+	</button>
+';
+
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'field',
+	Components::props('field', $attributes, [
+		'fieldContent' => $submitType === 'button' ? $button : $submit,
+		'fieldId' => $submitId,
+	])
+);

@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FieldsetEditor = (attributes) => {
+export const FieldEditor = (attributes) => {
 	const {
 		componentClass,
 	} = manifest;
@@ -14,29 +14,27 @@ export const FieldsetEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const fieldsetLegend = checkAttr('fieldsetLegend', attributes, manifest);
-	const fieldsetId = checkAttr('fieldsetId', attributes, manifest);
-	const fieldsetContent = checkAttr('fieldsetContent', attributes, manifest);
+	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
+	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 
-	const fieldsetClass = classnames([
+	const fieldClass = classnames([
 		selector(componentClass, componentClass),
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
 
 	return (
-		<fieldset
-			className={fieldsetClass}
-			id={fieldsetId}
+		<div
+			className={fieldClass}
 		>
-			{fieldsetLegend &&
-				<legend className={`${componentClass}__legend`}>
-					{fieldsetLegend}
-				</legend>
+			{fieldLabel &&
+				<label className={`${componentClass}__label`}>
+					{fieldLabel}
+				</label>
 			}
 			<div className={`${componentClass}__content`}>
-				{fieldsetContent}
+				{fieldContent}
 			</div>
-		</fieldset>
+		</div>
 	);
 };

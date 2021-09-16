@@ -26,13 +26,27 @@ $selectClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
+$selectIsDisabled = $selectIsDisabled ? 'disabled' : '';
+
+$select = '
+	<select
+		class="'. esc_attr($selectClass) .'"
+		name="'. esc_attr($selectName) . '"
+		id="'. esc_attr($selectId) . '"
+		' . $selectIsDisabled . '
+	>
+		' . $selectOptions . '
+	</select>
+';
+
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'field',
+	Components::props('field', $attributes, [
+		'fieldContent' => $select,
+		'fieldId' => $selectId,
+	])
+);
+
 ?>
 
-<select
-	class="<?php echo esc_attr($selectClass); ?>"
-	name="<?php echo esc_attr($selectName); ?>"
-	id="<?php echo esc_attr($selectId); ?>"
-	<?php $selectIsDisabled ? 'disabled': ''; ?>
->
-	<?php echo $selectOptions; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-</select>
+

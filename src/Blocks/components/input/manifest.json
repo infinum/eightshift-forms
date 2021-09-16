@@ -14,6 +14,9 @@
 			"inputIsRequired": false
 		}
 	},
+	"components": {
+		"field": "field"
+	},
 	"attributes": {
 		"inputName": {
 			"type": "string"

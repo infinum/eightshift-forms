@@ -6,8 +6,10 @@ import {
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	IconToggle
+	IconToggle,
+	props
 } from '@eightshift/frontend-libs/scripts';
+import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from '../manifest.json';
 
 export const SelectOptions = (attributes) => {
@@ -21,6 +23,10 @@ export const SelectOptions = (attributes) => {
 
 	return (
 		<>
+			<FieldOptions
+				{...props('field', attributes)}
+			/>
+
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
 				value={selectName}

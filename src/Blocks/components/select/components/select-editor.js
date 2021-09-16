@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -14,7 +15,6 @@ export const SelectEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const selectId = checkAttr('selectId', attributes, manifest);
 	const selectOptions = checkAttr('selectOptions', attributes, manifest);
 
 	const selectClass = classnames([
@@ -23,15 +23,20 @@ export const SelectEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	const select = (
+		<div className={selectClass}>
+			Select
+			{selectOptions}
+		</div>
+	);
+
 	return (
 		<>
-			<div
-				className={selectClass}
-				id={selectId}
-			>
-				Select
-				{selectOptions}
-			</div>
+			<FieldEditor
+				{...props('field', attributes, {
+					fieldContent: select
+				})}
+			/>
 		</>
 	);
 };

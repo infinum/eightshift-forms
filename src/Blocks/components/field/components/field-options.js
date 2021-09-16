@@ -9,19 +9,19 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const FieldsetOptions = (attributes) => {
+export const FieldOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
 
-	const fieldsetLegend = checkAttr('fieldsetLegend', attributes, manifest);
+	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Legend', 'eightshift-forms')} />}
-				value={fieldsetLegend}
-				onChange={(value) => setAttributes({ [getAttrKey('fieldsetLegend', attributes, manifest)]: value })}
+				label={<IconLabel icon={icons.id} label={__('Label', 'eightshift-forms')} />}
+				value={fieldLabel}
+				onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
 			/>
 		</>
 	);

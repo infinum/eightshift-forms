@@ -1,0 +1,27 @@
+{
+	"componentName": "field",
+	"title": "Field",
+	"componentClass": "field",
+	"example": {
+		"attributes": {
+			"fieldContent": "Content",
+			"fieldId": "Id",
+			"fieldLabel": "Label",
+			"fieldName": "Name"
+		}
+	},
+	"attributes": {
+		"fieldContent": {
+			"type": "string"
+		},
+		"fieldId": {
+			"type": "string"
+		},
+		"fieldLabel": {
+			"type": "string"
+		},
+		"fieldName": {
+			"type": "string"
+		}
+	}
+}

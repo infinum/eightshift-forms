@@ -29,16 +29,30 @@ $textareaClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-?>
+$textareaIsDisabled = $textareaIsDisabled ? 'disabled' : '';
+$textareaIsReadOnly = $textareaIsReadOnly ? 'readonly' : '';
+$textareaIsRequired = $textareaIsRequired ? 'required' : '';
 
-<textarea
-	class="<?php echo esc_attr($textareaClass); ?>"
-	name="<?php echo esc_attr($textareaName); ?>"
-	id="<?php echo esc_attr($textareaId); ?>"
-	placeholder="<?php echo esc_attr($textareaPlaceholder) ?>"
-	<?php $textareaIsDisabled ? 'disabled': ''; ?>
-	<?php $textareaIsReadOnly ? 'readonly': ''; ?>
-	<?php $textareaIsRequired ? 'required': ''; ?>
->
-	<?php echo esc_attr($textareaValue); ?>
-</textarea>
+$textarea = '
+	<textarea
+		class="' . esc_attr($textareaClass) . '"
+		name="' . esc_attr($textareaName) . '"
+		id="' . esc_attr($textareaId) . '"
+		placeholder="' . esc_attr($textareaPlaceholder) . '"
+		' . $textareaIsDisabled . '
+		' . $textareaIsReadOnly . '
+		' . $textareaIsRequired . '
+	>
+		' . esc_attr($textareaValue) . '
+	</textarea>
+';
+
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'field',
+	Components::props('field', $attributes, [
+		'fieldContent' => $textarea,
+		'fieldId' => $textareaId,
+	])
+);
+
+

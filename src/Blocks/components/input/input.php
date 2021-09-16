@@ -30,16 +30,29 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-?>
+$inputIsDisabled = $inputIsDisabled ? 'disabled' : '';
+$inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
+$inputIsRequired = $inputIsRequired ? 'required' : '';
 
-<input
-	class="<?php echo esc_attr($inputClass); ?>"
-	name="<?php echo esc_attr($inputName); ?>"
-	value="<?php echo esc_attr($inputValue); ?>"
-	id="<?php echo esc_attr($inputId); ?>"
-	placeholder="<?php echo esc_attr($inputPlaceholder) ?>"
-	type="<?php echo esc_attr($inputType) ?>"
-	<?php $inputIsDisabled ? 'disabled': ''; ?>
-	<?php $inputIsReadOnly ? 'readonly': ''; ?>
-	<?php $inputIsRequired ? 'required': ''; ?>
-/>
+
+$input = '
+	<input
+		class="'. esc_attr($inputClass) .'"
+		name="'. esc_attr($inputName) . '"
+		value="'. esc_attr($inputValue) . '"
+		id="'. esc_attr($inputId) . '"
+		placeholder="'. esc_attr($inputPlaceholder) . '"
+		type="'. esc_attr($inputType) . '"
+		' . $inputIsDisabled . '
+		' . $inputIsReadOnly . '
+		' . $inputIsRequired . '
+	/>
+';
+
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'field',
+	Components::props('field', $attributes, [
+		'fieldContent' => $input,
+		'fieldId' => $inputId,
+	])
+);

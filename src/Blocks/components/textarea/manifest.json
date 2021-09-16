@@ -13,6 +13,9 @@
 			"textareaIsRequired": false
 		}
 	},
+	"components": {
+		"field": "field"
+	},
 	"attributes": {
 		"textareaName": {
 			"type": "string"

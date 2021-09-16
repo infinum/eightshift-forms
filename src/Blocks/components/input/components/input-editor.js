@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
@@ -25,15 +26,24 @@ export const InputEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	const input = (
+		<input
+			className={inputClass}
+			value={inputValue}
+			placeholder={inputPlaceholder}
+			type={inputType}
+			id={inputId}
+			readOnly
+		/>
+	);
+
 	return (
 		<>
-			<input
-				className={inputClass}
-				value={inputValue}
-				placeholder={inputPlaceholder}
-				type={inputType}
-				id={inputId}
-				readOnly
+			<FieldEditor
+				{...props('field', attributes, {
+					fieldContent: input,
+					fieldId: inputId
+				})}
 			/>
 		</>
 	);

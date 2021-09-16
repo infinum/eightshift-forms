@@ -11,6 +11,9 @@
 			"submitIsDisabled": false
 		}
 	},
+	"components": {
+		"field": "field"
+	},
 	"attributes": {
 		"submitName": {
 			"type": "string"

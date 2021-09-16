@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from '../manifest.json';
 
 export const SubmitEditor = (attributes) => {
@@ -24,22 +25,32 @@ export const SubmitEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	const submit = (
+		<input
+			type='submit'
+			value={submitValue}
+			className={submitClass}
+			id={submitId}
+		/>
+	);
+
+	const button = (
+		<button
+			className={submitClass}
+			id={submitId}
+		>
+			{submitValue}
+		</button>
+	);
+
 	return (
 		<>
-			{submitType === 'button' ?
-				<button
-					className={submitClass}
-					id={submitId}
-				>
-					{submitValue}
-				</button> :
-				<input
-					type='submit'
-					value={submitValue}
-					className={submitClass}
-					id={submitId}
-				/>
-			}
+			<FieldEditor
+				{...props('field', attributes, {
+					fieldContent: submitType  === 'button' ? button : submit,
+					fieldId: submitId
+				})}
+			/>
 		</>
 	);
 };

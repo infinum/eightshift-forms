@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
@@ -24,7 +25,7 @@ export const TextareaEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	return (
+	const textarea = (
 		<textarea
 			className={textareaClass}
 			placeholder={textareaPlaceholder}
@@ -33,5 +34,16 @@ export const TextareaEditor = (attributes) => {
 		>
 			{textareaValue}
 		</textarea>
+	);
+
+	return (
+		<>
+			<FieldEditor
+				{...props('field', attributes, {
+					fieldContent: textarea,
+					fieldId: textareaId
+				})}
+			/>
+		</>
 	);
 };

@@ -26,7 +26,6 @@ $fieldsetClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-
 ?>
 
 <fieldset
@@ -34,5 +33,12 @@ $fieldsetClass = Components::classnames([
 	name="<?php echo esc_attr($fieldsetName); ?>"
 	id="<?php echo esc_attr($fieldsetId); ?>"
 >
-	<?php echo $fieldsetContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php if ($fieldsetLegend) { ?>
+		<legend class="<?php echo esc_attr("{$componentClass}__legend"); ?>">
+			<?php echo esc_html($fieldsetLegend); ?>
+		</legend>
+	<?php } ?>
+	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+		<?php echo $fieldsetContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	</div>
 </fieldset>

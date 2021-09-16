@@ -10,6 +10,9 @@
 			"selectIsDisabled": false
 		}
 	},
+	"components": {
+		"field": "field"
+	},
 	"attributes": {
 		"selectOptions": {
 			"type": "string"

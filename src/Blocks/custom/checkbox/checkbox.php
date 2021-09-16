@@ -8,6 +8,8 @@
 
 use EightshiftForms\Helpers\Components;
 
+$manifest = Components::getManifest(__DIR__);
+
 $blockClass = $attributes['blockClass'] ?? '';
 
 ?>
@@ -17,7 +19,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'fieldset',
 		Components::props('fieldset', $attributes, [
-			'fieldsetContent' => $innerBlockContent,
+			'fieldsetContent' => $innerBlockContent
 		])
 	);
 	?>
