@@ -1,17 +1,17 @@
 namespace: EightshiftFormsTests
 bootstrap: bootstrap.php
 coverage:
-    enabled: true
-    include:
-        - src/*
+	enabled: true
+	include:
+		- src/*
 suites:
-    unit:
-        path: .
+	unit:
+		path: .
 settings:
-    shuffle: true
-    lint: true
+	shuffle: true
+	lint: true
 paths:
-    tests: tests
-    output: tests/_output
-    support: tests/_support
-    data: tests
+	tests: tests
+	output: tests/_output
+	support: tests/_support
+	data: tests

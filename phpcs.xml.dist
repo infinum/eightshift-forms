@@ -26,49 +26,4 @@
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
-  <!-- <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.Found">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="WordPress.WP.EnqueuedResourceParameters.NotInFooter">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="WordPress.WP.GlobalVariablesOverride.OverrideProhibited">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.MultipleArguments">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound">
-    <severity>0</severity>
-  </rule> -->
-
-  <!-- Added because phpcs was complaining about this even tho it seemed ok. Looks like a bug in phpcs.-->
-  <rule ref="WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore">
-    <severity>0</severity>
-  </rule>
-
-  <rule ref="Generic.Files.LineLength.TooLong">
-    <severity>0</severity>
-  </rule>
-
 </ruleset>
