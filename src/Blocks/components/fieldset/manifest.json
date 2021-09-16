@@ -1,0 +1,22 @@
+{
+	"componentName": "fieldset",
+	"title": "Fieldset",
+	"componentClass": "fieldset",
+	"attributes": {
+		"fieldsetAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-forms/choice"
+			]
+		},
+		"fieldsetId": {
+			"type": "string"
+		},
+		"fieldsetLegend": {
+			"type": "string"
+		}
+	}
+}

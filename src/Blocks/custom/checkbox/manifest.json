@@ -1,0 +1,18 @@
+{
+	"blockName": "checkbox",
+	"title": "Checkbox",
+	"description" : "Checkbox block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"checkbox"
+	],
+	"hasInnerBlocks": true,
+	"components": {
+		"fieldset": "fieldset"
+	},
+	"attributes": {
+	}
+}

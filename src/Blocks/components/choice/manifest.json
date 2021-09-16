@@ -1,0 +1,44 @@
+{
+	"componentName": "choice",
+	"title": "Choice",
+	"componentClass": "choice",
+	"attributes": {
+		"choiceType": {
+			"type": "string",
+			"default": "checkbox"
+		},
+		"choiceLabel": {
+			"type": "string"
+		},
+		"choiceValue": {
+			"type": "string"
+		},
+		"choiceName": {
+			"type": "string"
+		},
+		"choiceIsChecked": {
+			"type": "boolean",
+			"default": false
+		},
+		"choiceIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"choiceIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"options": {
+		"choiceType": [
+			{
+				"label": "Checkbox",
+				"value": "checkbox"
+			},
+			{
+				"label": "Radio",
+				"value": "radio"
+			}
+		]
+	}
+}

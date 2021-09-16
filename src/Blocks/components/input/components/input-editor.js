@@ -35,7 +35,7 @@ export const InputEditor = (attributes) => {
 				id={inputId}
 				placeholder={inputPlaceholder}
 				type={inputType}
-				readOnly
+				disabled
 			/>
 		</>
 	);

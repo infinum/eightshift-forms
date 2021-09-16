@@ -1,0 +1,16 @@
+{
+	"blockName": "radio",
+	"title": "Radio",
+	"description" : "radio block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"radio"
+	],
+	"hasInnerBlocks": true,
+	"components": {
+		"fieldset": "fieldset"
+	}
+}
