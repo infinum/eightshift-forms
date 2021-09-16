@@ -14,13 +14,9 @@ export const TextareaEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const textareaName = checkAttr('textareaName', attributes, manifest);
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
-	const textareaId = checkAttr('textareaId', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
-	const textareaIsDisabled = checkAttr('textareaIsDisabled', attributes, manifest);
-	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
-	const textareaIsRequired = checkAttr('textareaIsRequired', attributes, manifest);
+	const textareaId = checkAttr('textareaId', attributes, manifest);
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),
@@ -31,12 +27,9 @@ export const TextareaEditor = (attributes) => {
 	return (
 		<textarea
 			className={textareaClass}
-			name={textareaName}
-			id={textareaId}
 			placeholder={textareaPlaceholder}
-			disabled={textareaIsDisabled}
-			readOnly={textareaIsReadOnly}
-			required={textareaIsRequired}
+			id={textareaId}
+			readOnly
 		>
 			{textareaValue}
 		</textarea>

@@ -4,34 +4,11 @@
 	"componentClass": "select",
 	"example": {
 		"attributes": {
+			"selectOptions": "",
 			"selectName": "Name",
 			"selectId": "Id",
-			"selectIsDisabled": false,
-			"selectOptions": ""
-		},
-		"innerBlocks": [
-			{
-				"name": "eightshift-forms/select-option",
-				"attributes": {
-					"selectOptionLabel": "Label1",
-					"selectOptionValue": "Value1"
-				}
-			},
-			{
-				"name": "eightshift-forms/select-option",
-				"attributes": {
-					"selectOptionLabel": "Label2",
-					"selectOptionValue": "Value2"
-				}
-			},
-			{
-				"name": "eightshift-forms/select-option",
-				"attributes": {
-					"selectOptionLabel": "Label3",
-					"selectOptionValue": "Value3"
-				}
-			}
-		]
+			"selectIsDisabled": false
+		}
 	},
 	"attributes": {
 		"selectOptions": {

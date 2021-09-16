@@ -7,9 +7,7 @@ export const ChoiceEditor = (attributes) => {
 	const choiceValue = checkAttr('choiceValue', attributes, manifest);
 	const choiceName = checkAttr('choiceName', attributes, manifest);
 	const choiceType = checkAttr('choiceType', attributes, manifest);
-	const choiceIsDisabled = checkAttr('choiceIsDisabled', attributes, manifest);
-	const choiceIsChecked = checkAttr('choiceIsChecked', attributes, manifest);
-	const choiceIsReadOnly = checkAttr('choiceIsReadOnly', attributes, manifest);
+	const choiceId = checkAttr('choiceId', attributes, manifest);
 
 	return (
 		<>
@@ -19,9 +17,8 @@ export const ChoiceEditor = (attributes) => {
 			<input
 				type={choiceType}
 				value={choiceValue}
-				disabled={choiceIsDisabled}
-				checked={choiceIsChecked}
-				readOnly={choiceIsReadOnly}
+				id={choiceId}
+				readOnly
 			/>
 		</>
 	);

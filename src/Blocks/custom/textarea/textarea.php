@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the textarea Block view.
+ * Template for the Textarea Block view.
  *
  * @package EightshiftForms
  */

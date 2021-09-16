@@ -14,10 +14,6 @@ export const FormEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const formName = checkAttr('formName', attributes, manifest);
-	const formAction = checkAttr('formAction', attributes, manifest);
-	const formMethod = checkAttr('formMethod', attributes, manifest);
-	const formTarget = checkAttr('formTarget', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 	const formContent = checkAttr('formContent', attributes, manifest);
 
@@ -32,10 +28,6 @@ export const FormEditor = (attributes) => {
 			<form
 				className={formClass}
 				id={formId}
-				name={formName}
-				action={formAction}
-				method={formMethod}
-				target={formTarget}
 			>
 				{formContent}
 			</form>

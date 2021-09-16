@@ -17,6 +17,6 @@ $formsForm = Components::checkAttr('formsForm', $attributes, $manifest);
 
 <div class="<?php echo esc_attr($blockClass); ?>">
 	<?php
-	echo \apply_filters('the_content', \get_post_field('post_content', $formsForm))
+	echo \apply_filters('the_content', \get_post_field('post_content', $formsForm)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	?>
 </div>

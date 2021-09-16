@@ -14,14 +14,10 @@ export const InputEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
-	const inputId = checkAttr('inputId', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	const inputType = checkAttr('inputType', attributes, manifest);
-	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
-	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
-	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
+	const inputId = checkAttr('inputId', attributes, manifest);
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),
@@ -33,14 +29,11 @@ export const InputEditor = (attributes) => {
 		<>
 			<input
 				className={inputClass}
-				name={inputName}
 				value={inputValue}
-				id={inputId}
 				placeholder={inputPlaceholder}
 				type={inputType}
-				disabled={inputIsDisabled}
-				readOnly={inputIsReadOnly}
-				required={inputIsRequired}
+				id={inputId}
+				readOnly
 			/>
 		</>
 	);

@@ -16,7 +16,6 @@ export const FieldsetEditor = (attributes) => {
 
 	const fieldsetLegend = checkAttr('fieldsetLegend', attributes, manifest);
 	const fieldsetId = checkAttr('fieldsetId', attributes, manifest);
-	const fieldsetName = checkAttr('fieldsetName', attributes, manifest);
 	const fieldsetContent = checkAttr('fieldsetContent', attributes, manifest);
 
 	const fieldsetClass = classnames([
@@ -29,7 +28,6 @@ export const FieldsetEditor = (attributes) => {
 		<fieldset
 			className={fieldsetClass}
 			id={fieldsetId}
-			name={fieldsetName}
 		>
 			{fieldsetLegend &&
 				<legend>

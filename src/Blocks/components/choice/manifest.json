@@ -11,6 +11,7 @@
 			"choiceLabel": "Label",
 			"choiceValue": "Value",
 			"choiceName": "Name",
+			"choiceId": "Id",
 			"choiceIsChecked": false,
 			"choiceIsDisabled": false,
 			"choiceIsReadOnly": false
@@ -28,6 +29,9 @@
 			"type": "string"
 		},
 		"choiceName": {
+			"type": "string"
+		},
+		"choiceId": {
 			"type": "string"
 		},
 		"choiceIsChecked": {

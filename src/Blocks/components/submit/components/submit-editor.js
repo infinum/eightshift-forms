@@ -14,11 +14,9 @@ export const SubmitEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const submitName = checkAttr('submitName', attributes, manifest);
 	const submitValue = checkAttr('submitValue', attributes, manifest);
-	const submitId = checkAttr('submitId', attributes, manifest);
 	const submitType = checkAttr('submitType', attributes, manifest);
-	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
+	const submitId = checkAttr('submitId', attributes, manifest);
 
 	const submitClass = classnames([
 		selector(componentClass, componentClass),
@@ -31,19 +29,15 @@ export const SubmitEditor = (attributes) => {
 			{submitType === 'button' ?
 				<button
 					className={submitClass}
-					name={submitName}
 					id={submitId}
-					disabled={submitIsDisabled}
 				>
-						{submitValue}
+					{submitValue}
 				</button> :
 				<input
 					type='submit'
 					value={submitValue}
 					className={submitClass}
-					name={submitName}
 					id={submitId}
-					disabled={submitIsDisabled}
 				/>
 			}
 		</>
