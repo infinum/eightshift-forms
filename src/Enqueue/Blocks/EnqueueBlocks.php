@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Blocks;
 
-use EightshiftForms\Enqueue\LocalizationConstants;
 use EightshiftForms\Config\Config;
-use EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
  * Enqueue_Blocks class.
@@ -22,22 +21,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 {
 
 	/**
-	 * Localization constants object.
-	 *
-	 * @var LocalizationConstants
-	 */
-	private $localizationConstants;
-
-	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestInterface     $manifest Inject manifest which holds data about assets from manifest.json.
-	 * @param LocalizationConstants $localizationConstants Localization constants object.
+	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 */
-	public function __construct(ManifestInterface $manifest, LocalizationConstants $localizationConstants)
+	public function __construct(ManifestInterface $manifest)
 	{
 		$this->manifest = $manifest;
-		$this->localizationConstants = $localizationConstants;
 	}
 
 	/**
@@ -76,15 +66,5 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
-	}
-
-	/**
-	 * Localization array.
-	 *
-	 * @return array
-	 */
-	public function getLocalizations(): array
-	{
-		return $this->localizationConstants->getLocalizations();
 	}
 }

@@ -1,5 +1,26 @@
 {
-  "componentName": "select",
+	"componentName": "select",
 	"title": "Select",
-	"componentClass": "select"
+	"componentClass": "select",
+	"attributes": {
+		"selectAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-forms/select-option"
+			]
+		},
+		"selectName": {
+			"type": "string"
+		},
+		"selectId": {
+			"type": "string"
+		},
+		"selectIsDisabled": {
+			"type": "boolean",
+			"default": false
+		}
+	}
 }

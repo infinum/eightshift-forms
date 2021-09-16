@@ -3,13 +3,19 @@
 /**
  * Template for the Select Block view.
  *
- * @package EightshiftForms\Blocks.
+ * @package EightshiftForms
  */
-
-namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Helpers\Components;
 
-$attributes['innerBlockContent'] = $innerBlockContent ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+?>
 
-echo \wp_kses_post(Components::render('select', $attributes));
+<div class="<?php echo esc_attr($blockClass); ?>">
+	<?php
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'select',
+		Components::props('select', $attributes)
+	);
+	?>
+</div>

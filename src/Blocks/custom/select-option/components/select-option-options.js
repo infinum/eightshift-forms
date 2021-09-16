@@ -1,56 +1,17 @@
+import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { props } from '@eightshift/frontend-libs/scripts';
+import { SelectOptionOptions as SelectOptionOptionsComponent } from '../../../components/select-option/components/select-option-options';
 
-export const SelectOptionOptions = (props) => {
-	const {
-		attributes: {
-			label,
-			value,
-			isSelected,
-			isDisabled,
-		},
-		actions: {
-			onChangeLabel,
-			onChangeValue,
-			onChangeIsSelected,
-			onChangeIsDisabled,
-		},
-	} = props;
-
+export const SelectOptionOptions = ({ attributes, setAttributes }) => {
 	return (
-		<PanelBody title={__('Select Option Settings', 'eightshift-forms')}>
-			{onChangeLabel &&
-				<TextControl
-					label={__('Label', 'eightshift-forms')}
-					value={label}
-					onChange={onChangeLabel}
-				/>
-			}
-
-			{onChangeValue &&
-				<TextControl
-					label={__('Value', 'eightshift-forms')}
-					value={value}
-					onChange={onChangeValue}
-				/>
-			}
-
-			{onChangeIsSelected &&
-				<ToggleControl
-					label={__('Selected', 'eightshift-forms')}
-					checked={isSelected}
-					onChange={onChangeIsSelected}
-				/>
-			}
-
-			{onChangeIsDisabled &&
-				<ToggleControl
-					label={__('Disabled', 'eightshift-forms')}
-					checked={isDisabled}
-					onChange={onChangeIsDisabled}
-				/>
-			}
-
+		<PanelBody title={__('Select Option', 'eightshift-forms')}>
+			<SelectOptionOptionsComponent
+				{...props('selectOption', attributes, {
+					setAttributes: setAttributes,
+				})}
+			/>
 		</PanelBody>
 	);
 };

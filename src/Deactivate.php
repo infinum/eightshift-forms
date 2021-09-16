@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftLibs\Plugin\HasDeactivationInterface;
+use EightshiftFormsPluginVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 
 /**
  * The plugin deactivation class.

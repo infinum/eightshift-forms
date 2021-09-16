@@ -13,12 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
-use EightshiftLibs\Main\AbstractMain;
-use EightshiftForms\Cache;
-use EightshiftForms\Captcha;
-use EightshiftForms\Rest;
-use EightshiftForms\Integrations;
-use EightshiftFormsTests\Mocks;
+use EightshiftFormsPluginVendor\EightshiftLibs\Main\AbstractMain;
 
 /**
  * The main start class.
@@ -33,16 +28,9 @@ class Main extends AbstractMain
 {
 
 	/**
-	 * Set this to true if you need dependency injection in tests.
-	 *
-	 * @var boolean
-	 */
-	private $isTest = false;
-
-	/**
 	 * Register the project with the WordPress system.
 	 *
-	 * The registerService method will call the register() method in every service class,
+	 * The register_service method will call the register() method in every service class,
 	 * which holds the actions and filters - effectively replacing the need to manually add
 	 * them in one place.
 	 *
@@ -51,113 +39,5 @@ class Main extends AbstractMain
 	public function register(): void
 	{
 		\add_action('plugins_loaded', [$this, 'registerServices']);
-	}
-
-	/**
-	 * Provides additional / different services depending on if we're in test or not.
-	 *
-	 * @param   boolean $isTest Set to true if running tests.
-	 * @return void
-	 */
-	public function setTest(bool $isTest): void
-	{
-		$this->isTest = $isTest;
-	}
-
-	/**
-	 * Get the list of services to register.
-	 *
-	 * A list of classes which contain hooks.
-	 *
-	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
-	 */
-	protected function getServiceClasses(): array
-	{
-		return $this->isTest ? $this->getTestServiceClasses() : $this->getProdServiceClasses();
-	}
-
-
-	/**
-	 * Get the list of services to register (for production).
-	 *
-	 * A list of classes which contain hooks.
-	 *
-	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
-	 */
-	protected function getProdServiceClasses(): array
-	{
-		return [];
-	}
-
-	/**
-	 * Get the list of services to register (for testing).
-	 *
-	 * A list of classes which contain hooks.
-	 *
-	 * @return array<int|string, array<int, class-string>|class-string> Array of fully qualified service class names.
-	 */
-	protected function getTestServiceClasses(): array
-	{
-		/**
-		 * Ignoring this rule because this is how PHP-DI expects the dependency tree to be defined.
-		 */
-		/* phpcs:disable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
-		return [
-
-			// Authorization.
-			Integrations\Authorization\Hmac::class,
-
-			// Integrations Greenhouse.
-			Mocks\MockGreenhouse::class => [
-				Cache\TransientCache::class,
-			],
-
-			// Integrations Mailchimp.
-			Integrations\Mailchimp\Mailchimp::class => [
-				Mocks\MockMailchimpMarketingClient::class,
-				Cache\TransientCache::class,
-			],
-
-			// Integrations Mailerlite.
-			Integrations\Mailerlite\Mailerlite::class => [
-				Mocks\MockMailerliteClient::class,
-			],
-
-			// // Captcha.
-			Captcha\BasicCaptcha::class,
-
-			// Base route.
-			Mocks\TestRoute::class => [
-				Integrations\Authorization\Hmac::class,
-				Captcha\BasicCaptcha::class,
-			],
-			Mocks\TestRouteSanitization::class => [
-				Integrations\Authorization\Hmac::class,
-				Captcha\BasicCaptcha::class,
-			],
-
-			// // Email route.
-			Rest\SendEmailRoute::class => [
-				Captcha\BasicCaptcha::class,
-			],
-
-			// // Buckaroo routes.
-			Integrations\Buckaroo\Buckaroo::class => [
-				Integrations\Core\GuzzleClient::class,
-			],
-			Rest\BuckarooResponseHandlerRoute::class => [
-				Integrations\Authorization\Hmac::class,
-			],
-
-			// Greenhouse routes.
-			Rest\GreenhouseJobsFetchRoute::class => [
-				Mocks\MockGreenhouse::class,
-			],
-
-			Rest\GreenhouseRoute::class => [
-				Mocks\MockGreenhouse::class,
-			],
-		];
-		/* phpcs:enable Universal.Arrays.MixedKeyedUnkeyedArray.Found */
 	}
 }

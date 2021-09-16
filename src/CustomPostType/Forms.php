@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CustomPostType;
 
-use EightshiftLibs\CustomPostType\AbstractPostType;
+use EightshiftFormsPluginVendor\EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
  * Class FormsPostType.
@@ -89,19 +89,19 @@ class Forms extends AbstractPostType
 		];
 
 		return [
-			'label'              => esc_html__('Eightshift Forms', 'eightshift-forms'),
-			'public'             => true,
-			'menu_position'      => static::MENU_POSITION,
-			'menu_icon'          => static::MENU_ICON,
-			'supports'           => ['title', 'editor', 'thumbnail'],
-			'has_archive'        => false,
-			'show_in_rest'       => true,
+			'label' => esc_html__('Eightshift Forms', 'eightshift-forms'),
+			'public' => true,
+			'menu_position' => static::MENU_POSITION,
+			'menu_icon' => static::MENU_ICON,
+			'supports' => ['title', 'editor', 'thumbnail'],
+			'has_archive' => false,
+			'show_in_rest' => true,
 			'publicly_queryable' => false,
-			'can_export'         => true,
-			'capability_type'    => self::POST_CAPABILITY_TYPE,
-			'rest_base'          => static::REST_API_ENDPOINT_SLUG,
-			'template_lock'      => 'all',
-			'template'           => $template,
+			'can_export' => true,
+			'capability_type' => self::POST_CAPABILITY_TYPE,
+			'rest_base' => static::REST_API_ENDPOINT_SLUG,
+			'template_lock' => 'all',
+			// 'template' => $template,
 		];
 	}
 }

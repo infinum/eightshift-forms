@@ -11,16 +11,27 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Config\Config;
-use EightshiftForms\CustomPostType\Forms;
-use EightshiftLibs\Blocks\AbstractBlocks;
+use EightshiftFormsPluginVendor\EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
  * Class Blocks
  */
-class Blocks extends AbstractBlocks implements Filters
+class Blocks extends AbstractBlocks
 {
+
+	/**
+	 * Reusable blocks Capability Name.
+	 */
+	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
+
+	/**
+	 * Blocks dependency filter name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency';
+
 	/**
 	 * Register all the hooks
 	 *
@@ -36,143 +47,10 @@ class Blocks extends AbstractBlocks implements Filters
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		if (\is_wp_version_compatible('5.8')) {
-			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
-		} else {
-			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
-		}
+		\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
 
-		// Register custom theme support options.
-		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
-
-		// Register custom project color palette.
-		\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
-
-		if (\is_wp_version_compatible('5.8')) {
-			\add_filter('allowed_block_types_all', [$this, 'getAllAllowedFormBlocks'], 20, 2);
-		} else {
-			\add_filter('allowed_block_types', [$this, 'getAllAllowedFormBlocksOld'], 20, 2);
-		}
-	}
-
-	/**
-	 * Limit block on forms post type to internal plugin blocks
-	 *
-	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Block_Editor_Context $blockEditorContext Block editor context.
-	 *
-	 * @return array|bool
-	 */
-	public function getAllAllowedFormBlocks($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
-	{
-		$projectName = Config::getProjectName();
-		if ($blockEditorContext->post && $blockEditorContext->post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
-			$formsBlocks = $this->getAllBlocksList([], $blockEditorContext);
-
-			// Remove form from the list to prevent users from adding a new form inside the form.
-			if (is_array($formsBlocks)) {
-				$formsBlocks = array_flip($formsBlocks);
-				unset($formsBlocks["{$projectName}/form"]);
-				$formsBlocks = array_values(array_flip($formsBlocks));
-			}
-
-			if (has_filter(Filters::ALLOWED_BLOCKS)) {
-				return apply_filters(Filters::ALLOWED_BLOCKS, $formsBlocks);
-			} else {
-				return $formsBlocks;
-			}
-		}
-
-		// If this filter is the first to run, $allowedBlockTypes will be === true.
-		if (is_array($allowedBlockTypes)) {
-			$allowedBlockTypes[] = "{$projectName}/forms";
-		}
-
-		return $allowedBlockTypes;
-	}
-
-	/**
-	 * Limit block on forms post type to internal plugin blocks
-	 *
-	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Post   $post The post resource data.
-	 *
-	 * @return array|bool
-	 */
-	public function getAllAllowedFormBlocksOld($allowedBlockTypes, $post)
-	{
-		$projectName = Config::getProjectName();
-		if ($post->post_type === Forms::POST_TYPE_SLUG) { /* phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
-			$formsBlocks = $this->getAllBlocksListOld([], $post);
-
-			// Remove form from the list to prevent users from adding a new form inside the form.
-			if (is_array($formsBlocks)) {
-				$formsBlocks = array_flip($formsBlocks);
-				unset($formsBlocks["{$projectName}/form"]);
-				$formsBlocks = array_values(array_flip($formsBlocks));
-			}
-
-			if (has_filter(Filters::ALLOWED_BLOCKS)) {
-				return apply_filters(Filters::ALLOWED_BLOCKS, $formsBlocks);
-			} else {
-				return $formsBlocks;
-			}
-		}
-
-		// If this filter is the first to run, $allowedBlockTypes will be === true.
-		if (is_array($allowedBlockTypes)) {
-			$allowedBlockTypes[] = "{$projectName}/forms";
-		}
-
-		return $allowedBlockTypes;
-	}
-
-	/**
-	 * Create custom category to assign all custom blocks
-	 *
-	 * This category will be shown on all blocks list in "Add Block" button.
-	 *
-	 * @param array[]  $categories Array of all block categories.
-	 * @param \WP_Block_Editor_Context $blockEditorContext blockEditorContext.
-	 *
-	 * @return array[] Array of block categories.
-	 */
-	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
-	{
-		return array_merge(
-			$categories,
-			[
-				[
-					'slug' => 'eightshift-forms',
-					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
-					'icon' => 'admin-settings',
-				],
-			]
-		);
-	}
-
-	/**
-	 * Create custom category to assign all custom blocks
-	 *
-	 * This category will be shown on all blocks list in "Add Block" button.
-	 *
-	 * @param array[]  $categories Array of all block categories.
-	 * @param \WP_Post $post WP_Post object.
-	 *
-	 * @return array[] Array of block categories.
-	 */
-	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
-	{
-		return array_merge(
-			$categories,
-			[
-				[
-					'slug' => 'eightshift-forms',
-					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
-					'icon' => 'admin-settings',
-				],
-			]
-		);
+		// Register blocks internal filter for props helper.
+		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 	}
 
 	/**
@@ -185,5 +63,33 @@ class Blocks extends AbstractBlocks implements Filters
 	protected function getBlocksPath(): string
 	{
 		return Config::getProjectPath() . '/src/Blocks';
+	}
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Post $post Post being loaded.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
+	{
+		error_log( print_r( ( $categories ), true ) );
+		
+		return array_merge(
+			$categories,
+			[
+				[
+					'slug' => 'eightshift-forms',
+					'title' => \esc_html__('Eightshift Forms', 'eightshift-libs'),
+					'icon' => 'admin-settings',
+				],
+			]
+		);
 	}
 }

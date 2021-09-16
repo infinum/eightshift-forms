@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Exception;
 
-use EightshiftLibs\Exception\GeneralExceptionInterface;
+use EightshiftFormsPluginVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 
 /**
  * Class MissingFilterInfoException.

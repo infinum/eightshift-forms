@@ -1,0 +1,51 @@
+{
+	"componentName": "input",
+	"title": "Input",
+	"componentClass": "input",
+	"attributes": {
+		"inputName": {
+			"type": "string"
+		},
+		"inputValue": {
+			"type": "string"
+		},
+		"inputId": {
+			"type": "string"
+		},
+		"inputPlaceholder": {
+			"type": "string"
+		},
+		"inputType": {
+			"type": "string",
+			"default": "text"
+		},
+		"inputIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputIsRequired": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"options": {
+		"inputType": [
+			{
+				"label": "Text",
+				"value": "text"
+			},
+			{
+				"label": "Number",
+				"value": "number"
+			},
+			{
+				"label": "Hidden",
+				"value": "hidden"
+			}
+		]
+	}
+}

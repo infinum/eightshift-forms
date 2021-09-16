@@ -1,0 +1,36 @@
+{
+	"componentName": "submit",
+	"title": "Submit",
+	"componentClass": "submit",
+	"attributes": {
+		"submitName": {
+			"type": "string"
+		},
+		"submitValue": {
+			"type": "string"
+		},
+		"submitId": {
+			"type": "string"
+		},
+		"submitType": {
+			"type": "string",
+			"default": "button"
+		},
+		"submitIsDisabled": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"options": {
+		"submitType": [
+			{
+				"label": "Button",
+				"value": "button"
+			},
+			{
+				"label": "Input",
+				"value": "input"
+			}
+		]
+	}
+}

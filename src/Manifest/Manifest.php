@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Manifest;
 
 use EightshiftForms\Config\Config;
-use EightshiftLibs\Manifest\AbstractManifest;
+use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\AbstractManifest;
 
 /**
  * Class Manifest
@@ -26,7 +26,7 @@ class Manifest extends AbstractManifest
 	 *
 	 * @var string
 	 */
-	public const MANIFEST_ITEM = 'manifest-item';
+	public const MANIFEST_ITEM = 'es-forms-manifest-item';
 
 	/**
 	 * Register all hooks. Changed filter name to manifest.

@@ -1,91 +1,40 @@
-import { __ } from '@wordpress/i18n';
-import ServerSideRender from '@wordpress/server-side-render';
+import React from 'react';
+import classnames from 'classnames';
 import { InnerBlocks } from '@wordpress/editor';
-import { Fragment } from '@wordpress/element';
-import { LabelEditor } from '../../../components/label/components/label-editor';
+import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import manifest from '../manifest.json';
 
-const hasSelectedInnerBlock = (props) => {
-	const select = wp.data.select('core/block-editor');
-	const selected = select.getBlockSelectionStart();
-	const inner = select.getBlock(props.clientId).innerBlocks ? select.getBlock(props.clientId).innerBlocks : [];
-	for (let i = 0; i < inner.length; i++) {
-		if (inner[i].clientId === selected || (inner[i].innerBlocks.length && hasSelectedInnerBlock(inner[i]))) {
-			return true;
-		}
-	}
-	return false;
-};
-
-export const SelectEditor = (props) => {
+export const SelectEditor = (attributes) => {
 	const {
-		attributes,
-		attributes: {
-			blockFullName,
-			blockClass,
-			label,
-			allowedBlocks,
-			theme = '',
-			prefillData,
-			prefillDataSource,
-		},
-		actions: {
-			onChangeLabel,
-		},
-		isSelected,
-		clientId,
-	} = props;
+		componentClass,
+	} = manifest;
 
-	const isBlockOrChildrenSelected = isSelected || hasSelectedInnerBlock(props);
+	const {
+		selectorClass = componentClass,
+		blockClass,
+		additionalClass,
+	} = attributes;
 
-	const isPrefillUsed = prefillData && prefillDataSource;
+	const selectId = checkAttr('selectId', attributes, manifest);
+	const selectAllowedBlocks = checkAttr('selectAllowedBlocks', attributes, manifest);
+
+	const selectClass = classnames([
+		selector(componentClass, componentClass),
+		selector(blockClass, blockClass, selectorClass),
+		selector(additionalClass, additionalClass),
+	]);
 
 	return (
 		<>
-
-			{isPrefillUsed &&
-				<ServerSideRender
-					block={blockFullName}
-					attributes={{ ...attributes, hideLoading: false }}
-					urlQueryArgs={{ cacheBusting: JSON.stringify(attributes) }}
-				/>
-			}
-
-			{!isPrefillUsed &&
-				<div className={`${blockClass} ${blockClass}__theme--${theme}`}>
-					<LabelEditor
-						blockClass={blockClass}
-						label={label}
-						onChangeLabel={onChangeLabel}
+			<div
+				className={selectClass}
+				id={selectId}
+			>
+				Select
+					<InnerBlocks
+						allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
 					/>
-					<div className={`${blockClass}__content-wrap`}>
-						{!isBlockOrChildrenSelected &&
-							<select>
-								{wp.data.select('core/block-editor').getBlock(clientId).innerBlocks.map((block, key) => {
-									return (
-										<option
-											key={key}
-											className={`${blockClass}__option`}
-											{...block.attributes}
-										>
-											{label}
-										</option>
-									);
-								})}
-							</select>
-						}
-						{isBlockOrChildrenSelected &&
-							<div className={`${blockClass}__editor`}>
-								<h2>{__('Modify select options', 'eightshift-forms')}</h2>
-								<p>{__('Unselect this block to render it', 'eightshift-forms')}</p>
-								<InnerBlocks
-									allowedBlocks={(typeof allowedBlocks === 'undefined') || allowedBlocks}
-									templateLock={false}
-								/>
-							</div>
-						}
-					</div>
-				</div>
-			}
+			</div>
 		</>
 	);
 };

@@ -3,5 +3,3 @@
  *
  * Usage: `WordPress admin screen`.
  */
-
-import './../../src/Blocks/components/cache-settings/assets';

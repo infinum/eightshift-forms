@@ -1,0 +1,21 @@
+{
+	"componentName": "select-option",
+	"title": "Select Option",
+	"componentClass": "select-option",
+	"attributes": {
+		"selectOptionLabel": {
+			"type": "string"
+		},
+		"selectOptionValue": {
+			"type": "string"
+		},
+		"selectOptionIsSelected": {
+			"type": "boolean",
+			"default": false
+		},
+		"selectOptionIsDisabled": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Config\Config;
-use EightshiftLibs\Helpers\Components as LibsComponents;
+use EightshiftFormsPluginVendor\EightshiftLibs\Helpers\Components as LibsComponents;
 
 /**
  * Helpers for components

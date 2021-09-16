@@ -1,75 +1,44 @@
+import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, ToggleControl, SelectControl } from '@wordpress/components';
-import { getMultiPrefillSources } from '../../../helpers/prefill';
+import { TextControl} from '@wordpress/components';
+import {
+	icons,
+	checkAttr,
+	getAttrKey,
+	IconLabel,
+	IconToggle
+} from '@eightshift/frontend-libs/scripts';
+import manifest from '../manifest.json';
 
-export const SelectOptions = (props) => {
+export const SelectOptions = (attributes) => {
 	const {
-		attributes: {
-			name,
-			isDisabled,
-			preventSending,
-			prefillData,
-			prefillDataSource,
-			showName = true,
-		},
-		actions: {
-			onChangeName,
-			onChangeIsDisabled,
-			onChangePreventSending,
-			onChangePrefillData,
-			onChangePrefillDataSource,
-		},
-	} = props;
+		setAttributes,
+	} = attributes;
 
-	const prefillSourcesAsOptions = getMultiPrefillSources();
+	const selectName = checkAttr('selectName', attributes, manifest);
+	const selectId = checkAttr('selectId', attributes, manifest);
+	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Select Settings', 'eightshift-forms')}>
+		<>
+			<TextControl
+				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+				value={selectName}
+				onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
+			/>
 
-			{onChangeName && showName &&
-				<TextControl
-					label={__('Name', 'eightshift-forms')}
-					value={name}
-					onChange={onChangeName}
-				/>
-			}
+			<TextControl
+				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+				value={selectId}
+				onChange={(value) => setAttributes({ [getAttrKey('selectId', attributes, manifest)]: value })}
+			/>
 
-			{onChangePrefillData &&
-				<ToggleControl
-					label={__('Prefill data?', 'eightshift-forms')}
-					help={__('If enabled, this field\'s select options will be prefilled from a source of your choice.', 'eightshift-forms')}
-					checked={prefillData}
-					onChange={onChangePrefillData}
-				/>
-			}
-
-			{onChangePrefillData && prefillData &&
-				<SelectControl
-					label={__('Prefill from?', 'eightshift-forms')}
-					help={__('Please select the source from which to prefill values.', 'eightshift-forms')}
-					value={prefillDataSource}
-					options={prefillSourcesAsOptions}
-					onChange={onChangePrefillDataSource}
-				/>
-			}
-
-			{onChangeIsDisabled &&
-				<ToggleControl
-					label={__('Disabled', 'eightshift-forms')}
-					checked={isDisabled}
-					onChange={onChangeIsDisabled}
-				/>
-			}
-
-			{onChangePreventSending &&
-				<ToggleControl
-					label={__('Do not send?', 'eightshift-forms')}
-					help={__('If enabled this field won\'t be sent when the form is submitted.', 'eightshift-forms')}
-					checked={preventSending}
-					onChange={onChangePreventSending}
-				/>
-			}
-
-		</PanelBody>
+			<IconToggle
+				icon={icons.play}
+				label={__('Is Disabled', 'eightshift-forms')}
+				checked={selectIsDisabled}
+				onChange={(value) => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: value })}
+			/>
+		</>
 	);
 };

@@ -1,51 +1,20 @@
-import classNames from 'classnames'; // eslint-disable-line no-unused-vars
-import { TextControl } from '@wordpress/components';
-import { LabelEditor } from './../../../components/label/components/label-editor';
+import React from 'react';
+import { props } from '@eightshift/frontend-libs/scripts';
+import { InputEditor as InputEditorComponent } from '../../../components/input/components/input-editor';
 
-export const InputEditor = (props) => {
+export const InputEditor = ({ attributes, setAttributes }) => {
+
 	const {
-		attributes: {
-			blockClass,
-			label,
-			value,
-			id,
-			type,
-			theme = '',
-		},
-		actions: {
-			onChangeLabel,
-			onChangeValue,
-		},
-	} = props;
-
-	const isHidden = type === 'hidden';
-	const blockClasses = classNames(
 		blockClass,
-		isHidden ? `${blockClass}--hidden` : '',
-	);
-
-	const wrapClasses = classNames(
-		`${blockClass}__content-wrap`,
-		`${blockClass}__theme--${theme}`,
-	);
+	} = attributes;
 
 	return (
-		<div className={blockClasses}>
-			{!isHidden &&
-				<LabelEditor
-					blockClass={blockClass}
-					label={label}
-					id={id}
-					onChangeLabel={onChangeLabel}
-				/>
-			}
-			<div className={wrapClasses}>
-				<TextControl
-					label={label}
-					value={value}
-					onChange={onChangeValue}
-				/>
-			</div>
+		<div className={blockClass}>
+			<InputEditorComponent
+				{...props('input', attributes, {
+					setAttributes: setAttributes,
+				})}
+			/>
 		</div>
 	);
-};
+}

@@ -1,38 +1,20 @@
-export const SubmitEditor = (props) => {
+import React from 'react';
+import { props } from '@eightshift/frontend-libs/scripts';
+import { SubmitEditor as SubmitEditorComponent } from '../../../components/submit/components/submit-editor';
+
+export const SubmitEditor = ({ attributes, setAttributes }) => {
+
 	const {
-		attributes: {
-			blockClass,
-			name,
-			value,
-			id,
-			classes,
-			type,
-			isDisabled,
-			theme = '',
-		},
-	} = props;
+		blockClass,
+	} = attributes;
 
 	return (
-		<div className={`${blockClass} ${blockClass}__theme--${theme}`}>
-			{type === 'button' ?
-				<button
-					name={name}
-					id={id}
-					className={`${blockClass}__button ${classes}`}
-					disabled={isDisabled}
-					tabIndex={'-1'}
-				>
-					{value}
-				</button> :
-				<input
-					name={name}
-					id={id}
-					className={`${blockClass}__input ${classes}`}
-					value={value}
-					type={type}
-					disabled={isDisabled}
-					tabIndex={'-1'}
-				/>}
+		<div className={blockClass}>
+			<SubmitEditorComponent
+				{...props('submit', attributes, {
+					setAttributes: setAttributes,
+				})}
+			/>
 		</div>
 	);
-};
+}
