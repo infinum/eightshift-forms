@@ -17,7 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'fieldset',
 		Components::props('fieldset', $attributes, [
-			'filedsetContent' => $innerBlockContent,
+			'fieldsetContent' => $innerBlockContent,
 		])
 	);
 	?>

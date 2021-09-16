@@ -13,6 +13,7 @@ $manifest = Components::getManifest(__DIR__);
 $blockClass = $attributes['blockClass'] ?? '';
 
 $formsForm = Components::checkAttr('formsForm', $attributes, $manifest);
+
 ?>
 
 <div class="<?php echo esc_attr($blockClass); ?>">
