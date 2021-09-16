@@ -11,5 +11,8 @@
 	],
 	"components": {
 		"textarea": "textarea"
-	}
+	},
+	"parent": [
+		"eightshift/form"
+	]
 }

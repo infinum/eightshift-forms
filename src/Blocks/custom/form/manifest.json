@@ -12,5 +12,8 @@
 	"hasInnerBlocks": true,
 	"components": {
 		"form": "form"
-	}
+	},
+	"parent": [
+		"eightshift/forms"
+	]
 }

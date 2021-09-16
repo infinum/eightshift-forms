@@ -2,6 +2,15 @@
 	"componentName": "submit",
 	"title": "Submit",
 	"componentClass": "submit",
+	"example": {
+		"attributes": {
+			"submitName": "Name",
+			"submitValue": "Value",
+			"submitId": "Id",
+			"submitType": "button",
+			"submitIsDisabled": false
+		}
+	},
 	"attributes": {
 		"submitName": {
 			"type": "string"

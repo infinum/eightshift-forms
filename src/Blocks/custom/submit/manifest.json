@@ -11,5 +11,8 @@
 	],
 	"components": {
 		"submit": "submit"
-	}
+	},
+	"parent": [
+		"eightshift/form"
+	]
 }

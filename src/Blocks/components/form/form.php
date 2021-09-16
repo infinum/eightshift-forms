@@ -20,7 +20,7 @@ $formAction = Components::checkAttr('formAction', $attributes, $manifest);
 $formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
 $formTarget = Components::checkAttr('formTarget', $attributes, $manifest);
 $formId = Components::checkAttr('formId', $attributes, $manifest);
-$formAllowedBlocks = Components::checkAttr('formAllowedBlocks', $attributes, $manifest);
+$formContent = Components::checkAttr('formContent', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -38,4 +38,5 @@ $formClass = Components::classnames([
 	method="<?php echo esc_attr($formMethod); ?>"
 	target="<?php echo esc_attr($formTarget); ?>"
 >
+	<?php echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </form>

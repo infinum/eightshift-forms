@@ -12,5 +12,8 @@
 	"hasInnerBlocks": true,
 	"components": {
 		"fieldset": "fieldset"
-	}
+	},
+	"parent": [
+		"eightshift/form"
+	]
 }

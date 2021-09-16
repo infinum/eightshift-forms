@@ -2,6 +2,13 @@
 	"componentName": "fieldset",
 	"title": "Fieldset",
 	"componentClass": "fieldset",
+	"example": {
+		"attributes": {
+			"fieldsetId": "Id",
+			"fieldsetLegend": "Legend",
+			"fieldsetName": "Name"
+		}
+	},
 	"attributes": {
 		"fieldsetAllowedBlocks": {
 			"type": "array",

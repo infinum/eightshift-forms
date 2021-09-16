@@ -2,6 +2,17 @@
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "textarea",
+	"example": {
+		"attributes": {
+			"textareaName": "Name",
+			"textareaValue": "Value",
+			"textareaId": "Id",
+			"textareaPlaceholder": "Placeholder",
+			"textareaIsDisabled": false,
+			"textareaIsReadOnly": false,
+			"textareaIsRequired": false
+		}
+	},
 	"attributes": {
 		"textareaName": {
 			"type": "string"

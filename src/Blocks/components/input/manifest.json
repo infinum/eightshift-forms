@@ -2,6 +2,18 @@
 	"componentName": "input",
 	"title": "Input",
 	"componentClass": "input",
+	"example": {
+		"attributes": {
+			"inputName": "Name",
+			"inputValue": "Value",
+			"inputId": "Id",
+			"inputPlaceholder": "Placeholder",
+			"inputType": "text",
+			"inputIsDisabled": false,
+			"inputIsReadOnly": false,
+			"inputIsRequired": false
+		}
+	},
 	"attributes": {
 		"inputName": {
 			"type": "string"

@@ -37,7 +37,7 @@ class Forms extends AbstractPostType
 	 *
 	 * @var string
 	 */
-	public const REST_API_ENDPOINT_SLUG = 'forms';
+	public const REST_API_ENDPOINT_SLUG = 'eightshift-forms';
 
 	/**
 	 * Post type slug constant.
@@ -93,7 +93,7 @@ class Forms extends AbstractPostType
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,
-			'supports' => ['title', 'editor', 'thumbnail'],
+			'supports' => ['title', 'editor', 'revision'],
 			'has_archive' => false,
 			'show_in_rest' => true,
 			'publicly_queryable' => false,

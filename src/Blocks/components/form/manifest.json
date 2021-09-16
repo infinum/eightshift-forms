@@ -2,6 +2,16 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "form",
+	"example": {
+		"attributes": {
+			"formContent": "Content",
+			"formName": "Name",
+			"formAction": "Action",
+			"formMethod": "Method",
+			"formTarget": "Target",
+			"formId": "Id"
+		}
+	},
 	"attributes": {
 		"formAllowedBlocks": {
 			"type": "array",
@@ -13,6 +23,9 @@
 				"eightshift-forms/submit",
 				"eightshift-forms/textarea"
 			]
+		},
+		"formContent": {
+			"type": "string"
 		},
 		"formName": {
 			"type": "string"

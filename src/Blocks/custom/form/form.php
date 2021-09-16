@@ -15,7 +15,9 @@ $blockClass = $attributes['blockClass'] ?? '';
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'form',
-		Components::props('form', $attributes)
+		Components::props('form', $attributes, [
+			'formContent' => $innerBlockContent,
+		])
 	);
 	?>
 </div>

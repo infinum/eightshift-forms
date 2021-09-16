@@ -2,6 +2,14 @@
 	"componentName": "select-option",
 	"title": "Select Option",
 	"componentClass": "select-option",
+	"example": {
+		"attributes": {
+			"selectOptionLabel": "Label",
+			"selectOptionValue": "Value",
+			"selectOptionIsSelected": false,
+			"selectOptionIsDisabled": false
+		}
+	},
 	"attributes": {
 		"selectOptionLabel": {
 			"type": "string"

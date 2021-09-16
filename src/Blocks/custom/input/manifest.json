@@ -11,5 +11,8 @@
 	],
 	"components": {
 		"input": "input"
-	}
+	},
+	"parent": [
+		"eightshift/form"
+	]
 }

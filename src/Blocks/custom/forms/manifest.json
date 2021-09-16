@@ -1,0 +1,23 @@
+{
+	"blockName": "forms",
+	"title": "Eightshift Forms",
+	"description" : "Forms block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"forms"
+	],
+	"example": {
+		"attributes": {
+			"formsForm": 1
+		}
+	},
+	"attributes": {
+		"formsForm": {
+			"type": "integer"
+		}
+	},
+	"postType": "eightshift-forms"
+}
