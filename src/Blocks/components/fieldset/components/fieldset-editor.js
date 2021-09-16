@@ -18,6 +18,7 @@ export const FieldsetEditor = (attributes) => {
 	const fieldsetLegend = checkAttr('fieldsetLegend', attributes, manifest);
 	const fieldsetId = checkAttr('fieldsetId', attributes, manifest);
 	const fieldsetAllowedBlocks = checkAttr('fieldsetAllowedBlocks', attributes, manifest);
+	const fieldsetName = checkAttr('fieldsetName', attributes, manifest);
 
 	const fieldsetClass = classnames([
 		selector(componentClass, componentClass),
@@ -29,6 +30,7 @@ export const FieldsetEditor = (attributes) => {
 		<fieldset
 			className={fieldsetClass}
 			id={fieldsetId}
+			name={fieldsetName}
 		>
 			{fieldsetLegend &&
 				<legend>

@@ -1,0 +1,15 @@
+{
+	"blockName": "textarea",
+	"title": "Textarea",
+	"description" : "Textarea block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"textarea"
+	],
+	"components": {
+		"textarea": "textarea"
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"componentName": "textarea",
+	"title": "Textarea",
+	"componentClass": "textarea",
+	"attributes": {
+		"textareaName": {
+			"type": "string"
+		},
+		"textareaValue": {
+			"type": "string"
+		},
+		"textareaId": {
+			"type": "string"
+		},
+		"textareaPlaceholder": {
+			"type": "string"
+		},
+		"textareaIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"textareaIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"textareaIsRequired": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

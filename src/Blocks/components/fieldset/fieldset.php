@@ -18,6 +18,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $fieldsetLegend = Components::checkAttr('fieldsetLegend', $attributes, $manifest);
 $fieldsetId = Components::checkAttr('fieldsetId', $attributes, $manifest);
 $fieldsetAllowedBlocks = Components::checkAttr('fieldsetAllowedBlocks', $attributes, $manifest);
+$fieldsetName = Components::checkAttr('fieldsetName', $attributes, $manifest);
 
 $fieldsetClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -31,6 +32,5 @@ $fieldsetClass = Components::classnames([
 	class="<?php echo esc_attr($fieldsetClass); ?>"
 	name="<?php echo esc_attr($fieldsetName); ?>"
 	id="<?php echo esc_attr($fieldsetId); ?>"
-	<?php $fieldsetIsDisabled ? 'disabled': ''; ?>
 >
 </fieldset>

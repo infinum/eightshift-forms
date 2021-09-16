@@ -11,5 +11,9 @@
 	],
 	"components": {
 		"choice": "choice"
-	}
+	},
+	"parent": [
+		"eightshift-forms/checkbox",
+		"eightshift-forms/radio"
+	]
 }

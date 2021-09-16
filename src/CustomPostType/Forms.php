@@ -101,7 +101,7 @@ class Forms extends AbstractPostType
 			'capability_type' => self::POST_CAPABILITY_TYPE,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
 			'template_lock' => 'all',
-			// 'template' => $template,
+			'template' => $template,
 		];
 	}
 }

@@ -1,0 +1,63 @@
+{
+	"componentName": "form",
+	"title": "form",
+	"componentClass": "form",
+	"attributes": {
+		"formAllowedBlocks": {
+			"type": "array",
+			"default": [
+				"eightshift-forms/checkbox",
+				"eightshift-forms/input",
+				"eightshift-forms/radio",
+				"eightshift-forms/select",
+				"eightshift-forms/submit",
+				"eightshift-forms/textarea"
+			]
+		},
+		"formName": {
+			"type": "string"
+		},
+		"formAction": {
+			"type": "string"
+		},
+		"formMethod": {
+			"type": "string"
+		},
+		"formTarget": {
+			"type": "string"
+		},
+		"formId": {
+			"type": "string"
+		}
+	},
+	"options": {
+		"formMethod": [
+			{
+				"label": "Get",
+				"value": "get"
+			},
+			{
+				"label": "Post",
+				"value": "post"
+			}
+		],
+		"formTarget": [
+			{
+				"label": "Blank",
+				"value": "_blank"
+			},
+			{
+				"label": "Self",
+				"value": "_self"
+			},
+			{
+				"label": "Parent",
+				"value": "_parent"
+			},
+			{
+				"label": "Top",
+				"value": "_top"
+			}
+		]
+	}
+}

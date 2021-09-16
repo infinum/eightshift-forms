@@ -17,6 +17,9 @@
 		},
 		"fieldsetLegend": {
 			"type": "string"
+		},
+		"fieldsetName": {
+			"type": "string"
 		}
 	}
 }

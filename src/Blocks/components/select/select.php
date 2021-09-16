@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the Heading Component.
+ * Template for the Select Component.
  *
  * @package EightshiftForms
  */
