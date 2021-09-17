@@ -11,7 +11,8 @@
 			"choiceId": "Id",
 			"choiceIsChecked": false,
 			"choiceIsDisabled": false,
-			"choiceIsReadOnly": false
+			"choiceIsReadOnly": false,
+			"choiceIsRequired": false
 		}
 	},
 	"attributes": {
@@ -40,6 +41,10 @@
 			"default": false
 		},
 		"choiceIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"choiceIsRequired": {
 			"type": "boolean",
 			"default": false
 		}

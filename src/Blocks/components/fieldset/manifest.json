@@ -10,6 +10,9 @@
 			"fieldsetName": "Name"
 		}
 	},
+	"components": {
+		"error": "error"
+	},
 	"attributes": {
 		"fieldsetContent": {
 			"type": "string"

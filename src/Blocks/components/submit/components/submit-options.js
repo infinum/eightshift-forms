@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	getOption,
@@ -22,6 +23,8 @@ export const SubmitOptions = (attributes) => {
 	const submitType = checkAttr('submitType', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
 
+	const [showAdvanced, setShowAdvanced] = useState(false);
+
 	return (
 		<>
 			<TextControl
@@ -36,25 +39,35 @@ export const SubmitOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-				value={submitId}
-				onChange={(value) => setAttributes({ [getAttrKey('submitId', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Show advanced options', 'eightshift-forms')}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<SelectControl
-				label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
-				value={submitType}
-				options={getOption('submitType', attributes, manifest)}
-				onChange={(value) => setAttributes({ [getAttrKey('submitType', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+						value={submitId}
+						onChange={(value) => setAttributes({ [getAttrKey('submitId', attributes, manifest)]: value })}
+					/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Disabled', 'eightshift-forms')}
-				checked={submitIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
-			/>
+					<SelectControl
+						label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
+						value={submitType}
+						options={getOption('submitType', attributes, manifest)}
+						onChange={(value) => setAttributes({ [getAttrKey('submitType', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Disabled', 'eightshift-forms')}
+						checked={submitIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

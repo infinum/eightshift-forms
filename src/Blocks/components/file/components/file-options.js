@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl } from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { TextControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -21,6 +22,9 @@ export const FileOptions = (attributes) => {
 	const fileAccept = checkAttr('fileAccept', attributes, manifest);
 	const fileId = checkAttr('fileId', attributes, manifest);
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
+	const fileIsRequired = checkAttr('fileIsRequired', attributes, manifest);
+
+	const [showAdvanced, setShowAdvanced] = useState(false);
 
 	return (
 		<>
@@ -34,24 +38,41 @@ export const FileOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
-				value={fileAccept}
-				onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Show advanced options', 'eightshift-forms')}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-				value={fileId}
-				onChange={(value) => setAttributes({ [getAttrKey('fileId', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
+						value={fileAccept}
+						onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
+					/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Multiple', 'eightshift-forms')}
-				checked={fileIsMultiple}
-				onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
-			/>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+						value={fileId}
+						onChange={(value) => setAttributes({ [getAttrKey('fileId', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Multiple', 'eightshift-forms')}
+						checked={fileIsMultiple}
+						onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
+					/>
+
+					<ToggleControl
+						icon={icons.play}
+						label={__('Is Required', 'eightshift-forms')}
+						checked={fileIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

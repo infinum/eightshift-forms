@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl } from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { TextControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -25,6 +26,8 @@ export const TextareaOptions = (attributes) => {
 	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
 	const textareaIsRequired = checkAttr('textareaIsRequired', attributes, manifest);
 
+	const [showAdvanced, setShowAdvanced] = useState(false);
+
 	return (
 		<>
 			<FieldOptions
@@ -38,43 +41,53 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
-				value={textareaValue}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
-			/>
-
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-				value={textareaId}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: value })}
-			/>
-
-			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
 				value={textareaPlaceholder}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
 			/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Disabled', 'eightshift-forms')}
-				checked={textareaIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Show advanced options', 'eightshift-forms')}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Read Only', 'eightshift-forms')}
-				checked={textareaIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsReadOnly', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+						value={textareaValue}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
+					/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Required', 'eightshift-forms')}
-				checked={textareaIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
-			/>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+						value={textareaId}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Disabled', 'eightshift-forms')}
+						checked={textareaIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Read Only', 'eightshift-forms')}
+						checked={textareaIsReadOnly}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaIsReadOnly', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Required', 'eightshift-forms')}
+						checked={textareaIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

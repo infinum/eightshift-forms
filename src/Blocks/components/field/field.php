@@ -43,4 +43,12 @@ $fieldClass = Components::classnames([
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
+	<?php
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'error',
+		Components::props('error', $attributes, [
+			'errorId' => $fieldId
+		])
+	);
+	?>
 </div>

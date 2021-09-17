@@ -1,7 +1,8 @@
 import React from 'react';
-import { TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { useState } from '@wordpress/element';
+import { TextControl, ToggleControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const SelectOptionOptions = (attributes) => {
@@ -14,31 +15,44 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
 
+	const [showAdvanced, setShowAdvanced] = useState(false);
+
 	return (
 		<>
 			<TextControl
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
-				placeholder={__('Option Label', 'eightshift-forms')}
-			/>
-
-			<TextControl
-				value={selectOptionValue}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
-				placeholder={__('Option Value', 'eightshift-forms')}
+				label={__('Label', 'eightshift-forms')}
 			/>
 
 			<ToggleControl
-				label={__('Is Selected', 'eightshift-forms')}
-				checked={selectOptionIsSelected}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<ToggleControl
-				label={__('Is Disabled', 'eightshift-forms')}
-				checked={selectOptionIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={__('Value', 'eightshift-forms')}
+						value={selectOptionValue}
+						onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
+					/>
+
+					<ToggleControl
+						icon={icons.play}
+						label={__('Is Selected', 'eightshift-forms')}
+						checked={selectOptionIsSelected}
+						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
+					/>
+
+					<ToggleControl
+						icon={icons.play}
+						label={__('Is Disabled', 'eightshift-forms')}
+						checked={selectOptionIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

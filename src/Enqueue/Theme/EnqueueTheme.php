@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\FormSubmitRoute;
 use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -59,5 +60,21 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
+	}
+
+	/**
+	 * Get script localizations
+	 *
+	 * @return array
+	 */
+	protected function getLocalizations(): array
+	{
+		$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+
+		return [
+			'esFormsLocalization' => [
+				'formSubmitRestApiUrl' => $restRoutesPath . FormSubmitRoute::ROUTE_SLUG,
+			]
+		];
 	}
 }

@@ -1,21 +1,22 @@
 <?php
 
 /**
- * Helpers for validation
+ * The class for form validation
  *
- * @package EightshiftForms\Helpers
+ * @package EightshiftForms\Validation
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Helpers;
+namespace EightshiftForms\Validation;
+
+use EightshiftForms\Exception\UnverifiedRequestException;
 
 /**
- * Helpers for validation
+ * Class Validation
  */
-class Validation
+abstract class AbstractValidation implements ValidatorInterface
 {
-
 	/**
 	 * Maximum file size expressed in B.
 	 *
@@ -37,7 +38,7 @@ class Validation
 	 *
 	 * @return boolean
 	 */
-	public static function containsUrl(string $string): bool
+	public function containsUrl(string $string): bool
 	{
 		return (bool) preg_match('/(http|ftp|mailto)/', $string);
 	}
@@ -49,9 +50,9 @@ class Validation
 	 *
 	 * @return boolean
 	 */
-	public static function isFileMaxSizeValid(int $fileSize): bool
+	public function isFileMaxSizeValid(int $fileSize): bool
 	{
-		return $fileSize <= static::MAX_FILE_SIZE;
+		return $fileSize <= self::MAX_FILE_SIZE;
 	}
 
 	/**
@@ -61,9 +62,9 @@ class Validation
 	 *
 	 * @return boolean
 	 */
-	public static function isFileMinSizeValid(int $fileSize): bool
+	public function isFileMinSizeValid(int $fileSize): bool
 	{
-		return $fileSize >= static::MIN_FILE_SIZE;
+		return $fileSize >= self::MIN_FILE_SIZE;
 	}
 
 	/**
@@ -74,7 +75,7 @@ class Validation
 	 *
 	 * @return boolean
 	 */
-	public static function isFileTypeValid(string $fileName, string $fileTypes): bool
+	public function isFileTypeValid(string $fileName, string $fileTypes): bool
 	{
 		$fileExtension = explode('.', $fileName);
 		$validTypes = explode(',', str_replace(' ', '', $fileTypes));

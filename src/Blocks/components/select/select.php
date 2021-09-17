@@ -19,6 +19,7 @@ $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
+$selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
 
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -28,11 +29,16 @@ $selectClass = Components::classnames([
 
 $selectIsDisabled = $selectIsDisabled ? 'disabled' : '';
 
+if (empty($selectId)) {
+	$selectId = $selectName;
+}
+
 $select = '
 	<select
 		class="'. esc_attr($selectClass) .'"
 		name="'. esc_attr($selectName) . '"
 		id="'. esc_attr($selectId) . '"
+		data-validation-required="' . $selectIsRequired . '"
 		' . $selectIsDisabled . '
 	>
 		' . $selectOptions . '

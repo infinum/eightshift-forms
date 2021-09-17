@@ -13,6 +13,7 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
+$blockJsClass = $attributes['blockJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
@@ -26,6 +27,7 @@ $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($blockJsClass, $blockJsClass),
 ]);
 
 ?>

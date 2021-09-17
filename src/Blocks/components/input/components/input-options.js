@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	getOption,
@@ -27,6 +28,8 @@ export const InputOptions = (attributes) => {
 	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 
+	const [showAdvanced, setShowAdvanced] = useState(false);
+
 	return (
 		<>
 			<FieldOptions
@@ -37,18 +40,6 @@ export const InputOptions = (attributes) => {
 				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
 				value={inputName}
 				onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-			/>
-
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
-				value={inputValue}
-				onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
-			/>
-
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-				value={inputId}
-				onChange={(value) => setAttributes({ [getAttrKey('inputId', attributes, manifest)]: value })}
 			/>
 
 			<TextControl
@@ -64,26 +55,48 @@ export const InputOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
 			/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Disabled', 'eightshift-forms')}
-				checked={inputIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Show advanced options', 'eightshift-forms')}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Read Only', 'eightshift-forms')}
-				checked={inputIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+						value={inputValue}
+						onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+					/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Required', 'eightshift-forms')}
-				checked={inputIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
-			/>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+						value={inputId}
+						onChange={(value) => setAttributes({ [getAttrKey('inputId', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Disabled', 'eightshift-forms')}
+						checked={inputIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Read Only', 'eightshift-forms')}
+						checked={inputIsReadOnly}
+						onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Required', 'eightshift-forms')}
+						checked={inputIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

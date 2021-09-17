@@ -32,8 +32,10 @@ $inputClass = Components::classnames([
 
 $inputIsDisabled = $inputIsDisabled ? 'disabled' : '';
 $inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
-$inputIsRequired = $inputIsRequired ? 'required' : '';
 
+if (empty($inputId)) {
+	$inputId = $inputName;
+}
 
 $input = '
 	<input
@@ -43,9 +45,9 @@ $input = '
 		id="'. esc_attr($inputId) . '"
 		placeholder="'. esc_attr($inputPlaceholder) . '"
 		type="'. esc_attr($inputType) . '"
+		data-validation-required="' . $inputIsRequired . '"
 		' . $inputIsDisabled . '
 		' . $inputIsReadOnly . '
-		' . $inputIsRequired . '
 	/>
 ';
 

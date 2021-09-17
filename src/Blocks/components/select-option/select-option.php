@@ -15,12 +15,16 @@ $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $ma
 $selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
 $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
 
+if (empty($selectOptionValue)) {
+	$selectOptionValue = $selectOptionLabel;
+}
+
 ?>
 
 <option
 	value="<?php echo esc_attr($selectOptionValue); ?>"
-	<?php $selectOptionIsSelected ? 'selected': ''; ?>
-	<?php $selectOptionIsDisabled ? 'disabled': ''; ?>
+	<?php echo $selectOptionIsSelected ? 'selected': ''; ?>
+	<?php echo $selectOptionIsDisabled ? 'disabled': ''; ?>
 >
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

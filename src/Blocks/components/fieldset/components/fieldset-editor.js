@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { ErrorEditor } from '../../error/components/error-editor';
 import manifest from '../manifest.json';
 
 export const FieldsetEditor = (attributes) => {
@@ -37,6 +38,9 @@ export const FieldsetEditor = (attributes) => {
 			<div className={`${componentClass}__content`}>
 				{fieldsetContent}
 			</div>
+			<ErrorEditor
+				{...props('error', attributes)}
+			/>
 		</fieldset>
 	);
 };

@@ -1,0 +1,19 @@
+{
+	"componentName": "error",
+	"title": "Error",
+	"componentClass": "es-error",
+	"example": {
+		"attributes": {
+			"errorValue": "Value",
+			"errorId": "Id"
+		}
+	},
+	"attributes": {
+		"errorValue": {
+			"type": "string"
+		},
+		"errorId": {
+			"type": "string"
+		}
+	}
+}

@@ -29,6 +29,10 @@ $submitClass = Components::classnames([
 
 $submitIsDisabled = $submitIsDisabled ? 'disabled' : '';
 
+if (empty($submitId)) {
+	$submitId = $submitName;
+}
+
 $submit = '
 	<input
 		type="submit"

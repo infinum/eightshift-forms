@@ -19,6 +19,7 @@ $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
 $fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
+$fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -28,6 +29,10 @@ $fileClass = Components::classnames([
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
+if (empty($fileId)) {
+	$fileId = $fileName;
+}
+
 $file = '
 	<input
 		class="'. esc_attr($fileClass) .'"
@@ -35,6 +40,7 @@ $file = '
 		id="'. esc_attr($fileId) . '"
 		accept="'. esc_attr($fileAccept) . '"
 		type="file"
+		data-validation-required="' . $fileIsRequired . '"
 		' . $fileIsMultiple . '
 	/>
 ';

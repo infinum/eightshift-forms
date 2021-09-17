@@ -31,7 +31,11 @@ $textareaClass = Components::classnames([
 
 $textareaIsDisabled = $textareaIsDisabled ? 'disabled' : '';
 $textareaIsReadOnly = $textareaIsReadOnly ? 'readonly' : '';
-$textareaIsRequired = $textareaIsRequired ? 'required' : '';
+
+if (empty($textareaId)) {
+	$textareaId = $textareaName;
+}
+
 
 $textarea = '
 	<textarea
@@ -39,9 +43,9 @@ $textarea = '
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		placeholder="' . esc_attr($textareaPlaceholder) . '"
+		data-validation-required="' . $textareaIsRequired . '"
 		' . $textareaIsDisabled . '
 		' . $textareaIsReadOnly . '
-		' . $textareaIsRequired . '
 	>
 		' . esc_attr($textareaValue) . '
 	</textarea>

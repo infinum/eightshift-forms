@@ -41,4 +41,10 @@ $fieldsetClass = Components::classnames([
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<?php echo $fieldsetContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
+	<?php
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'error',
+		Components::props('error', $attributes)
+	);
+	?>
 </fieldset>

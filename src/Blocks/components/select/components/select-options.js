@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl} from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { TextControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -20,6 +21,9 @@ export const SelectOptions = (attributes) => {
 	const selectName = checkAttr('selectName', attributes, manifest);
 	const selectId = checkAttr('selectId', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
+	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
+
+	const [showAdvanced, setShowAdvanced] = useState(false);
 
 	return (
 		<>
@@ -33,18 +37,35 @@ export const SelectOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-				value={selectId}
-				onChange={(value) => setAttributes({ [getAttrKey('selectId', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Show advanced options', 'eightshift-forms')}
+				checked={showAdvanced}
+				onChange={() => setShowAdvanced(!showAdvanced)}
 			/>
 
-			<IconToggle
-				icon={icons.play}
-				label={__('Is Disabled', 'eightshift-forms')}
-				checked={selectIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: value })}
-			/>
+			{showAdvanced &&
+				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
+						value={selectId}
+						onChange={(value) => setAttributes({ [getAttrKey('selectId', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Disabled', 'eightshift-forms')}
+						checked={selectIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Required', 'eightshift-forms')}
+						checked={selectIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: value })}
+					/>
+				</>
+			}
 		</>
 	);
 };

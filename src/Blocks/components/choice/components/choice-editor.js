@@ -4,7 +4,6 @@ import manifest from '../manifest.json';
 
 export const ChoiceEditor = (attributes) => {
 	const choiceLabel = checkAttr('choiceLabel', attributes, manifest);
-	const choiceValue = checkAttr('choiceValue', attributes, manifest);
 	const choiceName = checkAttr('choiceName', attributes, manifest);
 	const choiceType = checkAttr('choiceType', attributes, manifest);
 	const choiceId = checkAttr('choiceId', attributes, manifest);
@@ -16,7 +15,6 @@ export const ChoiceEditor = (attributes) => {
 			</label>
 			<input
 				type={choiceType}
-				value={choiceValue}
 				id={choiceId}
 				readOnly
 			/>

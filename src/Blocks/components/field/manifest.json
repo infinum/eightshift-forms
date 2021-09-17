@@ -10,6 +10,9 @@
 			"fieldName": "Name"
 		}
 	},
+	"components": {
+		"error": "error"
+	},
 	"attributes": {
 		"fieldContent": {
 			"type": "string"
