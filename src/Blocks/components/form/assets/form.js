@@ -177,8 +177,6 @@ export class Form {
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
 
-			console.log(gtmData);
-
 			if (window.dataLayer && gtmData?.event) {
 				window.dataLayer.push(gtmData);
 			}

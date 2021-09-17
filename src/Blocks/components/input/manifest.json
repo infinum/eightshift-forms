@@ -57,6 +57,10 @@
 				"value": "text"
 			},
 			{
+				"label": "Email",
+				"value": "email"
+			},
+			{
 				"label": "Number",
 				"value": "number"
 			},

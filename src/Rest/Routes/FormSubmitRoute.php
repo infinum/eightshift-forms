@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Mailer\MailerInterface;
 
 /**
  * Class FormSubmitRoute
@@ -59,6 +60,15 @@ class FormSubmitRoute extends AbstractBaseRoute
 	// Try catch request.
 		try {
 			$params =	$this->verifyRequest($request);
+
+			$this->mailer->sendEmail(
+				'ivan@gmail.com',
+				'subject',
+				'',
+				[],
+				[],
+				$params['post']
+			);
 
 			return \rest_ensure_response([
 				'code' => 200,

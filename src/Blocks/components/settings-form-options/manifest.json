@@ -1,0 +1,15 @@
+{
+	"title": "Settings Form Options",
+	"componentClass": "settings-form-options",
+	"attributes": {
+		"settingsFormOptionsPageTitle": {
+			"type": "string"
+		},
+		"settingsFormOptionsSubTitle": {
+			"type": "string"
+		},
+		"settingsFormOptionsForms": {
+			"type": "array"
+		}
+	}
+}

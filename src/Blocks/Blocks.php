@@ -79,8 +79,6 @@ class Blocks extends AbstractBlocks
 	 */
 	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{
-		error_log( print_r( ( $categories ), true ) );
-		
 		return array_merge(
 			$categories,
 			[

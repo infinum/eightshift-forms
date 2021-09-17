@@ -64,4 +64,20 @@ class Config extends AbstractConfigData
 	{
 		return 'v1';
 	}
+
+	/**
+	 * Method that returns mailer sender name.
+	 */
+	public static function getMailerSenderName(): string
+	{
+		return 'Eightshift';
+	}
+
+	/**
+	 * Method that returns mailer sender name.
+	 */
+	public static function getMailerSenderEmail(): string
+	{
+		return 'info@eightshift.com';
+	}
 }

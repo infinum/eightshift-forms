@@ -22,7 +22,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 	return (
 		<PanelBody title={__('Forms', 'eightshift-forms')}>
 			<CustomSelect
-				label={<IconLabel icon={icons.file} label={__('Select form', 'redesign')} />}
+				label={<IconLabel icon={icons.file} label={__('Select form', 'eightshift-forms')} />}
 				value={formsForm}
 				loadOptions={getFetchWpApi(postType, {processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle) })}
 				onChange={(value) => {setAttributes({[getAttrKey('formsForm', attributes, manifest)]: value.value})}}

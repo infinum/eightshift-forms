@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsPluginVendor\EightshiftLibs\Rest\CallableRouteInterface;
@@ -30,13 +31,22 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public $validator;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validatio methods.
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
-	public function __construct(ValidatorInterface $validator)
+	public function __construct(ValidatorInterface $validator, MailerInterface $mailer)
 	{
 		$this->validator = $validator;
+		$this->mailer = $mailer;
 	}
 
 	/**
