@@ -27,6 +27,7 @@ export const InputOptions = (attributes) => {
 	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
 	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
+	const inputTracking = checkAttr('inputTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -63,6 +64,12 @@ export const InputOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						value={inputTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
 						value={inputValue}

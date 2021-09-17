@@ -22,6 +22,7 @@ export const SelectOptions = (attributes) => {
 	const selectId = checkAttr('selectId', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
+	const selectTracking = checkAttr('selectTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -45,6 +46,12 @@ export const SelectOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tacking Code', 'eightshift-forms')} />}
+						value={selectTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
 						value={selectId}

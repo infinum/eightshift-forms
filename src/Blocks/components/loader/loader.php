@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the Error Component.
+ * Template for the loader Component.
  *
  * @package EightshiftForms
  */
@@ -16,10 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $manifest['blockJsClass'] ?? '';
 
-$errorValue = Components::checkAttr('errorValue', $attributes, $manifest);
-$errorId = Components::checkAttr('errorId', $attributes, $manifest);
-
-$errorClass = Components::classnames([
+$loaderClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
@@ -28,9 +25,6 @@ $errorClass = Components::classnames([
 
 ?>
 
-<div
-	class="<?php echo esc_attr($errorClass); ?>"
-	data-id="<?php echo esc_attr($errorId); ?>"
->
-	<?php echo esc_html($errorValue); ?>
+<div class="<?php echo esc_attr($loaderClass); ?>">
+	Loading
 </div>

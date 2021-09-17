@@ -1,0 +1,16 @@
+{
+	"componentName": "global-msg",
+	"title": "Global Msg",
+	"componentClass": "es-global-msg",
+	"blockJsClass": "js-es-block-form-global-msg",
+	"example": {
+		"attributes": {
+			"globalMsgValue": "Value"
+		}
+	},
+	"attributes": {
+		"globalMsgValue": {
+			"type": "string"
+		}
+	}
+}

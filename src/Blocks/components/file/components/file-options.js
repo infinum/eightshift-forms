@@ -23,6 +23,7 @@ export const FileOptions = (attributes) => {
 	const fileId = checkAttr('fileId', attributes, manifest);
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
 	const fileIsRequired = checkAttr('fileIsRequired', attributes, manifest);
+	const fileTracking = checkAttr('fileTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -46,6 +47,12 @@ export const FileOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tracking code', 'eightshift-forms')} />}
+						value={fileTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
 						value={fileAccept}

@@ -20,6 +20,7 @@ $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitId = Components::checkAttr('submitId', $attributes, $manifest);
 $submitType = Components::checkAttr('submitType', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
+$submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -40,6 +41,7 @@ $submit = '
 		class="' . esc_attr($submitClass) . '"
 		name="' . esc_attr($submitName) . '"
 		id="' . esc_attr($submitId) . '"
+		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
 	/>
 ';
@@ -49,6 +51,7 @@ $button = '
 		class="' . esc_attr($submitClass) . '"
 		name="' . esc_attr($submitName) . '"
 		id="' . esc_attr($submitId) . '"
+		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
 	>
 		' . esc_attr($submitValue) . '

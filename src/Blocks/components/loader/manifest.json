@@ -1,0 +1,6 @@
+{
+	"componentName": "loader",
+	"title": "Loader",
+	"componentClass": "es-loader",
+	"blockJsClass": "js-es-block-form-loader"
+}

@@ -31,6 +31,9 @@
 		"fileIsRequired": {
 			"type": "boolean",
 			"default": false
+		},
+		"fileTracking": {
+			"type": "string"
 		}
 	}
 }

@@ -22,6 +22,7 @@ $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes,
 $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);
 $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $manifest);
+$textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 
 $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -44,6 +45,7 @@ $textarea = '
 		id="' . esc_attr($textareaId) . '"
 		placeholder="' . esc_attr($textareaPlaceholder) . '"
 		data-validation-required="' . $textareaIsRequired . '"
+		data-tracking="' . $textareaTracking . '"
 		' . $textareaIsDisabled . '
 		' . $textareaIsReadOnly . '
 	>

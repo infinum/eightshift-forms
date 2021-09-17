@@ -47,6 +47,9 @@
 		"choiceIsRequired": {
 			"type": "boolean",
 			"default": false
+		},
+		"choiceTracking": {
+			"type": "string"
 		}
 	},
 	"options": {

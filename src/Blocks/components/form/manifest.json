@@ -2,6 +2,10 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
+	"components": {
+		"loader": "loader",
+		"globalMsg": "globalMsg"
+	},
 	"example": {
 		"attributes": {
 			"formContent": "Content",
@@ -9,7 +13,8 @@
 			"formAction": "Action",
 			"formMethod": "Method",
 			"formTarget": "Target",
-			"formId": "Id"
+			"formId": "Id",
+			"formSuccessRedirect": "Url"
 		}
 	},
 	"attributes": {
@@ -29,6 +34,12 @@
 			"type": "string"
 		},
 		"formId": {
+			"type": "string"
+		},
+		"formSuccessRedirect": {
+			"type": "string"
+		},
+		"formTrackingEventName": {
 			"type": "string"
 		}
 	},

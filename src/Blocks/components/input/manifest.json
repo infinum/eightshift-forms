@@ -45,6 +45,9 @@
 		"inputIsRequired": {
 			"type": "boolean",
 			"default": false
+		},
+		"inputTracking": {
+			"type": "string"
 		}
 	},
 	"options": {

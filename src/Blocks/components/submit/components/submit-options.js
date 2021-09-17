@@ -22,6 +22,7 @@ export const SubmitOptions = (attributes) => {
 	const submitId = checkAttr('submitId', attributes, manifest);
 	const submitType = checkAttr('submitType', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
+	const submitTracking = checkAttr('submitTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -47,6 +48,12 @@ export const SubmitOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						value={submitTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
 						value={submitId}

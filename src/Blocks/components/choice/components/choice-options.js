@@ -16,6 +16,7 @@ export const ChoiceOptions = (attributes) => {
 	const choiceIsDisabled = checkAttr('choiceIsDisabled', attributes, manifest);
 	const choiceIsReadOnly = checkAttr('choiceIsReadOnly', attributes, manifest);
 	const choiceIsRequired = checkAttr('choiceIsRequired', attributes, manifest);
+	const choiceTracking = checkAttr('choiceTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -41,6 +42,12 @@ export const ChoiceOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={__('Tracking code', 'eightshift-forms')}
+						value={choiceTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('choiceTracking', attributes, manifest)]: value })}
+					/>
+
 					<ToggleControl
 						icon={icons.play}
 						label={__('Is Checked', 'eightshift-forms')}

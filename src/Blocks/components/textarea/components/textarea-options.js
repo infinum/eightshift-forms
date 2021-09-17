@@ -25,6 +25,7 @@ export const TextareaOptions = (attributes) => {
 	const textareaIsDisabled = checkAttr('textareaIsDisabled', attributes, manifest);
 	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
 	const textareaIsRequired = checkAttr('textareaIsRequired', attributes, manifest);
+	const textareaTracking = checkAttr('textareaTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -54,6 +55,12 @@ export const TextareaOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						value={textareaTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
 						value={textareaValue}

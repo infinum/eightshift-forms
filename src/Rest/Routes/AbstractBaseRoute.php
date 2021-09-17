@@ -173,7 +173,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				\rest_ensure_response(
 					[
 						'code' => 400,
-						'status' => 'error_fields',
+						'status' => 'error_validation',
 						'message' => \esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
 						'validation' => $validateParams,
 					]
@@ -188,7 +188,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				\rest_ensure_response(
 					[
 						'code' => 400,
-						'status' => 'error_fields',
+						'status' => 'error_validation',
 						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
 						'validation' => $validatePostParams,
 					]

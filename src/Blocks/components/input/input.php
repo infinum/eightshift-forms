@@ -23,6 +23,7 @@ $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
+$inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
 
 $inputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -46,6 +47,7 @@ $input = '
 		placeholder="'. esc_attr($inputPlaceholder) . '"
 		type="'. esc_attr($inputType) . '"
 		data-validation-required="' . $inputIsRequired . '"
+		data-tracking="' . $inputTracking . '"
 		' . $inputIsDisabled . '
 		' . $inputIsReadOnly . '
 	/>

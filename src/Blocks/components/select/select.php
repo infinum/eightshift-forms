@@ -20,6 +20,7 @@ $selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
 $selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
+$selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -39,6 +40,7 @@ $select = '
 		name="'. esc_attr($selectName) . '"
 		id="'. esc_attr($selectId) . '"
 		data-validation-required="' . $selectIsRequired . '"
+		data-tracking="' . $selectTracking . '"
 		' . $selectIsDisabled . '
 	>
 		' . $selectOptions . '

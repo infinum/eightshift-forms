@@ -31,6 +31,9 @@
 		"submitIsDisabled": {
 			"type": "boolean",
 			"default": false
+		},
+		"submitTracking": {
+			"type": "string"
 		}
 	},
 	"options": {

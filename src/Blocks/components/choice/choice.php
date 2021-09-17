@@ -18,6 +18,7 @@ $choiceIsChecked = Components::checkAttr('choiceIsChecked', $attributes, $manife
 $choiceIsDisabled = Components::checkAttr('choiceIsDisabled', $attributes, $manifest);
 $choiceIsReadOnly = Components::checkAttr('choiceIsReadOnly', $attributes, $manifest);
 $choiceIsRequired = Components::checkAttr('choiceIsRequired', $attributes, $manifest);
+$choiceTracking = Components::checkAttr('choiceTracking', $attributes, $manifest);
 
 if (empty($choiceId)) {
 	$choiceId = $choiceName;
@@ -33,6 +34,7 @@ if (empty($choiceId)) {
 	name="<?php echo esc_attr($choiceName); ?>"
 	id="<?php echo esc_attr($choiceId); ?>"
 	data-validation-required="<?php echo esc_attr($choiceIsRequired); ?>"
+	data-tracking="<?php echo esc_attr($choiceTracking); ?>"
 	<?php echo $choiceIsChecked ? 'checked': ''; ?>
 	<?php echo $choiceIsDisabled ? 'disabled': ''; ?>
 	<?php echo $choiceIsReadOnly ? 'readonly': ''; ?>

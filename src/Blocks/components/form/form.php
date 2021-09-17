@@ -22,6 +22,8 @@ $formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
 $formTarget = Components::checkAttr('formTarget', $attributes, $manifest);
 $formId = Components::checkAttr('formId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
+$formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
+$formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -39,6 +41,20 @@ $formClass = Components::classnames([
 	action="<?php echo esc_attr($formAction); ?>"
 	method="<?php echo esc_attr($formMethod); ?>"
 	target="<?php echo esc_attr($formTarget); ?>"
+	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
+	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
 >
-	<?php echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'global-msg',
+		Components::props('globalMsg', $attributes)
+	);
+
+	echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'loader',
+		Components::props('loader', $attributes)
+	);
+	?>
 </form>

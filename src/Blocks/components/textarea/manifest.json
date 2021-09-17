@@ -40,6 +40,9 @@
 		"textareaIsRequired": {
 			"type": "boolean",
 			"default": false
+		},
+		"textareaTracking": {
+			"type": "string"
 		}
 	}
 }

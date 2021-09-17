@@ -60,8 +60,6 @@ class FormSubmitRoute extends AbstractBaseRoute
 		try {
 			$params =	$this->verifyRequest($request);
 
-			// error_log( print_r( ( $params ), true ) );
-			
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',

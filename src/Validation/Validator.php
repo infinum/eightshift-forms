@@ -28,15 +28,16 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 		
-		foreach($params as $key => $value) {
+		foreach($params as $value) {
 			$value = json_decode($value, true);
 
+			$id = $value['id'] ?? [];
 			$data = $value['data'] ?? [];
 			$value = $value['value'] ?? '';
 
 			foreach($data as $dataKey => $dataValue) {
 				if ($dataKey === 'validationRequired' && $dataValue === '1' && $value === '') {
-					$output[$key] = esc_html__('This field is required!', 'eightshift-forms');
+					$output[$id] = esc_html__('This field is required!', 'eightshift-forms');
 				}
 			}
 		}

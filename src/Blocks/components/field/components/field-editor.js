@@ -1,7 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
-import { ErrorEditor } from '../../error/components/error-editor';
+import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FieldEditor = (attributes) => {
@@ -15,7 +14,6 @@ export const FieldEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const fieldId = checkAttr('fieldId', attributes, manifest);
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 
@@ -37,12 +35,6 @@ export const FieldEditor = (attributes) => {
 			<div className={`${componentClass}__content`}>
 				{fieldContent}
 			</div>
-
-			<ErrorEditor
-				{...props('error', attributes, {
-					errorId: fieldId
-				})}
-			/>
 		</div>
 	);
 };

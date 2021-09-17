@@ -20,6 +20,7 @@ $fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
 $fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
+$fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -41,6 +42,7 @@ $file = '
 		accept="'. esc_attr($fileAccept) . '"
 		type="file"
 		data-validation-required="' . $fileIsRequired . '"
+		data-tracking="' . $fileTracking . '"
 		' . $fileIsMultiple . '
 	/>
 ';
