@@ -14,7 +14,7 @@
 		"fieldset": "fieldset"
 	},
 	"parent": [
-		"eightshift/form"
+		"eightshift-forms/form"
 	],
 	"attributes": {
 		"radioAllowedBlocks": {

@@ -1,10 +1,7 @@
 {
 	"componentName": "choice",
 	"title": "Choice",
-	"componentClass": "choice",
-	"parent": [
-		"eightshift-forms/fieldset"
-	],
+	"componentClass": "es-choice",
 	"example": {
 		"attributes": {
 			"choiceType": "checkbox",

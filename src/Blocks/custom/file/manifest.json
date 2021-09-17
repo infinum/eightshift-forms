@@ -1,16 +1,16 @@
 {
-	"blockName": "submit",
-	"title": "Submit",
-	"description" : "Submit block.",
+	"blockName": "file",
+	"title": "File",
+	"description" : "File block.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"
 	},
 	"keywords": [
-		"submit"
+		"file"
 	],
 	"components": {
-		"submit": "submit"
+		"file": "file"
 	},
 	"parent": [
 		"eightshift-forms/form"

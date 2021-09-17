@@ -1,0 +1,31 @@
+{
+	"componentName": "file",
+	"title": "file",
+	"componentClass": "es-file",
+	"example": {
+		"attributes": {
+			"fileName": "Name",
+			"fileAccept": "Accept",
+			"fileId": "Id",
+			"fileIsMultiple": false
+		}
+	},
+	"components": {
+		"field": "field"
+	},
+	"attributes": {
+		"fileName": {
+			"type": "string"
+		},
+		"fileAccept": {
+			"type": "string"
+		},
+		"fileId": {
+			"type": "string"
+		},
+		"fileIsMultiple": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

@@ -14,7 +14,7 @@
 		"select": "select"
 	},
 	"parent": [
-		"eightshift/form"
+		"eightshift-forms/form"
 	],
 	"example": {
 		"innerBlocks": [

@@ -1,7 +1,7 @@
 {
 	"componentName": "submit",
 	"title": "Submit",
-	"componentClass": "submit",
+	"componentClass": "es-submit",
 	"example": {
 		"attributes": {
 			"submitName": "Name",

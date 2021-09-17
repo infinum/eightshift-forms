@@ -1,7 +1,7 @@
 {
 	"componentName": "select",
 	"title": "Select",
-	"componentClass": "select",
+	"componentClass": "es-select",
 	"example": {
 		"attributes": {
 			"selectOptions": "",

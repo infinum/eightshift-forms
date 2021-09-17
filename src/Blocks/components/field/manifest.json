@@ -1,7 +1,7 @@
 {
 	"componentName": "field",
 	"title": "Field",
-	"componentClass": "field",
+	"componentClass": "es-field",
 	"example": {
 		"attributes": {
 			"fieldContent": "Content",

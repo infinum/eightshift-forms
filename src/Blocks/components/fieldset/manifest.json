@@ -1,7 +1,7 @@
 {
 	"componentName": "fieldset",
 	"title": "Fieldset",
-	"componentClass": "fieldset",
+	"componentClass": "es-fieldset",
 	"example": {
 		"attributes": {
 			"fieldsetContent": "Content",

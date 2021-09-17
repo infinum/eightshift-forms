@@ -1,7 +1,7 @@
 {
 	"componentName": "textarea",
 	"title": "Textarea",
-	"componentClass": "textarea",
+	"componentClass": "es-textarea",
 	"example": {
 		"attributes": {
 			"textareaName": "Name",

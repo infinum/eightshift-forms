@@ -14,13 +14,14 @@
 		"form": "form"
 	},
 	"parent": [
-		"eightshift/forms"
+		"eightshift-forms/forms"
 	],
 	"attributes": {
 		"formAllowedBlocks": {
 			"type": "array",
 			"default": [
 				"eightshift-forms/checkbox",
+				"eightshift-forms/file",
 				"eightshift-forms/input",
 				"eightshift-forms/radio",
 				"eightshift-forms/select",

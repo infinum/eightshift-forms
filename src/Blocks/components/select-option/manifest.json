@@ -1,7 +1,7 @@
 {
 	"componentName": "select-option",
 	"title": "Select Option",
-	"componentClass": "select-option",
+	"componentClass": "es-select-option",
 	"example": {
 		"attributes": {
 			"selectOptionLabel": "Label",

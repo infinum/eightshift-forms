@@ -13,6 +13,6 @@
 		"textarea": "textarea"
 	},
 	"parent": [
-		"eightshift/form"
+		"eightshift-forms/form"
 	]
 }

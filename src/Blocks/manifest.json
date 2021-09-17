@@ -2,6 +2,7 @@
 	"namespace": "eightshift-forms",
 	"background": "#BEA600",
 	"foreground": "#FBF9FF",
+	"blockClassPrefix": "es-block",
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"maxCols": 12,

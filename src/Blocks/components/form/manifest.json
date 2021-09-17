@@ -1,7 +1,7 @@
 {
 	"componentName": "form",
 	"title": "form",
-	"componentClass": "form",
+	"componentClass": "es-form",
 	"example": {
 		"attributes": {
 			"formContent": "Content",

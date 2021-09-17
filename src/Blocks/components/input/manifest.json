@@ -1,7 +1,7 @@
 {
 	"componentName": "input",
 	"title": "Input",
-	"componentClass": "input",
+	"componentClass": "es-input",
 	"example": {
 		"attributes": {
 			"inputName": "Name",
