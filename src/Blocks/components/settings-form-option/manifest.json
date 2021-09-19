@@ -8,8 +8,8 @@
 		"settingsFormOptionSubTitle": {
 			"type": "string"
 		},
-		"settingsFormOptionId": {
-			"type": "string"
+		"settingsFormOptionForm": {
+			"type": "array"
 		}
 	}
 }

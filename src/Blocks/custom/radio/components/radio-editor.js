@@ -1,7 +1,7 @@
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { FieldsetEditor } from '../../../components/fieldset/components/fieldset-editor';
+import { RadioEditor as RadioEditorComponent } from '../../../components/radio/components/radio-editor';
 import manifest from './../manifest.json';
 
 export const RadioEditor = ({ attributes, setAttributes }) => {
@@ -13,10 +13,10 @@ export const RadioEditor = ({ attributes, setAttributes }) => {
 
 	return (
 		<div className={blockClass}>
-			<FieldsetEditor
-				{...props('fieldset', attributes, {
+			<RadioEditorComponent
+				{...props('radio', attributes, {
 					setAttributes: setAttributes,
-					fieldsetContent: <InnerBlocks
+					radioContent: <InnerBlocks
 														allowedBlocks={(typeof radioAllowedBlocks === 'undefined') || radioAllowedBlocks}
 														templateLock={false}
 													/>

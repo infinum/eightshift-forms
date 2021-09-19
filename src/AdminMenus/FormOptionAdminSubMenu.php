@@ -12,7 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
-use EightshiftForms\Settings\FormOptionsInterface;
+use EightshiftForms\Settings\FormBuilderInterface;
 
 /**
  * FormOptionAdminSubMenu class.
@@ -22,18 +22,18 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable of form options data.
 	 *
-	 * @var FormOptionsInterface
+	 * @var FormBuilderInterface
 	 */
-	protected $formOptions;
+	protected $formOption;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormOptionsInterface $formOptions Inject documentsData which holds form options data.
+	 * @param FormBuilderInterface $formOption Inject documentsData which holds form options data.
 	 */
-	public function __construct(FormOptionsInterface $formOptions)
+	public function __construct(FormBuilderInterface $formOption)
 	{
-		$this->formOptions = $formOptions;
+		$this->formOption = $formOption;
 	}
 
 	/**
@@ -116,7 +116,7 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'settings-form-options';
+		return 'settings-form-option';
 	}
 
 	/**
@@ -150,7 +150,7 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 		return [
 			'settingsFormOptionsPageTitle' => \esc_html__('From Option', 'eightshift-forms'),
 			'settingsFormOptionsSubTitle' => \esc_html__('All your form details for from id', 'eightshift-forms'),
-			'settingsFormOptionId' => '',
+			'settingsFormOptionForm' => $this->formOption->getFormFields(),
 		];
 	}
 }

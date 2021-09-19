@@ -17,8 +17,8 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
-$fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
+$fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -26,19 +26,24 @@ $fieldClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
+$fieldTag = 'div';
+$labelTag = 'label';
+
+if ($fieldType === 'fieldset') {
+	$fieldTag = 'fieldset';
+	$labelTag = 'legend';
+}
+
 ?>
 
-<div
-	class="<?php echo esc_attr($fieldClass); ?>"
-	name="<?php echo esc_attr($fieldName); ?>"
->
+<<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>">
 	<?php if ($fieldLabel) { ?>
-		<label
+		<<?php echo esc_attr($labelTag); ?>
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 			for="<?php echo esc_attr($fieldId); ?>"
 		>
 			<?php echo esc_html($fieldLabel); ?>
-		</label>
+		</<?php echo esc_attr($labelTag); ?>>
 	<?php } ?>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -51,4 +56,4 @@ $fieldClass = Components::classnames([
 		])
 	);
 	?>
-</div>
+</<?php echo esc_attr($fieldTag); ?>>

@@ -11,7 +11,7 @@
 	],
 	"hasInnerBlocks": true,
 	"components": {
-		"fieldset": "fieldset"
+		"radio": "radio"
 	},
 	"parent": [
 		"eightshift-forms/form"

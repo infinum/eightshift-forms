@@ -16,6 +16,7 @@ export const FieldEditor = (attributes) => {
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
+	const fieldType = checkAttr('fieldType', attributes, manifest);
 
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
@@ -23,18 +24,49 @@ export const FieldEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	return (
-		<div
-			className={fieldClass}
-		>
-			{fieldLabel &&
-				<label className={`${componentClass}__label`}>
-					{fieldLabel}
-				</label>
-			}
-			<div className={`${componentClass}__content`}>
+	const LabelDefault = () => (
+		<label className={`${componentClass}__label`}>
+			{fieldLabel}
+		</label>
+	);
+
+	const LegendDefault = () => (
+		<legend className={`${componentClass}__label`}>
+			{fieldLabel}
+		</legend>
+	);
+
+	const Content = () => (
+		<div className={`${componentClass}__content`}>
 				{fieldContent}
 			</div>
-		</div>
+	);
+
+	const DivContent = () => {
+		return(
+			<div className={fieldClass}>
+				{fieldLabel &&
+					<LabelDefault />
+				}
+				<Content />
+			</div>
+		)
+	};
+
+	const FieldsetContent = () => {
+		return(
+			<fieldset className={fieldClass}>
+				{fieldLabel &&
+					<LegendDefault />
+				}
+				<Content />
+			</fieldset>
+		)
+	};
+
+	return (
+		<>
+		{fieldType === 'div' ? <DivContent /> : <FieldsetContent />}
+		</>
 	);
 };

@@ -7,12 +7,13 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Settings\AbstractFormBuilder;
 
 $manifest = Components::getManifest(__DIR__);
 
 $settingsFormOptionPageTitle = Components::checkAttr('settingsFormOptionPageTitle', $attributes, $manifest);
 $settingsFormOptionSubTitle = Components::checkAttr('settingsFormOptionSubTitle', $attributes, $manifest);
-$settingsFormOptionId = Components::checkAttr('settingsFormOptionId', $attributes, $manifest);
+$settingsFormOptionForm = Components::checkAttr('settingsFormOptionForm', $attributes, $manifest);
 
 ?>
 
@@ -22,5 +23,6 @@ $settingsFormOptionId = Components::checkAttr('settingsFormOptionId', $attribute
 
 <p>
 	<?php echo esc_html($settingsFormOptionSubTitle); ?>
-	<?php echo esc_html($settingsFormOptionId); ?>
 </p>
+
+<?php echo \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $settingsFormOptionForm); ?>
