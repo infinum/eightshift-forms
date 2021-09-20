@@ -1,0 +1,16 @@
+.es-submit {
+	background-color: #2271B1;
+	color: #FFFFFF;
+	padding: 10px 30px;
+	border: #2271B1;
+	cursor: pointer;
+	transition: {
+		property: background-color;
+		timing-function: ease-in-out;
+		duration: 0.2s;
+	}
+
+	&:hover {
+		background-color: #1A5483;
+	}
+}

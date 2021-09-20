@@ -1,6 +1,6 @@
 {
 	"title": "Settings Form Option",
-	"componentClass": "settings-form-option",
+	"componentClass": "es-settings-form-option",
 	"attributes": {
 		"settingsFormOptionPageTitle": {
 			"type": "string"
