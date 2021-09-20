@@ -1,0 +1,23 @@
+.es-field {
+	margin-bottom: 10px;
+	display: grid;
+	column-gap: 20px;
+	grid-template-columns: repeat(12, 1fr);
+
+	&__label {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		padding-top: 6px;
+	}
+
+	&__content {
+		grid-column-start: 4;
+		grid-column-end: 13;
+	}
+
+	&__es-error {
+		grid-column-start: 4;
+		grid-column-end: 13;
+		margin-top: 5px;
+	}
+}

@@ -15,6 +15,10 @@ $settingsFormOptionPageTitle = Components::checkAttr('settingsFormOptionPageTitl
 $settingsFormOptionSubTitle = Components::checkAttr('settingsFormOptionSubTitle', $attributes, $manifest);
 $settingsFormOptionForm = Components::checkAttr('settingsFormOptionForm', $attributes, $manifest);
 
+$formId = $_GET['formId'];
+
+$form = \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $settingsFormOptionForm, $formId);
+
 ?>
 
 <h1>
@@ -22,7 +26,7 @@ $settingsFormOptionForm = Components::checkAttr('settingsFormOptionForm', $attri
 </h1>
 
 <p>
-	<?php echo esc_html($settingsFormOptionSubTitle); ?>
+	<?php echo sprintf("%s - %s", esc_html($settingsFormOptionSubTitle), esc_html($formId)); ?>
 </p>
 
-<?php echo \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $settingsFormOptionForm); ?>
+<?php echo $form; ?>

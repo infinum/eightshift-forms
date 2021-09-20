@@ -148,8 +148,8 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'settingsFormOptionsPageTitle' => \esc_html__('From Option', 'eightshift-forms'),
-			'settingsFormOptionsSubTitle' => \esc_html__('All your form details for from id', 'eightshift-forms'),
+			'settingsFormOptionPageTitle' => \esc_html__('From Option', 'eightshift-forms'),
+			'settingsFormOptionSubTitle' => \esc_html__('All your form details for from id', 'eightshift-forms'),
 			'settingsFormOptionForm' => $this->formOption->getFormFields(),
 		];
 	}

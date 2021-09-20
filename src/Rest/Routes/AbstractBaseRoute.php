@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -210,5 +211,58 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			'get' => $params,
 			'post' => $postParams,
 		];
+	}
+
+	/**
+	 * Return form ID from form params.
+	 *
+	 * @param array $params Array of params got from form.
+	 * @param bool $decrypt Use decryption on post ID.
+	 *
+	 * @return string
+	 */
+	protected function getFormId(array $params, bool $decrypt = false): string
+	{
+		$formId = $params['es-form-post-id'] ?? '';
+
+		if (!$formId) {
+			return '';
+		}
+
+		$formId = json_decode($formId, true)['value'];
+
+		if ($decrypt) {
+			return Helper::encryptor('decrypt', $formId);
+		}
+
+		return $formId;
+
+	}
+
+	/**
+	 * Remove uncesesery params.
+	 *
+	 * @param array $params Array of params got from form.
+	 *
+	 * @return array
+	 */
+	protected function removeUneceseryParams(array $params): array
+	{
+		foreach($params as $param) {
+			$data = json_decode($param, true);
+
+			$type = $data['type'] ?? '';
+			$id = $data['id'] ?? '';
+
+			if ($type === 'submit') {
+				unset($params['submit']);
+			}
+
+			if ($id === 'es-form-post-id') {
+				unset($params['es-form-post-id']);
+			}
+		}
+
+		return $params;
 	}
 }

@@ -38,8 +38,7 @@ if (empty($textareaId)) {
 }
 
 
-$textarea = '
-	<textarea
+$textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
@@ -48,9 +47,7 @@ $textarea = '
 		data-tracking="' . $textareaTracking . '"
 		' . $textareaIsDisabled . '
 		' . $textareaIsReadOnly . '
-	>
-		' . esc_attr($textareaValue) . '
-	</textarea>
+	>' . esc_attr($textareaValue) . '</textarea>
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

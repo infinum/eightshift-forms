@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -14,4 +15,10 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $formsForm = Components::checkAttr('formsForm', $attributes, $manifest);
 
-echo \apply_filters('the_content', \get_post_field('post_content', $formsForm)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+$blocks = parse_blocks(get_the_content(null, null, $formsForm));
+
+$blocks[0]['attrs']['formFormPostId'] = (string) Helper::encryptor('encrypt', $formsForm);
+
+foreach ($blocks as $block) {
+	echo \apply_filters('the_content', \render_block($block)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}

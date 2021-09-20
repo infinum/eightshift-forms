@@ -46,7 +46,7 @@ class FormOptions implements FormOptionsInterface
 					'id' => $id,
 					'title' => get_the_title($id),
 					'slug' => \get_the_permalink($id),
-					'settingsLink' => "/wp-admin/edit.php?post_type={$postType}&page={$optionPageSlug}&id={$id}",
+					'settingsLink' => "/wp-admin/edit.php?post_type={$postType}&page={$optionPageSlug}&formId={$id}",
 					'editLink' => "/wp-admin/post.php?post={$id}&action=edit",
 				];
 			}

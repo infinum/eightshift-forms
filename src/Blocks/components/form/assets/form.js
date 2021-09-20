@@ -80,7 +80,7 @@ export class Form {
 	}
 
 	formatFormData = (element) => {
-		const items = element.elements;
+		const items = element.querySelectorAll('input, select, button, textarea');
 
 		const formData = new FormData();
 
@@ -95,24 +95,27 @@ export class Form {
 					data: item?.dataset,
 				};
 
-				// if (item.type === 'select-one') {
-				// 	data.selectLabel = Object.values(item.options).find((o) => o.value === data.value).text;
-				// }
+				// Change value to checked.
+				if (item.type === 'checkbox') {
+					data.value = item.checked;
+				}
 
-				// // Change value to checked.
-				// if (item.type === 'checkbox') {
-				// 	data.value = item.checked;
-				// }
-
-				// // Output files.
-				// if (item.type === 'file') {
-				// 	formData.append(`${item.name}_file`, item.files[0]);
-				// }
+				// Skip Radio that is not checked.
+				if (item.type === 'radio' && !item.checked) {
+					continue;
+				}
 
 				// Output all fields.
 				formData.append(item.name, JSON.stringify(data));
 			}
 		}
+
+		formData.append('es-form-post-id', JSON.stringify({
+			id: 'es-form-post-id',
+			value: element.getAttribute('data-form-post-id'),
+			type: 'hidden',
+			data: {},
+		}));
 
 		return formData;
 	}

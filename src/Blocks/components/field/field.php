@@ -52,7 +52,8 @@ if ($fieldType === 'fieldset') {
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'error',
 		Components::props('error', $attributes, [
-			'errorId' => $fieldId
+			'errorId' => $fieldId,
+			'blockClass' => $componentClass
 		])
 	);
 	?>

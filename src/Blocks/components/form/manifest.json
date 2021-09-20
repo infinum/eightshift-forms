@@ -2,6 +2,7 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
+	"blockJsClass": "js-es-block-form",
 	"components": {
 		"loader": "loader",
 		"globalMsg": "globalMsg"
@@ -34,6 +35,9 @@
 			"type": "string"
 		},
 		"formId": {
+			"type": "string"
+		},
+		"formPostId": {
 			"type": "string"
 		},
 		"formSuccessRedirect": {

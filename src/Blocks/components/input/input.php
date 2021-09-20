@@ -39,19 +39,18 @@ if (empty($inputId)) {
 }
 
 $input = '
-	<input
-		class="'. esc_attr($inputClass) .'"
-		name="'. esc_attr($inputName) . '"
-		value="'. esc_attr($inputValue) . '"
-		id="'. esc_attr($inputId) . '"
-		placeholder="'. esc_attr($inputPlaceholder) . '"
-		type="'. esc_attr($inputType) . '"
-		data-validation-required="' . $inputIsRequired . '"
-		data-tracking="' . $inputTracking . '"
-		' . $inputIsDisabled . '
-		' . $inputIsReadOnly . '
-	/>
-';
+<input
+	class="'. esc_attr($inputClass) .'"
+	name="'. esc_attr($inputName) . '"
+	value="'. esc_attr($inputValue) . '"
+	id="'. esc_attr($inputId) . '"
+	placeholder="'. esc_attr($inputPlaceholder) . '"
+	type="'. esc_attr($inputType) . '"
+	data-validation-required="' . $inputIsRequired . '"
+	data-tracking="' . $inputTracking . '"
+	' . $inputIsDisabled . '
+	' . $inputIsReadOnly . '
+/>';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\FormSettingsSubmitRoute;
 use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -62,5 +63,21 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
+	}
+
+	/**
+	 * Get script localizations
+	 *
+	 * @return array
+	 */
+	protected function getLocalizations(): array
+	{
+		$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+
+		return [
+			'esFormsLocalization' => [
+				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
+			]
+		];
 	}
 }

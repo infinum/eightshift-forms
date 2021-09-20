@@ -11,18 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Settings\FormOption;
 
 /**
- * Class FormSubmitRoute
+ * Class FormSettingsSubmitRoute
  */
-class FormSubmitRoute extends AbstractBaseRoute
+class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
 
-	use TraitHelper;
-
-	public const ROUTE_SLUG = '/form-submit';
+	public const ROUTE_SLUG = '/form-settings-submit';
 
 	/**
 	 * Get the base url of the route
@@ -66,29 +62,25 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 			$postParams = $params['post'];
 
-			$formId = $this->getFormId($postParams, true);
+			$formId = $this->getFormId($postParams);
 
-			$mailerUse = $this->getSettingsValue(FormOption::MAILER_USE_KEY, $formId);
+			$postParams = $this->removeUneceseryParams($postParams);
 
-			if ($mailerUse) {
-				$this->mailer->sendFormEmail(
-					$formId,
-					$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
-					[],
-					$this->removeUneceseryParams($postParams)
-				);
-			} else {
-				return \rest_ensure_response([
-					'code' => 404,
-					'status' => 'error',
-					'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
-				]);
+			foreach($postParams as $key => $value) {
+
+				$value = json_decode($value, true);
+
+				if ($value['value']) {
+					\update_post_meta($formId, $key, $value['value']);
+				} else {
+					\delete_post_meta($formId, $key);
+				}
 			}
 
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => esc_html__('Success', 'eightshift-form'),
+				'message' => esc_html__('Form successfully saved!', 'eightshift-form'),
 			]);
 
 			// return \rest_ensure_response($response);

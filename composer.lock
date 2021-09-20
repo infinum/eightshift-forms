@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "04ac9c742e6d6ee38639de30e435e62b",
+    "content-hash": "3351c060ab0f743f31a637f9fc3c2e45",
     "packages": [
         {
             "name": "infinum/eightshift-libs",
-            "version": "4.0.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "52e419ded154a42fa7047f12a6f9f25b6d8b219e"
+                "reference": "9e0f8ddf8789aae3045a024f4486c769101afe0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/52e419ded154a42fa7047f12a6f9f25b6d8b219e",
-                "reference": "52e419ded154a42fa7047f12a6f9f25b6d8b219e",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/9e0f8ddf8789aae3045a024f4486c769101afe0e",
+                "reference": "9e0f8ddf8789aae3045a024f4486c769101afe0e",
                 "shasum": ""
             },
             "require": {
@@ -42,6 +42,7 @@
                 "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
                 "ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -49,7 +50,28 @@
                     "EightshiftBoilerplate\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "analyze": [
+                    "@php ./vendor/bin/phpstan analyze"
+                ],
+                "standards:check": [
+                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.3-"
+                ],
+                "standards:fix": [
+                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.3-"
+                ],
+                "test:unit": [
+                    "@php ./vendor/bin/pest"
+                ],
+                "test:coverage": [
+                    "@php ./vendor/bin/pest --coverage"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -64,18 +86,18 @@
             "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
             "homepage": "https://eightshift.com/",
             "keywords": [
+                "Gutenberg",
+                "WordPress",
                 "blocks",
                 "composer",
-                "gutenberg",
                 "installer",
-                "plugin",
-                "wordpress"
+                "plugin"
             ],
             "support": {
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2021-08-16T08:23:46+00:00"
+            "time": "2021-09-20T07:02:44+00:00"
         },
         {
             "name": "opis/closure",
@@ -1327,7 +1349,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "infinum/eightshift-libs": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

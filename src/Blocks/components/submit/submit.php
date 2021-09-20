@@ -14,7 +14,6 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-
 $submitName = Components::checkAttr('submitName', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitId = Components::checkAttr('submitId', $attributes, $manifest);
@@ -53,8 +52,7 @@ $button = '
 		id="' . esc_attr($submitId) . '"
 		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
-	>
-		' . esc_attr($submitValue) . '
+	>' . esc_html($submitValue) . '
 	</button>
 ';
 

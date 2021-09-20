@@ -13,14 +13,15 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
-$blockJsClass = $attributes['blockJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+$blockJsClass = $manifest['blockJsClass'] ?? '';
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
 $formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
 $formTarget = Components::checkAttr('formTarget', $attributes, $manifest);
 $formId = Components::checkAttr('formId', $attributes, $manifest);
+$formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
@@ -43,18 +44,23 @@ $formClass = Components::classnames([
 	target="<?php echo esc_attr($formTarget); ?>"
 	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
 	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
+	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
 >
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'global-msg',
-		Components::props('globalMsg', $attributes)
+		Components::props('globalMsg', $attributes, [
+			'blockClass' => $componentClass
+		])
 	);
 
 	echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
 
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'loader',
-		Components::props('loader', $attributes)
+		Components::props('loader', $attributes, [
+			'blockClass' => $componentClass
+		])
 	);
 	?>
 </form>

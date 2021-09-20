@@ -15,6 +15,13 @@ namespace EightshiftForms\Settings;
  */
 class FormOption extends AbstractFormBuilder
 {
+	public const MAILER_USE_KEY = 'mailer-use';
+	public const MAILER_SENDER_NAME_KEY = 'mailer-sender-name';
+	public const MAILER_SENDER_EMAIL_KEY = 'mailer-sender-email';
+	public const MAILER_TO_KEY = 'mailer-to';
+	public const MAILER_SUBJECT_KEY = 'mailer-subject';
+	public const MAILER_TEMPLATE_KEY = 'mailer-template';
+
 	/**
 	 * Set all settings page field keys.
 	 *
@@ -25,44 +32,55 @@ class FormOption extends AbstractFormBuilder
 		return [
 			[
 				'component' => 'checkbox',
-				'checkboxName' => 'es_mailer_use',
-				'checkboxLabel' => \__('Use Mailer system?', 'eightshift-forms'),
-				'checkboxHelp' => \__('If checked your form will send you an email once it is submitted.', 'eightshift-forms'),
-				'checkboxType' => 'checkbox',
-				'checkboxIsRequired' => true,
-				'checkboxIsChecked' => true,
+				'label' => \__('Use Mailer system?', 'eightshift-forms'),
+				'help' => \__('If checked your form will send you an email once it is submitted.', 'eightshift-forms'),
+				'type' => 'checkbox',
+				'items' => [
+					[
+						'name' => self::MAILER_USE_KEY,
+						'label' => \__('Use', 'eightshift-forms'),
+						'isRequired' => true,
+					],
+				]
 			],
 			[
 				'component' => 'input',
-				'inputName' => 'es_mailer_sender_name',
-				'inputFieldLabel' => \__('Sender Name', 'eightshift-forms'),
-				'inputFieldHelp' => \__('', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
+				'name' => self::MAILER_SENDER_NAME_KEY,
+				'label' => \__('Sender Name', 'eightshift-forms'),
+				'help' => \__('', 'eightshift-forms'),
+				'type' => 'text',
+				'isRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'inputName' => 'es_mailer_sender_email',
-				'inputFieldLabel' => \__('Sender Email', 'eightshift-forms'),
-				'inputFieldHelp' => \__('', 'eightshift-forms'),
-				'inputType' => 'email',
-				'inputIsRequired' => true,
+				'name' => self::MAILER_SENDER_EMAIL_KEY,
+				'label' => \__('Sender Email', 'eightshift-forms'),
+				'help' => \__('Send email to what user once sent.', 'eightshift-forms'),
+				'type' => 'email',
+				'isRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'inputName' => 'es_mailer_to',
-				'inputFieldLabel' => \__('Send email to', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Send email to what user once sent.', 'eightshift-forms'),
-				'inputType' => 'email',
-				'inputIsRequired' => true,
+				'name' => self::MAILER_TO_KEY,
+				'label' => \__('Email to', 'eightshift-forms'),
+				'help' => \__('Define email to', 'eightshift-forms'),
+				'type' => 'text',
+				'isRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'inputName' => 'es_mailer_subject',
-				'inputFieldLabel' => \__('Email subject', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define email subject', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
+				'name' => self::MAILER_SUBJECT_KEY,
+				'label' => \__('Email subject', 'eightshift-forms'),
+				'help' => \__('Define email subject', 'eightshift-forms'),
+				'type' => 'text',
+				'isRequired' => true,
+			],
+			[
+				'component' => 'textarea',
+				'name' => self::MAILER_TEMPLATE_KEY,
+				'label' => \__('Email template', 'eightshift-forms'),
+				'help' => \__('Define email template', 'eightshift-forms'),
+				'isRequired' => true,
 			],
 		];
 	}

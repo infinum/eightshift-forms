@@ -1,0 +1,7 @@
+.es-loader {
+	display: none;
+
+	&.is-active {
+		display: block;
+	}
+}

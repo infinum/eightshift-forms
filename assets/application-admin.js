@@ -8,6 +8,8 @@
 
 // Load Styles
 import './styles/application-admin.scss';
+import './../src/Blocks/assets/application-admin';
 
 // // Load Scripts
 import './scripts/application-admin';
+import './../src/Blocks/assets/scripts/application-admin';
