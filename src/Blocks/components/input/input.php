@@ -16,6 +16,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
+$inputId = Components::checkAttr('inputId', $attributes, $manifest);
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
@@ -36,12 +37,6 @@ $inputClass = Components::classnames([
 
 $inputIsDisabled = $inputIsDisabled ? 'disabled' : '';
 $inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
-
-if (empty($inputName)) {
-	$inputName = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $inputFieldLabel);
-}
-
-$inputId = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $inputName);
 
 $input = '
 <input

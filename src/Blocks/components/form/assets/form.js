@@ -84,47 +84,47 @@ export class Form {
 
 		const formData = new FormData();
 
-		for (const key in items) {
-			if (Object.prototype.hasOwnProperty.call(items, key) && typeof items[key] === 'object') {
-				const item = items[key];
+		for (const [key, item] of Object.entries(items)) {
 
-				const {
-					type,
-					value,
-					name,
-					id,
-					dataset = {},
-				} = item;
+			console.log(item);
+			
+			const {
+				type,
+				value,
+				name,
+				id,
+				dataset = {},
+				checked,
+			} = item;
 
-				let label = element.querySelector(`label[for="${name}"]`);
+			let label = element.querySelector(`label[for="${name}"]`);
 
-				if (label !== null) {
-					label = label.innerText;
-				} else {
-					label = name;
-				}
-
-				const data = {
-					id,
-					value,
-					type,
-					label,
-					data: dataset,
-				};
-
-				// // Change value to checked.
-				if (item.type === 'checkbox') {
-					data.value = item.checked ? 'on' : 'off';
-				}
-
-				// // Skip Radio that is not checked.
-				if (item.type === 'radio' && !item.checked) {
-					continue;
-				}
-
-				// Output all fields.
-				formData.append(item.name, JSON.stringify(data));
+			if (label !== null) {
+				label = label.innerText;
+			} else {
+				label = name;
 			}
+
+			const data = {
+				name,
+				value,
+				type,
+				label,
+				data: dataset,
+			};
+
+			// Skip Radio that is not checked.
+			if (type === 'radio' && !checked) {
+				continue;
+			}
+
+			// Change value to checked.
+			if (type === 'checkbox' || type === 'radio') {
+				data.value = checked ? 'on' : 'off';
+			}
+
+			// Output all fields.
+			formData.append(name, JSON.stringify(data));
 		}
 
 		formData.append('es-form-post-id', JSON.stringify({

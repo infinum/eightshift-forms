@@ -15,6 +15,8 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+
+$submitId = Components::checkAttr('submitId', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitType = Components::checkAttr('submitType', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
@@ -31,6 +33,7 @@ $submitIsDisabled = $submitIsDisabled ? 'disabled' : '';
 $submit = '
 	<input
 		type="submit"
+		id="' . esc_attr($submitId) . '"
 		value="' . esc_attr($submitValue) . '"
 		class="' . esc_attr($submitClass) . '"
 		name="es-form-submit"
@@ -42,6 +45,7 @@ $submit = '
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
+		id="' . esc_attr($submitId) . '"
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
@@ -53,5 +57,6 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	'field',
 	Components::props('field', $attributes, [
 		'fieldContent' => $submitType === 'button' ? $button : $submit,
+		'fieldId' => $submitId,
 	])
 );

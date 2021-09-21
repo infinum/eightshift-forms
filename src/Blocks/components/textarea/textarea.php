@@ -16,6 +16,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
+$textareaId = Components::checkAttr('textareaId', $attributes, $manifest);
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
@@ -35,12 +36,6 @@ $textareaClass = Components::classnames([
 
 $textareaIsDisabled = $textareaIsDisabled ? 'disabled' : '';
 $textareaIsReadOnly = $textareaIsReadOnly ? 'readonly' : '';
-
-$textareaId = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $textareaName);
-
-if (empty($textareaName)) {
-	$textareaName = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $textareaFieldLabel);
-}
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"

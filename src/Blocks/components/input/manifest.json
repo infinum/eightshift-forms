@@ -15,6 +15,9 @@
 		}
 	},
 	"attributes": {
+		"inputId": {
+			"type": "string"
+		},
 		"inputName": {
 			"type": "string"
 		},

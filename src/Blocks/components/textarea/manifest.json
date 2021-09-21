@@ -16,6 +16,9 @@
 		"field": "field"
 	},
 	"attributes": {
+		"textareaId": {
+			"type": "string"
+		},
 		"textareaName": {
 			"type": "string"
 		},

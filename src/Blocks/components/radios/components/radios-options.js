@@ -12,6 +12,7 @@ export const RadiosOptions = (attributes) => {
 	} = attributes;
 
 	const radiosName = checkAttr('radiosName', attributes, manifest);
+	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -33,6 +34,12 @@ export const RadiosOptions = (attributes) => {
 						label={__('Name', 'eightshift-forms')}
 						value={radiosName}
 						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+					/>
+
+					<ToggleControl
+						label={__('Is Required', 'eightshift-forms')}
+						checked={radiosIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
 					/>
 				</>
 			}

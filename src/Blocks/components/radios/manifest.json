@@ -23,6 +23,10 @@
 		"radiosFieldType": {
 			"type": "string",
 			"default": "fieldset"
+		},
+		"radiosIsRequired": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

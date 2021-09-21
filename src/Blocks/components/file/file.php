@@ -16,6 +16,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
+$fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
@@ -32,12 +33,6 @@ $fileClass = Components::classnames([
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
-
-if (empty($fileName)) {
-	$fileName = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $fileFieldLabel);
-}
-
-$fileId = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $fileName);
 
 $file = '
 	<input

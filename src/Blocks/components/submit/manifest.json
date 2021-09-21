@@ -13,6 +13,9 @@
 		"field": "field"
 	},
 	"attributes": {
+		"submitId": {
+			"type": "string"
+		},
 		"submitValue": {
 			"type": "string",
 			"default": "Send"

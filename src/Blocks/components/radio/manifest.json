@@ -22,6 +22,9 @@
 		}
 	},
 	"attributes": {
+		"radioId": {
+			"type": "string"
+		},
 		"radioLabel": {
 			"type": "string"
 		},

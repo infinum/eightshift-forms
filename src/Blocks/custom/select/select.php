@@ -6,12 +6,28 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
+
+$unique = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, '');
+
+$selectName = $attributes['selectSelectName'] ?? '';
+$selectId = $attributes['selectSelectId'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+$props = [];
+
+if (empty($selectName)) {
+	$props['selectName'] = $unique;
+}
+
+if (empty($selectId)) {
+	$props['selectId'] = $unique;
+}
+
+$props['selectOptions'] = $innerBlockContent;
+$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'select',
-	Components::props('select', $attributes, [
-		'selectOptions' => $innerBlockContent,
-		'blockClass' => $attributes['blockClass'] ?? '',
-	])
+	Components::props('select', $attributes, $props)
 );

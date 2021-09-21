@@ -14,7 +14,6 @@ export const RadioOptions = (attributes) => {
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 	const radioIsReadOnly = checkAttr('radioIsReadOnly', attributes, manifest);
-	const radioIsRequired = checkAttr('radioIsRequired', attributes, manifest);
 	const radioTracking = checkAttr('radioTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
@@ -60,13 +59,6 @@ export const RadioOptions = (attributes) => {
 						label={__('Is Read Only', 'eightshift-forms')}
 						checked={radioIsReadOnly}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsReadOnly', attributes, manifest)]: value })}
-					/>
-
-					<ToggleControl
-						icon={icons.play}
-						label={__('Is Required', 'eightshift-forms')}
-						checked={radioIsRequired}
-						onChange={(value) => setAttributes({ [getAttrKey('radioIsRequired', attributes, manifest)]: value })}
 					/>
 				</>
 			}

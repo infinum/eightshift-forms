@@ -25,6 +25,9 @@
 		}
 	},
 	"attributes": {
+		"checkboxId": {
+			"type": "string"
+		},
 		"checkboxLabel": {
 			"type": "string"
 		},

@@ -16,6 +16,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
+$selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
@@ -32,12 +33,6 @@ $selectClass = Components::classnames([
 ]);
 
 $selectIsDisabled = $selectIsDisabled ? 'disabled' : '';
-
-if (empty($selectName)) {
-	$selectName = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $selectFieldLabel);
-}
-
-$selectId = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $selectName);
 
 $select = '
 	<select
