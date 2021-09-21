@@ -19,6 +19,7 @@ $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
+$fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -49,12 +50,14 @@ if ($fieldType === 'fieldset') {
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'error',
-		Components::props('error', $attributes, [
-			'errorId' => $fieldId,
-			'blockClass' => $componentClass
-		])
-	);
+	if ($fieldUseError) {
+		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'error',
+			Components::props('error', $attributes, [
+				'errorId' => $fieldId,
+				'blockClass' => $componentClass
+			])
+		);
+	}
 	?>
 </<?php echo esc_attr($fieldTag); ?>>

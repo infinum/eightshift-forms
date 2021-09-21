@@ -9,12 +9,11 @@ export const SubmitEditor = ({ attributes, setAttributes }) => {
 	} = attributes;
 
 	return (
-		<div className={blockClass}>
-			<SubmitEditorComponent
-				{...props('submit', attributes, {
-					setAttributes: setAttributes,
-				})}
-			/>
-		</div>
+		<SubmitEditorComponent
+			{...props('submit', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+			})}
+		/>
 	);
 }

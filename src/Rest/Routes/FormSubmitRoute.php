@@ -70,20 +70,20 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 			$mailerUse = $this->getSettingsValue(FormOption::MAILER_USE_KEY, $formId);
 
-			if ($mailerUse) {
-				$this->mailer->sendFormEmail(
-					$formId,
-					$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
-					[],
-					$this->removeUneceseryParams($postParams)
-				);
-			} else {
-				return \rest_ensure_response([
-					'code' => 404,
-					'status' => 'error',
-					'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
-				]);
-			}
+			// if ($mailerUse) {
+			// 	$this->mailer->sendFormEmail(
+			// 		$formId,
+			// 		$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
+			// 		[],
+			// 		$this->removeUneceseryParams($postParams)
+			// 	);
+			// } else {
+			// 	return \rest_ensure_response([
+			// 		'code' => 404,
+			// 		'status' => 'error',
+			// 		'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
+			// 	]);
+			// }
 
 			return \rest_ensure_response([
 				'code' => 200,

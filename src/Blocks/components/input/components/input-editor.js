@@ -18,7 +18,6 @@ export const InputEditor = (attributes) => {
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	const inputType = checkAttr('inputType', attributes, manifest);
-	const inputId = checkAttr('inputId', attributes, manifest);
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),
@@ -32,7 +31,6 @@ export const InputEditor = (attributes) => {
 			value={inputValue}
 			placeholder={inputPlaceholder}
 			type={inputType}
-			id={inputId}
 			readOnly
 		/>
 	);
@@ -42,7 +40,6 @@ export const InputEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: input,
-					fieldId: inputId
 				})}
 			/>
 		</>

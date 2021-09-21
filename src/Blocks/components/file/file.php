@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -17,10 +18,12 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
-$fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
+
+// Fix for getting attribute that is part of the child component.
+$fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -30,9 +33,11 @@ $fileClass = Components::classnames([
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
-if (empty($fileId)) {
-	$fileId = $fileName;
+if (empty($fileName)) {
+	$fileName = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $fileFieldLabel);
 }
+
+$fileId = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, $fileName);
 
 $file = '
 	<input

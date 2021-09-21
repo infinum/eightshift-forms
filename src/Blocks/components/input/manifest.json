@@ -14,17 +14,11 @@
 			"inputIsRequired": false
 		}
 	},
-	"components": {
-		"field": "field"
-	},
 	"attributes": {
 		"inputName": {
 			"type": "string"
 		},
 		"inputValue": {
-			"type": "string"
-		},
-		"inputId": {
 			"type": "string"
 		},
 		"inputPlaceholder": {

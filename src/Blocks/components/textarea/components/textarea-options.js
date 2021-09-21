@@ -20,7 +20,6 @@ export const TextareaOptions = (attributes) => {
 
 	const textareaName = checkAttr('textareaName', attributes, manifest);
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
-	const textareaId = checkAttr('textareaId', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
 	const textareaIsDisabled = checkAttr('textareaIsDisabled', attributes, manifest);
 	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
@@ -33,12 +32,6 @@ export const TextareaOptions = (attributes) => {
 		<>
 			<FieldOptions
 				{...props('field', attributes)}
-			/>
-
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-				value={textareaName}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
 			/>
 
 			<TextControl
@@ -56,6 +49,12 @@ export const TextareaOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						value={textareaName}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
+					/>
+
+					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
 						value={textareaTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
@@ -65,12 +64,6 @@ export const TextareaOptions = (attributes) => {
 						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
 						value={textareaValue}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-						value={textareaId}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

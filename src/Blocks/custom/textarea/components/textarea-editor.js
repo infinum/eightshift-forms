@@ -9,12 +9,11 @@ export const TextareaEditor = ({ attributes, setAttributes }) => {
 	} = attributes;
 
 	return (
-		<div className={blockClass}>
-			<TextareaEditorComponent
-				{...props('textarea', attributes, {
-					setAttributes: setAttributes,
-				})}
-			/>
-		</div>
+		<TextareaEditorComponent
+			{...props('textarea', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+			})}
+		/>
 	);
 }

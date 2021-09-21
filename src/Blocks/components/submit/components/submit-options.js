@@ -17,9 +17,7 @@ export const SubmitOptions = (attributes) => {
 		setAttributes,
 	} = attributes;
 
-	const submitName = checkAttr('submitName', attributes, manifest);
 	const submitValue = checkAttr('submitValue', attributes, manifest);
-	const submitId = checkAttr('submitId', attributes, manifest);
 	const submitType = checkAttr('submitType', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
 	const submitTracking = checkAttr('submitTracking', attributes, manifest);
@@ -28,12 +26,6 @@ export const SubmitOptions = (attributes) => {
 
 	return (
 		<>
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-				value={submitName}
-				onChange={(value) => setAttributes({ [getAttrKey('submitName', attributes, manifest)]: value })}
-			/>
-
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
 				value={submitValue}
@@ -48,16 +40,11 @@ export const SubmitOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
 						value={submitTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-						value={submitId}
-						onChange={(value) => setAttributes({ [getAttrKey('submitId', attributes, manifest)]: value })}
 					/>
 
 					<SelectControl

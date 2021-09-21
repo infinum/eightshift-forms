@@ -6,7 +6,6 @@
 		"attributes": {
 			"fileName": "Name",
 			"fileAccept": "Accept",
-			"fileId": "Id",
 			"fileIsMultiple": false,
 			"fileIsRequired": false
 		}
@@ -19,9 +18,6 @@
 			"type": "string"
 		},
 		"fileAccept": {
-			"type": "string"
-		},
-		"fileId": {
 			"type": "string"
 		},
 		"fileIsMultiple": {

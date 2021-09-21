@@ -6,7 +6,6 @@
 		"attributes": {
 			"selectOptions": "",
 			"selectName": "Name",
-			"selectId": "Id",
 			"selectIsDisabled": false,
 			"selectIsRequired": false
 		}
@@ -19,9 +18,6 @@
 			"type": "string"
 		},
 		"selectName": {
-			"type": "string"
-		},
-		"selectId": {
 			"type": "string"
 		},
 		"selectIsDisabled": {

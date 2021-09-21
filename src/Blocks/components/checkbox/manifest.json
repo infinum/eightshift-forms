@@ -10,12 +10,14 @@
 	"keywords": [
 		"checkbox"
 	],
+	"component": {
+		"error": "error"
+	},
 	"example": {
 		"attributes": {
 			"checkboxLabel": "Label",
 			"checkboxValue": "Value",
 			"checkboxName": "Name",
-			"checkboxId": "Id",
 			"checkboxIsChecked": false,
 			"checkboxIsDisabled": false,
 			"checkboxIsReadOnly": false,
@@ -30,9 +32,6 @@
 			"type": "string"
 		},
 		"checkboxName": {
-			"type": "string"
-		},
-		"checkboxId": {
 			"type": "string"
 		},
 		"checkboxIsChecked": {

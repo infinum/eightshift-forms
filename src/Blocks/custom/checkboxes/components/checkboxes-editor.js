@@ -13,16 +13,15 @@ export const CheckboxesEditor = ({ attributes, setAttributes }) => {
 	const checkboxesAllowedBlocks = checkAttr('checkboxesAllowedBlocks', attributes, manifest);
 
 	return (
-		<div className={blockClass}>
-			<CheckboxesEditorComponent
-				{...props('checkboxes', attributes, {
-					setAttributes: setAttributes,
-					checkboxesContent: <InnerBlocks
-														allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
-														templateLock={false}
-													/>
-				})}
-			/>
-		</div>
+		<CheckboxesEditorComponent
+			{...props('checkboxes', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+				checkboxesContent: <InnerBlocks
+													allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
+													templateLock={false}
+												/>
+			})}
+		/>
 	);
 }

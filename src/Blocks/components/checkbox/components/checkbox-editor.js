@@ -15,8 +15,6 @@ export const CheckboxEditor = (attributes) => {
 	} = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
-	const checkboxName = checkAttr('checkboxName', attributes, manifest);
-	const checkboxId = checkAttr('checkboxId', attributes, manifest);
 
 	const checkboxClass = classnames([
 		selector(componentClass, componentClass),
@@ -27,18 +25,16 @@ export const CheckboxEditor = (attributes) => {
 
 	return (
 		<div className={checkboxClass}>
-			<label
-				htmlFor={checkboxName}
-				className={`${componentClass}__label`}
-			>
-				{checkboxLabel}
-			</label>
-			<input
-				className={`${componentClass}__input`}
-				type={'checkbox'}
-				id={checkboxId}
-				readOnly
-			/>
+			<div className={`${componentClass}__content`}>
+				<label className={`${componentClass}__label`}>
+					{checkboxLabel}
+				</label>
+				<input
+					className={`${componentClass}__input`}
+					type={'checkbox'}
+					readOnly
+				/>
+			</div>
 		</div>
 	);
 };

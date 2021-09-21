@@ -11,7 +11,6 @@ export const RadioOptions = (attributes) => {
 	} = attributes;
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
-	const radioName = checkAttr('radioName', attributes, manifest);
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 	const radioIsReadOnly = checkAttr('radioIsReadOnly', attributes, manifest);
@@ -26,12 +25,6 @@ export const RadioOptions = (attributes) => {
 				label={__('Label', 'eightshift-forms')}
 				value={radioLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
-			/>
-
-			<TextControl
-				label={__('Name', 'eightshift-forms')}
-				value={radioName}
-				onChange={(value) => setAttributes({ [getAttrKey('radioName', attributes, manifest)]: value })}
 			/>
 
 			<ToggleControl

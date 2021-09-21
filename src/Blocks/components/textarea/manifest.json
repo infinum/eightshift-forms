@@ -6,7 +6,6 @@
 		"attributes": {
 			"textareaName": "Name",
 			"textareaValue": "Value",
-			"textareaId": "Id",
 			"textareaPlaceholder": "Placeholder",
 			"textareaIsDisabled": false,
 			"textareaIsReadOnly": false,
@@ -21,9 +20,6 @@
 			"type": "string"
 		},
 		"textareaValue": {
-			"type": "string"
-		},
-		"textareaId": {
 			"type": "string"
 		},
 		"textareaPlaceholder": {

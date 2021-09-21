@@ -15,7 +15,6 @@ export const FileEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const fileId = checkAttr('fileId', attributes, manifest);
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
 
 	const fileClass = classnames([
@@ -28,7 +27,6 @@ export const FileEditor = (attributes) => {
 		<input
 			className={fileClass}
 			type={'file'}
-			id={fileId}
 			{...fileIsMultiple ? 'multiple' : ''}
 		/>
 	);
@@ -38,7 +36,6 @@ export const FileEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: file,
-					fieldId: fileId
 				})}
 			/>
 		</>

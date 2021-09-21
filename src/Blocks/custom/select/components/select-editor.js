@@ -13,16 +13,15 @@ export const SelectEditor = ({ attributes, setAttributes }) => {
 	const selectAllowedBlocks = checkAttr('selectAllowedBlocks', attributes, manifest);
 
 	return (
-		<div className={blockClass}>
-			<SelectEditorComponent
-				{...props('select', attributes, {
-					setAttributes: setAttributes,
-					selectOptions: <InnerBlocks
-														allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
-														templateLock={false}
-													/>
-				})}
-			/>
-		</div>
+		<SelectEditorComponent
+			{...props('select', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+				selectOptions: <InnerBlocks
+													allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
+													templateLock={false}
+												/>
+			})}
+		/>
 	);
 }

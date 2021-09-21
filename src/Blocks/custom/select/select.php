@@ -8,16 +8,10 @@
 
 use EightshiftForms\Helpers\Components;
 
-$blockClass = $attributes['blockClass'] ?? '';
-?>
-
-<div class="<?php echo esc_attr($blockClass); ?>">
-	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'select',
-		Components::props('select', $attributes, [
-			'selectOptions' => $innerBlockContent,
-		])
-	);
-	?>
-</div>
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'select',
+	Components::props('select', $attributes, [
+		'selectOptions' => $innerBlockContent,
+		'blockClass' => $attributes['blockClass'] ?? '',
+	])
+);

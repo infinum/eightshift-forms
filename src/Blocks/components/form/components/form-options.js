@@ -20,7 +20,6 @@ export const FormOptions = (attributes) => {
 	const formName = checkAttr('formName', attributes, manifest);
 	const formAction = checkAttr('formAction', attributes, manifest);
 	const formMethod = checkAttr('formMethod', attributes, manifest);
-	const formTarget = checkAttr('formTarget', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 	const formSuccessRedirect = checkAttr('formSuccessRedirect', attributes, manifest);
 	const formTrackingEventName = checkAttr('formTrackingEventName', attributes, manifest);
@@ -68,13 +67,6 @@ export const FormOptions = (attributes) => {
 						label={<IconLabel icon={icons.id} label={__('Action', 'eightshift-forms')} />}
 						value={formAction}
 						onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
-					/>
-
-					<SelectControl
-						label={<IconLabel icon={icons.id} label={__('Target', 'eightshift-forms')} />}
-						value={formTarget}
-						options={getOption('formTarget', attributes, manifest)}
-						onChange={(value) => setAttributes({ [getAttrKey('formTarget', attributes, manifest)]: value })}
 					/>
 
 					<TextControl

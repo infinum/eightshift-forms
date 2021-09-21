@@ -21,7 +21,6 @@ export const InputOptions = (attributes) => {
 
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
-	const inputId = checkAttr('inputId', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	const inputType = checkAttr('inputType', attributes, manifest);
 	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
@@ -35,12 +34,6 @@ export const InputOptions = (attributes) => {
 		<>
 			<FieldOptions
 				{...props('field', attributes)}
-			/>
-
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-				value={inputName}
-				onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
 			/>
 
 			<TextControl
@@ -65,6 +58,12 @@ export const InputOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						value={inputName}
+						onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+					/>
+					
+					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
 						value={inputTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
@@ -74,12 +73,6 @@ export const InputOptions = (attributes) => {
 						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
 						value={inputValue}
 						onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-						value={inputId}
-						onChange={(value) => setAttributes({ [getAttrKey('inputId', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

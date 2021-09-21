@@ -20,6 +20,10 @@
 		"checkboxesFieldType": {
 			"type": "string",
 			"default": "fieldset"
+		},
+		"checkboxesFieldUseError": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

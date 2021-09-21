@@ -25,7 +25,14 @@ class Blocks extends AbstractBlocks
 	 *
 	 * @var string
 	 */
-	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency_forms';
+	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'es_blocks_dependency';
+
+	/**
+	 * Blocks id filter name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_NAME_TO_ID_FILTER_NAME = 'es_blocks_name_to_id';
 
 	/**
 	 * Register all the hooks
@@ -46,6 +53,9 @@ class Blocks extends AbstractBlocks
 
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
+	
+		// Convert string to id string.
+		\add_filter(static::BLOCKS_NAME_TO_ID_FILTER_NAME, [$this, 'convertStringToId']);
 	}
 
 	/**
@@ -84,5 +94,25 @@ class Blocks extends AbstractBlocks
 				],
 			]
 		);
+	}
+
+	/**
+	 * Convert string to id string.
+	 * If string is empty returns a random string.
+	 *
+	 * @param string $string String to convert
+	 *
+	 * @return string
+	 */
+	public function convertStringToId(string $string): string
+	{
+		if (empty($string)) {
+			return bin2hex(random_bytes(10));
+		}
+
+		$string = str_replace(' ', '-', $string);
+		$string = str_replace('_', '-', $string);
+
+		return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
 	}
 }

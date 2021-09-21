@@ -19,7 +19,6 @@ export const SelectOptions = (attributes) => {
 	} = attributes;
 
 	const selectName = checkAttr('selectName', attributes, manifest);
-	const selectId = checkAttr('selectId', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
 	const selectTracking = checkAttr('selectTracking', attributes, manifest);
@@ -32,12 +31,6 @@ export const SelectOptions = (attributes) => {
 				{...props('field', attributes)}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-				value={selectName}
-				onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
-			/>
-
 			<ToggleControl
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
@@ -47,15 +40,15 @@ export const SelectOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tacking Code', 'eightshift-forms')} />}
-						value={selectTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
+						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						value={selectName}
+						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-						value={selectId}
-						onChange={(value) => setAttributes({ [getAttrKey('selectId', attributes, manifest)]: value })}
+						label={<IconLabel icon={icons.id} label={__('Tacking Code', 'eightshift-forms')} />}
+						value={selectTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

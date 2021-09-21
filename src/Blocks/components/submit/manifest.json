@@ -4,9 +4,7 @@
 	"componentClass": "es-submit",
 	"example": {
 		"attributes": {
-			"submitName": "Name",
 			"submitValue": "Value",
-			"submitId": "Id",
 			"submitType": "button",
 			"submitIsDisabled": false
 		}
@@ -15,14 +13,9 @@
 		"field": "field"
 	},
 	"attributes": {
-		"submitName": {
-			"type": "string"
-		},
 		"submitValue": {
-			"type": "string"
-		},
-		"submitId": {
-			"type": "string"
+			"type": "string",
+			"default": "Send"
 		},
 		"submitType": {
 			"type": "string",

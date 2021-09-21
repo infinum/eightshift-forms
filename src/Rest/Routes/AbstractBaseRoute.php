@@ -146,13 +146,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Verifies everything is ok with request
 	 *
 	 * @param  \WP_REST_Request $request WP_REST_Request object.
-	 * @param  string           $requiredFilter (Optional) Filter that needs to exist to verify this request.
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
 	 * @return array            filtered request params.
 	 */
-	protected function verifyRequest(\WP_REST_Request $request, string $requiredFilter = ''): array
+	protected function verifyRequest(\WP_REST_Request $request): array
 	{
 		$params = $this->sanitizeFields($request->get_query_params());
 		$params = $this->fixDotUnderscoreReplacement($params);
@@ -248,17 +247,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function removeUneceseryParams(array $params): array
 	{
-		foreach($params as $param) {
-			$data = json_decode($param, true);
-
-			$type = $data['type'] ?? '';
-			$id = $data['id'] ?? '';
-
-			if ($type === 'submit') {
-				unset($params['submit']);
+		foreach($params as $key => $value) {
+			if ($key === 'es-form-submit') {
+				unset($params['es-form-submit']);
 			}
 
-			if ($id === 'es-form-post-id') {
+			if ($key === 'es-form-post-id') {
 				unset($params['es-form-post-id']);
 			}
 		}

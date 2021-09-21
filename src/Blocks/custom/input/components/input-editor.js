@@ -9,12 +9,11 @@ export const InputEditor = ({ attributes, setAttributes }) => {
 	} = attributes;
 
 	return (
-		<div className={blockClass}>
-			<InputEditorComponent
-				{...props('input', attributes, {
-					setAttributes: setAttributes,
-				})}
-			/>
-		</div>
+		<InputEditorComponent
+			{...props('input', attributes, {
+				blockClass,
+				setAttributes: setAttributes,
+			})}
+		/>
 	);
 }

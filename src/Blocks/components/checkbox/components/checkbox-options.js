@@ -28,12 +28,6 @@ export const CheckboxOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={__('Name', 'eightshift-forms')}
-				value={checkboxName}
-				onChange={(value) => setAttributes({ [getAttrKey('checkboxName', attributes, manifest)]: value })}
-			/>
-
 			<ToggleControl
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
@@ -42,6 +36,12 @@ export const CheckboxOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={__('Name', 'eightshift-forms')}
+						value={checkboxName}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxName', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={__('Tracking code', 'eightshift-forms')}
 						value={checkboxTracking}

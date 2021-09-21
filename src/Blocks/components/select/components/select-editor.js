@@ -25,7 +25,6 @@ export const SelectEditor = (attributes) => {
 
 	const select = (
 		<div className={selectClass}>
-			Select
 			{selectOptions}
 		</div>
 	);

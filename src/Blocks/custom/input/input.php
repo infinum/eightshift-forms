@@ -8,14 +8,10 @@
 
 use EightshiftForms\Helpers\Components;
 
-$blockClass = $attributes['blockClass'] ?? '';
+echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	'input',
+	Components::props('input', $attributes, [
+		'blockClass' => $attributes['blockClass'] ?? '',
+	])
+);
 ?>
-
-<div class="<?php echo esc_attr($blockClass); ?>">
-	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'input',
-		Components::props('input', $attributes)
-	);
-	?>
-</div>

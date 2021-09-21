@@ -15,8 +15,6 @@ export const RadioEditor = (attributes) => {
 	} = attributes;
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
-	const radioName = checkAttr('radioName', attributes, manifest);
-	const radioId = checkAttr('radioId', attributes, manifest);
 
 	const radioClass = classnames([
 		selector(componentClass, componentClass),
@@ -27,16 +25,12 @@ export const RadioEditor = (attributes) => {
 
 	return (
 		<div className={radioClass}>
-			<label
-				htmlFor={radioName}
-				className={`${componentClass}__label`}
-			>
+			<label className={`${componentClass}__label`}>
 				{radioLabel}
 			</label>
 			<input
 				className={`${componentClass}__input`}
 				type={'radio'}
-				id={radioId}
 				readOnly
 			/>
 		</div>

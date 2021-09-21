@@ -19,7 +19,6 @@ $blockJsClass = $manifest['blockJsClass'] ?? '';
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
 $formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
-$formTarget = Components::checkAttr('formTarget', $attributes, $manifest);
 $formId = Components::checkAttr('formId', $attributes, $manifest);
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
@@ -41,7 +40,6 @@ $formClass = Components::classnames([
 	id="<?php echo esc_attr($formId); ?>"
 	action="<?php echo esc_attr($formAction); ?>"
 	method="<?php echo esc_attr($formMethod); ?>"
-	target="<?php echo esc_attr($formTarget); ?>"
 	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
 	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
 	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
@@ -53,9 +51,15 @@ $formClass = Components::classnames([
 			'blockClass' => $componentClass
 		])
 	);
+	?>
 
-	echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
+		<?php
+		echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+		?>
+	</div>
 
+	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'loader',
 		Components::props('loader', $attributes, [

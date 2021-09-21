@@ -17,7 +17,6 @@ export const TextareaEditor = (attributes) => {
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
-	const textareaId = checkAttr('textareaId', attributes, manifest);
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),
@@ -29,7 +28,6 @@ export const TextareaEditor = (attributes) => {
 		<textarea
 			className={textareaClass}
 			placeholder={textareaPlaceholder}
-			id={textareaId}
 			readOnly
 		>
 			{textareaValue}
@@ -41,7 +39,6 @@ export const TextareaEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: textarea,
-					fieldId: textareaId
 				})}
 			/>
 		</>

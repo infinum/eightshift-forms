@@ -9,12 +9,11 @@ export const FileEditor = ({ attributes, setAttributes }) => {
 	} = attributes;
 
 	return (
-		<div className={blockClass}>
-			<FileEditorComponent
-				{...props('file', attributes, {
-					setAttributes: setAttributes,
-				})}
-			/>
-		</div>
+		<FileEditorComponent
+			{...props('file', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+			})}
+		/>
 	);
 }

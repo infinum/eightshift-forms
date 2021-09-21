@@ -15,7 +15,6 @@
 			"radioLabel": "Label",
 			"radioValue": "Value",
 			"radioName": "Name",
-			"radioId": "Id",
 			"radioIsChecked": false,
 			"radioIsDisabled": false,
 			"radioIsReadOnly": false,
@@ -30,9 +29,6 @@
 			"type": "string"
 		},
 		"radioName": {
-			"type": "string"
-		},
-		"radioId": {
 			"type": "string"
 		},
 		"radioIsChecked": {

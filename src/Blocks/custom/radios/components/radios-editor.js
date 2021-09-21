@@ -12,16 +12,15 @@ export const RadiosEditor = ({ attributes, setAttributes }) => {
 	const radiosAllowedBlocks = checkAttr('radiosAllowedBlocks', attributes, manifest);
 
 	return (
-		<div className={blockClass}>
-			<RadiosEditorComponent
-				{...props('radios', attributes, {
-					setAttributes: setAttributes,
-					radiosContent: <InnerBlocks
-														allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
-														templateLock={false}
-													/>
-				})}
-			/>
-		</div>
+		<RadiosEditorComponent
+			{...props('radios', attributes, {
+				setAttributes: setAttributes,
+				blockClass,
+				radiosContent: <InnerBlocks
+													allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
+													templateLock={false}
+												/>
+			})}
+		/>
 	);
 }

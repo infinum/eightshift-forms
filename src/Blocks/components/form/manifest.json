@@ -5,6 +5,7 @@
 	"blockJsClass": "js-es-block-form",
 	"components": {
 		"loader": "loader",
+		"field": "field",
 		"globalMsg": "globalMsg"
 	},
 	"example": {
@@ -13,7 +14,6 @@
 			"formName": "Name",
 			"formAction": "Action",
 			"formMethod": "Method",
-			"formTarget": "Target",
 			"formId": "Id",
 			"formSuccessRedirect": "Url"
 		}
@@ -29,10 +29,8 @@
 			"type": "string"
 		},
 		"formMethod": {
-			"type": "string"
-		},
-		"formTarget": {
-			"type": "string"
+			"type": "string",
+			"default": "post"
 		},
 		"formId": {
 			"type": "string"
@@ -56,24 +54,6 @@
 			{
 				"label": "Post",
 				"value": "post"
-			}
-		],
-		"formTarget": [
-			{
-				"label": "Blank",
-				"value": "_blank"
-			},
-			{
-				"label": "Self",
-				"value": "_self"
-			},
-			{
-				"label": "Parent",
-				"value": "_parent"
-			},
-			{
-				"label": "Top",
-				"value": "_top"
 			}
 		]
 	}

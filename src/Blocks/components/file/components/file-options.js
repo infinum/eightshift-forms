@@ -20,7 +20,6 @@ export const FileOptions = (attributes) => {
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileAccept = checkAttr('fileAccept', attributes, manifest);
-	const fileId = checkAttr('fileId', attributes, manifest);
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
 	const fileIsRequired = checkAttr('fileIsRequired', attributes, manifest);
 	const fileTracking = checkAttr('fileTracking', attributes, manifest);
@@ -33,12 +32,6 @@ export const FileOptions = (attributes) => {
 				{...props('field', attributes)}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-				value={fileName}
-				onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
-			/>
-
 			<ToggleControl
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
@@ -47,6 +40,12 @@ export const FileOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						value={fileName}
+						onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Tracking code', 'eightshift-forms')} />}
 						value={fileTracking}
@@ -57,12 +56,6 @@ export const FileOptions = (attributes) => {
 						label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
 						value={fileAccept}
 						onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
-						value={fileId}
-						onChange={(value) => setAttributes({ [getAttrKey('fileId', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

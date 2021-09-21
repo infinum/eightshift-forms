@@ -17,6 +17,9 @@
 		"radiosContent": {
 			"type": "string"
 		},
+		"radiosName": {
+			"type": "string"
+		},
 		"radiosFieldType": {
 			"type": "string",
 			"default": "fieldset"

@@ -14,7 +14,6 @@ export const FormEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const formId = checkAttr('formId', attributes, manifest);
 	const formContent = checkAttr('formContent', attributes, manifest);
 
 	const formClass = classnames([
@@ -25,11 +24,10 @@ export const FormEditor = (attributes) => {
 
 	return (
 		<>
-			<form
-				className={formClass}
-				id={formId}
-			>
-				{formContent}
+			<form className={formClass}>
+				<div className={`${componentClass}__fields`}>
+					{formContent}
+				</div>
 			</form>
 		</>
 	);

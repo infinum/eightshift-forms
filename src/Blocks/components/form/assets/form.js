@@ -88,19 +88,36 @@ export class Form {
 			if (Object.prototype.hasOwnProperty.call(items, key) && typeof items[key] === 'object') {
 				const item = items[key];
 
-				const data = {
-					id: item.id,
-					value: item.value,
-					type: item.type,
-					data: item?.dataset,
-				};
+				const {
+					type,
+					value,
+					name,
+					id,
+					dataset = {},
+				} = item;
 
-				// Change value to checked.
-				if (item.type === 'checkbox') {
-					data.value = item.checked;
+				let label = element.querySelector(`label[for="${name}"]`);
+
+				if (label !== null) {
+					label = label.innerText;
+				} else {
+					label = name;
 				}
 
-				// Skip Radio that is not checked.
+				const data = {
+					id,
+					value,
+					type,
+					label,
+					data: dataset,
+				};
+
+				// // Change value to checked.
+				if (item.type === 'checkbox') {
+					data.value = item.checked ? 'on' : 'off';
+				}
+
+				// // Skip Radio that is not checked.
 				if (item.type === 'radio' && !item.checked) {
 					continue;
 				}
@@ -114,6 +131,7 @@ export class Form {
 			id: 'es-form-post-id',
 			value: element.getAttribute('data-form-post-id'),
 			type: 'hidden',
+			label: 'Form Id',
 			data: {},
 		}));
 
