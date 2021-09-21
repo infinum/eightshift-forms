@@ -1,4 +1,5 @@
 {
+	"componentName": "settings-form-option",
 	"title": "Settings Form Option",
 	"componentClass": "es-settings-form-option",
 	"attributes": {
@@ -6,6 +7,9 @@
 			"type": "string"
 		},
 		"settingsFormOptionSubTitle": {
+			"type": "string"
+		},
+		"settingsFormOptionBackLink": {
 			"type": "string"
 		},
 		"settingsFormOptionForm": {

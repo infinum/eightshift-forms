@@ -97,6 +97,8 @@ class Forms extends AbstractPostType
 			'has_archive' => false,
 			'show_in_rest' => true,
 			'publicly_queryable' => false,
+			'show_in_menu' => false,
+			'show_in_nav_menus' => false,
 			'can_export' => true,
 			'capability_type' => self::POST_CAPABILITY_TYPE,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,

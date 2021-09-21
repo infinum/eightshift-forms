@@ -14,9 +14,9 @@ use EightshiftForms\AdminMenus\FormOptionAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 
 /**
- * FormOptions class.
+ * FormsListing class.
  */
-class FormOptions implements FormOptionsInterface
+class FormsListing implements FormListingInterface
 {
 
 	/**

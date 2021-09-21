@@ -150,6 +150,7 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 		return [
 			'settingsFormOptionPageTitle' => \esc_html__('From Option', 'eightshift-forms'),
 			'settingsFormOptionSubTitle' => \esc_html__('Specify all details for this form.', 'eightshift-forms'),
+			'settingsFormOptionBackLink' => '/wp-admin/admin.php?page=' . FormMainListingAdminMenu::ADMIN_MENU_SLUG,
 			'settingsFormOptionForm' => $this->formOption->getFormFields(),
 		];
 	}

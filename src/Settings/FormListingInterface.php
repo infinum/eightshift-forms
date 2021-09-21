@@ -13,7 +13,7 @@ namespace EightshiftForms\Settings;
 /**
  * Interface for admin content listing
  */
-interface FormOptionsInterface
+interface FormListingInterface
 {
 
 		/**

@@ -1,0 +1,24 @@
+.es-settings-forms-listings {
+	&__list {
+		margin: 0;
+	}
+
+	&__list-item {
+		border-top: 1px solid var(--global-colors-french);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px var(--global-spacing-horizontal);
+		margin: 0;
+	}
+
+	&__label {
+		font-size: 16px;
+		text-decoration: none;
+		transition: {
+			property: color;
+			timing-function: ease-in-out;
+			duration: 0.2s;
+		}
+	}
+}

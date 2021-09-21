@@ -1,0 +1,60 @@
+.es-settings-section {
+	padding: var(--global-spacing-horizontal) var(--global-spacing-vertical) 0 0;
+
+	&__section {
+		background-color: var(--global-colors-white);
+		border: 1px solid var(--global-colors-french);
+	}
+
+	&__heading {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: var(--global-spacing-horizontal) var(--global-spacing-vertical);
+		border-bottom: 1px solid var(--global-colors-french);
+	}
+
+	&__heading-title {
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	&__content {
+		padding: var(--global-spacing-vertical) var(--global-spacing-horizontal) 0;
+	}
+
+	&--reset-spacing {
+		margin-left: calc(var(--global-spacing-horizontal) * -1);
+		margin-right: calc(var(--global-spacing-horizontal) * -1);
+	}
+
+	&__description {
+		font-size: 14px;
+		padding-bottom: var(--global-spacing-horizontal);
+		color: var(--global-colors-chalice);
+	}
+
+	&__link {
+		text-decoration: none;
+		color: var(--global-colors-chalice);
+		transition: {
+			property: color;
+			timing-function: ease-in-out;
+			duration: 0.2s;
+		}
+	}
+
+	&__actions {
+		> * {
+			margin-left: 10px;
+			padding-left: 10px;
+			border-left: 1px solid var(--global-colors-french);
+
+			&:first-child {
+				margin-left: 0;
+				padding-left: 0;
+				border: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"componentName": "settings-forms-listings",
+	"title": "Settings Forms Listings",
+	"componentClass": "es-settings-forms-listings",
+	"attributes": {
+		"settingsFormsListingsPageTitle": {
+			"type": "string"
+		},
+		"settingsFormsListingsSubTitle": {
+			"type": "string"
+		},
+		"settingsFormsListingsForms": {
+			"type": "array"
+		},
+		"settingsFormsListingsPostType": {
+			"type": "string"
+		}
+	}
+}
