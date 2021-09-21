@@ -1,0 +1,25 @@
+{
+	"componentName": "radios",
+	"title": "radios",
+	"componentClass": "es-radios",
+	"description" : "radios block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"radios"
+	],
+	"components": {
+		"field": "field"
+	},
+	"attributes": {
+		"radiosContent": {
+			"type": "string"
+		},
+		"radiosFieldType": {
+			"type": "string",
+			"default": "fieldset"
+		}
+	}
+}

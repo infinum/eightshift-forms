@@ -1,6 +1,7 @@
 {
 	"componentName": "checkbox",
 	"title": "Checkbox",
+	"componentClass": "es-checkbox",
 	"description" : "Checkbox block.",
 	"category": "eightshift-forms",
 	"icon": {
@@ -9,12 +10,48 @@
 	"keywords": [
 		"checkbox"
 	],
-	"components": {
-		"field": "field",
-		"choice": "choice"
+	"example": {
+		"attributes": {
+			"checkboxLabel": "Label",
+			"checkboxValue": "Value",
+			"checkboxName": "Name",
+			"checkboxId": "Id",
+			"checkboxIsChecked": false,
+			"checkboxIsDisabled": false,
+			"checkboxIsReadOnly": false,
+			"checkboxIsRequired": false
+		}
 	},
 	"attributes": {
-		"checkboxContent": {
+		"checkboxLabel": {
+			"type": "string"
+		},
+		"checkboxValue": {
+			"type": "string"
+		},
+		"checkboxName": {
+			"type": "string"
+		},
+		"checkboxId": {
+			"type": "string"
+		},
+		"checkboxIsChecked": {
+			"type": "boolean",
+			"default": false
+		},
+		"checkboxIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"checkboxIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"checkboxIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"checkboxTracking": {
 			"type": "string"
 		},
 		"checkboxFieldType": {

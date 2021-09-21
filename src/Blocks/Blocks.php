@@ -21,16 +21,11 @@ class Blocks extends AbstractBlocks
 {
 
 	/**
-	 * Reusable blocks Capability Name.
-	 */
-	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
-
-	/**
 	 * Blocks dependency filter name constant.
 	 *
 	 * @var string
 	 */
-	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency';
+	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency_forms';
 
 	/**
 	 * Register all the hooks

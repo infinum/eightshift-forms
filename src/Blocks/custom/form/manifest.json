@@ -20,13 +20,13 @@
 		"formAllowedBlocks": {
 			"type": "array",
 			"default": [
-				"eightshift-forms/checkbox",
 				"eightshift-forms/file",
 				"eightshift-forms/input",
-				"eightshift-forms/radio",
+				"eightshift-forms/radios",
 				"eightshift-forms/select",
 				"eightshift-forms/submit",
-				"eightshift-forms/textarea"
+				"eightshift-forms/textarea",
+				"eightshift-forms/checkboxes"
 			]
 		}
 	}

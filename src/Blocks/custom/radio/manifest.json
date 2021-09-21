@@ -1,7 +1,7 @@
 {
 	"blockName": "radio",
 	"title": "Radio",
-	"description" : "radio block.",
+	"description" : "Radio block.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"
@@ -9,22 +9,10 @@
 	"keywords": [
 		"radio"
 	],
-	"hasInnerBlocks": true,
 	"components": {
 		"radio": "radio"
 	},
 	"parent": [
-		"eightshift-forms/form"
-	],
-	"attributes": {
-		"radioAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": [
-				"eightshift-forms/choice"
-			]
-		}
-	}
+		"eightshift-forms/radio"
+	]
 }

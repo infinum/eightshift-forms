@@ -1,0 +1,25 @@
+{
+	"componentName": "checkboxes",
+	"title": "checkboxes",
+	"componentClass": "es-checkboxes",
+	"description" : "checkboxes block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"checkboxes"
+	],
+	"components": {
+		"field": "field"
+	},
+	"attributes": {
+		"checkboxesContent": {
+			"type": "string"
+		},
+		"checkboxesFieldType": {
+			"type": "string",
+			"default": "fieldset"
+		}
+	}
+}

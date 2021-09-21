@@ -9,22 +9,10 @@
 	"keywords": [
 		"checkbox"
 	],
-	"hasInnerBlocks": true,
 	"components": {
 		"checkbox": "checkbox"
 	},
 	"parent": [
-		"eightshift-forms/form"
-	],
-	"attributes": {
-		"checkboxAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": [
-				"eightshift-forms/choice"
-			]
-		}
-	}
+		"eightshift-forms/checkbox"
+	]
 }

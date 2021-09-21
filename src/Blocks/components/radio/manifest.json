@@ -1,6 +1,7 @@
 {
 	"componentName": "radio",
 	"title": "Radio",
+	"componentClass": "es-radio",
 	"description" : "Radio block.",
 	"category": "eightshift-forms",
 	"icon": {
@@ -9,12 +10,48 @@
 	"keywords": [
 		"radio"
 	],
-	"components": {
-		"field": "field",
-		"choice": "choice"
+	"example": {
+		"attributes": {
+			"radioLabel": "Label",
+			"radioValue": "Value",
+			"radioName": "Name",
+			"radioId": "Id",
+			"radioIsChecked": false,
+			"radioIsDisabled": false,
+			"radioIsReadOnly": false,
+			"radioIsRequired": false
+		}
 	},
 	"attributes": {
-		"radioContent": {
+		"radioLabel": {
+			"type": "string"
+		},
+		"radioValue": {
+			"type": "string"
+		},
+		"radioName": {
+			"type": "string"
+		},
+		"radioId": {
+			"type": "string"
+		},
+		"radioIsChecked": {
+			"type": "boolean",
+			"default": false
+		},
+		"radioIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"radioIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"radioIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"radioTracking": {
 			"type": "string"
 		},
 		"radioFieldType": {

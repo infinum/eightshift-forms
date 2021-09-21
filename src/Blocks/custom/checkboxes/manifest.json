@@ -1,0 +1,30 @@
+{
+	"blockName": "checkboxes",
+	"title": "Checkboxes",
+	"description" : "Checkboxes block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"checkboxes"
+	],
+	"hasInnerBlocks": true,
+	"components": {
+		"checkboxes": "checkboxes"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	],
+	"attributes": {
+		"checkboxesAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-forms/checkbox"
+			]
+		}
+	}
+}
