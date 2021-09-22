@@ -3,6 +3,7 @@
 	"background": "#BEA600",
 	"foreground": "#FBF9FF",
 	"blockClassPrefix": "es-block",
+	"settingsPageUrl": "/wp-admin/edit.php?post_type=eightshift-forms&page=form-option&formId=",
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"maxCols": 12,
@@ -29,6 +30,16 @@
 				"name": "Matisse",
 				"slug": "matisse",
 				"color": "#2271B1"
+			},
+			{
+				"name": "White",
+				"slug": "white",
+				"color": "#FFFFFF"
+			},
+			{
+				"name": "Alto",
+				"slug": "alto",
+				"color": "#F2F2F2"
 			},
 			{
 				"name": "White",

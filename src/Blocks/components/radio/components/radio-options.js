@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, ToggleControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons } from '@eightshift/frontend-libs/scripts';
+import { TextControl, IconToggle } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons, ComponentUseToggle } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const RadioOptions = (attributes) => {
@@ -23,45 +23,50 @@ export const RadioOptions = (attributes) => {
 		<>
 			<TextControl
 				label={__('Label', 'eightshift-forms')}
+				help={__('Set label used next to the radio.', 'eightshift-forms')}
 				value={radioLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 			/>
 
 			<TextControl
 				label={__('Value', 'eightshift-forms')}
+				help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
 				value={radioValue}
 				onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
 			/>
 
-			<ToggleControl
+			<ComponentUseToggle
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
 				onChange={() => setShowAdvanced(!showAdvanced)}
+				showUseToggle={true}
+				showLabel={true}
 			/>
 
 			{showAdvanced &&
 				<>
 					<TextControl
 						label={__('Tracking code', 'eightshift-forms')}
+						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={radioTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
 					/>
 
-					<ToggleControl
+					<IconToggle
 						icon={icons.play}
 						label={__('Is Checked', 'eightshift-forms')}
 						checked={radioIsChecked}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
 					/>
 
-					<ToggleControl
+					<IconToggle
 						icon={icons.play}
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={radioIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
 					/>
 
-					<ToggleControl
+					<IconToggle
 						icon={icons.play}
 						label={__('Is Read Only', 'eightshift-forms')}
 						checked={radioIsReadOnly}

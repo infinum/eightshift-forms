@@ -21,6 +21,7 @@ $fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
+$fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -49,6 +50,9 @@ if ($fieldType === 'fieldset') {
 	<?php } ?>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	</div>
+	<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+		<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 	<?php
 	if ($fieldUseError) {

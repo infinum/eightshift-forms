@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { TextControl, SelectControl } from '@wordpress/components';
 import {
 	icons,
 	getOption,
@@ -9,7 +9,8 @@ import {
 	getAttrKey,
 	IconLabel,
 	IconToggle,
-	props
+	props,
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from './../manifest.json';
@@ -27,8 +28,11 @@ export const InputOptions = (attributes) => {
 	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 	const inputTracking = checkAttr('inputTracking', attributes, manifest);
+	const inputIsEmail = checkAttr('inputIsEmail', attributes, manifest);
+	const inputIsUrl = checkAttr('inputIsUrl', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
+	const [showValidation, setShowValidation] = useState(false);
 
 	return (
 		<>
@@ -38,41 +42,48 @@ export const InputOptions = (attributes) => {
 
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
+				help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
 				value={inputPlaceholder}
 				onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
 			/>
 
 			<SelectControl
 				label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
+				help={__('Set what type of input filed it is used.', 'eightshift-forms')}
 				value={inputType}
 				options={getOption('inputType', attributes, manifest)}
 				onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
 			/>
 
-			<ToggleControl
+			<ComponentUseToggle
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
 				onChange={() => setShowAdvanced(!showAdvanced)}
+				showUseToggle={true}
+				showLabel={true}
 			/>
 
 			{showAdvanced &&
 				<>
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 						value={inputName}
 						onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-					/>
-					
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
-						value={inputTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+						help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
 						value={inputValue}
 						onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+					/>
+
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						help={__('Provide GTM tracking code.', 'eightshift-forms')}
+						value={inputTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
@@ -88,12 +99,38 @@ export const InputOptions = (attributes) => {
 						checked={inputIsReadOnly}
 						onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
 					/>
+				</>
+			}
 
+			<ComponentUseToggle
+				label={__('Show validation options', 'eightshift-forms')}
+				checked={showValidation}
+				onChange={() => setShowValidation(!showValidation)}
+				showUseToggle={true}
+				showLabel={true}
+			/>
+
+			{showValidation &&
+				<>
 					<IconToggle
 						icon={icons.play}
 						label={__('Is Required', 'eightshift-forms')}
 						checked={inputIsRequired}
 						onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Email', 'eightshift-forms')}
+						checked={inputIsEmail}
+						onChange={(value) => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: value })}
+					/>
+
+					<IconToggle
+						icon={icons.play}
+						label={__('Is Url', 'eightshift-forms')}
+						checked={inputIsUrl}
+						onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
 					/>
 				</>
 			}

@@ -12,6 +12,11 @@
 		margin: 0;
 	}
 
+	&__item-intro {
+		display: flex;
+		align-items: center;
+	}
+
 	&__label {
 		font-size: 16px;
 		text-decoration: none;
@@ -20,5 +25,14 @@
 			timing-function: ease-in-out;
 			duration: 0.2s;
 		}
+	}
+
+	&__item-status {
+		background-color: var(--global-colors-alto);
+		padding: 2px 5px;
+		margin-left: 20px;
+		font-weight: bold;
+		font-size: 10px;
+		letter-spacing: 1px;
 	}
 }

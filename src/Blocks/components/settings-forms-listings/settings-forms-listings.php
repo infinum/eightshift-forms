@@ -57,11 +57,20 @@ $layoutClass = Components::classnames([
 						$settingsLink = $form['settingsLink'];
 						$slug = $form['slug'];
 						$title = $form['title'];
+						$status = $form['status'];
 						?>
 						<li class="<?php echo \esc_attr("{$componentClass}__list-item"); ?>">
-							<a href="<?php echo esc_html($editLink); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
-								<?php echo esc_html($title); ?>
-							</a>
+							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
+								<a href="<?php echo esc_html($editLink); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
+									<?php echo esc_html($title); ?>
+								</a>
+
+								<?php if ($status !== 'publish') { ?>
+									<span class="<?php echo esc_attr("{$componentClass}__item-status"); ?>">
+										<?php echo esc_html($status); ?>
+									</span>
+								<?php } ?>
+							</div>
 							<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 								<a href="<?php echo esc_html($editLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 									<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>

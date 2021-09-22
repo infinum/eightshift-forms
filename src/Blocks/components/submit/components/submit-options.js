@@ -8,7 +8,8 @@ import {
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	IconToggle
+	IconToggle,
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -28,14 +29,17 @@ export const SubmitOptions = (attributes) => {
 		<>
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+				help={__('Provide button text..', 'eightshift-forms')}
 				value={submitValue}
 				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 			/>
 
-			<ToggleControl
+			<ComponentUseToggle
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
 				onChange={() => setShowAdvanced(!showAdvanced)}
+				showUseToggle={true}
+				showLabel={true}
 			/>
 
 			{showAdvanced &&
@@ -43,12 +47,14 @@ export const SubmitOptions = (attributes) => {
 
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={submitTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
 					/>
 
 					<SelectControl
 						label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
+						help={__('Select type of button to be used.', 'eightshift-forms')}
 						value={submitType}
 						options={getOption('submitType', attributes, manifest)}
 						onChange={(value) => setAttributes({ [getAttrKey('submitType', attributes, manifest)]: value })}

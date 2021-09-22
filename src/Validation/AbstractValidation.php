@@ -15,30 +15,29 @@ namespace EightshiftForms\Validation;
  */
 abstract class AbstractValidation implements ValidatorInterface
 {
-	/**
-	 * Maximum file size expressed in B.
-	 *
-	 * @var integer
-	 */
-	public const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 	/**
-	 * Minimum file size expressed in B.
-	 *
-	 * @var integer
-	 */
-	public const MIN_FILE_SIZE = 1;
-
-	/**
-	 * Check if string contains url
+	 * Check if string is url
 	 *
 	 * @param string $string String to check.
 	 *
 	 * @return boolean
 	 */
-	public function containsUrl(string $string): bool
+	public function isUrl(string $string): bool
 	{
 		return (bool) preg_match('/(http|ftp|mailto)/', $string);
+	}
+
+	/**
+	 * Check if string is email
+	 *
+	 * @param string $string String to check.
+	 *
+	 * @return boolean
+	 */
+	public function isEmail(string $string): bool
+	{
+		return (bool) filter_var($string, FILTER_VALIDATE_EMAIL);
 	}
 
 	/**

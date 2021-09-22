@@ -30,6 +30,9 @@
 		"fieldLabel": {
 			"type": "string"
 		},
+		"fieldHelp": {
+			"type": "string"
+		},
 		"fieldUseError": {
 			"type": "boolean",
 			"default": true

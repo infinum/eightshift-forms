@@ -55,6 +55,16 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = esc_html__('This field is required!', 'eightshift-forms');
 						}
 						break;
+					case 'validationEmail':
+						if($dataValue === '1' && !$this->isEmail($inputValue)) {
+							$output[$paramKey] = esc_html__('This field is not a valid email!', 'eightshift-forms');
+						}
+						break;
+					case 'validationUrl':
+						if($dataValue === '1' && !$this->isUrl($inputValue)) {
+							$output[$paramKey] = esc_html__('This field is not a valid url!', 'eightshift-forms');
+						}
+						break;
 				}
 			}
 		}

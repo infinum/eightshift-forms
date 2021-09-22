@@ -17,6 +17,7 @@ export const FieldEditor = (attributes) => {
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);
+	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
@@ -42,6 +43,12 @@ export const FieldEditor = (attributes) => {
 			</div>
 	);
 
+	const Help = () => (
+		<div className={`${componentClass}__help`}>
+				{fieldHelp}
+			</div>
+	);
+
 	const DivContent = () => {
 		return(
 			<div className={fieldClass}>
@@ -49,6 +56,7 @@ export const FieldEditor = (attributes) => {
 					<LabelDefault />
 				}
 				<Content />
+				<Help />
 			</div>
 		)
 	};
@@ -60,6 +68,7 @@ export const FieldEditor = (attributes) => {
 					<LegendDefault />
 				}
 				<Content />
+				<Help />
 			</fieldset>
 		)
 	};

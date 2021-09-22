@@ -183,7 +183,7 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	{
 		return [
 			'settingsFormsListingsPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
-			'settingsFormsListingsSubTitle' => \esc_html__('This list shows all your forms in one place.', 'eightshift-forms'),
+			'settingsFormsListingsSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
 			'settingsFormsListingsPostType' => Forms::POST_TYPE_SLUG,
 			'settingsFormsListingsForms' => $this->formsListing->getFormsList(),
 		];

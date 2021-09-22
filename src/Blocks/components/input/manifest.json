@@ -45,6 +45,14 @@
 		},
 		"inputTracking": {
 			"type": "string"
+		},
+		"inputIsEmail": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputIsUrl": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

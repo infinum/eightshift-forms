@@ -147,9 +147,11 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
+		$slug = FormMainListingAdminMenu::ADMIN_MENU_SLUG;
+
 		return [
-			'settingsFormOptionPageTitle' => \esc_html__('From Option', 'eightshift-forms'),
-			'settingsFormOptionSubTitle' => \esc_html__('Specify all details for this form.', 'eightshift-forms'),
+			'settingsFormOptionPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
+			'settingsFormOptionSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
 			'settingsFormOptionBackLink' => '/wp-admin/admin.php?page=' . FormMainListingAdminMenu::ADMIN_MENU_SLUG,
 			'settingsFormOptionForm' => $this->formOption->getFormFields(),
 		];
