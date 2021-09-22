@@ -156,6 +156,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$params = $this->sanitizeFields($request->get_query_params());
 		$params = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
+		$files = $this->sanitizeFields($request->get_file_params());
 
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
@@ -206,9 +207,24 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			);
 		}
 
+		$validatePostParams = $this->validator->validate($postParams, $files);
+		if (!empty($validatePostParams)) {
+			throw new UnverifiedRequestException(
+				\rest_ensure_response(
+					[
+						'code' => 400,
+						'status' => 'error_validation',
+						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+						'validation' => $validatePostParams,
+					]
+				)->data
+			);
+		}
+
 		return [
 			'get' => $params,
 			'post' => $postParams,
+			'files' => $files,
 		];
 	}
 

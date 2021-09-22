@@ -23,6 +23,8 @@ export const FileOptions = (attributes) => {
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
 	const fileIsRequired = checkAttr('fileIsRequired', attributes, manifest);
 	const fileTracking = checkAttr('fileTracking', attributes, manifest);
+	const fileMinSize = checkAttr('fileMinSize', attributes, manifest);
+	const fileMaxSize = checkAttr('fileMaxSize', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -55,7 +57,24 @@ export const FileOptions = (attributes) => {
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
 						value={fileAccept}
+						help={__('Use comma as separator. Example: .jpg,.png,.pdf', 'eightshift-forms')}
 						onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
+					/>
+
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Min Size', 'eightshift-forms')} />}
+						help={__('Min size of the file in kilobytes.', 'eightshift-forms')}
+						value={fileMinSize}
+						type={'number'}
+						onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
+					/>
+
+					<TextControl
+						label={<IconLabel icon={icons.id} label={__('Max Size', 'eightshift-forms')} />}
+						help={__('Max size of the file in kilobytes.', 'eightshift-forms')}
+						value={fileMaxSize}
+						type={'number'}
+						onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

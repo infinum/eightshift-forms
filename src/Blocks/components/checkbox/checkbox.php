@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -60,7 +59,7 @@ $checkboxClass = Components::classnames([
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'error',
 		Components::props('error', $attributes, [
-			'errorId' => $checkboxId,
+			'errorId' => $checkboxName,
 			'blockClass' => $componentClass
 		])
 	);

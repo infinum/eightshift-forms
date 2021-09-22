@@ -23,6 +23,12 @@
 		"fileAccept": {
 			"type": "string"
 		},
+		"fileMinSize": {
+			"type": "string"
+		},
+		"fileMaxSize": {
+			"type": "string"
+		},
 		"fileIsMultiple": {
 			"type": "boolean",
 			"default": false

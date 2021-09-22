@@ -86,18 +86,20 @@ export class Form {
 
 		for (const [key, item] of Object.entries(items)) {
 
-			console.log(item);
-			
 			const {
 				type,
-				value,
 				name,
 				id,
 				dataset = {},
 				checked,
+				files,
 			} = item;
 
-			let label = element.querySelector(`label[for="${name}"]`);
+			let {
+				value,
+			} = item;
+
+			let label = element.querySelector(`label[for="${id}"]`);
 
 			if (label !== null) {
 				label = label.innerText;
@@ -105,26 +107,42 @@ export class Form {
 				label = name;
 			}
 
+			if (type === 'checkbox' || type === 'radio') {
+				if (!checked) {
+					value = '';
+				}
+			}
+
+			// Check for radio values.
+			if (type === 'radio' && formData.get(name)) {
+				if (!checked) {
+					continue;
+				} else {
+					formData.delete(name);
+				}
+			}
+
 			const data = {
+				id,
 				name,
 				value,
 				type,
 				label,
+				checked,
 				data: dataset,
 			};
 
-			// Skip Radio that is not checked.
-			if (type === 'radio' && !checked) {
-				continue;
-			}
-
-			// Change value to checked.
-			if (type === 'checkbox' || type === 'radio') {
-				data.value = checked ? 'on' : 'off';
-			}
-
 			// Output all fields.
-			formData.append(name, JSON.stringify(data));
+			if (type === 'file' && files.length) {
+
+				for (const [key, file] of Object.entries(files)) {
+					formData.append(`${name}-${key}`, file);
+					data.value = "1";
+					formData.append(`${name}-${key}`, JSON.stringify(data));
+				}
+			} else {
+				formData.append(name, JSON.stringify(data));
+			}
 		}
 
 		formData.append('es-form-post-id', JSON.stringify({
@@ -139,13 +157,11 @@ export class Form {
 	}
 
 	outputErrors = (element, fields) => {
-		for (const key in fields) {
-			if (Object.prototype.hasOwnProperty.call(fields, key)) {
-				const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
+		for (const [key] of Object.entries(fields)) {
+			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
 
-				if (item !== null) {
-					item.innerHTML = fields[key];
-				}
+			if (item !== null) {
+				item.innerHTML = fields[key];
 			}
 		}
 	}
@@ -202,7 +218,6 @@ export class Form {
 				window.dataLayer.push(gtmData);
 			}
 		}
-
 	}
 
 	getGtmData(element, eventName) {

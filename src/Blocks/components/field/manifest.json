@@ -21,6 +21,9 @@
 		"fieldContent": {
 			"type": "string"
 		},
+		"fieldName": {
+			"type": "string"
+		},
 		"fieldId": {
 			"type": "string"
 		},

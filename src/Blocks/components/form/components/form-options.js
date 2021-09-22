@@ -19,7 +19,6 @@ export const FormOptions = (attributes) => {
 
 	const formName = checkAttr('formName', attributes, manifest);
 	const formAction = checkAttr('formAction', attributes, manifest);
-	const formMethod = checkAttr('formMethod', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 	const formSuccessRedirect = checkAttr('formSuccessRedirect', attributes, manifest);
 	const formTrackingEventName = checkAttr('formTrackingEventName', attributes, manifest);
@@ -32,13 +31,6 @@ export const FormOptions = (attributes) => {
 				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
 				value={formName}
 				onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
-			/>
-
-			<SelectControl
-				label={<IconLabel icon={icons.id} label={__('Method', 'eightshift-forms')} />}
-				value={formMethod}
-				options={getOption('formMethod', attributes, manifest)}
-				onChange={(value) => setAttributes({ [getAttrKey('formMethod', attributes, manifest)]: value })}
 			/>
 
 			<ToggleControl

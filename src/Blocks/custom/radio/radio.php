@@ -9,14 +9,20 @@
 use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
-$unique = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, '');
+$unique = apply_filters(Blocks::BLOCKS_UNIQUE_STRING_FILTER_NAME, '');
 
-$radioId = $attributes['radioradioId'] ?? '';
+$radioLabel = $attributes['radioRadioLabel'] ?? '';
+$radioId = $attributes['radioRadioId'] ?? '';
+$radioValue = $attributes['radioRadioValue'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($radioId)) {
 	$props['radioId'] = $unique;
+}
+
+if (empty($radioValue)) {
+	$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
 }
 
 $props['blockClass'] = $blockClass;

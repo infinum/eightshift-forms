@@ -167,7 +167,7 @@ class Mailer implements MailerInterface
 			$value = json_decode($value, true);
 
 			$output[] = [
-				'label' => $key,
+				'label' => $value['label'],
 				'value' => $value['value'],
 			];
 		}

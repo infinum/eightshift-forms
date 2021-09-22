@@ -37,7 +37,7 @@ trait TraitHelper
 	 */
 	public function getSettingsName(string $string): string
 	{
-		return "es-{$string}-" . $this->getLocale();
+		return "{$string}-" . $this->getLocale();
 	}
 
 	/**

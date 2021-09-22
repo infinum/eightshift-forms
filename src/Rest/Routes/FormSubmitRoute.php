@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Settings\FormOption;
 
 /**
@@ -20,6 +21,14 @@ use EightshiftForms\Settings\FormOption;
 class FormSubmitRoute extends AbstractBaseRoute
 {
 
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
+	/**
+	 * Use General helper trait.
+	 */
 	use TraitHelper;
 
 	public const ROUTE_SLUG = '/form-submit';
@@ -65,25 +74,28 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$params =	$this->verifyRequest($request);
 
 			$postParams = $params['post'];
+			$fiels = $params['files'];
 
 			$formId = $this->getFormId($postParams, true);
 
 			$mailerUse = $this->getSettingsValue(FormOption::MAILER_USE_KEY, $formId);
 
-			// if ($mailerUse) {
-			// 	$this->mailer->sendFormEmail(
-			// 		$formId,
-			// 		$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
-			// 		[],
-			// 		$this->removeUneceseryParams($postParams)
-			// 	);
-			// } else {
-			// 	return \rest_ensure_response([
-			// 		'code' => 404,
-			// 		'status' => 'error',
-			// 		'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
-			// 	]);
-			// }
+			$files = $this->prepareFiles($fiels);
+
+			if ($mailerUse) {
+				$this->mailer->sendFormEmail(
+					$formId,
+					$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
+					$files,
+					$this->removeUneceseryParams($postParams)
+				);
+			} else {
+				return \rest_ensure_response([
+					'code' => 404,
+					'status' => 'error',
+					'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
+				]);
+			}
 
 			return \rest_ensure_response([
 				'code' => 200,
@@ -95,6 +107,11 @@ class FormSubmitRoute extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response($e->getData());
+		} finally {
+			// Always delete the files from the disk.
+			if ($files) {
+				$this->deleteFiles($files);
+			}
 		}
 	}
 }

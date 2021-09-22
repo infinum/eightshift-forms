@@ -45,24 +45,26 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * Validate File Minimum size.
 	 *
 	 * @param integer $fileSize File size value.
+	 * @param integer $maxFileSize Max file size.
 	 *
 	 * @return boolean
 	 */
-	public function isFileMaxSizeValid(int $fileSize): bool
+	public function isFileMaxSizeValid(int $fileSize, int $maxFileSize): bool
 	{
-		return $fileSize <= self::MAX_FILE_SIZE;
+		return $fileSize <= $maxFileSize;
 	}
 
 	/**
 	 * Validate File Minimum size.
 	 *
 	 * @param integer $fileSize File size value.
+	 * @param integer $minFileSize Min file size.
 	 *
 	 * @return boolean
 	 */
-	public function isFileMinSizeValid(int $fileSize): bool
+	public function isFileMinSizeValid(int $fileSize, int $minFileSize): bool
 	{
-		return $fileSize >= self::MIN_FILE_SIZE;
+		return $fileSize >= $minFileSize;
 	}
 
 	/**
@@ -76,7 +78,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	public function isFileTypeValid(string $fileName, string $fileTypes): bool
 	{
 		$fileExtension = explode('.', $fileName);
-		$validTypes = explode(',', str_replace(' ', '', $fileTypes));
+		$validTypes = explode(',', str_replace(' ', '', str_replace('.', '', $fileTypes)));
 
 		return in_array(end($fileExtension), $validTypes, true);
 	}

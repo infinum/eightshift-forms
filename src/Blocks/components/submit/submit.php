@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -57,6 +56,6 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	'field',
 	Components::props('field', $attributes, [
 		'fieldContent' => $submitType === 'button' ? $button : $submit,
-		'fieldId' => $submitId,
+		'fieldId' => $submitId
 	])
 );

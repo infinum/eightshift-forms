@@ -24,31 +24,85 @@ class Validator extends AbstractValidation
 	 *
 	 * @return array
 	 */
-	public function validate(array $params = []): array
+	public function validate(array $params = [], array $files = []): array
+	{
+		return array_merge(
+			$this->validateParams($params), $this->validateFiles($files, $params)
+		);
+	}
+
+	/**
+	 * Validate params.
+	 *
+	 * @param array $params Params to check.
+	 *
+	 * @return array
+	 */
+	private function validateParams(array $params): array
 	{
 		$output = [];
-		
-		foreach($params as $key => $value) {
-			$value = json_decode($value, true);
-			error_log( print_r( ( $value ), true ) );
 
-			$id = $value['id'] ?? [];
-			$data = $value['data'] ?? [];
-			$value = $value['value'] ?? '';
-			foreach($data as $dataKey => $dataValue) {
+		foreach($params as $paramKey => $paramValue) {
+			$inputDetails = json_decode($paramValue, true);
 
-				
-				
+			$inputData = $inputDetails['data'] ?? [];
+			$inputValue = $inputDetails['value'] ?? '';
 
-				// error_log( print_r( ( $dataKey ), true ) );
-				// error_log( print_r( ( $dataValue ), true ) );
-				// error_log( print_r( ( $value ), true ) );
-				// error_log( print_r( ( "----------------" ), true ) );
-
+			foreach($inputData as $dataKey => $dataValue) {
 				switch ($dataKey) {
 					case 'validationRequired':
-						if($dataValue === '1' && ($value === '' || $value === 'off')) {
-							$output[$key] = esc_html__('This field is required!', 'eightshift-forms');
+						if($dataValue === '1' && $inputValue === '') {
+							$output[$paramKey] = esc_html__('This field is required!', 'eightshift-forms');
+						}
+						break;
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Validate files.
+	 *
+	 * @param array $files Files to check.
+	 * @param array $params Params for reference.
+	 *
+	 * @return array
+	 */
+	private function validateFiles(array $files, array $params): array
+	{
+		$output = [];
+
+		foreach ($files as $fileKey => $fileValue) {
+			$input = $params[$fileKey] ?? [];
+
+			if (!$input) {
+				continue;
+			}
+
+			$fileName = $fileValue['name'] ?? '';
+			$fileSize = $fileValue['size'] ?? '';
+
+			$inputDetails = json_decode($input, true);
+			$inputData = $inputDetails['data'] ?? [];
+			$inputName = $inputDetails['name'] ?? '';
+
+			foreach($inputData as $dataKey => $dataValue) {
+				switch ($dataKey) {
+					case 'validationAccept':
+						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue)) {
+							$output[$inputName] = sprintf(esc_html__('Your file type is not supported. Please use only %s file type.', 'eightshift-forms'), $dataValue);
+						}
+						break;
+					case 'validationMinSize':
+						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+							$output[$inputName] = sprintf(esc_html__('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'), $dataValue);
+						}
+						break;
+					case 'validationMaxSize':
+						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+							$output[$inputName] = sprintf(esc_html__('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'), $dataValue);
 						}
 						break;
 				}

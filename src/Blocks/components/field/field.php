@@ -17,6 +17,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
+$fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
@@ -54,7 +55,7 @@ if ($fieldType === 'fieldset') {
 		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'error',
 			Components::props('error', $attributes, [
-				'errorId' => $fieldId,
+				'errorId' => $fieldName,
 				'blockClass' => $componentClass
 			])
 		);

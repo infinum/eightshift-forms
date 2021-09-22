@@ -9,13 +9,30 @@
 use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
-$unique = apply_filters(Blocks::BLOCKS_NAME_TO_ID_FILTER_NAME, '');
+$unique = apply_filters(Blocks::BLOCKS_UNIQUE_STRING_FILTER_NAME, '');
+
+$checkboxLabel = $attributes['checkboxCheckboxLabel'] ?? '';
+$checkboxName = $attributes['checkboxCheckboxName'] ?? '';
+$checkboxId = $attributes['checkboxCheckboxId'] ?? '';
+$checkboxValue = $attributes['checkboxCheckboxValue'] ?? '';
+$blockClass = $attributes['blockClass'] ?? '';
+$props = [];
+
+if (empty($checkboxName)) {
+	$props['checkboxName'] = $unique;
+}
+
+if (empty($checkboxId)) {
+	$props['checkboxId'] = $unique;
+}
+
+if (empty($checkboxValue)) {
+	$props['checkboxValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $checkboxLabel);
+}
+
+$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'checkbox',
-	Components::props('checkbox', $attributes, [
-		'blockClass' => $attributes['blockClass'] ?? '',
-		'checkboxName' => $unique,
-		'checkboxId' => $unique,
-	])
+	Components::props('checkbox', $attributes, $props)
 );

@@ -15,12 +15,12 @@ namespace EightshiftForms\Settings;
  */
 class FormOption extends AbstractFormBuilder
 {
-	public const MAILER_USE_KEY = 'mailer-use';
-	public const MAILER_SENDER_NAME_KEY = 'mailer-sender-name';
-	public const MAILER_SENDER_EMAIL_KEY = 'mailer-sender-email';
-	public const MAILER_TO_KEY = 'mailer-to';
-	public const MAILER_SUBJECT_KEY = 'mailer-subject';
-	public const MAILER_TEMPLATE_KEY = 'mailer-template';
+	public const MAILER_USE_KEY = 'es-mailer-use';
+	public const MAILER_SENDER_NAME_KEY = 'es-mailer-sender-name';
+	public const MAILER_SENDER_EMAIL_KEY = 'es-mailer-sender-email';
+	public const MAILER_TO_KEY = 'es-mailer-to';
+	public const MAILER_SUBJECT_KEY = 'es-mailer-subject';
+	public const MAILER_TEMPLATE_KEY = 'es-mailer-template';
 
 	/**
 	 * Set all settings page field keys.
@@ -31,56 +31,57 @@ class FormOption extends AbstractFormBuilder
 	{
 		return [
 			[
-				'component' => 'checkbox',
-				'label' => \__('Use Mailer system?', 'eightshift-forms'),
-				'help' => \__('If checked your form will send you an email once it is submitted.', 'eightshift-forms'),
-				'type' => 'checkbox',
-				'items' => [
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Use Mailer system?', 'eightshift-forms'),
+				'checkboxesHelp' => \__('If checked your form will send you an email once it is submitted.', 'eightshift-forms'),
+				'checkboxesContent' => [
 					[
-						'name' => self::MAILER_USE_KEY,
-						'label' => \__('Use', 'eightshift-forms'),
-						'isRequired' => true,
+						'component' => 'checkbox',
+						'checkboxName' => self::MAILER_USE_KEY,
+						'checkboxLabel' => \__('Use', 'eightshift-forms'),
+						'checkboxIsRequired' => true,
+						'checkboxValue' => 'true',
 					],
 				]
 			],
 			[
 				'component' => 'input',
-				'name' => self::MAILER_SENDER_NAME_KEY,
-				'label' => \__('Sender Name', 'eightshift-forms'),
-				'help' => \__('', 'eightshift-forms'),
-				'type' => 'text',
-				'isRequired' => true,
+				'inputName' => self::MAILER_SENDER_NAME_KEY,
+				'inputFieldLabel' => \__('Sender Name', 'eightshift-forms'),
+				'inputHelp' => \__('', 'eightshift-forms'),
+				'inputType' => 'text',
+				'inputIsRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'name' => self::MAILER_SENDER_EMAIL_KEY,
-				'label' => \__('Sender Email', 'eightshift-forms'),
-				'help' => \__('Send email to what user once sent.', 'eightshift-forms'),
-				'type' => 'email',
-				'isRequired' => true,
+				'inputName' => self::MAILER_SENDER_EMAIL_KEY,
+				'inputFieldLabel' => \__('Sender Email', 'eightshift-forms'),
+				'inputHelp' => \__('Send email to what user once sent.', 'eightshift-forms'),
+				'inputType' => 'email',
+				'inputIsRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'name' => self::MAILER_TO_KEY,
-				'label' => \__('Email to', 'eightshift-forms'),
-				'help' => \__('Define email to', 'eightshift-forms'),
-				'type' => 'text',
-				'isRequired' => true,
+				'inputName' => self::MAILER_TO_KEY,
+				'inputFieldLabel' => \__('Email to', 'eightshift-forms'),
+				'inputHelp' => \__('Define email to', 'eightshift-forms'),
+				'inputType' => 'email',
+				'inputIsRequired' => true,
 			],
 			[
 				'component' => 'input',
-				'name' => self::MAILER_SUBJECT_KEY,
-				'label' => \__('Email subject', 'eightshift-forms'),
-				'help' => \__('Define email subject', 'eightshift-forms'),
-				'type' => 'text',
-				'isRequired' => true,
+				'inputName' => self::MAILER_SUBJECT_KEY,
+				'inputFieldLabel' => \__('Email subject', 'eightshift-forms'),
+				'inputHelp' => \__('Define email subject', 'eightshift-forms'),
+				'inputType' => 'text',
+				'inputIsRequired' => true,
 			],
 			[
 				'component' => 'textarea',
-				'name' => self::MAILER_TEMPLATE_KEY,
-				'label' => \__('Email template', 'eightshift-forms'),
-				'help' => \__('Define email template', 'eightshift-forms'),
-				'isRequired' => true,
+				'textareaName' => self::MAILER_TEMPLATE_KEY,
+				'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
+				'textareaHelp' => \__('Define email template', 'eightshift-forms'),
+				'textareaIsRequired' => true,
 			],
 		];
 	}

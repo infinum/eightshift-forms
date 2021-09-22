@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -54,6 +53,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	Components::props('field', $attributes, [
 		'fieldContent' => $textarea,
 		'fieldId' => $textareaId,
+		'fieldName' => $textareaName,
 	])
 );
 

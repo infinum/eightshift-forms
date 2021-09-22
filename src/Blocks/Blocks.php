@@ -28,11 +28,18 @@ class Blocks extends AbstractBlocks
 	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'es_blocks_dependency';
 
 	/**
-	 * Blocks id filter name constant.
+	 * Blocks unique string filter name constant.
 	 *
 	 * @var string
 	 */
-	public const BLOCKS_NAME_TO_ID_FILTER_NAME = 'es_blocks_name_to_id';
+	public const BLOCKS_UNIQUE_STRING_FILTER_NAME = 'es_blocks_unique_string';
+
+	/**
+	 * Blocks string to value filter name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_STRING_TO_VALUE_FILTER_NAME = 'es_blocks_string_to_filter';
 
 	/**
 	 * Register all the hooks
@@ -54,8 +61,11 @@ class Blocks extends AbstractBlocks
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 	
-		// Convert string to id string.
-		\add_filter(static::BLOCKS_NAME_TO_ID_FILTER_NAME, [$this, 'convertStringToId']);
+		// Blocks unique string filter name constant.
+		\add_filter(static::BLOCKS_UNIQUE_STRING_FILTER_NAME, [$this, 'getUniqueString']);
+
+		// Blocks string to value filter name constant.
+		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);
 	}
 
 	/**
@@ -97,19 +107,25 @@ class Blocks extends AbstractBlocks
 	}
 
 	/**
-	 * Convert string to id string.
-	 * If string is empty returns a random string.
+	 * Set Unique string.
+	 *
+	 * @return string
+	 */
+	public function getUniqueString(): string
+	{
+		return bin2hex(random_bytes(10));
+	}
+
+	/**
+	 * Convert string to alue.
 	 *
 	 * @param string $string String to convert
 	 *
 	 * @return string
 	 */
-	public function convertStringToId(string $string): string
+	public function getStringToValue(string $string): string
 	{
-		if (empty($string)) {
-			return bin2hex(random_bytes(10));
-		}
-
+		$string = strtolower($string);
 		$string = str_replace(' ', '-', $string);
 		$string = str_replace('_', '-', $string);
 

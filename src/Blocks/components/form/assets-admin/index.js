@@ -6,7 +6,6 @@ domReady(() => {
 	
 	const selector = '.js-es-block-form';
 	const elements = document.querySelectorAll(selector);
-	console.log(elements);
 
 	if (elements.length) {
 		import('./../assets/form').then(({ Form }) => {
