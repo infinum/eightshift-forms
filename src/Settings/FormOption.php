@@ -50,7 +50,7 @@ class FormOption extends AbstractFormBuilder
 	{
 		return array_merge(
 			$this->getMailerFields(),
-			$this->getValidationFields(),
+			$this->getValidationFields()
 		);
 	}
 
@@ -144,7 +144,6 @@ class FormOption extends AbstractFormBuilder
 				'introTitle' => \__('Form validation messages', 'eightshift-forms'),
 				'introSubtitle' => \__('Configure your form validation messages in one place.', 'eightshift-forms'),
 			],
-			
 		];
 
 		foreach ($this->labels->getLabels() as $key => $label) {

@@ -43,9 +43,9 @@ $checkboxClass = Components::classnames([
 			value="<?php echo esc_attr($checkboxValue); ?>"
 			data-validation-required="<?php echo esc_attr($checkboxIsRequired); ?>"
 			data-tracking="<?php echo esc_attr($checkboxTracking); ?>"
-			<?php echo $checkboxIsChecked ? 'checked': ''; ?>
-			<?php echo $checkboxIsDisabled ? 'disabled': ''; ?>
-			<?php echo $checkboxIsReadOnly ? 'readonly': ''; ?>
+			<?php echo $checkboxIsChecked ? 'checked' : ''; ?>
+			<?php echo $checkboxIsDisabled ? 'disabled' : ''; ?>
+			<?php echo $checkboxIsReadOnly ? 'readonly' : ''; ?>
 		/>
 		<label
 			for="<?php echo esc_attr($checkboxId); ?>"

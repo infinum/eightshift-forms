@@ -20,7 +20,6 @@ use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInterface
 {
-
 	/**
 	 * Use General helper trait.
 	 */
@@ -47,8 +46,8 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 	 * Build settings page form.
 	 *
 	 * @param array $formItems Form array to build from.
-	 * @param array $formItems Form array to build from.
-	 * 
+	 * @param string $formId Form ID.
+	 *
 	 * @return string
 	 */
 	public function buildForm(array $formItems, string $formId): string
@@ -83,7 +82,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 	/**
 	 * Build component from arrya of items.
 	 *
-	 * @param array $attribute Array of form components.
+	 * @param array $attributes Array of form components.
 	 * @param string $formId Form ID.
 	 *
 	 * @return string
@@ -120,7 +119,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 	/**
 	 * Build inner component
 	 *
-	 * @param array $attribute Array of form components.
+	 * @param array $attributes Array of form components.
 	 * @param string $key Key to check.
 	 * @param string $formId Form ID.
 	 *
@@ -136,7 +135,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 
 		$parentComponent = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
-		foreach($attributes[$key] as $item) {
+		foreach ($attributes[$key] as $item) {
 			$component = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
 			if ($component) {
@@ -147,7 +146,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 
 						$item["{$component}Name"] = $newName;
 
-						if($savedValue === $item["{$component}Value"]) {
+						if ($savedValue === $item["{$component}Value"]) {
 							$item["{$component}IsChecked"] = true;
 						}
 						break;
@@ -158,7 +157,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 
 						$item["{$component}Name"] = $newName;
 
-						if($savedValue === $item["{$component}Value"]) {
+						if ($savedValue === $item["{$component}Value"]) {
 							$item["{$component}IsSelected"] = true;
 						}
 						break;
@@ -169,7 +168,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 
 						$item["{$component}Name"] = $newName;
 
-						if($savedValue === $item["{$component}Value"]) {
+						if ($savedValue === $item["{$component}Value"]) {
 							$item["{$component}IsChecked"] = true;
 						}
 						break;

@@ -18,4 +18,3 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldContent' => $checkboxesContent
 	])
 );
-?>

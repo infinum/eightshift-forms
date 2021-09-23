@@ -41,12 +41,12 @@ $inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
 
 $input = '
 <input
-	class="'. esc_attr($inputClass) .'"
-	name="'. esc_attr($inputName) . '"
-	value="'. esc_attr($inputValue) . '"
-	id="'. esc_attr($inputId) . '"
-	placeholder="'. esc_attr($inputPlaceholder) . '"
-	type="'. esc_attr($inputType) . '"
+	class="' . esc_attr($inputClass) . '"
+	name="' . esc_attr($inputName) . '"
+	value="' . esc_attr($inputValue) . '"
+	id="' . esc_attr($inputId) . '"
+	placeholder="' . esc_attr($inputPlaceholder) . '"
+	type="' . esc_attr($inputType) . '"
 	data-validation-required="' . $inputIsRequired . '"
 	data-validation-email="' . $inputIsEmail . '"
 	data-validation-url="' . $inputIsUrl . '"

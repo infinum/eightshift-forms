@@ -20,7 +20,6 @@ use EightshiftForms\Settings\FormOption;
  */
 class FormSubmitRoute extends AbstractBaseRoute
 {
-
 	/**
 	 * Use trait Upload_Helper inside class.
 	 */
@@ -68,13 +67,12 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-
 		$files = [];
 
 		// Try catch request.
 		try {
 			$formId = $this->getFormId($request->get_body_params(), true);
-			$params =	$this->verifyRequest($request, $formId);
+			$params = $this->verifyRequest($request, $formId);
 
 			$postParams = $params['post'];
 			$fiels = $params['files'];

@@ -30,5 +30,3 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	'textarea',
 	Components::props('textarea', $attributes, $props)
 );
-
-

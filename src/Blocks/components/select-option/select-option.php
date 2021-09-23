@@ -23,8 +23,8 @@ if (empty($selectOptionValue)) {
 
 <option
 	value="<?php echo esc_attr($selectOptionValue); ?>"
-	<?php echo $selectOptionIsSelected ? 'selected': ''; ?>
-	<?php echo $selectOptionIsDisabled ? 'disabled': ''; ?>
+	<?php echo $selectOptionIsSelected ? 'selected' : ''; ?>
+	<?php echo $selectOptionIsDisabled ? 'disabled' : ''; ?>
 >
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

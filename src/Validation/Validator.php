@@ -39,16 +39,17 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
+	 * @param string $formId Form Id.
 	 * @param array $params Get params.
 	 * @param array $files Get files.
-	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function validate(array $params = [], array $files = [], string $formId): array
+	public function validate(string $formId, array $params = [], array $files = []): array
 	{
 		return array_merge(
-			$this->validateParams($params, $formId), $this->validateFiles($files, $params, $formId)
+			$this->validateParams($params, $formId),
+			$this->validateFiles($files, $params, $formId)
 		);
 	}
 
@@ -64,26 +65,26 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		foreach($params as $paramKey => $paramValue) {
+		foreach ($params as $paramKey => $paramValue) {
 			$inputDetails = json_decode($paramValue, true);
 
 			$inputData = $inputDetails['data'] ?? [];
 			$inputValue = $inputDetails['value'] ?? '';
 
-			foreach($inputData as $dataKey => $dataValue) {
+			foreach ($inputData as $dataKey => $dataValue) {
 				switch ($dataKey) {
 					case 'validationRequired':
-						if($dataValue === '1' && $inputValue === '') {
+						if ($dataValue === '1' && $inputValue === '') {
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
 					case 'validationEmail':
-						if($dataValue === '1' && !$this->isEmail($inputValue)) {
+						if ($dataValue === '1' && !$this->isEmail($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
 					case 'validationUrl':
-						if($dataValue === '1' && !$this->isUrl($inputValue)) {
+						if ($dataValue === '1' && !$this->isUrl($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
@@ -121,7 +122,7 @@ class Validator extends AbstractValidation
 			$inputData = $inputDetails['data'] ?? [];
 			$inputName = $inputDetails['name'] ?? '';
 
-			foreach($inputData as $dataKey => $dataValue) {
+			foreach ($inputData as $dataKey => $dataValue) {
 				switch ($dataKey) {
 					case 'validationAccept':
 						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue)) {

@@ -60,7 +60,7 @@ class Blocks extends AbstractBlocks
 
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
-	
+
 		// Blocks unique string filter name constant.
 		\add_filter(static::BLOCKS_UNIQUE_STRING_FILTER_NAME, [$this, 'getUniqueString']);
 
@@ -119,7 +119,7 @@ class Blocks extends AbstractBlocks
 	/**
 	 * Convert string to alue.
 	 *
-	 * @param string $string String to convert
+	 * @param string $string String to convert.
 	 *
 	 * @return string
 	 */

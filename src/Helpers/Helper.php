@@ -26,18 +26,18 @@ class Helper
 	 */
 	public static function encryptor(string $action, string $string)
 	{
-		$encrypt_method = "AES-256-CBC";
-		$secret_key = wp_salt(); // user define private key
-		$secret_iv = wp_salt('SECURE_AUTH_KEY'); // user define secret key
-		$key = hash('sha256', $secret_key);
-		$iv = substr(hash('sha256', $secret_iv), 0, 16); // sha256 is hash_hmac_algo
+		$encryptMethod = "AES-256-CBC";
+		$secretKey = wp_salt(); // user define private key.
+		$secretIv = wp_salt('SECURE_AUTH_KEY'); // user define secret key.
+		$key = hash('sha256', $secretKey);
+		$iv = substr(hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
 
-		if ($action == 'encrypt') {
-			$output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+		if ($action === 'encrypt') {
+			$output = openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
 
-			return base64_encode($output);
+			return base64_encode($output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
-		return openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+		return openssl_decrypt(base64_decode($string), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 	}
 }

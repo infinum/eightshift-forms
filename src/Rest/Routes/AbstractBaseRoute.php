@@ -51,13 +51,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param InterfaceLabels $labels Inject documentsData which holds form labels data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		MailerInterface $mailer,
 		InterfaceLabels $labels
-	)
-	{
+	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
 		$this->labels = $labels;
@@ -155,7 +155,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		return $params;
 	}
 
-		/**
+	/**
 	 * Verifies everything is ok with request
 	 *
 	 * @param \WP_REST_Request $request WP_REST_Request object.
@@ -192,7 +192,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate GET Params.
-		$validateParams = $this->validator->validate($params, [], $formId);
+		$validateParams = $this->validator->validate($formId, $params, []);
 		if (!empty($validateParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -207,7 +207,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate POST Params.
-		$validatePostParams = $this->validator->validate($postParams, [], $formId);
+		$validatePostParams = $this->validator->validate($formId, $postParams, []);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -221,7 +221,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			);
 		}
 
-		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
+		$validatePostParams = $this->validator->validate($formId, $postParams, $files);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -265,7 +265,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $formId;
-
 	}
 
 	/**
@@ -277,7 +276,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function removeUneceseryParams(array $params): array
 	{
-		foreach($params as $key => $value) {
+		foreach ($params as $key => $value) {
 			if ($key === 'es-form-submit') {
 				unset($params['es-form-submit']);
 			}

@@ -28,12 +28,12 @@ $introClass = Components::classnames([
 
 <div class="<?php echo esc_attr($introClass); ?>">
 	<div class="<?php echo esc_attr("{$introClass}__title"); ?>">
-		<?php echo $introTitle; ?>
+		<?php echo esc_html($introTitle); ?>
 	</div>
 
 	<?php if ($introSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$introClass}__subtitle"); ?>">
-			<?php echo $introSubtitle; ?>
+			<?php echo esc_html($introSubtitle); ?>
 		</div>
 	<?php } ?>
 </div>

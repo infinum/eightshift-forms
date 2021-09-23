@@ -19,7 +19,6 @@ use EightshiftForms\Settings\FormOption;
  */
 class Mailer implements MailerInterface
 {
-
 	/**
 	 * Use General helper trait.
 	 */
@@ -74,7 +73,7 @@ class Mailer implements MailerInterface
 		}
 
 		if (!$template) {
-			// $template = $this->getTemplate($fields);
+			$template = $this->getTemplate($fields);
 		}
 
 		return \wp_mail($to, $subject, $template, $headers, $files);
@@ -116,7 +115,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $email Email string.
 	 * @param string $name Name string.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getHeader(string $email, string $name = ''): array

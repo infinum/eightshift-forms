@@ -12,7 +12,7 @@ use EightshiftForms\Helpers\Helper;
 $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 
-echo Components::outputCssVariablesGlobal($globalManifest);
+echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 $blockClass = $attributes['blockClass'] ?? '';
 
@@ -23,5 +23,6 @@ $blocks = parse_blocks(get_the_content(null, null, $formsForm));
 $blocks[0]['attrs']['formFormPostId'] = (string) Helper::encryptor('encrypt', $formsForm);
 
 foreach ($blocks as $block) {
-	echo \apply_filters('the_content', \render_block($block)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo \apply_filters('the_content', \render_block($block));
 }

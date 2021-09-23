@@ -56,5 +56,3 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldName' => $textareaName,
 	])
 );
-
-

@@ -59,7 +59,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	// Try catch request.
 		try {
 			$formId = $this->getFormId($request->get_body_params());
-			$params =	$this->verifyRequest($request, $formId);
+			$params = $this->verifyRequest($request, $formId);
 
 			$postParams = $params['post'];
 
@@ -67,8 +67,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 			$postParams = $this->removeUneceseryParams($postParams);
 
-			foreach($postParams as $key => $value) {
-
+			foreach ($postParams as $key => $value) {
 				$value = json_decode($value, true);
 
 				if ($value['value']) {

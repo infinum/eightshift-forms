@@ -26,4 +26,8 @@
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
+	<rule ref="Generic.Files.LineLength">
+		<exclude name="Generic.Files.LineLength.TooLong"/>
+	</rule>
+
 </ruleset>

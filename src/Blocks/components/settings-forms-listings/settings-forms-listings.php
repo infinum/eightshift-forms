@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for settings form optiosn page.
+ * Template for settings listing page.
  *
  * @package EightshiftForms\Blocks.
  */
@@ -37,9 +37,9 @@ $layoutClass = Components::classnames([
 			</div>
 
 			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-				<a href="<?php echo esc_html("/wp-admin/post-new.php?post_type={$settingsFormsListingsPostType}"); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+				<a href="<?php echo esc_url("/wp-admin/post-new.php?post_type={$settingsFormsListingsPostType}"); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
-					<?php echo esc_html('Add new form', 'eightshift-forms'); ?>
+					<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
 				</a>
 			</div>
 		</div>
@@ -51,16 +51,16 @@ $layoutClass = Components::classnames([
 				<ul class="<?php echo \esc_attr("{$componentClass}__list {$sectionClass}--reset-spacing"); ?>">
 					<?php foreach ($settingsFormsListingsForms as $form) { ?>
 						<?php
-						$id = $form['id'];
+						$id = $form['id']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$editLink = $form['editLink'];
 						$settingsLink = $form['settingsLink'];
 						$slug = $form['slug'];
-						$title = $form['title'];
-						$status = $form['status'];
+						$title = $form['title']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+						$status = $form['status']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						?>
 						<li class="<?php echo \esc_attr("{$componentClass}__list-item"); ?>">
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
-								<a href="<?php echo esc_html($editLink); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
+								<a href="<?php echo esc_url($editLink); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
 									<?php echo esc_html($title); ?>
 								</a>
 
@@ -71,13 +71,13 @@ $layoutClass = Components::classnames([
 								<?php } ?>
 							</div>
 							<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-								<a href="<?php echo esc_html($editLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<a href="<?php echo esc_url($editLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 									<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>
-									<?php echo esc_html('Edit', 'eightshift-forms'); ?>
+									<?php echo esc_html__('Edit', 'eightshift-forms'); ?>
 								</a>
-								<a href="<?php echo esc_html($settingsLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<a href="<?php echo esc_url($settingsLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 									<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-admin-settings"); ?> "></span>
-									<?php echo esc_html('Settings', 'eightshift-forms'); ?>
+									<?php echo esc_html__('Settings', 'eightshift-forms'); ?>
 								</a>
 							</div>
 						</li>

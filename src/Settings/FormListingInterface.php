@@ -16,7 +16,7 @@ namespace EightshiftForms\Settings;
 interface FormListingInterface
 {
 
-		/**
+	/**
 	 * Get Form List items.
 	 *
 	 * @return array

@@ -14,10 +14,11 @@ $radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
 $radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
 
-$radiosContent = str_replace('name=""','name="'. $radiosName . '"', $radiosContent);
-$radiosContent = str_replace('data-validation-required=""','data-validation-required="'. $radiosIsRequired . '"', $radiosContent);
+$radiosContent = str_replace('name=""', 'name="' . $radiosName . '"', $radiosContent);
+$radiosContent = str_replace('data-validation-required=""', 'data-validation-required="' . $radiosIsRequired . '"', $radiosContent);
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	Components::props('field', $attributes, [
 		'fieldContent' => $radiosContent,
@@ -25,4 +26,3 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldName' => $radiosName,
 	])
 );
-?>

@@ -43,9 +43,9 @@ $radioClass = Components::classnames([
 			value="<?php echo esc_attr($radioValue); ?>"
 			data-validation-required="<?php echo esc_attr($radioIsRequired); ?>"
 			data-tracking="<?php echo esc_attr($radioTracking); ?>"
-			<?php echo $radioIsChecked ? 'checked': ''; ?>
-			<?php echo $radioIsDisabled ? 'disabled': ''; ?>
-			<?php echo $radioIsReadOnly ? 'readonly': ''; ?>
+			<?php echo $radioIsChecked ? 'checked' : ''; ?>
+			<?php echo $radioIsDisabled ? 'disabled' : ''; ?>
+			<?php echo $radioIsReadOnly ? 'readonly' : ''; ?>
 		/>
 		<label
 			for="<?php echo esc_attr($radioId); ?>"

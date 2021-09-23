@@ -28,7 +28,7 @@ $layoutClass = Components::classnames([
 	Components::selector($sectionClass, $sectionClass),
 ]);
 
-$formId = $_GET['formId'];
+$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 $form = \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $settingsFormOptionForm, $formId);
 
@@ -42,9 +42,9 @@ $form = \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $setting
 			</div>
 
 			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-				<a href="<?php echo esc_html($settingsFormOptionBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+				<a href="<?php echo esc_url($settingsFormOptionBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-arrow-left"); ?> "></span>
-					<?php echo esc_html('Back to forms', 'eightshift-forms'); ?>
+					<?php echo esc_html__('Back to forms', 'eightshift-forms'); ?>
 				</a>
 			</div>
 		</div>
@@ -52,7 +52,7 @@ $form = \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $setting
 			<?php echo esc_html($settingsFormOptionSubTitle); ?>
 		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-			<?php echo $form; ?>
+			<?php echo $form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 	</div>
 </div>

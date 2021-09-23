@@ -35,9 +35,9 @@ $selectIsDisabled = $selectIsDisabled ? 'disabled' : '';
 
 $select = '
 	<select
-		class="'. esc_attr($selectClass) .'"
-		name="'. esc_attr($selectName) . '"
-		id="'. esc_attr($selectId) . '"
+		class="' . esc_attr($selectClass) . '"
+		name="' . esc_attr($selectName) . '"
+		id="' . esc_attr($selectId) . '"
 		data-validation-required="' . $selectIsRequired . '"
 		data-tracking="' . $selectTracking . '"
 		' . $selectIsDisabled . '
@@ -54,7 +54,3 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldName' => $selectName,
 	])
 );
-
-?>
-
-

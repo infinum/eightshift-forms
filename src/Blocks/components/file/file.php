@@ -37,11 +37,11 @@ $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $file = '
 	<input
-		class="'. esc_attr($fileClass) .'"
-		name="'. esc_attr($fileName) . '"
-		id="'. esc_attr($fileId) . '"
+		class="' . esc_attr($fileClass) . '"
+		name="' . esc_attr($fileName) . '"
+		id="' . esc_attr($fileId) . '"
 		type="file"
-		data-validation-accept="'. $fileAccept . '"
+		data-validation-accept="' . $fileAccept . '"
 		data-validation-required="' . $fileIsRequired . '"
 		data-validation-min-size="' . $fileMinSize . '"
 		data-validation-max-size="' . $fileMaxSize . '"
