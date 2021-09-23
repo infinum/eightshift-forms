@@ -26,14 +26,14 @@ export const CheckboxEditor = (attributes) => {
 	return (
 		<div className={checkboxClass}>
 			<div className={`${componentClass}__content`}>
-				<label className={`${componentClass}__label`}>
-					{checkboxLabel}
-				</label>
 				<input
 					className={`${componentClass}__input`}
 					type={'checkbox'}
 					readOnly
 				/>
+				<label className={`${componentClass}__label`}>
+					{checkboxLabel}
+				</label>
 			</div>
 		</div>
 	);

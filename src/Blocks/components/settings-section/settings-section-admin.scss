@@ -1,17 +1,17 @@
 .es-settings-section {
-	padding: var(--global-spacing-horizontal) var(--global-spacing-vertical) 0 0;
+	padding: var(--global-es-spacing-horizontal) var(--global-es-spacing-vertical) 0 0;
 
 	&__section {
-		background-color: var(--global-colors-white);
-		border: 1px solid var(--global-colors-french);
+		background-color: var(--global-colors-es-white);
+		border: 1px solid var(--global-colors-es-french);
 	}
 
 	&__heading {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--global-spacing-horizontal) var(--global-spacing-vertical);
-		border-bottom: 1px solid var(--global-colors-french);
+		padding: var(--global-es-spacing-horizontal) var(--global-es-spacing-vertical);
+		border-bottom: 1px solid var(--global-colors-es-french);
 	}
 
 	&__heading-title {
@@ -20,28 +20,28 @@
 	}
 
 	&__content {
-		padding: 0 var(--global-spacing-horizontal);
+		padding: 0 var(--global-es-spacing-horizontal);
 	}
 
 	&--reset-spacing {
-		margin-left: calc(var(--global-spacing-horizontal) * -1);
-		margin-right: calc(var(--global-spacing-horizontal) * -1);
+		margin-left: calc(var(--global-es-spacing-horizontal) * -1);
+		margin-right: calc(var(--global-es-spacing-horizontal) * -1);
 	}
 
 	&__description {
 		font-size: 13px;
-		color: var(--global-colors-boulder);
-		border-bottom: 1px solid var(--global-colors-french);
-		padding: var(--global-spacing-vertical) var(--global-spacing-horizontal);
+		color: var(--global-colors-es-boulder);
+		border-bottom: 1px solid var(--global-colors-es-french);
+		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal);
 
 		&--with-spacing {
-			margin-bottom: var(--global-spacing-vertical);
+			margin-bottom: var(--global-es-spacing-vertical);
 		}
 	}
 
 	&__link {
 		text-decoration: none;
-		color: var(--global-colors-chalice);
+		color: var(--global-colors-es-chalice);
 		transition: {
 			property: color;
 			timing-function: ease-in-out;
@@ -53,7 +53,7 @@
 		> * {
 			margin-left: 10px;
 			padding-left: 10px;
-			border-left: 1px solid var(--global-colors-french);
+			border-left: 1px solid var(--global-colors-es-french);
 
 			&:first-child {
 				margin-left: 0;

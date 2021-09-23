@@ -1,0 +1,7 @@
+@import './checkbox-style.scss';
+
+.es-checkbox {
+	&__input {
+		display: none!important;
+	}
+}

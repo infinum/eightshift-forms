@@ -1,5 +1,5 @@
 .es-intro {
-	margin-bottom: var(--global-spacing-vertical);
+	margin-bottom: var(--global-es-spacing-vertical);
 
 	&__title {
 		font-size: 17px;
@@ -9,6 +9,6 @@
 	&__subtitle {
 		padding-top: 10px;
 		font-size: 13px;
-		color: var(--global-colors-boulder);
+		color: var(--global-colors-es-boulder);
 	}
 }

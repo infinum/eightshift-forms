@@ -74,6 +74,7 @@ class FormOption extends AbstractFormBuilder
 					[
 						'component' => 'checkbox',
 						'checkboxName' => self::MAILER_USE_KEY,
+						'checkboxId' => self::MAILER_USE_KEY,
 						'checkboxLabel' => \__('Use', 'eightshift-forms'),
 						'checkboxIsRequired' => true,
 						'checkboxValue' => 'true',
@@ -83,6 +84,7 @@ class FormOption extends AbstractFormBuilder
 			[
 				'component' => 'input',
 				'inputName' => self::MAILER_SENDER_NAME_KEY,
+				'inputId' => self::MAILER_SENDER_NAME_KEY,
 				'inputFieldLabel' => \__('Sender Name', 'eightshift-forms'),
 				'inputFieldHelp' => \__('Define sender name showed in the email client.', 'eightshift-forms'),
 				'inputType' => 'text',
@@ -91,6 +93,7 @@ class FormOption extends AbstractFormBuilder
 			[
 				'component' => 'input',
 				'inputName' => self::MAILER_SENDER_EMAIL_KEY,
+				'inputId' => self::MAILER_SENDER_EMAIL_KEY,
 				'inputFieldLabel' => \__('Sender Email', 'eightshift-forms'),
 				'inputFieldHelp' => \__('Define sender email showed in the email client.', 'eightshift-forms'),
 				'inputType' => 'email',
@@ -99,6 +102,7 @@ class FormOption extends AbstractFormBuilder
 			[
 				'component' => 'input',
 				'inputName' => self::MAILER_TO_KEY,
+				'inputId' => self::MAILER_TO_KEY,
 				'inputFieldLabel' => \__('Email to', 'eightshift-forms'),
 				'inputFieldHelp' => \__('Define to what address the email will be sent', 'eightshift-forms'),
 				'inputType' => 'email',
@@ -107,6 +111,7 @@ class FormOption extends AbstractFormBuilder
 			[
 				'component' => 'input',
 				'inputName' => self::MAILER_SUBJECT_KEY,
+				'inputId' => self::MAILER_SUBJECT_KEY,
 				'inputFieldLabel' => \__('Email subject', 'eightshift-forms'),
 				'inputFieldHelp' => \__('Define email subject', 'eightshift-forms'),
 				'inputType' => 'text',
@@ -115,6 +120,7 @@ class FormOption extends AbstractFormBuilder
 			[
 				'component' => 'textarea',
 				'textareaName' => self::MAILER_TEMPLATE_KEY,
+				'textareaId' => self::MAILER_TEMPLATE_KEY,
 				'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
 				'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
 				'textareaIsRequired' => true,
@@ -145,6 +151,7 @@ class FormOption extends AbstractFormBuilder
 			$output[] = [
 				'component' => 'input',
 				'inputName' => $key,
+				'inputId' => $key,
 				'inputFieldLabel' => $key,
 				'inputPlaceholder' => $label,
 			];

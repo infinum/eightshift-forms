@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "9e0f8ddf8789aae3045a024f4486c769101afe0e"
+                "reference": "b1eb37415643c00751c63153e951b8f1c9b79023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/9e0f8ddf8789aae3045a024f4486c769101afe0e",
-                "reference": "9e0f8ddf8789aae3045a024f4486c769101afe0e",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/b1eb37415643c00751c63153e951b8f1c9b79023",
+                "reference": "b1eb37415643c00751c63153e951b8f1c9b79023",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2021-09-20T07:02:44+00:00"
+            "time": "2021-09-23T06:54:31+00:00"
         },
         {
             "name": "opis/closure",

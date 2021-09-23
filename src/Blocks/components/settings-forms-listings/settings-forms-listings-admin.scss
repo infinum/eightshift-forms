@@ -4,11 +4,11 @@
 	}
 
 	&__list-item {
-		border-bottom: 1px solid var(--global-colors-french);
+		border-bottom: 1px solid var(--global-colors-es-french);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 10px var(--global-spacing-horizontal);
+		padding: 10px var(--global-es-spacing-horizontal);
 		margin: 0;
 
 		&:last-child {
@@ -32,7 +32,7 @@
 	}
 
 	&__item-status {
-		background-color: var(--global-colors-alto);
+		background-color: var(--global-colors-es-alto);
 		padding: 2px 5px;
 		margin-left: 20px;
 		font-weight: bold;

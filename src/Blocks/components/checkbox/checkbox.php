@@ -35,12 +35,6 @@ $checkboxClass = Components::classnames([
 
 <div class="<?php echo esc_attr($checkboxClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-		<label
-			for="<?php echo esc_attr($checkboxId); ?>"
-			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-		>
-			<?php echo esc_attr($checkboxLabel); ?>
-		</label>
 		<input
 			class="<?php echo esc_attr("{$componentClass}__input"); ?>"
 			type="checkbox"
@@ -53,6 +47,12 @@ $checkboxClass = Components::classnames([
 			<?php echo $checkboxIsDisabled ? 'disabled': ''; ?>
 			<?php echo $checkboxIsReadOnly ? 'readonly': ''; ?>
 		/>
+		<label
+			for="<?php echo esc_attr($checkboxId); ?>"
+			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+		>
+			<?php echo esc_attr($checkboxLabel); ?>
+		</label>
 	</div>
 
 	<?php

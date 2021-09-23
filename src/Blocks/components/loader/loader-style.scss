@@ -1,7 +1,32 @@
 .es-loader {
-	display: none;
+	display: var(--loader-scoped-display, none);
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: var(--global-colors-es-white);
+		opacity: 0.5;
+	}
+
+	svg {
+		height: 40px;
+		width: 40px;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		position: absolute;
+	}
 
 	&.is-active {
-		display: block;
+		--loader-scoped-display: block;
 	}
 }

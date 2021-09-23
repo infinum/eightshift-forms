@@ -13,8 +13,8 @@ html {
 body {
 	@include font-smoothing;
 	font-family: var(--global-font-family);
-	color: var(--global-colors-black);
-	background-color: var(--global-colors-white);
+	color: var(--global-colors-es-black);
+	background-color: var(--global-colors-es-white);
 	position: relative;
 	overflow-x: hidden;
 }

@@ -1,3 +1,11 @@
 .es-form {
+	box-sizing: border-box;
+
+	*,
+	*::after,
+	*::before {
+		box-sizing: border-box;
+	}
+
 	padding-right: 20px;
 }

@@ -1,3 +1,7 @@
+@import './input-style.scss';
+
 .es-input {
-	width: 100%;
+	padding: 10px!important;
+	border-color: var(--global-colors-es-chalice)!important;;
+	border-radius: 0!important;
 }

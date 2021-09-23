@@ -1,0 +1,15 @@
+.es-global-msg {
+	background-color: var(--global-colors-es-reef);
+	color: var(--global-colors-es-white);
+	display: none;
+
+	span {
+		margin-bottom: 20px;
+		padding: 20px;
+		display: block;
+	}
+
+	&.is-active {
+		display: block;
+	}
+}

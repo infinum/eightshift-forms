@@ -34,22 +34,24 @@ $radioClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($radioClass); ?>">
-	<label
-		for="<?php echo esc_attr($radioId); ?>"
-		class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-	>
-		<?php echo esc_attr($radioLabel); ?>
-	</label>
-	<input
-		class="<?php echo esc_attr("{$componentClass}__input"); ?>"
-		type="radio"
-		name="<?php echo esc_attr($radioName); ?>"
-		id="<?php echo esc_attr($radioId); ?>"
-		value="<?php echo esc_attr($radioValue); ?>"
-		data-validation-required="<?php echo esc_attr($radioIsRequired); ?>"
-		data-tracking="<?php echo esc_attr($radioTracking); ?>"
-		<?php echo $radioIsChecked ? 'checked': ''; ?>
-		<?php echo $radioIsDisabled ? 'disabled': ''; ?>
-		<?php echo $radioIsReadOnly ? 'readonly': ''; ?>
-	/>
+	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+		<input
+			class="<?php echo esc_attr("{$componentClass}__input"); ?>"
+			type="radio"
+			name="<?php echo esc_attr($radioName); ?>"
+			id="<?php echo esc_attr($radioId); ?>"
+			value="<?php echo esc_attr($radioValue); ?>"
+			data-validation-required="<?php echo esc_attr($radioIsRequired); ?>"
+			data-tracking="<?php echo esc_attr($radioTracking); ?>"
+			<?php echo $radioIsChecked ? 'checked': ''; ?>
+			<?php echo $radioIsDisabled ? 'disabled': ''; ?>
+			<?php echo $radioIsReadOnly ? 'readonly': ''; ?>
+		/>
+		<label
+			for="<?php echo esc_attr($radioId); ?>"
+			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+		>
+			<?php echo esc_attr($radioLabel); ?>
+		</label>
+	</div>
 </div>

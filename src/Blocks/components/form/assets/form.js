@@ -7,7 +7,7 @@ export class Form {
 		this.loaderSelector = `${this.formSelector}-loader`;
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 
-		this.CLASS_LOADER_ACTIVE = 'is-active';
+		this.CLASS_ACTIVE = 'is-active';
 	}
 
 	init = () => {
@@ -76,6 +76,10 @@ export class Form {
 			if (response.status === 'error_validation') {
 				this.outputErrors(element, response.validation);
 			}
+
+			setTimeout(() => {
+				this.hideGlobalMsg(element);
+			}, 6000);
 		});
 	}
 
@@ -177,8 +181,9 @@ export class Form {
 
 	showLoader = (element) => {
 		const item = element.querySelector(this.loaderSelector);
+
 		if (item !== null) {
-			item.classList.add(this.CLASS_LOADER_ACTIVE)
+			item.classList.add(this.CLASS_ACTIVE)
 		}
 	}
 
@@ -186,7 +191,7 @@ export class Form {
 		const item = element.querySelector(this.loaderSelector);
 
 		if (item !== null) {
-			item.classList.remove(this.CLASS_LOADER_ACTIVE)
+			item.classList.remove(this.CLASS_ACTIVE)
 		}
 	}
 
@@ -194,8 +199,9 @@ export class Form {
 		const item = element.querySelector(this.globalMsgSelector);
 
 		if (item !== null) {
+			item.classList.add(this.CLASS_ACTIVE);
 			item.setAttribute('data-status', status);
-			item.innerHTML = msg;
+			item.innerHTML = `<span>${msg}</span>`;
 		}
 	}
 
@@ -203,8 +209,17 @@ export class Form {
 		const item = element.querySelector(this.globalMsgSelector);
 
 		if (item !== null) {
+			item.classList.remove(this.CLASS_ACTIVE);
 			item.setAttribute('data-status', '');
 			item.innerHTML = '';
+		}
+	}
+
+	hideGlobalMsg(element) {
+		const item = element.querySelector(this.globalMsgSelector);
+
+		if (item !== null) {
+			item.classList.remove(this.CLASS_ACTIVE);
 		}
 	}
 

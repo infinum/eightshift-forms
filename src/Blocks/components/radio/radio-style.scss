@@ -1,0 +1,54 @@
+.es-radio {
+	$this: &;
+	--es-radio-scoped-icon-size: 18px;
+
+	margin-bottom: var(--es-radio-scoped-spacing, 10px);
+
+	&:last-child {
+		--es-radio-scoped-spacing: 0;
+	}
+
+	&__content {
+		display: flex;
+		align-items: center;
+	}
+
+	&__input {
+		display: none;
+	}
+
+	&__input:checked + #{$this}__label::after {
+		--es-radio-scoped-border-color: var(--global-colors-es-matisse);
+		--es-radio-scoped-background-color: var(--global-colors-es-matisse);
+	}
+
+	&__input:focus + #{$this}__label::after {
+		--es-radio-scoped-border-color: var(--global-colors-es-matisse);
+	}
+
+	&__label {
+		position: relative;
+		padding-left: calc(var(--es-radio-scoped-icon-size) + 10px);
+		cursor: pointer;
+
+		&::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			border-radius: 50%;
+			background-color: var(--es-radio-scoped-background-color, transform);
+			border: 1px solid var(--es-radio-scoped-border-color, var(--global-colors-es-chalice));
+			width: var(--es-radio-scoped-icon-size);
+			height: var(--es-radio-scoped-icon-size);
+			transition: {
+				property: background-color, border-color;
+				timing-function: ease-in-out;
+				duration: 0.2s;
+			}
+		}
+
+		&:hover::after {
+			--es-radio-scoped-border-color: var(--global-colors-es-matisse);
+		}
+	}
+}

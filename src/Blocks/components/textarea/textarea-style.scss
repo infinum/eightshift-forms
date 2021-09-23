@@ -1,9 +1,8 @@
-.es-input {
+.es-textarea {
 	width: 100%;
 	border: 1px solid var(--global-colors-es-chalice);
 	cursor: text;
 	background-color: transparent;
 	height: var(--global-es-input-height);
-	padding: 0 10px;
-	border-radius: 0;
+	padding: 10px;
 }

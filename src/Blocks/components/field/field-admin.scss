@@ -7,7 +7,7 @@
 	&__label {
 		grid-column-start: 1;
 		grid-column-end: 3;
-		padding-top: 6px;
+		padding-top: 12px;
 		font-size: 15px;
 	}
 
@@ -17,7 +17,7 @@
 	}
 
 	&__help {
-		color: var(--global-colors-chalice);
+		color: var(--global-colors-es-chalice);
 		grid-column-start: 4;
 		grid-column-end: 13;
 		margin-top: 5px;

@@ -25,14 +25,16 @@ export const RadioEditor = (attributes) => {
 
 	return (
 		<div className={radioClass}>
-			<label className={`${componentClass}__label`}>
-				{radioLabel}
-			</label>
-			<input
-				className={`${componentClass}__input`}
-				type={'radio'}
-				readOnly
-			/>
+			<div className={`${componentClass}__content`}>
+				<input
+					className={`${componentClass}__input`}
+					type={'radio'}
+					readOnly
+				/>
+				<label className={`${componentClass}__label`}>
+					{radioLabel}
+				</label>
+			</div>
 		</div>
 	);
 };

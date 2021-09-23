@@ -6,7 +6,7 @@ All variables are available here:
 https://github.com/infinum/eightshift-frontend-libs/blob/develop/styles/scss/_core.scss
 */
 
-$base-col-number: global-settings(maxCols);
+$base-col-number: global-settings(esMaxCols);
 
 :root {
 	--base-font-size: 0.625;

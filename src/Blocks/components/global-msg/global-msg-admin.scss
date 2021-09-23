@@ -1,0 +1,22 @@
+.es-global-msg {
+	--global-msg-scoped-width: 300px;
+
+	position: fixed;
+	right: 0;
+	bottom: 20px;
+	width: var(--global-msg-scoped-width);
+	transform: translateX(var(--global-msg-scoped-width));
+	background-color: var(--global-colors-es-reef);
+	color: var(--global-colors-es-white);
+	z-index: 1;
+	padding: 20px;
+	transition: {
+		property: transform;
+		timing-function: ease-in-out;
+		duration: 0.3s;
+	}
+
+	&.is-active {
+		transform: translateX(0);
+	}
+}

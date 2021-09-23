@@ -6,9 +6,10 @@
 	"settingsPageUrl": "/wp-admin/edit.php?post_type=eightshift-forms&page=form-option&formId=",
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
-		"maxCols": 12,
-		"spacingVertical": "20px",
-		"spacingHorizontal": "15px",
+		"esMaxCols": 12,
+		"esSpacingVertical": "20px",
+		"esSpacingHorizontal": "15px",
+		"esInputHeight": "42px",
 		"breakpoints": {
 			"mobile": 480,
 			"tablet": 960,
@@ -18,37 +19,52 @@
 		"colors": [
 			{
 				"name": "French",
-				"slug": "french",
+				"slug": "es-french",
 				"color": "#C3C4C7"
 			},
 			{
 				"name": "Black",
-				"slug": "black",
+				"slug": "es-black",
 				"color": "#000000"
 			},
 			{
 				"name": "Matisse",
-				"slug": "matisse",
+				"slug": "es-matisse",
 				"color": "#2271B1"
 			},
 			{
+				"name": "Blumine",
+				"slug": "es-blumine",
+				"color": "#1A5483"
+			},
+			{
 				"name": "White",
-				"slug": "white",
+				"slug": "es-white",
 				"color": "#FFFFFF"
 			},
 			{
 				"name": "Alto",
-				"slug": "alto",
+				"slug": "es-alto",
 				"color": "#F2F2F2"
 			},
 			{
 				"name": "Boulder",
-				"slug": "boulder",
+				"slug": "es-boulder",
 				"color": "#797878"
 			},
 			{
+				"name": "Pome",
+				"slug": "es-pome",
+				"color": "#F0383F"
+			},
+			{
+				"name": "Reef",
+				"slug": "es-reef",
+				"color": "#85AD7F"
+			},
+			{
 				"name": "Chalice",
-				"slug": "chalice",
+				"slug": "es-chalice",
 				"color": "#AFAFAF"
 			}
 		]

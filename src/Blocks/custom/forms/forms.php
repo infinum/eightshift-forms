@@ -10,6 +10,9 @@ use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
+$globalManifest = Components::getManifest(dirname(__DIR__, 2));
+
+echo Components::outputCssVariablesGlobal($globalManifest);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
