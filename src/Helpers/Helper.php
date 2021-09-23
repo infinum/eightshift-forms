@@ -22,9 +22,9 @@ class Helper
 	 * @param string $action Action used.
 	 * @param string $string String used.
 	 *
-	 * @return string
+	 * @return string|bool
 	 */
-	public static function encryptor(string $action, string $string): string
+	public static function encryptor(string $action, string $string)
 	{
 		$encrypt_method = "AES-256-CBC";
 		$secret_key = wp_salt(); // user define private key

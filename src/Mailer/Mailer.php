@@ -20,6 +20,9 @@ use EightshiftForms\Settings\FormOption;
 class Mailer implements MailerInterface
 {
 
+	/**
+	 * Use General helper trait.
+	 */
 	use TraitHelper;
 
 	/**

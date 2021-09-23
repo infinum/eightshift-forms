@@ -48,11 +48,10 @@ $form = \apply_filters(AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER, $setting
 				</a>
 			</div>
 		</div>
+		<div class="<?php echo \esc_attr("{$sectionClass}__description {$sectionClass}__description--with-spacing"); ?>">
+			<?php echo esc_html($settingsFormOptionSubTitle); ?>
+		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-			<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-				<?php echo esc_html($settingsFormOptionSubTitle); ?>
-			</div>
-
 			<?php echo $form; ?>
 		</div>
 	</div>

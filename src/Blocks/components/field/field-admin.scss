@@ -8,11 +8,19 @@
 		grid-column-start: 1;
 		grid-column-end: 3;
 		padding-top: 6px;
+		font-size: 15px;
 	}
 
 	&__content {
 		grid-column-start: 4;
 		grid-column-end: 13;
+	}
+
+	&__help {
+		color: var(--global-colors-chalice);
+		grid-column-start: 4;
+		grid-column-end: 13;
+		margin-top: 5px;
 	}
 
 	&__es-error {

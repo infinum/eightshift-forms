@@ -15,12 +15,12 @@
 	}
 
 	&__heading-title {
-		font-size: 18px;
+		font-size: 22px;
 		font-weight: bold;
 	}
 
 	&__content {
-		padding: var(--global-spacing-vertical) var(--global-spacing-horizontal) 0;
+		padding: 0 var(--global-spacing-horizontal);
 	}
 
 	&--reset-spacing {
@@ -29,9 +29,14 @@
 	}
 
 	&__description {
-		font-size: 14px;
-		padding-bottom: var(--global-spacing-horizontal);
-		color: var(--global-colors-chalice);
+		font-size: 13px;
+		color: var(--global-colors-boulder);
+		border-bottom: 1px solid var(--global-colors-french);
+		padding: var(--global-spacing-vertical) var(--global-spacing-horizontal);
+
+		&--with-spacing {
+			margin-bottom: var(--global-spacing-vertical);
+		}
 	}
 
 	&__link {

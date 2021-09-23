@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Labels\InterfaceLabels;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -39,15 +40,27 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public $mailer;
 
 	/**
+	 * Instance variable of form labels data.
+	 *
+	 * @var InterfaceLabels
+	 */
+	protected $labels;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
-	public function __construct(ValidatorInterface $validator, MailerInterface $mailer)
+	public function __construct(
+		ValidatorInterface $validator,
+		MailerInterface $mailer,
+		InterfaceLabels $labels
+	)
 	{
 		$this->validator = $validator;
 		$this->mailer = $mailer;
+		$this->labels = $labels;
 	}
 
 	/**
@@ -145,13 +158,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		/**
 	 * Verifies everything is ok with request
 	 *
-	 * @param  \WP_REST_Request $request WP_REST_Request object.
+	 * @param \WP_REST_Request $request WP_REST_Request object.
+	 * @param string $formId Form Id.
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
 	 * @return array            filtered request params.
 	 */
-	protected function verifyRequest(\WP_REST_Request $request): array
+	protected function verifyRequest(\WP_REST_Request $request, string $formId): array
 	{
 		$params = $this->sanitizeFields($request->get_query_params());
 		$params = $this->fixDotUnderscoreReplacement($params);
@@ -178,7 +192,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate GET Params.
-		$validateParams = $this->validator->validate($params);
+		$validateParams = $this->validator->validate($params, [], $formId);
 		if (!empty($validateParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -193,7 +207,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate POST Params.
-		$validatePostParams = $this->validator->validate($postParams);
+		$validatePostParams = $this->validator->validate($postParams, [], $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -207,7 +221,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			);
 		}
 
-		$validatePostParams = $this->validator->validate($postParams, $files);
+		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(

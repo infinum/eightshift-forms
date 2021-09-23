@@ -1,0 +1,14 @@
+.es-intro {
+	margin-bottom: var(--global-spacing-vertical);
+
+	&__title {
+		font-size: 17px;
+		font-weight: bold;
+	}
+
+	&__subtitle {
+		padding-top: 10px;
+		font-size: 13px;
+		color: var(--global-colors-boulder);
+	}
+}

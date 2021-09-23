@@ -43,11 +43,10 @@ $layoutClass = Components::classnames([
 				</a>
 			</div>
 		</div>
+		<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
+			<?php echo esc_html($settingsFormsListingsSubTitle); ?>
+		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-			<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-				<?php echo esc_html($settingsFormsListingsSubTitle); ?>
-			</div>
-
 			<?php if ($settingsFormsListingsForms) { ?>
 				<ul class="<?php echo \esc_attr("{$componentClass}__list {$sectionClass}--reset-spacing"); ?>">
 					<?php foreach ($settingsFormsListingsForms as $form) { ?>

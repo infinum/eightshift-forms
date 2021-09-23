@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Labels\InterfaceLabels;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class Validator
@@ -18,16 +20,35 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 class Validator extends AbstractValidation
 {
 	/**
+	 * Instance variable of form labels data.
+	 *
+	 * @var InterfaceLabels
+	 */
+	protected $labels;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param InterfaceLabels $labels Inject documentsData which holds form labels data.
+	 */
+	public function __construct(InterfaceLabels $labels)
+	{
+		$this->labels = $labels;
+	}
+
+	/**
 	 * Validate form and return error if it is not valid.
 	 *
 	 * @param array $params Get params.
+	 * @param array $files Get files.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function validate(array $params = [], array $files = []): array
+	public function validate(array $params = [], array $files = [], string $formId): array
 	{
 		return array_merge(
-			$this->validateParams($params), $this->validateFiles($files, $params)
+			$this->validateParams($params, $formId), $this->validateFiles($files, $params, $formId)
 		);
 	}
 
@@ -35,10 +56,11 @@ class Validator extends AbstractValidation
 	 * Validate params.
 	 *
 	 * @param array $params Params to check.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	private function validateParams(array $params): array
+	private function validateParams(array $params, string $formId): array
 	{
 		$output = [];
 
@@ -52,17 +74,17 @@ class Validator extends AbstractValidation
 				switch ($dataKey) {
 					case 'validationRequired':
 						if($dataValue === '1' && $inputValue === '') {
-							$output[$paramKey] = esc_html__('This field is required!', 'eightshift-forms');
+							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
 					case 'validationEmail':
 						if($dataValue === '1' && !$this->isEmail($inputValue)) {
-							$output[$paramKey] = esc_html__('This field is not a valid email!', 'eightshift-forms');
+							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
 					case 'validationUrl':
 						if($dataValue === '1' && !$this->isUrl($inputValue)) {
-							$output[$paramKey] = esc_html__('This field is not a valid url!', 'eightshift-forms');
+							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
 				}
@@ -77,10 +99,11 @@ class Validator extends AbstractValidation
 	 *
 	 * @param array $files Files to check.
 	 * @param array $params Params for reference.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	private function validateFiles(array $files, array $params): array
+	private function validateFiles(array $files, array $params, string $formId): array
 	{
 		$output = [];
 
@@ -102,17 +125,17 @@ class Validator extends AbstractValidation
 				switch ($dataKey) {
 					case 'validationAccept':
 						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue)) {
-							$output[$inputName] = sprintf(esc_html__('Your file type is not supported. Please use only %s file type.', 'eightshift-forms'), $dataValue);
+							$output[$inputName] = sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
 						}
 						break;
 					case 'validationMinSize':
 						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$inputName] = sprintf(esc_html__('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'), $dataValue);
+							$output[$inputName] = sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue);
 						}
 						break;
 					case 'validationMaxSize':
 						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$inputName] = sprintf(esc_html__('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'), $dataValue);
+							$output[$inputName] = sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue);
 						}
 						break;
 				}

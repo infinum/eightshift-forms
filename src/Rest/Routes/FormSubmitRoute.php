@@ -69,14 +69,15 @@ class FormSubmitRoute extends AbstractBaseRoute
 	public function routeCallback(\WP_REST_Request $request)
 	{
 
-	// Try catch request.
+		$files = [];
+
+		// Try catch request.
 		try {
-			$params =	$this->verifyRequest($request);
+			$formId = $this->getFormId($request->get_body_params(), true);
+			$params =	$this->verifyRequest($request, $formId);
 
 			$postParams = $params['post'];
 			$fiels = $params['files'];
-
-			$formId = $this->getFormId($postParams, true);
 
 			$mailerUse = $this->getSettingsValue(FormOption::MAILER_USE_KEY, $formId);
 
@@ -93,14 +94,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 				return \rest_ensure_response([
 					'code' => 404,
 					'status' => 'error',
-					'message' => esc_html__('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-form'),
+					'message' => $this->labels->getLabel('mailerErrorEmailNotSent', $formId),
 				]);
 			}
 
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => esc_html__('Success', 'eightshift-form'),
+				'message' => $this->labels->getLabel('mailerSuccessSend', $formId),
 			]);
 
 			// return \rest_ensure_response($response);

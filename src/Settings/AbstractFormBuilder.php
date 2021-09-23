@@ -21,6 +21,9 @@ use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInterface
 {
 
+	/**
+	 * Use General helper trait.
+	 */
 	use TraitHelper;
 
 	/**
@@ -59,7 +62,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 		$form .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'submit',
 			Components::props('submit', [
-				'submitValue' => __('Save', 'eightshift-forms'),
+				'submitValue' => __('Save settings', 'eightshift-forms'),
 			]),
 			'',
 			true

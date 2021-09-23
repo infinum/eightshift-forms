@@ -58,7 +58,8 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 	// Try catch request.
 		try {
-			$params =	$this->verifyRequest($request);
+			$formId = $this->getFormId($request->get_body_params());
+			$params =	$this->verifyRequest($request, $formId);
 
 			$postParams = $params['post'];
 
