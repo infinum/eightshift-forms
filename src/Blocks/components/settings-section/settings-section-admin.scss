@@ -78,6 +78,7 @@
 
 	&__menu-item {
 		margin: 0;
+
 		&:last-child {
 			#{$this}__menu-link {
 				border-bottom: none;
@@ -108,9 +109,5 @@
 			background-color: var(--global-colors-es-matisse);
 			color: var(--global-colors-es-white);
 		}
-	}
-
-	&__menu-link-icon {
-
 	}
 }
