@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl, ToggleControl } from '@wordpress/components';
+import { TextControl, SelectControl } from '@wordpress/components';
 import {
 	icons,
 	getOption,

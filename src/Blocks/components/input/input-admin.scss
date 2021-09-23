@@ -1,7 +1,9 @@
+// stylelint-disable declaration-no-important
+
 @import './input-style.scss';
 
 .es-input {
-	padding: 10px!important;
-	border-color: var(--global-colors-es-chalice)!important;;
-	border-radius: 0!important;
+	padding: 10px !important;
+	border-color: var(--global-colors-es-chalice) !important;
+	border-radius: 0 !important;
 }

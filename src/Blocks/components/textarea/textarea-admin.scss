@@ -1,8 +1,10 @@
+// stylelint-disable declaration-no-important
+
 @import './textarea-style.scss';
 
 .es-textarea {
-	padding: 10px!important;
-	border-color: var(--global-colors-es-chalice)!important;;
-	border-radius: 0!important;
+	padding: 10px !important;
+	border-color: var(--global-colors-es-chalice) !important;
+	border-radius: 0 !important;
 	height: calc(var(--global-es-input-height) * 3);
 }

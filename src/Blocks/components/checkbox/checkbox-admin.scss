@@ -1,7 +1,9 @@
+// stylelint-disable declaration-no-important
+
 @import './checkbox-style.scss';
 
 .es-checkbox {
 	&__input {
-		display: none!important;
+		display: none !important;
 	}
 }

@@ -88,8 +88,7 @@ export class Form {
 
 		const formData = new FormData();
 
-		for (const [key, item] of Object.entries(items)) {
-
+		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
 			const {
 				type,
 				name,

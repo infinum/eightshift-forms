@@ -1,7 +1,9 @@
+// stylelint-disable declaration-no-important
+
 @import './radio-style.scss';
 
 .es-radio {
 	&__input {
-		display: none!important;
+		display: none !important;
 	}
 }
