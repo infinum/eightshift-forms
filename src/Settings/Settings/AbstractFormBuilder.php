@@ -42,6 +42,12 @@ abstract class AbstractFormBuilder
 		}
 
 		$form .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'divider',
+			Components::props('divider', []),
+			'',
+			true
+		);
+		$form .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'submit',
 			Components::props('submit', [
 				'submitValue' => __('Save settings', 'eightshift-forms'),
@@ -83,6 +89,7 @@ abstract class AbstractFormBuilder
 		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
 		$name = $attributes["{$component}Name"] ?? '';
+		$value = $attributes["{$component}Value"] ?? '';
 
 		if (isset($attributes['checkboxesContent'])) {
 			$attributes['checkboxesContent'] = $this->getInnerComponent($attributes, 'checkboxesContent', $formId);
@@ -97,7 +104,11 @@ abstract class AbstractFormBuilder
 		}
 
 		$attributes["{$component}Name"] = $this->getSettingsName($name);
-		$attributes["{$component}Value"] = \get_post_meta($formId, $this->getSettingsName($name), true);
+		if (empty($value)) {
+			$attributes["{$component}Value"] = \get_post_meta($formId, $this->getSettingsName($name), true);
+		}
+
+		// var_dump(Components::props($component, $attributes));
 
 		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$attributes['component'],

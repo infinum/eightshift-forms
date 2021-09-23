@@ -31,15 +31,11 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 	public const TYPE_KEY = 'mailer';
 
 	// Use keys.
-	public const MAILER_USE_KEY = 'mailerUse';
 	public const MAILER_SENDER_NAME_KEY = 'mailerSenderName';
 	public const MAILER_SENDER_EMAIL_KEY = 'mailerSenderEmail';
 	public const MAILER_TO_KEY = 'mailerTo';
 	public const MAILER_SUBJECT_KEY = 'mailerSubject';
 	public const MAILER_TEMPLATE_KEY = 'mailerTemplate';
-
-	// Get settings page data hook name.
-	public const SETTINGS_PAGE_GREENHOUSE_DATA = 'es_settings_page_greenhouse_data';
 
 	/**
 	 * Register all the hooks
@@ -54,11 +50,9 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Get Form options array
 	 *
-	 * @param string $formId Form Id.
-	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsTypeData(): array
 	{
 		return [
 			'sidebar' => [

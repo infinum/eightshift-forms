@@ -12,29 +12,30 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Settings\Listing\FormListingInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use EightshiftForms\Settings\Settings\SettingsAllInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
- * FormMainListingAdminMenu class.
+ * FormDetailsAdminSubMenu class.
  */
-class FormMainListingAdminMenu extends AbstractAdminMenu
+class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
 	 * Instance variable of form options data.
 	 *
-	 * @var FormListingInterface
+	 * @var SettingsAllInterface
 	 */
-	protected $formsListing;
+	protected $settingsAll;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormListingInterface $formsListing Inject documentsData which holds form options data.
+	 * @param SettingsAllInterface $settingsAll Inject documentsData which holds form options data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
+	public function __construct(SettingsAllInterface $settingsAll)
 	{
-		$this->formsListing = $formsListing;
+		$this->settingsAll = $settingsAll;
 	}
 
 	/**
@@ -49,21 +50,14 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'form-options';
+	public const ADMIN_MENU_SLUG = 'es-details';
 
 	/**
-	 * Menu icon for this admin menu.
+	 * Parent menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_ICON = 'dashicons-forms';
-
-	/**
-	 * Menu position for this admin menu.
-	 *
-	 * @var string
-	 */
-	public const ADMIN_MENU_POSITION = 4;
+	public const PARENT_MENU_SLUG = '';
 
 	/**
 	 * Get the title to use for the admin page.
@@ -72,7 +66,7 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Eightshift Forms', 'eightshift-forms');
+		return \esc_html__('Form Details', 'eightshift-forms');
 	}
 
 	/**
@@ -82,7 +76,7 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Eightshift Forms', 'eightshift-forms');
+		return \esc_html__('Form Details', 'eightshift-forms');
 	}
 
 	/**
@@ -108,39 +102,13 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the URL to the icon to be used for this menu
+	 * Get the slug of the parent menu.
 	 *
-	 * @return string The URL to the icon to be used for this menu.
-	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
-	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
-	 *                * Pass the name of a Dashicons helper class to use a font icon,
-	 *                  e.g. 'dashicons-chart-pie'.
-	 *                * Pass 'none' to leave div.wp-menu-image empty so an icon can be added via CSS.
+	 * @return string The slug name for the parent menu (or the file name of a standard WordPress admin page.
 	 */
-	protected function getIcon(): string
+	protected function getParentMenu(): string
 	{
-		return self::ADMIN_MENU_ICON;
-	}
-
-	/**
-	 * Get the position of the menu.
-	 *
-	 * @return int Number that indicates the position of the menu.
-	 * 5   - below Posts
-	 * 10  - below Media
-	 * 15  - below Links
-	 * 20  - below Pages
-	 * 25  - below comments
-	 * 60  - below first separator
-	 * 65  - below Plugins
-	 * 70  - below Users
-	 * 75  - below Tools
-	 * 80  - below Settings
-	 * 100 - below second separator
-	 */
-	protected function getPosition(): int
-	{
-		return self::ADMIN_MENU_POSITION;
+		return self::PARENT_MENU_SLUG;
 	}
 
 	/**
@@ -150,7 +118,7 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'settings-forms-listings';
+		return 'settings-details';
 	}
 
 	/**
@@ -181,11 +149,17 @@ class FormMainListingAdminMenu extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
+		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		return [
-			'settingsFormsListingsPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
-			'settingsFormsListingsSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
-			'settingsFormsListingsNewFormLink' => Config::getNewFormPageUrl(),
-			'settingsFormsListingsForms' => $this->formsListing->getFormsList(),
+			'settingsDetailsPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
+			'settingsDetailsSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
+			'settingsDetailsBackLink' => Config::getListingPageUrl(),
+			'settingsDetailsLink' => Config::getOptionsPageUrl($formId, ''),
+			'settingsDetailsData' => $this->settingsAll->getSettingsAll($formId, $type),
+			'settingsDetailsType' => !empty($type) ? $type : SettingsGeneral::TYPE_KEY,
+			'settingsDetailsFormId' => $formId,
 		];
 	}
 }

@@ -13,7 +13,7 @@ namespace EightshiftForms\Hooks;
 /**
  * The Filters class, used for defining available filters.
  */
-interface Filters
+class Filters
 {
 
 }

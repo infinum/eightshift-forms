@@ -30,9 +30,6 @@ class SettingsHubspot implements SettingsTypeInterface, ServiceInterface
 	// Settings key.
 	public const TYPE_KEY = 'hubspot';
 
-		// Use keys.
-		public const HUBSPOT_USE_KEY = 'hubspotUse';
-
 	/**
 	 * Register all the hooks
 	 *
@@ -46,11 +43,9 @@ class SettingsHubspot implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Get Form options array
 	 *
-	 * @param string $formId Form Id.
-	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsTypeData(): array
 	{
 		return [
 			'sidebar' => [

@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, ServerSideRender } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FormEditor = (attributes) => {
@@ -12,9 +12,11 @@ export const FormEditor = (attributes) => {
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
+		blockFullName,
 	} = attributes;
 
 	const formContent = checkAttr('formContent', attributes, manifest);
+	const formIntegration = checkAttr('formIntegration', attributes, manifest);
 
 	const formClass = classnames([
 		selector(componentClass, componentClass),
@@ -25,9 +27,11 @@ export const FormEditor = (attributes) => {
 	return (
 		<>
 			<form className={formClass}>
-				<div className={`${componentClass}__fields`}>
-					{formContent}
-				</div>
+				{formIntegration === 'none' &&
+					<div className={`${componentClass}__fields`}>
+						{formContent}
+					</div>
+				}
 			</form>
 		</>
 	);

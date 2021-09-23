@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Settings\FormOption;
+use EightshiftForms\Mailer\SettingsMailer;
 
 /**
  * Class FormSubmitRoute
@@ -77,14 +77,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$postParams = $params['post'];
 			$fiels = $params['files'];
 
-			$mailerUse = $this->getSettingsValue(FormOption::MAILER_USE_KEY, $formId);
+			$mailerUse = $this->getSettingsValue(SettingsMailer::TYPE_KEY . 'Use', $formId);
 
 			$files = $this->prepareFiles($fiels);
 
 			if ($mailerUse) {
 				$this->mailer->sendFormEmail(
 					$formId,
-					$this->getSettingsValue(FormOption::MAILER_TO_KEY, $formId),
+					$this->getSettingsValue(SettingsMailer::MAILER_TO_KEY, $formId),
 					$files,
 					$this->removeUneceseryParams($postParams)
 				);

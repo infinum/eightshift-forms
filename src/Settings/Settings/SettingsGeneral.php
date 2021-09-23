@@ -11,10 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -46,13 +42,12 @@ class SettingsGeneral implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Get Form options array
 	 *
-	 * @param string $formId Form Id.
-	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsTypeData(): array
 	{
-		return [
+		$output = [
+			'isRequired' => true,
 			'sidebar' => [
 				'label' => __('General', 'eightshift-forms'),
 				'value' => self::TYPE_KEY,
@@ -64,42 +59,35 @@ class SettingsGeneral implements SettingsTypeInterface, ServiceInterface
 					'introTitle' => \__('Integrations setting', 'eightshift-forms'),
 					'introSubtitle' => \__('Configure settings for all your integrations in one place.', 'eightshift-forms'),
 				],
-				[
-					'component' => 'checkboxes',
-					'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
-					'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
-					'checkboxesContent' => [
-						[
-							'component' => 'checkbox',
-							'checkboxName' => SettingsMailer::MAILER_USE_KEY,
-							'checkboxId' => SettingsMailer::MAILER_USE_KEY,
-							'checkboxLabel' => \__('Use Mailer', 'eightshift-forms'),
-							'checkboxValue' => 'true',
-						],
-						[
-							'component' => 'checkbox',
-							'checkboxName' => SettingsGreenhouse::GREENHOUSE_USE_KEY,
-							'checkboxId' => SettingsGreenhouse::GREENHOUSE_USE_KEY,
-							'checkboxLabel' => \__('Use Greenhouse', 'eightshift-forms'),
-							'checkboxValue' => 'true',
-						],
-						[
-							'component' => 'checkbox',
-							'checkboxName' => SettingsMailchimp::MAILCHIMP_USE_KEY,
-							'checkboxId' => SettingsMailchimp::MAILCHIMP_USE_KEY,
-							'checkboxLabel' => \__('Use Mailchimp', 'eightshift-forms'),
-							'checkboxValue' => 'true',
-						],
-						[
-							'component' => 'checkbox',
-							'checkboxName' => SettingsHubspot::HUBSPOT_USE_KEY,
-							'checkboxId' => SettingsHubspot::HUBSPOT_USE_KEY,
-							'checkboxLabel' => \__('Use Hubspot', 'eightshift-forms'),
-							'checkboxValue' => 'true',
-						],
-					]
-				],
-			],
+			]
 		];
+
+		$items = [
+			'component' => 'checkboxes',
+			'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
+			'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
+			'checkboxesContent' => [
+			]
+		];
+
+		foreach (SettingsAll::SETTINGS as $key => $value) {
+			if ($key === self::TYPE_KEY) {
+				continue;
+			}
+
+			$name = "{$key}Use";
+
+			$items['checkboxesContent'][] = [
+				'component' => 'checkbox',
+				'checkboxName' => $name,
+				'checkboxId' => $name,
+				'checkboxLabel' => sprintf(__('Use %s', 'eightshift-forms'), ucfirst($key)),
+				'checkboxValue' => 'true',
+			];
+		}
+
+		$output['form'] = array_merge($output['form'], [$items]);
+
+		return $output;
 	}
 }

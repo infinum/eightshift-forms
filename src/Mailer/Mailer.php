@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Settings\FormOption;
 
 /**
  * Class Mailer
@@ -37,16 +35,16 @@ class Mailer implements MailerInterface
 	public function sendFormEmail(string $formId, string $to, array $files = [], array $fields = []): bool
 	{
 		$headers = $this->getHeader(
-			$this->getSettingsValue(FormOption::MAILER_SENDER_EMAIL_KEY, $formId),
-			$this->getSettingsValue(FormOption::MAILER_SENDER_NAME_KEY, $formId)
+			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_EMAIL_KEY, $formId),
+			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_NAME_KEY, $formId)
 		);
 
 		$template = $this->getTemplate(
 			$fields,
-			$this->getSettingsValue(FormOption::MAILER_TEMPLATE_KEY, $formId)
+			$this->getSettingsValue(SettingsMailer::MAILER_TEMPLATE_KEY, $formId)
 		);
 
-		$subject = $this->getSettingsValue(FormOption::MAILER_SUBJECT_KEY, $formId);
+		$subject = $this->getSettingsValue(SettingsMailer::MAILER_SUBJECT_KEY, $formId);
 
 		return \wp_mail($to, $subject, $template, $headers, $files);
 	}

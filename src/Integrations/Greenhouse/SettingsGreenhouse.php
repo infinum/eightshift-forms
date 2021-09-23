@@ -30,9 +30,6 @@ class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
 	// Settings key.
 	public const TYPE_KEY = 'greenhouse';
 
-	// Use keys.
-	public const GREENHOUSE_USE_KEY = 'greenhouseUse';
-
 	/**
 	 * Register all the hooks
 	 *
@@ -46,11 +43,9 @@ class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Get Form options array
 	 *
-	 * @param string $formId Form Id.
-	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsTypeData(): array
 	{
 		return [
 			'sidebar' => [

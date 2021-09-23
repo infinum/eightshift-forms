@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Config;
 
-use EightshiftForms\AdminMenus\FormMainListingAdminMenu;
+use EightshiftForms\AdminMenus\FormDetailsAdminSubMenu;
+use EightshiftForms\AdminMenus\FormListingAdminMenu;
 use EightshiftForms\AdminMenus\FormOptionAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
@@ -76,7 +77,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getListingPageUrl(): string
 	{
-		$page = FormMainListingAdminMenu::ADMIN_MENU_SLUG;
+		$page = FormListingAdminMenu::ADMIN_MENU_SLUG;
 
 		return "/wp-admin/admin.php?page={$page}";
 	}
@@ -92,7 +93,7 @@ class Config extends AbstractConfigData
 	public static function getOptionsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
 	{
 		$postType = Forms::POST_TYPE_SLUG;
-		$page = FormOptionAdminSubMenu::ADMIN_MENU_SLUG;
+		$page = FormDetailsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';
 
 		if (!empty($type)) {

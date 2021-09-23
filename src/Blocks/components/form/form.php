@@ -7,6 +7,8 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -24,6 +26,7 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
+$formIntegration = Components::checkAttr('formIntegration', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -53,11 +56,17 @@ $formClass = Components::classnames([
 	);
 	?>
 
-	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
-		<?php
-		echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-		?>
-	</div>
+	<?php if ($formIntegration === 'none') { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
+			<?php
+			echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+			?>
+		</div>
+	<?php } ?>
+
+	<?php if ($formIntegration !== 'none') { ?>
+		<?php echo apply_filters(MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME, Helper::encryptor('decrypt', $formPostId)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php } ?>
 
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

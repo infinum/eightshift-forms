@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsTypeInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -31,7 +32,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	public const TYPE_KEY = 'mailchimp';
 
 	// Use keys.
-	public const MAILCHIMP_USE_KEY = 'mailchimpUse';
+	public const MAILCHIMP_API_KEY = 'mailchimp_api_key';
+	public const MAILCHIMP_FORM_URL = 'mailchimp_form_url';
 
 	/**
 	 * Register all the hooks
@@ -46,12 +48,12 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Get Form options array
 	 *
-	 * @param string $formId Form Id.
-	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsTypeData(): array
 	{
+		$apiKey = Variables::getApiKeyMailchimp();
+
 		return [
 			'sidebar' => [
 				'label' => __('Mailchimp', 'eightshift-forms'),
@@ -63,6 +65,26 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 					'component' => 'intro',
 					'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
 					'introSubtitle' => \__('Configure your mailchimp settings in one place.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'input',
+					'inputName' => self::MAILCHIMP_API_KEY,
+					'inputId' => self::MAILCHIMP_API_KEY,
+					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $apiKey,
+					'inputIsReadOnly' => !empty($apiKey),
+				],
+				[
+					'component' => 'input',
+					'inputName' => self::MAILCHIMP_FORM_URL,
+					'inputId' => self::MAILCHIMP_FORM_URL,
+					'inputFieldLabel' => \__('Form Url', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Provide Signup form URL from your Mailchimp form builder.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true
 				],
 			]
 		];

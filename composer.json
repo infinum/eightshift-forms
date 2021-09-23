@@ -41,6 +41,7 @@
 	"require": {
 		"php": "^7.2 || <8.0",
 		"infinum/eightshift-libs": "dev-develop",
+		"paquettg/php-html-parser": "^3.1",
 		"typisttech/imposter-plugin": "^0.6.2"
 	},
 	"autoload": {

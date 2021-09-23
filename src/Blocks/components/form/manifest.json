@@ -19,6 +19,10 @@
 		}
 	},
 	"attributes": {
+		"formIntegration": {
+			"type": "string",
+			"default": "none"
+		},
 		"formContent": {
 			"type": "string"
 		},
@@ -54,6 +58,24 @@
 			{
 				"label": "Post",
 				"value": "post"
+			}
+		],
+		"formIntegration": [
+			{
+				"label": "None",
+				"value": "none"
+			},
+			{
+				"label": "Mailchimp",
+				"value": "mailchimp"
+			},
+			{
+				"label": "Greenhouse",
+				"value": "greenhouse"
+			},
+			{
+				"label": "Hubspot",
+				"value": "hubspot"
 			}
 		]
 	}
