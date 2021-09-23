@@ -11,10 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
-use EightshiftForms\Settings\FormListingInterface;
 
 /**
  * FormMainListingAdminMenu class.

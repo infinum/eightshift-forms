@@ -16,7 +16,7 @@ namespace EightshiftForms\Config;
 use EightshiftForms\AdminMenus\FormMainListingAdminMenu;
 use EightshiftForms\AdminMenus\FormOptionAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Settings\FormOption;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsPluginVendor\EightshiftLibs\Config\AbstractConfigData;
 
 /**
@@ -85,21 +85,21 @@ class Config extends AbstractConfigData
 	 * Method that returns form options page url.
 	 *
 	 * @param string $formId Form ID.
-	 * @param string $setting Setting key.
+	 * @param string $type type key.
 	 *
 	 * @return string
 	 */
-	public static function getOptionsPageUrl(string $formId, string $setting = FormOption::SETTINGS_GENERAL_KEY): string
+	public static function getOptionsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
 	{
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormOptionAdminSubMenu::ADMIN_MENU_SLUG;
-		$settingKey = '';
+		$typeKey = '';
 
-		if (!empty($setting)) {
-			$settingKey = "&setting={$setting}";
+		if (!empty($type)) {
+			$typeKey = "&type={$type}";
 		}
 
-		return "/wp-admin/edit.php?post_type={$postType}&page={$page}&formId={$formId}{$settingKey}";
+		return "/wp-admin/edit.php?post_type={$postType}&page={$page}&formId={$formId}{$typeKey}";
 	}
 
 	/**

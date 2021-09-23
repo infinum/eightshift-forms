@@ -7,8 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Settings\AbstractFormBuilder;
-use EightshiftForms\Settings\FormOption;
 
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
@@ -19,22 +17,22 @@ echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore Word
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
-$settingsFormOptionPageTitle = Components::checkAttr('settingsFormOptionPageTitle', $attributes, $manifest);
-$settingsFormOptionSubTitle = Components::checkAttr('settingsFormOptionSubTitle', $attributes, $manifest);
-$settingsFormOptionBackLink = Components::checkAttr('settingsFormOptionBackLink', $attributes, $manifest);
-$settingsFormOptionFormId = Components::checkAttr('settingsFormOptionFormId', $attributes, $manifest);
-$settingsFormOptionLink = Components::checkAttr('settingsFormOptionLink', $attributes, $manifest);
-$settingsFormOptionForm = Components::checkAttr('settingsFormOptionForm', $attributes, $manifest);
+$settingsDetailsPageTitle = Components::checkAttr('settingsDetailsPageTitle', $attributes, $manifest);
+$settingsDetailsSubTitle = Components::checkAttr('settingsDetailsSubTitle', $attributes, $manifest);
+$settingsDetailsBackLink = Components::checkAttr('settingsDetailsBackLink', $attributes, $manifest);
+$settingsDetailsFormId = Components::checkAttr('settingsDetailsFormId', $attributes, $manifest);
+$settingsDetailsLink = Components::checkAttr('settingsDetailsLink', $attributes, $manifest);
+$settingsDetailsData = Components::checkAttr('settingsDetailsData', $attributes, $manifest);
+$settingsDetailsType = Components::checkAttr('settingsDetailsType', $attributes, $manifest);
 
-$sidebar = $settingsFormOptionForm['sidebar'] ?? [];
+$sidebar = $settingsDetailsData['sidebar'] ?? [];
+$form = $settingsDetailsData['form'] ?? '';
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($sectionClass, $sectionClass),
 	Components::selector($sectionClass, $sectionClass, '', 'with-sidebar'),
 ]);
-
-$setting = isset($_GET['setting']) ? \sanitize_text_field(wp_unslash($_GET['setting'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 ?>
 
@@ -52,8 +50,8 @@ $setting = isset($_GET['setting']) ? \sanitize_text_field(wp_unslash($_GET['sett
 							?>
 							<li class="<?php echo \esc_attr("{$sectionClass}__menu-item"); ?>">
 								<a
-									href="<?php echo esc_url("{$settingsFormOptionLink}&setting={$value}"); ?>"
-									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $setting, $sectionClass, 'menu-link', 'active')); ?>"
+									href="<?php echo esc_url("{$settingsDetailsLink}&type={$value}"); ?>"
+									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $settingsDetailsType, $sectionClass, 'menu-link', 'active')); ?>"
 								>
 									<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-icon dashicons {$icon}"); ?> "></span>
 									<?php echo esc_html($label); ?>
@@ -69,29 +67,21 @@ $setting = isset($_GET['setting']) ? \sanitize_text_field(wp_unslash($_GET['sett
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__heading"); ?>">
 				<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-					<?php echo sprintf('%s - %s', esc_html($settingsFormOptionPageTitle), esc_html($settingsFormOptionFormId)); ?>
+					<?php echo sprintf('%s - %s', esc_html($settingsDetailsPageTitle), esc_html($settingsDetailsFormId)); ?>
 				</div>
 
 				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-					<a href="<?php echo esc_url($settingsFormOptionBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+					<a href="<?php echo esc_url($settingsDetailsBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-arrow-left"); ?> "></span>
 						<?php echo esc_html__('Back to forms', 'eightshift-forms'); ?>
 					</a>
 				</div>
 			</div>
 			<div class="<?php echo \esc_attr("{$sectionClass}__description {$sectionClass}__description--with-spacing"); ?>">
-				<?php echo esc_html($settingsFormOptionSubTitle); ?>
+				<?php echo esc_html($settingsDetailsSubTitle); ?>
 			</div>
 			<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-				<?php
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo \apply_filters(
-					AbstractFormBuilder::SETTINGS_PAGE_FORM_BUILDER,
-					$settingsFormOptionForm['forms'][$setting] ?? [],
-					$settingsFormOptionFormId,
-					$setting === FormOption::SETTINGS_GENERAL_KEY
-				);
-				?>
+				<?php echo $form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		</div>
 	</div>

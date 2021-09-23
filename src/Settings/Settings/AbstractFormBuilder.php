@@ -3,44 +3,26 @@
 /**
  * Class that holds all methods for building admin settings pages forms.
  *
- * @package EightshiftLibs\Settings
+ * @package EightshiftForms\Settings\Settings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings;
+namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftFormsPluginVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
-use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * FormBuilder class.
  */
-abstract class AbstractFormBuilder implements FormOptionInterface, ServiceInterface
+abstract class AbstractFormBuilder
 {
 	/**
 	 * Use General helper trait.
 	 */
 	use TraitHelper;
-
-	/**
-	 * Get card article props hook name.
-	 *
-	 * @return string
-	 */
-	public const SETTINGS_PAGE_FORM_BUILDER = 'es_settings_page_form_builder';
-
-	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_filter(self::SETTINGS_PAGE_FORM_BUILDER, [$this, 'buildForm'], 10, 3);
-	}
 
 	/**
 	 * Build settings page form.

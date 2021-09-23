@@ -12,8 +12,8 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Settings\Settings\SettingsAllInterface;
 use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
-use EightshiftForms\Settings\FormOptionInterface;
 
 /**
  * FormOptionAdminSubMenu class.
@@ -23,18 +23,18 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable of form options data.
 	 *
-	 * @var FormOptionInterface
+	 * @var SettingsAllInterface
 	 */
-	protected $formOption;
+	protected $settingsAll;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormOptionInterface $formOption Inject documentsData which holds form options data.
+	 * @param SettingsAllInterface $settingsAll Inject documentsData which holds form options data.
 	 */
-	public function __construct(FormOptionInterface $formOption)
+	public function __construct(SettingsAllInterface $settingsAll)
 	{
-		$this->formOption = $formOption;
+		$this->settingsAll = $settingsAll;
 	}
 
 	/**
@@ -117,7 +117,7 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'settings-form-option';
+		return 'settings-details';
 	}
 
 	/**
@@ -149,14 +149,16 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
-			'settingsFormOptionPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
-			'settingsFormOptionSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
-			'settingsFormOptionBackLink' => Config::getListingPageUrl(),
-			'settingsFormOptionLink' => Config::getOptionsPageUrl($formId, ''),
-			'settingsFormOptionForm' => $this->formOption->getFormFields($formId),
-			'settingsFormOptionFormId' => $formId,
+			'settingsDetailsPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
+			'settingsDetailsSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
+			'settingsDetailsBackLink' => Config::getListingPageUrl(),
+			'settingsDetailsLink' => Config::getOptionsPageUrl($formId, ''),
+			'settingsDetailsData' => $this->settingsAll->getSettingsAll($formId, $type),
+			'settingsDetailsType' => $type,
+			'settingsDetailsFormId' => $formId,
 		];
 	}
 }
