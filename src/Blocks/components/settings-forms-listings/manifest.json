@@ -12,7 +12,7 @@
 		"settingsFormsListingsForms": {
 			"type": "array"
 		},
-		"settingsFormsListingsPostType": {
+		"settingsFormsListingsNewFormLink": {
 			"type": "string"
 		}
 	}

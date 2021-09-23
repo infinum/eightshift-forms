@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
 use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
-use EightshiftForms\Settings\FormBuilderInterface;
+use EightshiftForms\Settings\FormOptionInterface;
 
 /**
  * FormOptionAdminSubMenu class.
@@ -22,16 +23,16 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable of form options data.
 	 *
-	 * @var FormBuilderInterface
+	 * @var FormOptionInterface
 	 */
 	protected $formOption;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormBuilderInterface $formOption Inject documentsData which holds form options data.
+	 * @param FormOptionInterface $formOption Inject documentsData which holds form options data.
 	 */
-	public function __construct(FormBuilderInterface $formOption)
+	public function __construct(FormOptionInterface $formOption)
 	{
 		$this->formOption = $formOption;
 	}
@@ -147,13 +148,15 @@ class FormOptionAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$slug = FormMainListingAdminMenu::ADMIN_MENU_SLUG;
+		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
 			'settingsFormOptionPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
 			'settingsFormOptionSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
-			'settingsFormOptionBackLink' => '/wp-admin/admin.php?page=' . FormMainListingAdminMenu::ADMIN_MENU_SLUG,
-			'settingsFormOptionForm' => $this->formOption->getFormFields(),
+			'settingsFormOptionBackLink' => Config::getListingPageUrl(),
+			'settingsFormOptionLink' => Config::getOptionsPageUrl($formId, ''),
+			'settingsFormOptionForm' => $this->formOption->getFormFields($formId),
+			'settingsFormOptionFormId' => $formId,
 		];
 	}
 }

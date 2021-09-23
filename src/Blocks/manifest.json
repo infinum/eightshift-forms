@@ -3,7 +3,7 @@
 	"background": "#BEA600",
 	"foreground": "#FBF9FF",
 	"blockClassPrefix": "es-block",
-	"settingsPageUrl": "/wp-admin/edit.php?post_type=eightshift-forms&page=form-option&formId=",
+	"settingsPageUrl": "/wp-admin/edit.php?post_type=eightshift-forms&page=form-option",
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"esMaxCols": 12,

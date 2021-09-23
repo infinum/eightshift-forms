@@ -1,5 +1,12 @@
 .es-settings-section {
+	$this: &;
 	padding: var(--global-es-spacing-horizontal) var(--global-es-spacing-vertical) 0 0;
+
+	&--with-sidebar {
+		display: grid;
+		column-gap: var(--global-es-spacing-vertical);
+		grid-template-columns: 20% auto;
+	}
 
 	&__section {
 		background-color: var(--global-colors-es-white);
@@ -61,5 +68,49 @@
 				border: none;
 			}
 		}
+	}
+
+	&__menu {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__menu-item {
+		margin: 0;
+		&:last-child {
+			#{$this}__menu-link {
+				border-bottom: none;
+			}
+		}
+	}
+
+	&__menu-link {
+		padding: 10px var(--global-es-spacing-vertical);
+		border-bottom: 1px solid var(--global-colors-es-french);
+		display: block;
+		text-decoration: none;
+		color: var(--global-colors-es-boulder);
+		transition: {
+			property: color, background-color;
+			timing-function: ease-in-out;
+			duration: 0.2s;
+		}
+
+		&:hover,
+		&:hover:focus {
+			color: var(--global-colors-es-matisse);
+		}
+
+		&--active,
+		&--active:focus,
+		&--active:hover {
+			background-color: var(--global-colors-es-matisse);
+			color: var(--global-colors-es-white);
+		}
+	}
+
+	&__menu-link-icon {
+
 	}
 }

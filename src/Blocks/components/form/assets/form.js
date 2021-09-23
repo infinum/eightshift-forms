@@ -55,7 +55,11 @@ export class Form {
 				// If success, redirect or output msg.
 				const isRedirect = element.getAttribute('data-success-redirect');
 				if (isRedirect !== '') {
-					window.location.href = isRedirect;
+					this.setGlobalMsg(element, response.message, 'success');
+
+					setTimeout(() => {
+						window.location.href = isRedirect;
+					}, 1000);
 				} else {
 					this.setGlobalMsg(element, response.message, 'success');
 				}

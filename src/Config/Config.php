@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Config;
 
+use EightshiftForms\AdminMenus\FormMainListingAdminMenu;
+use EightshiftForms\AdminMenus\FormOptionAdminSubMenu;
+use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Settings\FormOption;
 use EightshiftFormsPluginVendor\EightshiftLibs\Config\AbstractConfigData;
 
 /**
@@ -28,7 +32,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return 'eightshift-forms';
+		return "eightshift-forms";
 	}
 
 	/**
@@ -66,18 +70,59 @@ class Config extends AbstractConfigData
 	}
 
 	/**
-	 * Method that returns mailer sender name.
+	 * Method that returns listing page url.
+	 *
+	 * @return string
 	 */
-	public static function getMailerSenderName(): string
+	public static function getListingPageUrl(): string
 	{
-		return 'Eightshift';
+		$page = FormMainListingAdminMenu::ADMIN_MENU_SLUG;
+
+		return "/wp-admin/admin.php?page={$page}";
 	}
 
 	/**
-	 * Method that returns mailer sender name.
+	 * Method that returns form options page url.
+	 *
+	 * @param string $formId Form ID.
+	 * @param string $setting Setting key.
+	 *
+	 * @return string
 	 */
-	public static function getMailerSenderEmail(): string
+	public static function getOptionsPageUrl(string $formId, string $setting = FormOption::SETTINGS_GENERAL_KEY): string
 	{
-		return 'info@eightshift.com';
+		$postType = Forms::POST_TYPE_SLUG;
+		$page = FormOptionAdminSubMenu::ADMIN_MENU_SLUG;
+		$settingKey = '';
+
+		if (!empty($setting)) {
+			$settingKey = "&setting={$setting}";
+		}
+
+		return "/wp-admin/edit.php?post_type={$postType}&page={$page}&formId={$formId}{$settingKey}";
+	}
+
+	/**
+	 * Method that returns new form page url.
+	 *
+	 * @return string
+	 */
+	public static function getNewFormPageUrl(): string
+	{
+		$postType = Forms::POST_TYPE_SLUG;
+
+		return "/wp-admin/post-new.php?post_type={$postType}";
+	}
+
+	/**
+	 * Method that returns form edit page url.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public static function getFormEditPageUrl(string $formId): string
+	{
+		return "/wp-admin/post.php?post={$formId}&action=edit";
 	}
 }

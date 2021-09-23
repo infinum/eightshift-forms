@@ -12,8 +12,14 @@
 		"settingsFormOptionBackLink": {
 			"type": "string"
 		},
+		"settingsFormOptionLink": {
+			"type": "string"
+		},
 		"settingsFormOptionForm": {
 			"type": "array"
+		},
+		"settingsFormOptionFormId": {
+			"type": "string"
 		}
 	}
 }

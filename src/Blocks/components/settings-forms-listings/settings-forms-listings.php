@@ -19,8 +19,8 @@ $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $settingsFormsListingsPageTitle = Components::checkAttr('settingsFormsListingsPageTitle', $attributes, $manifest);
 $settingsFormsListingsSubTitle = Components::checkAttr('settingsFormsListingsSubTitle', $attributes, $manifest);
+$settingsFormsListingsNewFormLink = Components::checkAttr('settingsFormsListingsNewFormLink', $attributes, $manifest);
 $settingsFormsListingsForms = Components::checkAttr('settingsFormsListingsForms', $attributes, $manifest);
-$settingsFormsListingsPostType = Components::checkAttr('settingsFormsListingsPostType', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -37,7 +37,7 @@ $layoutClass = Components::classnames([
 			</div>
 
 			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-				<a href="<?php echo esc_url("/wp-admin/post-new.php?post_type={$settingsFormsListingsPostType}"); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+				<a href="<?php echo esc_url($settingsFormsListingsNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
 					<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
 				</a>

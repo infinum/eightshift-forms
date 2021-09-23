@@ -1,4 +1,5 @@
 .es-field {
+	$this: &;
 	margin-bottom: 10px;
 	display: grid;
 	column-gap: 20px;
@@ -28,4 +29,9 @@
 		grid-column-end: 13;
 		margin-top: 5px;
 	}
+}
+
+legend.es-field__label {
+	padding-top: 12px;
+	margin-bottom: -18px;
 }

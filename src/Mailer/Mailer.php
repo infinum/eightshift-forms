@@ -52,34 +52,6 @@ class Mailer implements MailerInterface
 	}
 
 	/**
-	 * Send email function
-	 *
-	 * @param string $to Email to.
-	 * @param string $subject Email subject.
-	 * @param string $template Email template.
-	 * @param array $headers Email header.
-	 * @param array $files Email files.
-	 * @param array $fields Email fields.
-	 *
-	 * @return boolean
-	 */
-	public function sendEmail(string $to, string $subject, string $template = '', array $headers = [], array $files = [], array $fields = []): bool
-	{
-		if (!$headers) {
-			$headers = $this->getHeader(
-				Config::getMailerSenderEmail(),
-				Config::getMailerSenderName()
-			);
-		}
-
-		if (!$template) {
-			$template = $this->getTemplate($fields);
-		}
-
-		return \wp_mail($to, $subject, $template, $headers, $files);
-	}
-
-	/**
 	 * Get Email type
 	 *
 	 * @return string

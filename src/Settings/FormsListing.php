@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
-use EightshiftForms\AdminMenus\FormOptionAdminSubMenu;
+use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 
 /**
@@ -26,9 +26,6 @@ class FormsListing implements FormListingInterface
 	 */
 	public function getFormsList(): array
 	{
-		$postType = Forms::POST_TYPE_SLUG;
-		$optionPageSlug = FormOptionAdminSubMenu::ADMIN_MENU_SLUG;
-
 		$args = [
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
@@ -47,8 +44,8 @@ class FormsListing implements FormListingInterface
 					'title' => get_the_title($id),
 					'slug' => \get_the_permalink($id),
 					'status' => \get_post_status($id),
-					'settingsLink' => "/wp-admin/edit.php?post_type={$postType}&page={$optionPageSlug}&formId={$id}",
-					'editLink' => "/wp-admin/post.php?post={$id}&action=edit",
+					'settingsLink' => Config::getOptionsPageUrl((string) $id),
+					'editLink' => Config::getFormEditPageUrl((string) $id),
 				];
 			}
 		}

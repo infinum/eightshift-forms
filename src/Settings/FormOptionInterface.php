@@ -13,12 +13,14 @@ namespace EightshiftForms\Settings;
 /**
  * Interface for admin content listing
  */
-interface FormBuilderInterface
+interface FormOptionInterface
 {
 	/**
 	 * Set all settings page field keys.
 	 *
+	 * @param string $formId Form ID.
+	 *
 	 * @return array
 	 */
-	public function getFormFields(): array;
+	public function getFormFields(string $formId): array;
 }

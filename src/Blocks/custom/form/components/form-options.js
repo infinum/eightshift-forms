@@ -21,7 +21,7 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 			>
 				<Button
 					label={__('Open Form Settings Page', 'eightshift-forms')}
-					href={`${settingsPageUrl}${formId}`}
+					href={`${settingsPageUrl}&formId=${formId}&setting=general`}
 					isSecondary
 				>
 					{__('Open Form Settings', 'eightshift-forms')}

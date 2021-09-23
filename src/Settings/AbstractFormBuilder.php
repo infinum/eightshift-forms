@@ -18,7 +18,7 @@ use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * FormBuilder class.
  */
-abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInterface
+abstract class AbstractFormBuilder implements FormOptionInterface, ServiceInterface
 {
 	/**
 	 * Use General helper trait.
@@ -39,7 +39,7 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 	 */
 	public function register(): void
 	{
-		\add_filter(self::SETTINGS_PAGE_FORM_BUILDER, [$this, 'buildForm'], 10, 2);
+		\add_filter(self::SETTINGS_PAGE_FORM_BUILDER, [$this, 'buildForm'], 10, 3);
 	}
 
 	/**
@@ -47,10 +47,11 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 	 *
 	 * @param array $formItems Form array to build from.
 	 * @param string $formId Form ID.
+	 * @param bool $refresh To refresh form after success or not.
 	 *
 	 * @return string
 	 */
-	public function buildForm(array $formItems, string $formId): string
+	public function buildForm(array $formItems, string $formId, bool $refresh = false): string
 	{
 		$form = '';
 
@@ -67,13 +68,21 @@ abstract class AbstractFormBuilder implements FormBuilderInterface, ServiceInter
 			true
 		);
 
+		$formProps = [
+			'formContent' => $form,
+			'formMethod' => 'POST',
+			'formPostId' => $formId,
+		];
+
+		if ($refresh) {
+			$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+			$formProps['formSuccessRedirect'] = admin_url(sprintf(basename($request)));
+		}
+
 		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'form',
-			Components::props('form', [], [
-				'formContent' => $form,
-				'formMethod' => 'POST',
-				'formPostId' => $formId,
-			]),
+			Components::props('form', [], $formProps),
 			'',
 			true
 		);
