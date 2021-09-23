@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, IconToggle } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, ComponentUseToggle } from '@eightshift/frontend-libs/scripts';
+import { TextControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, ComponentUseToggle, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import manifest from '../manifest.json';
 

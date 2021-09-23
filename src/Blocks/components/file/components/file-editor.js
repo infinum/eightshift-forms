@@ -26,6 +26,7 @@ export const FileEditor = (attributes) => {
 			className={fileClass}
 			type={'file'}
 			readOnly
+			disabled
 		/>
 	);
 

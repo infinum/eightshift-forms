@@ -29,6 +29,7 @@
 	&__label {
 		position: relative;
 		padding-left: calc(var(--es-checkbox-scoped-icon-size) + 10px);
+		min-height: var(--es-checkbox-scoped-icon-size);
 		cursor: pointer;
 
 		&::after {

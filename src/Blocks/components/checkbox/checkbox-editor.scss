@@ -1,0 +1,15 @@
+// stylelint-disable declaration-no-important
+
+.es-checkbox {
+	&__input {
+		display: none !important;
+	}
+
+	&:last-child {
+		--es-checkbox-scoped-spacing: 10px;
+	}
+
+	&__label--placeholder {
+		opacity: 0.5;
+	}
+}

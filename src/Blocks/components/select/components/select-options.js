@@ -9,7 +9,7 @@ import {
 	IconLabel,
 	IconToggle,
 	props,
-	ComponentUseToggle
+	ComponentUseToggle,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from '../manifest.json';

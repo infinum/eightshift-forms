@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
@@ -21,7 +22,11 @@ export const RadioEditor = (attributes) => {
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
-	
+
+	const radioLabelClass = classnames([
+		selector(componentClass, componentClass, 'label'),
+		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
+	]);
 
 	return (
 		<div className={radioClass}>
@@ -31,8 +36,8 @@ export const RadioEditor = (attributes) => {
 					type={'radio'}
 					readOnly
 				/>
-				<label className={`${componentClass}__label`}>
-					{radioLabel}
+				<label className={radioLabelClass}>
+					{radioLabel ? radioLabel : __('Enter radio label in sidebar.', 'eightshift-forms')}
 				</label>
 			</div>
 		</div>

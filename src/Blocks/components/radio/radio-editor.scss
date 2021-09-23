@@ -1,0 +1,15 @@
+// stylelint-disable declaration-no-important
+
+.es-radio {
+	&__input {
+		display: none !important;
+	}
+
+	&:last-child {
+		--es-radio-scoped-spacing: 10px;
+	}
+
+	&__label--placeholder {
+		opacity: 0.5;
+	}
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
@@ -21,7 +22,11 @@ export const CheckboxEditor = (attributes) => {
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
-	
+
+	const checkboxLabelClass = classnames([
+		selector(componentClass, componentClass, 'label'),
+		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
+	]);
 
 	return (
 		<div className={checkboxClass}>
@@ -31,8 +36,8 @@ export const CheckboxEditor = (attributes) => {
 					type={'checkbox'}
 					readOnly
 				/>
-				<label className={`${componentClass}__label`}>
-					{checkboxLabel}
+				<label className={checkboxLabelClass}>
+					{checkboxLabel ? checkboxLabel : __('Enter checkbox label in sidebar.', 'eightshift-forms')}
 				</label>
 			</div>
 		</div>

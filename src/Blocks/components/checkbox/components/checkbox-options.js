@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, IconToggle } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, ComponentUseToggle } from '@eightshift/frontend-libs/scripts';
+import { TextControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons, ComponentUseToggle, IconToggle } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const CheckboxOptions = (attributes) => {
