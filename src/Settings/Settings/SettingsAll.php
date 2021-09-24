@@ -60,6 +60,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			$output['forms'][$value] = $this->buildForm(
 				$data['form'] ?? [],
 				$formId,
+				true,
 				$type === SettingsGeneral::TYPE_KEY
 			);
 
@@ -73,7 +74,6 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		if (empty($type)) {
 			$type = SettingsGeneral::TYPE_KEY;
 		}
-		// var_dump($output);
 
 		return [
 			'sidebar' => $output['sidebar'],

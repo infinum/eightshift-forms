@@ -32,8 +32,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	public const TYPE_KEY = 'mailchimp';
 
 	// Use keys.
-	public const MAILCHIMP_API_KEY = 'mailchimp_api_key';
-	public const MAILCHIMP_FORM_URL = 'mailchimp_form_url';
+	public const MAILCHIMP_API_KEY_KEY = 'mailchimpApiKey';
+	public const MAILCHIMP_FORM_URL_KEY = 'mailchimpFormUrl';
 
 	/**
 	 * Register all the hooks
@@ -68,8 +68,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 				],
 				[
 					'component' => 'input',
-					'inputName' => self::MAILCHIMP_API_KEY,
-					'inputId' => self::MAILCHIMP_API_KEY,
+					'inputName' => self::MAILCHIMP_API_KEY_KEY,
+					'inputId' => self::MAILCHIMP_API_KEY_KEY,
 					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 					'inputType' => 'text',
@@ -79,8 +79,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 				],
 				[
 					'component' => 'input',
-					'inputName' => self::MAILCHIMP_FORM_URL,
-					'inputId' => self::MAILCHIMP_FORM_URL,
+					'inputName' => self::MAILCHIMP_FORM_URL_KEY,
+					'inputId' => self::MAILCHIMP_FORM_URL_KEY,
 					'inputFieldLabel' => \__('Form Url', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Provide Signup form URL from your Mailchimp form builder.', 'eightshift-forms'),
 					'inputType' => 'text',

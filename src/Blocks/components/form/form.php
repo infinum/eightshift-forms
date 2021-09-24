@@ -37,43 +37,49 @@ $formClass = Components::classnames([
 
 ?>
 
-<form
-	class="<?php echo esc_attr($formClass); ?>"
-	name="<?php echo esc_attr($formName); ?>"
-	id="<?php echo esc_attr($formId); ?>"
-	action="<?php echo esc_attr($formAction); ?>"
-	method="<?php echo esc_attr($formMethod); ?>"
-	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
-	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
-	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
->
-	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'global-msg',
-		Components::props('globalMsg', $attributes, [
-			'blockClass' => $componentClass
-		])
-	);
-	?>
+<?php if ($formIntegration === 'none') { ?>
+	<form
+		class="<?php echo esc_attr($formClass); ?>"
+		name="<?php echo esc_attr($formName); ?>"
+		id="<?php echo esc_attr($formId); ?>"
+		action="<?php echo esc_attr($formAction); ?>"
+		method="<?php echo esc_attr($formMethod); ?>"
+		data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
+		data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
+		data-form-post-id="<?php echo esc_attr($formPostId); ?>"
+	>
+		<?php
+		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'global-msg',
+			Components::props('globalMsg', $attributes, [
+				'blockClass' => $componentClass
+			])
+		);
+		?>
 
-	<?php if ($formIntegration === 'none') { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 			<?php
 			echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
 			?>
 		</div>
-	<?php } ?>
 
-	<?php if ($formIntegration !== 'none') { ?>
-		<?php echo apply_filters(MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME, Helper::encryptor('decrypt', $formPostId)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	<?php } ?>
-
+		<?php
+		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			'loader',
+			Components::props('loader', $attributes, [
+				'blockClass' => $componentClass
+			])
+		);
+		?>
+	</form>
+<?php } else { ?>
 	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'loader',
-		Components::props('loader', $attributes, [
-			'blockClass' => $componentClass
-		])
-	);
+	if ($formPostId) {
+		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME,
+			$formPostId,
+			$formSuccessRedirect
+		);
+	}
 	?>
-</form>
+<?php }

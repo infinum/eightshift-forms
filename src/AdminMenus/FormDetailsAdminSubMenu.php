@@ -153,7 +153,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
-			'settingsDetailsPageTitle' => \esc_html__('From Options', 'eightshift-forms'),
+			'settingsDetailsPageTitle' => sprintf(\esc_html__('From Options - %s', 'eightshift-forms'), get_the_title($formId)),
 			'settingsDetailsSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
 			'settingsDetailsBackLink' => Config::getListingPageUrl(),
 			'settingsDetailsLink' => Config::getOptionsPageUrl($formId, ''),

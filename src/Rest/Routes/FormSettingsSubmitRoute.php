@@ -63,7 +63,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 			$postParams = $params['post'];
 
-			$formId = $this->getFormId($postParams);
+			$formId = $this->getFormId($postParams, true);
 
 			$postParams = $this->removeUneceseryParams($postParams);
 

@@ -67,7 +67,7 @@ $layoutClass = Components::classnames([
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__heading"); ?>">
 				<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-					<?php echo sprintf('%s - %s', esc_html($settingsDetailsPageTitle), esc_html($settingsDetailsFormId)); ?>
+					<?php echo esc_html($settingsDetailsPageTitle); ?>
 				</div>
 
 				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">

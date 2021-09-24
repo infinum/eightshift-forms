@@ -1,6 +1,7 @@
 import React from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr, ServerSideRender } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FormEditor = (attributes) => {
@@ -12,7 +13,6 @@ export const FormEditor = (attributes) => {
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
-		blockFullName,
 	} = attributes;
 
 	const formContent = checkAttr('formContent', attributes, manifest);
@@ -26,13 +26,16 @@ export const FormEditor = (attributes) => {
 
 	return (
 		<>
-			<form className={formClass}>
-				{formIntegration === 'none' &&
+			{formIntegration === 'none' ?
+				<form className={formClass}>
 					<div className={`${componentClass}__fields`}>
 						{formContent}
 					</div>
+				</form> :
+				<div className={`${componentClass}__integration`}>
+					{sprintf(__('Your %s form will be displayed here on the frontend.', 'eightshift-forms'), formIntegration)}
+				</div>
 				}
-			</form>
 		</>
 	);
 };

@@ -110,9 +110,6 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 					'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
 					'textareaIsRequired' => true,
 				],
-				[
-					'component' => 'divider',
-				],
 			]
 		];
 	}

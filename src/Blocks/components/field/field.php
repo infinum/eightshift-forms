@@ -51,9 +51,11 @@ if ($fieldType === 'fieldset') {
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
-	<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-		<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	</div>
+	<?php if ($fieldHelp) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+	<?php } ?>
 	<?php
 	if ($fieldUseError) {
 		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

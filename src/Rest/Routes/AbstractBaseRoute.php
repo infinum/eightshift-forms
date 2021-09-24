@@ -172,6 +172,20 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$postParams = $this->sanitizeFields($request->get_body_params());
 		$files = $this->sanitizeFields($request->get_file_params());
 
+		$params = $this->fixNestedParams($params);
+		$postParams = $this->fixNestedParams($postParams);
+
+		foreach ($params as $paramKey => $paramValue) {
+			if (is_array($paramValue)) {
+				foreach ($paramValue as $itemsKey => $itemsValue) {
+					foreach ($itemsValue as $itemKey => $itemValue) {
+						$params["{$paramKey}[{$itemsKey}][{$itemKey}]"] = $itemValue;
+					}
+				}
+				unset($params[$paramKey]);
+			}
+		}
+
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
 			if (
@@ -283,6 +297,29 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 			if ($key === 'es-form-post-id') {
 				unset($params['es-form-post-id']);
+			}
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Fix nested params
+	 *
+	 * @param array $params Prams array
+	 *
+	 * @return array
+	 */
+	protected function fixNestedParams(array $params): array
+	{
+		foreach ($params as $paramKey => $paramValue) {
+			if (is_array($paramValue)) {
+				foreach ($paramValue as $itemsKey => $itemsValue) {
+					foreach ($itemsValue as $itemKey => $itemValue) {
+						$params["{$paramKey}[{$itemsKey}][{$itemKey}]"] = $itemValue;
+					}
+				}
+				unset($params[$paramKey]);
 			}
 		}
 

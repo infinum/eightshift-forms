@@ -1,0 +1,10 @@
+.es-form {
+	&__integration {
+		background-color: var(--global-colors-es-alto);
+		width: 100%;
+		height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

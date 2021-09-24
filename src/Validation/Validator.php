@@ -66,6 +66,7 @@ class Validator extends AbstractValidation
 		$output = [];
 
 		foreach ($params as $paramKey => $paramValue) {
+
 			$inputDetails = json_decode($paramValue, true);
 
 			$inputData = $inputDetails['data'] ?? [];
