@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
-use EightshiftFormsPluginVendor\EightshiftLibs\Main\AbstractMain;
+use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
 
 /**
  * The main start class.

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Hubspot Settings Options class.
+ * Hubspot Settings class.
  *
  * @package EightshiftForms\Integrations\Hubspot
  */
@@ -12,22 +12,26 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Settings\Settings\SettingsTypeInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Hubspot integration class.
+ * SettingsHubspot class.
  */
 class SettingsHubspot implements SettingsTypeInterface, ServiceInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
-	// Filter name key.
+	/**
+	 * Filter name key.
+	 */
 	public const FILTER_NAME = 'esforms_settings_hubspot';
 
-	// Settings key.
+	/**
+	 * Settings key.
+	 */
 	public const TYPE_KEY = 'hubspot';
 
 	/**
@@ -41,11 +45,13 @@ class SettingsHubspot implements SettingsTypeInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form options array
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(): array
+	public function getSettingsTypeData(string $formId): array
 	{
 		return [
 			'sidebar' => [

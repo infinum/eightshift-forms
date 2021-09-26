@@ -6,10 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
 
-$unique = apply_filters(Blocks::BLOCKS_UNIQUE_STRING_FILTER_NAME, '');
+$unique = Components::getUnique();
 
 $fileName = $attributes['fileFileName'] ?? '';
 $fileId = $attributes['fileFileId'] ?? '';

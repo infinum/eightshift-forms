@@ -1,6 +1,6 @@
 {
-	"name": "@eightshift/eightshift-forms-plugin",
-	"version": "1.2.2",
+	"name": "@eightshift/eightshift-forms",
+	"version": "1.0.0",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
@@ -13,12 +13,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/infinum/eightshift-forms-plugin.git"
+		"url": "git+https://github.com/infinum/eightshift-forms.git"
 	},
 	"bugs": {
-		"url": "https://github.com/infinum/eightshift-forms-plugin/issues"
+		"url": "https://github.com/infinum/eightshift-forms/issues"
 	},
-	"homepage": "https://github.com/infinum/eightshift-forms-plugin#readme",
+	"homepage": "https://github.com/infinum/eightshift-forms#readme",
 	"scripts": {
 		"__eslintTheme": "eslint src/**/*.js",
 		"__stylelintTheme": "stylelint src/**/*.scss",

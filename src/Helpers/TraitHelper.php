@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Trait that holds all generic helpers.
+ * Trait that holds all generic helpers used in classes.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -29,7 +29,19 @@ trait TraitHelper
 	}
 
 	/**
-	 * Get filed name with locale and prefix.
+	 * Get option value.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return string
+	 */
+	public function getOptionValue(string $key): string
+	{
+		return (string) \get_option($this->getSettingsName($key), false);
+	}
+
+	/**
+	 * Get string name with locale.
 	 *
 	 * @param string $string Providing string to append to.
 	 *
@@ -49,8 +61,8 @@ trait TraitHelper
 	{
 		$locale = get_locale();
 
-		if (\has_filter('es_set_locale')) {
-			$locale = \apply_filters('es_set_locale', $locale);
+		if (\has_filter('es_forms_set_locale')) {
+			$locale = \apply_filters('es_forms_set_locale', $locale);
 		}
 
 		return $locale;

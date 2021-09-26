@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\FormSubmitRoute;
-use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueTheme

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Variables class, used for defining available Variables
+ * The Variables class, used for defining available variables.
  *
  * @package EightshiftForms\Hooks
  */
@@ -15,7 +15,6 @@ namespace EightshiftForms\Hooks;
  */
 class Variables
 {
-
 	/**
 	 * Get API Key for Hubspot.
 	 *

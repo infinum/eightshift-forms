@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for admin sub menu example.
+ * Class that holds class for admin sub menu - Form Listing.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Listing\FormListingInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
  * FormListingAdminMenu class.
@@ -21,7 +21,7 @@ use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 class FormListingAdminMenu extends AbstractAdminMenu
 {
 	/**
-	 * Instance variable of form options data.
+	 * Instance variable of form listing data.
 	 *
 	 * @var FormListingInterface
 	 */
@@ -30,7 +30,7 @@ class FormListingAdminMenu extends AbstractAdminMenu
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormListingInterface $formsListing Inject documentsData which holds form options data.
+	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
 	public function __construct(FormListingInterface $formsListing)
 	{
@@ -184,7 +184,7 @@ class FormListingAdminMenu extends AbstractAdminMenu
 		return [
 			'settingsFormsListingsPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
 			'settingsFormsListingsSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
-			'settingsFormsListingsNewFormLink' => Config::getNewFormPageUrl(),
+			'settingsFormsListingsNewFormLink' => Helper::getNewFormPageUrl(),
 			'settingsFormsListingsForms' => $this->formsListing->getFormsList(),
 		];
 	}

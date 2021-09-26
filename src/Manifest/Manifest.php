@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Manifest;
 
 use EightshiftForms\Config\Config;
-use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\AbstractManifest;
+use EightshiftFormsVendor\EightshiftLibs\Manifest\AbstractManifest;
 
 /**
  * Class Manifest

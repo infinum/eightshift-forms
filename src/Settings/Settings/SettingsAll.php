@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds all settings for form.
+ * Class that holds data for admin forms settings.
  *
  * @package EightshiftForms\Settings\Settings
  */
@@ -36,7 +36,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 	];
 
 	/**
-	 * Set all settings.
+	 * Get all settings array for building settings page.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
@@ -47,34 +47,50 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 	{
 		$output = [];
 
+		// Loop all settings.
 		foreach (self::SETTINGS as $key => $filter) {
+
+			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
 			}
 
+			// Get filter data.
 			$data = apply_filters($filter, $formId);
+
+			// Check sidebar value for type.
 			$value = $data['sidebar']['value'] ?? '';
+
+			// Check required field settings page that always stays on the page.
 			$isRequired = $data['isRequired'] ?? false;
 
+			// Populate sidebar data.
 			$output['sidebar'][$value] = $data['sidebar'] ?? [];
-			$output['forms'][$value] = $this->buildForm(
+
+			// Populate and build form.
+			$output['forms'][$value] = $this->buildSettingsForm(
 				$data['form'] ?? [],
-				$formId,
-				true,
-				$type === SettingsGeneral::TYPE_KEY
+				[
+					'formPostId' => $formId,
+					'formSuccessRedirect' => $type === SettingsGeneral::TYPE_KEY,
+				]
 			);
 
+			// Check if settings is set to be used if not hide options page.
 			$isUsed = \get_post_meta($formId, $this->getSettingsName("{$key}Use"), true) ?? false;
 
+			// Always leave required settings on the page.
 			if (!$isUsed && !$isRequired) {
 				unset($output['sidebar'][$value]);
 			}
 		}
 
+		// If type key is empty use general settings.
 		if (empty($type)) {
 			$type = SettingsGeneral::TYPE_KEY;
 		}
 
+		// Return all settings data.
 		return [
 			'sidebar' => $output['sidebar'],
 			'form' => $output['forms'][$type],

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Config\Config;
-use EightshiftFormsPluginVendor\EightshiftLibs\Blocks\AbstractBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
  * Class Blocks
@@ -61,9 +61,6 @@ class Blocks extends AbstractBlocks
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 
-		// Blocks unique string filter name constant.
-		\add_filter(static::BLOCKS_UNIQUE_STRING_FILTER_NAME, [$this, 'getUniqueString']);
-
 		// Blocks string to value filter name constant.
 		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);
 	}
@@ -107,17 +104,8 @@ class Blocks extends AbstractBlocks
 	}
 
 	/**
-	 * Set Unique string.
-	 *
-	 * @return string
-	 */
-	public function getUniqueString(): string
-	{
-		return bin2hex(random_bytes(10));
-	}
-
-	/**
-	 * Convert string to alue.
+	 * Convert string to value.
+	 * Remove unecesery spaces, underscores or special chars.
 	 *
 	 * @param string $string String to convert.
 	 *

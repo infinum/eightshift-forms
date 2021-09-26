@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for $className endpoint
+ * The class register route for Form Settings endpoint
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -18,6 +18,9 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
 
+	/**
+	 * Route slug.
+	 */
 	public const ROUTE_SLUG = '/form-settings-submit';
 
 	/**
@@ -58,18 +61,22 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 	// Try catch request.
 		try {
-			$formId = $this->getFormId($request->get_body_params());
-			$params = $this->verifyRequest($request, $formId);
+			// Validate request.
+			$params = $this->verifyRequest($request);
 
 			$postParams = $params['post'];
 
-			$formId = $this->getFormId($postParams, true);
+			// Get normal form ID string.
+			$formId = $this->getFormId($postParams);
 
+			// Remove unecesery params.
 			$postParams = $this->removeUneceseryParams($postParams);
 
+			// Save all fields in the settings.
 			foreach ($postParams as $key => $value) {
 				$value = json_decode($value, true);
 
+				// Check if key needs updating or deleting.
 				if ($value['value']) {
 					\update_post_meta($formId, $key, $value['value']);
 				} else {

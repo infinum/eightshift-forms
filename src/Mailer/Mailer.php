@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register mailer
+ * The class for sending emails.
  *
  * @package EightshiftForms\Mailers
  */
@@ -18,7 +18,7 @@ use EightshiftForms\Helpers\TraitHelper;
 class Mailer implements MailerInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
@@ -30,27 +30,32 @@ class Mailer implements MailerInterface
 	 * @param array $files Email files.
 	 * @param array $fields Email fields.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function sendFormEmail(string $formId, string $to, array $files = [], array $fields = []): bool
 	{
+		// Get header options from form settings.
 		$headers = $this->getHeader(
 			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_EMAIL_KEY, $formId),
 			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_NAME_KEY, $formId)
 		);
 
+		// Generate HTML form for sending with form fields.
 		$template = $this->getTemplate(
 			$fields,
 			$this->getSettingsValue(SettingsMailer::MAILER_TEMPLATE_KEY, $formId)
 		);
 
+		// Populate subject from form settings.
 		$subject = $this->getSettingsValue(SettingsMailer::MAILER_SUBJECT_KEY, $formId);
 
+		// Send email.
 		return \wp_mail($to, $subject, $template, $headers, $files);
 	}
 
 	/**
-	 * Get Email type
+	 * Get Email type.
+	 * We use HTML for all.
 	 *
 	 * @return string
 	 */
@@ -60,7 +65,7 @@ class Mailer implements MailerInterface
 	}
 
 	/**
-	 * Get email from string
+	 * Get email from.
 	 *
 	 * @param string $email Email string.
 	 * @param string $name Name string.

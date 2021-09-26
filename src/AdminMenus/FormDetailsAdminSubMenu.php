@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for admin sub menu example.
+ * Class that holds class for admin sub menu - Form Details.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsAllInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
-use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
+use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
  * FormDetailsAdminSubMenu class.
@@ -22,7 +22,7 @@ use EightshiftFormsPluginVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable of form options data.
+	 * Instance variable of form all settings.
 	 *
 	 * @var SettingsAllInterface
 	 */
@@ -31,7 +31,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsAllInterface $settingsAll Inject documentsData which holds form options data.
+	 * @param SettingsAllInterface $settingsAll Inject form all settings data.
 	 */
 	public function __construct(SettingsAllInterface $settingsAll)
 	{
@@ -154,9 +154,9 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 
 		return [
 			'settingsDetailsPageTitle' => sprintf(\esc_html__('From Options - %s', 'eightshift-forms'), get_the_title($formId)),
-			'settingsDetailsSubTitle' => \esc_html__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
-			'settingsDetailsBackLink' => Config::getListingPageUrl(),
-			'settingsDetailsLink' => Config::getOptionsPageUrl($formId, ''),
+			'settingsDetailsSubTitle' => \esc_html__('On form settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
+			'settingsDetailsBackLink' => Helper::getListingPageUrl(),
+			'settingsDetailsLink' => Helper::getOptionsPageUrl($formId, ''),
 			'settingsDetailsData' => $this->settingsAll->getSettingsAll($formId, $type),
 			'settingsDetailsType' => !empty($type) ? $type : SettingsGeneral::TYPE_KEY,
 			'settingsDetailsFormId' => $formId,

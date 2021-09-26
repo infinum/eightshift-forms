@@ -15,10 +15,10 @@ use EightshiftForms\Helpers\TraitHelper;
 /**
  * Labels class.
  */
-class Labels implements InterfaceLabels
+class Labels implements LabelsInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
@@ -39,7 +39,6 @@ class Labels implements InterfaceLabels
 			'validationMinSize' => __('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
-
 			'mailerErrorEmailNotSent' => __('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-forms'),
 			'mailerSuccessSend' => __('Success', 'eightshift-forms'),
 		];
@@ -53,12 +52,16 @@ class Labels implements InterfaceLabels
 	 *
 	 * @return string
 	 */
-	public function getLabel(string $key, string $formId): string
+	public function getLabel(string $key, string $formId = ''): string
 	{
-		$dbLabel = $this->getSettingsValue($key, $formId);
+		// If form ID is not missing check form settings for the overrides.
+		if (!empty($formId)) {
+			$dbLabel = $this->getSettingsValue($key, $formId);
 
-		if (!empty($dbLabel)) {
-			return $dbLabel;
+			// If there is an override in the DB use that.
+			if (!empty($dbLabel)) {
+				return $dbLabel;
+			}
 		}
 
 		$labels = $this->getLabels();

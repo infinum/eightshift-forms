@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Config\Config;
-use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
  * Enqueue_Blocks class.

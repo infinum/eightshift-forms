@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Validation Settings Options class.
+ * Validation Settings class.
  *
  * @package EightshiftForms\Validation
  */
@@ -11,39 +11,43 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Labels\InterfaceLabels;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\SettingsTypeInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Validation integration class.
+ * SettingsValidation class.
  */
 class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
-	// Filter name key.
+	/**
+	 * Filter name key.
+	 */
 	public const FILTER_NAME = 'esforms_settings_validation';
 
-	// Settings key.
+	/**
+	 * Settings key.
+	 */
 	public const TYPE_KEY = 'validation';
 
 	/**
 	 * Instance variable of form labels data.
 	 *
-	 * @var InterfaceLabels
+	 * @var LabelsInterface
 	 */
 	protected $labels;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param InterfaceLabels $labels Inject documentsData which holds form labels data.
+	 * @param LabelsInterface $labels Inject documentsData which holds form labels data.
 	 */
-	public function __construct(InterfaceLabels $labels)
+	public function __construct(LabelsInterface $labels)
 	{
 		$this->labels = $labels;
 	}
@@ -59,11 +63,13 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form options array
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(): array
+	public function getSettingsTypeData(string $formId): array
 	{
 		return [
 			'sidebar' => [
@@ -71,7 +77,7 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 				'value' => self::TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
-			'form' => $this->getFields(),
+			'form' => $this->getFields($formId),
 		];
 	}
 
@@ -80,7 +86,7 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 	 *
 	 * @return array
 	 */
-	public function getFields(): array
+	public function getFields(string $formId): array
 	{
 		$output = [
 			[
@@ -90,13 +96,15 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 			],
 		];
 
+		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
 			$output[] = [
 				'component' => 'input',
-				'inputName' => $key,
-				'inputId' => $key,
+				'inputName' => $this->getSettingsName($key),
+				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => ucfirst($key),
 				'inputPlaceholder' => $label,
+				'inputValue' => \get_post_meta($formId, $this->getSettingsName($key), true),
 			];
 		}
 

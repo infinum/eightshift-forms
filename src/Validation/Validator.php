@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Labels\InterfaceLabels;
-use EightshiftForms\Labels\Labels;
+use EightshiftForms\Labels\LabelsInterface;
 
 /**
  * Class Validator
@@ -22,16 +20,16 @@ class Validator extends AbstractValidation
 	/**
 	 * Instance variable of form labels data.
 	 *
-	 * @var InterfaceLabels
+	 * @var LabelsInterface
 	 */
 	protected $labels;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param InterfaceLabels $labels Inject documentsData which holds form labels data.
+	 * @param LabelsInterface $labels Inject documentsData which holds form labels data.
 	 */
-	public function __construct(InterfaceLabels $labels)
+	public function __construct(LabelsInterface $labels)
 	{
 		$this->labels = $labels;
 	}
@@ -39,13 +37,13 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param string $formId Form Id.
 	 * @param array $params Get params.
 	 * @param array $files Get files.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function validate(string $formId, array $params = [], array $files = []): array
+	public function validate(array $params = [], array $files = [], string $formId = ''): array
 	{
 		return array_merge(
 			$this->validateParams($params, $formId),
@@ -105,7 +103,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @return array
 	 */
-	private function validateFiles(array $files, array $params, string $formId): array
+	private function validateFiles(array $files, array $params, string $formId = ''): array
 	{
 		$output = [];
 

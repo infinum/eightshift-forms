@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Exception;
 
-use EightshiftFormsPluginVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
+use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 
 /**
  * UnverifiedRequestException class.

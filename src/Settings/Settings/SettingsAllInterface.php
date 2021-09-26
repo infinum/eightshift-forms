@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface that holds all methods for building admin settings pages forms.
+ * Class that holds data for admin forms settings.
  *
  * @package EightshiftForms\Settings\Settings
  */
@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 /**
- * Interface for admin content listing
+ * Interface for SettingsAllInterface
  */
 interface SettingsAllInterface
 {
 	/**
-	 * Set all settings page field keys.
+	 * Get all settings array for building settings page.
 	 *
 	 * @param string $formId Form ID.
-	 * @param string $Option Form Type to show.
+	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsAll(string $formId, string $option): array;
+	public function getSettingsAll(string $formId, string $type): array;
 }

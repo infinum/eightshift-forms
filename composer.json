@@ -1,5 +1,5 @@
 {
-	"name": "eightshift/eightshift-forms-plugin",
+	"name": "eightshift/eightshift-forms",
 	"description": "Eightshift Forms plugin for building developer-friendly Gutenberg-ready forms in WordPress",
 	"keywords": [
 		"composer",
@@ -23,8 +23,8 @@
 		}
 	],
 	"support": {
-		"issues": "https://github.com/infinum/eightshift-forms-plugin/issues",
-		"source": "https://github.com/infinum/eightshift-forms-plugin"
+		"issues": "https://github.com/infinum/eightshift-forms/issues",
+		"source": "https://github.com/infinum/eightshift-forms"
 	},
 	"require-dev": {
 		"infinum/eightshift-coding-standards": "^1.1",
@@ -63,7 +63,7 @@
 	},
 	"extra": {
 		"imposter": {
-			"namespace": "EightshiftFormsPluginVendor"
+			"namespace": "EightshiftFormsVendor"
 		}
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * General Settings Options class.
+ * General Settings class.
  *
  * @package EightshiftForms\Settings\Settings
  */
@@ -11,22 +11,26 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Mailer integration class.
+ * SettingsGeneral class.
  */
 class SettingsGeneral implements SettingsTypeInterface, ServiceInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
-	// Filter name key.
+	/**
+	 * Filter name key.
+	 */
 	public const FILTER_NAME = 'esforms_settings_general';
 
-	// Settings key.
+	/**
+	 * Settings key.
+	 */
 	public const TYPE_KEY = 'general';
 
 	/**
@@ -40,11 +44,13 @@ class SettingsGeneral implements SettingsTypeInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form options array
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(): array
+	public function getSettingsTypeData(string $formId): array
 	{
 		$output = [
 			'isRequired' => true,
@@ -70,22 +76,28 @@ class SettingsGeneral implements SettingsTypeInterface, ServiceInterface
 			]
 		];
 
+		// Check all settings and build checkboxes.
 		foreach (SettingsAll::SETTINGS as $key => $value) {
 			if ($key === self::TYPE_KEY) {
 				continue;
 			}
 
-			$name = "{$key}Use";
+			// Determin the correct setting name.
+			$name = $this->getSettingsName("{$key}Use");
+
+			// Check for saved data.
+			$value = \get_post_meta($formId, $name, true);
 
 			$items['checkboxesContent'][] = [
 				'component' => 'checkbox',
 				'checkboxName' => $name,
 				'checkboxId' => $name,
 				'checkboxLabel' => sprintf(__('Use %s', 'eightshift-forms'), ucfirst($key)),
-				'checkboxValue' => 'true',
+				'checkboxIsChecked' => !empty($value)
 			];
 		}
 
+		// Merge checkboxes to the original output array.
 		$output['form'] = array_merge($output['form'], [$items]);
 
 		return $output;

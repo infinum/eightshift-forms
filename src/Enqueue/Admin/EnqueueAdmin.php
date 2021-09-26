@@ -12,8 +12,8 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\FormSettingsSubmitRoute;
-use EightshiftFormsPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
  * Class EnqueueAdmin

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for FormsPostType custom post type registration.
+ * Class that holds class for FormsPostType custom post type registration.
  *
  * @package EightshiftForms\CustomPostType
  */
@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CustomPostType;
 
-use EightshiftFormsPluginVendor\EightshiftLibs\CustomPostType\AbstractPostType;
+use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
  * Class FormsPostType.

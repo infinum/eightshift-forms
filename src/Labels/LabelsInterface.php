@@ -13,7 +13,7 @@ namespace EightshiftForms\Labels;
 /**
  * Labels Interface.
  */
-interface InterfaceLabels
+interface LabelsInterface
 {
 	/**
 	 * Get all labels
@@ -30,5 +30,5 @@ interface InterfaceLabels
 	 *
 	 * @return string
 	 */
-	public function getLabel(string $key, string $formId): string;
+	public function getLabel(string $key, string $formId = ''): string;
 }

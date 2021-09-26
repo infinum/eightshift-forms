@@ -10,11 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftFormsPluginVendor\PHPHtmlParser\Dom;
+use EightshiftFormsVendor\PHPHtmlParser\Dom;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Settings\Settings\AbstractFormBuilder;
-use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * MailchimpMapper integration class.
@@ -22,13 +21,18 @@ use EightshiftFormsPluginVendor\EightshiftLibs\Services\ServiceInterface;
 class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
-	// Filter name.
+	/**
+	 * Filter Name
+	 */
 	public const MAILCHIMP_MAPPER_FILTER_NAME = 'es_mailchimp_mapper_filter';
 
+	/**
+	 * Transient cache name.
+	 */
 	public const MAILCHIMP_MAPPER_TRANSIENT_NAME = 'es_mailchimp_mapper_cache';
 
 	/**
@@ -40,37 +44,45 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	{
 
 		// Blocks string to value filter name constant.
-		\add_filter(static::MAILCHIMP_MAPPER_FILTER_NAME, [$this, 'getMapper'], 10, 2);
+		\add_filter(static::MAILCHIMP_MAPPER_FILTER_NAME, [$this, 'getMapper']);
 	}
 
 	/**
 	 * Map Mailchimp form to our components.
 	 *
-	 * @param string $formId Form ID.
-	 * @param string $redirect Redirect Url.
+	 * @param array $formAdditionalProps Additional props to pass to form.
 	 *
 	 * @return string
 	 */
-	public function getMapper(string $formId, string $redirect = ''): string
+	public function getMapper(array $formAdditionalProps): string
 	{
 		$build = get_transient(self::MAILCHIMP_MAPPER_TRANSIENT_NAME);
 
-		$formId = Helper::encryptor('decrypt', $formId);
-
+		// Check if form exists in cache.
 		if (empty($build)) {
 
+			// Add post ID prop.
+			$formId = $formAdditionalProps['formPostId'];
+
+			// Fetch form from remote url provided in form settings.
 			$form = $this->getIntegrationRemoteForm(\get_post_meta($formId, $this->getSettingsName(SettingsMailchimp::MAILCHIMP_FORM_URL_KEY), true));
 
+			// Build the actual form.
 			$build = $this->getForm($form);
 
+			// Set cache for future use.
 			set_transient(self::MAILCHIMP_MAPPER_TRANSIENT_NAME, $build, 3600);
 		}
 
-		return $this->buildForm($build, $formId, false, !empty($redirect));
+		// Return form to the frontend.
+		return $this->buildForm(
+			$build,
+			$formAdditionalProps
+		);
 	}
 
 	/**
-	 * Build form
+	 * Map remote form.
 	 *
 	 * @param string $form Form String.
 	 *

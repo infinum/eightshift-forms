@@ -74,11 +74,15 @@ $formClass = Components::classnames([
 	</form>
 <?php } else { ?>
 	<?php
+	// formPostId check so Block Editor will not break due to multiple fetches from the React.
+	// Load only when form id is ready.
 	if ($formPostId) {
 		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME,
-			$formPostId,
-			$formSuccessRedirect
+			[
+				'formPostId' => (string) Helper::encryptor('encrypt', $formId),
+				'formSuccessRedirect' => $redirect
+			]
 		);
 	}
 	?>

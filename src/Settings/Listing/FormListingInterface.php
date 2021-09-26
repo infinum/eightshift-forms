@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for admin content listing.
+ * Class that holds data for admin forms listings.
  *
  * @package EightshiftForms\Settings\Listing
  */
@@ -17,7 +17,7 @@ interface FormListingInterface
 {
 
 	/**
-	 * Get Form List items.
+	 * Get Forms List.
 	 *
 	 * @return array
 	 */

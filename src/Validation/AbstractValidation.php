@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class for form validation
+ * The class for form validation.
  *
  * @package EightshiftForms\Validation
  */
@@ -17,7 +17,7 @@ abstract class AbstractValidation implements ValidatorInterface
 {
 
 	/**
-	 * Check if string is url
+	 * Check if string is url.
 	 *
 	 * @param string $string String to check.
 	 *
@@ -29,7 +29,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	}
 
 	/**
-	 * Check if string is email
+	 * Check if string is email.
 	 *
 	 * @param string $string String to check.
 	 *

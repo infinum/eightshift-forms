@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for $className endpoint
+ * The class register route for public form submiting endpoint
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -26,10 +26,13 @@ class FormSubmitRoute extends AbstractBaseRoute
 	use UploadHelper;
 
 	/**
-	 * Use General helper trait.
+	 * Use general helper trait.
 	 */
 	use TraitHelper;
 
+	/**
+	 * Route slug.
+	 */
 	public const ROUTE_SLUG = '/form-submit';
 
 	/**
@@ -71,16 +74,22 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 		// Try catch request.
 		try {
+			// Get encripted form ID and decrypt it.
 			$formId = $this->getFormId($request->get_body_params(), true);
+
+			// Validate request.
 			$params = $this->verifyRequest($request, $formId);
 
 			$postParams = $params['post'];
-			$fiels = $params['files'];
+			$files = $params['files'];
 
+			// Upload files to temp folder.
+			$files = $this->prepareFiles($files);
+
+			// Check if mailes data is set.
 			$mailerUse = $this->getSettingsValue(SettingsMailer::TYPE_KEY . 'Use', $formId);
 
-			$files = $this->prepareFiles($fiels);
-
+			// Send email if everything is ok.
 			if ($mailerUse) {
 				$this->mailer->sendFormEmail(
 					$formId,

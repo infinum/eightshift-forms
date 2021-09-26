@@ -13,11 +13,11 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Labels\InterfaceLabels;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsPluginVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
-use EightshiftFormsPluginVendor\EightshiftLibs\Rest\CallableRouteInterface;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
 /**
  * Class FormSubmitRoute
@@ -40,9 +40,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public $mailer;
 
 	/**
-	 * Instance variable of form labels data.
+	 * Instance variable of LabelsInterface data.
 	 *
-	 * @var InterfaceLabels
+	 * @var LabelsInterface
 	 */
 	protected $labels;
 
@@ -51,12 +51,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
-	 * @param InterfaceLabels $labels Inject documentsData which holds form labels data.
+	 * @param LabelsInterface $labels Inject LabelsInterface which holds form labels data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		MailerInterface $mailer,
-		InterfaceLabels $labels
+		LabelsInterface $labels
 	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
@@ -66,7 +66,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Method that returns project Route namespace.
 	 *
-	 * @return string Project namespace EightshiftFormsPluginVendor\for REST route.
+	 * @return string Project namespace EightshiftFormsVendor\for REST route.
 	 */
 	protected function getNamespace(): string
 	{
@@ -107,7 +107,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Sanitizes all received fields recursively. If a field is something we don't need to
 	 * sanitize then we don't touch it.
 	 *
-	 * @param  array $params Array of params.
+	 * @param array $params Array of params.
+	 *
 	 * @return array
 	 */
 	protected function sanitizeFields(array $params)
@@ -140,6 +141,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Quick and dirty fix is to replace these values back to dots after receiving them.
 	 *
 	 * @param array $params Request params.
+	 *
 	 * @return array
 	 */
 	protected function fixDotUnderscoreReplacement(array $params): array
@@ -156,35 +158,25 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Verifies everything is ok with request
+	 * Verifies everything is ok with request.
 	 *
 	 * @param \WP_REST_Request $request WP_REST_Request object.
 	 * @param string $formId Form Id.
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
-	 * @return array            filtered request params.
+	 * @return array Filtered request params.
 	 */
-	protected function verifyRequest(\WP_REST_Request $request, string $formId): array
+	protected function verifyRequest(\WP_REST_Request $request, string $formId = ''): array
 	{
 		$params = $this->sanitizeFields($request->get_query_params());
 		$params = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
 		$files = $this->sanitizeFields($request->get_file_params());
 
+		// Quick hack for nested params like checkboxes and radios.
 		$params = $this->fixNestedParams($params);
 		$postParams = $this->fixNestedParams($postParams);
-
-		foreach ($params as $paramKey => $paramValue) {
-			if (is_array($paramValue)) {
-				foreach ($paramValue as $itemsKey => $itemsValue) {
-					foreach ($itemsValue as $itemKey => $itemValue) {
-						$params["{$paramKey}[{$itemsKey}][{$itemKey}]"] = $itemValue;
-					}
-				}
-				unset($params[$paramKey]);
-			}
-		}
 
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
@@ -206,7 +198,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate GET Params.
-		$validateParams = $this->validator->validate($formId, $params, []);
+		$validateParams = $this->validator->validate($params, [], $formId);
 		if (!empty($validateParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -221,7 +213,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		// Validate POST Params.
-		$validatePostParams = $this->validator->validate($formId, $postParams, []);
+		$validatePostParams = $this->validator->validate($postParams, [], $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -235,7 +227,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			);
 		}
 
-		$validatePostParams = $this->validator->validate($formId, $postParams, $files);
+		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
 				\rest_ensure_response(
@@ -257,7 +249,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Return form ID from form params.
+	 * Return form ID from form params and determins if ID needs decrypting.
 	 *
 	 * @param array $params Array of params got from form.
 	 * @param bool $decrypt Use decryption on post ID.
@@ -282,7 +274,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Remove uncesesery params.
+	 * Remove uncesesery params before submitting data to validation.
 	 *
 	 * @param array $params Array of params got from form.
 	 *
@@ -304,7 +296,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Fix nested params
+	 * Quick hack for nested params like checkboxes and radios.
 	 *
 	 * @param array $params Prams array
 	 *

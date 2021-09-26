@@ -20,6 +20,7 @@ $formsForm = Components::checkAttr('formsForm', $attributes, $manifest);
 
 $blocks = parse_blocks(get_the_content(null, null, $formsForm));
 
+// Encrypt form post ID for security reasons.
 $blocks[0]['attrs']['formFormPostId'] = (string) Helper::encryptor('encrypt', $formsForm);
 
 foreach ($blocks as $block) {
