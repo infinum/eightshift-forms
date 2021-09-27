@@ -80,7 +80,7 @@ $formClass = Components::classnames([
 		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME,
 			[
-				'formPostId' => (string) Helper::encryptor('encrypt', $formId),
+				'formPostId' => $formPostId,
 				'formSuccessRedirect' => $formSuccessRedirect
 			]
 		);

@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\GlobalSettings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
@@ -27,6 +29,8 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	public const SETTINGS = [
 		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_GLOBAL_NAME,
 		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_GLOBAL_NAME,
+		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_GLOBAL_NAME,
+		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_GLOBAL_NAME,
 	];
 
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -30,6 +31,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const FILTER_NAME = 'es_forms_settings_hubspot';
 
 	/**
+	 * Filter global name key.
+	 */
+	public const FILTER_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
+
+	/**
 	 * Settings key.
 	 */
 	public const TYPE_KEY = 'hubspot';
@@ -40,6 +46,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const HUBSPOT_USE_KEY = 'hubspotUse';
 
 	/**
+	 * API Key.
+	 */
+	public const HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -47,6 +58,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -58,6 +70,12 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$optionsSet = $this->getOptionValue(self::HUBSPOT_API_KEY_KEY);
+
+		if (!$optionsSet) {
+			return [];
+		}
+
 		return [
 			'sidebar' => [
 				'label' => __('Hubspot', 'eightshift-forms'),
@@ -71,6 +89,57 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					'introSubtitle' => \__('Configure your hubspot settings in one place.', 'eightshift-forms'),
 				],
 			]
+		];
+	}
+
+	/**
+	 * Get global settings array for building settings page.
+	 *
+	 * @return array
+	 */
+	public function getSettingsGlobalData(): array
+	{
+		$apiKey = Variables::getApiKeyHubspot();
+
+		return [
+			'sidebar' => [
+				'label' => __('Hubspot', 'eightshift-forms'),
+				'value' => self::TYPE_KEY,
+				'icon' => 'dashicons-admin-site-alt3',
+			],
+			'form' => [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Hubspot settings', 'eightshift-forms'),
+					'introSubtitle' => \__('Configure your Hubspot settings in one place.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'checkboxes',
+					'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
+					'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
+					'checkboxesContent' => [
+						[
+							'component' => 'checkbox',
+							'checkboxName' => $this->getSettingsName(self::HUBSPOT_USE_KEY),
+							'checkboxId' => $this->getSettingsName(self::HUBSPOT_USE_KEY),
+							'checkboxLabel' => __('Use Hubspot', 'eightshift-forms'),
+							'checkboxIsChecked' => !empty($this->getOptionValue(self::HUBSPOT_USE_KEY)),
+							'checkboxValue' => 'true',
+						]
+					]
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::HUBSPOT_API_KEY_KEY),
+					'inputId' => $this->getSettingsName(self::HUBSPOT_API_KEY_KEY),
+					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Open your Hubspot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $apiKey ?? $this->getOptionValue(self::HUBSPOT_API_KEY_KEY),
+					'inputIsReadOnly' => !empty($apiKey),
+				],
+			],
 		];
 	}
 }

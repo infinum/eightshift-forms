@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftFormsVendor\PHPHtmlParser\Dom;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -56,13 +57,20 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	 */
 	public function getMapper(array $formAdditionalProps): string
 	{
+		// Get post ID prop.
+		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', $formAdditionalProps['formPostId']) : '';
+
+		// Get settings url.
+		$settingsUrl = $this->getSettingsValue(SettingsMailchimp::MAILCHIMP_FORM_URL_KEY, $formId);
+
+		if (empty($formId) || empty($settingsUrl)) {
+			return '';
+		}
+
 		$build = get_transient(self::MAILCHIMP_MAPPER_TRANSIENT_NAME);
 
 		// Check if form exists in cache.
 		if (empty($build)) {
-			// Add post ID prop.
-			$formId = $formAdditionalProps['formPostId'];
-
 			// Fetch form from remote url provided in form settings.
 			$form = $this->getIntegrationRemoteForm($this->getSettingsValue(SettingsMailchimp::MAILCHIMP_FORM_URL_KEY, $formId));
 

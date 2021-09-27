@@ -160,7 +160,7 @@ abstract class AbstractFormBuilder
 		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
 		// Check children components for specific components.
-		if ($component === 'checkboxes' || $component === 'selct' || $component === 'radios') {
+		if ($component === 'checkboxes' || $component === 'select' || $component === 'radios') {
 			$output = '';
 			switch ($component) {
 				case 'checkboxes':

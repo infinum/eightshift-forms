@@ -28,12 +28,12 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 	 * All settings.
 	 */
 	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY => SettingsGeneral::FILTER_NAME,
+		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_NAME,
 		SettingsValidation::TYPE_KEY => SettingsValidation::FILTER_NAME,
-		SettingsMailer::TYPE_KEY => SettingsMailer::FILTER_NAME,
+		SettingsMailer::TYPE_KEY     => SettingsMailer::FILTER_NAME,
+		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_NAME,
 		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_NAME,
-		SettingsHubspot::TYPE_KEY => SettingsHubspot::FILTER_NAME,
-		SettingsMailchimp::TYPE_KEY => SettingsMailchimp::FILTER_NAME,
+		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_NAME,
 	];
 
 	/**
