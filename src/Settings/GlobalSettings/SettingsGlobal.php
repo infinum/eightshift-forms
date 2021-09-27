@@ -1,56 +1,44 @@
 <?php
 
 /**
- * Class that holds data for admin forms settings.
+ * Class that holds data for global forms settings.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Settings\GlobalSettings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Settings\GlobalSettings;
 
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftForms\Mailer\SettingsMailer;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
-use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
 
 /**
- * SettingsAll class.
+ * SettingsGlobal class.
  */
-class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
+class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterface
 {
 
 	/**
 	 * All settings.
 	 */
 	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_NAME,
-		SettingsValidation::TYPE_KEY => SettingsValidation::FILTER_NAME,
-		SettingsMailer::TYPE_KEY     => SettingsMailer::FILTER_NAME,
-		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_NAME,
-		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_NAME,
-		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_NAME,
+		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_GLOBAL_NAME,
+		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_GLOBAL_NAME,
 	];
 
 	/**
 	 * Get all settings array for building settings page.
 	 *
-	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsAll(string $formId, string $type): array
+	public function getSettingsGlobal(string $type): array
 	{
 		$output = [];
-
-		if (!$formId) {
-			return [];
-		}
 
 		// Loop all settings.
 		foreach (self::SETTINGS as $key => $filter) {
@@ -60,7 +48,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			}
 
 			// Get filter data.
-			$data = apply_filters($filter, $formId);
+			$data = apply_filters($filter, '');
 
 			// Check sidebar value for type.
 			$value = $data['sidebar']['value'] ?? '';
@@ -75,13 +63,12 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			$output['forms'][$value] = $this->buildSettingsForm(
 				$data['form'] ?? [],
 				[
-					'formPostId' => $formId,
 					'formSuccessRedirect' => $type === SettingsGeneral::TYPE_KEY,
 				]
 			);
 
 			// Check if settings is set to be used if not hide options page.
-			$isUsed = \get_post_meta($formId, $this->getSettingsName("{$value}Use"), true) ?? false;
+			$isUsed = \get_option($this->getSettingsName("{$value}Use"), true) ?? false;
 
 			// Always leave required settings on the page.
 			if (!$isUsed && !$isRequired) {

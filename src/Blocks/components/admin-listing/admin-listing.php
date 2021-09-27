@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for settings listing page.
+ * Template for admin listing page.
  *
  * @package EightshiftForms\Blocks.
  */
@@ -10,17 +10,17 @@ use EightshiftForms\Helpers\Components;
 
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
-$manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/settings-section');
+$manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/admin-settings-section');
 
 echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
-$settingsFormsListingsPageTitle = Components::checkAttr('settingsFormsListingsPageTitle', $attributes, $manifest);
-$settingsFormsListingsSubTitle = Components::checkAttr('settingsFormsListingsSubTitle', $attributes, $manifest);
-$settingsFormsListingsNewFormLink = Components::checkAttr('settingsFormsListingsNewFormLink', $attributes, $manifest);
-$settingsFormsListingsForms = Components::checkAttr('settingsFormsListingsForms', $attributes, $manifest);
+$adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
+$adminListingSubTitle = Components::checkAttr('adminListingSubTitle', $attributes, $manifest);
+$adminListingNewFormLink = Components::checkAttr('adminListingNewFormLink', $attributes, $manifest);
+$adminListingForms = Components::checkAttr('adminListingForms', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -33,23 +33,23 @@ $layoutClass = Components::classnames([
 	<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 		<div class="<?php echo \esc_attr("{$sectionClass}__heading"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-				<?php echo esc_html($settingsFormsListingsPageTitle); ?>
+				<?php echo esc_html($adminListingPageTitle); ?>
 			</div>
 
 			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-				<a href="<?php echo esc_url($settingsFormsListingsNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+				<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
 					<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
 				</a>
 			</div>
 		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-			<?php echo esc_html($settingsFormsListingsSubTitle); ?>
+			<?php echo esc_html($adminListingSubTitle); ?>
 		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-			<?php if ($settingsFormsListingsForms) { ?>
+			<?php if ($adminListingForms) { ?>
 				<ul class="<?php echo \esc_attr("{$componentClass}__list {$sectionClass}--reset-spacing"); ?>">
-					<?php foreach ($settingsFormsListingsForms as $form) { ?>
+					<?php foreach ($adminListingForms as $form) { ?>
 						<?php
 						$id = $form['id']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$editLink = $form['editLink'];

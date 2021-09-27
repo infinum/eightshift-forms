@@ -1,0 +1,22 @@
+{
+	"componentName": "admin-settings",
+	"title": "Admin Settings",
+	"componentClass": "es-admin-settings",
+	"attributes": {
+		"adminSettingsPageTitle": {
+			"type": "string"
+		},
+		"adminSettingsSubTitle": {
+			"type": "string"
+		},
+		"adminSettingsBackLink": {
+			"type": "string"
+		},
+		"adminSettingsLink": {
+			"type": "string"
+		},
+		"adminSettingsData": {
+			"type": "array"
+		}
+	}
+}

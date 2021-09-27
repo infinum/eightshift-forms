@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftFormsVendor\PHPHtmlParser\Dom;
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Settings\Settings\AbstractFormBuilder;
+use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -60,7 +60,6 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 
 		// Check if form exists in cache.
 		if (empty($build)) {
-
 			// Add post ID prop.
 			$formId = $formAdditionalProps['formPostId'];
 
@@ -90,7 +89,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	 */
 	private function getForm(string $form): array
 	{
-		$dom = new Dom;
+		$dom = new Dom();
 		$dom->loadStr($form);
 		$fields = $dom->find('.mergeRow');
 

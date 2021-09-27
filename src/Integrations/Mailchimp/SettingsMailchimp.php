@@ -12,13 +12,14 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingsTypeInterface;
+use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
+use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailchimp class.
  */
-class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
+class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -28,7 +29,12 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Filter name key.
 	 */
-	public const FILTER_NAME = 'esforms_settings_mailchimp';
+	public const FILTER_NAME = 'es_forms_settings_mailchimp';
+
+	/**
+	 * Filter global name key.
+	 */
+	public const FILTER_GLOBAL_NAME = 'es_forms_settings_global_mailchimp';
 
 	/**
 	 * Settings key.
@@ -52,7 +58,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsTypeData']);
+		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -62,10 +69,8 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsData(string $formId): array
 	{
-		$apiKey = Variables::getApiKeyMailchimp();
-
 		return [
 			'sidebar' => [
 				'label' => __('Mailchimp', 'eightshift-forms'),
@@ -80,17 +85,6 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 				],
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
-					'inputId' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
-					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
-					'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-					'inputType' => 'text',
-					'inputIsRequired' => true,
-					'inputValue' => $apiKey ?? \get_post_meta($formId, $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY), true),
-					'inputIsReadOnly' => !empty($apiKey),
-				],
-				[
-					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::MAILCHIMP_FORM_URL_KEY),
 					'inputId' => $this->getSettingsName(self::MAILCHIMP_FORM_URL_KEY),
 					'inputFieldLabel' => \__('Form Url', 'eightshift-forms'),
@@ -100,6 +94,40 @@ class SettingsMailchimp implements SettingsTypeInterface, ServiceInterface
 					'inputIsRequired' => true
 				],
 			]
+		];
+	}
+
+	/**
+	 * Get global settings array for building settings page.
+	 *
+	 * @return array
+	 */
+	public function getSettingsGlobalData(): array
+	{
+		$apiKey = Variables::getApiKeyMailchimp();
+
+		return [
+			'sidebar' => [
+				'label' => __('Mailchimp', 'eightshift-forms'),
+				'value' => self::TYPE_KEY,
+				'icon' => 'dashicons-admin-site-alt3',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
+				'introSubtitle' => \__('Configure your mailchimp settings in one place.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'input',
+				'inputName' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
+				'inputId' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
+				'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
+				'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+				'inputType' => 'text',
+				'inputIsRequired' => true,
+				'inputValue' => $apiKey ?? \get_option($this->getSettingsName(self::MAILCHIMP_API_KEY_KEY), true),
+				'inputIsReadOnly' => !empty($apiKey),
+			],
 		];
 	}
 }

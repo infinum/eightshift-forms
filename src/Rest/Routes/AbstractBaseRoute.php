@@ -298,7 +298,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Quick hack for nested params like checkboxes and radios.
 	 *
-	 * @param array $params Prams array
+	 * @param array $params Prams array.
 	 *
 	 * @return array
 	 */

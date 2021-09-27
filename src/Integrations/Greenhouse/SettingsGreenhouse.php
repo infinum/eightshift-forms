@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Settings\Settings\SettingsTypeInterface;
+use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGreenhouse class.
  */
-class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
+class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -27,7 +27,7 @@ class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Filter name key.
 	 */
-	public const FILTER_NAME = 'esforms_settings_greenhouse';
+	public const FILTER_NAME = 'es_forms_settings_greenhouse';
 
 	/**
 	 * Settings key.
@@ -41,7 +41,7 @@ class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsTypeData']);
+		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
 	}
 
 	/**
@@ -51,7 +51,7 @@ class SettingsGreenhouse implements SettingsTypeInterface, ServiceInterface
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsData(string $formId): array
 	{
 		return [
 			'sidebar' => [

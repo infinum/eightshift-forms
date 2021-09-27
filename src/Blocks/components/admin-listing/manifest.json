@@ -1,0 +1,19 @@
+{
+	"componentName": "admin-listing",
+	"title": "Admin Listing",
+	"componentClass": "es-admin-listing",
+	"attributes": {
+		"adminListingPageTitle": {
+			"type": "string"
+		},
+		"adminListingSubTitle": {
+			"type": "string"
+		},
+		"adminListingForms": {
+			"type": "array"
+		},
+		"adminListingNewFormLink": {
+			"type": "string"
+		}
+	}
+}

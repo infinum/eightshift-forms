@@ -12,13 +12,13 @@ namespace EightshiftForms\Validation;
 
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Settings\Settings\SettingsTypeInterface;
+use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingsTypeInterface, ServiceInterface
+class SettingsValidation implements SettingsDataInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -28,7 +28,7 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Filter name key.
 	 */
-	public const FILTER_NAME = 'esforms_settings_validation';
+	public const FILTER_NAME = 'es_forms_settings_validation';
 
 	/**
 	 * Settings key.
@@ -59,7 +59,7 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsTypeData']);
+		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsData(string $formId): array
 	{
 		return [
 			'sidebar' => [
@@ -83,6 +83,8 @@ class SettingsValidation implements SettingsTypeInterface, ServiceInterface
 
 	/**
 	 * Get fields.
+	 *
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */

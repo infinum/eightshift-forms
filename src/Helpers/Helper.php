@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftForms\AdminMenus\FormDetailsAdminSubMenu;
-use EightshiftForms\AdminMenus\FormListingAdminMenu;
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
+use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -53,7 +53,7 @@ class Helper
 	 */
 	public static function getListingPageUrl(): string
 	{
-		$page = FormListingAdminMenu::ADMIN_MENU_SLUG;
+		$page = FormListingAdminSubMenu::ADMIN_MENU_SLUG;
 
 		return "/wp-admin/admin.php?page={$page}";
 	}
@@ -68,15 +68,14 @@ class Helper
 	 */
 	public static function getOptionsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
 	{
-		$postType = Forms::POST_TYPE_SLUG;
-		$page = FormDetailsAdminSubMenu::ADMIN_MENU_SLUG;
+		$page = FormSettingsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';
 
 		if (!empty($type)) {
 			$typeKey = "&type={$type}";
 		}
 
-		return "/wp-admin/edit.php?post_type={$postType}&page={$page}&formId={$formId}{$typeKey}";
+		return "/wp-admin/admin.php?page={$page}&formId={$formId}{$typeKey}";
 	}
 
 	/**

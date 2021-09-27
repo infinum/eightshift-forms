@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 /**
- * Interface for SettingsTypeInterface
+ * Interface for SettingsDataInterface
  */
-interface SettingsTypeInterface
+interface SettingsDataInterface
 {
 	/**
 	 * Get Form settings data array
@@ -22,5 +22,5 @@ interface SettingsTypeInterface
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array;
+	public function getSettingsData(string $formId): array;
 }

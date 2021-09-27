@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds class for admin sub menu - Form Details.
+ * Class that holds class for admin sub menu - Form Listing.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -11,31 +11,52 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsAllInterface;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
- * FormDetailsAdminSubMenu class.
+ * FormListingAdminSubMenu class.
  */
-class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
+class FormListingAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable of form all settings.
+	 * Instance variable of form listing.
 	 *
-	 * @var SettingsAllInterface
+	 * @var FormListingInterface
 	 */
-	protected $settingsAll;
+	protected $formsListing;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsAllInterface $settingsAll Inject form all settings data.
+	 * @param FormListingInterface $Listing Inject form listing data.
 	 */
-	public function __construct(SettingsAllInterface $settingsAll)
+	public function __construct(FormListingInterface $formsListing)
 	{
-		$this->settingsAll = $settingsAll;
+		$this->formsListing = $formsListing;
+	}
+
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action(
+			'admin_menu',
+			function () {
+				\add_submenu_page(
+					$this->getParentMenu(),
+					$this->getTitle(),
+					$this->getMenuTitle(),
+					$this->getCapability(),
+					$this->getMenuSlug(),
+					[$this, 'processAdminSubmenu']
+				);
+			},
+			20
+		);
 	}
 
 	/**
@@ -50,14 +71,14 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-details';
+	public const ADMIN_MENU_SLUG = FormAdminMenu::ADMIN_MENU_SLUG;
 
 	/**
 	 * Parent menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const PARENT_MENU_SLUG = '';
+	public const PARENT_MENU_SLUG = FormAdminMenu::ADMIN_MENU_SLUG;
 
 	/**
 	 * Get the title to use for the admin page.
@@ -66,7 +87,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Form Details', 'eightshift-forms');
+		return '';
 	}
 
 	/**
@@ -76,7 +97,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Form Details', 'eightshift-forms');
+		return \esc_html__('Forms', 'eightshift-forms');
 	}
 
 	/**
@@ -118,7 +139,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'settings-details';
+		return 'admin-listing';
 	}
 
 	/**
@@ -132,7 +153,7 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
-		return Components::render($this->getViewComponent(), $attributes);
+		return '';
 	}
 
 	/**
@@ -149,17 +170,6 @@ class FormDetailsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return [
-			'settingsDetailsPageTitle' => sprintf(\esc_html__('From Options - %s', 'eightshift-forms'), get_the_title($formId)),
-			'settingsDetailsSubTitle' => \esc_html__('On form settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
-			'settingsDetailsBackLink' => Helper::getListingPageUrl(),
-			'settingsDetailsLink' => Helper::getOptionsPageUrl($formId, ''),
-			'settingsDetailsData' => $this->settingsAll->getSettingsAll($formId, $type),
-			'settingsDetailsType' => !empty($type) ? $type : SettingsGeneral::TYPE_KEY,
-			'settingsDetailsFormId' => $formId,
-		];
+		return [];
 	}
 }

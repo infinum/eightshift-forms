@@ -1,17 +1,16 @@
 <?php
 
 /**
- * Class that holds all methods for building form settings pages.
+ * Class that holds all methods for building form settings pages, integrations forms, etc.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Form
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
@@ -26,11 +25,11 @@ abstract class AbstractFormBuilder
 	use TraitHelper;
 
 	/**
-	 * Undocumented function
+	 * Build public facing form.
 	 *
-	 * @param array $formItems
-	 * @param string $formId
-	 * @param boolean $refresh
+	 * @param array $formItems Form array.
+	 * @param array $formAdditionalProps Additional attributes for form component.
+	 *
 	 * @return string
 	 */
 	public function buildForm(array $formItems, array $formAdditionalProps = []): string
@@ -39,23 +38,26 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Undocumented function
+	 * Build settings form.
 	 *
-	 * @param array $formItems
-	 * @param string $formId
-	 * @param boolean $refresh
+	 * @param array $formItems Form array.
+	 * @param array $formAdditionalProps Additional attributes for form component.
+	 *
 	 * @return string
 	 */
 	public function buildSettingsForm(array $formItems, array $formAdditionalProps = []): string
 	{
 		$formContent = '';
 
+		// Add divider on the bottom of every form.
 		$formContent .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'divider',
 			Components::props('divider', []),
 			'',
 			true
 		);
+
+		// Add submit on the bottom of every form.
 		$formContent .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'submit',
 			Components::props('submit', [
@@ -65,17 +67,17 @@ abstract class AbstractFormBuilder
 			true
 		);
 
+		// If form needs refreshing like on general setting just pass formSuccessRedirect as true and the form will refresh on the same settings page.
 		if (isset($formAdditionalProps['formSuccessRedirect']) && $formAdditionalProps['formSuccessRedirect']) {
-			$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-			$formAdditionalProps['formSuccessRedirect'] = admin_url(sprintf(basename($request)));
+			$formAdditionalProps['formSuccessRedirect'] = $this->getAdminRefreshUrl();
 		}
 
+		// Build form.
 		return $this->getForm($formItems, $formAdditionalProps, $formContent);
 	}
 
 	/**
-	 * Get Integration Remote form Body.
+	 * Get Integration remote form body.
 	 *
 	 * @param string $url Remote url.
 	 *
@@ -93,7 +95,7 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Undocumented function
+	 * Returns the current admin page url for refresh.
 	 *
 	 * @return string
 	 */
@@ -105,35 +107,38 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Build settings page form.
+	 * Get the actual form for the components.
 	 *
-	 * @param array $formItems Form array to build from.
-	 * @param string $formId Form ID.
-	 * @param bool $isSettings Set values for settings pages.
-	 * @param bool $refresh To refresh form after success or not.
-	 *
+	 * @param array $formItems Form array.
+	 * @param array $formAdditionalProps Additional attributes for form component.
+	 * @param string $formContent For adding additional form components after every form.
 	 * @return string
 	 */
 	private function getForm(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
 	{
 		$form = '';
 
+		// Build all top-level component.
 		foreach ($formItems as $item) {
 			$form .= $this->buildComponent($item);
 		}
 
+		// Append additional form components.
 		if (!empty($formContent)) {
 			$form .= $formContent;
 		}
 
+		// Populate form props.
 		$formProps = [
 			'formContent' => $form,
 		];
 
+		// Add additional form props.
 		if ($formAdditionalProps) {
 			$formProps = array_merge($formProps, $formAdditionalProps);
 		}
 
+		// Build form component.
 		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'form',
 			Components::props('form', [], $formProps),
@@ -143,7 +148,7 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Build component from arrya of items.
+	 * Build components from arrya of items.
 	 *
 	 * @param array $attributes Array of form components.
 	 *
@@ -151,8 +156,10 @@ abstract class AbstractFormBuilder
 	 */
 	private function buildComponent(array $attributes): string
 	{
+		// Determin component name.
 		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
+		// Check children components for specific components.
 		if ($component === 'checkboxes' || $component === 'selct' || $component === 'radios') {
 			$output = '';
 			switch ($component) {
@@ -167,20 +174,25 @@ abstract class AbstractFormBuilder
 					break;
 			}
 
+			// Loop children and do the same ad on top level.
 			foreach ($attributes[$key] as $item) {
+				// Determin component name.
 				$innercComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
-	
+
+				// Build child component.
 				$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					$item['component'],
-					Components::props($innercComponent,  $item),
+					Components::props($innercComponent, $item),
 					'',
 					true
 				);
 			}
 
+			// Output child to the parent array.
 			$attributes[$key] = $output;
 		}
 
+		// Build the component.
 		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$attributes['component'],
 			Components::props($component, $attributes),

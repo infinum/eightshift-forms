@@ -16,9 +16,9 @@ use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
- * FormListingAdminMenu class.
+ * FormAdminMenu class.
  */
-class FormListingAdminMenu extends AbstractAdminMenu
+class FormAdminMenu extends AbstractAdminMenu
 {
 	/**
 	 * Instance variable of form listing data.
@@ -150,7 +150,7 @@ class FormListingAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'settings-forms-listings';
+		return 'admin-listing';
 	}
 
 	/**
@@ -182,10 +182,10 @@ class FormListingAdminMenu extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'settingsFormsListingsPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
-			'settingsFormsListingsSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
-			'settingsFormsListingsNewFormLink' => Helper::getNewFormPageUrl(),
-			'settingsFormsListingsForms' => $this->formsListing->getFormsList(),
+			'adminListingPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
+			'adminListingSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
+			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
+			'adminListingForms' => $this->formsListing->getFormsList(),
 		];
 	}
 }

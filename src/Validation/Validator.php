@@ -45,6 +45,7 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = ''): array
 	{
+		// Merge params and files validations.
 		return array_merge(
 			$this->validateParams($params, $formId),
 			$this->validateFiles($files, $params, $formId)
@@ -64,7 +65,6 @@ class Validator extends AbstractValidation
 		$output = [];
 
 		foreach ($params as $paramKey => $paramValue) {
-
 			$inputDetails = json_decode($paramValue, true);
 
 			$inputData = $inputDetails['data'] ?? [];

@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Mailer;
 
 use EightshiftForms\Helpers\TraitHelper;
-use EightshiftForms\Settings\Settings\SettingsTypeInterface;
+use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements SettingsTypeInterface, ServiceInterface
+class SettingsMailer implements SettingsDataInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -27,7 +27,7 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 	/**
 	 * Filter name key.
 	 */
-	public const FILTER_NAME = 'esforms_settings_mailer';
+	public const FILTER_NAME = 'es_forms_settings_mailer';
 
 	/**
 	 * Settings key.
@@ -66,7 +66,7 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsTypeData']);
+		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
 	}
 
 	/**
@@ -76,7 +76,7 @@ class SettingsMailer implements SettingsTypeInterface, ServiceInterface
 	 *
 	 * @return array
 	 */
-	public function getSettingsTypeData(string $formId): array
+	public function getSettingsData(string $formId): array
 	{
 		return [
 			'sidebar' => [

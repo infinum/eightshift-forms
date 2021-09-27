@@ -49,7 +49,7 @@ trait TraitHelper
 	 */
 	public function getSettingsName(string $string): string
 	{
-		return "{$string}-" . $this->getLocale();
+		return "es-forms-{$string}-" . $this->getLocale();
 	}
 
 	/**
