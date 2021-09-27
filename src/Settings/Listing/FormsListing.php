@@ -48,7 +48,7 @@ class FormsListing implements FormListingInterface
 					'title' => get_the_title($id),
 					'slug' => \get_the_permalink($id),
 					'status' => \get_post_status($id),
-					'settingsLink' => Helper::getOptionsPageUrl((string) $id),
+					'settingsLink' => Helper::getSettingsPageUrl((string) $id),
 					'editLink' => Helper::getFormEditPageUrl((string) $id),
 				];
 			}

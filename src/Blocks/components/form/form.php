@@ -81,7 +81,7 @@ $formClass = Components::classnames([
 			MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME,
 			[
 				'formPostId' => (string) Helper::encryptor('encrypt', $formId),
-				'formSuccessRedirect' => $redirect
+				'formSuccessRedirect' => $formSuccessRedirect
 			]
 		);
 	}

@@ -15,8 +15,14 @@
 		"adminSettingsLink": {
 			"type": "string"
 		},
-		"adminSettingsData": {
+		"adminSettingsSidebar": {
 			"type": "array"
+		},
+		"adminSettingsForm": {
+			"type": "string"
+		},
+		"adminSettingsType": {
+			"type": "string"
 		}
 	}
 }

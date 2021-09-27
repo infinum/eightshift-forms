@@ -89,7 +89,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Global Settings', 'eightshift-forms');
+		return \esc_html__('Settings', 'eightshift-forms');
 	}
 
 	/**
@@ -99,7 +99,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Global Settings', 'eightshift-forms');
+		return \esc_html__('Settings', 'eightshift-forms');
 	}
 
 	/**
@@ -179,8 +179,10 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsPageTitle' => \esc_html__('Forms Global Settings', 'eightshift-forms'),
 			'adminSettingsSubTitle' => \esc_html__('On forms global settings page you can set all settings that are applied to all forms.', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsLink' => Helper::getOptionsPageUrl('0', ''),
-			'adminSettingsData' => $this->settingsGlobal->getSettingsGlobal($type),
+			'adminSettingsLink' => Helper::getSettingsGlobalPageUrl(''),
+			'adminSettingsSidebar' => $this->settingsGlobal->getSettingsSidebar($type),
+			'adminSettingsForm' => $this->settingsGlobal->getSettingsForm($type),
+			'adminSettingsType' => $type,
 		];
 	}
 }

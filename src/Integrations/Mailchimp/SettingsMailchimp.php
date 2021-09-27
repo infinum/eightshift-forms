@@ -42,6 +42,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const TYPE_KEY = 'mailchimp';
 
 	/**
+	 * Mailchimp Use key.
+	 */
+	public const MAILCHIMP_USE_KEY = 'mailchimpUse';
+
+	/**
 	 * API Key.
 	 */
 	public const MAILCHIMP_API_KEY_KEY = 'mailchimpApiKey';
@@ -71,6 +76,12 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$optionsSet = $this->getOptionValue(self::MAILCHIMP_USE_KEY);
+
+		if (!$optionsSet) {
+			return [];
+		}
+
 		return [
 			'sidebar' => [
 				'label' => __('Mailchimp', 'eightshift-forms'),
@@ -90,7 +101,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'inputFieldLabel' => \__('Form Url', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Provide Signup form URL from your Mailchimp form builder.', 'eightshift-forms'),
 					'inputType' => 'text',
-					'inputValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILCHIMP_FORM_URL_KEY), true),
+					'inputValue' => $this->getSettingsValue(self::MAILCHIMP_FORM_URL_KEY, $formId),
 					'inputIsRequired' => true
 				],
 			]
@@ -112,21 +123,38 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'value' => self::TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your mailchimp settings in one place.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
-				'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
-				'inputValue' => $apiKey ?? \get_option($this->getSettingsName(self::MAILCHIMP_API_KEY_KEY), true),
-				'inputIsReadOnly' => !empty($apiKey),
+			'form' => [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
+					'introSubtitle' => \__('Configure your mailchimp settings in one place.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'checkboxes',
+					'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
+					'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
+					'checkboxesContent' => [
+						[
+							'component' => 'checkbox',
+							'checkboxName' => $this->getSettingsName(self::MAILCHIMP_USE_KEY),
+							'checkboxId' => $this->getSettingsName(self::MAILCHIMP_USE_KEY),
+							'checkboxLabel' => __('Use Mailchimp', 'eightshift-forms'),
+							'checkboxIsChecked' => !empty($this->getOptionValue(self::MAILCHIMP_USE_KEY)),
+							'checkboxValue' => 'true',
+						]
+					]
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
+					'inputId' => $this->getSettingsName(self::MAILCHIMP_API_KEY_KEY),
+					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $apiKey ?? $this->getOptionValue(self::MAILCHIMP_API_KEY_KEY),
+					'inputIsReadOnly' => !empty($apiKey),
+				],
 			],
 		];
 	}

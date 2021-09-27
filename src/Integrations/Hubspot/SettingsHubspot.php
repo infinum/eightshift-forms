@@ -35,6 +35,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const TYPE_KEY = 'hubspot';
 
 	/**
+	 * Hubspot Use key.
+	 */
+	public const HUBSPOT_USE_KEY = 'hubspotUse';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void

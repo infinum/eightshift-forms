@@ -35,6 +35,11 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	public const TYPE_KEY = 'mailer';
 
 	/**
+	 * Mailer Use key.
+	 */
+	public const MAILER_USE_KEY = 'mailerUse';
+
+	/**
 	 * Sender Name key.
 	 */
 	public const MAILER_SENDER_NAME_KEY = 'mailerSenderName';
@@ -98,7 +103,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'inputFieldHelp' => \__('Define sender name showed in the email client.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
-					'inputValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILER_SENDER_NAME_KEY), true),
+					'inputValue' => $this->getSettingsValue(self::MAILER_SENDER_NAME_KEY, $formId),
 				],
 				[
 					'component' => 'input',
@@ -108,7 +113,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'inputFieldHelp' => \__('Define sender email showed in the email client.', 'eightshift-forms'),
 					'inputType' => 'email',
 					'inputIsRequired' => true,
-					'inputValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILER_SENDER_EMAIL_KEY), true),
+					'inputValue' => $this->getSettingsValue(self::MAILER_SENDER_EMAIL_KEY, $formId),
 				],
 				[
 					'component' => 'input',
@@ -118,7 +123,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'inputFieldHelp' => \__('Define to what address the email will be sent', 'eightshift-forms'),
 					'inputType' => 'email',
 					'inputIsRequired' => true,
-					'inputValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILER_TO_KEY), true),
+					'inputValue' => $this->getSettingsValue(self::MAILER_TO_KEY, $formId),
 				],
 				[
 					'component' => 'input',
@@ -128,7 +133,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'inputFieldHelp' => \__('Define email subject', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
-					'inputValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILER_SUBJECT_KEY), true),
+					'inputValue' => $this->getSettingsValue(self::MAILER_SUBJECT_KEY, $formId),
 				],
 				[
 					'component' => 'textarea',
@@ -137,7 +142,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
 					'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
 					'textareaIsRequired' => true,
-					'textareaValue' => \get_post_meta($formId, $this->getSettingsName(self::MAILER_TEMPLATE_KEY), true),
+					'textareaValue' => $this->getSettingsValue(self::MAILER_TEMPLATE_KEY, $formId),
 				],
 			]
 		];

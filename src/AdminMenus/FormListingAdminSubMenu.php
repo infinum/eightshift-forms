@@ -29,7 +29,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Create a new instance.
 	 *
-	 * @param FormListingInterface $Listing Inject form listing data.
+	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
 	public function __construct(FormListingInterface $formsListing)
 	{

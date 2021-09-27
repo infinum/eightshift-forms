@@ -16,12 +16,22 @@ namespace EightshiftForms\Settings\Settings;
 interface SettingsAllInterface
 {
 	/**
-	 * Get all settings array for building settings page.
+	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsAll(string $formId, string $type): array;
+	public function getSettingsSidebar(string $formId, string $type): array;
+
+	/**
+	 * Get all settings array for building settings page.
+	 *
+	 * @param string $formId Form ID.
+	 * @param string $type Form Type to show.
+	 *
+	 * @return string
+	 */
+	public function getSettingsForm(string $formId, string $type): string;
 }

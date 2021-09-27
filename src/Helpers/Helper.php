@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
@@ -59,14 +60,14 @@ class Helper
 	}
 
 	/**
-	 * Method that returns form options page url.
+	 * Method that returns form settings page url.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Type key.
 	 *
 	 * @return string
 	 */
-	public static function getOptionsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
+	public static function getSettingsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
 	{
 		$page = FormSettingsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';
@@ -76,6 +77,25 @@ class Helper
 		}
 
 		return "/wp-admin/admin.php?page={$page}&formId={$formId}{$typeKey}";
+	}
+
+	/**
+	 * Method that returns form settings global page url.
+	 *
+	 * @param string $type Type key.
+	 *
+	 * @return string
+	 */
+	public static function getSettingsGlobalPageUrl(string $type = SettingsGeneral::TYPE_KEY): string
+	{
+		$page = FormGlobalSettingsAdminSubMenu::ADMIN_MENU_SLUG;
+		$typeKey = '';
+
+		if (!empty($type)) {
+			$typeKey = "&type={$type}";
+		}
+
+		return "/wp-admin/admin.php?page={$page}{$typeKey}";
 	}
 
 	/**

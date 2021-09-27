@@ -21,11 +21,9 @@ $adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attri
 $adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
 $adminSettingsLink = Components::checkAttr('adminSettingsLink', $attributes, $manifest);
-$adminSettingsData = Components::checkAttr('adminSettingsData', $attributes, $manifest);
-
-$sidebar = $adminSettingsData['sidebar'] ?? [];
-$form = $adminSettingsData['form'] ?? '';
-$active = $adminSettingsData['active'] ?? '';
+$adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
+$adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
+$adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -33,7 +31,7 @@ $layoutClass = Components::classnames([
 	Components::selector($sectionClass, $sectionClass, '', 'with-sidebar'),
 ]);
 
-if (!$adminSettingsData) {
+if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	return;
 }
 
@@ -43,9 +41,9 @@ if (!$adminSettingsData) {
 	<div class="<?php echo \esc_attr("{$sectionClass}__sidebar"); ?>">
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__content {$sectionClass}--reset-spacing"); ?>">
-				<?php if ($sidebar) { ?>
+				<?php if ($adminSettingsSidebar) { ?>
 					<ul class="<?php echo \esc_attr("{$sectionClass}__menu"); ?>">
-						<?php foreach ($sidebar as $item) { ?>
+						<?php foreach ($adminSettingsSidebar as $item) { ?>
 							<?php
 							$label = $item['label'] ?? '';
 							$value = $item['value'] ?? '';
@@ -54,7 +52,7 @@ if (!$adminSettingsData) {
 							<li class="<?php echo \esc_attr("{$sectionClass}__menu-item"); ?>">
 								<a
 									href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
-									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $active, $sectionClass, 'menu-link', 'active')); ?>"
+									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 								>
 									<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-icon dashicons {$icon}"); ?> "></span>
 									<?php echo esc_html($label); ?>
@@ -84,7 +82,7 @@ if (!$adminSettingsData) {
 				<?php echo esc_html($adminSettingsSubTitle); ?>
 			</div>
 			<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-				<?php echo $form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo $adminSettingsForm; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		</div>
 	</div>

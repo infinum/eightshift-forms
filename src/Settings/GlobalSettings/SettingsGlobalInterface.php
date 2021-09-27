@@ -16,11 +16,20 @@ namespace EightshiftForms\Settings\GlobalSettings;
 interface SettingsGlobalInterface
 {
 	/**
-	 * Get all settings array for building settings page.
+	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsGlobal(string $type): array;
+	public function getSettingsSidebar(string $type): array;
+
+	/**
+	 * Get all settings array for building settings page.
+	 *
+	 * @param string $type Form Type to show.
+	 *
+	 * @return string
+	 */
+	public function getSettingsForm(string $type): string;
 }

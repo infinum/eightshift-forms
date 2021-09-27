@@ -29,19 +29,20 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_GLOBAL_NAME,
 	];
 
+
 	/**
-	 * Get all settings array for building settings page.
+	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsGlobal(string $type): array
+	public function getSettingsSidebar(string $type): array
 	{
 		$output = [];
 
 		// Loop all settings.
-		foreach (self::SETTINGS as $key => $filter) {
+		foreach (self::SETTINGS as $filter) {
 			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
@@ -53,35 +54,43 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 			// Check sidebar value for type.
 			$value = $data['sidebar']['value'] ?? '';
 
-			// Check required field settings page that always stays on the page.
-			$isRequired = $data['isRequired'] ?? false;
-
 			// Populate sidebar data.
-			$output['sidebar'][$value] = $data['sidebar'] ?? [];
-
-			// Populate and build form.
-			$output['forms'][$value] = $this->buildSettingsForm(
-				$data['form'] ?? [],
-				[
-					'formSuccessRedirect' => $type === SettingsGeneral::TYPE_KEY,
-				]
-			);
-
-			// Check if settings is set to be used if not hide options page.
-			$isUsed = \get_option($this->getSettingsName("{$value}Use"), true) ?? false;
-
-			// Always leave required settings on the page.
-			if (!$isUsed && !$isRequired) {
-				unset($output['sidebar'][$value]);
-				unset($output['forms'][$value]);
-			}
+			$output[$value] = $data['sidebar'] ?? [];
 		}
 
 		// Return all settings data.
-		return [
-			'active' => isset($output['forms'][$type]) ? $type : SettingsGeneral::TYPE_KEY,
-			'sidebar' => $output['sidebar'],
-			'form' => $output['forms'][$type] ?? $output['forms'][SettingsGeneral::TYPE_KEY],
-		];
+		return $output;
+	}
+
+
+	/**
+	 * Get all settings array for building settings page.
+	 *
+	 * @param string $type Form Type to show.
+	 *
+	 * @return string
+	 */
+	public function getSettingsForm(string $type): string
+	{
+		// Check if type is set if not use general settings page.
+		if (empty($type)) {
+			$type = SettingsGeneral::TYPE_KEY;
+		}
+
+		// Fiund settings page.
+		$filter = self::SETTINGS[$type] ?? '';
+
+		// Determin if there is a filter for settings page.
+		if (!has_filter($filter)) {
+			return '';
+		}
+
+		// Get filter data.
+		$data = apply_filters($filter, '');
+
+		// Populate and build form.
+		return $this->buildSettingsForm(
+			$data['form'] ?? []
+		);
 	}
 }

@@ -28,23 +28,23 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 	 * All settings.
 	 */
 	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_NAME,
+		SettingsGeneral::TYPE_KEY => SettingsGeneral::FILTER_NAME,
 		SettingsValidation::TYPE_KEY => SettingsValidation::FILTER_NAME,
-		SettingsMailer::TYPE_KEY     => SettingsMailer::FILTER_NAME,
+		SettingsMailer::TYPE_KEY => SettingsMailer::FILTER_NAME,
 		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_NAME,
-		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_NAME,
-		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_NAME,
+		SettingsHubspot::TYPE_KEY => SettingsHubspot::FILTER_NAME,
+		SettingsMailchimp::TYPE_KEY => SettingsMailchimp::FILTER_NAME,
 	];
 
 	/**
-	 * Get all settings array for building settings page.
+	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
 	 *
 	 * @return array
 	 */
-	public function getSettingsAll(string $formId, string $type): array
+	public function getSettingsSidebar(string $formId, string $type): array
 	{
 		$output = [];
 
@@ -62,39 +62,59 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			// Get filter data.
 			$data = apply_filters($filter, $formId);
 
+			// If empty array skip.
+			if (!$data) {
+				continue;
+			}
+
 			// Check sidebar value for type.
 			$value = $data['sidebar']['value'] ?? '';
 
-			// Check required field settings page that always stays on the page.
-			$isRequired = $data['isRequired'] ?? false;
-
 			// Populate sidebar data.
-			$output['sidebar'][$value] = $data['sidebar'] ?? [];
-
-			// Populate and build form.
-			$output['forms'][$value] = $this->buildSettingsForm(
-				$data['form'] ?? [],
-				[
-					'formPostId' => $formId,
-					'formSuccessRedirect' => $type === SettingsGeneral::TYPE_KEY,
-				]
-			);
-
-			// Check if settings is set to be used if not hide options page.
-			$isUsed = \get_post_meta($formId, $this->getSettingsName("{$value}Use"), true) ?? false;
-
-			// Always leave required settings on the page.
-			if (!$isUsed && !$isRequired) {
-				unset($output['sidebar'][$value]);
-				unset($output['forms'][$value]);
-			}
+			$output[$value] = $data['sidebar'] ?? [];
 		}
 
 		// Return all settings data.
-		return [
-			'active' => isset($output['forms'][$type]) ? $type : SettingsGeneral::TYPE_KEY,
-			'sidebar' => $output['sidebar'],
-			'form' => $output['forms'][$type] ?? $output['forms'][SettingsGeneral::TYPE_KEY],
-		];
+		return $output;
+	}
+
+	/**
+	 * Get all settings array for building settings page.
+	 *
+	 * @param string $formId Form ID.
+	 * @param string $type Form Type to show.
+	 *
+	 * @return string
+	 */
+	public function getSettingsForm(string $formId, string $type): string
+	{
+		// Bailout if form id is wrong or empty.
+		if (empty($formId)) {
+			return '';
+		}
+
+		// Check if type is set if not use general settings page.
+		if (empty($type)) {
+			$type = SettingsGeneral::TYPE_KEY;
+		}
+
+		// Fiund settings page.
+		$filter = self::SETTINGS[$type] ?? '';
+
+		// Determin if there is a filter for settings page.
+		if (!has_filter($filter)) {
+			return '';
+		}
+
+		// Get filter data.
+		$data = apply_filters($filter, $formId);
+
+		// Populate and build form.
+		return $this->buildSettingsForm(
+			$data['form'] ?? [],
+			[
+				'formPostId' => $formId
+			]
+		);
 	}
 }

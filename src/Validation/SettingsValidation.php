@@ -95,7 +95,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'component' => 'intro',
 				'introTitle' => \__('Form validation messages', 'eightshift-forms'),
 				'introSubtitle' => \__('Configure your form validation messages in one place.', 'eightshift-forms'),
-			],
+			]
 		];
 
 		// List all labels for settings override.
@@ -106,7 +106,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => ucfirst($key),
 				'inputPlaceholder' => $label,
-				'inputValue' => \get_post_meta($formId, $this->getSettingsName($key), true),
+				'inputValue' => $this->getSettingsValue($key, $formId),
 			];
 		}
 

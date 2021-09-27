@@ -64,7 +64,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 			$formId = $formAdditionalProps['formPostId'];
 
 			// Fetch form from remote url provided in form settings.
-			$form = $this->getIntegrationRemoteForm(\get_post_meta($formId, $this->getSettingsName(SettingsMailchimp::MAILCHIMP_FORM_URL_KEY), true));
+			$form = $this->getIntegrationRemoteForm($this->getSettingsValue(SettingsMailchimp::MAILCHIMP_FORM_URL_KEY, $formId));
 
 			// Build the actual form.
 			$build = $this->getForm($form);

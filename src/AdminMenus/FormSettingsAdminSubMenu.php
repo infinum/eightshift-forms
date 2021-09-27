@@ -183,11 +183,13 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		return [
 			// translators: %s replaces form title name.
-			'adminSettingsPageTitle' => sprintf(\esc_html__('From Options - %s', 'eightshift-forms'), get_the_title($formId)),
+			'adminSettingsPageTitle' => sprintf(\esc_html__('From Settings - %s', 'eightshift-forms'), get_the_title($formId)),
 			'adminSettingsSubTitle' => \esc_html__('On form settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsLink' => Helper::getOptionsPageUrl($formId, ''),
-			'adminSettingsData' => $this->settingsAll->getSettingsAll($formId, $type)
+			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
+			'adminSettingsSidebar' => $this->settingsAll->getSettingsSidebar($formId, $type),
+			'adminSettingsForm' => $this->settingsAll->getSettingsForm($formId, $type),
+			'adminSettingsType' => $type,
 		];
 	}
 
@@ -195,14 +197,15 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 * Fix Parent Admin Menu Item
 	 *
 	 * @param string|null $parentFile Parent file to check.
+	 *
 	 * @return string
 	 */
-	public function changeHighlightParent($parentFile){
-	
-		global $plugin_page;
+	public function changeHighlightParent($parentFile)
+	{
+		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		if ( $plugin_page === 'es-settings' ) {
-				$plugin_page = 'es-forms';
+		if ($plugin_page === 'es-settings') { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+			$plugin_page = 'es-forms'; // phpcs:ignore
 		}
 
 		return $parentFile;

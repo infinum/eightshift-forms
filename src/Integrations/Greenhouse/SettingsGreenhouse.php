@@ -35,6 +35,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const TYPE_KEY = 'greenhouse';
 
 	/**
+	 * Greenhouse Use key.
+	 */
+	public const GREENHOUSE_USE_KEY = 'greenhouseUse';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void

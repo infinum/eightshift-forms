@@ -72,15 +72,30 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Remove unecesery params.
 			$postParams = $this->removeUneceseryParams($postParams);
 
-			// Save all fields in the settings.
-			foreach ($postParams as $key => $value) {
-				$value = json_decode($value, true);
+			// If form ID is not set this is considered an global setting.
+			if (empty($formId)) {
+				// Save all fields in the settings.
+				foreach ($postParams as $key => $value) {
+					$value = json_decode($value, true);
 
-				// Check if key needs updating or deleting.
-				if ($value['value']) {
-					\update_post_meta($formId, $key, $value['value']);
-				} else {
-					\delete_post_meta($formId, $key);
+					// Check if key needs updating or deleting.
+					if ($value['value']) {
+						\update_option($key, $value['value']);
+					} else {
+						\delete_option($key);
+					}
+				}
+			} else {
+				// Save all fields in the settings.
+				foreach ($postParams as $key => $value) {
+					$value = json_decode($value, true);
+
+					// Check if key needs updating or deleting.
+					if ($value['value']) {
+						\update_post_meta($formId, $key, $value['value']);
+					} else {
+						\delete_post_meta($formId, $key);
+					}
 				}
 			}
 
