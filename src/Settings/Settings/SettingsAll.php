@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Integrations\Integrations;
 
 /**
  * SettingsAll class.
@@ -31,9 +29,6 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_NAME,
 		SettingsValidation::TYPE_KEY => SettingsValidation::FILTER_NAME,
 		SettingsMailer::TYPE_KEY     => SettingsMailer::FILTER_NAME,
-		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_NAME,
-		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_NAME,
-		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_NAME,
 	];
 
 	/**
@@ -53,7 +48,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		}
 
 		// Loop all settings.
-		foreach (self::SETTINGS as $key => $filter) {
+		foreach ($this->getAllSettings() as $filter) {
 			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
@@ -99,7 +94,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		}
 
 		// Fiund settings page.
-		$filter = self::SETTINGS[$type] ?? '';
+		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
 		if (!has_filter($filter)) {
@@ -116,5 +111,21 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 				'formPostId' => $formId
 			]
 		);
+	}
+
+	/**
+	 * Get all integration settings merged with global settings.
+	 *
+	 * @return array
+	 */
+	private function getAllSettings(): array
+	{
+		$integrations = self::SETTINGS;
+
+		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
+			$integrations[$key] = $integration['settings'] ?? '';
+		}
+
+		return $integrations;
 	}
 }

@@ -29,7 +29,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	/**
 	 * Filter Name
 	 */
-	public const MAILCHIMP_MAPPER_FILTER_NAME = 'es_mailchimp_mapper_filter';
+	public const FILTER_MAPPER_NAME = 'es_mailchimp_mapper_filter';
 
 	/**
 	 * Transient cache name.
@@ -45,7 +45,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	{
 
 		// Blocks string to value filter name constant.
-		\add_filter(static::MAILCHIMP_MAPPER_FILTER_NAME, [$this, 'getMapper']);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getMapper']);
 	}
 
 	/**

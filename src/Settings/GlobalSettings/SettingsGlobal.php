@@ -11,9 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\GlobalSettings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
 
@@ -27,12 +25,8 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 * All settings.
 	 */
 	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_GLOBAL_NAME,
-		SettingsMailchimp::TYPE_KEY  => SettingsMailchimp::FILTER_GLOBAL_NAME,
-		SettingsGreenhouse::TYPE_KEY => SettingsGreenhouse::FILTER_GLOBAL_NAME,
-		SettingsHubspot::TYPE_KEY    => SettingsHubspot::FILTER_GLOBAL_NAME,
+		SettingsGeneral::TYPE_KEY => SettingsGeneral::FILTER_GLOBAL_NAME,
 	];
-
 
 	/**
 	 * Get all settings sidebar array for building settings page.
@@ -46,7 +40,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$output = [];
 
 		// Loop all settings.
-		foreach (self::SETTINGS as $filter) {
+		foreach ($this->getAllSettings() as $filter) {
 			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
@@ -54,6 +48,11 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 
 			// Get filter data.
 			$data = apply_filters($filter, '');
+
+			// If empty array skip.
+			if (!$data) {
+				continue;
+			}
 
 			// Check sidebar value for type.
 			$value = $data['sidebar']['value'] ?? '';
@@ -82,7 +81,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		}
 
 		// Fiund settings page.
-		$filter = self::SETTINGS[$type] ?? '';
+		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
 		if (!has_filter($filter)) {
@@ -96,5 +95,21 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		return $this->buildSettingsForm(
 			$data['form'] ?? []
 		);
+	}
+
+	/**
+	 * Get all integration settings merged with global settings.
+	 *
+	 * @return array
+	 */
+	private function getAllSettings(): array
+	{
+		$integrations = self::SETTINGS;
+
+		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
+			$integrations[$key] = $integration['global'] ?? '';
+		}
+
+		return $integrations;
 	}
 }

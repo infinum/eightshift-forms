@@ -8,6 +8,7 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
 
 $manifest = Components::getManifest(__DIR__);
@@ -77,13 +78,17 @@ $formClass = Components::classnames([
 	// formPostId check so Block Editor will not break due to multiple fetches from the React.
 	// Load only when form id is ready.
 	if ($formPostId) {
-		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			MailchimpMapper::MAILCHIMP_MAPPER_FILTER_NAME,
-			[
-				'formPostId' => $formPostId,
-				'formSuccessRedirect' => $formSuccessRedirect
-			]
-		);
+		$mapper = Integrations::ALL_INTEGRATIONS[$formIntegration]['mapper'] ?? '';
+
+		if ($mapper) {
+			echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$mapper,
+				[
+					'formPostId' => $formPostId,
+					'formSuccessRedirect' => $formSuccessRedirect
+				]
+			);
+		}
 	}
 	?>
 <?php }
