@@ -1,6 +1,6 @@
 {
 	"blockName": "form",
-	"title": "Form",
+	"title": "Custom Form",
 	"description" : "Form block.",
 	"category": "eightshift-forms",
 	"icon": {
@@ -14,7 +14,7 @@
 		"form": "form"
 	},
 	"parent": [
-		"eightshift-forms/forms"
+		"eightshift-forms/form-selector"
 	],
 	"attributes": {
 		"formAllowedBlocks": {
@@ -28,6 +28,9 @@
 				"eightshift-forms/textarea",
 				"eightshift-forms/checkboxes"
 			]
+		},
+		"formPostId": {
+			"type": "string"
 		}
 	}
 }

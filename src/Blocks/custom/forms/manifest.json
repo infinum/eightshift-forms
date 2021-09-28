@@ -10,13 +10,10 @@
 		"forms"
 	],
 	"example": {
-		"attributes": {
-			"formsForm": 1
-		}
 	},
 	"attributes": {
-		"formsForm": {
-			"type": "integer"
+		"formsFormPostId": {
+			"type": "string"
 		}
 	},
 	"postType": "eightshift-forms"

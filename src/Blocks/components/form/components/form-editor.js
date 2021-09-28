@@ -16,7 +16,6 @@ export const FormEditor = (attributes) => {
 	} = attributes;
 
 	const formContent = checkAttr('formContent', attributes, manifest);
-	const formIntegration = checkAttr('formIntegration', attributes, manifest);
 
 	const formClass = classnames([
 		selector(componentClass, componentClass),
@@ -25,17 +24,10 @@ export const FormEditor = (attributes) => {
 	]);
 
 	return (
-		<>
-			{formIntegration === 'none' ?
-				<form className={formClass}>
-					<div className={`${componentClass}__fields`}>
-						{formContent}
-					</div>
-				</form> :
-				<div className={`${componentClass}__integration`}>
-					{sprintf(__('Your %s form will be displayed here on the frontend.', 'eightshift-forms'), formIntegration)}
-				</div>
-				}
-		</>
+		<form className={formClass}>
+			<div className={`${componentClass}__fields`}>
+				{formContent}
+			</div>
+		</form>
 	);
 };

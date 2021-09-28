@@ -1,15 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { TextControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
 	ComponentUseToggle,
-	LinkEditComponent,
-	getOption
+	LinkEditComponent
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -22,7 +21,6 @@ export const FormOptions = (attributes) => {
 	const formId = checkAttr('formId', attributes, manifest);
 	const formSuccessRedirect = checkAttr('formSuccessRedirect', attributes, manifest);
 	const formTrackingEventName = checkAttr('formTrackingEventName', attributes, manifest);
-	const formIntegration = checkAttr('formIntegration', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -65,14 +63,6 @@ export const FormOptions = (attributes) => {
 						help={__('Provide forms unique ID.', 'eightshift-forms')}
 						value={formId}
 						onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
-					/>
-
-					<SelectControl
-						label={<IconLabel icon={icons.id} label={__('Integration', 'eightshift-forms')} />}
-						help={__('If you want to use one of the integrations forms select it here and populate the configuration in the form settings page.', 'eightshift-forms')}
-						value={formIntegration}
-						options={getOption('formIntegration', attributes, manifest)}
-						onChange={(value) => setAttributes({ [getAttrKey('formIntegration', attributes, manifest)]: value })}
 					/>
 				</>
 			}

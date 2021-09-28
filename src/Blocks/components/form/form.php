@@ -27,7 +27,6 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
-$formIntegration = Components::checkAttr('formIntegration', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -38,57 +37,37 @@ $formClass = Components::classnames([
 
 ?>
 
-<?php if ($formIntegration === 'none') { ?>
-	<form
-		class="<?php echo esc_attr($formClass); ?>"
-		name="<?php echo esc_attr($formName); ?>"
-		id="<?php echo esc_attr($formId); ?>"
-		action="<?php echo esc_attr($formAction); ?>"
-		method="<?php echo esc_attr($formMethod); ?>"
-		data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
-		data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
-		data-form-post-id="<?php echo esc_attr($formPostId); ?>"
-	>
-		<?php
-		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			'global-msg',
-			Components::props('globalMsg', $attributes, [
-				'blockClass' => $componentClass
-			])
-		);
-		?>
-
-		<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
-			<?php
-			echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-			?>
-		</div>
-
-		<?php
-		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			'loader',
-			Components::props('loader', $attributes, [
-				'blockClass' => $componentClass
-			])
-		);
-		?>
-	</form>
-<?php } else { ?>
+<form
+	class="<?php echo esc_attr($formClass); ?>"
+	name="<?php echo esc_attr($formName); ?>"
+	id="<?php echo esc_attr($formId); ?>"
+	action="<?php echo esc_attr($formAction); ?>"
+	method="<?php echo esc_attr($formMethod); ?>"
+	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
+	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
+	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
+>
 	<?php
-	// formPostId check so Block Editor will not break due to multiple fetches from the React.
-	// Load only when form id is ready.
-	if ($formPostId) {
-		$mapper = Integrations::ALL_INTEGRATIONS[$formIntegration]['mapper'] ?? '';
-
-		if ($mapper) {
-			echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				$mapper,
-				[
-					'formPostId' => $formPostId,
-					'formSuccessRedirect' => $formSuccessRedirect
-				]
-			);
-		}
-	}
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'global-msg',
+		Components::props('globalMsg', $attributes, [
+			'blockClass' => $componentClass
+		])
+	);
 	?>
-<?php }
+
+	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
+		<?php
+		echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+		?>
+	</div>
+
+	<?php
+	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'loader',
+		Components::props('loader', $attributes, [
+			'blockClass' => $componentClass
+		])
+	);
+	?>
+</form>

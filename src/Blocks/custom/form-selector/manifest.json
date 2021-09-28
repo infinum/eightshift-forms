@@ -1,0 +1,22 @@
+{
+	"blockName": "form-selector",
+	"title": "Eightshift Forms",
+	"description" : "Forms block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"forms"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"formSelectorAllowedBlocks": {
+			"type": "array",
+			"default": [
+				"eightshift-forms/form",
+				"eightshift-forms/mailchimp"
+			]
+		}
+	}
+}

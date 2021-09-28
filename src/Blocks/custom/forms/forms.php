@@ -16,13 +16,38 @@ echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore Word
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$formsForm = Components::checkAttr('formsForm', $attributes, $manifest);
+// Check formPost ID prop.
+$formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 
-$blocks = parse_blocks(get_the_content(null, null, $formsForm));
+// Bailout if form post ID is missing.
+if (!$formsFormPostId) {
+	return;
+}
 
-// Encrypt form post ID for security reasons.
-$blocks[0]['attrs']['formFormPostId'] = (string) Helper::encryptor('encrypt', $formsForm);
+// Convert blocks to array.
+$blocks = parse_blocks(get_the_content(null, null, $formsFormPostId));
 
+// Bailout if it fails for some reason.
+if (!$blocks) {
+	return;
+}
+
+// Encrypt.
+$formsFormPostId = (string) Helper::encryptor('encrypt', $formsFormPostId);
+
+// Iterate blocks an children by passing them form ID.
+foreach ($blocks as $key => $block) {
+	if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
+		$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
+
+		foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+			$name = Components::kebabToCamelCase(str_replace($globalManifest['namespace'] . '/', '', $innerBlock['blockName']));
+			$blocks[$key]['innerBlocks'][$innerKey]['attrs']["formPostId"] = $formsFormPostId;
+		}
+	}
+}
+
+// Render blocks.
 foreach ($blocks as $block) {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo \apply_filters('the_content', \render_block($block));

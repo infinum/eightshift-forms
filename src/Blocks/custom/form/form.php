@@ -8,7 +8,11 @@
 
 use EightshiftForms\Helpers\Components;
 
+$manifest = Components::getManifest(__DIR__);
+
 $blockClass = $attributes['blockClass'] ?? '';
+
+$formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -22,6 +26,7 @@ $formClass = Components::classnames([
 		'form',
 		Components::props('form', $attributes, [
 			'formContent' => $innerBlockContent,
+			'formPostId' => $formPostId,
 		])
 	);
 	?>

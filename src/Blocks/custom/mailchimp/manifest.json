@@ -1,0 +1,22 @@
+{
+	"blockName": "mailchimp",
+	"title": "Mailchimp Forms",
+	"description" : "Mailchimp block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"mailchimp"
+	],
+	"example": {
+	},
+	"attributes": {
+		"formPostId": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}
