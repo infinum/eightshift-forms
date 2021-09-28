@@ -67,7 +67,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getSettingsPageUrl(string $formId, string $type = SettingsGeneral::TYPE_KEY): string
+	public static function getSettingsPageUrl(string $formId, string $type = SettingsGeneral::SETTINGS_TYPE_KEY): string
 	{
 		$page = FormSettingsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';
@@ -86,7 +86,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getSettingsGlobalPageUrl(string $type = SettingsGeneral::TYPE_KEY): string
+	public static function getSettingsGlobalPageUrl(string $type = SettingsGeneral::SETTINGS_TYPE_KEY): string
 	{
 		$page = FormGlobalSettingsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';

@@ -1,0 +1,22 @@
+{
+	"blockName": "greenhouse",
+	"title": "Greenhouse Forms",
+	"description" : "Greenhouse block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"greenhouse"
+	],
+	"example": {
+	},
+	"attributes": {
+		"formPostId": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

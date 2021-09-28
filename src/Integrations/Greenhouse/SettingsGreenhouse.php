@@ -26,29 +26,39 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	use TraitHelper;
 
 	/**
-	 * Filter name key.
+	 * Filter settings key.
 	 */
-	public const FILTER_NAME = 'es_forms_settings_greenhouse';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_greenhouse';
 
 	/**
-	 * Filter global name key.
+	 * Filter global settings key.
 	 */
-	public const FILTER_GLOBAL_NAME = 'es_forms_settings_global_greenhouse';
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_greenhouse';
 
 	/**
 	 * Settings key.
 	 */
-	public const TYPE_KEY = 'greenhouse';
+	public const SETTINGS_TYPE_KEY = 'greenhouse';
 
 	/**
 	 * Greenhouse Use key.
 	 */
-	public const GREENHOUSE_USE_KEY = 'greenhouseUse';
+	public const SETTINGS_GREENHOUSE_USE_KEY = 'greenhouseUse';
 
 	/**
 	 * API Key.
 	 */
-	public const GREENHOUSE_API_KEY_KEY = 'greenhouseApiKey';
+	public const SETTINGS_GREENHOUSE_API_KEY_KEY = 'greenhouseApiKey';
+
+	/**
+	 * Board Token Key.
+	 */
+	public const SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY = 'greenhouseBoardToken';
+
+	/**
+	 * Job ID Key.
+	 */
+	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouseJobId';
 
 	/**
 	 * Register all the hooks
@@ -57,8 +67,8 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -70,7 +80,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$optionsSet = $this->getOptionValue(self::GREENHOUSE_API_KEY_KEY);
+		$optionsSet = $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
 
 		if (!$optionsSet) {
 			return [];
@@ -79,7 +89,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		return [
 			'sidebar' => [
 				'label' => __('Greenhouse', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => [
@@ -87,6 +97,16 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'component' => 'intro',
 					'introTitle' => \__('Greenhouse settings', 'eightshift-forms'),
 					'introSubtitle' => \__('Configure your greenhouse settings in one place.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+					'inputFieldLabel' => \__('Job ID', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				],
 			]
 		];
@@ -100,11 +120,12 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$apiKey = Variables::getApiKeyGreenhouse();
+		$boardToken = Variables::getBoardTokenGreenhouse();
 
 		return [
 			'sidebar' => [
 				'label' => __('Greenhouse', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => [
@@ -120,24 +141,35 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'checkboxesContent' => [
 						[
 							'component' => 'checkbox',
-							'checkboxName' => $this->getSettingsName(self::GREENHOUSE_USE_KEY),
-							'checkboxId' => $this->getSettingsName(self::GREENHOUSE_USE_KEY),
+							'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
+							'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 							'checkboxLabel' => __('Use Greenhouse', 'eightshift-forms'),
-							'checkboxIsChecked' => !empty($this->getOptionValue(self::GREENHOUSE_USE_KEY)),
+							'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY)),
 							'checkboxValue' => 'true',
 						]
 					]
 				],
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::GREENHOUSE_API_KEY_KEY),
-					'inputId' => $this->getSettingsName(self::GREENHOUSE_API_KEY_KEY),
+					'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
-					'inputValue' => $apiKey ?? $this->getOptionValue(self::GREENHOUSE_API_KEY_KEY),
+					'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 					'inputIsReadOnly' => !empty($apiKey),
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+					'inputFieldLabel' => \__('Board Token', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $boardToken ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+					'inputIsReadOnly' => !empty($boardToken),
 				],
 			],
 		];

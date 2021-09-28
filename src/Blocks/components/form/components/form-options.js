@@ -7,8 +7,7 @@ import {
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	ComponentUseToggle,
-	LinkEditComponent
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -19,8 +18,6 @@ export const FormOptions = (attributes) => {
 
 	const formName = checkAttr('formName', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
-	const formSuccessRedirect = checkAttr('formSuccessRedirect', attributes, manifest);
-	const formTrackingEventName = checkAttr('formTrackingEventName', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -42,22 +39,6 @@ export const FormOptions = (attributes) => {
 			/>
 			{showAdvanced &&
 				<>
-					<LinkEditComponent
-						url={formSuccessRedirect}
-						setAttributes={setAttributes}
-						showNewTabOption={false}
-						help={__('If set form will redirect to this url once submitted with success.', 'eightshift-forms')}
-						title={__('Redirect', 'eightshift-forms')}
-						urlAttrName={getAttrKey('formSuccessRedirect', attributes, manifest)}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking Event Name', 'eightshift-forms')} />}
-						help={__('Provide GTM tracking event name.', 'eightshift-forms')}
-						value={formTrackingEventName}
-						onChange={(value) => setAttributes({ [getAttrKey('formTrackingEventName', attributes, manifest)]: value })}
-					/>
-
 					<TextControl
 						label={<IconLabel icon={icons.id} label={__('Id', 'eightshift-forms')} />}
 						help={__('Provide forms unique ID.', 'eightshift-forms')}

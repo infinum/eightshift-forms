@@ -87,13 +87,13 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$files = $this->prepareFiles($files);
 
 			// Check if mailes data is set.
-			$mailerUse = $this->getSettingsValue(SettingsMailer::TYPE_KEY . 'Use', $formId);
+			$mailerUse = $this->getSettingsValue(SettingsMailer::SETTINGS_TYPE_KEY . 'Use', $formId);
 
 			// Send email if everything is ok.
 			if ($mailerUse) {
 				$this->mailer->sendFormEmail(
 					$formId,
-					$this->getSettingsValue(SettingsMailer::MAILER_TO_KEY, $formId),
+					$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
 					$files,
 					$this->removeUneceseryParams($postParams)
 				);

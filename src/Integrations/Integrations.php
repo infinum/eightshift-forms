@@ -24,18 +24,18 @@ class Integrations
 	 * All settings.
 	 */
 	public const ALL_INTEGRATIONS = [
-		SettingsMailchimp::TYPE_KEY => [
-			'global' => SettingsMailchimp::FILTER_GLOBAL_NAME,
-			'settings' => SettingsMailchimp::FILTER_NAME,
+		SettingsMailchimp::SETTINGS_TYPE_KEY => [
+			'global' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsMailchimp::FILTER_SETTINGS_NAME,
 			'mapper' => MailchimpMapper::FILTER_MAPPER_NAME,
 		],
-		SettingsGreenhouse::TYPE_KEY => [
-			'global' => SettingsGreenhouse::FILTER_GLOBAL_NAME,
-			'settings' => SettingsGreenhouse::FILTER_NAME,
+		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
+			'global' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsGreenhouse::FILTER_SETTINGS_NAME,
 		],
-		SettingsHubspot::TYPE_KEY => [
-			'global' => SettingsHubspot::FILTER_GLOBAL_NAME,
-			'settings' => SettingsHubspot::FILTER_NAME,
+		SettingsHubspot::SETTINGS_TYPE_KEY => [
+			'global' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 		],
 	];
 }

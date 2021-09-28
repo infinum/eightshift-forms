@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Mailchimp Mapper integration class.
+ * Greenhouse Mapper integration class.
  *
- * @package EightshiftForms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations\Greenhouse
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Mailchimp;
+namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftFormsVendor\PHPHtmlParser\Dom;
 use EightshiftForms\Helpers\TraitHelper;
@@ -17,9 +17,9 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * MailchimpMapper integration class.
+ * GreenhouseMapper integration class.
  */
-class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
+class GreenhouseMapper extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -29,12 +29,12 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	/**
 	 * Filter Name
 	 */
-	public const FILTER_MAPPER_NAME = 'es_mailchimp_mapper_filter';
+	public const FILTER_MAPPER_NAME = 'es_greenhouse_mapper_filter';
 
 	/**
 	 * Transient cache name.
 	 */
-	public const CACHE_MAILCHIMP_MAPPER_TRANSIENT_NAME = 'es_mailchimp_mapper_cache';
+	public const CACHE_GREENHOUSE_MAPPER_TRANSIENT_NAME = 'es_greenhouse_mapper_cache';
 
 	/**
 	 * Register all the hooks
@@ -49,7 +49,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	}
 
 	/**
-	 * Map Mailchimp form to our components.
+	 * Map Greenhouse form to our components.
 	 *
 	 * @param array $formAdditionalProps Additional props to pass to form.
 	 *
@@ -61,24 +61,24 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', $formAdditionalProps['formPostId']) : '';
 
 		// Get settings url.
-		$settingsUrl = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_FORM_URL_KEY, $formId);
+		$settingsUrl = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
 
 		if (empty($formId) || empty($settingsUrl)) {
 			return '';
 		}
 
-		$build = get_transient(self::CACHE_MAILCHIMP_MAPPER_TRANSIENT_NAME);
+		$build = get_transient(self::CACHE_GREENHOUSE_MAPPER_TRANSIENT_NAME);
 
 		// Check if form exists in cache.
 		if (empty($build)) {
 			// Fetch form from remote url provided in form settings.
-			$form = $this->getIntegrationRemoteForm($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_FORM_URL_KEY, $formId));
+			$form = $this->getIntegrationRemoteForm($this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId));
 
 			// Build the actual form.
 			$build = $this->getForm($form);
 
 			// Set cache for future use.
-			set_transient(self::CACHE_MAILCHIMP_MAPPER_TRANSIENT_NAME, $build, 3600);
+			set_transient(self::CACHE_GREENHOUSE_MAPPER_TRANSIENT_NAME, $build, 3600);
 		}
 
 		// Return form to the frontend.

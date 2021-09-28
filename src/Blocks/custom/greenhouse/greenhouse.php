@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Template for the Mailchimp Block view.
+ * Template for the Greenhouse Block view.
  *
  * @package EightshiftForms
  */
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
+use EightshiftForms\Integrations\Greenhouse\GreenhouseMapper;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -18,7 +18,7 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formPostIdDecoded = Helper::encryptor('decode', $formPostId);
 
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	MailchimpMapper::FILTER_MAPPER_NAME,
+	GreenhouseMapper::FILTER_MAPPER_NAME,
 	[
 		'formPostId' => $formPostId,
 		'formTrackingEventName' => \apply_filters(

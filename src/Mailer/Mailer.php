@@ -36,18 +36,18 @@ class Mailer implements MailerInterface
 	{
 		// Get header options from form settings.
 		$headers = $this->getHeader(
-			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_EMAIL_KEY, $formId),
-			$this->getSettingsValue(SettingsMailer::MAILER_SENDER_NAME_KEY, $formId)
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 		);
 
 		// Generate HTML form for sending with form fields.
 		$template = $this->getTemplate(
 			$fields,
-			$this->getSettingsValue(SettingsMailer::MAILER_TEMPLATE_KEY, $formId)
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId)
 		);
 
 		// Populate subject from form settings.
-		$subject = $this->getSettingsValue(SettingsMailer::MAILER_SUBJECT_KEY, $formId);
+		$subject = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 
 		// Send email.
 		return \wp_mail($to, $subject, $template, $headers, $files);

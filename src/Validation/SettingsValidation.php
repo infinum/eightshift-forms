@@ -26,14 +26,14 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	use TraitHelper;
 
 	/**
-	 * Filter name key.
+	 * Filter settings key.
 	 */
-	public const FILTER_NAME = 'es_forms_settings_validation';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_validation';
 
 	/**
 	 * Settings key.
 	 */
-	public const TYPE_KEY = 'validation';
+	public const SETTINGS_TYPE_KEY = 'validation';
 
 	/**
 	 * Instance variable of form labels data.
@@ -59,7 +59,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 	}
 
 	/**
@@ -74,7 +74,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		return [
 			'sidebar' => [
 				'label' => __('Validation', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => $this->getFields($formId),

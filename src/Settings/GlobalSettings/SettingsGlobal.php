@@ -22,10 +22,10 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 {
 
 	/**
-	 * All settings.
+	 * All global settings.
 	 */
-	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY => SettingsGeneral::FILTER_GLOBAL_NAME,
+	public const GLOBAL_SETTINGS = [
+		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 	];
 
 	/**
@@ -77,7 +77,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	{
 		// Check if type is set if not use general settings page.
 		if (empty($type)) {
-			$type = SettingsGeneral::TYPE_KEY;
+			$type = SettingsGeneral::SETTINGS_TYPE_KEY;
 		}
 
 		// Fiund settings page.
@@ -104,12 +104,12 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 */
 	private function getAllSettings(): array
 	{
-		$integrations = self::SETTINGS;
+		$allSettings = self::GLOBAL_SETTINGS;
 
 		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
 			$integrations[$key] = $integration['global'] ?? '';
 		}
 
-		return $integrations;
+		return $allSettings;
 	}
 }

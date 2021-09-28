@@ -26,29 +26,29 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	use TraitHelper;
 
 	/**
-	 * Filter name key.
+	 * Filter settings key.
 	 */
-	public const FILTER_NAME = 'es_forms_settings_hubspot';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_hubspot';
 
 	/**
-	 * Filter global name key.
+	 * Filter global settings key.
 	 */
-	public const FILTER_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
 
 	/**
 	 * Settings key.
 	 */
-	public const TYPE_KEY = 'hubspot';
+	public const SETTINGS_TYPE_KEY = 'hubspot';
 
 	/**
 	 * Hubspot Use key.
 	 */
-	public const HUBSPOT_USE_KEY = 'hubspotUse';
+	public const SETTINGS_HUBSPOT_USE_KEY = 'hubspotUse';
 
 	/**
 	 * API Key.
 	 */
-	public const HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
+	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
 
 	/**
 	 * Register all the hooks
@@ -57,8 +57,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$optionsSet = $this->getOptionValue(self::HUBSPOT_API_KEY_KEY);
+		$optionsSet = $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$optionsSet) {
 			return [];
@@ -79,7 +79,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			'sidebar' => [
 				'label' => __('Hubspot', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => [
@@ -104,7 +104,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			'sidebar' => [
 				'label' => __('Hubspot', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => [
@@ -120,23 +120,23 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					'checkboxesContent' => [
 						[
 							'component' => 'checkbox',
-							'checkboxName' => $this->getSettingsName(self::HUBSPOT_USE_KEY),
-							'checkboxId' => $this->getSettingsName(self::HUBSPOT_USE_KEY),
+							'checkboxName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
+							'checkboxId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 							'checkboxLabel' => __('Use Hubspot', 'eightshift-forms'),
-							'checkboxIsChecked' => !empty($this->getOptionValue(self::HUBSPOT_USE_KEY)),
+							'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY)),
 							'checkboxValue' => 'true',
 						]
 					]
 				],
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::HUBSPOT_API_KEY_KEY),
-					'inputId' => $this->getSettingsName(self::HUBSPOT_API_KEY_KEY),
+					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 					'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Open your Hubspot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
-					'inputValue' => $apiKey ?? $this->getOptionValue(self::HUBSPOT_API_KEY_KEY),
+					'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 					'inputIsReadOnly' => !empty($apiKey),
 				],
 			],

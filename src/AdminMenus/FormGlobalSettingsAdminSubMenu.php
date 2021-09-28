@@ -172,7 +172,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
 			// translators: %s replaces form title name.

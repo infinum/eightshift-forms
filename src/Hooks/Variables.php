@@ -36,6 +36,16 @@ class Variables
 	}
 
 	/**
+	 * Get Board token Key for Greenhouse.
+	 *
+	 * @return string
+	 */
+	public static function getBoardTokenGreenhouse(): string
+	{
+		return defined('ES_BOARD_TOKEN_GREENHOUSE') ? ES_BOARD_TOKEN_GREENHOUSE : '';
+	}
+
+	/**
 	 * Get API Key for Mailchimp.
 	 *
 	 * @return string

@@ -7,9 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Integrations\Integrations;
-use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
 
 $manifest = Components::getManifest(__DIR__);
 

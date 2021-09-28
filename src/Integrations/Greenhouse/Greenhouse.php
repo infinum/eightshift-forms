@@ -10,15 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Exception\MissingFilterInfoException;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Cache\Cache;
+use EightshiftForms\Helpers\TraitHelper;
 
 /**
  * Greenhouse integration class.
  */
 class Greenhouse implements GreenhouseClientInterface
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use TraitHelper;
 
 	/**
 	 * Transient name for storing GH Jobs
@@ -35,35 +37,18 @@ class Greenhouse implements GreenhouseClientInterface
 	public const CACHE_JOBS_LIFESPAN = 21600;
 
 	/**
-	 * Cache object used for caching Mailchimp responses.
-	 *
-	 * @var Cache
-	 */
-	private $cache;
-
-	/**
-	 * Constructs object
-	 *
-	 * @param Cache $transientCache Transient cache object.
-	 */
-	public function __construct(Cache $transientCache)
-	{
-		$this->cache = $transientCache;
-	}
-
-	/**
 	 * Return jobs with cache option for faster loading.
 	 *
 	 * @return array
 	 */
 	public function getJobs(): array
 	{
-		$output = $this->cache->get(static::CACHE_JOBS);
+		$output = \get_transient(static::CACHE_JOBS);
 
 		if (!$output) {
 			$output = (string) wp_json_encode($this->getJobsRaw());
 
-			$this->cache->save(static::CACHE_JOBS, $output, static::CACHE_JOBS_LIFESPAN);
+			\set_transient(static::CACHE_JOBS, $output, static::CACHE_JOBS_LIFESPAN);
 		}
 
 		return json_decode($output, true);
@@ -100,8 +85,6 @@ class Greenhouse implements GreenhouseClientInterface
 	 */
 	public function postGreenhouseApplication(string $jobId, array $body): array
 	{
-		$this->verifyGreenhouseInfoExists();
-
 		$response = \wp_remote_post(
 			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}",
 			[
@@ -112,86 +95,6 @@ class Greenhouse implements GreenhouseClientInterface
 		);
 
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-	}
-
-	/**
-	 * Get confirmation email name key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getConfirmationName(): string
-	{
-		return \has_filter(Filters::GREENHOUSE_CONFIRMATION) ? \apply_filters(Filters::GREENHOUSE_CONFIRMATION, 'name') : '';
-	}
-
-	/**
-	 * Get confirmation email, email key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getConfirmationEmail(): string
-	{
-		return \has_filter(Filters::GREENHOUSE_CONFIRMATION) ? \apply_filters(Filters::GREENHOUSE_CONFIRMATION, 'email') : '';
-	}
-
-	/**
-	 * Get confirmation email subject key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getConfirmationSubject(): string
-	{
-		return \has_filter(Filters::GREENHOUSE_CONFIRMATION) ? \apply_filters(Filters::GREENHOUSE_CONFIRMATION, 'subject') : '';
-	}
-
-	/**
-	 * Get Fallback email, email key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getFallbackEmail(): string
-	{
-		return \has_filter(Filters::GREENHOUSE_FALLBACK) ? \apply_filters(Filters::GREENHOUSE_FALLBACK, 'email') : '';
-	}
-
-	/**
-	 * Get Fallback email subject key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getFallbackSubject(): string
-	{
-		return \has_filter(Filters::GREENHOUSE_FALLBACK) ? \apply_filters(Filters::GREENHOUSE_FALLBACK, 'subject') : '';
-	}
-
-	/**
-	 * Get Board token from filter data.
-	 *
-	 * @return string
-	 */
-	public function getBoardToken(): string
-	{
-		return \has_filter(Filters::GREENHOUSE) ? \apply_filters(Filters::GREENHOUSE, 'apiBoardToken') : '';
-	}
-
-	/**
-	 * Get url for job boards from filter data.
-	 *
-	 * @return string
-	 */
-	public function getJobBoardUrl(): string
-	{
-		return \has_filter(Filters::GREENHOUSE) ? \apply_filters(Filters::GREENHOUSE, 'jobBoardUrl') : '';
-	}
-
-	/**
-	 * Get api key from filter data.
-	 *
-	 * @return string
-	 */
-	public function getApiKey(): string
-	{
-		return base64_encode(\has_filter(Filters::GREENHOUSE) ? \apply_filters(Filters::GREENHOUSE, 'apiKey') : ''); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 
 	/**
@@ -221,8 +124,6 @@ class Greenhouse implements GreenhouseClientInterface
 	 */
 	protected function getGreenhouseJobs()
 	{
-		$this->verifyGreenhouseInfoExists();
-
 		$response = \wp_remote_get(
 			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs",
 			[
@@ -242,8 +143,6 @@ class Greenhouse implements GreenhouseClientInterface
 	 */
 	protected function getGreenhouseJob(string $jobId)
 	{
-		$this->verifyGreenhouseInfoExists();
-
 		$response = \wp_remote_get(
 			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
 			[
@@ -366,43 +265,32 @@ class Greenhouse implements GreenhouseClientInterface
 	}
 
 	/**
-	 * Make sure we have the data we need defined as filters.
+	 * Return Board Token from settings or global vairaible.
 	 *
-	 * @throws MissingFilterInfoException When not all required keys are set.
-	 *
-	 * @return void
+	 * @return string
 	 */
-	private function verifyGreenhouseInfoExists(): void
+	private function getBoardToken(): string
 	{
-		if (! has_filter(Filters::GREENHOUSE)) {
-			throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, esc_html__('entire_filter', 'eightshift-forms'));
-		}
+		return $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+	}
 
-		if (empty(\apply_filters(Filters::GREENHOUSE, 'jobBoardUrl'))) {
-			throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'jobBoardUrl');
-		}
+	/**
+	 * Return Api Key from settings or global vairaible.
+	 *
+	 * @return string
+	 */
+	private function getApiKey(): string
+	{
+		return $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY);
+	}
 
-		if (empty(\apply_filters(Filters::GREENHOUSE, 'apiKey'))) {
-			throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'apiKey');
-		}
-
-		if (empty(\apply_filters(Filters::GREENHOUSE, 'apiBoardToken'))) {
-			throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'apiBoardToken');
-		}
-
-		// Returning value can't be mocked via tests.
-		if (defined('IS_TEST') && ! IS_TEST) {
-			if (\apply_filters(Filters::GREENHOUSE, 'jobBoardUrl' === 'jobBoardUrl')) {
-				throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'jobBoardUrl');
-			}
-
-			if (\apply_filters(Filters::GREENHOUSE, 'apiKey' === 'apiKey')) {
-				throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'apiKey');
-			}
-
-			if (\apply_filters(Filters::GREENHOUSE, 'apiBoardToken' === 'apiBoardToken')) {
-				throw MissingFilterInfoException::viewException(Filters::GREENHOUSE, 'apiBoardToken');
-			}
-		}
+	/**
+	 * Return Job Board Url.
+	 *
+	 * @return string
+	 */
+	private function getJobBoardUrl(): string
+	{
+		return 'https://boards-api.greenhouse.io/v1/';
 	}
 }

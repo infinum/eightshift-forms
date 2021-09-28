@@ -175,7 +175,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if (empty($formId)) {
 			return [];

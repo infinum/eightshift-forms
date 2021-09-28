@@ -15,21 +15,37 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\Integrations;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsAll class.
  */
-class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
+class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, ServiceInterface
 {
 
 	/**
 	 * All settings.
 	 */
-	public const SETTINGS = [
-		SettingsGeneral::TYPE_KEY    => SettingsGeneral::FILTER_NAME,
-		SettingsValidation::TYPE_KEY => SettingsValidation::FILTER_NAME,
-		SettingsMailer::TYPE_KEY     => SettingsMailer::FILTER_NAME,
+	public const ALL_SETTINGS = [
+		SettingsGeneral::SETTINGS_TYPE_KEY    => SettingsGeneral::FILTER_SETTINGS_NAME,
+		SettingsValidation::SETTINGS_TYPE_KEY => SettingsValidation::FILTER_SETTINGS_NAME,
+		SettingsMailer::SETTINGS_TYPE_KEY     => SettingsMailer::FILTER_SETTINGS_NAME,
 	];
+
+	/**
+	 * Filter block setting value key.
+	 */
+	public const FILTER_BLOCK_SETTING_VALUE_NAME = 'es_forms_block_setting_value';
+
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_filter(self::FILTER_BLOCK_SETTING_VALUE_NAME, [$this, 'getBlockSettingValue'], 10, 2);
+	}
 
 	/**
 	 * Get all settings sidebar array for building settings page.
@@ -90,7 +106,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 
 		// Check if type is set if not use general settings page.
 		if (empty($type)) {
-			$type = SettingsGeneral::TYPE_KEY;
+			$type = SettingsGeneral::SETTINGS_TYPE_KEY;
 		}
 
 		// Fiund settings page.
@@ -114,18 +130,31 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 	}
 
 	/**
+	 * Return one setting value used in blocks.
+	 *
+	 * @param string $key Key to find.
+	 * @param string $formId Form ID.
+	 *
+	 * @return mixed
+	 */
+	public function getBlockSettingValue(string $key, string $formId)
+	{
+		return $this->getSettingsValue($key, $formId);
+	}
+
+	/**
 	 * Get all integration settings merged with global settings.
 	 *
 	 * @return array
 	 */
 	private function getAllSettings(): array
 	{
-		$integrations = self::SETTINGS;
+		$allSettings = self::ALL_SETTINGS;
 
 		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$integrations[$key] = $integration['settings'] ?? '';
+			$allSettings[$key] = $integration['settings'] ?? '';
 		}
 
-		return $integrations;
+		return $allSettings;
 	}
 }

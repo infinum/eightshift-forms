@@ -24,19 +24,29 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	use TraitHelper;
 
 	/**
-	 * Filter name key.
+	 * Filter settings key.
 	 */
-	public const FILTER_NAME = 'es_forms_settings_general';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_general';
 
 	/**
-	 * Filter global name key.
+	 * Filter global settings key.
 	 */
-	public const FILTER_GLOBAL_NAME = 'es_forms_settings_global_general';
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_general';
 
 	/**
 	 * Settings key.
 	 */
-	public const TYPE_KEY = 'general';
+	public const SETTINGS_TYPE_KEY = 'general';
+
+	/**
+	 * Redirection Success key.
+	 */
+	public const SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY = 'generalRedirectionSuccess';
+
+	/**
+	 * Tracking event name key.
+	 */
+	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'generalTrackingEventName';
 
 	/**
 	 * Register all the hooks
@@ -45,8 +55,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -61,10 +71,30 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 		$output = [
 			'sidebar' => [
 				'label' => __('General', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
-			'form' => []
+			'form' => [
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
+					'inputFieldLabel' => \__('Success Redirection Url', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Define url to redirect after the form is submitted with success.', 'eightshift-forms'),
+					'inputType' => 'url',
+					'inputIsUrl' => true,
+					'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+					'inputFieldLabel' => \__('Tracking Event Name', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Define event name used to push data to GTM.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
+				],
+			]
 		];
 
 		return $output;
@@ -80,7 +110,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 		$output = [
 			'sidebar' => [
 				'label' => __('General', 'eightshift-forms'),
-				'value' => self::TYPE_KEY,
+				'value' => self::SETTINGS_TYPE_KEY,
 				'icon' => 'dashicons-admin-site-alt3',
 			],
 			'form' => []
