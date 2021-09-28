@@ -153,7 +153,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-					'inputIsReadOnly' => !empty($apiKey),
+					'inputIsDisabled' => !empty($apiKey),
 				],
 			],
 		];

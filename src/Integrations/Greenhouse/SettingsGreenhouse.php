@@ -61,6 +61,23 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouseJobId';
 
 	/**
+	 * Instance variable for Greenhouse data.
+	 *
+	 * @var GreenhouseClientInterface
+	 */
+	protected $greenhouseClient;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds greenhouse connect data.
+	 */
+	public function __construct(GreenhouseClientInterface $greenhouseClient)
+	{
+		$this->greenhouseClient = $greenhouseClient;
+	}
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -86,6 +103,27 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			return [];
 		}
 
+		$jobIdOptions = array_map(
+			function($option) use ($formId) {
+				return [
+					'component' => 'select-option',
+					'selectOptionLabel' => $option['title'] ?? '',
+					'selectOptionValue' => $option['id'] ?? '',
+					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId) === $option['id'],
+				];
+			},
+			$this->greenhouseClient->getJobsSimple()
+		);
+
+		array_unshift(
+			$jobIdOptions,
+			[
+				'component' => 'select-option',
+				'selectOptionLabel' => '',
+				'selectOptionValue' => '',
+			]
+		);
+
 		return [
 			'sidebar' => [
 				'label' => __('Greenhouse', 'eightshift-forms'),
@@ -99,15 +137,15 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'introSubtitle' => \__('Configure your greenhouse settings in one place.', 'eightshift-forms'),
 				],
 				[
-					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-					'inputFieldLabel' => \__('Job ID', 'eightshift-forms'),
-					'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-					'inputType' => 'text',
-					'inputIsRequired' => true,
-					'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-				],
+					'component' => 'select',
+					'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+					'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+					'selectFieldLabel' => \__('Job ID', 'eightshift-forms'),
+					'selectFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+					'selectOptions' => $jobIdOptions,
+					'selectIsRequired' => true,
+					'selectValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+				]
 			]
 		];
 	}
@@ -158,7 +196,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-					'inputIsReadOnly' => !empty($apiKey),
+					'inputIsDisabled' => !empty($apiKey),
 				],
 				[
 					'component' => 'input',
@@ -169,7 +207,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $boardToken ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-					'inputIsReadOnly' => !empty($boardToken),
+					'inputIsDisabled' => !empty($boardToken),
 				],
 			],
 		];

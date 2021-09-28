@@ -13,9 +13,6 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Mailer\MailerInterface;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
@@ -24,45 +21,6 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
-
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	public $validator;
-
-	/**
-	 * Instance variable of MailerInterface data.
-	 *
-	 * @var MailerInterface
-	 */
-	public $mailer;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
-	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds form labels data.
-	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		MailerInterface $mailer,
-		LabelsInterface $labels
-	) {
-		$this->validator = $validator;
-		$this->mailer = $mailer;
-		$this->labels = $labels;
-	}
-
 	/**
 	 * Method that returns project Route namespace.
 	 *
@@ -249,6 +207,26 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Return form Type from form params.
+	 *
+	 * @param array $params Array of params got from form.
+	 *
+	 * @return string
+	 */
+	protected function getFormType(array $params): string
+	{
+		$formType = $params['es-form-type'] ?? '';
+
+		if (!$formType) {
+			return '';
+		}
+
+		$formType = json_decode($formType, true)['value'];
+
+		return $formType;
+	}
+
+	/**
 	 * Return form ID from form params and determins if ID needs decrypting.
 	 *
 	 * @param array $params Array of params got from form.
@@ -283,6 +261,10 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function removeUneceseryParams(array $params): array
 	{
 		foreach ($params as $key => $value) {
+			if ($key === 'es-form-type') {
+				unset($params['es-form-type']);
+			}
+
 			if ($key === 'es-form-submit') {
 				unset($params['es-form-submit']);
 			}

@@ -107,7 +107,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$allSettings = self::GLOBAL_SETTINGS;
 
 		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$integrations[$key] = $integration['global'] ?? '';
+			$allSettings[$key] = $integration['global'] ?? '';
 		}
 
 		return $allSettings;

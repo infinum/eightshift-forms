@@ -20,7 +20,7 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormListingAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable of form listing.
+	 * Instance variable for listing.
 	 *
 	 * @var FormListingInterface
 	 */

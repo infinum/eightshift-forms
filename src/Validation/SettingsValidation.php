@@ -36,7 +36,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'validation';
 
 	/**
-	 * Instance variable of form labels data.
+	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
 	 */
@@ -45,7 +45,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param LabelsInterface $labels Inject documentsData which holds form labels data.
+	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
 	public function __construct(LabelsInterface $labels)
 	{

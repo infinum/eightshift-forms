@@ -9,6 +9,7 @@
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
+use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -21,6 +22,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	MailchimpMapper::FILTER_MAPPER_NAME,
 	[
 		'formPostId' => $formPostId,
+		'formType' => SettingsMailer::SETTINGS_TYPE_KEY,
 		'formTrackingEventName' => \apply_filters(
 			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,

@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 class FormAdminMenu extends AbstractAdminMenu
 {
 	/**
-	 * Instance variable of form listing data.
+	 * Instance variable for listing data.
 	 *
 	 * @var FormListingInterface
 	 */

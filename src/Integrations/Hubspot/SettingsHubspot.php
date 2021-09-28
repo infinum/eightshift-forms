@@ -137,7 +137,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-					'inputIsReadOnly' => !empty($apiKey),
+					'inputIsDisabled' => !empty($apiKey),
 				],
 			],
 		];

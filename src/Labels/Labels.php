@@ -39,8 +39,13 @@ class Labels implements LabelsInterface
 			'validationMinSize' => __('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
-			'mailerErrorEmailNotSent' => __('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-forms'),
-			'mailerSuccessSend' => __('Success', 'eightshift-forms'),
+
+			'mailerErrorEmail' => __('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-forms'),
+			'mailerSuccess' => __('Email sent', 'eightshift-forms'),
+
+			'greenhouseErrorUseMissing' => __('Greenhouse integration is not enabled in the configuration. Please contact your admin.', 'eightshift-forms'),
+			'greenhouseErrorJobIdMissing' => __('Greenhouse Job Id is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
+			'greenhouseSuccess' => __('Candidate saved successfully', 'eightshift-forms'),
 		];
 	}
 

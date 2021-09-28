@@ -22,7 +22,7 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable of form all settings.
+	 * Instance variable for all settings.
 	 *
 	 * @var SettingsAllInterface
 	 */

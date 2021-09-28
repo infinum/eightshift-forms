@@ -100,11 +100,16 @@ export class Form {
 				dataset = {},
 				checked,
 				files,
+				disabled,
 			} = item;
 
 			let {
 				value,
 			} = item;
+
+			if (disabled) {
+				continue;
+			}
 
 			let label = element.querySelector(`label[for="${id}"]`);
 
@@ -157,6 +162,14 @@ export class Form {
 			value: element.getAttribute('data-form-post-id'),
 			type: 'hidden',
 			label: 'Form Id',
+			data: {},
+		}));
+
+		formData.append('es-form-type', JSON.stringify({
+			id: 'es-form-type',
+			value: element.getAttribute('data-form-type'),
+			type: 'hidden',
+			label: 'Form type',
 			data: {},
 		}));
 

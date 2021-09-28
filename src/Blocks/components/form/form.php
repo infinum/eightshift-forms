@@ -24,6 +24,7 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
+$formType = Components::checkAttr('formType', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -43,6 +44,7 @@ $formClass = Components::classnames([
 	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
 	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
 	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
+	data-form-type="<?php echo esc_attr($formType); ?>"
 >
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

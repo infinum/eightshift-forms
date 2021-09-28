@@ -13,7 +13,12 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\TraitHelper;
 use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class FormSubmitRoute
@@ -29,6 +34,54 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * Use general helper trait.
 	 */
 	use TraitHelper;
+
+	/**
+	 * Instance variable of ValidatorInterface data.
+	 *
+	 * @var ValidatorInterface
+	 */
+	public $validator;
+
+	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
+	 * Instance variable of LabelsInterface data.
+	 *
+	 * @var LabelsInterface
+	 */
+	protected $labels;
+
+	/**
+	 * Instance variable of GreenhouseClientInterface data.
+	 *
+	 * @var GreenhouseClientInterface
+	 */
+	protected $greenhouseClient;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
+	 */
+	public function __construct(
+		ValidatorInterface $validator,
+		MailerInterface $mailer,
+		LabelsInterface $labels,
+		GreenhouseClientInterface $greenhouseClient
+	) {
+		$this->validator = $validator;
+		$this->mailer = $mailer;
+		$this->labels = $labels;
+		$this->greenhouseClient = $greenhouseClient;
+	}
 
 	/**
 	 * Route slug.
@@ -77,41 +130,30 @@ class FormSubmitRoute extends AbstractBaseRoute
 			// Get encripted form ID and decrypt it.
 			$formId = $this->getFormId($request->get_body_params(), true);
 
-			// Validate request.
-			$params = $this->verifyRequest($request, $formId);
+			// Determin form type.
+			$formType = $this->getFormType($request->get_body_params());
 
-			$postParams = $params['post'];
-			$files = $params['files'];
+			// Validate request.
+			$postParams = $this->verifyRequest($request, $formId);
+
+			// Prepare fields.
+			$params = $this->removeUneceseryParams($postParams['post']);
+
+			// Prepare files.
+			$files = $postParams['files'];
 
 			// Upload files to temp folder.
 			$files = $this->prepareFiles($files);
 
-			// Check if mailes data is set.
-			$mailerUse = $this->getSettingsValue(SettingsMailer::SETTINGS_TYPE_KEY . 'Use', $formId);
+			switch ($formType) {
+				case SettingsMailer::SETTINGS_TYPE_KEY:
+					return $this->sendEmail($formId, $params, $files);
+					break;
 
-			// Send email if everything is ok.
-			if ($mailerUse) {
-				$this->mailer->sendFormEmail(
-					$formId,
-					$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-					$files,
-					$this->removeUneceseryParams($postParams)
-				);
-			} else {
-				return \rest_ensure_response([
-					'code' => 404,
-					'status' => 'error',
-					'message' => $this->labels->getLabel('mailerErrorEmailNotSent', $formId),
-				]);
+				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					return $this->sendGreenhouse($formId, $params, $files);
+					break;
 			}
-
-			return \rest_ensure_response([
-				'code' => 200,
-				'status' => 'success',
-				'message' => $this->labels->getLabel('mailerSuccessSend', $formId),
-			]);
-
-			// return \rest_ensure_response($response);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response($e->getData());
@@ -121,5 +163,100 @@ class FormSubmitRoute extends AbstractBaseRoute
 				$this->deleteFiles($files);
 			}
 		}
+	}
+
+	/**
+	 * Use mailer function.
+	 *
+	 * @param string $formId Form ID
+	 * @param array $params Params array.
+	 * @param array $files Files array.
+	 *
+	 * @return mixed
+	 */
+	private function sendEmail(string $formId, array $params = [], $files = []) {
+		// Send email.
+		$mailer = $this->mailer->sendFormEmail(
+			$formId,
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			$files,
+			$params
+		);
+
+		// If email fails.
+		if (!$mailer) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('mailerErrorEmail', $formId),
+			]);
+		}
+
+		// If email success.
+		return \rest_ensure_response([
+			'code' => 200,
+			'status' => 'success',
+			'message' => $this->labels->getLabel('mailerSuccess', $formId),
+		]);
+	}
+
+	/**
+	 * Use Greenhouse function.
+	 *
+	 * @param string $formId Form ID
+	 * @param array $params Params array.
+	 * @param array $files Files array.
+	 *
+	 * @return mixed
+	 */
+	private function sendGreenhouse(string $formId, array $params = [], $files = []) {
+		// Check if greenhouse data is set.
+		$greenhouseUse = $this->getOptionValue(SettingsGreenhouse::SETTINGS_TYPE_KEY . 'Use');
+
+		// Send email if everything is ok.
+		if (!$greenhouseUse) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('greenhouseErrorUseMissing', $formId),
+			]);
+		}
+
+		// Check if greenhouse data is set.
+		$greenhouseJobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+
+		// Send email if everything is ok.
+		if (!$greenhouseUse) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('greenhouseErrorJobIdMissing', $formId),
+			]);
+		}
+
+		$response = $this->greenhouseClient->postGreenhouseApplication(
+			$greenhouseJobId,
+			$params,
+			$files
+		);
+
+		error_log( print_r( ( $response ), true ) );
+
+		$status = $response['status'] ?? 200;
+		$message = $response['error'] ?? '';
+
+		if ($status !== 200) {
+			return \rest_ensure_response([
+				'code' => $status,
+				'status' => 'error',
+				'message' => $message
+			]);
+		}
+
+		return \rest_ensure_response([
+			'code' => 200,
+			'status' => 'success',
+			'message' => $this->labels->getLabel('greenhouseSuccess', $formId),
+		]);
 	}
 }

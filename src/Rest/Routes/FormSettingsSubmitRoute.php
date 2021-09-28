@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class FormSettingsSubmitRoute
@@ -22,6 +23,25 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = '/form-settings-submit';
+
+
+	/**
+	 * Instance variable of ValidatorInterface data.
+	 *
+	 * @var ValidatorInterface
+	 */
+	public $validator;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 */
+	public function __construct(
+		ValidatorInterface $validator
+	) {
+		$this->validator = $validator;
+	}
 
 	/**
 	 * Get the base url of the route

@@ -8,7 +8,8 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseMapper;
+use EightshiftForms\Integrations\Greenhouse\Greenhouse;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -18,9 +19,10 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formPostIdDecoded = Helper::encryptor('decode', $formPostId);
 
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	GreenhouseMapper::FILTER_MAPPER_NAME,
+	Greenhouse::FILTER_MAPPER_NAME,
 	[
 		'formPostId' => $formPostId,
+		'formType' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
 		'formTrackingEventName' => \apply_filters(
 			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,

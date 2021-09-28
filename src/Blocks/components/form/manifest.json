@@ -43,6 +43,9 @@
 		},
 		"formTrackingEventName": {
 			"type": "string"
+		},
+		"formType": {
+			"type": "string"
 		}
 	},
 	"options": {

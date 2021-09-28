@@ -8,6 +8,7 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -31,6 +32,7 @@ $formClass = Components::classnames([
 		Components::props('form', $attributes, [
 			'formContent' => $innerBlockContent,
 			'formPostId' => $formPostId,
+			'formType' => SettingsMailer::SETTINGS_TYPE_KEY,
 			'formTrackingEventName' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 				SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,

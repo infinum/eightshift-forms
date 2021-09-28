@@ -18,7 +18,7 @@ use EightshiftForms\Labels\LabelsInterface;
 class Validator extends AbstractValidation
 {
 	/**
-	 * Instance variable of form labels data.
+	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
 	 */
@@ -27,7 +27,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Create a new instance.
 	 *
-	 * @param LabelsInterface $labels Inject documentsData which holds form labels data.
+	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
 	public function __construct(LabelsInterface $labels)
 	{
@@ -78,12 +78,12 @@ class Validator extends AbstractValidation
 						}
 						break;
 					case 'validationEmail':
-						if ($dataValue === '1' && !$this->isEmail($inputValue) && $dataKey['validationRequired'] === '1') {
+						if ($dataValue === '1' && !$this->isEmail($inputValue) && $inputData['validationRequired'] === '1') {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
 					case 'validationUrl':
-						if ($dataValue === '1' && !$this->isUrl($inputValue) && $dataKey['validationRequired'] === '1') {
+						if ($dataValue === '1' && !$this->isUrl($inputValue) && $inputData['validationRequired'] === '1') {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
@@ -124,17 +124,17 @@ class Validator extends AbstractValidation
 			foreach ($inputData as $dataKey => $dataValue) {
 				switch ($dataKey) {
 					case 'validationAccept':
-						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue) && $dataKey['validationRequired'] === '1') {
+						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue) && $inputData['validationRequired'] === '1') {
 							$output[$inputName] = sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
 						}
 						break;
 					case 'validationMinSize':
-						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000) && $dataKey['validationRequired'] === '1') {
+						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000) && $inputData['validationRequired'] === '1') {
 							$output[$inputName] = sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue);
 						}
 						break;
 					case 'validationMaxSize':
-						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000) && $dataKey['validationRequired'] === '1') {
+						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000) && $inputData['validationRequired'] === '1') {
 							$output[$inputName] = sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue);
 						}
 						break;
