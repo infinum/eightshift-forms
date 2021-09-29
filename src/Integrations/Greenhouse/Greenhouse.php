@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
@@ -24,7 +24,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter Name
@@ -189,7 +189,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $required,
 								'selectOptions' => array_map(
-									function($selectOption) {
+									function ($selectOption) {
 										return [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['label'],

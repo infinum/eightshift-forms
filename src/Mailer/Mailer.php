@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 
 /**
  * Class Mailer
@@ -20,7 +20,7 @@ class Mailer implements MailerInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Send email function for form ID.

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -23,7 +23,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter settings key.
@@ -34,6 +34,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_greenhouse';
+
+	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_greenhouse';
 
 	/**
 	 * Settings key.
@@ -86,6 +91,27 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+	}
+
+	/**
+	 * Determin if settings are valid.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsValid(string $formId): bool
+	{
+		$jobKey = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+		$apiKey = Variables::getApiKeyGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY);
+		$boardToken = Variables::getBoardTokenGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+
+		if (empty($jobKey) || empty($apiKey) || empty($boardToken)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -104,7 +130,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		}
 
 		$jobIdOptions = array_map(
-			function($option) use ($formId) {
+			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
@@ -144,7 +170,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'selectFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 					'selectOptions' => $jobIdOptions,
 					'selectIsRequired' => true,
-					'selectValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
+					'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 				]
 			]
 		];

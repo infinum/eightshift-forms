@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -21,7 +21,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter settings key.

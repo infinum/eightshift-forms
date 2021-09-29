@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftFormsVendor\PHPHtmlParser\Dom;
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -24,7 +24,7 @@ class MailchimpMapper extends AbstractFormBuilder implements ServiceInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter Name

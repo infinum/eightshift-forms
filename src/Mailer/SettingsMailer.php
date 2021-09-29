@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -22,12 +23,17 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter settings key.
 	 */
 	public const FILTER_SETTINGS_NAME = 'es_forms_settings_mailer';
+
+	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_mailer';
 
 	/**
 	 * Settings key.
@@ -67,6 +73,28 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+	}
+
+	/**
+	 * Determin if settings are valid.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsValid(string $formId): bool
+	{
+		$senderName = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$senderEmail = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
+		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
+
+		if (empty($senderName) || empty($senderEmail) || empty($to) || empty($subject)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -136,7 +164,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 					'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
 					'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
-					'textareaIsRequired' => true,
+					'textareaIsRequired' => false,
 					'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 				],
 			]

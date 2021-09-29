@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
 /**
@@ -22,7 +22,7 @@ abstract class AbstractFormBuilder
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Build public facing form.

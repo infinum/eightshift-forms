@@ -1,5 +1,4 @@
 import React from 'react';
-import { __, sprintf } from '@wordpress/i18n';
 import classnames from 'classnames';
 import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';

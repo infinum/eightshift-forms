@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 
 /**
@@ -21,7 +21,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Transient cache name.
@@ -42,9 +42,9 @@ class GreenhouseClient implements GreenhouseClientInterface
 			$output = array_map(
 				function ($job) {
 					$jobId = $job['id'];
-	
+
 					$job = $this->getGreenhouseJob((string) $jobId);
-	
+
 					if (!$job) {
 						return [];
 					}
@@ -132,9 +132,6 @@ class GreenhouseClient implements GreenhouseClientInterface
 				'data_format' => 'body',
 			]
 		);
-
-		error_log( print_r( ( $response ), true ) );
-		
 
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 	}

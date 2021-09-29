@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 
 /**
  * Labels class.
@@ -20,7 +20,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Get all labels
@@ -30,6 +30,7 @@ class Labels implements LabelsInterface
 	public function getLabels(): array
 	{
 		return [
+			// Validation.
 			'validationRequired' => __('This field is required!', 'eightshift-forms'),
 			'validationEmail' => __('This field is not a valid email!', 'eightshift-forms'),
 			'validationUrl' => __('This field is not a valid url!', 'eightshift-forms'),
@@ -40,12 +41,16 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
 
-			'mailerErrorEmail' => __('Email not sent due to configuration issue. Please contact your admin.', 'eightshift-forms'),
-			'mailerSuccess' => __('Email sent', 'eightshift-forms'),
+			// Mailer.
+			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please contact your admin.', 'eightshift-forms'),
+			'mailerErrorEmailSend' => __('Email not sent due to unknown issue. Please contact your admin.', 'eightshift-forms'),
+			'mailerSuccess' => __('Email sent successfully.', 'eightshift-forms'),
 
-			'greenhouseErrorUseMissing' => __('Greenhouse integration is not enabled in the configuration. Please contact your admin.', 'eightshift-forms'),
+			// Greenhouse.
+			'greenhouseWpError' => __('There was some problem with saving your application. Please contact your admin.', 'eightshift-forms'),
+			'greenhouseErrorSettingsMissing' => __('Greenhouse integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'greenhouseErrorJobIdMissing' => __('Greenhouse Job Id is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
-			'greenhouseSuccess' => __('Candidate saved successfully', 'eightshift-forms'),
+			'greenhouseSuccess' => __('Candidate saved successfully.', 'eightshift-forms'),
 		];
 	}
 

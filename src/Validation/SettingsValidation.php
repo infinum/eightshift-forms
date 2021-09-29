@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -23,7 +23,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter settings key.

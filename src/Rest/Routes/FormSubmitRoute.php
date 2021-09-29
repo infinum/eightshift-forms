@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
@@ -33,7 +33,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -168,13 +168,26 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Use mailer function.
 	 *
-	 * @param string $formId Form ID
+	 * @param string $formId Form ID.
 	 * @param array $params Params array.
 	 * @param array $files Files array.
 	 *
 	 * @return mixed
 	 */
-	private function sendEmail(string $formId, array $params = [], $files = []) {
+	private function sendEmail(string $formId, array $params = [], $files = [])
+	{
+		// Check if greenhouse data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('mailerErrorSettingsMissing', $formId),
+			]);
+		}
+
 		// Send email.
 		$mailer = $this->mailer->sendFormEmail(
 			$formId,
@@ -188,7 +201,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 404,
 				'status' => 'error',
-				'message' => $this->labels->getLabel('mailerErrorEmail', $formId),
+				'message' => $this->labels->getLabel('mailerErrorEmailSend', $formId),
 			]);
 		}
 
@@ -203,48 +216,46 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Use Greenhouse function.
 	 *
-	 * @param string $formId Form ID
+	 * @param string $formId Form ID.
 	 * @param array $params Params array.
 	 * @param array $files Files array.
 	 *
 	 * @return mixed
 	 */
-	private function sendGreenhouse(string $formId, array $params = [], $files = []) {
-		// Check if greenhouse data is set.
-		$greenhouseUse = $this->getOptionValue(SettingsGreenhouse::SETTINGS_TYPE_KEY . 'Use');
+	private function sendGreenhouse(string $formId, array $params = [], $files = [])
+	{
 
-		// Send email if everything is ok.
-		if (!$greenhouseUse) {
+		// Check if greenhouse data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
 			return \rest_ensure_response([
 				'code' => 404,
 				'status' => 'error',
-				'message' => $this->labels->getLabel('greenhouseErrorUseMissing', $formId),
+				'message' => $this->labels->getLabel('greenhouseErrorSettingsMissing', $formId),
 			]);
 		}
 
-		// Check if greenhouse data is set.
-		$greenhouseJobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
-
-		// Send email if everything is ok.
-		if (!$greenhouseUse) {
-			return \rest_ensure_response([
-				'code' => 404,
-				'status' => 'error',
-				'message' => $this->labels->getLabel('greenhouseErrorJobIdMissing', $formId),
-			]);
-		}
-
+		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postGreenhouseApplication(
-			$greenhouseJobId,
+			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 			$params,
 			$files
 		);
 
-		error_log( print_r( ( $response ), true ) );
-
 		$status = $response['status'] ?? 200;
 		$message = $response['error'] ?? '';
 
+		if (is_wp_error($response)) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('greenhouseWpError', $formId),
+			]);
+		}
+
+		// Bailout if Greenhouse returns error.
 		if ($status !== 200) {
 			return \rest_ensure_response([
 				'code' => $status,
@@ -253,6 +264,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
+		// Finish with success.
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',

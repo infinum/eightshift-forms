@@ -19,6 +19,14 @@ $blockClass = $attributes['blockClass'] ?? '';
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formPostIdDecoded = Helper::encryptor('decode', $formPostId);
 
+// Check if mailer data is set and valid.
+$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formPostIdDecoded);
+
+// Bailout if settings are not ok.
+if (!$isSettingsValid) {
+	return;
+}
+
 $formClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 ]);

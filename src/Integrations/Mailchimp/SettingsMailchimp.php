@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftForms\Helpers\TraitHelper;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -24,7 +24,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Use general helper trait.
 	 */
-	use TraitHelper;
+	use SettingsHelper;
 
 	/**
 	 * Filter settings key.
@@ -35,6 +35,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_mailchimp';
+
+	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_mailchimp';
 
 	/**
 	 * Settings key.

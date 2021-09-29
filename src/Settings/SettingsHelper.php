@@ -8,12 +8,15 @@
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Helpers;
+namespace EightshiftForms\Settings;
+
+use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 /**
- * TraitHelper trait.
+ * SettingsHelper trait.
  */
-trait TraitHelper
+trait SettingsHelper
 {
 	/**
 	 * Get settings value.
