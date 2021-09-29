@@ -1,7 +1,7 @@
 {
 	"blockName": "checkboxes",
 	"title": "Checkboxes",
-	"description" : "Checkboxes block.",
+	"description" : "Block used for grouping multiple checkboxes.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

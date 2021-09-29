@@ -1,7 +1,7 @@
 {
 	"blockName": "radios",
 	"title": "Radios",
-	"description" : "Radios block.",
+	"description" : "Block used for grouping multiple radios.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

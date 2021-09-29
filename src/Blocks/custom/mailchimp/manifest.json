@@ -1,7 +1,7 @@
 {
 	"blockName": "mailchimp",
-	"title": "Mailchimp Forms",
-	"description" : "Mailchimp block.",
+	"title": "Mailchimp Form",
+	"description" : "Block used to show Mailchimp subscription form.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

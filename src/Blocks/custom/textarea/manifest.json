@@ -1,7 +1,7 @@
 {
 	"blockName": "textarea",
 	"title": "Textarea",
-	"description" : "Textarea block.",
+	"description" : "Block used for large text input.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

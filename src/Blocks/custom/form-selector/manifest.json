@@ -1,7 +1,7 @@
 {
 	"blockName": "form-selector",
 	"title": "Eightshift Forms",
-	"description" : "Forms block.",
+	"description" : "Select what form type you would like to use for this specific form.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"
@@ -15,7 +15,8 @@
 			"type": "array",
 			"default": [
 				"eightshift-forms/form",
-				"eightshift-forms/mailchimp"
+				"eightshift-forms/mailchimp",
+				"eightshift-forms/greenhouse"
 			]
 		}
 	}

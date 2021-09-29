@@ -1,7 +1,7 @@
 {
 	"blockName": "input",
 	"title": "Input",
-	"description" : "Input block.",
+	"description" : "Block used for generic input like text, email, url, hidden and etc.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

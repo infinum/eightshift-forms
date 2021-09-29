@@ -1,7 +1,7 @@
 {
 	"blockName": "select",
 	"title": "Select",
-	"description" : "Select block.",
+	"description" : "Block used for select/dropdown.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

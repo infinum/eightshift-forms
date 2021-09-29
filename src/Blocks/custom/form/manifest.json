@@ -1,7 +1,7 @@
 {
 	"blockName": "form",
 	"title": "Custom Form",
-	"description" : "Form block.",
+	"description" : "Block used for custom form builder.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

@@ -1,7 +1,7 @@
 {
 	"blockName": "forms",
 	"title": "Eightshift Forms",
-	"description" : "Forms block.",
+	"description" : "Block used to select what type of form you would like to use on your page.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

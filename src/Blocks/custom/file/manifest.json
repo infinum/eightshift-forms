@@ -1,7 +1,7 @@
 {
 	"blockName": "file",
 	"title": "File",
-	"description" : "File block.",
+	"description" : "Block used for file upload.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

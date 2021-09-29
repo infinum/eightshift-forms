@@ -1,7 +1,7 @@
 {
 	"blockName": "greenhouse",
-	"title": "Greenhouse Forms",
-	"description" : "Greenhouse block.",
+	"title": "Greenhouse Form",
+	"description" : "Block used to show Greenhouse application form.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"

@@ -1,7 +1,7 @@
 {
 	"blockName": "checkbox",
 	"title": "Checkbox",
-	"description" : "Checkbox block.",
+	"description" : "Block used for checkbox.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"
