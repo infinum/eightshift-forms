@@ -13,6 +13,8 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 
+use function EightshiftFormsVendor\DI\value;
+
 /**
  * GreenhouseClient integration class.
  */
@@ -24,68 +26,47 @@ class GreenhouseClient implements GreenhouseClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name.
+	 * Transient cache name for simple jobs.
 	 */
 	public const CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME = 'es_greenhouse_jobs_cache';
 
 	/**
-	 * Return jobs list from Greenhouse
-	 *
-	 * @return array
+	 * Transient cache name for jobs questions.
 	 */
-	public function getJobs(): array
-	{
-		$output = get_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME);
-
-		// Check if form exists in cache.
-		if (empty($output)) {
-			$output = array_map(
-				function ($job) {
-					$jobId = $job['id'];
-
-					$job = $this->getGreenhouseJob((string) $jobId);
-
-					if (!$job) {
-						return [];
-					}
-
-					return [
-						'id' => (string) $jobId,
-						'title' => $job['title'] ?? '',
-						'content' => $job['content'] ?? '',
-						'locations' => explode(', ', $job['location']['name']),
-						'updatedAt' => $job['updated_at'],
-						'questions' => $job['questions'] ?? [],
-					];
-				},
-				$this->getGreenhouseJobs()
-			);
-
-			set_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME, $output, 3600);
-		}
-
-		return $output;
-	}
+	public const CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME = 'es_greenhouse_jobs_questions_cache';
 
 	/**
 	 * Return jobs simple list from Greenhouse.
 	 *
 	 * @return array
 	 */
-	public function getJobsSimple(): array
+	public function getJobs(): array
 	{
-		$output = array_map(
-			function ($job) {
-				$jobId = $job['id'] ?? '';
-				if ($jobId) {
-					return [
+		$output = get_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Check if form exists in cache.
+		if (empty($output)) {
+			$jobs = $this->getGreenhouseJobs();
+
+			if ($jobs) {
+				foreach ($jobs as $job) {
+					$jobId = $job['id'] ?? '';
+
+					if (!$jobId) {
+						continue;
+					}
+
+					$output[$jobId] = [
 						'id' => (string) $jobId,
 						'title' => $job['title'] ?? '',
+						'locations' => explode(', ', $job['location']['name']),
+						'updatedAt' => $job['updated_at'],
 					];
 				}
-			},
-			$this->getJobs()
-		);
+
+				set_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME, $output, 3600);
+			}
+		}
 
 		return $output;
 	}
@@ -97,18 +78,24 @@ class GreenhouseClient implements GreenhouseClientInterface
 	 *
 	 * @return array
 	 */
-	public function getJob(string $jobId): array
+	public function getJobQuestions(string $jobId): array
 	{
-		$output = array_filter(
-			$this->getJobs(),
-			function ($job) use ($jobId) {
-				if ($job['id'] === $jobId) {
-					return $job;
-				}
-			}
-		);
+		$output = get_transient(self::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
-		return (array) array_values($output)[0];
+		// Check if form exists in cache.
+		if (empty($output) || !isset($output[$jobId]) || empty($output[$jobId])) {
+			$job = $this->getGreenhouseJob($jobId);
+
+			$questions = $job['questions'] ?? [];
+
+			if ($jobId && $questions) {
+				$output[$jobId] = $job['questions'] ?? [];
+
+				set_transient(self::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME, $output, 3600);
+			}
+		}
+
+		return $output[$jobId] ?? [];
 	}
 
 	/**
@@ -150,6 +137,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs",
 			[
 				'headers' => $this->getHeaders(),
+				'timeout' => 60,
 			]
 		);
 
@@ -169,6 +157,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
 			[
 				'headers' => $this->getHeaders(),
+				'timeout' => 60,
 			]
 		);
 

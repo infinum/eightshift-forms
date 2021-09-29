@@ -51,7 +51,7 @@ $checkboxClass = Components::classnames([
 			for="<?php echo esc_attr($checkboxId); ?>"
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
-			<?php echo esc_attr($checkboxLabel); ?>
+			<?php echo wp_kses_post(\apply_filters('the_content', $checkboxLabel)); ?>
 		</label>
 	</div>
 

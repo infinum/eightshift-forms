@@ -85,21 +85,15 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return '';
 		}
 
-		// Get Job details.
-		$job = $this->greenhouseClient->getJob($jobId);
-		if (empty($job)) {
-			return '';
-		}
-
-		// Get questions.
-		$questions = $this->getFields($job['questions']);
+		// Get Job questions.
+		$questions = $this->greenhouseClient->getJobQuestions($jobId);
 		if (empty($questions)) {
 			return '';
 		}
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$questions,
+			$this->getFields($questions),
 			$formAdditionalProps
 		);
 	}

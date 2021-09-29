@@ -184,6 +184,12 @@ export class Form {
 				item.innerHTML = fields[key];
 			}
 		}
+
+		if (typeof fields !== 'undefined') {
+			const firstItem = Object.keys(fields)[0];
+
+			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
+		}
 	}
 
 	reset = (element) => {
@@ -269,5 +275,11 @@ export class Form {
 		});
 
 		return Object.assign({}, { event: eventName, ...data });
+	}
+
+	scrollToElement = (element) => {
+		if (element !== null) {
+			element.scrollIntoView(true);
+		}
 	}
 }

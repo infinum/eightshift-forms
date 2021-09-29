@@ -15,18 +15,11 @@ interface GreenhouseClientInterface
 {
 
 	/**
-	 * Return jobs list from Greenhouse
-	 *
-	 * @return array
-	 */
-	public function getJobs(): array;
-
-	/**
 	 * Return jobs simple list from Greenhouse.
 	 *
 	 * @return array
 	 */
-	public function getJobsSimple(): array;
+	public function getJobs(): array;
 
 	/**
 	 * Return job with cache option for faster loading.
@@ -35,7 +28,7 @@ interface GreenhouseClientInterface
 	 *
 	 * @return array
 	 */
-	public function getJob(string $jobId): array;
+	public function getJobQuestions(string $jobId): array;
 
 	/**
 	 * API request to post job application to Greenhouse.

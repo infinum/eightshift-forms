@@ -138,7 +138,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId) === $option['id'],
 				];
 			},
-			$this->greenhouseClient->getJobsSimple()
+			$this->greenhouseClient->getJobs()
 		);
 
 		array_unshift(
