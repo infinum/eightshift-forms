@@ -123,7 +123,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$optionsSet = $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
+		$optionsSet = Variables::getApiKeyGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY);
 
 		if (!$optionsSet) {
 			return [];

@@ -76,10 +76,13 @@ class GreenhouseClient implements GreenhouseClientInterface
 	{
 		$output = array_map(
 			function ($job) {
-				return [
-					'id' => (string) $job['id'],
-					'title' => $job['title'] ?? '',
-				];
+				$jobId = $job['id'] ?? '';
+				if ($jobId) {
+					return [
+						'id' => (string) $jobId,
+						'title' => $job['title'] ?? '',
+					];
+				}
 			},
 			$this->getJobs()
 		);
