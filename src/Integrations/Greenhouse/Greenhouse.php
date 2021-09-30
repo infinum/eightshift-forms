@@ -93,7 +93,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFields($questions),
+			$this->getFields($questions, $formId),
 			$formAdditionalProps
 		);
 	}
@@ -102,10 +102,11 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 * Map Greenhouse fields to our components.
 	 *
 	 * @param array $data Fields.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function getFields(array $data): array
+	public function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -126,6 +127,20 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				$type = $field['type'] ?? '';
 				$name = $field['name'] ?? '';
 				$values = $field['values'];
+
+				if (
+					$field['name'] === 'resume_text' &&
+					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId)
+				) {
+					continue;
+				}
+
+				if (
+					$field['name'] === 'cover_letter_text' &&
+					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId)
+				) {
+					continue;
+				}
 
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {

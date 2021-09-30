@@ -1,4 +1,6 @@
 .es-form {
+	$this: &;
+
 	&__integration {
 		background-color: var(--global-colors-es-alto);
 		width: 100%;
@@ -14,20 +16,26 @@
 		margin-right: 0;
 	}
 
-	.block-editor-inner-blocks {
-		padding-left: 0;
-		padding-right: 0;
-	}
+	> #{$this}__fields {
+		> .block-editor-inner-blocks {
+			padding-left: 0;
+			padding-right: 0;
 
-	.block-editor-block-list__layout {
-		display: flex;
-		flex-wrap: wrap;
-		margin-left: calc(var(--es-form-scoped-spacing) * -1);
-		margin-right: calc(var(--es-form-scoped-spacing) * -1);
+			> .block-editor-block-list__layout {
+				display: flex;
+				flex-wrap: wrap;
+				margin-left: calc(var(--es-form-scoped-spacing) * -1);
+				margin-right: calc(var(--es-form-scoped-spacing) * -1);
 
-		> * {
-			padding-left: var(--es-form-scoped-spacing);
-			padding-right: var(--es-form-scoped-spacing);
+				> * { // stylelint-disable-line max-nesting-depth
+					padding-left: var(--es-form-scoped-spacing);
+					padding-right: var(--es-form-scoped-spacing);
+					margin-left: 0;
+					margin-right: 0;
+					flex: 0 0 var(--field-width, 100%);
+					max-width: var(--field-width, 100%);
+				}
+			}
 		}
 	}
 }

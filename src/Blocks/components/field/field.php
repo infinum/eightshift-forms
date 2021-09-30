@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Enqueue\Blocks\EnqueueBlocks;
 use EightshiftForms\Helpers\Components;
 
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
@@ -15,6 +16,19 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+
+// Update media breakpoints from the filter.
+$customMediaBreakpoints = apply_filters(EnqueueBlocks::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+if (
+	has_filter(EnqueueBlocks::FILTER_MEDIA_BREAKPOINTS_NAME) &&
+	is_array($customMediaBreakpoints) &&
+	isset($customMediaBreakpoints['mobile']) &&
+	isset($customMediaBreakpoints['tablet']) &&
+	isset($customMediaBreakpoints['desktop']) &&
+	isset($customMediaBreakpoints['large'])
+) {
+	$globalManifest['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+}
 
 $unique = Components::getUnique();
 

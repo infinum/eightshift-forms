@@ -2,8 +2,8 @@
 	margin: 0 0 20px 0;
 	border: none;
 	padding: 0;
-	flex: 0 0 var(--field-width);
-	max-width: var(--field-width);
+	flex: 0 0 var(--field-width, 100%);
+	max-width: var(--field-width, 100%);
 
 	&__label {
 		margin-bottom: 10px;

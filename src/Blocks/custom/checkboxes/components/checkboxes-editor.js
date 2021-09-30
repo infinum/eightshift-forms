@@ -5,7 +5,7 @@ import { CheckboxesEditor as CheckboxesEditorComponent } from '../../../componen
 import manifest from '../manifest.json';
 
 
-export const CheckboxesEditor = ({ attributes, setAttributes }) => {
+export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 	const {
 		blockClass,
 	} = attributes;
@@ -17,6 +17,7 @@ export const CheckboxesEditor = ({ attributes, setAttributes }) => {
 			{...props('checkboxes', attributes, {
 				setAttributes: setAttributes,
 				blockClass,
+				clientId,
 				checkboxesContent: <InnerBlocks
 													allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
 													templateLock={false}

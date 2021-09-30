@@ -1,5 +1,8 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
 import classnames from 'classnames';
+import { isObject } from 'lodash';
 import {
 	selector,
 	checkAttr,
@@ -19,6 +22,18 @@ export const FieldEditor = (attributes) => {
 		additionalClass,
 		clientId,
 	} = attributes;
+
+	// Update media breakpoints from the filter.
+	if (
+		isObject(esFormsBlocksLocalization.mediaBreakpoints) &&
+		esFormsBlocksLocalization.mediaBreakpoints &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "mobile") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "tablet") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "desktop") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "large")
+	) {
+		Object.assign(globalManifest.globalVariables.breakpoints, esFormsBlocksLocalization.mediaBreakpoints);
+	}
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
@@ -58,7 +73,7 @@ export const FieldEditor = (attributes) => {
 	const DivContent = () => {
 		return(
 			<div className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, globalManifest)}
+				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
 
 				{fieldLabel &&
 					<LabelDefault />
@@ -72,7 +87,7 @@ export const FieldEditor = (attributes) => {
 	const FieldsetContent = () => {
 		return(
 			<fieldset className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, globalManifest)}
+				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
 
 				{fieldLabel &&
 					<LegendDefault />

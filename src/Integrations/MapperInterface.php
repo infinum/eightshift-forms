@@ -28,8 +28,9 @@ interface MapperInterface
 	 * Map Greenhouse fields to our components.
 	 *
 	 * @param array $data Fields.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array
 	 */
-	public function getFields(array $data): array;
+	public function getFields(array $data, string $formId): array;
 }

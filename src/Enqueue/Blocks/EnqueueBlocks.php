@@ -21,6 +21,10 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
  */
 class EnqueueBlocks extends AbstractEnqueueBlocks
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Filter additional blocks key.
@@ -28,9 +32,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public const FILTER_ADDITIONAL_BLOCKS_NAME = 'es_forms_additional_blocks';
 
 	/**
-	 * Use general helper trait.
+	 * Filter media breakpoints key.
 	 */
-	use SettingsHelper;
+	public const FILTER_MEDIA_BREAKPOINTS_NAME = 'es_forms_media_breakpoints';
 
 	/**
 	 * Create a new admin instance.
@@ -143,14 +147,17 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getLocalizations(): array
 	{
-		if (!is_admin()) {
-			return [];
+		$output = [];
+
+		// Only for block editor.
+		if (is_admin()) {
+			$output['additionalBlocks'] = apply_filters(self::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 		}
 
+		$output['mediaBreakpoints'] = apply_filters(self::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+
 		return [
-			'esFormsBlocksLocalization' => [
-				'additionalBlocks' => apply_filters(self::FILTER_ADDITIONAL_BLOCKS_NAME, []),
-			]
+			'esFormsBlocksLocalization' => $output,
 		];
 	}
 }

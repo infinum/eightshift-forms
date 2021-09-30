@@ -71,6 +71,16 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouseJobId';
 
 	/**
+	 * Hide resume textarea Key.
+	 */
+	public const SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY = 'greenhouseHideResumeTextarea';
+
+	/**
+	 * Hide Cover Letter textarea Key.
+	 */
+	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouseHideCoverLetterTextarea';
+
+	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var GreenhouseClientInterface
@@ -185,7 +195,30 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectOptions' => $jobIdOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
-			]
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Show/Hide specific fields', 'eightshift-forms'),
+				'checkboxesFieldHelp' => \__('Select if you want to show additional textarea for input fields provided by Greenhouse.', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
+						'checkboxLabel' => __('Hide resume textarea', 'eightshift-forms'),
+						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId)),
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
+						'checkboxLabel' => __('Hide cover letter textarea', 'eightshift-forms'),
+						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId)),
+						'checkboxValue' => 'true',
+					]
+				]
+			],
 		];
 	}
 

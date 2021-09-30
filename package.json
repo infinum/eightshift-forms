@@ -35,7 +35,7 @@
 		"webpack-cli": "^4.7.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "https://github.com/infinum/eightshift-frontend-libs.git#develop"
+		"@eightshift/frontend-libs": "git+https://github.com/infinum/eightshift-frontend-libs.git#develop"
 	},
 	"husky": {
 		"hooks": {

@@ -2,7 +2,7 @@ import React from 'react';
 import { props } from '@eightshift/frontend-libs/scripts';
 import { FileEditor as FileEditorComponent } from '../../../components/file/components/file-editor';
 
-export const FileEditor = ({ attributes, setAttributes }) => {
+export const FileEditor = ({ attributes, setAttributes, clientId }) => {
 
 	const {
 		blockClass,
@@ -13,6 +13,7 @@ export const FileEditor = ({ attributes, setAttributes }) => {
 			{...props('file', attributes, {
 				setAttributes: setAttributes,
 				blockClass,
+				clientId,
 			})}
 		/>
 	);
