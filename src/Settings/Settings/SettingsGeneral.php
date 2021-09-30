@@ -54,6 +54,16 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'generalTrackingEventName';
 
 	/**
+	 * Disable default styles key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY = 'generalDisableDefaultStyles';
+
+	/**
+	 * Disable default scripts key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY = 'generalDisableDefaultScripts';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -118,6 +128,30 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		return [];
+		return [
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Scripts & Styles', 'eightshift-forms'),
+				'checkboxesFieldHelp' => \__('Select options you want to disable on your forms. <br />Keep in mind that you know what you are doing and that you will provide your own styles and scripts.', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
+						'checkboxLabel' => __('Disable default Styles', 'eightshift-forms'),
+						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)),
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
+						'checkboxLabel' => __('Disable default Scripts', 'eightshift-forms'),
+						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)),
+						'checkboxValue' => 'true',
+					]
+				]
+			],
+		];
 	}
 }

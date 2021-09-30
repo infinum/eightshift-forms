@@ -1,15 +1,25 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl} from '@wordpress/components';
+import { Fragment } from '@wordpress/element';
+import { TextControl, RangeControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
+	Responsive,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FieldOptions = (attributes) => {
+	const {
+		attributes: manifestAttributes,
+		responsiveAttributes: {
+			fieldWidth
+		},
+		options
+	} = manifest;
+
 	const {
 		setAttributes,
 	} = attributes;
@@ -32,6 +42,29 @@ export const FieldOptions = (attributes) => {
 				value={fieldHelp}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 			/>
+
+			<Responsive
+				label={<IconLabel icon={icons.Width} label={__('Width', 'eightshift-forms')} />}
+			>
+				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
+					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
+
+					return (
+						<Fragment key={index}>
+							<RangeControl
+								label={breakpoint}
+								allowReset={true}
+								value={checkAttr(responsiveAttribute, attributes, manifest, true)}
+								onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
+								min={options.fieldWidth.min}
+								max={options.fieldWidth.max}
+								step={options.fieldWidth.step}
+								resetFallbackValue={defaultWidth}
+							/>
+						</Fragment>
+					);
+				})}
+			</Responsive>
 		</>
 	);
 };

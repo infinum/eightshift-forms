@@ -8,12 +8,15 @@
 
 use EightshiftForms\Helpers\Components;
 
+$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+
+$unique = Components::getUnique();
 
 $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
@@ -39,7 +42,10 @@ if ($fieldType === 'fieldset') {
 
 ?>
 
-<<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>">
+<<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
+
+	<?php echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+
 	<?php if ($fieldLabel) { ?>
 		<<?php echo esc_attr($labelTag); ?>
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"

@@ -7,4 +7,27 @@
 		align-items: center;
 		justify-content: center;
 	}
+
+	&__fields {
+		display: block;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.block-editor-inner-blocks {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.block-editor-block-list__layout {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: calc(var(--es-form-scoped-spacing) * -1);
+		margin-right: calc(var(--es-form-scoped-spacing) * -1);
+
+		> * {
+			padding-left: var(--es-form-scoped-spacing);
+			padding-right: var(--es-form-scoped-spacing);
+		}
+	}
 }

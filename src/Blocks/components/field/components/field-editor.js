@@ -1,7 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import {
+	selector,
+	checkAttr,
+	outputCssVariables
+} from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import globalManifest from './../../../manifest.json';
 
 export const FieldEditor = (attributes) => {
 	const {
@@ -12,6 +17,7 @@ export const FieldEditor = (attributes) => {
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
+		clientId,
 	} = attributes;
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
@@ -52,6 +58,8 @@ export const FieldEditor = (attributes) => {
 	const DivContent = () => {
 		return(
 			<div className={fieldClass}>
+				{outputCssVariables(attributes, manifest, clientId, globalManifest)}
+
 				{fieldLabel &&
 					<LabelDefault />
 				}
@@ -64,6 +72,8 @@ export const FieldEditor = (attributes) => {
 	const FieldsetContent = () => {
 		return(
 			<fieldset className={fieldClass}>
+				{outputCssVariables(attributes, manifest, clientId, globalManifest)}
+
 				{fieldLabel &&
 					<LegendDefault />
 				}

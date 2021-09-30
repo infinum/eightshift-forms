@@ -36,6 +36,45 @@
 		"fieldUseError": {
 			"type": "boolean",
 			"default": true
+		},
+		"fieldWidthLarge": {
+			"type": "integer",
+			"default": 4
+		},
+		"fieldWidthDesktop": {
+			"type": "integer"
+		},
+		"fieldWidthTablet": {
+			"type": "integer"
+		},
+		"fieldWidthMobile": {
+			"type": "integer",
+			"default": 5
+		}
+	},
+	"responsiveAttributes": {
+		"fieldWidth": {
+			"large": "fieldWidthLarge",
+			"desktop": "fieldWidthDesktop",
+			"tablet": "fieldWidthTablet",
+			"mobile": "fieldWidthMobile"
+		}
+	},
+	"variables": {
+		"fieldWidth": [
+			{
+				"inverse": true,
+				"variable": {
+					"field-width": "calc((%value%/12)*100%)"
+				}
+			}
+		]
+	},
+	"options": {
+		"fieldWidth": {
+			"min":  1,
+			"max":  12,
+			"step": 1
 		}
 	}
 }

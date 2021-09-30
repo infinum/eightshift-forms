@@ -12,6 +12,8 @@ namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\FormSubmitRoute;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -20,6 +22,10 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
  */
 class EnqueueTheme extends AbstractEnqueueTheme
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Create a new admin instance.
@@ -38,8 +44,36 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueStyles'], 10);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueStylesLocal'], 10);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsLocal']);
+	}
+
+	/**
+	 * Method that returns frontend script with check.
+	 *
+	 * @return mixed
+	 */
+	public function enqueueScriptsLocal()
+	{
+		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)) {
+			return null;
+		}
+
+		return $this->enqueueScripts();
+	}
+
+	/**
+	 * Method that returns frontend style with check.
+	 *
+	 * @return mixed
+	 */
+	public function enqueueStylesLocal()
+	{
+		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)) {
+			return null;
+		}
+
+		return $this->enqueueStyles();
 	}
 
 	/**
