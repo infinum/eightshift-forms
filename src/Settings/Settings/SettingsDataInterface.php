@@ -16,6 +16,13 @@ namespace EightshiftForms\Settings\Settings;
 interface SettingsDataInterface
 {
 	/**
+	 * Get Settings sidebar data.
+	 *
+	 * @return array
+	 */
+	public function getSettingsSidebar(): array;
+
+	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.

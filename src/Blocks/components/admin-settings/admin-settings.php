@@ -54,7 +54,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 									href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
 									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 								>
-									<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-icon dashicons {$icon}"); ?> "></span>
+									<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 									<?php echo esc_html($label); ?>
 								</a>
 							</li>

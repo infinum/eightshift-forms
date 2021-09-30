@@ -68,7 +68,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'mangage-options';
+	public const ADMIN_MENU_CAPABILITY = 'eightshift-form-form-settings';
 
 	/**
 	 * Menu slug for this admin sub menu

@@ -61,6 +61,7 @@ $layoutClass = Components::classnames([
 						<li class="<?php echo \esc_attr("{$componentClass}__list-item"); ?>">
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($editLink); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
+									<span class="dashicons dashicons-feedback <?php echo \esc_attr("{$componentClass}__label-icon"); ?>"></span>
 									<?php echo esc_html($title); ?>
 								</a>
 

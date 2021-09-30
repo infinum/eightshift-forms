@@ -24,11 +24,17 @@
 	&__label {
 		font-size: 16px;
 		text-decoration: none;
+		display: flex;
+		align-items: center;
 		transition: {
 			property: color;
 			timing-function: ease-in-out;
 			duration: 0.2s;
 		}
+	}
+
+	&__label-icon {
+		margin-right: 10px;
 	}
 
 	&__item-status {

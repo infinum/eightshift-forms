@@ -27,15 +27,18 @@ class Integrations
 		SettingsMailchimp::SETTINGS_TYPE_KEY => [
 			'global' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsMailchimp::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsMailchimp::FILTER_SETTINGS_SIDEBAR_NAME,
 			'mapper' => MailchimpMapper::FILTER_MAPPER_NAME,
 		],
 		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 			'global' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsGreenhouse::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsGreenhouse::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsHubspot::SETTINGS_TYPE_KEY => [
 			'global' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsHubspot::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 	];
 }

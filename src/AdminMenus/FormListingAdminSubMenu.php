@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Helpers\Components;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
@@ -64,7 +63,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'mangage-options';
+	public const ADMIN_MENU_CAPABILITY = 'eightshift-form-listing';
 
 	/**
 	 * Menu slug for this admin sub menu

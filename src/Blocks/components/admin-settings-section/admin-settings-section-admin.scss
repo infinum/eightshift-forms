@@ -89,13 +89,18 @@
 	&__menu-link {
 		padding: 10px var(--global-es-spacing-vertical);
 		border-bottom: 1px solid var(--global-colors-es-french);
-		display: block;
+		display: flex;
+		align-items: center;
 		text-decoration: none;
 		color: var(--global-colors-es-boulder);
 		transition: {
 			property: color, background-color;
 			timing-function: ease-in-out;
 			duration: 0.2s;
+		}
+
+		svg {
+			margin-right: 15px;
 		}
 
 		&:hover,

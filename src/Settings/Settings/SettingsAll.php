@@ -33,6 +33,15 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	];
 
 	/**
+	 * All settings sidebars.
+	 */
+	public const ALL_SETTINGS_SIDEBARS = [
+		SettingsGeneral::SETTINGS_TYPE_KEY    => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
+		SettingsValidation::SETTINGS_TYPE_KEY => SettingsValidation::FILTER_SETTINGS_SIDEBAR_NAME,
+		SettingsMailer::SETTINGS_TYPE_KEY     => SettingsMailer::FILTER_SETTINGS_SIDEBAR_NAME,
+	];
+
+	/**
 	 * Filter block setting value key.
 	 */
 	public const FILTER_BLOCK_SETTING_VALUE_NAME = 'es_forms_block_setting_value';
@@ -64,7 +73,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		}
 
 		// Loop all settings.
-		foreach ($this->getAllSettings() as $filter) {
+		foreach ($this->getAllSettingsSidebars() as $filter) {
 			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
@@ -79,10 +88,10 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 			}
 
 			// Check sidebar value for type.
-			$value = $data['sidebar']['value'] ?? '';
+			$value = $data['value'] ?? '';
 
 			// Populate sidebar data.
-			$output[$value] = $data['sidebar'] ?? [];
+			$output[$value] = $data ?? [];
 		}
 
 		// Return all settings data.
@@ -122,7 +131,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 
 		// Populate and build form.
 		return $this->buildSettingsForm(
-			$data['form'] ?? [],
+			$data ?? [],
 			[
 				'formPostId' => $formId
 			]
@@ -140,6 +149,22 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	public function getBlockSettingValue(string $key, string $formId)
 	{
 		return $this->getSettingsValue($key, $formId);
+	}
+
+	/**
+	 * Get all integration settings sidebar merged with general settings.
+	 *
+	 * @return array
+	 */
+	private function getAllSettingsSidebars(): array
+	{
+		$allSettings = self::ALL_SETTINGS_SIDEBARS;
+
+		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
+			$allSettings[$key] = $integration['settingsSidebar'] ?? '';
+		}
+
+		return $allSettings;
 	}
 
 	/**

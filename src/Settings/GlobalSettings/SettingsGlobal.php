@@ -29,6 +29,13 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	];
 
 	/**
+	 * All global settings sidebars.
+	 */
+	public const GLOBAL_SETTINGS_SIDEBARS = [
+		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
+	];
+
+	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $type Form Type to show.
@@ -40,7 +47,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$output = [];
 
 		// Loop all settings.
-		foreach ($this->getAllSettings() as $filter) {
+		foreach ($this->getAllSettingsSidebars() as $filter) {
 			// Determin if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
@@ -55,10 +62,10 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 			}
 
 			// Check sidebar value for type.
-			$value = $data['sidebar']['value'] ?? '';
+			$value = $data['value'] ?? '';
 
 			// Populate sidebar data.
-			$output[$value] = $data['sidebar'] ?? [];
+			$output[$value] = $data ?? [];
 		}
 
 		// Return all settings data.
@@ -93,8 +100,24 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 
 		// Populate and build form.
 		return $this->buildSettingsForm(
-			$data['form'] ?? []
+			$data ?? []
 		);
+	}
+
+	/**
+	 * Get all integration settings sidebar merged with general settings.
+	 *
+	 * @return array
+	 */
+	private function getAllSettingsSidebars(): array
+	{
+		$allSettings = self::GLOBAL_SETTINGS_SIDEBARS;
+
+		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
+			$allSettings[$key] = $integration['settingsSidebar'] ?? '';
+		}
+
+		return $allSettings;
 	}
 
 	/**
