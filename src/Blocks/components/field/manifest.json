@@ -38,19 +38,16 @@
 			"default": true
 		},
 		"fieldWidthLarge": {
-			"type": "integer",
-			"default": 4
+			"type": "integer"
 		},
 		"fieldWidthDesktop": {
 			"type": "integer"
 		},
 		"fieldWidthTablet": {
-			"type": "integer",
-			"default": 6
+			"type": "integer"
 		},
 		"fieldWidthMobile": {
-			"type": "integer",
-			"default": 12
+			"type": "integer"
 		}
 	},
 	"responsiveAttributes": {
