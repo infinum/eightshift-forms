@@ -154,7 +154,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'phone',
+						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 					];
