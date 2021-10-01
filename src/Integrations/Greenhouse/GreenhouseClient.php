@@ -13,8 +13,6 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 
-use function EightshiftFormsVendor\DI\value;
-
 /**
  * GreenhouseClient integration class.
  */

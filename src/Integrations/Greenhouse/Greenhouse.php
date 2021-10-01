@@ -32,11 +32,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public const FILTER_MAPPER_NAME = 'es_greenhouse_mapper_filter';
 
 	/**
-	 * Transient cache name.
-	 */
-	public const CACHE_GREENHOUSE_MAPPER_TRANSIENT_NAME = 'es_greenhouse_mapper_cache';
-
-	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var GreenhouseClientInterface
@@ -115,13 +110,14 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		}
 
 		foreach ($data as $question) {
+			if (empty($question)) {
+				continue;
+			}
+
 			$fields = $question['fields'] ?? '';
 			$label = $question['label'] ?? '';
 			$required = $question['required'] ?? false;
 
-			if (empty($question)) {
-				continue;
-			}
 
 			foreach ($fields as $field) {
 				$type = $field['type'] ?? '';

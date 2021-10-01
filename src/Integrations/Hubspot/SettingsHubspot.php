@@ -143,7 +143,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'inputFieldHelp' => \__('Open your Hubspot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputIsRequired' => true,
-				'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 				'inputIsDisabled' => !empty($apiKey),
 			],
 		];

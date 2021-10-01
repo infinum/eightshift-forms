@@ -3,7 +3,7 @@
 /**
  * File containing Greenhouse Connect interface
  *
- * @package EightshiftForms\Integrations
+ * @package EightshiftForms\Integrations\Greenhouse
  */
 
 namespace EightshiftForms\Integrations\Greenhouse;

@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations;
 
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Mailchimp\MailchimpMapper;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 
 /**
@@ -28,7 +27,6 @@ class Integrations
 			'global' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsMailchimp::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsMailchimp::FILTER_SETTINGS_SIDEBAR_NAME,
-			'mapper' => MailchimpMapper::FILTER_MAPPER_NAME,
 		],
 		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 			'global' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,

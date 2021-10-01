@@ -261,7 +261,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputIsRequired' => true,
-				'inputValue' => $apiKey ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 				'inputIsDisabled' => !empty($apiKey),
 			],
 			[
@@ -272,7 +272,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'inputFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputIsRequired' => true,
-				'inputValue' => $boardToken ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+				'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 				'inputIsDisabled' => !empty($boardToken),
 			],
 		];

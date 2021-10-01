@@ -15,6 +15,8 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
+use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Mailer\SettingsMailer;
@@ -64,23 +66,33 @@ class FormSubmitRoute extends AbstractBaseRoute
 	protected $greenhouseClient;
 
 	/**
+	 * Instance variable for Mailchimp data.
+	 *
+	 * @var MailchimpClientInterface
+	 */
+	protected $mailchimpClient;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
+	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		MailerInterface $mailer,
 		LabelsInterface $labels,
-		GreenhouseClientInterface $greenhouseClient
+		GreenhouseClientInterface $greenhouseClient,
+		MailchimpClientInterface $mailchimpClient
 	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
 		$this->labels = $labels;
 		$this->greenhouseClient = $greenhouseClient;
+		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
@@ -152,6 +164,10 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
 					return $this->sendGreenhouse($formId, $params, $files);
+					break;
+
+				case SettingsMailchimp::SETTINGS_TYPE_KEY:
+					return $this->sendMailchimp($formId, $params);
 					break;
 			}
 		} catch (UnverifiedRequestException $e) {
@@ -269,6 +285,63 @@ class FormSubmitRoute extends AbstractBaseRoute
 			'code' => 200,
 			'status' => 'success',
 			'message' => $this->labels->getLabel('greenhouseSuccess', $formId),
+		]);
+	}
+
+	/**
+	 * Use Mailchimp function.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array $params Params array.
+	 *
+	 * @return mixed
+	 */
+	private function sendMailchimp(string $formId, array $params = [])
+	{
+
+		// Check if greenhouse data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('mailchimpErrorSettingsMissing', $formId),
+			]);
+		}
+
+		// Send application to Greenhouse.
+		$response = $this->mailchimpClient->postMailchimpSubscription(
+			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
+			$params
+		);
+
+		$status = $response['status'] ?? 'subscribed';
+		$message = $response['title'] ?? '';
+
+		if (is_wp_error($response)) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('mailchimpWpError', $formId),
+			]);
+		}
+
+		// Bailout if Greenhouse returns error.
+		if ($status !== 'subscribed') {
+			return \rest_ensure_response([
+				'code' => $status,
+				'status' => 'error',
+				'message' => $message
+			]);
+		}
+
+		// Finish with success.
+		return \rest_ensure_response([
+			'code' => 200,
+			'status' => 'success',
+			'message' => $this->labels->getLabel('mailchimpSuccess', $formId),
 		]);
 	}
 }
