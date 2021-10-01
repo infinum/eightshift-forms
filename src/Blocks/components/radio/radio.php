@@ -29,6 +29,7 @@ $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($radioIsDisabled, $componentClass, '', 'disabled'),
 ]);
 
 ?>
