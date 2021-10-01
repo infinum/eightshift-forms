@@ -39,11 +39,13 @@ $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
+$fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 ]);
 
 $fieldTag = 'div';
