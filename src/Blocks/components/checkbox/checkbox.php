@@ -29,6 +29,7 @@ $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
 ]);
 
 ?>

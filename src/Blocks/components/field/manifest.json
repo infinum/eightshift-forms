@@ -48,6 +48,11 @@
 		},
 		"fieldWidthMobile": {
 			"type": "integer"
+		},
+
+		"fieldDisabled": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"responsiveAttributes": {
