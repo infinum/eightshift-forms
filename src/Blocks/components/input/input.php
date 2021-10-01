@@ -61,5 +61,6 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldContent' => $input,
 		'fieldId' => $inputId,
 		'fieldName' => $inputName,
+		'fieldDisabled' => !empty($inputIsDisabled),
 	])
 );

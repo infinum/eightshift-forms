@@ -54,5 +54,6 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		'fieldContent' => $textarea,
 		'fieldId' => $textareaId,
 		'fieldName' => $textareaName,
+		'fieldDisabled' => !empty($textareaIsDisabled),
 	])
 );

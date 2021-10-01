@@ -56,6 +56,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	'field',
 	Components::props('field', $attributes, [
 		'fieldContent' => $submitType === 'button' ? $button : $submit,
-		'fieldId' => $submitId
+		'fieldId' => $submitId,
+		'fieldDisabled' => !empty($submitIsDisabled),
 	])
 );
