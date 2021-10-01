@@ -48,8 +48,8 @@ $button = '
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
-	>' . esc_html($submitValue) . '
-	</button>
+	><span>' . esc_html($submitValue) . '
+	</span></button>
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
