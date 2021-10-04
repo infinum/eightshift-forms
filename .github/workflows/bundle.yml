@@ -1,6 +1,7 @@
 name: Bundle release
 
 on:
+  push:
   release:
     types: [ published ]
   # Allow manually triggering the workflow.
@@ -59,8 +60,8 @@ jobs:
 
       - name: Move bundled files to a subfolder
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/.github/bundle-plugin.sh"
-          bash "${GITHUB_WORKSPACE}/.github/bundle-plugin.sh"
+          chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
+          bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
         shell: bash
 
       - name: Archive assets
