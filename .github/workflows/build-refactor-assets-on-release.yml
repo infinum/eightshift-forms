@@ -1,8 +1,8 @@
 name: Build assets on release and create archive
 on: 
   push:
-    tags:
-      - '*.*.*-alpha'
+    branches:
+      - 'refactor'
 jobs:
   release:
     runs-on: ubuntu-latest

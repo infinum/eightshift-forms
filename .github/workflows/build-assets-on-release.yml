@@ -3,7 +3,8 @@ on:
   push:
     tags:
       - '*.*.*'
-      - '!*.*.*-alpha'
+    branches-ignore:
+      - 'refactor'
 jobs:
   release:
     runs-on: ubuntu-latest
