@@ -60,7 +60,7 @@ jobs:
       - name: Move bundled files to a subfolder
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/bundle-plugin.sh"
-          bash "${GITHUB_WORKSPACE}/.github/script.sh"
+          bash "${GITHUB_WORKSPACE}/.github/bundle-plugin.sh"
         shell: bash
 
       - name: Archive assets
