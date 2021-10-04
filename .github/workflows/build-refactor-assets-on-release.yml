@@ -50,12 +50,12 @@ jobs:
     - name: Archive Release
       uses: thedoctor0/zip-release@master
       with:
-        filename: 'release.zip'
+        filename: 'eightshift-forms.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'
 
     - name: Add artifacts to release
       uses: softprops/action-gh-release@v1
       with:
-        files: release.zip
+        files: eightshift-forms.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
