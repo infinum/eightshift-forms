@@ -58,7 +58,8 @@ jobs:
         run: npm run build --no-dev --no-progress
 
       - name: Move bundled files to a subfolder
-        run: bash bin/bundle-plugin.sh .
+        run: bash ./bin/bundle-plugin.sh .
+        shell: bash
 
       - name: Archive assets
         uses: thedoctor0/zip-release@master
