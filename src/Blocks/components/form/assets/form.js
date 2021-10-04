@@ -46,8 +46,7 @@ export class Form {
 				return response.json();
 			})
 			.then((response) => {
-				// Reset all error classes on fields.
-				element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((e) => e.classList.remove(this.CLASS_HAS_ERROR));	
+				this.resetErrors(element);
 
 				this.hideLoader(element);
 
@@ -229,6 +228,11 @@ export class Form {
 		}
 
 		loader.classList.remove(this.CLASS_ACTIVE);
+	}
+
+	resetErrors = (form) => {
+		// Reset all error classes on fields.
+		form.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));	
 	}
 
 	setGlobalMsg = (form, msg, status) => {
