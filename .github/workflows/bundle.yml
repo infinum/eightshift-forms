@@ -22,52 +22,52 @@ jobs:
             echo "::set-output name=value::main"
           fi
 
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ steps.version_tag.outputs.value }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.version_tag.outputs.value }}
 
-    - uses: "shivammathur/setup-php@v2"
-      with:
-        php-version: "7.4"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
 
-    - name: Install dependencies
-      uses: ramsey/composer-install@v1
-      with:
-        composer-options: '-oa --no-dev'
+      - name: Install dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: '-oa --no-dev'
 
-    - name: Set Node.js version
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
 
-    - name: Cache node modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.OS }}-build-${{ env.cache-name }}-
-          ${{ runner.OS }}-build-
-          ${{ runner.OS }}-
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
 
 
-    - name: Install node packages
-      run: npm install
+      - name: Install node packages
+        run: npm install
 
-    - name: Install node packages
-      run: npm run build --no-dev --no-progress
+      - name: Install node packages
+        run: npm run build --no-dev --no-progress
 
-    - name: Archive assets
-      uses: thedoctor0/zip-release@master
-      with:
-        filename: 'eightshift-forms.zip'
-        exclusions: '*.git* *tests/ *bin/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json'
-        path: '.'
-        directory: '.'
+      - name: Archive assets
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: 'eightshift-forms.zip'
+          exclusions: '*.git* *tests/ *bin/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json'
+          path: '.'
+          directory: '.'
 
-    - name: Upload zip to release
-      uses: AButler/upload-release-assets@v2.0
-      with:
-        files: 'eightshift-forms.zip'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload zip to release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'eightshift-forms.zip'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
