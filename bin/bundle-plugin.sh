@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-#set -x # debugging purposes
+set -x # debugging purposes
 
 # Arguments
 # $1 - current_path variable (root)
