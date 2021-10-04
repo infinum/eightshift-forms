@@ -54,27 +54,11 @@ jobs:
       - name: Install node packages
         run: npm install
 
-      - name: Install node packages
+      - name: Bundle assets
         run: npm run build --no-dev --no-progress
 
-      - name: Move build files to a folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: eightshift-forms
-          path: |
-            public/
-            src/
-            vendor/
-            CHANGELOG.md
-            eightshift-forms.php
-            LICENSE
-            README.md
-            uninstall.php
-
-      - name: Download build files folder
-        uses: actions/download-artifact@v2
-        with:
-          name: eightshift-forms
+      - name: Move bundled files to a subfolder
+        run: bash bin/bundle-plugin.sh .
 
       - name: Archive assets
         uses: thedoctor0/zip-release@master
@@ -82,7 +66,7 @@ jobs:
           type: 'zip'
           filename: 'eightshift-forms.zip'
           exclusions: '*.git* *tests/ bin/ assets/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json node_modules/*'
-          path: '.eightshift-forms'
+          path: '.eightshift-forms/'
           directory: '.'
 
       - name: Upload zip to release
