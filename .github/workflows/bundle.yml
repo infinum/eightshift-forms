@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  bundle-release:
+  bundle:
     name: Add zip to release
     runs-on: ubuntu-latest
     steps:
@@ -15,7 +15,11 @@ jobs:
         id: version_tag
         run: |
           [[ ! "$GITHUB_REF" =~ refs/tags ]] && exit
-          echo "::set-output name=value::${GITHUB_REF#refs/tags/}"
+          if [[ $GITHUB_REF =~ [\d+\.]+-(\w+) ]]; then
+            echo "::set-output name=value::${BASH_REMATCH[1]}"
+          else
+            echo "::set-output name=value::main"
+          fi
 
       - name: Echo
         run: echo ${{ steps.version_tag.outputs.value }}
