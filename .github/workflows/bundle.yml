@@ -1,0 +1,79 @@
+name: Bundle release
+
+on:
+  release:
+    types: [ published ]
+  # Allow manually triggering the workflow.
+  workflow_dispatch:
+
+jobs:
+  bundle:
+    name: Add zip to release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version tag
+        id: version_tag
+        run: |
+          [[ ! "$GITHUB_REF" =~ refs/tags ]] && exit
+          VERSION=${GITHUB_REF#refs/tags/}
+          if [[ "$VERSION" =~ -([a-z]+) ]]; then
+            echo "::set-output name=value::${BASH_REMATCH[1]}"
+          else
+            echo "::set-output name=value::main"
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.version_tag.outputs.value }}
+
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: '-oa --no-dev'
+
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+
+      - name: Install node packages
+        run: npm install
+
+      - name: Bundle assets
+        run: npm run build --no-dev --no-progress
+
+      - name: Move bundled files to a subfolder
+        run: |
+          chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
+          bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
+        shell: bash
+
+      - name: Archive assets
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'eightshift-forms.zip'
+          exclusions: '*.git* *tests/ bin/ assets/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json node_modules/*'
+          path: '.eightshift-forms/'
+          directory: '.'
+
+      - name: Upload zip to release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'eightshift-forms.zip'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
