@@ -15,9 +15,6 @@ jobs:
       matrix:
           node: [14]
     steps:
-      - name: TEST
-        run: ${{ github }}
-
       - name: Extract tag name
         id: tag
         uses: actions/github-script@0.2.0
@@ -28,7 +25,7 @@ jobs:
 
       - name: Echo
         run: echo ${{ steps.tag.outputs.result }}
-        
+
 #    - name: Checkout
 #      uses: actions/checkout@v2
 #      with:
