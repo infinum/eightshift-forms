@@ -8,6 +8,8 @@ export class Form {
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 
 		this.CLASS_ACTIVE = 'is-active';
+		this.CLASS_LOADING = 'is-loading';
+		this.CLASS_HAS_ERROR = 'has-error';
 	}
 
 	init = () => {
@@ -40,51 +42,51 @@ export class Form {
 		};
 
 		fetch(this.formSubmitRestApiUrl, body)
-		.then((response) => {
-			return response.json();
-		})
-		.then((response) => {
+			.then((response) => {
+				return response.json();
+			})
+			.then((response) => {
+				this.resetErrors(element);
 
-			this.hideLoader(element);
+				this.hideLoader(element);
 
-			if (response.code === 200) {
+				if (response.code === 200) {
+					// Send GTM.
+					this.gtmSubmit(element);
 
-				// Send GTM.
-				this.gtmSubmit(element);
+					// If success, redirect or output msg.
+					const isRedirect = element.getAttribute('data-success-redirect');
+					if (isRedirect !== '') {
+						this.setGlobalMsg(element, response.message, 'success');
 
-				// If success, redirect or output msg.
-				const isRedirect = element.getAttribute('data-success-redirect');
-				if (isRedirect !== '') {
-					this.setGlobalMsg(element, response.message, 'success');
-
-					setTimeout(() => {
-						window.location.href = isRedirect;
-					}, 1000);
-				} else {
-					this.setGlobalMsg(element, response.message, 'success');
+						setTimeout(() => {
+							window.location.href = isRedirect;
+						}, 1000);
+					} else {
+						this.setGlobalMsg(element, response.message, 'success');
+					}
 				}
-			}
 
-			// Normal errors.
-			if (response.status === 'error') {
-				this.setGlobalMsg(element, response.message, 'error');
-			}
+				// Normal errors.
+				if (response.status === 'error') {
+					this.setGlobalMsg(element, response.message, 'error');
+				}
 
-			// Fatal errors, trigger bugsnag.
-			if (response.status === 'error_fatal') {
-				this.setGlobalMsg(element, response.message, 'error');
-				throw new Error(JSON.stringify(response));
-			}
+				// Fatal errors, trigger bugsnag.
+				if (response.status === 'error_fatal') {
+					this.setGlobalMsg(element, response.message, 'error');
+					throw new Error(JSON.stringify(response));
+				}
 
-			// Validate fields.
-			if (response.status === 'error_validation') {
-				this.outputErrors(element, response.validation);
-			}
+				// Validate fields.
+				if (response.status === 'error_validation') {
+					this.outputErrors(element, response.validation);
+				}
 
-			setTimeout(() => {
-				this.hideGlobalMsg(element);
-			}, 6000);
-		});
+				setTimeout(() => {
+					this.hideGlobalMsg(element);
+				}, 6000);
+			});
 	}
 
 	formatFormData = (element) => {
@@ -177,8 +179,11 @@ export class Form {
 	}
 
 	outputErrors = (element, fields) => {
+		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
+
+			item?.parentElement?.classList.add(this.CLASS_HAS_ERROR);
 
 			if (item !== null) {
 				item.innerHTML = fields[key];
@@ -201,48 +206,67 @@ export class Form {
 		this.unsetGlobalMsg(element);
 	}
 
-	showLoader = (element) => {
-		const item = element.querySelector(this.loaderSelector);
+	showLoader = (form) => {
+		const loader = form.querySelector(this.loaderSelector);
 
-		if (item !== null) {
-			item.classList.add(this.CLASS_ACTIVE)
+		form?.classList?.add(this.CLASS_LOADING);
+
+		if (!loader) {
+			return;
 		}
+
+		loader.classList.add(this.CLASS_ACTIVE);
 	}
 
-	hideLoader = (element) => {
-		const item = element.querySelector(this.loaderSelector);
+	hideLoader = (form) => {
+		const loader = form.querySelector(this.loaderSelector);
 
-		if (item !== null) {
-			item.classList.remove(this.CLASS_ACTIVE)
+		form?.classList?.remove(this.CLASS_LOADING);
+
+		if (!loader) {
+			return;
 		}
+
+		loader.classList.remove(this.CLASS_ACTIVE);
 	}
 
-	setGlobalMsg = (element, msg, status) => {
-		const item = element.querySelector(this.globalMsgSelector);
-
-		if (item !== null) {
-			item.classList.add(this.CLASS_ACTIVE);
-			item.setAttribute('data-status', status);
-			item.innerHTML = `<span>${msg}</span>`;
-		}
+	resetErrors = (form) => {
+		// Reset all error classes on fields.
+		form.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));	
 	}
 
-	unsetGlobalMsg(element) {
-		const item = element.querySelector(this.globalMsgSelector);
+	setGlobalMsg = (form, msg, status) => {
+		const messageContainer = form.querySelector(this.globalMsgSelector);
 
-		if (item !== null) {
-			item.classList.remove(this.CLASS_ACTIVE);
-			item.setAttribute('data-status', '');
-			item.innerHTML = '';
+		if (!messageContainer) {
+			return;
 		}
+
+		messageContainer.classList.add(this.CLASS_ACTIVE);
+		messageContainer.dataset.status = status;
+		messageContainer.innerHTML = `<span>${msg}</span>`;
 	}
 
-	hideGlobalMsg(element) {
-		const item = element.querySelector(this.globalMsgSelector);
+	unsetGlobalMsg(form) {
+		const messageContainer = form.querySelector(this.globalMsgSelector);
 
-		if (item !== null) {
-			item.classList.remove(this.CLASS_ACTIVE);
+		if (!messageContainer) {
+			return;
 		}
+
+		messageContainer.classList.remove(this.CLASS_ACTIVE);
+		messageContainer.dataset.status = '';
+		messageContainer.innerHTML = '';
+	}
+
+	hideGlobalMsg(form) {
+		const messageContainer = form.querySelector(this.globalMsgSelector);
+
+		if (!messageContainer) {
+			return;
+		}
+
+		messageContainer.classList.remove(this.CLASS_ACTIVE);
 	}
 
 	gtmSubmit(element) {
@@ -251,8 +275,8 @@ export class Form {
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
 
-			if (window.dataLayer && gtmData?.event) {
-				window.dataLayer.push(gtmData);
+			if (window?.dataLayer && gtmData?.event) {
+				window?.dataLayer.push(gtmData);
 			}
 		}
 	}
