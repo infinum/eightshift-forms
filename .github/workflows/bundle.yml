@@ -62,26 +62,14 @@ jobs:
         with:
           name: eightshift-forms
           path: |
-            !.git/
-            !.gitattributes
-            !.gitignore
-            !*tests/
-            !bin/
-            !assets/
-            !*.eslintignore
-            !*.eslintrc
-            !*.stylelintrc
-            !CODE_OF_CONDUCT.md
-            !*.config.js
-            !*.yml
-            !*.xml
-            !*.xml.dist
-            !*.neon.dist
-            !composer.json
-            !composer.lock
-            !package.json
-            !package-lock.json
-            !node_modules/*
+            public/
+            src/
+            vendor/
+            CHANGELOG.md
+            eightshift-forms.php
+            LICENSE
+            README.md
+            uninstall.php
 
       - name: Download build files folder
         uses: actions/download-artifact@v2
