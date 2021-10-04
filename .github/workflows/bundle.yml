@@ -60,7 +60,7 @@ jobs:
       - name: Move bundled files to a subfolder
         run: |
           chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
-          bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
+          bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh ."
         shell: bash
 
       - name: Archive assets
@@ -69,7 +69,7 @@ jobs:
           type: 'zip'
           filename: 'eightshift-forms.zip'
           exclusions: '*.git* *tests/ bin/ assets/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json node_modules/*'
-          path: '.eightshift-forms/'
+          path: 'eightshift-forms/'
           directory: '.'
 
       - name: Upload zip to release
