@@ -1,4 +1,4 @@
-name: Build assets on release and create archive
+name: Build Refactor branch assets on release and create archive
 on: 
   push:
     branches:
