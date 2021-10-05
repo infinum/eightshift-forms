@@ -136,7 +136,9 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		return [
+		$isUsed = (bool) $this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId);
+
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Mailing setting', 'eightshift-forms'),
@@ -157,55 +159,65 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
-				'inputFieldLabel' => \__('Sender Name', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define sender name showed in the email client.', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
-				'inputFieldLabel' => \__('Sender Email', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define sender email showed in the email client.', 'eightshift-forms'),
-				'inputType' => 'email',
-				'inputIsRequired' => true,
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
-				'inputFieldLabel' => \__('Email to', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define to what address the email will be sent', 'eightshift-forms'),
-				'inputType' => 'email',
-				'inputIsRequired' => true,
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
-				'inputFieldLabel' => \__('Email subject', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define email subject', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			],
-			[
-				'component' => 'textarea',
-				'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
-				'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
-				'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
-				'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
-				'textareaIsRequired' => false,
-				'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
-			],
 		];
+
+		if ($isUsed) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
+						'inputFieldLabel' => \__('Sender Name', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Define sender name showed in the email client.', 'eightshift-forms'),
+						'inputType' => 'text',
+						'inputIsRequired' => true,
+						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
+						'inputFieldLabel' => \__('Sender Email', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Define sender email showed in the email client.', 'eightshift-forms'),
+						'inputType' => 'email',
+						'inputIsRequired' => true,
+						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
+						'inputFieldLabel' => \__('Email to', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Define to what address the email will be sent', 'eightshift-forms'),
+						'inputType' => 'email',
+						'inputIsRequired' => true,
+						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
+						'inputFieldLabel' => \__('Email subject', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Define email subject', 'eightshift-forms'),
+						'inputType' => 'text',
+						'inputIsRequired' => true,
+						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+					],
+					[
+						'component' => 'textarea',
+						'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
+						'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
+						'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
+						'textareaFieldHelp' => \__('Define email template', 'eightshift-forms'),
+						'textareaIsRequired' => false,
+						'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+					],
+				]
+			);
+		}
+
+		return $output;
 	}
 }

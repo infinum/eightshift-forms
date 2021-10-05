@@ -192,9 +192,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 */
 	private function sendEmail(string $formId, array $params = [], $files = [])
 	{
-		$isUsed = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
+		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
-		if (empty($isUsed)) {
+		if (!$isUsed) {
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
