@@ -104,7 +104,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 				'inputFieldLabel' => \__('Success Redirection Url', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define url to redirect after the form is submitted with success.', 'eightshift-forms'),
+				'inputFieldHelp' => \__('Define URL to redirect to after the form is submitted with success. You can do basic templating with <code>{field_name}</code> to replace parts of the URL.', 'eightshift-forms'),
 				'inputType' => 'url',
 				'inputIsUrl' => true,
 				'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),

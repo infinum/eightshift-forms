@@ -55,13 +55,20 @@ export class Form {
 					this.gtmSubmit(element);
 
 					// If success, redirect or output msg.
-					const isRedirect = element.getAttribute('data-success-redirect');
+					let isRedirect = element?.dataset?.successRedirect ?? '';
+
 					if (isRedirect !== '') {
 						this.setGlobalMsg(element, response.message, 'success');
 
+						// Replace string templates.
+						for (var [key, val] of this.formatFormData(element).entries()) {
+							const { value } = JSON.parse(val);
+							isRedirect = isRedirect.replaceAll(`{${key}}`, encodeURIComponent(value));
+						}
+
 						setTimeout(() => {
 							window.location.href = isRedirect;
-						}, 1000);
+						}, 600);
 					} else {
 						this.setGlobalMsg(element, response.message, 'success');
 					}
@@ -232,7 +239,7 @@ export class Form {
 
 	resetErrors = (form) => {
 		// Reset all error classes on fields.
-		form.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));	
+		form.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
 	}
 
 	setGlobalMsg = (form, msg, status) => {
