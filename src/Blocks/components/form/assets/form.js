@@ -197,7 +197,7 @@ export class Form {
 			}
 		}
 
-		if (typeof fields !== 'undefined') {
+		if (typeof fields !== 'undefined' && element?.dataset?.scrollToErrors) {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
