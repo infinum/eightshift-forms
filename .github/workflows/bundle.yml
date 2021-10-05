@@ -59,9 +59,9 @@ jobs:
 
       - name: Move bundled files to a subfolder
         run: |
+          chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
           ls -all "$GITHUB_WORKSPACE/bin"
           pwd
-          chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
           bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh $GITHUB_WORKSPACE"
         shell: bash
 
