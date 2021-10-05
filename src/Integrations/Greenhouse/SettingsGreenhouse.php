@@ -119,11 +119,31 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsValid(string $formId): bool
 	{
-		$jobKey = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
-		$apiKey = Variables::getApiKeyGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY);
-		$boardToken = Variables::getBoardTokenGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+		if (!$this->isSettingsGlobalValid($formId)) {
+			return false;
+		}
 
-		if (empty($jobKey) || empty($apiKey) || empty($boardToken)) {
+		$jobKey = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+
+		if (empty($jobKey)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determin if settings global are valid.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsGlobalValid(): bool
+	{
+		$isUsed = $this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY);
+		$apiKey = Variables::getApiKeyGreenhouse() ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
+		$boardToken = Variables::getBoardTokenGreenhouse() ?? $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+
+		if (empty($isUsed) || empty($apiKey) || empty($boardToken)) {
 			return false;
 		}
 
@@ -137,6 +157,10 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if (!$this->isSettingsGlobalValid()) {
+			return [];
+		}
+
 		return [
 			'label' => __('Greenhouse', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -153,9 +177,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$optionsSet = Variables::getApiKeyGreenhouse() ?? $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY);
-
-		if (!$optionsSet) {
+		if (!$this->isSettingsGlobalValid()) {
 			return [];
 		}
 

@@ -192,6 +192,17 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 */
 	private function sendEmail(string $formId, array $params = [], $files = [])
 	{
+		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
+
+		// If mailer system is not used just post as a success.
+		if (!$isUsed) {
+			return \rest_ensure_response([
+				'code' => 200,
+				'status' => 'success',
+				'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
+			]);
+		}
+
 		// Check if greenhouse data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
