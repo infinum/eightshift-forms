@@ -46,6 +46,11 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'mailer';
 
 	/**
+	 * Mailer Use key.
+	 */
+	public const SETTINGS_MAILER_USE_KEY = 'mailerUse';
+
+	/**
 	 * Sender Name key.
 	 */
 	public const SETTINGS_MAILER_SENDER_NAME_KEY = 'mailerSenderName';
@@ -96,7 +101,12 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 
-		if (empty($senderName) || empty($senderEmail) || empty($to) || empty($subject)) {
+		if (
+			empty($senderName) ||
+			empty($senderEmail) ||
+			empty($to) ||
+			empty($subject)
+		) {
 			return false;
 		}
 
@@ -131,6 +141,21 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 				'component' => 'intro',
 				'introTitle' => \__('Mailing setting', 'eightshift-forms'),
 				'introSubtitle' => \__('Configure your mailing settings in one place.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
+				'checkboxesFieldHelp' => \__('Select if you want to use send email on form success.', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
+						'checkboxLabel' => __('Use Mailer', 'eightshift-forms'),
+						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId)),
+						'checkboxValue' => 'true',
+					]
+				]
 			],
 			[
 				'component' => 'input',

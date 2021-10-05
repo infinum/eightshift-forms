@@ -110,10 +110,30 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function isSettingsValid(string $formId): bool
 	{
+		if (!$this->isSettingsGlobalValid($formId)) {
+			return false;
+		}
+
 		$list = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
+
+		if (empty($list)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determin if settings global are valid.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsGlobalValid(): bool
+	{
+		$isUsed = $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = Variables::getApiKeyMailchimp() ?? $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
-		if (empty($list) || empty($apiKey)) {
+		if (empty($isUsed) || empty($apiKey)) {
 			return false;
 		}
 
@@ -127,6 +147,10 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if (!$this->isSettingsGlobalValid()) {
+			return [];
+		}
+
 		return [
 			'label' => __('Mailchimp', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -143,9 +167,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$optionsSet = $this->getOptionValue(self::SETTINGS_MAILCHIMP_USE_KEY);
-
-		if (!$optionsSet) {
+		if (!$this->isSettingsGlobalValid()) {
 			return [];
 		}
 

@@ -45,6 +45,7 @@ class Labels implements LabelsInterface
 			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'mailerErrorEmailSend' => __('Email not sent due to unknown issue. Please contact your admin.', 'eightshift-forms'),
 			'mailerSuccess' => __('Email sent successfully.', 'eightshift-forms'),
+			'mailerSuccessNoSend' => __('Email sent successfully.', 'eightshift-forms'),
 
 			// Greenhouse.
 			'greenhouseWpError' => __('There was some problem with saving your application. Please contact your admin.', 'eightshift-forms'),
