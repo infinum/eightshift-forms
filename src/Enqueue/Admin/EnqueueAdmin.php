@@ -77,7 +77,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 		return [
 			'esFormsLocalization' => [
 				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
-				'formSettingsCacheBustSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
 			]
 		];
 	}
