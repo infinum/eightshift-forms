@@ -1,6 +1,12 @@
 @import './submit-style.scss';
 
-.es-submit--global {
-	float: right;
-	width: initial;
+.es-submit {
+	&--global {
+		float: right;
+		width: initial;
+	}
+
+	&--cache {
+		width: auto;
+	}
 }

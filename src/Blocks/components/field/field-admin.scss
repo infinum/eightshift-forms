@@ -5,6 +5,14 @@
 	column-gap: 20px;
 	grid-template-columns: repeat(12, 1fr);
 
+	&--center {
+		align-items: center;
+
+		#{$this}__label {
+			padding-top: 0;
+		}
+	}
+
 	&__label {
 		grid-column-start: 1;
 		grid-column-end: 3;

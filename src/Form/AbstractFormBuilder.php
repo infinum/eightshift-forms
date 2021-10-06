@@ -193,10 +193,19 @@ abstract class AbstractFormBuilder
 			$attributes[$key] = $output;
 		}
 
+		$additionalAttributes = [];
+
+		if (isset($attributes['additionalFieldClass'])) {
+			$additionalAttributes['additionalFieldClass'] = $attributes['additionalFieldClass'];
+		}
+
 		// Build the component.
 		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$attributes['component'],
-			Components::props($component, $attributes),
+			array_merge(
+				Components::props($component, $attributes),
+				$additionalAttributes,
+			),
 			'',
 			true
 		);

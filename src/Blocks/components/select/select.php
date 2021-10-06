@@ -48,10 +48,15 @@ $select = '
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $select,
-		'fieldId' => $selectId,
-		'fieldName' => $selectName,
-		'fieldDisabled' => !empty($selectIsDisabled),
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $select,
+			'fieldId' => $selectId,
+			'fieldName' => $selectName,
+			'fieldDisabled' => !empty($selectIsDisabled),
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

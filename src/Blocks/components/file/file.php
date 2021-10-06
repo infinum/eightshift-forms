@@ -52,9 +52,14 @@ $file = '
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $file,
-		'fieldId' => $fileId,
-		'fieldName' => $fileName,
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $file,
+			'fieldId' => $fileId,
+			'fieldName' => $fileName,
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

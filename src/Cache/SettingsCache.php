@@ -80,14 +80,40 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'submit',
-				'additionalClass' => 'js-es-forms-cache-bust',
-				'submitValue' => __('Submit', 'eightshift-forms'),
+				'additionalFieldClass' => 'es-field--center',
+				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
+				'submitValue' => __('Delete', 'eightshift-forms'),
+				'submitFieldLabel' => __('Greenhouse Form Mapper', 'eightshift-forms'),
 				'submitAttrs' => [
 					'data-type' => 'aaa',
 					'data-label' => 'bbb',
 				],
 				'submitFieldUseError' => false
-			]
+			],
+			[
+				'component' => 'submit',
+				'additionalFieldClass' => 'es-field--center',
+				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
+				'submitValue' => __('Delete', 'eightshift-forms'),
+				'submitFieldLabel' => __('Greenhouse Jobs', 'eightshift-forms'),
+				'submitAttrs' => [
+					'data-type' => 'aaa',
+					'data-label' => 'bbb',
+				],
+				'submitFieldUseError' => false
+			],
+			[
+				'component' => 'submit',
+				'additionalFieldClass' => 'es-field--center',
+				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
+				'submitValue' => __('Delete', 'eightshift-forms'),
+				'submitFieldLabel' => __('Greenhouse Jobs Questions', 'eightshift-forms'),
+				'submitAttrs' => [
+					'data-type' => 'aaa',
+					'data-label' => 'bbb',
+				],
+				'submitFieldUseError' => false
+			],
 		];
 	}
 }

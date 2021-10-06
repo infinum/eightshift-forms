@@ -57,10 +57,15 @@ $input = '
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $input,
-		'fieldId' => $inputId,
-		'fieldName' => $inputName,
-		'fieldDisabled' => !empty($inputIsDisabled),
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $input,
+			'fieldId' => $inputId,
+			'fieldName' => $inputName,
+			'fieldDisabled' => !empty($inputIsDisabled),
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

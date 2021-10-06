@@ -62,9 +62,14 @@ $button = '
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $submitType === 'button' ? $button : $submit,
-		'fieldId' => $submitId,
-		'fieldDisabled' => !empty($submitIsDisabled),
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $submitType === 'button' ? $button : $submit,
+			'fieldId' => $submitId,
+			'fieldDisabled' => !empty($submitIsDisabled),
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

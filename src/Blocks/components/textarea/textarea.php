@@ -50,10 +50,15 @@ $textarea = '<textarea
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $textarea,
-		'fieldId' => $textareaId,
-		'fieldName' => $textareaName,
-		'fieldDisabled' => !empty($textareaIsDisabled),
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $textarea,
+			'fieldId' => $textareaId,
+			'fieldName' => $textareaName,
+			'fieldDisabled' => !empty($textareaIsDisabled),
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );
