@@ -57,7 +57,7 @@ class Labels implements LabelsInterface
 			'mailchimpWpError' => __('There was some problem with saving your subscription. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpErrorSettingsMissing' => __('Mailchimp integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpErrorListMissing' => __('Mailchimp list is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
-			'mailchimpSuccess' => __('Candidate saved successfully.', 'eightshift-forms'),
+			'mailchimpSuccess' => __('You have successfully subscribed to our newsletter.', 'eightshift-forms'),
 		];
 	}
 

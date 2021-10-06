@@ -101,9 +101,17 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		// Get filter data.
 		$data = apply_filters($filter, '');
 
+		// Add additional props to form component.
+		$formAdditionalProps['formType'] = $type;
+
+		if ($type === SettingsCache::SETTINGS_TYPE_KEY) {
+			$formAdditionalProps['formSuccessRedirect'] = true;
+		}
+
 		// Populate and build form.
 		return $this->buildSettingsForm(
-			$data ?? []
+			$data ?? [],
+			$formAdditionalProps
 		);
 	}
 

@@ -129,12 +129,17 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		// Get filter data.
 		$data = apply_filters($filter, $formId);
 
+		// Add additional props to form component.
+		$formAdditionalProps['formPostId'] = $formId;
+
+		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
+			$formAdditionalProps['formSuccessRedirect'] = true;
+		}
+
 		// Populate and build form.
 		return $this->buildSettingsForm(
 			$data ?? [],
-			[
-				'formPostId' => $formId
-			]
+			$formAdditionalProps
 		);
 	}
 

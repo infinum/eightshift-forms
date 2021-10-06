@@ -185,6 +185,18 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
+		$jobs = $this->greenhouseClient->getJobs();
+
+		if (!$jobs) {
+			return [
+				[
+					'component' => 'highlighted-content',
+					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('we couldn\'t get the data from the Greenhouse. Please check if you API key is valid and you provided the correct Board name.', 'eightshift-forms'),
+				],
+			];
+		}
+
 		$jobIdOptions = array_map(
 			function ($option) use ($formId) {
 				return [
@@ -194,7 +206,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId) === $option['id'],
 				];
 			},
-			$this->greenhouseClient->getJobs()
+			$jobs
 		);
 
 		array_unshift(

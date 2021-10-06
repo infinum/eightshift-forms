@@ -139,7 +139,13 @@ class GreenhouseClient implements GreenhouseClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true)['jobs'] ?? [];
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['jobs'])) {
+			return [];
+		}
+
+		return $body['jobs'];
 	}
 
 	/**
@@ -159,7 +165,13 @@ class GreenhouseClient implements GreenhouseClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true);
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (isset($body['error'])) {
+			return [];
+		}
+
+		return $body;
 	}
 
 	/**

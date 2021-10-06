@@ -171,7 +171,19 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
 					'highlightedContentSubtitle' => sprintf(\__('in order to use Mailchimp integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
-				]
+				],
+			];
+		}
+
+		$lists = $this->mailchimpClient->getLists();
+
+		if (!$lists) {
+			return [
+				[
+					'component' => 'highlighted-content',
+					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('we couldn\'t get the data from the Mailchimp. Please check if you API key is valid.', 'eightshift-forms'),
+				],
 			];
 		}
 
@@ -184,7 +196,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId) === $option['id'],
 				];
 			},
-			$this->mailchimpClient->getLists()
+			$lists
 		);
 
 		array_unshift(

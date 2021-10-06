@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
+use EightshiftForms\Helpers\Components;
+use EightshiftForms\Integrations\Greenhouse\Greenhouse;
+use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
+use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -71,7 +75,6 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-
 		return [
 			[
 				'component' => 'intro',
@@ -79,40 +82,44 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 				'introSubtitle' => \__('Cache settings in one place.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'submit',
-				'additionalFieldClass' => 'es-field--center',
-				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
-				'submitValue' => __('Delete', 'eightshift-forms'),
-				'submitFieldLabel' => __('Greenhouse Form Mapper', 'eightshift-forms'),
-				'submitAttrs' => [
-					'data-type' => 'aaa',
-					'data-label' => 'bbb',
-				],
-				'submitFieldUseError' => false
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Mailchimp cache', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxName' => MailchimpClient::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME,
+						'checkboxId' => MailchimpClient::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME,
+						'checkboxLabel' => __('Lists', 'eightshift-forms'),
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxName' => MailchimpClient::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME,
+						'checkboxId' => MailchimpClient::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME,
+						'checkboxLabel' => __('Lists fields', 'eightshift-forms'),
+						'checkboxValue' => 'true',
+					]
+				]
 			],
 			[
-				'component' => 'submit',
-				'additionalFieldClass' => 'es-field--center',
-				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
-				'submitValue' => __('Delete', 'eightshift-forms'),
-				'submitFieldLabel' => __('Greenhouse Jobs', 'eightshift-forms'),
-				'submitAttrs' => [
-					'data-type' => 'aaa',
-					'data-label' => 'bbb',
-				],
-				'submitFieldUseError' => false
-			],
-			[
-				'component' => 'submit',
-				'additionalFieldClass' => 'es-field--center',
-				'additionalClass' => 'js-es-forms-cache-bust es-submit--cache',
-				'submitValue' => __('Delete', 'eightshift-forms'),
-				'submitFieldLabel' => __('Greenhouse Jobs Questions', 'eightshift-forms'),
-				'submitAttrs' => [
-					'data-type' => 'aaa',
-					'data-label' => 'bbb',
-				],
-				'submitFieldUseError' => false
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Greenhouse cache', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxName' => GreenhouseClient::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME,
+						'checkboxId' => GreenhouseClient::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME,
+						'checkboxLabel' => __('Jobs list', 'eightshift-forms'),
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxName' => GreenhouseClient::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME,
+						'checkboxId' => GreenhouseClient::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME,
+						'checkboxLabel' => __('Jobs questions', 'eightshift-forms'),
+						'checkboxValue' => 'true',
+					]
+				]
 			],
 		];
 	}

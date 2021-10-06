@@ -204,7 +204,7 @@ abstract class AbstractFormBuilder
 			$attributes['component'],
 			array_merge(
 				Components::props($component, $attributes),
-				$additionalAttributes,
+				$additionalAttributes
 			),
 			'',
 			true

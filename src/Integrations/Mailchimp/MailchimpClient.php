@@ -151,7 +151,13 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true)['merge_fields'] ?? [];
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['merge_fields'])) {
+			return [];
+		}
+
+		return $body['merge_fields'];
 	}
 
 	/**
@@ -169,7 +175,13 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true)['lists'] ?? [];
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['lists'])) {
+			return [];
+		}
+
+		return $body['lists'];
 	}
 
 	/**

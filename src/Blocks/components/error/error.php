@@ -14,7 +14,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalErrorClass = $attributes['additionalErrorClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$blockJsClass = $manifest['blockJsClass'] ?? '';
+$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $errorValue = Components::checkAttr('errorValue', $attributes, $manifest);
 $errorId = Components::checkAttr('errorId', $attributes, $manifest);
@@ -23,7 +23,7 @@ $errorClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalErrorClass, $additionalErrorClass),
-	Components::selector($blockJsClass, $blockJsClass),
+	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
 ?>
