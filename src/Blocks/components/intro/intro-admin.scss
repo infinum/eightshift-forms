@@ -1,14 +1,19 @@
 .es-intro {
-	margin-bottom: var(--global-es-spacing-vertical);
+	margin-bottom: 40px;
 
 	&__title {
 		font-size: 17px;
 		font-weight: bold;
+
+		&--medium {
+			font-size: 14px;
+		}
 	}
 
 	&__subtitle {
 		padding-top: 10px;
 		font-size: 13px;
+		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
 	}
 }
