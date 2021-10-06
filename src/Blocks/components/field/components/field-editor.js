@@ -19,7 +19,7 @@ export const FieldEditor = (attributes) => {
 	const {
 		selectorClass = componentClass,
 		blockClass,
-		additionalClass,
+		additionalFieldClass,
 		clientId,
 	} = attributes;
 
@@ -43,7 +43,7 @@ export const FieldEditor = (attributes) => {
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
 		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
+		selector(additionalFieldClass, additionalFieldClass),
 	]);
 
 	const LabelDefault = () => (

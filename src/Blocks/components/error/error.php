@@ -11,7 +11,7 @@ use EightshiftForms\Helpers\Components;
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
+$additionalErrorClass = $attributes['additionalErrorClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $manifest['blockJsClass'] ?? '';
@@ -22,7 +22,7 @@ $errorId = Components::checkAttr('errorId', $attributes, $manifest);
 $errorClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
-	Components::selector($additionalClass, $additionalClass),
+	Components::selector($additionalErrorClass, $additionalErrorClass),
 	Components::selector($blockJsClass, $blockJsClass),
 ]);
 

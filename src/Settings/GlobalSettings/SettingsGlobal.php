@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\GlobalSettings;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
@@ -26,6 +27,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 */
 	public const GLOBAL_SETTINGS = [
 		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
+		SettingsCache::SETTINGS_TYPE_KEY => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 	];
 
 	/**
@@ -33,6 +35,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 */
 	public const GLOBAL_SETTINGS_SIDEBARS = [
 		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
+		SettingsCache::SETTINGS_TYPE_KEY => SettingsCache::FILTER_SETTINGS_SIDEBAR_NAME,
 	];
 
 	/**

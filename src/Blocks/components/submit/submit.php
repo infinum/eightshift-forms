@@ -20,6 +20,7 @@ $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitType = Components::checkAttr('submitType', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
+$submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -28,6 +29,11 @@ $submitClass = Components::classnames([
 ]);
 
 $submitIsDisabled = $submitIsDisabled ? 'disabled' : '';
+
+$submitAttrsOutput = '';
+foreach ($submitAttrs as $key => $value) {
+	$submitAttrsOutput .= \wp_kses_post("{$key}=" . $value . " ");
+}
 
 $submit = '
 	<input
@@ -38,6 +44,7 @@ $submit = '
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
+		' . $submitAttrsOutput . '
 	/>
 ';
 
@@ -48,6 +55,7 @@ $button = '
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
 		' . $submitIsDisabled . '
+		' . $submitAttrsOutput . '
 	><span>' . esc_html($submitValue) . '
 	</span></button>
 ';

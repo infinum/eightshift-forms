@@ -61,6 +61,7 @@ abstract class AbstractFormBuilder
 		$formContent .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'submit',
 			Components::props('submit', [
+				'additionalClass' => 'es-submit--global',
 				'submitValue' => __('Save settings', 'eightshift-forms'),
 			]),
 			'',
