@@ -157,7 +157,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			// Upload files to temp folder.
 			$files = $this->prepareFiles($files);
 
-			// Determin form type to use.
+			// Determine form type to use.
 			switch ($formType) {
 				case SettingsMailer::SETTINGS_TYPE_KEY:
 					return $this->sendEmail($formId, $params, $files);
