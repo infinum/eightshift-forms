@@ -10,3 +10,4 @@ Adding new integration steps:
 7. Add new switch and callback to the FormSubmitRoute.php class.
 8. Add new block to for the specific integration.
 9. Add new Allowed block in the manifest.json in the form-selector block.
+10. Add transient cache to the cache busting list in the SettingsCache.php.
