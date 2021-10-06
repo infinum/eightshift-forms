@@ -117,7 +117,6 @@ class GreenhouseClient implements GreenhouseClientInterface
 						$this->prepareFiles($files)
 					)
 				),
-				'data_format' => 'body',
 			]
 		);
 
