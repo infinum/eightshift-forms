@@ -1,0 +1,22 @@
+.es-highlighted-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 300px;
+	flex-direction: column;
+	text-align: center;
+
+	&__title {
+		font-size: 30px;
+		font-weight: bold;
+		color: var(--global-colors-es-boulder)
+	}
+
+	&__subtitle {
+		padding-top: 10px;
+		font-size: 16px;
+		line-height: 1.7;
+		color: var(--global-colors-es-boulder);
+		max-width: 50%;
+	}
+}

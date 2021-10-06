@@ -16,7 +16,7 @@ namespace EightshiftForms\Hooks;
 class Variables
 {
 	/**
-	 * Get API Key for Hubspot.
+	 * Get API Key for HubSpot.
 	 *
 	 * @return string
 	 */

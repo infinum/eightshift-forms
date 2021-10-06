@@ -1,0 +1,13 @@
+{
+	"componentName": "highlighted-content",
+	"title": "Highlighted Content",
+	"componentClass": "es-highlighted-content",
+	"attributes": {
+		"highlightedContentTitle": {
+			"type": "string"
+		},
+		"highlightedContentSubtitle": {
+			"type": "string"
+		}
+	}
+}

@@ -157,6 +157,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			// Upload files to temp folder.
 			$files = $this->prepareFiles($files);
 
+			// Determin form type to use.
 			switch ($formType) {
 				case SettingsMailer::SETTINGS_TYPE_KEY:
 					return $this->sendEmail($formId, $params, $files);
@@ -194,7 +195,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	{
 		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
-		// If mailer system is not used just post as a success.
+		// If Mailer system is not used just post as a success.
 		if (!$isUsed) {
 			return \rest_ensure_response([
 				'code' => 200,
@@ -203,7 +204,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// Check if greenhouse data is set and valid.
+		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
@@ -252,7 +253,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	private function sendGreenhouse(string $formId, array $params = [], $files = [])
 	{
 
-		// Check if greenhouse data is set and valid.
+		// Check if Greenhouse data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
@@ -310,7 +311,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	private function sendMailchimp(string $formId, array $params = [])
 	{
 
-		// Check if greenhouse data is set and valid.
+		// Check if Mailchimp data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
@@ -322,7 +323,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// Send application to Greenhouse.
+		// Send application to Mailchimp.
 		$response = $this->mailchimpClient->postMailchimpSubscription(
 			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
 			$params
@@ -339,7 +340,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// Bailout if Greenhouse returns error.
+		// Bailout if Mailchimp returns error.
 		if ($status !== 'subscribed') {
 			return \rest_ensure_response([
 				'code' => $status,

@@ -18,7 +18,7 @@ $manifest = Components::getManifest(__DIR__);
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formPostIdDecoded = Helper::encryptor('decode', $formPostId);
 
-// Check if greenhouse data is set and valid.
+// Check if Greenhouse data is set and valid.
 $isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $formPostIdDecoded);
 
 // Bailout if settings are not ok.

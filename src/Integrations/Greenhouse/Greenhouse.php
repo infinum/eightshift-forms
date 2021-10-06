@@ -41,7 +41,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Create a new instance.
 	 *
-	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds greenhouse connect data.
+	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 */
 	public function __construct(GreenhouseClientInterface $greenhouseClient)
 	{
