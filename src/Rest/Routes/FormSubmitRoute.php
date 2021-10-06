@@ -195,7 +195,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	{
 		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
-		// If Mailer system is not used just post as a success.
+		// If Mailer system is not used just respond with success.
 		if (!$isUsed) {
 			return \rest_ensure_response([
 				'code' => 200,
