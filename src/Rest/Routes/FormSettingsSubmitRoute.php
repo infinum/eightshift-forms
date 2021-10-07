@@ -87,7 +87,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Get encripted form ID and decrypt it.
 			$formId = $this->getFormId($request->get_body_params());
 
-			// Determin form type.
+			// Determine form type.
 			$formType = $this->getFormType($request->get_body_params());
 
 			// Validate request.
