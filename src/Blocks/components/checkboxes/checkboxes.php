@@ -14,7 +14,12 @@ $checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $ma
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $checkboxesContent
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $checkboxesContent
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

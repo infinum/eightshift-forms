@@ -13,7 +13,7 @@ $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
+$additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
@@ -44,7 +44,7 @@ $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
-	Components::selector($additionalClass, $additionalClass),
+	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 ]);
 

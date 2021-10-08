@@ -2,7 +2,7 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
-	"blockJsClass": "js-es-block-form",
+	"componentJsClass": "js-es-block-form",
 	"components": {
 		"loader": "loader",
 		"field": "field",

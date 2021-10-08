@@ -14,13 +14,13 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$blockJsClass = $manifest['blockJsClass'] ?? '';
+$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $loaderClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($blockJsClass, $blockJsClass),
+	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
 ?>

@@ -26,8 +26,6 @@ final class MissingFilterInfoException extends \RuntimeException implements Gene
 	 * @param string $key    Which key is missing in info provided by filter.
 	 *
 	 * @return static
-	 *
-	 * @since 0.1.0
 	 */
 	public static function viewException($filter, $key)
 	{

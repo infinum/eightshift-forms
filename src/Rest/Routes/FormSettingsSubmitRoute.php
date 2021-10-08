@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Exception\MissingPermissionException;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Validation\ValidatorInterface;
 
@@ -81,42 +84,51 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 	// Try catch request.
 		try {
+			// Get encripted form ID and decrypt it.
+			$formId = $this->getFormId($request->get_body_params());
+
+			// Determine form type.
+			$formType = $this->getFormType($request->get_body_params());
+
 			// Validate request.
-			$params = $this->verifyRequest($request);
+			$postParams = $this->verifyRequest($request);
 
-			$postParams = $params['post'];
+			// Prepare fields.
+			$params = $this->removeUneceseryParams($postParams['post']);
 
-			// Get normal form ID string.
-			$formId = $this->getFormId($postParams);
+			// Determine form type to use.
+			switch ($formType) {
+				case SettingsCache::SETTINGS_TYPE_KEY:
+					return $this->cache($params);
+					break;
+				default:
+					// If form ID is not set this is considered an global setting.
+					if (empty($formId)) {
+						// Save all fields in the settings.
+						foreach ($params as $key => $value) {
+							$value = json_decode($value, true);
 
-			// Remove unecesery params.
-			$postParams = $this->removeUneceseryParams($postParams);
-
-			// If form ID is not set this is considered an global setting.
-			if (empty($formId)) {
-				// Save all fields in the settings.
-				foreach ($postParams as $key => $value) {
-					$value = json_decode($value, true);
-
-					// Check if key needs updating or deleting.
-					if ($value['value']) {
-						\update_option($key, $value['value']);
+							// Check if key needs updating or deleting.
+							if ($value['value']) {
+								\update_option($key, $value['value']);
+							} else {
+								\delete_option($key);
+							}
+						}
 					} else {
-						\delete_option($key);
-					}
-				}
-			} else {
-				// Save all fields in the settings.
-				foreach ($postParams as $key => $value) {
-					$value = json_decode($value, true);
+						// Save all fields in the settings.
+						foreach ($params as $key => $value) {
+							$value = json_decode($value, true);
 
-					// Check if key needs updating or deleting.
-					if ($value['value']) {
-						\update_post_meta($formId, $key, $value['value']);
-					} else {
-						\delete_post_meta($formId, $key);
+							// Check if key needs updating or deleting.
+							if ($value['value']) {
+								\update_post_meta($formId, $key, $value['value']);
+							} else {
+								\delete_post_meta($formId, $key);
+							}
+						}
 					}
-				}
+					break;
 			}
 
 			return \rest_ensure_response([
@@ -124,11 +136,44 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				'status' => 'success',
 				'message' => esc_html__('Form successfully saved!', 'eightshift-form'),
 			]);
-
-			// return \rest_ensure_response($response);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response($e->getData());
 		}
+	}
+
+	/**
+	 * Delete transient cache from the DB.
+	 *
+	 * @param array $params Keys to delete.
+	 *
+	 * @return mixed
+	 */
+	private function cache(array $params)
+	{
+		if (! current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
+			\rest_ensure_response([
+				'code' => 400,
+				'status' => 'error',
+				'message' => esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-form'),
+			]);
+		}
+
+		foreach ($params as $param) {
+			$data = json_decode($param, true);
+
+			$value = $data['value'];
+			$name = $data['name'];
+
+			if ($value) {
+				delete_transient($name);
+			}
+		}
+
+		return \rest_ensure_response([
+			'code' => 200,
+			'status' => 'success',
+			'message' => esc_html__('Selected cache successfully deleted!', 'eightshift-form'),
+		]);
 	}
 }

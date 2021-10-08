@@ -20,9 +20,14 @@ $radiosContent = str_replace('data-validation-required=""', 'data-validation-req
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 echo Components::render(
 	'field',
-	Components::props('field', $attributes, [
-		'fieldContent' => $radiosContent,
-		'fieldId' => $radiosName,
-		'fieldName' => $radiosName,
-	])
+	array_merge(
+		Components::props('field', $attributes, [
+			'fieldContent' => $radiosContent,
+			'fieldId' => $radiosName,
+			'fieldName' => $radiosName,
+		]),
+		[
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+		]
+	)
 );

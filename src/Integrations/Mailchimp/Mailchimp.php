@@ -122,8 +122,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$name = $field['tag'] ?? '';
 			$label = $field['name'] ?? '';
 			$required = $field['required'] ?? false;
+			$public = $field['public'] ?? false;
 			$value = $field['default_value'] ?? '';
 			$id = $field['merge_id'] ?? '';
+
+			if (!$public) {
+				continue;
+			}
 
 			switch ($type) {
 				case 'text':

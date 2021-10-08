@@ -98,21 +98,21 @@ class MailchimpClient implements MailchimpClientInterface
 	public function postMailchimpSubscription(string $listId, array $params): array
 	{
 		$email = json_decode($params['email_address'], true)['value'];
-		$emailHash = wp_hash($email, '');
+		$emailHash = md5(strtolower($email));
 
 		$response = \wp_remote_request(
 			"{$this->getApiUrl()}lists/{$listId}/members/{$emailHash}",
 			[
-				'method' => 'PUT',
 				'headers' => $this->getHeaders(true),
 				'body' => wp_json_encode(
 					[
+						'method' => 'PUT',
 						'email_address' => $email,
 						'status_if_new' => 'subscribed',
+						'status' => 'subscribed',
 						'merge_fields' => $this->prepareParams($params)
 					]
 				),
-				'data_format' => 'body',
 			]
 		);
 
@@ -151,7 +151,13 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true)['merge_fields'] ?? [];
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['merge_fields'])) {
+			return [];
+		}
+
+		return $body['merge_fields'];
 	}
 
 	/**
@@ -169,7 +175,13 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true)['lists'] ?? [];
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['lists'])) {
+			return [];
+		}
+
+		return $body['lists'];
 	}
 
 	/**
