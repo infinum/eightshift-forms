@@ -1,14 +1,27 @@
 import React from 'react';
-import { __ } from '@wordpress/i18n';
+import { useSelect } from "@wordpress/data";
+import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
 
 export const MailchimpEditor = ({ attributes }) => {
 	const {
 		blockClass,
+		blockFullName
 	} = attributes;
+
+	const formPostId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
 		<div className={blockClass}>
-			{__('Mailchimp form will be rendered here!', 'eightshift-forms')}
+			<ServerSideRender
+				block={blockFullName}
+				attributes={
+					{
+						...attributes,
+						mailchimpServerSideRender: true,
+						mailchimpFormPostId: formPostId.toString(),
+					}
+				}
+			/>
 		</div>
 	);
 }

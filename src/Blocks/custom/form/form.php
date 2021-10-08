@@ -16,11 +16,11 @@ $manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
-$formPostIdDecoded = Helper::encryptor('decode', $formPostId);
+$formFormPostId = Components::checkAttr('formFormPostId', $attributes, $manifest);
+$formFormPostIdDecoded = Helper::encryptor('decode', $formFormPostId);
 
 // Check if mailer data is set and valid.
-$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formPostIdDecoded);
+$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formFormPostIdDecoded);
 
 // Bailout if settings are not ok.
 if (!$isSettingsValid) {
@@ -39,17 +39,17 @@ $formClass = Components::classnames([
 		'form',
 		Components::props('form', $attributes, [
 			'formContent' => $innerBlockContent,
-			'formPostId' => $formPostId,
+			'formPostId' => $formFormPostId,
 			'formType' => SettingsMailer::SETTINGS_TYPE_KEY,
 			'formTrackingEventName' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 				SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-				$formPostIdDecoded
+				$formFormPostIdDecoded
 			),
 			'formSuccessRedirect' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 				SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-				$formPostIdDecoded
+				$formFormPostIdDecoded
 			),
 		])
 	);

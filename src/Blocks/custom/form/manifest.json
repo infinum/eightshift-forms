@@ -29,7 +29,7 @@
 				"eightshift-forms/checkboxes"
 			]
 		},
-		"formPostId": {
+		"formFormPostId": {
 			"type": "string"
 		}
 	}

@@ -12,8 +12,12 @@
 	"example": {
 	},
 	"attributes": {
-		"formPostId": {
+		"greenhouseFormPostId": {
 			"type": "string"
+		},
+		"greenhouseServerSideRender": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"parent": [

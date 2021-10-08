@@ -12,8 +12,12 @@
 	"example": {
 	},
 	"attributes": {
-		"formPostId": {
+		"mailchimpFormPostId": {
 			"type": "string"
+		},
+		"mailchimpServerSideRender": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"parent": [

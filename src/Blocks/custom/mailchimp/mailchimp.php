@@ -15,11 +15,17 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
-$formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
-$formPostIdDecoded = Helper::encryptor('decode', $formPostId);
+$mailchimpServerSideRender = Components::checkAttr('mailchimpServerSideRender', $attributes, $manifest);
+$mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes, $manifest);
+
+if ($mailchimpServerSideRender) {
+	$mailchimpFormPostId = Helper::encryptor('encrypt', $mailchimpFormPostId);
+}
+
+$mailchimpFormPostIdDecoded = Helper::encryptor('decode', $mailchimpFormPostId);
 
 // Check if mailchimp data is set and valid.
-$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $formPostIdDecoded);
+$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $mailchimpFormPostIdDecoded);
 
 // Bailout if settings are not ok.
 if (!$isSettingsValid) {
@@ -29,17 +35,17 @@ if (!$isSettingsValid) {
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Mailchimp::FILTER_MAPPER_NAME,
 	[
-		'formPostId' => $formPostId,
+		'formPostId' => $mailchimpFormPostId,
 		'formType' => SettingsMailchimp::SETTINGS_TYPE_KEY,
 		'formTrackingEventName' => \apply_filters(
 			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$formPostIdDecoded
+			$mailchimpFormPostIdDecoded
 		),
 		'formSuccessRedirect' => \apply_filters(
 			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$formPostIdDecoded
+			$mailchimpFormPostIdDecoded
 		),
 	]
 );
