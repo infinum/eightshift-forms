@@ -30,9 +30,7 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	 *
 	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
 	 */
-	public function __construct(
-		GreenhouseClientInterface $greenhouseClient
-	) {
+	public function __construct(GreenhouseClientInterface $greenhouseClient) {
 		$this->greenhouseClient = $greenhouseClient;
 	}
 
