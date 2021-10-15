@@ -18,9 +18,9 @@ export const FormEditor = ({ attributes, setAttributes }) => {
 				{...props('form', attributes, {
 					setAttributes: setAttributes,
 					formContent: <InnerBlocks
-														allowedBlocks={(typeof formAllowedBlocks === 'undefined') || formAllowedBlocks}
-														templateLock={false}
-													/>
+													allowedBlocks={(typeof formAllowedBlocks === 'undefined') || formAllowedBlocks}
+													templateLock={false}
+												/>
 				})}
 			/>
 		</div>

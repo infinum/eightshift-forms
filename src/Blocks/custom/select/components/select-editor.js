@@ -19,9 +19,9 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 				blockClass,
 				clientId,
 				selectOptions: <InnerBlocks
-													allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
-													templateLock={false}
-												/>
+												allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
+												templateLock={false}
+											/>
 			})}
 		/>
 	);
