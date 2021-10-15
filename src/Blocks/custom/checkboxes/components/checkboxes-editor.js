@@ -19,9 +19,9 @@ export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 				blockClass,
 				clientId,
 				checkboxesContent: <InnerBlocks
-													allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
-													templateLock={false}
-												/>
+														allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
+														templateLock={false}
+													/>
 			})}
 		/>
 	);
