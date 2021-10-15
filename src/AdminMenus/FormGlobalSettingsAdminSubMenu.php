@@ -69,14 +69,14 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	public const ADMIN_MENU_CAPABILITY = 'eightshift-form-global-settings';
 
 	/**
-	 * Menu slug for this admin sub menu
+	 * Menu slug for this admin sub menu.
 	 *
 	 * @var string
 	 */
 	public const ADMIN_MENU_SLUG = 'es-settings-global';
 
 	/**
-	 * Parent menu slug for this admin sub menu
+	 * Parent menu slug for this admin sub menu.
 	 *
 	 * @var string
 	 */
@@ -127,7 +127,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Get the slug of the parent menu.
 	 *
-	 * @return string The slug name for the parent menu (or the file name of a standard WordPress admin page.
+	 * @return string The slug name for the parent menu (or the file name) of a standard WordPress admin page.
 	 */
 	protected function getParentMenu(): string
 	{
@@ -137,7 +137,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
-	 * @return string View uri.
+	 * @return string View URI.
 	 */
 	protected function getViewComponent(): string
 	{

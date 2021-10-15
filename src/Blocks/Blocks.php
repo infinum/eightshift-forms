@@ -66,7 +66,7 @@ class Blocks extends AbstractBlocks
 	}
 
 	/**
-	 * Get blocks absolute path
+	 * Get blocks absolute path.
 	 *
 	 * Prefix path is defined by project config.
 	 *

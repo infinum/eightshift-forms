@@ -36,7 +36,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	}
 
 	/**
-	 * Register all the hooks
+	 * Register all the hooks.
 	 *
 	 * @return void
 	 */
