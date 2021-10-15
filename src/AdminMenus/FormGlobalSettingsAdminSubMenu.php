@@ -62,7 +62,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	}
 
 	/**
-	 * Capability for this admin sub menu
+	 * Capability for this admin sub menu.
 	 *
 	 * @var string
 	 */
