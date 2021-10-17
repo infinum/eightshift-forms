@@ -121,4 +121,26 @@ class Helper
 	{
 		return "/wp-admin/post.php?post={$formId}&action=edit";
 	}
+
+	/**
+	 * Get all field names from the form.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public static function getFormNames(string $formId): string
+	{
+		preg_match_all('/Name":"(.*?)"/m', get_the_content(null, null, $formId), $matches, PREG_SET_ORDER);
+
+		$output = [];
+
+		foreach ($matches as $item) {
+			if (isset($item[1]) && !empty($item[1])) {
+				$output[] = "<code>{" . $item[1] . "}</code>";
+			}
+		}
+
+		return implode(', ', $output);
+	}
 }
