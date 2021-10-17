@@ -27,13 +27,21 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $to Email to.
+	 * @param string $subject Email subject.
+	 * @param string $template Email template.
 	 * @param array $files Email files.
 	 * @param array $fields Email fields.
 	 *
 	 * @return bool
 	 */
-	public function sendFormEmail(string $formId, string $to, array $files = [], array $fields = []): bool
-	{
+	public function sendFormEmail(
+		string $formId,
+		string $to,
+		string $subject,
+		string $template = '',
+		array $files = [],
+		array $fields = []
+	): bool {
 		// Get header options from form settings.
 		$headers = $this->getHeader(
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
@@ -41,16 +49,13 @@ class Mailer implements MailerInterface
 		);
 
 		// Generate HTML form for sending with form fields.
-		$template = $this->getTemplate(
+		$templateHtml = $this->getTemplate(
 			$fields,
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId)
+			$template
 		);
 
-		// Populate subject from form settings.
-		$subject = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId);
-
 		// Send email.
-		return \wp_mail($to, $subject, $template, $headers, $files);
+		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
 	}
 
 	/**

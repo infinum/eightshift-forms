@@ -220,6 +220,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		$mailer = $this->mailer->sendFormEmail(
 			$formId,
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params
 		);
@@ -231,6 +233,29 @@ class FormSubmitRoute extends AbstractBaseRoute
 				'status' => 'error',
 				'message' => $this->labels->getLabel('mailerErrorEmailSend', $formId),
 			]);
+		}
+
+		if (isset($params['sender-email'])) {
+			$senderEmail = json_decode($params['sender-email'], true)['value'];
+
+			// Send email.
+			$mailerConfirmation = $this->mailer->sendFormEmail(
+				$formId,
+				$senderEmail,
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+				$files,
+				$params
+			);
+
+			// If email fails.
+			if (!$mailerConfirmation) {
+				return \rest_ensure_response([
+					'code' => 404,
+					'status' => 'error',
+					'message' => $this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
+				]);
+			}
 		}
 
 		// If email success.
