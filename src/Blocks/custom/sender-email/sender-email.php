@@ -13,8 +13,6 @@ $unique = Components::getUnique();
 $inputName = $attributes['senderEmailInputName'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 
-$props['blockClass'] = $blockClass;
-
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'input',
 	Components::props('input', $attributes, [
