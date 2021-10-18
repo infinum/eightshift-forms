@@ -45,7 +45,7 @@ $textarea = '<textarea
 		data-tracking="' . $textareaTracking . '"
 		' . $textareaIsDisabled . '
 		' . $textareaIsReadOnly . '
-	>' . esc_attr($textareaValue) . '</textarea>
+	>' . $textareaValue . '</textarea>
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

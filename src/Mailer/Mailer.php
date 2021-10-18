@@ -110,28 +110,20 @@ class Mailer implements MailerInterface
 	 * HTML template for email.
 	 *
 	 * @param array $items All items to output.
-	 * @param string $desc Additional description.
+	 * @param string $template Additional description.
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(array $items, string $desc = ''): string
+	protected function getTemplate(array $items, string $template): string
 	{
-		$output = '';
-
 		foreach ($this->prepareFields($items) as $item) {
-			$label = $item['label'] ?? '';
+			$name = $item['name'] ?? '';
 			$value = $item['value'] ?? '';
 
-			$output .= "<li><strong>{$label}</strong>: {$value}</li>";
+			$template = str_replace("{" . $name . "}", $value, $template);
 		}
 
-		return "
-			{$desc}
-
-			<ul>
-				{$output}
-			</ul>
-		";
+		return nl2br($template);
 	}
 
 	/**
@@ -149,7 +141,7 @@ class Mailer implements MailerInterface
 			$value = json_decode($value, true);
 
 			$output[] = [
-				'label' => $value['label'],
+				'name' => $key,
 				'value' => $value['value'],
 			];
 		}

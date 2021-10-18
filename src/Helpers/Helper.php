@@ -131,11 +131,20 @@ class Helper
 	 */
 	public static function getFormNames(string $formId): string
 	{
-		preg_match_all('/Name":"(.*?)"/m', get_the_content(null, null, $formId), $matches, PREG_SET_ORDER);
+		$content = get_the_content(null, null, $formId);
+
+		// Find all name values.
+		preg_match_all('/Name":"(.*?)"/m', $content, $matches, PREG_SET_ORDER);
+
+		// Find custom predefined names.
+		preg_match_all('/\/(sender-email|sender-name) {(.*?)} \/-->/m', $content, $matchesCustom, PREG_SET_ORDER);
+
+		$items = array_merge($matches, $matchesCustom);
 
 		$output = [];
 
-		foreach ($matches as $item) {
+		// Populate output.
+		foreach ($items as $item) {
 			if (isset($item[1]) && !empty($item[1])) {
 				$output[] = "<code>{" . $item[1] . "}</code>";
 			}

@@ -72,8 +72,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function sanitizeFields(array $params)
 	{
 		foreach ($params as $key => $param) {
+			$type = json_decode($param, true)['type'];
+
 			if (is_string($param)) {
-				$params[$key] = \wp_unslash(\sanitize_text_field($param));
+				if ($type === 'textarea') {
+					$params[$key] = \sanitize_textarea_field($param);
+				} else {
+					$params[$key] = \sanitize_text_field($param);
+				}
 			} elseif (is_array($param)) {
 				$params[$key] = $this->sanitizeFields($param);
 			}
