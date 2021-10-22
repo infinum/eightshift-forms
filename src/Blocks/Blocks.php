@@ -56,7 +56,11 @@ class Blocks extends AbstractBlocks
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+		if (\is_wp_version_compatible('5.8')) {
+			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		} else {
+			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+		}
 
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
