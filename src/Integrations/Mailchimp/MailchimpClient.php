@@ -104,9 +104,9 @@ class MailchimpClient implements MailchimpClientInterface
 			"{$this->getApiUrl()}lists/{$listId}/members/{$emailHash}",
 			[
 				'headers' => $this->getHeaders(true),
+				'method' => 'PUT',
 				'body' => wp_json_encode(
 					[
-						'method' => 'PUT',
 						'email_address' => $email,
 						'status_if_new' => 'subscribed',
 						'status' => 'subscribed',
@@ -189,9 +189,9 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @param array $params Params.
 	 *
-	 * @return array
+	 * @return object
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params): object
 	{
 		$output = [];
 
@@ -203,7 +203,7 @@ class MailchimpClient implements MailchimpClientInterface
 			$output[$key] = $value;
 		}
 
-		return $output;
+		return (object) $output;
 	}
 
 	/**
