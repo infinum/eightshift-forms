@@ -100,7 +100,33 @@ class Blocks extends AbstractBlocks
 			[
 				[
 					'slug' => 'eightshift-forms',
-					'title' => \esc_html__('Eightshift Forms', 'eightshift-libs'),
+					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
+					'icon' => 'admin-settings',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories_all Available from WP 5.8.
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
+	{
+		return array_merge(
+			$categories,
+			[
+				[
+					'slug' => 'eightshift-forms',
+					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
 					'icon' => 'admin-settings',
 				],
 			]
