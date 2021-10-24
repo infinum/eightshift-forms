@@ -18,6 +18,19 @@ import manifest from './../manifest.json';
 export const InputOptions = (attributes) => {
 	const {
 		setAttributes,
+
+		showInputName = true,
+		showInputValue = true,
+		showInputAdvancedOptions = true,
+		showInputPlaceholder = true,
+		showInputType = true,
+		showInputValidationOptions = true,
+		showInputIsDisabled = true,
+		showInputIsReadOnly = true,
+		showInputIsRequired = true,
+		showInputTracking = true,
+		showInputIsEmail = true,
+		showInputIsUrl = true,
 	} = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
@@ -40,98 +53,126 @@ export const InputOptions = (attributes) => {
 				{...props('field', attributes)}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
-				help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
-				value={inputPlaceholder}
-				onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
-			/>
+			{showInputPlaceholder &&
+				<TextControl
+					label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
+					help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
+					value={inputPlaceholder}
+					onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+				/>
+			}
 
-			<SelectControl
-				label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
-				help={__('Set what type of input filed it is used.', 'eightshift-forms')}
-				value={inputType}
-				options={getOption('inputType', attributes, manifest)}
-				onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
-			/>
+			{showInputType &&
+				<SelectControl
+					label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
+					help={__('Set what type of input filed it is used.', 'eightshift-forms')}
+					value={inputType}
+					options={getOption('inputType', attributes, manifest)}
+					onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
+				/>
+			}
 
-			<ComponentUseToggle
-				label={__('Show advanced options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
-			/>
-
-			{showAdvanced &&
+			{showInputAdvancedOptions &&
 				<>
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
-						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
-						value={inputName}
-						onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+					<ComponentUseToggle
+						label={__('Show advanced options', 'eightshift-forms')}
+						checked={showAdvanced}
+						onChange={() => setShowAdvanced(!showAdvanced)}
+						showUseToggle={true}
+						showLabel={true}
 					/>
 
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
-						help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
-						value={inputValue}
-						onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
-					/>
+					{showAdvanced &&
+						<>
+							{showInputName &&
+								<TextControl
+									label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+									help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
+									value={inputName}
+									onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+								/>
+							}
 
-					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
-						help={__('Provide GTM tracking code.', 'eightshift-forms')}
-						value={inputTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
-					/>
+							{showInputValue &&
+								<TextControl
+									label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+									help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
+									value={inputValue}
+									onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+								/>
+							}
 
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Disabled', 'eightshift-forms')}
-						checked={inputIsDisabled}
-						onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
-					/>
+							{showInputTracking &&
+								<TextControl
+									label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+									help={__('Provide GTM tracking code.', 'eightshift-forms')}
+									value={inputTracking}
+									onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
+								/>
+							}
 
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Read Only', 'eightshift-forms')}
-						checked={inputIsReadOnly}
-						onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
-					/>
+							{showInputIsDisabled &&
+								<IconToggle
+									icon={icons.play}
+									label={__('Is Disabled', 'eightshift-forms')}
+									checked={inputIsDisabled}
+									onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
+								/>
+							}
+
+							{showInputIsReadOnly &&
+								<IconToggle
+									icon={icons.play}
+									label={__('Is Read Only', 'eightshift-forms')}
+									checked={inputIsReadOnly}
+									onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
+								/>
+							}
+						</>
+					}
 				</>
 			}
 
-			<ComponentUseToggle
-				label={__('Show validation options', 'eightshift-forms')}
-				checked={showValidation}
-				onChange={() => setShowValidation(!showValidation)}
-				showUseToggle={true}
-				showLabel={true}
-			/>
-
-			{showValidation &&
+			{showInputValidationOptions &&
 				<>
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Required', 'eightshift-forms')}
-						checked={inputIsRequired}
-						onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
+					<ComponentUseToggle
+						label={__('Show validation options', 'eightshift-forms')}
+						checked={showValidation}
+						onChange={() => setShowValidation(!showValidation)}
+						showUseToggle={true}
+						showLabel={true}
 					/>
 
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Email', 'eightshift-forms')}
-						checked={inputIsEmail}
-						onChange={(value) => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: value })}
-					/>
+					{showValidation &&
+						<>
+							{showInputIsRequired &&
+								<IconToggle
+									icon={icons.play}
+									label={__('Is Required', 'eightshift-forms')}
+									checked={inputIsRequired}
+									onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
+								/>
+							}
 
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Url', 'eightshift-forms')}
-						checked={inputIsUrl}
-						onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
-					/>
+							{showInputIsEmail &&
+								<IconToggle
+									icon={icons.play}
+									label={__('Is Email', 'eightshift-forms')}
+									checked={inputIsEmail}
+									onChange={(value) => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: value })}
+								/>
+							}
+
+							{showInputIsUrl &&
+								<IconToggle
+									icon={icons.play}
+									label={__('Is Url', 'eightshift-forms')}
+									checked={inputIsUrl}
+									onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
+								/>
+							}
+						</>
+					}
 				</>
 			}
 		</>

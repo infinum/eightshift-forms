@@ -4,13 +4,16 @@ import { PanelBody } from '@wordpress/components';
 import { props } from '@eightshift/frontend-libs/scripts';
 import { InputOptions as InputOptionsComponent } from '../../../components/input/components/input-options';
 
-export const InputOptions = ({ attributes, setAttributes }) => {
+export const SenderNameOptions = ({ attributes, setAttributes }) => {
 	return (
-		<PanelBody title={__('Input', 'eightshift-forms')}>
+		<PanelBody title={__('Sender Name', 'eightshift-forms')}>
 			<InputOptionsComponent
 				{...props('input', attributes, {
 					setAttributes: setAttributes,
 				})}
+				showInputName={false}
+				showInputType={false}
+				showInputValidationOptions={false}
 			/>
 		</PanelBody>
 	);

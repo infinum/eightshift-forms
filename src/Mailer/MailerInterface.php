@@ -21,10 +21,19 @@ interface MailerInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $to Email to.
+	 * @param string $subject Email subject.
+	 * @param string $template Email template.
 	 * @param array $files Email files.
 	 * @param array $fields Email fields.
 	 *
 	 * @return bool
 	 */
-	public function sendFormEmail(string $formId, string $to, array $files = [], array $fields = []): bool;
+	public function sendFormEmail(
+		string $formId,
+		string $to,
+		string $subject,
+		string $template = '',
+		array $files = [],
+		array $fields = []
+	): bool;
 }

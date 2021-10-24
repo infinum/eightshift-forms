@@ -44,6 +44,7 @@ class Labels implements LabelsInterface
 			// Mailer.
 			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'mailerErrorEmailSend' => __('Email not sent due to unknown issue. Please contact your admin.', 'eightshift-forms'),
+			'mailerErrorEmailConfirmationSend' => __('Email user confirmation not sent due to unknown issue. Please contact your admin.', 'eightshift-forms'),
 			'mailerSuccess' => __('Email sent successfully.', 'eightshift-forms'),
 			'mailerSuccessNoSend' => __('Email sent successfully.', 'eightshift-forms'),
 

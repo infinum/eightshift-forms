@@ -1,0 +1,45 @@
+{
+	"blockName": "sender-email",
+	"title": "Sender Email",
+	"description" : "Block used for sender email field used for user confirmation email.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"sender",
+		"email"
+	],
+	"components": {
+		"input": "input"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	],
+	"example": {
+		"attributes": {
+			"inputName": "sender-email",
+			"inputType": "email",
+			"inputIsRequired": true,
+			"inputIsEmail": true
+		}
+	},
+	"attributes": {
+		"inputName": {
+			"type": "string",
+			"default": "sender-email"
+		},
+		"inputType": {
+			"type": "string",
+			"default": "email"
+		},
+		"inputIsRequired": {
+			"type": "boolean",
+			"default": true
+		},
+		"inputIsEmail": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

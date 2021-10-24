@@ -27,13 +27,21 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $to Email to.
+	 * @param string $subject Email subject.
+	 * @param string $template Email template.
 	 * @param array $files Email files.
 	 * @param array $fields Email fields.
 	 *
 	 * @return bool
 	 */
-	public function sendFormEmail(string $formId, string $to, array $files = [], array $fields = []): bool
-	{
+	public function sendFormEmail(
+		string $formId,
+		string $to,
+		string $subject,
+		string $template = '',
+		array $files = [],
+		array $fields = []
+	): bool {
 		// Get header options from form settings.
 		$headers = $this->getHeader(
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
@@ -41,16 +49,13 @@ class Mailer implements MailerInterface
 		);
 
 		// Generate HTML form for sending with form fields.
-		$template = $this->getTemplate(
+		$templateHtml = $this->getTemplate(
 			$fields,
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId)
+			$template
 		);
 
-		// Populate subject from form settings.
-		$subject = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId);
-
 		// Send email.
-		return \wp_mail($to, $subject, $template, $headers, $files);
+		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
 	}
 
 	/**
@@ -105,28 +110,20 @@ class Mailer implements MailerInterface
 	 * HTML template for email.
 	 *
 	 * @param array $items All items to output.
-	 * @param string $desc Additional description.
+	 * @param string $template Additional description.
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(array $items, string $desc = ''): string
+	protected function getTemplate(array $items, string $template): string
 	{
-		$output = '';
-
 		foreach ($this->prepareFields($items) as $item) {
-			$label = $item['label'] ?? '';
+			$name = $item['name'] ?? '';
 			$value = $item['value'] ?? '';
 
-			$output .= "<li><strong>{$label}</strong>: {$value}</li>";
+			$template = str_replace("{" . $name . "}", $value, $template);
 		}
 
-		return "
-			{$desc}
-
-			<ul>
-				{$output}
-			</ul>
-		";
+		return nl2br($template);
 	}
 
 	/**
@@ -144,7 +141,7 @@ class Mailer implements MailerInterface
 			$value = json_decode($value, true);
 
 			$output[] = [
-				'label' => $value['label'],
+				'name' => $key,
 				'value' => $value['value'],
 			];
 		}

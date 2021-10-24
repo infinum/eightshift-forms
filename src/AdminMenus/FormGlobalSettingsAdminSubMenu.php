@@ -3,7 +3,7 @@
 /**
  * Class that holds class for admin sub menu - Global Settings.
  *
- * @package EightshiftLibs\AdminMenus
+ * @package EightshiftForms\AdminMenus
  */
 
 declare(strict_types=1);

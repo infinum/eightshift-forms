@@ -121,4 +121,35 @@ class Helper
 	{
 		return "/wp-admin/post.php?post={$formId}&action=edit";
 	}
+
+	/**
+	 * Get all field names from the form.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public static function getFormNames(string $formId): string
+	{
+		$content = get_the_content(null, null, $formId);
+
+		// Find all name values.
+		preg_match_all('/Name":"(.*?)"/m', $content, $matches, PREG_SET_ORDER);
+
+		// Find custom predefined names.
+		preg_match_all('/\/(sender-email|sender-name) {(.*?)} \/-->/m', $content, $matchesCustom, PREG_SET_ORDER);
+
+		$items = array_merge($matches, $matchesCustom);
+
+		$output = [];
+
+		// Populate output.
+		foreach ($items as $item) {
+			if (isset($item[1]) && !empty($item[1])) {
+				$output[] = "<code>{" . $item[1] . "}</code>";
+			}
+		}
+
+		return implode(', ', $output);
+	}
 }
