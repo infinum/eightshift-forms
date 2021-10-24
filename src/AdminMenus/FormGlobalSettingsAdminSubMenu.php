@@ -66,7 +66,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift-form-global-settings';
+	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_global_settings';
 
 	/**
 	 * Menu slug for this admin sub menu.
