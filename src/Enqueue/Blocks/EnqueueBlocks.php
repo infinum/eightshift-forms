@@ -155,6 +155,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		$output['mediaBreakpoints'] = apply_filters(self::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+		$output['postType'] = get_post_type() ?? '';
 
 		return [
 			'esFormsBlocksLocalization' => $output,

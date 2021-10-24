@@ -1,3 +1,4 @@
+/* global esFormsBlocksLocalization */
 /**
  * This is the main entry point for Block Editor blocks scripts used for the `WordPress admin editor`.
  * This file registers blocks dynamically using `registerBlocks` helper method.
@@ -9,6 +10,7 @@
  * Usage: `WordPress admin editor`.
  */
 
+import { unregisterBlockType } from '@wordpress/blocks';
 import { registerBlocks, outputCssVariablesGlobal } from '@eightshift/frontend-libs/scripts/editor';
 import { Wrapper } from '../../wrapper/wrapper';
 import WrapperManifest from '../../wrapper/manifest.json';
@@ -27,3 +29,8 @@ registerBlocks(
 
 // Output global css variables.
 outputCssVariablesGlobal(globalSettings);
+
+// Remove form-selector block from anywhere else other than form CPT.
+if (esFormsBlocksLocalization?.postType !== 'eightshift-forms') {
+	unregisterBlockType('eightshift-forms/form-selector');
+}
