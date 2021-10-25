@@ -40,8 +40,8 @@ abstract class AbstractFormBuilder
 	/**
 	 * Build settings form.
 	 *
-	 * @param array<array, mixed> $formItems Form array.
-	 * @param array<string, string|int|bool> $formAdditionalProps Additional attributes for form component.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
 	 *
 	 * @return string
 	 */
@@ -110,7 +110,7 @@ abstract class AbstractFormBuilder
 	/**
 	 * Get the actual form for the components.
 	 *
-	 * @param array<string, mixed> $formItems Form array.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
 	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
 	 * @param string $formContent For adding additional form components after every form.
 	 *

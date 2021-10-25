@@ -57,14 +57,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Map Mailchimp form to our components.
 	 *
-	 * @param array<string, mixed> $formAdditionalProps Additional props to pass to form.
+	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
 	 *
 	 * @return string
 	 */
 	public function getForm(array $formAdditionalProps): string
 	{
 		// Get post ID prop.
-		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', $formAdditionalProps['formPostId']) : '';
+		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
 		if (empty($formId)) {
 			return '';
 		}
