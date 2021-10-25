@@ -63,7 +63,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift-form-listing';
+	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_listing';
 
 	/**
 	 * Menu slug for this admin sub menu

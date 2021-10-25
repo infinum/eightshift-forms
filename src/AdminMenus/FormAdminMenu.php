@@ -42,7 +42,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift-form';
+	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_adminu_menu';
 
 	/**
 	 * Menu slug for this admin sub menu

@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftForms\Helpers\Components;
-use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Settings\SettingsHelper;
