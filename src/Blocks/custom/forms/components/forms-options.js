@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody} from '@wordpress/components';
+import {PanelBody, SelectControl} from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -8,7 +8,8 @@ import {
 	getAttrKey,
 	checkAttr,
 	getFetchWpApi,
-	unescapeHTML
+	unescapeHTML,
+	getOption
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -18,6 +19,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 	} = manifest;
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
+	const formsStyle = checkAttr('formsStyle', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Forms', 'eightshift-forms')}>
@@ -29,6 +31,15 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 				onChange={(value) => {setAttributes({[getAttrKey('formsFormPostId', attributes, manifest)]: value.value.toString()})}}
 				isClearable={false}
 				reFetchOnSearch={true}
+				multiple={false}
+			/>
+
+			<SelectControl
+				label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
+				help={__('Set what style type is your form.', 'eightshift-forms')}
+				value={formsStyle}
+				options={getOption('formsStyle', attributes, manifest)}
+				onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
 			/>
 		</PanelBody>
 	);

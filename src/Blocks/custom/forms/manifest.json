@@ -14,7 +14,23 @@
 	"attributes": {
 		"formsFormPostId": {
 			"type": "string"
+		},
+		"formsStyle": {
+			"type": "string",
+			"default": "default"
 		}
 	},
-	"postType": "eightshift-forms"
+	"postType": "eightshift-forms",
+	"options": {
+		"formsStyle": [
+			{
+				"label": "Default",
+				"value": "default"
+			},
+			{
+				"label": "Bla",
+				"value": "bla"
+			}
+		]
+	}
 }
