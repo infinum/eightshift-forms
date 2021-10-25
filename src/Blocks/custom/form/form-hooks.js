@@ -1,5 +1,7 @@
 /* global esFormsBlocksLocalization */
-import { addFilter} from '@wordpress/hooks';
+
+import { addFilter } from '@wordpress/hooks';
+import { isArray } from 'lodash'
 import manifest from './manifest.json';
 import globalManifest from '../../manifest.json';
 
@@ -13,10 +15,11 @@ export const hooks = () => {
 	const {
 		blockName,
 	} = manifest;
+	
 
 	// All adding additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
-		if ( name === `${namespace}/${blockName}` && Array.isArray(esFormsBlocksLocalization.additionalBlocks) ) {
+		if (name === `${namespace}/${blockName}` && typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.additionalBlocks)) {
 			esFormsBlocksLocalization.additionalBlocks.forEach((element) => {
 				settings.attributes.formAllowedBlocks.default.push(element);
 			});

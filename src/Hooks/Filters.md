@@ -60,3 +60,39 @@ public function getMediaBreakpoints(): array
 	];
 }
 ```
+
+## Add additional style options to forms block
+
+This filter will add new options to the style select dropdown in the forms block.
+
+Forms style option selector will not show unless a filter is provided.
+
+**Default fields:**
+```php
+[]
+```
+
+**Filter:**
+```php
+// Provide custom forms style options.
+add_filter('es_forms_block_forms_style_options', [$this, 'getFormsStyleOptions']);
+
+/**
+ * Provide custom forms style options.
+ *
+ * @return array
+ */
+public function getFormsStyleOptions(): array
+{
+	return [
+		[
+			'label' => 'Default',
+			'value' => 'default'
+		],
+		[
+			'label' => 'Custom Style',
+			'value' => 'custom-style'
+		],
+	];
+}
+```

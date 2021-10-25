@@ -25,12 +25,12 @@ export const FieldEditor = (attributes) => {
 
 	// Update media breakpoints from the filter.
 	if (
-		isObject(esFormsBlocksLocalization.mediaBreakpoints) &&
-		esFormsBlocksLocalization.mediaBreakpoints &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "mobile") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "tablet") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "desktop") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization.mediaBreakpoints, "large")
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		isObject(esFormsBlocksLocalization?.mediaBreakpoints) &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "mobile") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "tablet") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "desktop") &&
+		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "large")
 	) {
 		Object.assign(globalManifest.globalVariables.breakpoints, esFormsBlocksLocalization.mediaBreakpoints);
 	}
