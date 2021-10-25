@@ -23,8 +23,8 @@ interface MailerInterface
 	 * @param string $to Email to.
 	 * @param string $subject Email subject.
 	 * @param string $template Email template.
-	 * @param array $files Email files.
-	 * @param array $fields Email fields.
+	 * @param array<string, mixed> $files Email files.
+	 * @param array<string, mixed> $fields Email fields.
 	 *
 	 * @return bool
 	 */

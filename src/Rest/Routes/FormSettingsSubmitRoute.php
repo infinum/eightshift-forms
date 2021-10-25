@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Exception\MissingPermissionException;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Validation\ValidatorInterface;
 
@@ -59,7 +58,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -100,7 +99,6 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			switch ($formType) {
 				case SettingsCache::SETTINGS_TYPE_KEY:
 					return $this->cache($params);
-					break;
 				default:
 					// If form ID is not set this is considered an global setting.
 					if (empty($formId)) {
@@ -122,9 +120,9 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 							// Check if key needs updating or deleting.
 							if ($value['value']) {
-								\update_post_meta($formId, $key, $value['value']);
+								\update_post_meta((int) $formId, $key, $value['value']);
 							} else {
-								\delete_post_meta($formId, $key);
+								\delete_post_meta((int) $formId, $key);
 							}
 						}
 					}
@@ -145,7 +143,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Delete transient cache from the DB.
 	 *
-	 * @param array $params Keys to delete.
+	 * @param array<string, mixed> $params Keys to delete.
 	 *
 	 * @return mixed
 	 */

@@ -55,7 +55,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	/**
 	 * Get Settings sidebar data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(): array
 	{
@@ -69,7 +69,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	/**
 	 * Get global settings array for building settings page.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsGlobalData(): array
 	{

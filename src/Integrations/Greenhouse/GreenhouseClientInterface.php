@@ -17,7 +17,7 @@ interface GreenhouseClientInterface
 	/**
 	 * Return jobs simple list from Greenhouse.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getJobs(): array;
 
@@ -26,7 +26,7 @@ interface GreenhouseClientInterface
 	 *
 	 * @param string $jobId Job id to search by.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getJobQuestions(string $jobId): array;
 
@@ -34,10 +34,10 @@ interface GreenhouseClientInterface
 	 * API request to post job application to Greenhouse.
 	 *
 	 * @param string $jobId Job id to search.
-	 * @param array $params Params array.
-	 * @param array $files Files array.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function postGreenhouseApplication(string $jobId, array $params, array $files): array;
 }

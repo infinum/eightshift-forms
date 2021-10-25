@@ -21,14 +21,14 @@ class UnverifiedRequestException extends \RuntimeException implements GeneralExc
 	/**
 	 * Data to expose.
 	 *
-	 * @var array
+	 * @var array<array, mixed>
 	 */
 	private $data = [];
 
 	/**
 	 * Constructs object
 	 *
-	 * @param array $data Rest response array to expose.
+	 * @param array<array, mixed> $data Rest response array to expose.
 	 */
 	public function __construct(array $data = [])
 	{
@@ -39,7 +39,7 @@ class UnverifiedRequestException extends \RuntimeException implements GeneralExc
 	/**
 	 * $this->data getter.
 	 *
-	 * @return array
+	 * @return array<array, mixed>
 	 */
 	public function getData(): array
 	{

@@ -18,7 +18,7 @@ interface LabelsInterface
 	/**
 	 * Get all labels
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public function getLabels(): array;
 

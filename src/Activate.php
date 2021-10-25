@@ -30,11 +30,13 @@ class Activate implements HasActivationInterface
 		// Add caps.
 		$role = get_role('administrator');
 
-		$role->add_cap(Forms::POST_CAPABILITY_TYPE);
-		$role->add_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
-		$role->add_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
-		$role->add_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
-		$role->add_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		if ($role instanceof \WP_Role) {
+			$role->add_cap(Forms::POST_CAPABILITY_TYPE);
+			$role->add_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
+			$role->add_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+			$role->add_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
+			$role->add_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		}
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

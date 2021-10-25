@@ -113,7 +113,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -161,15 +161,12 @@ class FormSubmitRoute extends AbstractBaseRoute
 			switch ($formType) {
 				case SettingsMailer::SETTINGS_TYPE_KEY:
 					return $this->sendEmail($formId, $params, $files);
-					break;
 
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
 					return $this->sendGreenhouse($formId, $params, $files);
-					break;
 
 				case SettingsMailchimp::SETTINGS_TYPE_KEY:
 					return $this->sendMailchimp($formId, $params);
-					break;
 			}
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -186,8 +183,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * Use mailer function.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array $params Params array.
-	 * @param array $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return mixed
 	 */
@@ -270,8 +267,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * Use Greenhouse function.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array $params Params array.
-	 * @param array $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return mixed
 	 */
@@ -329,7 +326,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * Use Mailchimp function.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array $params Params array.
+	 * @param array<string, mixed> $params Params array.
 	 *
 	 * @return mixed
 	 */

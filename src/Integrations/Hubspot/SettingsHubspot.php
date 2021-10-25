@@ -77,7 +77,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsValid(string $formId): bool
 	{
-		if (!$this->isSettingsGlobalValid($formId)) {
+		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
 
@@ -110,7 +110,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Get Settings sidebar data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(): array
 	{
@@ -126,7 +126,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsData(string $formId): array
 	{
@@ -153,7 +153,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Get global settings array for building settings page.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsGlobalData(): array
 	{

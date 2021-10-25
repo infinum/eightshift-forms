@@ -25,7 +25,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Get all labels
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public function getLabels(): array
 	{

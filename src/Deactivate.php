@@ -32,11 +32,13 @@ class Deactivate implements HasDeactivationInterface
 		// Remove caps.
 		$role = get_role('administrator');
 
-		$role->remove_cap(Forms::POST_CAPABILITY_TYPE);
-		$role->remove_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
-		$role->remove_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
-		$role->remove_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
-		$role->remove_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		if ($role instanceof \WP_Role) {
+			$role->remove_cap(Forms::POST_CAPABILITY_TYPE);
+			$role->remove_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
+			$role->remove_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+			$role->remove_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
+			$role->remove_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		}
 
 		// Delet transients.
 		delete_transient(MailchimpClient::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME);

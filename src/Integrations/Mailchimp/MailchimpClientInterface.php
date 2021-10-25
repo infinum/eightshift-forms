@@ -16,7 +16,7 @@ interface MailchimpClientInterface
 	/**
 	 * Get Mailchimp lists with cache.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getLists(): array;
 
@@ -25,7 +25,7 @@ interface MailchimpClientInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getListFields(string $formId): array;
 
@@ -33,9 +33,9 @@ interface MailchimpClientInterface
 	 * API request to post mailchimp subscription to Mailchimp.
 	 *
 	 * @param string $listId List id.
-	 * @param array $params Params array.
+	 * @param array<string, mixed> $params Params array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function postMailchimpSubscription(string $listId, array $params): array;
 }

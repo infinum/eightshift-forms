@@ -18,7 +18,7 @@ interface MapperInterface
 	/**
 	 * Map Greenhouse form to our components.
 	 *
-	 * @param array $formAdditionalProps Additional props to pass to form.
+	 * @param array<string, mixed> $formAdditionalProps Additional props to pass to form.
 	 *
 	 * @return string
 	 */
@@ -27,10 +27,10 @@ interface MapperInterface
 	/**
 	 * Map Greenhouse fields to our components.
 	 *
-	 * @param array $data Fields.
+	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFields(array $data, string $formId): array;
 }

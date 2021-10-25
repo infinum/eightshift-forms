@@ -80,7 +80,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return null;
 		}
 
-		return $this->enqueueBlockEditorScript();
+		$this->enqueueBlockEditorScript();
 	}
 
 	/**
@@ -94,7 +94,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return null;
 		}
 
-		return $this->enqueueBlockEditorStyle();
+		$this->enqueueBlockEditorStyle();
 	}
 
 	/**
@@ -108,7 +108,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return null;
 		}
 
-		return $this->enqueueBlockStyle();
+		$this->enqueueBlockStyle();
 	}
 
 	/**
@@ -122,7 +122,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return null;
 		}
 
-		return $this->enqueueBlockScript();
+		$this->enqueueBlockScript();
 	}
 
 	/**
@@ -148,7 +148,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Get script localizations
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getLocalizations(): array
 	{

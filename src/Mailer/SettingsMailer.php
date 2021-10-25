@@ -127,7 +127,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Get Settings sidebar data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(): array
 	{
@@ -143,7 +143,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsData(string $formId): array
 	{

@@ -37,11 +37,11 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array $params Get params.
-	 * @param array $files Get files.
+	 * @param array<string, mixed> $params Get params.
+	 * @param array<string, mixed> $files Get files.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = ''): array
 	{
@@ -55,10 +55,10 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate params.
 	 *
-	 * @param array $params Params to check.
+	 * @param array<string, mixed> $params Params to check.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function validateParams(array $params, string $formId): array
 	{
@@ -97,11 +97,11 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate files.
 	 *
-	 * @param array $files Files to check.
-	 * @param array $params Params for reference.
+	 * @param array<string, mixed> $files Files to check.
+	 * @param array<string, mixed> $params Params for reference.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int|string, string>
 	 */
 	private function validateFiles(array $files, array $params, string $formId = ''): array
 	{

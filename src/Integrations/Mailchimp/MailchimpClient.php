@@ -36,7 +36,7 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * Get Mailchimp lists with cache.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getLists(): array
 	{
@@ -67,7 +67,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getListFields(string $formId): array
 	{
@@ -91,9 +91,9 @@ class MailchimpClient implements MailchimpClientInterface
 	 * API request to post mailchimp subscription to Mailchimp.
 	 *
 	 * @param string $listId List id.
-	 * @param array $params Params array.
+	 * @param array<string, mixed> $params Params array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function postMailchimpSubscription(string $listId, array $params): array
 	{
@@ -103,7 +103,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$response = \wp_remote_request(
 			"{$this->getApiUrl()}lists/{$listId}/members/{$emailHash}",
 			[
-				'headers' => $this->getHeaders(true),
+				'headers' => $this->getHeaders(),
 				'method' => 'PUT',
 				'body' => wp_json_encode(
 					[
@@ -122,7 +122,7 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getHeaders(): array
 	{
@@ -139,7 +139,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @param string $listId List id to search.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getMailchimpListFields(string $listId)
 	{
@@ -163,7 +163,7 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * API request to get all lists from Mailchimp.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getMailchimpLists()
 	{
@@ -187,7 +187,7 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * Prepare params
 	 *
-	 * @param array $params Params.
+	 * @param array<string, mixed> $params Params.
 	 *
 	 * @return object
 	 */

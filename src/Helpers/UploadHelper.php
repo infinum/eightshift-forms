@@ -19,9 +19,9 @@ trait UploadHelper
 	/**
 	 * Prepare all files and upload to uploads folder.
 	 *
-	 * @param array $files Files to prepare.
+	 * @param array<string, mixed> $files Files to prepare.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function prepareFiles(array $files): array
 	{
@@ -69,10 +69,10 @@ trait UploadHelper
 	/**
 	 * Override the default upload path.
 	 *
-	 * @param array $param Dir path.
+	 * @param array<string, mixed> $param Dir path.
 	 * @param string $myDir My directory override.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function changeUploadDir(array $param, string $myDir = 'tmp'): array
 	{
@@ -86,7 +86,7 @@ trait UploadHelper
 	/**
 	 * Delete files from the uploads folder.
 	 *
-	 * @param array $files Delete submitted files.
+	 * @param array<string, mixed> $files Delete submitted files.
 	 *
 	 * @return void
 	 */
@@ -105,7 +105,7 @@ trait UploadHelper
 	/**
 	 * Check if there is a faulty file in the array.
 	 *
-	 * @param array $files Files to check.
+	 * @param array<string, mixed> $files Files to check.
 	 *
 	 * @return boolean
 	 */

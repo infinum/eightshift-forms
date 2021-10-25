@@ -18,7 +18,7 @@ interface SettingsGlobalDataInterface
 	/**
 	 * Get global settings array for building settings page.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsGlobalData(): array;
 }

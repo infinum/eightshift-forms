@@ -19,7 +19,7 @@ interface FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @return array
+	 * @return array<int, array<string, int|string|bool>>
 	 */
 	public function getFormsList(): array;
 }

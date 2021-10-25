@@ -22,7 +22,7 @@ class FormsListing implements FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @return array
+	 * @return array<int, array<string, int|string|bool>>
 	 */
 	public function getFormsList(): array
 	{
@@ -45,9 +45,9 @@ class FormsListing implements FormListingInterface
 				// Output predefined array of data.
 				$output[] = [
 					'id' => $id,
-					'title' => get_the_title($id),
-					'slug' => \get_the_permalink($id),
-					'status' => \get_post_status($id),
+					'title' => get_the_title((int) $id),
+					'slug' => \get_the_permalink((int) $id),
+					'status' => \get_post_status((int) $id),
 					'settingsLink' => Helper::getSettingsPageUrl((string) $id),
 					'editLink' => Helper::getFormEditPageUrl((string) $id),
 				];

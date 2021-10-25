@@ -11,3 +11,4 @@ parameters:
         - '#^Variable \$innerBlockContent might not be defined\.#'
         - '#^Variable \$this might not be defined\.#'
         - '#^Variable \$templatePath might not be defined\.#'
+        - '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
