@@ -37,6 +37,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public const FILTER_MEDIA_BREAKPOINTS_NAME = 'es_forms_media_breakpoints';
 
 	/**
+	 * Filter block forms style options key.
+	 */
+	public const FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME = 'es_forms_block_forms_style_options';
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
@@ -152,6 +157,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		// Only for block editor.
 		if (is_admin()) {
 			$output['additionalBlocks'] = apply_filters(self::FILTER_ADDITIONAL_BLOCKS_NAME, []);
+			$output['formsBlockStyleOptions'] = apply_filters(self::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
 		}
 
 		$output['mediaBreakpoints'] = apply_filters(self::FILTER_MEDIA_BREAKPOINTS_NAME, []);

@@ -5,3 +5,4 @@
  */
 
 import './logo.svg';
+import './cover.png';

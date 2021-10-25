@@ -14,6 +14,9 @@
 	"attributes": {
 		"formsFormPostId": {
 			"type": "string"
+		},
+		"formsStyle": {
+			"type": "string"
 		}
 	},
 	"postType": "eightshift-forms"

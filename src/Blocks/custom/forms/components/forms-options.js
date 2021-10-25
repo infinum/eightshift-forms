@@ -1,6 +1,9 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
+import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { PanelBody} from '@wordpress/components';
+import { PanelBody, SelectControl } from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -18,6 +21,13 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 	} = manifest;
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
+	const formsStyle = checkAttr('formsStyle', attributes, manifest);
+
+	let formsStyleOptions = [];
+
+	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.formsBlockStyleOptions)) {
+		formsStyleOptions = esFormsBlocksLocalization.formsBlockStyleOptions;
+	}
 
 	return (
 		<PanelBody title={__('Forms', 'eightshift-forms')}>
@@ -29,7 +39,18 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 				onChange={(value) => {setAttributes({[getAttrKey('formsFormPostId', attributes, manifest)]: value.value.toString()})}}
 				isClearable={false}
 				reFetchOnSearch={true}
+				multiple={false}
 			/>
+
+			{formsStyleOptions &&
+				<SelectControl
+					label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
+					help={__('Set what style type is your form.', 'eightshift-forms')}
+					value={formsStyle}
+					options={formsStyleOptions}
+					onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
+				/>
+			}
 		</PanelBody>
 	);
 };

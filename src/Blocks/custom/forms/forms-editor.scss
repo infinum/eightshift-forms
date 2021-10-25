@@ -1,4 +1,6 @@
 .es-block-forms {
+	$this: &;
+
 	// Transparent overlay over the forms so the user can't click on them from the admin screen.
 	&::after {
 		content: '';
@@ -8,5 +10,22 @@
 		position: absolute;
 		left: 0;
 		top: 0;
+	}
+
+	&--not-set {
+		#{$this}__image {
+			max-width: 100%;
+			height: auto;
+			display: block;
+		}
+
+		#{$this}__text {
+			color: #009897;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			text-align: center;
+			font-size: 20px;
+			font-weight: bold;
+		}
 	}
 }

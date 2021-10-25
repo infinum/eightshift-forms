@@ -15,6 +15,8 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
+$blockClass = $attributes['blockClass'] ?? '';
+
 $mailchimpServerSideRender = Components::checkAttr('mailchimpServerSideRender', $attributes, $manifest);
 $mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes, $manifest);
 
@@ -27,25 +29,33 @@ $mailchimpFormPostIdDecoded = Helper::encryptor('decode', $mailchimpFormPostId);
 // Check if mailchimp data is set and valid.
 $isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $mailchimpFormPostIdDecoded);
 
-// Bailout if settings are not ok.
-if (!$isSettingsValid) {
-	return;
-}
+$mailchimpClass = Components::classnames([
+	Components::selector($blockClass, $blockClass),
+	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
+]);
 
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	Mailchimp::FILTER_MAPPER_NAME,
-	[
-		'formPostId' => $mailchimpFormPostId,
-		'formType' => SettingsMailchimp::SETTINGS_TYPE_KEY,
-		'formTrackingEventName' => \apply_filters(
-			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
-			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$mailchimpFormPostIdDecoded
-		),
-		'formSuccessRedirect' => \apply_filters(
-			SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
-			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$mailchimpFormPostIdDecoded
-		),
-	]
-);
+// Bailout if settings are not ok.
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		Mailchimp::FILTER_MAPPER_NAME,
+		[
+			'formPostId' => $mailchimpFormPostId,
+			'formType' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+			'formTrackingEventName' => \apply_filters(
+				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
+				SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+				$mailchimpFormPostIdDecoded
+			),
+			'formSuccessRedirect' => \apply_filters(
+				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
+				SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+				$mailchimpFormPostIdDecoded
+			),
+		]
+	);
+} else { ?>
+	<div class="<?php echo esc_attr($mailchimpClass); ?>">
+		<?php esc_html_e('Sorry, it looks like your Mailchimp settings are not configured correctly. Please contact your admin.', 'eightshift-forms'); ?>
+	</div>
+		<?php
+}
