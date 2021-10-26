@@ -170,7 +170,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 			}
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
-			return \rest_ensure_response($e->getData());
+			return \rest_ensure_response(
+				[
+					'code' => 400,
+					'status' => 'error_validation',
+					'message' => $e->getMessage(),
+					'validation' => $e->getData(),
+				]
+			);
 		} finally {
 			// Always delete the files from the disk.
 			if ($files) {
@@ -354,7 +361,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		$status = $response['status'] ?? 'subscribed';
 		$message = $response['title'] ?? '';
 
-		if (is_wp_error($response)) {
+		if (!$response) {
 			return \rest_ensure_response([
 				'code' => 404,
 				'status' => 'error',

@@ -136,7 +136,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			]);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
-			return \rest_ensure_response($e->getData());
+			return \rest_ensure_response(
+				[
+					'code' => 400,
+					'status' => 'error_validation',
+					'message' => $e->getMessage(),
+					'validation' => $e->getData(),
+				]
+			);
 		}
 	}
 

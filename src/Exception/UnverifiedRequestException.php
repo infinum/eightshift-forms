@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File missing data in filter exception
+ * UnverifiedRequestException
  *
  * @package EightshiftForms\Exception
  */
@@ -15,31 +15,31 @@ use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 /**
  * UnverifiedRequestException class.
  */
-class UnverifiedRequestException extends \RuntimeException implements GeneralExceptionInterface
+final class UnverifiedRequestException extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
-	 * Data to expose.
+	 * Iternal data.
 	 *
-	 * @var array<array, mixed>
+	 * @var array<int|string, mixed>
 	 */
 	private $data = [];
 
 	/**
-	 * Constructs object
+	 * Throws error if request is not verified.
 	 *
-	 * @param array<array, mixed> $data Rest response array to expose.
+	 * @param string $message Message to show.
+	 * @param array<int|string, mixed> $data Data that is wrong.
 	 */
-	public function __construct(array $data = [])
+	public function __construct(string $message, array $data = [])
 	{
-		$this->data = $data;
-		parent::__construct('UnverifiedRequestException');
+			$this->data = $data;
+			parent::__construct($message);
 	}
 
 	/**
-	 * $this->data getter.
+	 * Get exception data
 	 *
-	 * @return array<array, mixed>
+	 * @return array<int|string, mixed>
 	 */
 	public function getData(): array
 	{

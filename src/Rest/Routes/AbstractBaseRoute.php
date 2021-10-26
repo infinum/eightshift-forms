@@ -152,13 +152,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				! wp_verify_nonce($params['nonce'], $params['form-unique-id'])
 			) {
 				throw new UnverifiedRequestException(
-					\rest_ensure_response(
-						[
-							'code' => 400,
-							'status' => 'error',
-							'message' => \esc_html__('Invalid nonce.', 'eightshift-forms'),
-						]
-					)->data
+					\esc_html__('Invalid nonce.', 'eightshift-forms')
 				);
 			}
 		}
@@ -167,14 +161,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$validateParams = $this->validator->validate($params, [], $formId);
 		if (!empty($validateParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validateParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
+				$validateParams
 			);
 		}
 
@@ -182,28 +170,16 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$validatePostParams = $this->validator->validate($postParams, [], $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validatePostParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+				$validatePostParams
 			);
 		}
 
 		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validatePostParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+				$validatePostParams
 			);
 		}
 
