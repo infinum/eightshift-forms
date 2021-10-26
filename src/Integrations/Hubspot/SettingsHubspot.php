@@ -81,12 +81,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return false;
 		}
 
-		// $list = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
-
-		// if (empty($list)) {
-		// 	return false;
-		// }
-
 		return true;
 	}
 

@@ -84,27 +84,6 @@ class Forms extends AbstractPostType
 	 */
 	protected function getPostTypeArguments(): array
 	{
-		// $template = [
-		// 	[
-		// 		'eightshift-forms/form',
-		// 		[],
-		// 		[
-		// 			[
-		// 				'eightshift-forms/input',
-		// 				[
-		// 					'inputInputFieldLabel' => esc_html__('Your first form input', 'eightshift-forms'),
-		// 				],
-		// 				[]
-		// 			],
-		// 			[
-		// 				'eightshift-forms/submit',
-		// 				[],
-		// 				[]
-		// 			]
-		// 		]
-		// 	],
-		// ];
-
 		$template = [
 			[
 				'eightshift-forms/form-selector', [], []
