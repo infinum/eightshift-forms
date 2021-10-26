@@ -3,8 +3,13 @@ includes:
 parameters:
     level: max
     inferPrivatePropertyTypeFromConstructor: true
+    treatPhpDocTypesAsCertain: false
+    scanFiles:
+        - vendor/wp-cli/wp-cli/php/class-wp-cli.php
     paths:
         - src/
+    excludes_analyse:
+        - src/**/*Example.php
     ignoreErrors:
         # Block templates
         - '#^Variable \$attributes might not be defined\.#'
