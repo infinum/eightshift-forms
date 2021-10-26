@@ -297,7 +297,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		$status = $response['status'] ?? 200;
 		$message = $response['error'] ?? '';
 
-		if (is_wp_error($response)) {
+		if (!$response) {
 			return \rest_ensure_response([
 				'code' => 404,
 				'status' => 'error',
