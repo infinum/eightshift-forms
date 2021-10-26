@@ -133,7 +133,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		$formAdditionalProps['formPostId'] = $formId;
 
 		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
-			$formAdditionalProps['formSuccessRedirect'] = true;
+			$formAdditionalProps['formSuccessRedirect'] = 'true';
 		}
 
 		// Populate and build form.

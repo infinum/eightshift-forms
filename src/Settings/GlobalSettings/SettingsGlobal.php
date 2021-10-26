@@ -105,7 +105,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$formAdditionalProps['formType'] = $type;
 
 		if ($type === SettingsCache::SETTINGS_TYPE_KEY) {
-			$formAdditionalProps['formSuccessRedirect'] = true;
+			$formAdditionalProps['formSuccessRedirect'] = 'true';
 		}
 
 		// Populate and build form.
