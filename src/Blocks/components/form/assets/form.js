@@ -106,80 +106,44 @@ export class Form {
 				type,
 				name,
 				id,
-				dataset = {},
-				checked,
+				value,
 				files,
 				disabled,
-			} = item;
-
-			let {
-				value,
+				checked,
 			} = item;
 
 			if (disabled) {
 				continue;
 			}
 
-			let label = element.querySelector(`label[for="${id}"]`);
-
-			if (label !== null) {
-				label = label.innerText;
-			} else {
-				label = name;
-			}
-
-			if (type === 'checkbox' || type === 'radio') {
-				if (!checked) {
-					value = '';
-				}
-			}
-
-			// Check for radio values.
-			if (type === 'radio' && formData.get(name)) {
-				if (!checked) {
-					continue;
-				} else {
-					formData.delete(name);
-				}
-			}
-
 			const data = {
-				id,
 				name,
 				value,
 				type,
-				label,
 				checked,
-				data: dataset,
 			};
 
 			// Output all fields.
 			if (type === 'file' && files.length) {
 
 				for (const [key, file] of Object.entries(files)) {
-					formData.append(`${name}-${key}`, file);
+					formData.append(`${name}-${id}`, file);
 					data.value = "1";
-					formData.append(`${name}-${key}`, JSON.stringify(data));
+					formData.append(`${name}-${id}`, JSON.stringify(data));
 				}
 			} else {
-				formData.append(name, JSON.stringify(data));
+				formData.append(id, JSON.stringify(data));
 			}
 		}
 
 		formData.append('es-form-post-id', JSON.stringify({
-			id: 'es-form-post-id',
 			value: element.getAttribute('data-form-post-id'),
 			type: 'hidden',
-			label: 'Form Id',
-			data: {},
 		}));
 
 		formData.append('es-form-type', JSON.stringify({
-			id: 'es-form-type',
 			value: element.getAttribute('data-form-type'),
 			type: 'hidden',
-			label: 'Form type',
-			data: {},
 		}));
 
 		return formData;

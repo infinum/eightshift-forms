@@ -135,14 +135,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function verifyRequest(\WP_REST_Request $request, string $formId = ''): array
 	{
-		$params = $this->sanitizeFields($request->get_query_params());
-		$params = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
 		$files = $request->get_file_params();
 
 		// Quick hack for nested params like checkboxes and radios.
-		$params = $this->fixNestedParams($params);
-		$postParams = $this->fixNestedParams($postParams);
+		$postParams = $this->fixDotUnderscoreReplacement($postParams);
 
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
@@ -155,15 +152,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					\esc_html__('Invalid nonce.', 'eightshift-forms')
 				);
 			}
-		}
-
-		// Validate GET Params.
-		$validateParams = $this->validator->validate($params, [], $formId);
-		if (!empty($validateParams)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
-				$validateParams
-			);
 		}
 
 		// Validate POST Params.
@@ -184,7 +172,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return [
-			'get' => $params,
 			'post' => $postParams,
 			'files' => $files,
 		];
@@ -255,29 +242,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 			if ($key === 'es-form-post-id') {
 				unset($params['es-form-post-id']);
-			}
-		}
-
-		return $params;
-	}
-
-	/**
-	 * Quick hack for nested params like checkboxes and radios.
-	 *
-	 * @param array<string, mixed> $params Prams array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function fixNestedParams(array $params): array
-	{
-		foreach ($params as $paramKey => $paramValue) {
-			if (is_array($paramValue)) {
-				foreach ($paramValue as $itemsKey => $itemsValue) {
-					foreach ($itemsValue as $itemKey => $itemValue) {
-						$params["{$paramKey}[{$itemsKey}][{$itemKey}]"] = $itemValue;
-					}
-				}
-				unset($params[$paramKey]);
 			}
 		}
 

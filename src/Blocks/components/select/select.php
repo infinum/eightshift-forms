@@ -19,7 +19,6 @@ $selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
-$selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
@@ -38,7 +37,6 @@ $select = '
 		class="' . esc_attr($selectClass) . '"
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
-		data-validation-required="' . $selectIsRequired . '"
 		data-tracking="' . $selectTracking . '"
 		' . $selectIsDisabled . '
 	>

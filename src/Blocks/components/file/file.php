@@ -17,12 +17,8 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
-$fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
-$fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
-$fileMinSize = Components::checkAttr('fileMinSize', $attributes, $manifest);
-$fileMaxSize = Components::checkAttr('fileMaxSize', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
@@ -41,10 +37,6 @@ $file = '
 		name="' . esc_attr($fileName) . '"
 		id="' . esc_attr($fileId) . '"
 		type="file"
-		data-validation-accept="' . $fileAccept . '"
-		data-validation-required="' . $fileIsRequired . '"
-		data-validation-min-size="' . $fileMinSize . '"
-		data-validation-max-size="' . $fileMaxSize . '"
 		data-tracking="' . $fileTracking . '"
 		' . $fileIsMultiple . '
 	/>

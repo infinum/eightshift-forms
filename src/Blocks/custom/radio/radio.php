@@ -17,10 +17,6 @@ $radioValue = $attributes['radioRadioValue'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
-if (empty($radioId)) {
-	$props['radioId'] = $unique;
-}
-
 if (empty($radioValue)) {
 	$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
 }

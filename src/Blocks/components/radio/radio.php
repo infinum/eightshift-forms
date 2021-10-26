@@ -22,7 +22,6 @@ $radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
 $radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
 $radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manifest);
 $radioIsReadOnly = Components::checkAttr('radioIsReadOnly', $attributes, $manifest);
-$radioIsRequired = Components::checkAttr('radioIsRequired', $attributes, $manifest);
 $radioTracking = Components::checkAttr('radioTracking', $attributes, $manifest);
 
 $radioClass = Components::classnames([
@@ -42,7 +41,6 @@ $radioClass = Components::classnames([
 			name="<?php echo esc_attr($radioName); ?>"
 			id="<?php echo esc_attr($radioId); ?>"
 			value="<?php echo esc_attr($radioValue); ?>"
-			data-validation-required="<?php echo esc_attr($radioIsRequired); ?>"
 			data-tracking="<?php echo esc_attr($radioTracking); ?>"
 			<?php echo $radioIsChecked ? 'checked' : ''; ?>
 			<?php echo $radioIsDisabled ? 'disabled' : ''; ?>

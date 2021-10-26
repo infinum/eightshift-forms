@@ -16,11 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($inputName)) {
-	$props['inputName'] = $unique;
-}
-
-if (empty($inputId)) {
-	$props['inputId'] = $unique;
+	$props['inputName'] = $inputId;
 }
 
 $props['blockClass'] = $blockClass;

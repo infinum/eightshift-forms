@@ -16,11 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($radiosName)) {
-	$props['radiosName'] = $unique;
-}
-
-if (empty($radiosName)) {
-	$props['radiosName'] = $unique;
+	$props['radiosName'] = $radiosId;
 }
 
 $props['radiosContent'] = $innerBlockContent;

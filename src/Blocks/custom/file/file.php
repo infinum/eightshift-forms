@@ -16,11 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($fileName)) {
-	$props['fileName'] = $unique;
-}
-
-if (empty($fileId)) {
-	$props['fileId'] = $unique;
+	$props['fileName'] = $fileId;
 }
 
 $props['blockClass'] = $blockClass;

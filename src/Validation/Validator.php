@@ -10,13 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * Class Validator
  */
 class Validator extends AbstractValidation
 {
+	use ObjectHelperTrait;
+
 	/**
 	 * Instance variable for labels data.
 	 *
@@ -45,51 +49,153 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = ''): array
 	{
+		$validationReference = $this->getValidateFields($formId);
+
 		// Merge params and files validations.
 		return array_merge(
-			$this->validateParams($params, $formId),
+			$this->validateParams($params, $validationReference, $formId),
 			$this->validateFiles($files, $params, $formId)
 		);
+	}
+
+	/**
+	 * Output validation fields for form.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getValidateFields($formId) {
+		$output = [];
+
+		$blocks = parse_blocks(get_the_content(null, false, $formId));
+
+		foreach($blocks[0]['innerBlocks'][0]['innerBlocks'] as $block) {
+			$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
+
+			if ($name === 'checkboxes') {
+				foreach($block['innerBlocks'] as $inner) {
+					$innerOptions = $this->getValidateFieldsInner($inner, 'checkbox');
+
+					if ($innerOptions) {
+						$output = array_merge($output, $innerOptions);
+					}
+				}
+			} else {
+				$innerOptions = $this->getValidateFieldsInner($block, $name);
+			}
+
+			if ($innerOptions) {
+				$output = array_merge($output, $innerOptions);
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Validate inner block
+	 *
+	 * @param array<string, mixed> $block Block inner content.
+	 * @param string $name Block name.
+	 * 
+	 * @return array<string, mixed>
+	 */
+	private function getValidateFieldsInner($block, $name): array
+	{
+		$output = [];
+
+		foreach($block['attrs'] as $attributeKey => $attributeValue) {
+			switch ($name) {
+				case 'senderEmail':
+				case 'senderName':
+					$attrName = "{$name}Input";
+						break;
+				default:
+					$attrName = $name . ucfirst($name);
+						break;
+			}
+
+			$valid = array_flip([
+				"{$attrName}IsRequired",
+				"{$attrName}IsEmail",
+				"{$attrName}IsUrl",
+				"{$attrName}Accept",
+				"{$attrName}MinSize",
+				"{$attrName}MaxSize",
+			]);
+
+			$id = $block['attrs']["{$attrName}Id"] ?? '';
+
+			if (isset($valid[$attributeKey]) && !empty($id)) {
+				$output[$id][lcfirst(str_replace($attrName, '', $attributeKey))] = $attributeValue;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $params Params to check.
+	 * @param array<string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function validateParams(array $params, string $formId): array
+	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
 		$output = [];
 
 		foreach ($params as $paramKey => $paramValue) {
-			$inputDetails = json_decode($paramValue, true);
+			if (is_array($paramValue)) {
+				$checked = array_filter($paramValue, function($item) {
+					$inputDetails = json_decode($item, true);
+					return $inputDetails['checked'];
+				});
 
-			$inputData = $inputDetails['data'] ?? [];
-			$inputValue = $inputDetails['value'] ?? '';
+				if ($checked) {
+					$inputValue = 'true';
+				}
+			} else {
+				$inputDetails = json_decode($paramValue, true);
 
-			foreach ($inputData as $dataKey => $dataValue) {
+				$inputValue = $inputDetails['value'] ?? '';
+			}
+
+			$reference = $validationReference[$paramKey] ?? [];
+
+			if (!$reference) {
+				continue;
+			}
+
+			foreach ($reference as $dataKey => $dataValue) {
 				switch ($dataKey) {
-					case 'validationRequired':
-						if ($dataValue === '1' && $inputValue === '') {
+					case 'isRequired':
+						error_log( print_r( ( $dataValue ), true ) );
+						error_log( print_r( ( $inputValue ), true ) );
+						
+						if ($dataValue && $inputValue === '') {
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
-					case 'validationEmail':
-						if ($dataValue === '1' && !$this->isEmail($inputValue) && $inputData['validationRequired'] === '1') {
+					case 'IsEmail':
+						if ($dataValue && !$this->isEmail($inputValue) && $reference['isRequired']) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
-					case 'validationUrl':
-						if ($dataValue === '1' && !$this->isUrl($inputValue) && $inputData['validationRequired'] === '1') {
+					case 'isUrl':
+						if ($dataValue && !$this->isUrl($inputValue) && $reference['isRequired']) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
 				}
 			}
 		}
+
+		error_log( print_r( ( $output ), true ) );
+		
 
 		return $output;
 	}
