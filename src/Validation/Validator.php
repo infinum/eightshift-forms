@@ -66,13 +66,11 @@ class Validator extends AbstractValidation
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
 
-		// error_log( print_r( ( $formId ), true ) );
-
 		if ($formData) {
-			$validationReference = $this->getValidationReference($formData, true);
+			$validationReference = $this->getValidationReferenceManual($formData);
 
-			// error_log( print_r( ( $validationReference ), true ) );
-			// error_log( print_r( ( $params ), true ) );
+			error_log( print_r( ( $validationReference ), true ) );
+			error_log( print_r( ( $params ), true ) );
 		} else {
 			$blocks = parse_blocks(get_the_content(null, false, $formId));
 	
@@ -214,25 +212,21 @@ class Validator extends AbstractValidation
 		return $output;
 	}
 
-		/**
-	 * Output validation reference fields for form.
+	/**
+	 * Output validation reference fields for block form.
 	 *
 	 * @param array $blocks Blocks array of data.
 	 * @param bool $isManualBuild Determin if logic is used for blocks or manual built form like settings or integrations.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getValidationReference(array $blocks, bool $isManualBuild = false): array
+	private function getValidationReference(array $blocks): array
 	{
 		$output = [];
 
 		// Loop multiple levels form-selector > form.
 		foreach ($blocks as $block) {
-			if ($isManualBuild) {
-				$name = $block['component'] ?? '';
-			} else {
-				$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
-			}
+			$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
 
 			if (!$name) {
 				continue;
@@ -260,7 +254,7 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Output validation reference inner blocks fields for form.
+	 * Output validation reference inner blocks fields for block form.
 	 *
 	 * @param array<string, mixed> $block Block inner content.
 	 * @param string $name Block name.
@@ -268,6 +262,94 @@ class Validator extends AbstractValidation
 	 * @return array<string, mixed>
 	 */
 	private function getValidationReferenceInner($block, $name): array
+	{
+		$output = [];
+
+		// Check all attributes.
+		foreach($block['attrs'] as $attributeKey => $attributeValue) {
+			switch ($name) {
+				// If something custom add corrections.
+				case 'senderEmail':
+				case 'senderName':
+					$attrName = "{$name}Input";
+						break;
+				default:
+					$attrName = $name . ucfirst($name);
+						break;
+			}
+
+			// Get all validation fields with the correct prefix.
+			$valid = array_flip(
+				array_map(
+					function($item) use ($attrName) {
+						return "{$attrName}{$item}";
+					},
+					self::VALIDATION_FIELDS
+				)
+			);
+
+			// Get Block Id.
+			$id = $block['attrs']["{$attrName}Id"] ?? '';
+
+			// Output validation items with correct value for the matching ID.
+			if (isset($valid[$attributeKey]) && !empty($id)) {
+				$output[$id][lcfirst(str_replace($attrName, '', $attributeKey))] = $attributeValue;
+			}
+		}
+
+		return $output;
+	}
+
+		/**
+	 * Output validation reference fields for manual form (integrations, settings).
+	 *
+	 * @param array $blocks Blocks array of data.
+	 * @param bool $isManualBuild Determin if logic is used for blocks or manual built form like settings or integrations.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getValidationReferenceManual(array $blocks): array
+	{
+		$output = [];
+
+		// Loop multiple levels form-selector > form.
+		foreach ($blocks as $block) {
+			$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
+
+			if (!$name) {
+				continue;
+			}
+
+			// Check inner blocks if there are checkboxes.
+			if ($name === 'checkboxes') {
+				foreach($block['innerBlocks'] as $inner) {
+					$innerOptions = $this->getValidationReferenceManualInner($inner, 'checkbox');
+
+					if ($innerOptions) {
+						$output = array_merge($output, $innerOptions);
+					}
+				}
+			} else {
+				$innerOptions = $this->getValidationReferenceManualInner($block, $name);
+			}
+
+			if ($innerOptions) {
+				$output = array_merge($output, $innerOptions);
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Output validation reference inner blocks fields for manual form (integrations, settings).
+	 *
+	 * @param array<string, mixed> $block Block inner content.
+	 * @param string $name Block name.
+	 * 
+	 * @return array<string, mixed>
+	 */
+	private function getValidationReferenceManualInner($block, $name): array
 	{
 		$output = [];
 

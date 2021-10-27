@@ -116,9 +116,6 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 			$formAdditionalProps['formSuccessRedirect'] = 'true';
 		}
 
-		// error_log( print_r( ( $data ), true ) );
-		
-
 		// Populate and build form.
 		return $this->buildSettingsForm(
 			$data ?? [],
