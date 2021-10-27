@@ -41,18 +41,31 @@ trait UploadHelper
 		add_filter('upload_dir', [$this, 'changeUploadDir'], 1, 10);
 
 		foreach ($files as $fileKey => $fileValue) {
-			$upload = \wp_handle_upload(
-				$fileValue,
-				[
-					'test_form' => false,
-				]
-			);
+			foreach ($fileValue['name'] as $key => $value) {
+				if ($fileValue['name'][$key]) {
 
-			if (array_key_exists('error', $upload)) {
-				$hasError = true;
-				$output[$fileKey] = 'error';
-			} else {
-				$output[$fileKey] = $upload['file'];
+					$fileDetails = [
+						'name' => $fileValue['name'][$key],
+						'type' => $fileValue['type'][$key],
+						'tmp_name' => $fileValue['tmp_name'][$key],
+						'error' => $fileValue['error'][$key],
+						'size' => $fileValue['size'][$key],
+					];
+					
+					$upload = wp_handle_upload(
+						$fileDetails,
+						[
+							'test_form' => false,
+						]
+					);
+
+					if (array_key_exists('error', $upload)) {
+						$hasError = true;
+						$output[$fileKey] = 'error';
+					} else {
+						$output[$fileKey] = $upload['file'];
+					}
+				}
 			}
 		}
 

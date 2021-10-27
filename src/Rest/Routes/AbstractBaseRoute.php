@@ -128,18 +128,20 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param \WP_REST_Request $request WP_REST_Request object.
 	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $formData Form data to validate.
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
 	 * @return array<string, mixed> Filtered request params.
 	 */
-	protected function verifyRequest(\WP_REST_Request $request, string $formId = ''): array
+	protected function verifyRequest(\WP_REST_Request $request, string $formId = '', array $formData = []): array
 	{
-		$postParams = $this->sanitizeFields($request->get_body_params());
+		// Get params and files.
+		$params = $this->sanitizeFields($request->get_body_params());
 		$files = $request->get_file_params();
 
 		// Quick hack for nested params like checkboxes and radios.
-		$postParams = $this->fixDotUnderscoreReplacement($postParams);
+		$params = $this->fixDotUnderscoreReplacement($params);
 
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
@@ -154,25 +156,17 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			}
 		}
 
-		// Validate POST Params.
-		$validatePostParams = $this->validator->validate($postParams, [], $formId);
-		if (!empty($validatePostParams)) {
+		// Validate Params.
+		$validate = $this->validator->validate($params, $files, $formId, $formData);
+		if (!empty($validate)) {
 			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-				$validatePostParams
-			);
-		}
-
-		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
-		if (!empty($validatePostParams)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-				$validatePostParams
+				\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+				$validate
 			);
 		}
 
 		return [
-			'post' => $postParams,
+			'post' => $params,
 			'files' => $files,
 		];
 	}

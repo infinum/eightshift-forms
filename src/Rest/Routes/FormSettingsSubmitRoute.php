@@ -13,6 +13,8 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -89,8 +91,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Determine form type.
 			$formType = $this->getFormType($request->get_body_params());
 
+			// Get form fields for validation.
+			$formData = isset(Filters::ALL[$formType]['settings']) ? apply_filters(Filters::ALL[$formType]['settings'], $formId) : [];
+
 			// Validate request.
-			$postParams = $this->verifyRequest($request);
+			$postParams = $this->verifyRequest($request, $formId, $formData);
 
 			// Prepare fields.
 			$params = $this->removeUneceseryParams($postParams['post']);

@@ -13,8 +13,10 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
@@ -145,21 +147,22 @@ class FormSubmitRoute extends AbstractBaseRoute
 			// Determin form type.
 			$formType = $this->getFormType($request->get_body_params());
 
+			// Get form fields for validation.
+			$formData = isset(Filters::ALL[$formType]['fields']) ? apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
+
 			// Validate request.
-			$postParams = $this->verifyRequest($request, $formId);
+			$postParams = $this->verifyRequest($request, $formId, $formData);
 
 			// Prepare fields.
 			$params = $this->removeUneceseryParams($postParams['post']);
 
-			// Prepare files.
-			$files = $postParams['files'];
-
 			// Upload files to temp folder.
-			$files = $this->prepareFiles($files);
+			$files = $this->prepareFiles($postParams['files'] ?? []);
 
 			// Determine form type to use.
 			switch ($formType) {
 				case SettingsMailer::SETTINGS_TYPE_KEY:
+					$postParams = $this->verifyRequest($request, $formId);
 					return $this->sendEmail($formId, $params, $files);
 
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:

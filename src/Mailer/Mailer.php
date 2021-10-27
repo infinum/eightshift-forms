@@ -137,12 +137,24 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		foreach ($fields as $key => $value) {
-			$value = json_decode($value, true);
+		foreach ($fields as $value) {
+			// Array used for radios.
+			if (is_array($value)) {
+				// Filter item that has checked value.
+				$value = array_filter($value, function($item) {
+					$inputDetails = json_decode($item, true);
+					return $inputDetails['value'] !== '';
+				});
+
+				// Output only item that is checked or empty.
+				$value = $value ? reset($value) : '';
+			}
+
+			$details = json_decode($value, true);
 
 			$output[] = [
-				'name' => $key,
-				'value' => $value['value'],
+				'name' => $details['name'],
+				'value' => $details['value'],
 			];
 		}
 

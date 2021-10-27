@@ -22,9 +22,18 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 {
 
 	/**
-	 * Filter Name
+	 * Filter mapper.
+	 *
+	 * @var string
 	 */
 	public const FILTER_MAPPER_NAME = 'es_mailchimp_mapper_filter';
+
+	/**
+	 * Filter form fields.
+	 *
+	 * @var string
+	 */
+	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -52,6 +61,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	{
 		// Blocks string to value filter name constant.
 		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm']);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
 	}
 
 	/**
@@ -69,33 +79,44 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return '';
 		}
 
-		// Get Job Id.
-		$formId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
-		if (empty($formId)) {
-			return '';
+		return $this->buildForm(
+			$this->getFormFields((string) $formId),
+			$formAdditionalProps
+		);
+	}
+
+	/**
+	 * Get Mailchimp maped form fields.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getFormFields(string $formId): array
+	{
+		// Get List Id.
+		$listId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
+		if (empty($listId)) {
+			return [];
 		}
 
 		// Get fields.
-		$fields = $this->mailchimpClient->getListFields($formId);
+		$fields = $this->mailchimpClient->getListFields($listId);
 		if (empty($fields)) {
-			return '';
+			return [];
 		}
 
-		return $this->buildForm(
-			$this->getFields($fields, (string) $formId),
-			$formAdditionalProps
-		);
+		return $this->getFields($fields, (string) $formId);
 	}
 
 	/**
 	 * Map Mailchimp fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
-	 * @param string $formId Form Id.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFields(array $data, string $formId): array
+	private function getFields(array $data): array
 	{
 		$output = [];
 
@@ -124,7 +145,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$required = $field['required'] ?? false;
 			$public = $field['public'] ?? false;
 			$value = $field['default_value'] ?? '';
-			$id = $field['merge_id'] ?? '';
+			$id = $name;
 
 			if (!$public) {
 				continue;

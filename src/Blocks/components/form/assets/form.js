@@ -106,10 +106,13 @@ export class Form {
 				type,
 				name,
 				id,
-				value,
 				files,
 				disabled,
 				checked,
+			} = item;
+
+			let {
+				value
 			} = item;
 
 			if (disabled) {
@@ -120,16 +123,18 @@ export class Form {
 				name,
 				value,
 				type,
-				checked,
 			};
+
+			if ((type === 'checkbox' || type === 'radio') && !checked) {
+				data.value= '';
+			}
 
 			// Output all fields.
 			if (type === 'file' && files.length) {
-
 				for (const [key, file] of Object.entries(files)) {
-					formData.append(`${name}-${id}`, file);
-					data.value = "1";
-					formData.append(`${name}-${id}`, JSON.stringify(data));
+					formData.append(`${id}[${key}]`, file);
+					data.value = true;
+					formData.append(`${id}[${key}]`, JSON.stringify(data));
 				}
 			} else {
 				formData.append(id, JSON.stringify(data));

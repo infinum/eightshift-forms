@@ -29,6 +29,21 @@ class Validator extends AbstractValidation
 	protected $labels;
 
 	/**
+	 * Validation Fields to check.
+	 * If adding a new validation type put it here.
+	 *
+	 * @var array<int, string>
+	 */
+	private const VALIDATION_FIELDS = [
+		"IsRequired",
+		"IsEmail",
+		"IsUrl",
+		"Accept",
+		"MinSize",
+		"MaxSize",
+	];
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
@@ -44,95 +59,31 @@ class Validator extends AbstractValidation
 	 * @param array<string, mixed> $params Get params.
 	 * @param array<string, mixed> $files Get files.
 	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $formData Form data to validate.
 	 *
 	 * @return array<int|string, mixed>
 	 */
-	public function validate(array $params = [], array $files = [], string $formId = ''): array
+	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
-		$validationReference = $this->getValidateFields($formId);
+
+		// error_log( print_r( ( $formId ), true ) );
+
+		if ($formData) {
+			$validationReference = $this->getValidationReference($formData, true);
+
+			// error_log( print_r( ( $validationReference ), true ) );
+			// error_log( print_r( ( $params ), true ) );
+		} else {
+			$blocks = parse_blocks(get_the_content(null, false, $formId));
+	
+			$validationReference = $this->getValidationReference($blocks[0]['innerBlocks'][0]['innerBlocks']);
+		}
 
 		// Merge params and files validations.
 		return array_merge(
 			$this->validateParams($params, $validationReference, $formId),
-			$this->validateFiles($files, $params, $formId)
+			$this->validateFiles($files, $validationReference, $formId)
 		);
-	}
-
-	/**
-	 * Output validation fields for form.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getValidateFields($formId) {
-		$output = [];
-
-		$blocks = parse_blocks(get_the_content(null, false, $formId));
-
-		foreach($blocks[0]['innerBlocks'][0]['innerBlocks'] as $block) {
-			$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
-
-			if ($name === 'checkboxes') {
-				foreach($block['innerBlocks'] as $inner) {
-					$innerOptions = $this->getValidateFieldsInner($inner, 'checkbox');
-
-					if ($innerOptions) {
-						$output = array_merge($output, $innerOptions);
-					}
-				}
-			} else {
-				$innerOptions = $this->getValidateFieldsInner($block, $name);
-			}
-
-			if ($innerOptions) {
-				$output = array_merge($output, $innerOptions);
-			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Validate inner block
-	 *
-	 * @param array<string, mixed> $block Block inner content.
-	 * @param string $name Block name.
-	 * 
-	 * @return array<string, mixed>
-	 */
-	private function getValidateFieldsInner($block, $name): array
-	{
-		$output = [];
-
-		foreach($block['attrs'] as $attributeKey => $attributeValue) {
-			switch ($name) {
-				case 'senderEmail':
-				case 'senderName':
-					$attrName = "{$name}Input";
-						break;
-				default:
-					$attrName = $name . ucfirst($name);
-						break;
-			}
-
-			$valid = array_flip([
-				"{$attrName}IsRequired",
-				"{$attrName}IsEmail",
-				"{$attrName}IsUrl",
-				"{$attrName}Accept",
-				"{$attrName}MinSize",
-				"{$attrName}MaxSize",
-			]);
-
-			$id = $block['attrs']["{$attrName}Id"] ?? '';
-
-			if (isset($valid[$attributeKey]) && !empty($id)) {
-				$output[$id][lcfirst(str_replace($attrName, '', $attributeKey))] = $attributeValue;
-			}
-		}
-
-		return $output;
 	}
 
 	/**
@@ -148,45 +99,51 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
+		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
+			// Array used for radios.
 			if (is_array($paramValue)) {
-				$checked = array_filter($paramValue, function($item) {
+				// Filter item that has checked value.
+				$paramValue = array_filter($paramValue, function($item) {
 					$inputDetails = json_decode($item, true);
-					return $inputDetails['checked'];
+					return $inputDetails['value'] !== '';
 				});
 
-				if ($checked) {
-					$inputValue = 'true';
-				}
-			} else {
-				$inputDetails = json_decode($paramValue, true);
-
-				$inputValue = $inputDetails['value'] ?? '';
+				// Output only item that is checked or empty.
+				$paramValue = $paramValue ? reset($paramValue) : '';
 			}
 
+			// Normal type just etract data and value.
+			$inputDetails = json_decode($paramValue, true);
+
+			$inputValue = $inputDetails['value'] ?? '';
+
+			// Find validation reference by ID.
 			$reference = $validationReference[$paramKey] ?? [];
 
+			// Bailout if no validation is required.
 			if (!$reference) {
 				continue;
 			}
 
+			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
 				switch ($dataKey) {
+					// Check validation for required params.
 					case 'isRequired':
-						error_log( print_r( ( $dataValue ), true ) );
-						error_log( print_r( ( $inputValue ), true ) );
-						
 						if ($dataValue && $inputValue === '') {
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
+					// Check validation for email params.
 					case 'IsEmail':
-						if ($dataValue && !$this->isEmail($inputValue) && $reference['isRequired']) {
+						if ($dataValue && !$this->isEmail($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
+					// Check validation for url params.
 					case 'isUrl':
-						if ($dataValue && !$this->isUrl($inputValue) && $reference['isRequired']) {
+						if ($dataValue && !$this->isUrl($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
@@ -194,57 +151,155 @@ class Validator extends AbstractValidation
 			}
 		}
 
-		error_log( print_r( ( $output ), true ) );
-		
+		return $output;
+	}
+
+	/**
+	 * Validate files from the validation reference.
+	 *
+	 * @param array<string, mixed> $files Files to check.
+	 * @param array<string, mixed> $validationReference Validation reference to check against.
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int|string, string>
+	 */
+	private function validateFiles(array $files, array $validationReference, string $formId = ''): array
+	{
+		$output = [];
+
+		// Check files.
+		foreach ($files as $fileKey => $fileValue) {
+			// Find validation reference by ID.
+			$reference = $validationReference[$fileKey] ?? [];
+
+			// Bailout if no validation is required.
+			if (!$reference) {
+				continue;
+			}
+
+			// Loop all validations from the reference.
+			foreach ($reference as $dataKey => $dataValue) {
+
+				// Check validation for accept file types.
+				if ($dataKey === 'accept') {
+					foreach ($fileValue['name'] as $file) {
+						if (!empty($dataValue) && !$this->isFileTypeValid($file, $dataValue)) {
+							$output[$fileKey] = sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
+							continue;
+						}
+					}
+				}
+
+				// Check validation for size min/max.
+				foreach ($fileValue['size'] as $file) {
+					// Check validation for min size.
+					if ($dataKey === 'minSize') {
+						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $file, (int) $dataValue * 1000)) {
+							$output[$fileKey] = sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue);
+							continue;
+						}
+					}
+
+					// Check validation for max size.
+					if ($dataKey === 'maxSize') {
+						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $file, (int) $dataValue * 1000)) {
+							$output[$fileKey] = sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue);
+							continue;
+						}
+					}
+				}
+			}
+		}
+
+		return $output;
+	}
+
+		/**
+	 * Output validation reference fields for form.
+	 *
+	 * @param array $blocks Blocks array of data.
+	 * @param bool $isManualBuild Determin if logic is used for blocks or manual built form like settings or integrations.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getValidationReference(array $blocks, bool $isManualBuild = false): array
+	{
+		$output = [];
+
+		// Loop multiple levels form-selector > form.
+		foreach ($blocks as $block) {
+			if ($isManualBuild) {
+				$name = $block['component'] ?? '';
+			} else {
+				$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
+			}
+
+			if (!$name) {
+				continue;
+			}
+
+			// Check inner blocks if there are checkboxes.
+			if ($name === 'checkboxes') {
+				foreach($block['innerBlocks'] as $inner) {
+					$innerOptions = $this->getValidationReferenceInner($inner, 'checkbox');
+
+					if ($innerOptions) {
+						$output = array_merge($output, $innerOptions);
+					}
+				}
+			} else {
+				$innerOptions = $this->getValidationReferenceInner($block, $name);
+			}
+
+			if ($innerOptions) {
+				$output = array_merge($output, $innerOptions);
+			}
+		}
 
 		return $output;
 	}
 
 	/**
-	 * Validate files.
+	 * Output validation reference inner blocks fields for form.
 	 *
-	 * @param array<string, mixed> $files Files to check.
-	 * @param array<string, mixed> $params Params for reference.
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int|string, string>
+	 * @param array<string, mixed> $block Block inner content.
+	 * @param string $name Block name.
+	 * 
+	 * @return array<string, mixed>
 	 */
-	private function validateFiles(array $files, array $params, string $formId = ''): array
+	private function getValidationReferenceInner($block, $name): array
 	{
 		$output = [];
 
-		foreach ($files as $fileKey => $fileValue) {
-			$input = $params[$fileKey] ?? [];
-
-			if (!$input) {
-				continue;
+		// Check all attributes.
+		foreach($block['attrs'] as $attributeKey => $attributeValue) {
+			switch ($name) {
+				// If something custom add corrections.
+				case 'senderEmail':
+				case 'senderName':
+					$attrName = "{$name}Input";
+						break;
+				default:
+					$attrName = $name . ucfirst($name);
+						break;
 			}
 
-			$fileName = $fileValue['name'] ?? '';
-			$fileSize = $fileValue['size'] ?? '';
+			// Get all validation fields with the correct prefix.
+			$valid = array_flip(
+				array_map(
+					function($item) use ($attrName) {
+						return "{$attrName}{$item}";
+					},
+					self::VALIDATION_FIELDS
+				)
+			);
 
-			$inputDetails = json_decode($input, true);
-			$inputData = $inputDetails['data'] ?? [];
-			$inputName = $inputDetails['name'] ?? '';
+			// Get Block Id.
+			$id = $block['attrs']["{$attrName}Id"] ?? '';
 
-			foreach ($inputData as $dataKey => $dataValue) {
-				switch ($dataKey) {
-					case 'validationAccept':
-						if (!empty($dataValue) && !$this->isFileTypeValid($fileName, $dataValue) && $inputData['validationRequired'] === '1') {
-							$output[$inputName] = sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
-						}
-						break;
-					case 'validationMinSize':
-						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000) && $inputData['validationRequired'] === '1') {
-							$output[$inputName] = sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue);
-						}
-						break;
-					case 'validationMaxSize':
-						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000) && $inputData['validationRequired'] === '1') {
-							$output[$inputName] = sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue);
-						}
-						break;
-				}
+			// Output validation items with correct value for the matching ID.
+			if (isset($valid[$attributeKey]) && !empty($id)) {
+				$output[$id][lcfirst(str_replace($attrName, '', $attributeKey))] = $attributeValue;
 			}
 		}
 
