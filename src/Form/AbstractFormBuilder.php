@@ -179,10 +179,16 @@ abstract class AbstractFormBuilder
 					break;
 			}
 
+			$id = $attributes["{$component}Id"] ?? '';
+
 			// Loop children and do the same ad on top level.
-			foreach ($attributes[$key] as $item) {
+			foreach ($attributes[$key] as $innerKey => $item) {
 				// Determin component name.
 				$innercComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+
+				if ($key === 'radiosContent') {
+					$item["{$innercComponent}Id"] = "{$id}[{$innerKey}]";
+				}
 
 				// Build child component.
 				$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

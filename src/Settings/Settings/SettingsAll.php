@@ -98,7 +98,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 			$type = SettingsGeneral::SETTINGS_TYPE_KEY;
 		}
 
-		// Fiund settings page.
+		// Find settings page.
 		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
@@ -111,6 +111,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 
 		// Add additional props to form component.
 		$formAdditionalProps['formPostId'] = $formId;
+		$formAdditionalProps['formType'] = $type;
 
 		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
 			$formAdditionalProps['formSuccessRedirect'] = 'true';

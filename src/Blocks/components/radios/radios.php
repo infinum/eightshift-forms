@@ -15,20 +15,19 @@ $radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
 
 // Add internal counter name key.
-$indexName = 0;
-$radiosContent = preg_replace_callback('/name=""/', function() use (&$indexName, $radiosName) {
+$radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
 	return 'name="' . $radiosName . '"';
 }, $radiosContent);
 
 // Add internal counter id key.
 $indexId = 0;
-$radiosContent = preg_replace_callback('/id=""/', function() use (&$indexId, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId) {
 	return 'id="' . $radiosId . '[' . $indexId++ . ']"';
 }, $radiosContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$radiosContent = preg_replace_callback('/for=""/', function() use (&$indexLabel, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId) {
 	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 

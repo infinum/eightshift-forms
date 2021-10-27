@@ -43,7 +43,6 @@ trait UploadHelper
 		foreach ($files as $fileKey => $fileValue) {
 			foreach ($fileValue['name'] as $key => $value) {
 				if ($fileValue['name'][$key]) {
-
 					$fileDetails = [
 						'name' => $fileValue['name'][$key],
 						'type' => $fileValue['type'][$key],
@@ -51,7 +50,7 @@ trait UploadHelper
 						'error' => $fileValue['error'][$key],
 						'size' => $fileValue['size'][$key],
 					];
-					
+
 					$upload = wp_handle_upload(
 						$fileDetails,
 						[

@@ -96,7 +96,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFormFields(string $formId): array
 	{

@@ -13,8 +13,8 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Form\FormHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Integrations;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -22,6 +22,10 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use form helper trait.
+	 */
+	use FormHelper;
 
 	/**
 	 * Route slug.
@@ -91,8 +95,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Determine form type.
 			$formType = $this->getFormType($request->get_body_params());
 
+			// Check if form settings or global settings.
+			$formInternalType = 'settings';
+			if (!$formId) {
+				$formInternalType = 'global';
+			}
+
 			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType]['settings']) ? apply_filters(Filters::ALL[$formType]['settings'], $formId) : [];
+			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : []; // @phpstan-ignore-line
 
 			// Validate request.
 			$postParams = $this->verifyRequest($request, $formId, $formData);
@@ -109,6 +119,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					if (empty($formId)) {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
+							// Array used for radios.
+							if (is_array($value)) {
+								$value = $this->getRadioFieldCheckedItem($value);
+							}
+
 							$value = json_decode($value, true);
 
 							// Check if key needs updating or deleting.
@@ -121,6 +136,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					} else {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
+							// Array used for radios.
+							if (is_array($value)) {
+								$value = $this->getRadioFieldCheckedItem($value);
+							}
+
 							$value = json_decode($value, true);
 
 							// Check if key needs updating or deleting.

@@ -247,10 +247,12 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'introTitle' => \__('How to get an API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
 				'introSubtitle' => \__('
-					1. Login to your Mailchimp Account. <br />
-					2. Navigate to Integrations > API keys. <br />
-					3. Click on the <strong>Create A Key</strong> button. <br/>
-					4. Copy the API key to the provided field or use global constant.
+					1. Login to your Mailchimp Account.<br />
+					2. Navigate to your user profile image (bottom left corner).<br />
+					3. Click on <strong>Account</strong>.<br />
+					4. Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.<br />
+					5. Click on the <strong>Create A Key</strong> button.<br/>
+					6. Copy the API key to the provided field or use global constant.
 				', 'eightshift-forms'),
 			],
 			[

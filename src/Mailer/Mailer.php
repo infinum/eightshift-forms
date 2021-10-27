@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
+use EightshiftForms\Form\FormHelper;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
@@ -17,6 +18,11 @@ use EightshiftForms\Settings\SettingsHelper;
  */
 class Mailer implements MailerInterface
 {
+	/**
+	 * Use form helper trait.
+	 */
+	use FormHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -140,14 +146,7 @@ class Mailer implements MailerInterface
 		foreach ($fields as $value) {
 			// Array used for radios.
 			if (is_array($value)) {
-				// Filter item that has checked value.
-				$value = array_filter($value, function($item) {
-					$inputDetails = json_decode($item, true);
-					return $inputDetails['value'] !== '';
-				});
-
-				// Output only item that is checked or empty.
-				$value = $value ? reset($value) : '';
+				$value = $this->getRadioFieldCheckedItem($value);
 			}
 
 			$details = json_decode($value, true);

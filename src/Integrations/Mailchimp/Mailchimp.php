@@ -90,7 +90,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFormFields(string $formId): array
 	{
@@ -106,7 +106,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return [];
 		}
 
-		return $this->getFields($fields, (string) $formId);
+		return $this->getFields($fields);
 	}
 
 	/**

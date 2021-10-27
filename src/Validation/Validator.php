@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Form\FormHelper;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
@@ -19,6 +20,14 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
  */
 class Validator extends AbstractValidation
 {
+	/**
+	 * Use form helper trait.
+	 */
+	use FormHelper;
+
+	/**
+	 * Use Object Helper
+	 */
 	use ObjectHelperTrait;
 
 	/**
@@ -65,15 +74,11 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
-
 		if ($formData) {
 			$validationReference = $this->getValidationReferenceManual($formData);
-
-			error_log( print_r( ( $validationReference ), true ) );
-			error_log( print_r( ( $params ), true ) );
 		} else {
-			$blocks = parse_blocks(get_the_content(null, false, $formId));
-	
+			$blocks = parse_blocks(get_the_content(null, false, (int) $formId));
+
 			$validationReference = $this->getValidationReference($blocks[0]['innerBlocks'][0]['innerBlocks']);
 		}
 
@@ -88,7 +93,7 @@ class Validator extends AbstractValidation
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $params Params to check.
-	 * @param array<string, mixed> $validationReference Validation reference to check against.
+	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
 	 * @return array<string, mixed>
@@ -101,14 +106,7 @@ class Validator extends AbstractValidation
 		foreach ($params as $paramKey => $paramValue) {
 			// Array used for radios.
 			if (is_array($paramValue)) {
-				// Filter item that has checked value.
-				$paramValue = array_filter($paramValue, function($item) {
-					$inputDetails = json_decode($item, true);
-					return $inputDetails['value'] !== '';
-				});
-
-				// Output only item that is checked or empty.
-				$paramValue = $paramValue ? reset($paramValue) : '';
+				$paramValue = $this->getRadioFieldCheckedItem($paramValue);
 			}
 
 			// Normal type just etract data and value.
@@ -156,7 +154,7 @@ class Validator extends AbstractValidation
 	 * Validate files from the validation reference.
 	 *
 	 * @param array<string, mixed> $files Files to check.
-	 * @param array<string, mixed> $validationReference Validation reference to check against.
+	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
 	 * @return array<int|string, string>
@@ -177,7 +175,6 @@ class Validator extends AbstractValidation
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
-
 				// Check validation for accept file types.
 				if ($dataKey === 'accept') {
 					foreach ($fileValue['name'] as $file) {
@@ -215,10 +212,9 @@ class Validator extends AbstractValidation
 	/**
 	 * Output validation reference fields for block form.
 	 *
-	 * @param array $blocks Blocks array of data.
-	 * @param bool $isManualBuild Determin if logic is used for blocks or manual built form like settings or integrations.
+	 * @param array<string, mixed> $blocks Blocks array of data.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, array<string, mixed>>
 	 */
 	private function getValidationReference(array $blocks): array
 	{
@@ -232,9 +228,11 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
+			$innerOptions = [];
+
 			// Check inner blocks if there are checkboxes.
 			if ($name === 'checkboxes') {
-				foreach($block['innerBlocks'] as $inner) {
+				foreach ($block['innerBlocks'] as $inner) {
 					$innerOptions = $this->getValidationReferenceInner($inner, 'checkbox');
 
 					if ($innerOptions) {
@@ -258,30 +256,30 @@ class Validator extends AbstractValidation
 	 *
 	 * @param array<string, mixed> $block Block inner content.
 	 * @param string $name Block name.
-	 * 
-	 * @return array<string, mixed>
+	 *
+	 * @return array<int|string, array<string, mixed>>
 	 */
 	private function getValidationReferenceInner($block, $name): array
 	{
 		$output = [];
 
 		// Check all attributes.
-		foreach($block['attrs'] as $attributeKey => $attributeValue) {
+		foreach ($block['attrs'] as $attributeKey => $attributeValue) {
 			switch ($name) {
 				// If something custom add corrections.
 				case 'senderEmail':
 				case 'senderName':
 					$attrName = "{$name}Input";
-						break;
+					break;
 				default:
 					$attrName = $name . ucfirst($name);
-						break;
+					break;
 			}
 
 			// Get all validation fields with the correct prefix.
 			$valid = array_flip(
 				array_map(
-					function($item) use ($attrName) {
+					function ($item) use ($attrName) {
 						return "{$attrName}{$item}";
 					},
 					self::VALIDATION_FIELDS
@@ -300,13 +298,12 @@ class Validator extends AbstractValidation
 		return $output;
 	}
 
-		/**
+	/**
 	 * Output validation reference fields for manual form (integrations, settings).
 	 *
-	 * @param array $blocks Blocks array of data.
-	 * @param bool $isManualBuild Determin if logic is used for blocks or manual built form like settings or integrations.
+	 * @param array<int|string, mixed> $blocks Blocks array of data.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, array<string, mixed>>
 	 */
 	private function getValidationReferenceManual(array $blocks): array
 	{
@@ -314,15 +311,17 @@ class Validator extends AbstractValidation
 
 		// Loop multiple levels form-selector > form.
 		foreach ($blocks as $block) {
-			$name = Components::kebabToCamelCase(explode('/', $block['blockName'])[1]);
+			$name = $block['component'];
 
 			if (!$name) {
 				continue;
 			}
 
+			$innerOptions = [];
+
 			// Check inner blocks if there are checkboxes.
 			if ($name === 'checkboxes') {
-				foreach($block['innerBlocks'] as $inner) {
+				foreach ($block['checkboxesContent'] as $inner) {
 					$innerOptions = $this->getValidationReferenceManualInner($inner, 'checkbox');
 
 					if ($innerOptions) {
@@ -344,44 +343,33 @@ class Validator extends AbstractValidation
 	/**
 	 * Output validation reference inner blocks fields for manual form (integrations, settings).
 	 *
-	 * @param array<string, mixed> $block Block inner content.
-	 * @param string $name Block name.
-	 * 
-	 * @return array<string, mixed>
+	 * @param array<string, mixed> $attributes Component attributes.
+	 * @param string $name Component name.
+	 *
+	 * @return array<int|string, array<string, mixed>>
 	 */
-	private function getValidationReferenceManualInner($block, $name): array
+	private function getValidationReferenceManualInner($attributes, $name): array
 	{
 		$output = [];
 
 		// Check all attributes.
-		foreach($block['attrs'] as $attributeKey => $attributeValue) {
-			switch ($name) {
-				// If something custom add corrections.
-				case 'senderEmail':
-				case 'senderName':
-					$attrName = "{$name}Input";
-						break;
-				default:
-					$attrName = $name . ucfirst($name);
-						break;
-			}
-
+		foreach ($attributes as $attributeKey => $attributeValue) {
 			// Get all validation fields with the correct prefix.
 			$valid = array_flip(
 				array_map(
-					function($item) use ($attrName) {
-						return "{$attrName}{$item}";
+					function ($item) use ($name) {
+						return "{$name}{$item}";
 					},
 					self::VALIDATION_FIELDS
 				)
 			);
 
 			// Get Block Id.
-			$id = $block['attrs']["{$attrName}Id"] ?? '';
+			$id = $attributes["{$name}Id"] ?? '';
 
 			// Output validation items with correct value for the matching ID.
 			if (isset($valid[$attributeKey]) && !empty($id)) {
-				$output[$id][lcfirst(str_replace($attrName, '', $attributeKey))] = $attributeValue;
+				$output[$id][lcfirst(str_replace($name, '', $attributeKey))] = $attributeValue;
 			}
 		}
 

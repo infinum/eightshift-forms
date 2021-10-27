@@ -3,15 +3,12 @@
 /**
  * Trait that holds all generic helpers used in classes.
  *
- * @package EightshiftLibs\Helpers
+ * @package EightshiftLibs\Settings
  */
 
 declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
-
-use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 /**
  * SettingsHelper trait.
