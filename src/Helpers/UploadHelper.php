@@ -58,7 +58,7 @@ trait UploadHelper
 						]
 					);
 
-					if (array_key_exists('error', $upload)) {
+					if (isset($upload['error'])) {
 						$hasError = true;
 						$output[$fileKey] = 'error';
 					} else {
