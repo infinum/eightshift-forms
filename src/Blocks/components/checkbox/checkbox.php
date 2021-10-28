@@ -58,7 +58,7 @@ $checkboxClass = Components::classnames([
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'error',
 		Components::props('error', $attributes, [
-			'errorId' => $checkboxName,
+			'errorId' => $checkboxId,
 			'blockClass' => $componentClass
 		])
 	);

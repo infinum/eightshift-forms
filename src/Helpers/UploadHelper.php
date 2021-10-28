@@ -23,7 +23,7 @@ trait UploadHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function prepareFiles(array $files): array
+	protected function uploadFiles(array $files): array
 	{
 		$output = [];
 		$hasError = false;

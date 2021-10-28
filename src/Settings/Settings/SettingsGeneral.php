@@ -134,14 +134,19 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => \__('Scripts & Styles', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('Select options you want to disable on your forms. <br />Keep in mind that you know what you are doing and that you will provide your own styles and scripts.', 'eightshift-forms'),
+				'checkboxesFieldHelp' => \__('
+					Select options you want to disable on your forms. <br /><br />
+					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
+					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
+					Disabling scripts will remove all scripts on the frontend, keep in mind this will make the frontend validation and form submitting stop working.
+				', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
 						'checkboxLabel' => __('Disable default Styles', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY) === 'true',
 						'checkboxValue' => 'true',
 					],
 					[
@@ -149,7 +154,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
 						'checkboxLabel' => __('Disable default Scripts', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]

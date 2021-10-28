@@ -177,7 +177,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxLabel' => __('Use HubSpot', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY) === 'true',
 						'checkboxValue' => 'true',
 						'checkboxIsRequired' => true,
 					]

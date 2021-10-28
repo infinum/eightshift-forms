@@ -140,28 +140,31 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 		// Try catch request.
 		try {
+			$params = $this->prepareParams($request->get_body_params());
+
 			// Get encripted form ID and decrypt it.
-			$formId = $this->getFormId($request->get_body_params(), true);
+			$formId = $this->getFormId($params, true);
 
 			// Determin form type.
-			$formType = $this->getFormType($request->get_body_params());
+			$formType = $this->getFormType($params);
 
 			// Get form fields for validation.
 			$formData = isset(Filters::ALL[$formType]['fields']) ? apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
 
 			// Validate request.
-			$postParams = $this->verifyRequest($request, $formId, $formData);
-
-			// Prepare fields.
-			$params = $this->removeUneceseryParams($postParams['post']);
+			$this->verifyRequest(
+				$params,
+				$request->get_file_params(),
+				$formId,
+				$formData
+			);
 
 			// Upload files to temp folder.
-			$files = $this->prepareFiles($postParams['files'] ?? []);
+			$files = $this->uploadFiles($request->get_file_params() ?? []);
 
 			// Determine form type to use.
 			switch ($formType) {
 				case SettingsMailer::SETTINGS_TYPE_KEY:
-					$postParams = $this->verifyRequest($request, $formId);
 					return $this->sendEmail($formId, $params, $files);
 
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
@@ -241,13 +244,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
-		if (isset($params['sender-email'])) {
-			$senderEmail = json_decode($params['sender-email'], true)['value'];
+		// Find Sender Details.
+		$senderDetails = $this->getSenderDetails($params);
 
+		if (isset($senderDetails['sender-email'])) {
 			// Send email.
 			$mailerConfirmation = $this->mailer->sendFormEmail(
 				$formId,
-				$senderEmail,
+				$senderDetails['sender-email'],
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 				$files,

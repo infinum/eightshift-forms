@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
@@ -9,19 +9,16 @@ import {
 	IconLabel,
 	IconToggle,
 	props,
-	ComponentUseToggle,
-	getUnique
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from '../manifest.json';
 
 export const SelectOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 	} = attributes;
 
-	const selectId = checkAttr('selectId', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
@@ -29,11 +26,6 @@ export const SelectOptions = (attributes) => {
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
-
-	// Populate ID manually and make it generic.
-	if (selectId === '') {
-		setAttributes({ [getAttrKey('selectId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
@@ -7,29 +7,22 @@ import {
 	getAttrKey,
 	props,
 	ComponentUseToggle,
-	IconToggle,
-	getUnique
+	IconToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import manifest from '../manifest.json';
 
 export const RadiosOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 	} = attributes;
 
-	const radiosId = checkAttr('radiosId', attributes, manifest);
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
 
-	// Populate ID manually and make it generic.
-	if (radiosId === '') {
-		setAttributes({ [getAttrKey('radiosId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

@@ -164,7 +164,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 						'checkboxLabel' => __('Use Mailer', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId)),
+						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]
@@ -233,7 +233,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Email template', 'eightshift-forms'),
 						// translators: %s will be replaced with forms field name.
 						'textareaFieldHelp' => \sprintf(__('Define email template. You can use these email template variables: %s. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), $formNames),
-						'textareaIsRequired' => false,
+						'textareaIsRequired' => true,
 						'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 					],
 					[
@@ -252,7 +252,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'inputFieldLabel' => \__('Sender email subject', 'eightshift-forms'),
 						'inputFieldHelp' => \__('Define sender email subject.', 'eightshift-forms'),
 						'inputType' => 'text',
-						'inputIsRequired' => true,
+						'inputIsRequired' => false,
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 					],
 					[

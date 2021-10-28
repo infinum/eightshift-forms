@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Form\FormHelper;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
@@ -20,11 +19,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
  */
 class Validator extends AbstractValidation
 {
-	/**
-	 * Use form helper trait.
-	 */
-	use FormHelper;
-
 	/**
 	 * Use Object Helper
 	 */
@@ -65,7 +59,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array<string, mixed> $params Get params.
+	 * @param array<int|string, mixed> $params Get params.
 	 * @param array<string, mixed> $files Get files.
 	 * @param string $formId Form Id.
 	 * @param array<string, mixed> $formData Form data to validate.
@@ -92,11 +86,11 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate params.
 	 *
-	 * @param array<string, mixed> $params Params to check.
+	 * @param array<int|string, mixed> $params Params to check.
 	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, mixed>
 	 */
 	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
@@ -104,15 +98,7 @@ class Validator extends AbstractValidation
 
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
-			// Array used for radios.
-			if (is_array($paramValue)) {
-				$paramValue = $this->getRadioFieldCheckedItem($paramValue);
-			}
-
-			// Normal type just etract data and value.
-			$inputDetails = json_decode($paramValue, true);
-
-			$inputValue = $inputDetails['value'] ?? '';
+			$inputValue = $paramValue['value'] ?? '';
 
 			// Find validation reference by ID.
 			$reference = $validationReference[$paramKey] ?? [];
@@ -268,7 +254,6 @@ class Validator extends AbstractValidation
 			switch ($name) {
 				// If something custom add corrections.
 				case 'senderEmail':
-				case 'senderName':
 					$attrName = "{$name}Input";
 					break;
 				default:

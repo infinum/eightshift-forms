@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
@@ -9,19 +9,16 @@ import {
 	IconLabel,
 	IconToggle,
 	props,
-	ComponentUseToggle,
-	getUnique
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import manifest from '../manifest.json';
 
 export const FileOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 	} = attributes;
 
-	const fileId = checkAttr('fileId', attributes, manifest);
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileAccept = checkAttr('fileAccept', attributes, manifest);
 	const fileIsMultiple = checkAttr('fileIsMultiple', attributes, manifest);
@@ -32,11 +29,6 @@ export const FileOptions = (attributes) => {
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
-
-	// Populate ID manually and make it generic.
-	if (fileId === '') {
-		setAttributes({ [getAttrKey('fileId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

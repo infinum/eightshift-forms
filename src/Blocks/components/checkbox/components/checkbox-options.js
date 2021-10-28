@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
@@ -7,18 +7,15 @@ import {
 	getAttrKey,
 	icons,
 	ComponentUseToggle,
-	IconToggle,
-	getUnique
+	IconToggle
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const CheckboxOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 	} = attributes;
 
-	const checkboxId = checkAttr('checkboxId', attributes, manifest);
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxName = checkAttr('checkboxName', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
@@ -29,11 +26,6 @@ export const CheckboxOptions = (attributes) => {
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
-
-	// Populate ID manually and make it generic.
-	if (checkboxId === '') {
-		setAttributes({ [getAttrKey('checkboxId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl, SelectControl } from '@wordpress/components';
@@ -10,14 +10,12 @@ import {
 	IconLabel,
 	IconToggle,
 	props,
-	ComponentUseToggle,
-	getUnique
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from './../manifest.json';
 
 export const InputOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 
@@ -35,7 +33,6 @@ export const InputOptions = (attributes) => {
 		showInputIsUrl = true,
 	} = attributes;
 
-	const inputId = checkAttr('inputId', attributes, manifest);
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
@@ -49,11 +46,6 @@ export const InputOptions = (attributes) => {
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
-
-	// Populate ID manually and make it generic.
-	if (inputId === '') {
-		setAttributes({ [getAttrKey('inputId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

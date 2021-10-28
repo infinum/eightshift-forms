@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
-import { selector, props } from '@eightshift/frontend-libs/scripts';
+import {
+	selector,
+	props,
+	getAttrKey,
+	getUnique
+} from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import manifest from '../manifest.json';
 
 export const FileEditor = (attributes) => {
+	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 	} = manifest;
 
 	const {
+		setAttributes,
+
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
@@ -20,6 +28,11 @@ export const FileEditor = (attributes) => {
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
+
+	// Populate ID manually and make it generic.
+	useEffect(() => {
+		setAttributes({ [getAttrKey('fileId', attributes, manifest)]: unique });
+	}, []); // eslint-disable-line
 
 	const file = (
 		<input

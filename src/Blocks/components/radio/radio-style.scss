@@ -26,6 +26,14 @@
 		--es-radio-scoped-border-color: var(--global-colors-es-matisse);
 	}
 
+	&__input:disabled + #{$this}__label::after {
+		--es-radio-scoped-opacity: 0.7;
+	}
+
+	&__input:disabled:checked + #{$this}__label::after {
+		--es-radio-scoped-opacity: 0.7;
+	}
+
 	&__label {
 		position: relative;
 		padding-left: calc(var(--es-radio-scoped-icon-size) + 10px);
@@ -37,6 +45,7 @@
 			position: absolute;
 			left: 0;
 			border-radius: 50%;
+			opacity: var(--es-radio-scoped-opacity, 1);
 			background-color: var(--es-radio-scoped-background-color, transform);
 			border: 1px solid var(--es-radio-scoped-border-color, var(--global-colors-es-chalice));
 			width: var(--es-radio-scoped-icon-size);

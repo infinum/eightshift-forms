@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
@@ -9,19 +9,16 @@ import {
 	IconLabel,
 	IconToggle,
 	props,
-	ComponentUseToggle,
-	getUnique
+	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import manifest from '../manifest.json';
 
 export const TextareaOptions = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		setAttributes,
 	} = attributes;
 
-	const textareaId = checkAttr('textareaId', attributes, manifest);
 	const textareaName = checkAttr('textareaName', attributes, manifest);
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
@@ -32,11 +29,6 @@ export const TextareaOptions = (attributes) => {
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
-
-	// Populate ID manually and make it generic.
-	if (textareaId === '') {
-		setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: unique });
-	}
 
 	return (
 		<>

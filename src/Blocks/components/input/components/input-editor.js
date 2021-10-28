@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import {
+	selector,
+	checkAttr,
+	props,
+	getUnique,
+	getAttrKey
+} from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
+	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 	} = manifest;
 
 	const {
+		setAttributes,
+
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
@@ -23,6 +32,11 @@ export const InputEditor = (attributes) => {
 	if (inputType === 'email') {
 		inputType = 'text';
 	}
+
+	// Populate ID manually and make it generic.
+	useEffect(() => {
+		setAttributes({ [getAttrKey('inputId', attributes, manifest)]: unique });
+	}, []); // eslint-disable-line
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),

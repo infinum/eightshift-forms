@@ -266,7 +266,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
 						'checkboxLabel' => __('Use Mailchimp', 'eightshift-forms'),
 						'checkboxIsRequired' => true,
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_MAILCHIMP_USE_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_USE_KEY) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]

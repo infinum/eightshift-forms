@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import {
+	selector,
+	checkAttr,
+	getUnique,
+	getAttrKey
+} from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
+	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 	} = manifest;
 
 	const {
+		setAttributes,
+
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
@@ -27,6 +35,11 @@ export const CheckboxEditor = (attributes) => {
 		selector(componentClass, componentClass, 'label'),
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
 	]);
+
+	// Populate ID manually and make it generic.
+	useEffect(() => {
+		setAttributes({ [getAttrKey('checkboxId', attributes, manifest)]: unique });
+	}, []); // eslint-disable-line
 
 	return (
 		<div className={checkboxClass}>

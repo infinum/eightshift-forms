@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Form\FormHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Validation\ValidatorInterface;
 
@@ -22,10 +21,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use form helper trait.
-	 */
-	use FormHelper;
 
 	/**
 	 * Route slug.
@@ -89,11 +84,13 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 
 	// Try catch request.
 		try {
-			// Get encripted form ID and decrypt it.
-			$formId = $this->getFormId($request->get_body_params());
+			$params = $this->prepareParams($request->get_body_params());
 
-			// Determine form type.
-			$formType = $this->getFormType($request->get_body_params());
+			// Get encripted form ID and decrypt it.
+			$formId = $this->getFormId($params);
+
+			// Determin form type.
+			$formType = $this->getFormType($params);
 
 			// Check if form settings or global settings.
 			$formInternalType = 'settings';
@@ -105,10 +102,12 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : []; // @phpstan-ignore-line
 
 			// Validate request.
-			$postParams = $this->verifyRequest($request, $formId, $formData);
-
-			// Prepare fields.
-			$params = $this->removeUneceseryParams($postParams['post']);
+			$this->verifyRequest(
+				$params,
+				$request->get_file_params(),
+				$formId,
+				$formData
+			);
 
 			// Determine form type to use.
 			switch ($formType) {
@@ -119,13 +118,6 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					if (empty($formId)) {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
-							// Array used for radios.
-							if (is_array($value)) {
-								$value = $this->getRadioFieldCheckedItem($value);
-							}
-
-							$value = json_decode($value, true);
-
 							// Check if key needs updating or deleting.
 							if ($value['value']) {
 								\update_option($key, $value['value']);
@@ -136,13 +128,6 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					} else {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
-							// Array used for radios.
-							if (is_array($value)) {
-								$value = $this->getRadioFieldCheckedItem($value);
-							}
-
-							$value = json_decode($value, true);
-
 							// Check if key needs updating or deleting.
 							if ($value['value']) {
 								\update_post_meta((int) $formId, $key, $value['value']);
@@ -175,7 +160,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Delete transient cache from the DB.
 	 *
-	 * @param array<string, mixed> $params Keys to delete.
+	 * @param array<int|string, mixed> $params Keys to delete.
 	 *
 	 * @return mixed
 	 */
@@ -190,10 +175,8 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		}
 
 		foreach ($params as $param) {
-			$data = json_decode($param, true);
-
-			$value = $data['value'];
-			$name = $data['name'];
+			$value = $param['value'] ?? '';
+			$name = $param['name'] ?? '';
 
 			if ($value) {
 				delete_transient($name);

@@ -133,8 +133,6 @@ export class Form {
 			if (type === 'file' && files.length) {
 				for (const [key, file] of Object.entries(files)) {
 					formData.append(`${id}[${key}]`, file);
-					data.value = true;
-					formData.append(`${id}[${key}]`, JSON.stringify(data));
 				}
 			} else {
 				formData.append(id, JSON.stringify(data));

@@ -1,6 +1,6 @@
 {
 	"blockName": "form-selector",
-	"title": "Eightshift Forms",
+	"title": "Form Selector",
 	"description" : "Select what form type you would like to use for this specific form.",
 	"category": "eightshift-forms",
 	"icon": {

@@ -244,7 +244,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
 						'checkboxLabel' => __('Hide resume textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId)),
+						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId) === 'true',
 						'checkboxValue' => 'true',
 					],
 					[
@@ -252,7 +252,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
 						'checkboxLabel' => __('Hide cover letter textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId)),
+						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]
@@ -313,7 +313,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 						'checkboxLabel' => __('Use Greenhouse', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY) === 'true',
 						'checkboxValue' => 'true',
 						'checkboxIsRequired' => true,
 					]
