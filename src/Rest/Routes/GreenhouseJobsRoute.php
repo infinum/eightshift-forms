@@ -30,7 +30,8 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	 *
 	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
 	 */
-	public function __construct(GreenhouseClientInterface $greenhouseClient) {
+	public function __construct(GreenhouseClientInterface $greenhouseClient)
+	{
 		$this->greenhouseClient = $greenhouseClient;
 	}
 
@@ -62,7 +63,7 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -97,7 +98,14 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 			return $output;
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
-			return \rest_ensure_response($e->getData());
+			return \rest_ensure_response(
+				[
+					'code' => 400,
+					'status' => 'error_validation',
+					'message' => $e->getMessage(),
+					'validation' => $e->getData(),
+				]
+			);
 		}
 	}
 }

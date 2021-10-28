@@ -41,7 +41,7 @@ class Helper
 		if ($action === 'encrypt') {
 			$output = openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
 
-			return base64_encode($output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			return base64_encode((string) $output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
 		return openssl_decrypt(base64_decode($string), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
@@ -131,7 +131,7 @@ class Helper
 	 */
 	public static function getFormNames(string $formId): string
 	{
-		$content = get_the_content(null, null, $formId);
+		$content = get_the_content(null, false, (int) $formId);
 
 		// Find all name values.
 		preg_match_all('/Name":"(.*?)"/m', $content, $matches, PREG_SET_ORDER);

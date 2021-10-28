@@ -59,7 +59,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return null;
 		}
 
-		return $this->enqueueScripts();
+		$this->enqueueScripts();
 	}
 
 	/**
@@ -73,7 +73,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return null;
 		}
 
-		return $this->enqueueStyles();
+		$this->enqueueStyles();
 	}
 
 	/**
@@ -99,7 +99,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	/**
 	 * Get script localizations
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getLocalizations(): array
 	{

@@ -36,7 +36,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	/**
 	 * Return jobs simple list from Greenhouse.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getJobs(): array
 	{
@@ -74,7 +74,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	 *
 	 * @param string $jobId Job id to search by.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getJobQuestions(string $jobId): array
 	{
@@ -100,10 +100,10 @@ class GreenhouseClient implements GreenhouseClientInterface
 	 * API request to post job application to Greenhouse.
 	 *
 	 * @param string $jobId Job id to search.
-	 * @param array $params Params array.
-	 * @param array $files Files array.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function postGreenhouseApplication(string $jobId, array $params, array $files): array
 	{
@@ -126,7 +126,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	/**
 	 * API request to get all jobs from Greenhouse.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getGreenhouseJobs()
 	{
@@ -152,7 +152,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	 *
 	 * @param string $jobId Job id to search.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getGreenhouseJob(string $jobId)
 	{
@@ -178,7 +178,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 	 *
 	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getHeaders(bool $useAuth = false): array
 	{
@@ -196,9 +196,9 @@ class GreenhouseClient implements GreenhouseClientInterface
 	/**
 	 * Prepare params
 	 *
-	 * @param array $params Params.
+	 * @param array<string, mixed>  $params Params.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function prepareParams(array $params): array
 	{
@@ -216,9 +216,9 @@ class GreenhouseClient implements GreenhouseClientInterface
 	/**
 	 * Prepare files.
 	 *
-	 * @param array $files Files.
+	 * @param array<string, mixed>  $files Files.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function prepareFiles(array $files): array
 	{

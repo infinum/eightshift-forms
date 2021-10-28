@@ -29,8 +29,8 @@ class Mailer implements MailerInterface
 	 * @param string $to Email to.
 	 * @param string $subject Email subject.
 	 * @param string $template Email template.
-	 * @param array $files Email files.
-	 * @param array $fields Email fields.
+	 * @param array<string, mixed> $files Email files.
+	 * @param array<string, mixed> $fields Email fields.
 	 *
 	 * @return bool
 	 */
@@ -96,7 +96,7 @@ class Mailer implements MailerInterface
 	 * @param string $email Email string.
 	 * @param string $name Name string.
 	 *
-	 * @return array
+	 * @return array<int, string>
 	 */
 	protected function getHeader(string $email, string $name = ''): array
 	{
@@ -109,7 +109,7 @@ class Mailer implements MailerInterface
 	/**
 	 * HTML template for email.
 	 *
-	 * @param array $items All items to output.
+	 * @param array<string, mixed> $items All items to output.
 	 * @param string $template Additional description.
 	 *
 	 * @return string
@@ -129,9 +129,9 @@ class Mailer implements MailerInterface
 	/**
 	 * Prepare email fields.
 	 *
-	 * @param array $fields Fields to prepare.
+	 * @param array<string, mixed> $fields Fields to prepare.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	protected function prepareFields(array $fields): array
 	{

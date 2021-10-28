@@ -22,7 +22,7 @@ class FormsListing implements FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @return array
+	 * @return array<int, array<string, int|string|bool>>
 	 */
 	public function getFormsList(): array
 	{
@@ -40,7 +40,7 @@ class FormsListing implements FormListingInterface
 			while ($theQuery->have_posts()) {
 				$theQuery->the_post();
 
-				$id = get_the_ID();
+				$id = (int) get_the_ID();
 
 				// Output predefined array of data.
 				$output[] = [

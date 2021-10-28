@@ -62,20 +62,20 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Map Greenhouse form to our components.
 	 *
-	 * @param array $formAdditionalProps Additional props to pass to form.
+	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
 	 *
 	 * @return string
 	 */
 	public function getForm(array $formAdditionalProps): string
 	{
 		// Get post ID prop.
-		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', $formAdditionalProps['formPostId']) : '';
+		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
 		if (empty($formId)) {
 			return '';
 		}
 
 		// Get Job Id.
-		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
 		if (empty($jobId)) {
 			return '';
 		}
@@ -88,7 +88,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFields($questions, $formId),
+			$this->getFields($questions, (string) $formId),
 			$formAdditionalProps
 		);
 	}
@@ -96,10 +96,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Map Greenhouse fields to our components.
 	 *
-	 * @param array $data Fields.
+	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFields(array $data, string $formId): array
 	{

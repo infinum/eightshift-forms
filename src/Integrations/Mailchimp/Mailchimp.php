@@ -57,20 +57,20 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Map Mailchimp form to our components.
 	 *
-	 * @param array $formAdditionalProps Additional props to pass to form.
+	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
 	 *
 	 * @return string
 	 */
 	public function getForm(array $formAdditionalProps): string
 	{
 		// Get post ID prop.
-		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', $formAdditionalProps['formPostId']) : '';
+		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
 		if (empty($formId)) {
 			return '';
 		}
 
 		// Get Job Id.
-		$formId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
+		$formId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
 		if (empty($formId)) {
 			return '';
 		}
@@ -82,7 +82,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		}
 
 		return $this->buildForm(
-			$this->getFields($fields, $formId),
+			$this->getFields($fields, (string) $formId),
 			$formAdditionalProps
 		);
 	}
@@ -90,10 +90,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Map Mailchimp fields to our components.
 	 *
-	 * @param array $data Fields.
+	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFields(array $data, string $formId): array
 	{

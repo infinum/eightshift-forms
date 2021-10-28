@@ -62,7 +62,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	public function getSettingsSidebar(string $formId, string $type): array
 	{
@@ -133,7 +133,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		$formAdditionalProps['formPostId'] = $formId;
 
 		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
-			$formAdditionalProps['formSuccessRedirect'] = true;
+			$formAdditionalProps['formSuccessRedirect'] = 'true';
 		}
 
 		// Populate and build form.
@@ -159,7 +159,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	/**
 	 * Get all integration settings sidebar merged with general settings.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getAllSettingsSidebars(): array
 	{
@@ -175,7 +175,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	/**
 	 * Get all integration settings merged with global settings.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getAllSettings(): array
 	{

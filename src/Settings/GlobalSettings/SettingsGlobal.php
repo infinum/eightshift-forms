@@ -43,7 +43,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 *
 	 * @param string $type Form Type to show.
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	public function getSettingsSidebar(string $type): array
 	{
@@ -105,7 +105,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$formAdditionalProps['formType'] = $type;
 
 		if ($type === SettingsCache::SETTINGS_TYPE_KEY) {
-			$formAdditionalProps['formSuccessRedirect'] = true;
+			$formAdditionalProps['formSuccessRedirect'] = 'true';
 		}
 
 		// Populate and build form.
@@ -118,7 +118,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	/**
 	 * Get all integration settings sidebar merged with general settings.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getAllSettingsSidebars(): array
 	{
@@ -134,7 +134,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	/**
 	 * Get all integration settings merged with global settings.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getAllSettings(): array
 	{

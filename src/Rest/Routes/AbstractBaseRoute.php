@@ -18,6 +18,8 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
 /**
  * Class FormSubmitRoute
+ *
+ * @property \EightshiftForms\Validation\Validator $validator
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
@@ -65,16 +67,16 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Sanitizes all received fields recursively. If a field is something we don't need to
 	 * sanitize then we don't touch it.
 	 *
-	 * @param array $params Array of params.
+	 * @param array<string, mixed> $params Array of params.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function sanitizeFields(array $params)
 	{
 		foreach ($params as $key => $param) {
-			$type = json_decode($param, true)['type'];
-
 			if (is_string($param)) {
+				$type = json_decode($param, true)['type'];
+
 				if ($type === 'textarea') {
 					$params[$key] = \sanitize_textarea_field($param);
 				} else {
@@ -104,9 +106,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * Quick and dirty fix is to replace these values back to dots after receiving them.
 	 *
-	 * @param array $params Request params.
+	 * @param array<string, mixed> $params Request params.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function fixDotUnderscoreReplacement(array $params): array
 	{
@@ -129,14 +131,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
-	 * @return array Filtered request params.
+	 * @return array<string, mixed> Filtered request params.
 	 */
 	protected function verifyRequest(\WP_REST_Request $request, string $formId = ''): array
 	{
 		$params = $this->sanitizeFields($request->get_query_params());
 		$params = $this->fixDotUnderscoreReplacement($params);
 		$postParams = $this->sanitizeFields($request->get_body_params());
-		$files = $this->sanitizeFields($request->get_file_params());
+		$files = $request->get_file_params();
 
 		// Quick hack for nested params like checkboxes and radios.
 		$params = $this->fixNestedParams($params);
@@ -150,13 +152,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				! wp_verify_nonce($params['nonce'], $params['form-unique-id'])
 			) {
 				throw new UnverifiedRequestException(
-					\rest_ensure_response(
-						[
-							'code' => 400,
-							'status' => 'error',
-							'message' => \esc_html__('Invalid nonce.', 'eightshift-forms'),
-						]
-					)->data
+					\esc_html__('Invalid nonce.', 'eightshift-forms')
 				);
 			}
 		}
@@ -165,14 +161,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$validateParams = $this->validator->validate($params, [], $formId);
 		if (!empty($validateParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validateParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
+				$validateParams
 			);
 		}
 
@@ -180,28 +170,16 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$validatePostParams = $this->validator->validate($postParams, [], $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validatePostParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+				$validatePostParams
 			);
 		}
 
 		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
 		if (!empty($validatePostParams)) {
 			throw new UnverifiedRequestException(
-				\rest_ensure_response(
-					[
-						'code' => 400,
-						'status' => 'error_validation',
-						'message' => \esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-						'validation' => $validatePostParams,
-					]
-				)->data
+				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
+				$validatePostParams
 			);
 		}
 
@@ -215,7 +193,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Return form Type from form params.
 	 *
-	 * @param array $params Array of params got from form.
+	 * @param array<string, mixed> $params Array of params got from form.
 	 *
 	 * @return string
 	 */
@@ -235,7 +213,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Return form ID from form params and determins if ID needs decrypting.
 	 *
-	 * @param array $params Array of params got from form.
+	 * @param array<string, mixed> $params Array of params got from form.
 	 * @param bool $decrypt Use decryption on post ID.
 	 *
 	 * @return string
@@ -251,7 +229,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$formId = json_decode($formId, true)['value'];
 
 		if ($decrypt) {
-			return Helper::encryptor('decrypt', $formId);
+			return (string) Helper::encryptor('decrypt', $formId);
 		}
 
 		return $formId;
@@ -260,9 +238,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Remove uncesesery params before submitting data to validation.
 	 *
-	 * @param array $params Array of params got from form.
+	 * @param array<string, mixed> $params Array of params got from form.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function removeUneceseryParams(array $params): array
 	{
@@ -286,9 +264,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Quick hack for nested params like checkboxes and radios.
 	 *
-	 * @param array $params Prams array.
+	 * @param array<string, mixed> $params Prams array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function fixNestedParams(array $params): array
 	{

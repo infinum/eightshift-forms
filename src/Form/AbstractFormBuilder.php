@@ -27,8 +27,8 @@ abstract class AbstractFormBuilder
 	/**
 	 * Build public facing form.
 	 *
-	 * @param array $formItems Form array.
-	 * @param array $formAdditionalProps Additional attributes for form component.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
 	 *
 	 * @return string
 	 */
@@ -40,8 +40,8 @@ abstract class AbstractFormBuilder
 	/**
 	 * Build settings form.
 	 *
-	 * @param array $formItems Form array.
-	 * @param array $formAdditionalProps Additional attributes for form component.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
 	 *
 	 * @return string
 	 */
@@ -110,9 +110,10 @@ abstract class AbstractFormBuilder
 	/**
 	 * Get the actual form for the components.
 	 *
-	 * @param array $formItems Form array.
-	 * @param array $formAdditionalProps Additional attributes for form component.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
 	 * @param string $formContent For adding additional form components after every form.
+	 *
 	 * @return string
 	 */
 	private function getForm(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
@@ -151,7 +152,7 @@ abstract class AbstractFormBuilder
 	/**
 	 * Build components from arrya of items.
 	 *
-	 * @param array $attributes Array of form components.
+	 * @param array<string, mixed> $attributes Array of form components.
 	 *
 	 * @return string
 	 */
@@ -172,6 +173,9 @@ abstract class AbstractFormBuilder
 					break;
 				case 'select':
 					$key = 'selectOptions';
+					break;
+				default:
+					$key = '';
 					break;
 			}
 

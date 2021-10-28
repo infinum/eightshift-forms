@@ -80,31 +80,10 @@ class Forms extends AbstractPostType
 	/**
 	 * Get the arguments that configure the Projects custom post type.
 	 *
-	 * @return array Array of arguments.
+	 * @return array<mixed> Array of arguments.
 	 */
 	protected function getPostTypeArguments(): array
 	{
-		// $template = [
-		// 	[
-		// 		'eightshift-forms/form',
-		// 		[],
-		// 		[
-		// 			[
-		// 				'eightshift-forms/input',
-		// 				[
-		// 					'inputInputFieldLabel' => esc_html__('Your first form input', 'eightshift-forms'),
-		// 				],
-		// 				[]
-		// 			],
-		// 			[
-		// 				'eightshift-forms/submit',
-		// 				[],
-		// 				[]
-		// 			]
-		// 		]
-		// 	],
-		// ];
-
 		$template = [
 			[
 				'eightshift-forms/form-selector', [], []

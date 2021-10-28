@@ -21,7 +21,7 @@ interface SettingsAllInterface
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(string $formId, string $type): array;
 

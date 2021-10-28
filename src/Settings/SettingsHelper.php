@@ -28,7 +28,7 @@ trait SettingsHelper
 	 */
 	public function getSettingsValue(string $key, string $formId): string
 	{
-		return (string) \get_post_meta($formId, $this->getSettingsName($key), true);
+		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
 	}
 
 	/**

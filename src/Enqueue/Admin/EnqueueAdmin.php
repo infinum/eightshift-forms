@@ -68,7 +68,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	/**
 	 * Get script localizations
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getLocalizations(): array
 	{

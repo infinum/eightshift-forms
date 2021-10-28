@@ -20,7 +20,7 @@ interface SettingsGlobalInterface
 	 *
 	 * @param string $type Form Type to show.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(string $type): array;
 

@@ -34,7 +34,7 @@ $formsClass = Components::classnames([
 	// Bailout if form post ID is missing.
 	if ($formsFormPostId) {
 		// Convert blocks to array.
-		$blocks = parse_blocks(get_the_content(null, null, $formsFormPostId));
+		$blocks = parse_blocks(get_the_content(null, false, $formsFormPostId));
 
 		// Bailout if it fails for some reason.
 		if (!$blocks) {

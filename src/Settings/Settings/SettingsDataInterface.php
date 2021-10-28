@@ -18,7 +18,7 @@ interface SettingsDataInterface
 	/**
 	 * Get Settings sidebar data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(): array;
 
@@ -27,7 +27,7 @@ interface SettingsDataInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsData(string $formId): array;
 }

@@ -49,7 +49,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'admin_menu',
 			function () {
 				\add_submenu_page(
-					null,
+					'',
 					$this->getTitle(),
 					$this->getMenuTitle(),
 					$this->getCapability(),
@@ -183,7 +183,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		return [
 			// translators: %s replaces form title name.
-			'adminSettingsPageTitle' => sprintf(\esc_html__('From Settings - %s', 'eightshift-forms'), get_the_title($formId)),
+			'adminSettingsPageTitle' => sprintf(\esc_html__('From Settings - %s', 'eightshift-forms'), get_the_title((int) $formId)),
 			'adminSettingsSubTitle' => \esc_html__('On form settings page you can setup email settings, integrations and much more.', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
@@ -208,6 +208,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$plugin_page = 'es-forms'; // phpcs:ignore
 		}
 
-		return $parentFile;
+		return $parentFile ?? '';
 	}
 }
