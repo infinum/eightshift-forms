@@ -31,7 +31,7 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
 		"szepeviktor/phpstan-wordpress": "^0.7",
 		"php-stubs/wordpress-stubs": "^5.5",
-		"wp-cli/wp-cli": "^2.4"
+		"wp-cli/wp-cli": "^2.5"
 	},
 	"repositories": [
 		{

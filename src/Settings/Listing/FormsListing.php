@@ -40,14 +40,14 @@ class FormsListing implements FormListingInterface
 			while ($theQuery->have_posts()) {
 				$theQuery->the_post();
 
-				$id = get_the_ID();
+				$id = (int) get_the_ID();
 
 				// Output predefined array of data.
 				$output[] = [
 					'id' => $id,
-					'title' => get_the_title((int) $id),
-					'slug' => \get_the_permalink((int) $id),
-					'status' => \get_post_status((int) $id),
+					'title' => get_the_title($id),
+					'slug' => \get_the_permalink($id),
+					'status' => \get_post_status($id),
 					'settingsLink' => Helper::getSettingsPageUrl((string) $id),
 					'editLink' => Helper::getFormEditPageUrl((string) $id),
 				];
