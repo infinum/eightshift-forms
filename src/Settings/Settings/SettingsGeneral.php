@@ -65,6 +65,16 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY = 'generalDisableDefaultScripts';
 
 	/**
+	 * Disable scroll to field on error key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY = 'generalDisableScrollToFieldOnError';
+
+	/**
+	 * Disable scroll to global msg on success key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY = 'generalDisableScrollGlobalMsgOnSuccess';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -143,18 +153,37 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
-						'checkboxLabel' => __('Disable default Styles', 'eightshift-forms'),
+						'checkboxLabel' => __('Disable default styles', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY) === 'true',
 						'checkboxValue' => 'true',
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
-						'checkboxLabel' => __('Disable default Scripts', 'eightshift-forms'),
+						'checkboxLabel' => __('Disable default scripts', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY) === 'true',
+						'checkboxValue' => 'true',
+					]
+				]
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => \__('Form behavior', 'eightshift-forms'),
+				'checkboxesFieldHelp' => \__('Set all form behavior options in one place', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY),
+						'checkboxLabel' => __('Disable scroll to field on error', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY) === 'true',
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY),
+						'checkboxLabel' => __('Disable scroll to global message on success', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]

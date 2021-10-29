@@ -44,6 +44,18 @@
 		"formTrackingEventName": {
 			"type": "string"
 		},
+		"formResetOnSuccess": {
+			"type": "bool",
+			"default": true
+		},
+		"formDisableScrollToFieldOnError": {
+			"type": "bool",
+			"default": false
+		},
+		"formDisableScrollToGlobalMessageOnSuccess": {
+			"type": "bool",
+			"default": false
+		},
 		"formType": {
 			"type": "string"
 		}

@@ -16,6 +16,16 @@ namespace EightshiftForms\Hooks;
 class Variables
 {
 	/**
+	 * Set forms to develop mode.
+	 *
+	 * @return bool
+	 */
+	public static function isDevelopMode(): bool
+	{
+		return defined('ES_DEVELOP_MODE') ? true : false;
+	}
+
+	/**
 	 * Get API Key for HubSpot.
 	 *
 	 * @return string

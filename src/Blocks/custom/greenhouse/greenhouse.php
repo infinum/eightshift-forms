@@ -8,8 +8,10 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -41,6 +43,15 @@ if ($isSettingsValid) {
 		[
 			'formPostId' => $greenhouseFormPostId,
 			'formType' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			'formResetOnSuccess' => (bool) !Variables::isDevelopMode(),
+			'formDisableScrollToFieldOnError' => (bool) \apply_filters(
+				Settings::FILTER_SETTINGS_OPTION_VALUE_NAME,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY
+			),
+			'formDisableScrollToGlobalMessageOnSuccess' => (bool) \apply_filters(
+				Settings::FILTER_SETTINGS_OPTION_VALUE_NAME,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY
+			),
 			'formTrackingEventName' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
 				SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
