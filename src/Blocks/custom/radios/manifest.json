@@ -26,5 +26,19 @@
 				"eightshift-forms/radio"
 			]
 		}
-	}
+	},
+	"template": [
+		[
+			"eightshift-forms/radio",
+			{
+				"radioRadioLabel": "Radio 1"
+			}
+		],
+		[
+			"eightshift-forms/radio",
+			{
+				"radioRadioLabel": "Radio 2"
+			}
+		]
+	]
 }
