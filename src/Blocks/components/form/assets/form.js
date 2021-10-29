@@ -10,6 +10,9 @@ export class Form {
 		this.CLASS_ACTIVE = 'is-active';
 		this.CLASS_LOADING = 'is-loading';
 		this.CLASS_HAS_ERROR = 'has-error';
+
+		this.redirectionTimeout = options.redirectionTimeout ?? 600;
+		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
 	}
 
 	// Init all actions.
@@ -88,7 +91,7 @@ export class Form {
 						// Do the actual redirect after some time.
 						setTimeout(() => {
 							window.location.href = isRedirect;
-						}, 600);
+						}, parseInt(this.redirectionTimeout, 10));
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
@@ -132,10 +135,13 @@ export class Form {
 					this.outputErrors(element, response.validation);
 				}
 
+				console.log(this.hideGlobalMessageTimeout);
+				
+
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.hideGlobalMsg(element);
-				}, 6000);
+				}, parseInt(this.hideGlobalMessageTimeout, 10));
 
 				// Dispatch event.
 				this.addEvent(element, 'AfterFormSubmitEnd');

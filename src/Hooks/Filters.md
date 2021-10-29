@@ -6,6 +6,11 @@ This document will provide you with the code examples for forms filters.
 
 This filter is used if you want to add your custom or core blocks to the custom form builder.
 
+**Default values:**
+```php
+[]
+```
+
 **Filter:**
 ```php
 // Provide additional blocks in the custom forms block.
@@ -30,7 +35,7 @@ public function getAdditionalBlocks(): array
 This filter will override our default media breakpoints used for responsive selectors like widths of the form fields.
 You must provide all 4 breakpoints in order for this to work properly.
 
-**Default fields:**
+**Default values:**
 ```php
 [
 	'mobile' => 480,
@@ -67,7 +72,7 @@ This filter will add new options to the style select dropdown in the forms block
 
 Forms style option selector will not show unless a filter is provided.
 
-**Default fields:**
+**Default values:**
 ```php
 []
 ```

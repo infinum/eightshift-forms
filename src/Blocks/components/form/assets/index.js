@@ -12,6 +12,8 @@ domReady(() => {
 			const form = new Form({
 				formSelector: selector,
 				formSubmitRestApiUrl: esFormsLocalization.formSubmitRestApiUrl,
+				redirectionTimeout: esFormsLocalization.redirectionTimeout,
+				hideGlobalMessageTimeout: esFormsLocalization.hideGlobalMessageTimeout,
 			});
 
 			form.init();
