@@ -89,7 +89,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Get encripted form ID and decrypt it.
 			$formId = $this->getFormId($params);
 
-			// Determin form type.
+			// Determine form type.
 			$formType = $this->getFormType($params);
 
 			// Check if form settings or global settings.

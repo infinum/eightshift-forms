@@ -45,15 +45,15 @@
 			"type": "string"
 		},
 		"formResetOnSuccess": {
-			"type": "bool",
+			"type": "boolean",
 			"default": true
 		},
 		"formDisableScrollToFieldOnError": {
-			"type": "bool",
+			"type": "boolean",
 			"default": false
 		},
 		"formDisableScrollToGlobalMessageOnSuccess": {
-			"type": "bool",
+			"type": "boolean",
 			"default": false
 		},
 		"formType": {

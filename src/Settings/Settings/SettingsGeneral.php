@@ -114,7 +114,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
-				'inputFieldLabel' => \__('Success Redirection Url', 'eightshift-forms'),
+				'inputFieldLabel' => __('Success Redirection Url', 'eightshift-forms'),
 				// translators: %s will be replaced with forms field name.
 				'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), Helper::getFormNames($formId)),
 				'inputType' => 'url',
@@ -125,8 +125,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
-				'inputFieldLabel' => \__('Tracking Event Name', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define event name used to push data to GTM.', 'eightshift-forms'),
+				'inputFieldLabel' => __('Tracking Event Name', 'eightshift-forms'),
+				'inputFieldHelp' => __('Define event name used to push data to GTM.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
 			],
@@ -143,8 +143,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Scripts & Styles', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('
+				'checkboxesFieldLabel' => __('Scripts & Styles', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('
 					Select options you want to disable on your forms. <br /><br />
 					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
@@ -169,8 +169,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Form behavior', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('Set all form behavior options in one place', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('Form behavior', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('Set all form behavior options in one place', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',

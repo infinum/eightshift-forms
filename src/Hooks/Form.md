@@ -24,11 +24,9 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
 	const form = document.querySelector('.js-es-block-form');
 
-	if (form) {
-		form.addEventListener('esFormsAfterFormSubmit', (event) => {
-			// Do you logic here.
-		});
-	}
+	form?.addEventListener('esFormsAfterFormSubmit', (event) => {
+		// Do you logic here.
+	});
 });
 ```
 
@@ -39,13 +37,15 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
 	const forms = document.querySelectorAll('.js-es-block-form');
 
-	if (forms.length) {
-		[...forms].forEach((form) => {
-			form.addEventListener('esFormsAfterFormSubmit', (event) => {
-				// Do you logic here.
-			});
-		});
+	if (!forms.length) {
+		return;
 	}
+
+	[...forms].forEach((form) => {
+		form.addEventListener('esFormsAfterFormSubmit', (event) => {
+			// Do you logic here.
+		});
+	});
 });
 ```
 

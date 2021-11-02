@@ -23,7 +23,6 @@ export const RadiosOptions = (attributes) => {
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
 
-
 	return (
 		<>
 			<FieldOptions

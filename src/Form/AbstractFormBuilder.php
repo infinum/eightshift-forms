@@ -186,7 +186,7 @@ abstract class AbstractFormBuilder
 
 			// Loop children and do the same ad on top level.
 			foreach ($attributes[$key] as $innerKey => $item) {
-				// Determin component name.
+				// Determine the component's name.
 				$innercComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
 				if ($key === 'radiosContent') {

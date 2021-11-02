@@ -86,7 +86,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-id'),
-				'inputFieldLabel' => \__('input label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getOptionValue('input-id'),
@@ -94,7 +94,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-email-id'),
-				'inputFieldLabel' => \__('input email label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input email label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input email', 'eightshift-forms'),
 				'inputType' => 'email',
 				'inputValue' => $this->getOptionValue('input-email-id'),
@@ -103,7 +103,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-number-id'),
-				'inputFieldLabel' => \__('input number label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input number label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input number', 'eightshift-forms'),
 				'inputType' => 'number',
 				'inputValue' => $this->getOptionValue('input-number-id'),
@@ -111,7 +111,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-url-id'),
-				'inputFieldLabel' => \__('input url label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input url label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input url', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getOptionValue('input-url-id'),
@@ -120,7 +120,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-hidden-id'),
-				'inputFieldLabel' => \__('input hidden label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input hidden label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input hidden', 'eightshift-forms'),
 				'inputType' => 'hidden',
 				'inputValue' => $this->getOptionValue('input-hidden-id'),
@@ -128,7 +128,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'input',
 				'inputId' => $this->getSettingsName('input-required-id'),
-				'inputFieldLabel' => \__('input required label', 'eightshift-forms'),
+				'inputFieldLabel' => __('input required label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input required', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getOptionValue('input-required-id'),
@@ -137,14 +137,14 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName('textarea-id'),
-				'textareaFieldLabel' => \__('textarea label', 'eightshift-forms'),
+				'textareaFieldLabel' => __('textarea label', 'eightshift-forms'),
 				'textareaFieldHelp' => __('help field textarea', 'eightshift-forms'),
 				'textareaValue' => $this->getOptionValue('textarea-id'),
 			],
 			[
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName('textarea-required-id'),
-				'textareaFieldLabel' => \__('textarea required label', 'eightshift-forms'),
+				'textareaFieldLabel' => __('textarea required label', 'eightshift-forms'),
 				'textareaFieldHelp' => __('help field textarea required', 'eightshift-forms'),
 				'textareaValue' => $this->getOptionValue('textarea-required-id'),
 				'textareaIsRequired' => true,
@@ -152,7 +152,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'select',
 				'selectId' => $this->getSettingsName('select-id'),
-				'selectFieldLabel' => \__('select label', 'eightshift-forms'),
+				'selectFieldLabel' => __('select label', 'eightshift-forms'),
 				'selectFieldHelp' => __('help field select', 'eightshift-forms'),
 				'selectValue' => $this->getOptionValue('select-id'),
 				'selectOptions' => [
@@ -173,7 +173,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'select',
 				'selectId' => $this->getSettingsName('select-required-id'),
-				'selectFieldLabel' => \__('select required label', 'eightshift-forms'),
+				'selectFieldLabel' => __('select required label', 'eightshift-forms'),
 				'selectFieldHelp' => __('help field select required', 'eightshift-forms'),
 				'selectValue' => $this->getOptionValue('select-required-id'),
 				'selectIsRequired' => true,
@@ -200,20 +200,20 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('checkboxes', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('checkboxes', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('help field checkboxes', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
 						'checkboxId' => $this->getSettingsName('checkbox-id1'),
-						'checkboxLabel' => \__('checkbox label 1', 'eightshift-forms'),
+						'checkboxLabel' => __('checkbox label 1', 'eightshift-forms'),
 						'checkboxValue' => 'checkbox-id1',
 						'checkboxIsChecked' => $this->getOptionValue('checkbox-id1') === 'checkbox-id1',
 					],
 					[
 						'component' => 'checkbox',
 						'checkboxId' => $this->getSettingsName('checkbox-required-id2'),
-						'checkboxLabel' => \__('checkbox required label 2', 'eightshift-forms'),
+						'checkboxLabel' => __('checkbox required label 2', 'eightshift-forms'),
 						'checkboxValue' => 'checkbox-required-id2',
 						'checkboxIsChecked' => $this->getOptionValue('checkbox-required-id2') === 'checkbox-required-id2',
 						'checkboxIsRequired' => true,
@@ -221,7 +221,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'checkbox',
 						'checkboxId' => $this->getSettingsName('checkbox-disabled-id3'),
-						'checkboxLabel' => \__('checkbox disabled label 3', 'eightshift-forms'),
+						'checkboxLabel' => __('checkbox disabled label 3', 'eightshift-forms'),
 						'checkboxValue' => 'checkbox-disabled-id3',
 						'checkboxIsChecked' => $this->getOptionValue('checkbox-disabled-id3') === 'checkbox-disabled-id3',
 						'checkboxIsDisabled' => true,
@@ -229,7 +229,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'checkbox',
 						'checkboxId' => $this->getSettingsName('checkbox-readonly-id4'),
-						'checkboxLabel' => \__('checkbox readonly label 4', 'eightshift-forms'),
+						'checkboxLabel' => __('checkbox readonly label 4', 'eightshift-forms'),
 						'checkboxValue' => 'checkbox-readonly-id4',
 						'checkboxIsReadOnly' => true,
 						'checkboxIsChecked' => $this->getOptionValue('checkbox-readonly-id4') === 'checkbox-readonly-id4',
@@ -238,27 +238,27 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'radios',
-				'radiosFieldLabel' => \__('radios', 'eightshift-forms'),
+				'radiosFieldLabel' => __('radios', 'eightshift-forms'),
 				'radiosFieldHelp' => __('help field radios', 'eightshift-forms'),
 				'radiosId' => $this->getSettingsName('radio-id'),
 				'radiosName' => $this->getSettingsName('radio-name'),
 				'radiosContent' => [
 					[
 						'component' => 'radio',
-						'radioLabel' => \__('radio label 1', 'eightshift-forms'),
+						'radioLabel' => __('radio label 1', 'eightshift-forms'),
 						'radioValue' => 'radio-id1',
 						'radioIsChecked' => $this->getOptionValue('radio-id') === 'radio-id1',
 					],
 					[
 						'component' => 'radio',
-						'radioLabel' => \__('radio disabled label 2', 'eightshift-forms'),
+						'radioLabel' => __('radio disabled label 2', 'eightshift-forms'),
 						'radioValue' => 'radio-disabled-id2',
 						'radio' => 'radio-disabled-id2',
 						'radioIsDisabled' => true,
 					],
 					[
 						'component' => 'radio',
-						'radioLabel' => \__('radio disabled checked label 3', 'eightshift-forms'),
+						'radioLabel' => __('radio disabled checked label 3', 'eightshift-forms'),
 						'radioValue' => 'radio-disabled-checked-id3',
 						'radio' => 'radio-disabled-checked-id3',
 						'radioIsDisabled' => true,
@@ -268,7 +268,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'radios',
-				'radiosFieldLabel' => \__('radios required', 'eightshift-forms'),
+				'radiosFieldLabel' => __('radios required', 'eightshift-forms'),
 				'radiosFieldHelp' => __('help field radios required', 'eightshift-forms'),
 				'radiosId' => $this->getSettingsName('radio-required-id'),
 				'radiosName' => $this->getSettingsName('radio-required-name'),
@@ -276,13 +276,13 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'radiosContent' => [
 					[
 						'component' => 'radio',
-						'radioLabel' => \__('radio required label 1', 'eightshift-forms'),
+						'radioLabel' => __('radio required label 1', 'eightshift-forms'),
 						'radioValue' => 'radio-required-id1',
 						'radioIsChecked' => $this->getOptionValue('radio-required-id') === 'radio-required-id1',
 					],
 					[
 						'component' => 'radio',
-						'radioLabel' => \__('radio required label 2', 'eightshift-forms'),
+						'radioLabel' => __('radio required label 2', 'eightshift-forms'),
 						'radioValue' => 'radio-required-id2',
 						'radioIsChecked' => $this->getOptionValue('radio-required-id') === 'radio-required-id2',
 					],

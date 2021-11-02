@@ -19,7 +19,7 @@ This variable will set forms Hubspot api key and you will not be able to change 
 define('ES_API_KEY_HUBSPOT', '<api-key>');
 ```
 
-## Set Greenhouse api key
+## Set Greenhouse API key
 
 This variable will set forms Greenhouse api key and you will not be able to change it from the admin.
 

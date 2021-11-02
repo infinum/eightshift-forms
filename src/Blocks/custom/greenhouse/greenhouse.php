@@ -43,7 +43,7 @@ if ($isSettingsValid) {
 		[
 			'formPostId' => $greenhouseFormPostId,
 			'formType' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
-			'formResetOnSuccess' => (bool) !Variables::isDevelopMode(),
+			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'formDisableScrollToFieldOnError' => (bool) \apply_filters(
 				Settings::FILTER_SETTINGS_OPTION_VALUE_NAME,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY
