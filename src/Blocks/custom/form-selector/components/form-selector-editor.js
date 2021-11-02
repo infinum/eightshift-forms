@@ -69,7 +69,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 				<>
 					<div className={blockClass}>
 						<div className={`${blockClass}__title`}>
-							{__('Select our created forms', 'eightshift-forms')}
+							{__('Select one of our templates', 'eightshift-forms')}
 						</div>
 						<div className={`${blockClass}__items`}>
 							{forms.map((form, index) => {
@@ -94,7 +94,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 							})}
 						</div>
 						<div className={`${blockClass}__title-after`}>
-							{__('or start building your own', 'eightshift-forms')}
+							{__('or start building your own form', 'eightshift-forms')}
 						</div>
 					</div>
 				</>

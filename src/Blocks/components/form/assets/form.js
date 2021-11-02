@@ -168,7 +168,7 @@ export class Form {
 			}
 
 			let {
-				value
+				value,
 			} = item;
 
 			// Build data object.
@@ -180,7 +180,7 @@ export class Form {
 
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
-				data.value= '';
+				data.value = '';
 			}
 
 			// Append files field.
