@@ -24,11 +24,9 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
 	const form = document.querySelector('.js-es-block-form');
 
-	if (form) {
-		form.addEventListener('esFormsAfterFormSubmit', (event) => {
-			// Do you logic here.
-		});
-	}
+	form?.addEventListener('esFormsAfterFormSubmit', (event) => {
+		// Do you logic here.
+	});
 });
 ```
 
