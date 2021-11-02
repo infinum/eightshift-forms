@@ -6,6 +6,10 @@ import manifest from '../manifest.json';
 
 export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 	const {
+		template,
+	} = manifest;
+
+	const {
 		blockClass,
 	} = attributes;
 
@@ -20,6 +24,7 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 				radiosContent: <InnerBlocks
 												allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
 												templateLock={false}
+												template={template}
 											/>
 			})}
 		/>

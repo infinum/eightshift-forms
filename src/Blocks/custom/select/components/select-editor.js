@@ -5,6 +5,9 @@ import { SelectEditor as SelectEditorComponent } from '../../../components/selec
 import manifest from './../manifest.json';
 
 export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
+	const {
+		template,
+	} = manifest;
 
 	const {
 		blockClass,
@@ -21,6 +24,7 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 				selectOptions: <InnerBlocks
 												allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
 												templateLock={false}
+												template={template}
 											/>
 			})}
 		/>

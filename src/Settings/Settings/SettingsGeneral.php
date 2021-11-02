@@ -65,6 +65,16 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY = 'generalDisableDefaultScripts';
 
 	/**
+	 * Disable scroll to field on error key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY = 'generalDisableScrollToFieldOnError';
+
+	/**
+	 * Disable scroll to global msg on success key.
+	 */
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY = 'generalDisableScrollGlobalMsgOnSuccess';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -104,7 +114,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
-				'inputFieldLabel' => \__('Success Redirection Url', 'eightshift-forms'),
+				'inputFieldLabel' => __('Success Redirection Url', 'eightshift-forms'),
 				// translators: %s will be replaced with forms field name.
 				'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), Helper::getFormNames($formId)),
 				'inputType' => 'url',
@@ -115,8 +125,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
-				'inputFieldLabel' => \__('Tracking Event Name', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Define event name used to push data to GTM.', 'eightshift-forms'),
+				'inputFieldLabel' => __('Tracking Event Name', 'eightshift-forms'),
+				'inputFieldHelp' => __('Define event name used to push data to GTM.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
 			],
@@ -133,8 +143,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Scripts & Styles', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('
+				'checkboxesFieldLabel' => __('Scripts & Styles', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('
 					Select options you want to disable on your forms. <br /><br />
 					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
@@ -143,18 +153,37 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
-						'checkboxLabel' => __('Disable default Styles', 'eightshift-forms'),
+						'checkboxLabel' => __('Disable default styles', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY) === 'true',
 						'checkboxValue' => 'true',
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
-						'checkboxLabel' => __('Disable default Scripts', 'eightshift-forms'),
+						'checkboxLabel' => __('Disable default scripts', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY) === 'true',
+						'checkboxValue' => 'true',
+					]
+				]
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => __('Form behavior', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('Set all form behavior options in one place', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY),
+						'checkboxLabel' => __('Disable scroll to field on error', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY) === 'true',
+						'checkboxValue' => 'true',
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY),
+						'checkboxLabel' => __('Disable scroll to global message on success', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY) === 'true',
 						'checkboxValue' => 'true',
 					]
 				]

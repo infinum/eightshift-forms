@@ -51,5 +51,19 @@
 				"eightshift-forms/select-option"
 			]
 		}
-	}
+	},
+	"template": [
+		[
+			"eightshift-forms/select-option",
+			{
+				"selectOptionSelectOptionLabel": "Option 1"
+			}
+		],
+		[
+			"eightshift-forms/select-option",
+			{
+				"selectOptionSelectOptionLabel": "Option 2"
+			}
+		]
+	]
 }

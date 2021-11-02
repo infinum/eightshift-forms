@@ -70,4 +70,14 @@ class Filters
 			'settingsSidebar' => SettingsTest::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 	];
+
+	/**
+	 * Filter form js redirection timeout key.
+	 */
+	public const FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME = 'es_forms_form_js_redirection_timeout';
+
+	/**
+	 * Filter form js hide global message timeout key.
+	 */
+	public const FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME = 'es_forms_form_js_hide_global_message_timeout';
 }
