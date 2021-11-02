@@ -21,6 +21,12 @@
 		"fieldContent": {
 			"type": "string"
 		},
+		"fieldBeforeContent": {
+			"type": "string"
+		},
+		"fieldAfterContent": {
+			"type": "string"
+		},
 		"fieldName": {
 			"type": "string"
 		},

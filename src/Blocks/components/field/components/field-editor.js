@@ -37,6 +37,8 @@ export const FieldEditor = (attributes) => {
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
+	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
+	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 
@@ -60,7 +62,9 @@ export const FieldEditor = (attributes) => {
 
 	const Content = () => (
 		<div className={`${componentClass}__content`}>
+				{fieldBeforeContent}
 				{fieldContent}
+				{fieldAfterContent}
 			</div>
 	);
 

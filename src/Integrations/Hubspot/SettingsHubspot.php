@@ -42,6 +42,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
 
 	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_hubspot';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'hubspot';
@@ -57,6 +62,28 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
 
 	/**
+	 * Form ID Key.
+	 */
+	public const SETTINGS_HUBSPOT_FORM_ID_KEY = 'HubspotFormId';
+
+	/**
+	 * Instance variable for Hubspot data.
+	 *
+	 * @var HubspotClientInterface
+	 */
+	protected $hubspotClient;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 */
+	public function __construct(HubspotClientInterface $hubspotClient)
+	{
+		$this->hubspotClient = $hubspotClient;
+	}
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -66,6 +93,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -78,6 +106,12 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public function isSettingsValid(string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
+			return false;
+		}
+
+		$formKey = $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId);
+
+		if (empty($formKey)) {
 			return false;
 		}
 
@@ -135,11 +169,54 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
+		$forms = $this->hubspotClient->getForms();
+
+		if (!$forms) {
+			return [
+				[
+					'component' => 'highlighted-content',
+					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('we couldn\'t get the data from the Hubspot. Please check if you API key is valid.', 'eightshift-forms'),
+				],
+			];
+		}
+
+		$formIdOptions = array_map(
+			function ($option) use ($formId) {
+				return [
+					'component' => 'select-option',
+					'selectOptionLabel' => $option['title'] ?? '',
+					'selectOptionValue' => $option['id'] ?? '',
+					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId) === $option['id'],
+				];
+			},
+			$forms
+		);
+
+		array_unshift(
+			$formIdOptions,
+			[
+				'component' => 'select-option',
+				'selectOptionLabel' => '',
+				'selectOptionValue' => '',
+			]
+		);
+
 		return [
 			[
 				'component' => 'intro',
 				'introTitle' => \__('HubSpot settings', 'eightshift-forms'),
 				'introSubtitle' => \__('Configure your HubSpot settings in one place.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FORM_ID_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FORM_ID_KEY),
+				'selectFieldLabel' => \__('Form ID', 'eightshift-forms'),
+				'selectFieldHelp' => \__('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
+				'selectOptions' => $formIdOptions,
+				'selectIsRequired' => true,
+				'selectValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId),
 			],
 		];
 	}

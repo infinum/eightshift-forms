@@ -36,6 +36,8 @@ $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
+$fieldBeforeContent = Components::checkAttr('fieldBeforeContent', $attributes, $manifest);
+$fieldAfterContent = Components::checkAttr('fieldAfterContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
@@ -71,7 +73,9 @@ if ($fieldType === 'fieldset') {
 		</<?php echo esc_attr($labelTag); ?>>
 	<?php } ?>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+		<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 	<?php if ($fieldHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">

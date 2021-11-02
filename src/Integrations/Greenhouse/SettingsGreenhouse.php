@@ -229,7 +229,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectFieldLabel' => \__('Job ID', 'eightshift-forms'),
-				'selectFieldHelp' => \__('Open your Greenhouse account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+				'selectFieldHelp' => \__('Select what Greenhouse job you want to show on this form.', 'eightshift-forms'),
 				'selectOptions' => $jobIdOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
