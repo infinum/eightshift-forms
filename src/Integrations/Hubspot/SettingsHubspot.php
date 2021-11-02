@@ -175,8 +175,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('we couldn\'t get the data from the Hubspot. Please check if you API key is valid.', 'eightshift-forms'),
+					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Hubspot. Please check if you API key is valid.', 'eightshift-forms'),
 				],
 			];
 		}
@@ -212,8 +212,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FORM_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FORM_ID_KEY),
-				'selectFieldLabel' => \__('Form ID', 'eightshift-forms'),
-				'selectFieldHelp' => \__('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
+				'selectFieldLabel' => __('Form ID', 'eightshift-forms'),
+				'selectFieldHelp' => __('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
 				'selectOptions' => $formIdOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId),

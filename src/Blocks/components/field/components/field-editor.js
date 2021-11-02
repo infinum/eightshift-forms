@@ -62,16 +62,16 @@ export const FieldEditor = (attributes) => {
 
 	const Content = () => (
 		<div className={`${componentClass}__content`}>
-				{fieldBeforeContent}
-				{fieldContent}
-				{fieldAfterContent}
-			</div>
+			{fieldBeforeContent}
+			{fieldContent}
+			{fieldAfterContent}
+		</div>
 	);
 
 	const Help = () => (
 		<div className={`${componentClass}__help`}>
-				{fieldHelp}
-			</div>
+			{fieldHelp}
+		</div>
 	);
 
 	const DivContent = () => {
