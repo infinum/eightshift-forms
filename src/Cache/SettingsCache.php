@@ -76,12 +76,12 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('Cache settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Cache settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Cache settings', 'eightshift-forms'),
+				'introSubtitle' => __('Cache settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Mailchimp cache', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('Mailchimp cache', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
@@ -101,7 +101,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Greenhouse cache', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('Greenhouse cache', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',

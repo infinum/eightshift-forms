@@ -168,9 +168,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
+					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(\__('in order to use Mailchimp integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => sprintf(__('in order to use Mailchimp integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 				],
 			];
 		}
@@ -181,8 +181,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('we couldn\'t get the data from the Mailchimp. Please check if you API key is valid.', 'eightshift-forms'),
+					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Mailchimp. Please check if you API key is valid.', 'eightshift-forms'),
 				],
 			];
 		}
@@ -211,15 +211,15 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your mailchimp settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your mailchimp settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
-				'selectFieldLabel' => \__('List', 'eightshift-forms'),
-				'selectFieldHelp' => \__('Select list for subscription.', 'eightshift-forms'),
+				'selectFieldLabel' => __('List', 'eightshift-forms'),
+				'selectFieldHelp' => __('Select list for subscription.', 'eightshift-forms'),
 				'selectOptions' => $listsOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
@@ -239,14 +239,14 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your Mailchimp settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your Mailchimp settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => \__('How to get an API key?', 'eightshift-forms'),
+				'introTitle' => __('How to get an API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => \__('
+				'introSubtitle' => __('
 					1. Login to your Mailchimp Account.<br />
 					2. Navigate to your user profile image (bottom left corner).<br />
 					3. Click on <strong>Account</strong>.<br />
@@ -257,8 +257,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
@@ -275,8 +275,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+				'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 				'inputType' => 'password',
 				'inputIsRequired' => true,
 				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),

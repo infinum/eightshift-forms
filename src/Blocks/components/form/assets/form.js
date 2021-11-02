@@ -31,7 +31,7 @@ export class Form {
 		const element = event.target;
 
 		// Dispatch event.
-		this.addEvent(element, 'BeforeFormSubmit');
+		this.dispatchFormEvent(element, 'BeforeFormSubmit');
 
 		// Loader show.
 		this.showLoader(element);
@@ -58,7 +58,7 @@ export class Form {
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.addEvent(element, 'AfterFormSubmit');
+				this.dispatchFormEvent(element, 'AfterFormSubmit');
 
 				// Clear all form errors.
 				this.resetErrors(element);
@@ -77,7 +77,7 @@ export class Form {
 					// Redirect on success.
 					if (isRedirect !== '') {
 						// Dispatch event.
-						this.addEvent(element, 'AfterFormSubmitSuccessRedirect');
+						this.dispatchFormEvent(element, 'AfterFormSubmitSuccessRedirect');
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
@@ -95,7 +95,7 @@ export class Form {
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
-						this.addEvent(element, 'AfterFormSubmitSuccess');
+						this.dispatchFormEvent(element, 'AfterFormSubmitSuccess');
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
@@ -108,7 +108,7 @@ export class Form {
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
-					this.addEvent(element, 'AfterFormSubmitError');
+					this.dispatchFormEvent(element, 'AfterFormSubmitError');
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -117,7 +117,7 @@ export class Form {
 				// Fatal errors, trigger bugsnag.
 				if (response.status === 'error_fatal') {
 					// Dispatch event.
-					this.addEvent(element, 'AfterFormSubmitErrorFatal');
+					this.dispatchFormEvent(element, 'AfterFormSubmitErrorFatal');
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -129,14 +129,11 @@ export class Form {
 				// Validate fields error.
 				if (response.status === 'error_validation') {
 					// Dispatch event.
-					this.addEvent(element, 'AfterFormSubmitErrorValidation');
+					this.dispatchFormEvent(element, 'AfterFormSubmitErrorValidation');
 
 					// Output field errors.
 					this.outputErrors(element, response.validation);
 				}
-
-				console.log(this.hideGlobalMessageTimeout);
-				
 
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
@@ -144,7 +141,7 @@ export class Form {
 				}, parseInt(this.hideGlobalMessageTimeout, 10));
 
 				// Dispatch event.
-				this.addEvent(element, 'AfterFormSubmitEnd');
+				this.dispatchFormEvent(element, 'AfterFormSubmitEnd');
 			});
 	}
 
@@ -332,8 +329,8 @@ export class Form {
 			const gtmData = this.getGtmData(element, eventName);
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.addEvent(element, 'BeforeGtmDataPush');
-				window?.dataLayer.push(gtmData);
+				this.dispatchFormEvent(element, 'BeforeGtmDataPush');
+				window.dataLayer.push(gtmData);
 			}
 		}
 	}
@@ -367,7 +364,7 @@ export class Form {
 	}
 
 	// Dispatch custom event.
-	addEvent(element, name) {
+	dispatchFormEvent(element, name) {
 		const event = new CustomEvent(`esForms${name}`);
 
 		element.dispatchEvent(event);
