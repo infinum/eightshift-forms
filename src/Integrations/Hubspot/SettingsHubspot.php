@@ -128,9 +128,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('We are sorry but', 'eightshift-forms'),
+					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(\__('in order to use HubSpot integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => sprintf(__('in order to use HubSpot integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 				]
 			];
 		}
@@ -138,8 +138,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('HubSpot settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your HubSpot settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your HubSpot settings in one place.', 'eightshift-forms'),
 			],
 		];
 	}
@@ -156,28 +156,28 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('HubSpot settings', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your HubSpot settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your HubSpot settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => \__('How to get an API key?', 'eightshift-forms'),
+				'introTitle' => __('How to get an API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => \__('
+				'introSubtitle' => __('
 					1. Login to your HubSpot Account. <br />
 				', 'eightshift-forms'),
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
 						'checkboxName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxLabel' => __('Use HubSpot', 'eightshift-forms'),
-						'checkboxIsChecked' => !empty($this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY)),
+						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY) === 'true',
 						'checkboxValue' => 'true',
 						'checkboxIsRequired' => true,
 					]
@@ -187,8 +187,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputFieldLabel' => \__('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+				'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 				'inputType' => 'password',
 				'inputIsRequired' => true,
 				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),

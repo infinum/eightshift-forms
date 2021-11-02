@@ -1,6 +1,6 @@
 {
 	"blockName": "form-selector",
-	"title": "Eightshift Forms",
+	"title": "Form Selector",
 	"description" : "Select what form type you would like to use for this specific form.",
 	"category": "eightshift-forms",
 	"icon": {
@@ -19,5 +19,60 @@
 				"eightshift-forms/greenhouse"
 			]
 		}
-	}
+	},
+	"forms": [
+		{
+			"label": "Empty",
+			"slug": "empty",
+			"icon": "color",
+			"blockName": "eightshift-forms/form"
+		},
+		{
+			"label": "Simple Contact",
+			"slug": "contact",
+			"icon": "color",
+			"blockName": "eightshift-forms/form",
+			"innerBlocks": [
+				[
+					"eightshift-forms/sender-email",
+					{
+						"senderEmailInputFieldLabel": "Your email"
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Your name"
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Subject"
+					}
+				],
+				[
+					"eightshift-forms/textarea",
+					{
+						"textareaTextareaFieldLabel": "Message"
+					}
+				],
+				[
+					"eightshift-forms/submit"
+				]
+			]
+		},
+		{
+			"label": "Mailchimp",
+			"slug": "mailchimp",
+			"icon": "color",
+			"blockName": "eightshift-forms/greenhouse"
+		},
+		{
+			"label": "Greenhouse",
+			"slug": "greenhouse",
+			"icon": "color",
+			"blockName": "eightshift-forms/mailchimp"
+		}
+	]
 }

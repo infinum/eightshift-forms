@@ -57,7 +57,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function register(): void
 	{
 		// Editor only script.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScriptLocal']);
+		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
 
 		// Editor only style.
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyleLocal'], 50);
@@ -66,21 +66,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
 
 		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScriptLocal']);
-	}
-
-	/**
-	 * Method that returns editor only script with check.
-	 *
-	 * @return mixed
-	 */
-	public function enqueueBlockEditorScriptLocal()
-	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)) {
-			return null;
-		}
-
-		$this->enqueueBlockEditorScript();
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScript']);
 	}
 
 	/**
@@ -109,20 +95,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		$this->enqueueBlockStyle();
-	}
-
-	/**
-	 * Method that returns frontend only script with check.
-	 *
-	 * @return mixed
-	 */
-	public function enqueueBlockScriptLocal()
-	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)) {
-			return null;
-		}
-
-		$this->enqueueBlockScript();
 	}
 
 	/**

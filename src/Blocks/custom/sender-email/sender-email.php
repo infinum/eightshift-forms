@@ -15,7 +15,5 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'input',
-	Components::props('input', $attributes, [
-		'inputId' => $inputName . $unique,
-	])
+	Components::props('input', $attributes)
 );

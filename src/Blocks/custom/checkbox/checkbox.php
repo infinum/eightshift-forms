@@ -19,11 +19,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($checkboxName)) {
-	$props['checkboxName'] = $unique;
-}
-
-if (empty($checkboxId)) {
-	$props['checkboxId'] = $unique;
+	$props['checkboxName'] = $checkboxId;
 }
 
 if (empty($checkboxValue)) {

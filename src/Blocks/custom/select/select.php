@@ -16,11 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($selectName)) {
-	$props['selectName'] = $unique;
-}
-
-if (empty($selectId)) {
-	$props['selectId'] = $unique;
+	$props['selectName'] = $selectId;
 }
 
 $props['selectOptions'] = $innerBlockContent;

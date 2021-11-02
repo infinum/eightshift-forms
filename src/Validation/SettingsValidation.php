@@ -94,8 +94,8 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => \__('Form validation messages', 'eightshift-forms'),
-				'introSubtitle' => \__('Configure your form validation messages in one place.', 'eightshift-forms'),
+				'introTitle' => __('Form validation messages', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your form validation messages in one place.', 'eightshift-forms'),
 			]
 		];
 

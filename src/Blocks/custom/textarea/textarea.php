@@ -16,11 +16,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($textareaName)) {
-	$props['textareaName'] = $unique;
-}
-
-if (empty($textareaId)) {
-	$props['textareaId'] = $unique;
+	$props['textareaName'] = $textareaId;
 }
 
 $props['blockClass'] = $blockClass;

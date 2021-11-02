@@ -27,9 +27,18 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	use SettingsHelper;
 
 	/**
-	 * Filter Name
+	 * Filter mapper.
+	 *
+	 * @var string
 	 */
 	public const FILTER_MAPPER_NAME = 'es_greenhouse_mapper_filter';
+
+	/**
+	 * Filter form fields.
+	 *
+	 * @var string
+	 */
+	public const FILTER_FORM_FIELDS_NAME = 'es_greenhouse_form_fields_filter';
 
 	/**
 	 * Instance variable for Greenhouse data.
@@ -57,6 +66,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	{
 		// Blocks string to value filter name constant.
 		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm']);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
 	}
 
 	/**
@@ -69,28 +79,40 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function getForm(array $formAdditionalProps): string
 	{
 		// Get post ID prop.
-		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
+		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
 		if (empty($formId)) {
-			return '';
-		}
-
-		// Get Job Id.
-		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
-		if (empty($jobId)) {
-			return '';
-		}
-
-		// Get Job questions.
-		$questions = $this->greenhouseClient->getJobQuestions($jobId);
-		if (empty($questions)) {
 			return '';
 		}
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFields($questions, (string) $formId),
+			$this->getFormFields((string) $formId),
 			$formAdditionalProps
 		);
+	}
+
+	/**
+	 * Get Greenhouse maped form fields.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getFormFields(string $formId): array
+	{
+		// Get Job Id.
+		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
+		if (empty($jobId)) {
+			return [];
+		}
+
+		// Get Job questions.
+		$questions = $this->greenhouseClient->getJobQuestions($jobId);
+		if (empty($questions)) {
+			return [];
+		}
+
+		return $this->getFields($questions, (string) $formId);
 	}
 
 	/**
@@ -101,7 +123,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFields(array $data, string $formId): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 

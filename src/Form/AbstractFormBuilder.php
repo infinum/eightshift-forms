@@ -73,6 +73,9 @@ abstract class AbstractFormBuilder
 			$formAdditionalProps['formSuccessRedirect'] = $this->getAdminRefreshUrl();
 		}
 
+		$formAdditionalProps['formResetOnSuccess'] = false;
+		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = true;
+
 		// Build form.
 		return $this->getForm($formItems, $formAdditionalProps, $formContent);
 	}
@@ -111,7 +114,7 @@ abstract class AbstractFormBuilder
 	 * Get the actual form for the components.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
+	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
 	 * @param string $formContent For adding additional form components after every form.
 	 *
 	 * @return string
@@ -179,10 +182,16 @@ abstract class AbstractFormBuilder
 					break;
 			}
 
+			$id = $attributes["{$component}Id"] ?? '';
+
 			// Loop children and do the same ad on top level.
-			foreach ($attributes[$key] as $item) {
-				// Determin component name.
+			foreach ($attributes[$key] as $innerKey => $item) {
+				// Determine the component's name.
 				$innercComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+
+				if ($key === 'radiosContent') {
+					$item["{$innercComponent}Id"] = "{$id}[{$innerKey}]";
+				}
 
 				// Build child component.
 				$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

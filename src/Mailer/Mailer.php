@@ -137,12 +137,10 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		foreach ($fields as $key => $value) {
-			$value = json_decode($value, true);
-
+		foreach ($fields as $field) {
 			$output[] = [
-				'name' => $key,
-				'value' => $value['value'],
+				'name' => $field['name'] ?? '',
+				'value' => $field['value'] ?? '',
 			];
 		}
 

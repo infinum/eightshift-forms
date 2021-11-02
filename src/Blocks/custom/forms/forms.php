@@ -50,8 +50,7 @@ $formsClass = Components::classnames([
 				$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-					$name = Components::kebabToCamelCase(str_replace($globalManifest['namespace'] . '/', '', $innerBlock['blockName']));
-					$blockName = explode('/', $innerBlock['blockName'])[1];
+					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
 				}
 			}

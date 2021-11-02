@@ -17,7 +17,6 @@
 			"radioName": "Name",
 			"radioIsChecked": false,
 			"radioIsDisabled": false,
-			"radioIsReadOnly": false,
 			"radioIsRequired": false
 		}
 	},
@@ -39,10 +38,6 @@
 			"default": false
 		},
 		"radioIsDisabled": {
-			"type": "boolean",
-			"default": false
-		},
-		"radioIsReadOnly": {
 			"type": "boolean",
 			"default": false
 		},

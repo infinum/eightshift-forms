@@ -1,0 +1,37 @@
+// stylelint-disable declaration-no-important
+
+.es-block-form-selector {
+	&__title,
+	&__title-after {
+		text-align: center;
+		font-style: italic;
+		font-size: 14px;
+		margin-bottom: 20px;
+		color: var(--global-colors-es-boulder);
+	}
+
+	&__items {
+		display: grid;
+		gap: var(--global-es-spacing-vertical);
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	&__button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-flow: column;
+		height: auto;
+		width: 100%;
+		padding: 15px !important;
+		font-style: 16px;
+
+		svg {
+			margin-bottom: 10px;
+		}
+	}
+
+	&__title-after {
+		margin-top: 20px;
+	}
+}

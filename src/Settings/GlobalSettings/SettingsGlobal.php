@@ -12,7 +12,7 @@ namespace EightshiftForms\Settings\GlobalSettings;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Integrations\Integrations;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
 
@@ -21,23 +21,6 @@ use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
  */
 class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterface
 {
-
-	/**
-	 * All global settings.
-	 */
-	public const GLOBAL_SETTINGS = [
-		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
-		SettingsCache::SETTINGS_TYPE_KEY => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
-	];
-
-	/**
-	 * All global settings sidebars.
-	 */
-	public const GLOBAL_SETTINGS_SIDEBARS = [
-		SettingsGeneral::SETTINGS_TYPE_KEY => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
-		SettingsCache::SETTINGS_TYPE_KEY => SettingsCache::FILTER_SETTINGS_SIDEBAR_NAME,
-	];
-
 	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
@@ -122,10 +105,16 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 */
 	private function getAllSettingsSidebars(): array
 	{
-		$allSettings = self::GLOBAL_SETTINGS_SIDEBARS;
+		$allSettings = [];
 
-		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$allSettings[$key] = $integration['settingsSidebar'] ?? '';
+		foreach ($this->getAllSettings() as $key => $integration) {
+			$filter = Filters::ALL[$key] ?? '';
+
+			if (!$filter) {
+				continue;
+			}
+
+			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
 		}
 
 		return $allSettings;
@@ -138,10 +127,16 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	 */
 	private function getAllSettings(): array
 	{
-		$allSettings = self::GLOBAL_SETTINGS;
+		$allSettings = [];
 
-		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$allSettings[$key] = $integration['global'] ?? '';
+		foreach (Filters::ALL as $key => $integration) {
+			$global = $integration['global'] ?? '';
+
+			if (!$global) {
+				continue;
+			}
+
+			$allSettings[$key] = $global;
 		}
 
 		return $allSettings;

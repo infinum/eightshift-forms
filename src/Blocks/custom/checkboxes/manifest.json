@@ -26,5 +26,19 @@
 				"eightshift-forms/checkbox"
 			]
 		}
-	}
+	},
+	"template": [
+		[
+			"eightshift-forms/checkbox",
+			{
+				"checkboxCheckboxLabel": "Checkbox 1"
+			}
+		],
+		[
+			"eightshift-forms/checkbox",
+			{
+				"checkboxCheckboxLabel": "Checkbox 2"
+			}
+		]
+	]
 }

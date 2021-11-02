@@ -26,6 +26,14 @@
 		--es-checkbox-scoped-border-color: var(--global-colors-es-matisse);
 	}
 
+	&__input:disabled + #{$this}__label::after {
+		--es-checkbox-scoped-opacity: 0.7;
+	}
+
+	&__input:disabled:checked + #{$this}__label::after {
+		--es-checkbox-scoped-opacity: 0.7;
+	}
+
 	&__label {
 		position: relative;
 		padding-left: calc(var(--es-checkbox-scoped-icon-size) + 10px);
@@ -36,6 +44,7 @@
 			content: '';
 			position: absolute;
 			left: 0;
+			opacity: var(--es-checkbox-scoped-opacity, 1);
 			background-color: var(--es-checkbox-scoped-background-color, transform);
 			border: 1px solid var(--es-checkbox-scoped-border-color, var(--global-colors-es-chalice));
 			width: var(--es-checkbox-scoped-icon-size);

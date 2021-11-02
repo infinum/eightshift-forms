@@ -24,6 +24,9 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
+$formResetOnSuccess = Components::checkAttr('formResetOnSuccess', $attributes, $manifest);
+$formDisableScrollToFieldOnError = Components::checkAttr('formDisableScrollToFieldOnError', $attributes, $manifest);
+$formDisableScrollToGlobalMessageOnSuccess = Components::checkAttr('formDisableScrollToGlobalMessageOnSuccess', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 
 $formClass = Components::classnames([
@@ -45,6 +48,9 @@ $formClass = Components::classnames([
 	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
 	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
 	data-form-type="<?php echo esc_attr($formType); ?>"
+	data-reset-on-success="<?php echo esc_attr($formResetOnSuccess); ?>"
+	data-disable-scroll-to-field-on-error="<?php echo esc_attr($formDisableScrollToFieldOnError); ?>"
+	data-disable-scroll-to-global-message-on-success="<?php echo esc_attr($formDisableScrollToGlobalMessageOnSuccess); ?>"
 >
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -28,7 +28,7 @@ $submitClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$submitIsDisabled = $submitIsDisabled ? 'disabled' : '';
+$submitIsDisabled = disabled($submitIsDisabled);
 
 $submitAttrsOutput = '';
 foreach ($submitAttrs as $key => $value) {

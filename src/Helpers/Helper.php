@@ -137,7 +137,7 @@ class Helper
 		preg_match_all('/Name":"(.*?)"/m', $content, $matches, PREG_SET_ORDER);
 
 		// Find custom predefined names.
-		preg_match_all('/\/(sender-email|sender-name) {(.*?)} \/-->/m', $content, $matchesCustom, PREG_SET_ORDER);
+		preg_match_all('/\/(sender-email) {(.*?)} \/-->/m', $content, $matchesCustom, PREG_SET_ORDER);
 
 		$items = array_merge($matches, $matchesCustom);
 

@@ -22,7 +22,6 @@ $checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
 $checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $manifest);
 $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
 $checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
-$checkboxIsRequired = Components::checkAttr('checkboxIsRequired', $attributes, $manifest);
 $checkboxTracking = Components::checkAttr('checkboxTracking', $attributes, $manifest);
 
 $checkboxClass = Components::classnames([
@@ -42,11 +41,10 @@ $checkboxClass = Components::classnames([
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxId); ?>"
 			value="<?php echo esc_attr($checkboxValue); ?>"
-			data-validation-required="<?php echo esc_attr($checkboxIsRequired); ?>"
 			data-tracking="<?php echo esc_attr($checkboxTracking); ?>"
-			<?php echo $checkboxIsChecked ? 'checked' : ''; ?>
-			<?php echo $checkboxIsDisabled ? 'disabled' : ''; ?>
-			<?php echo $checkboxIsReadOnly ? 'readonly' : ''; ?>
+			<?php checked($checkboxIsChecked); ?>
+			<?php disabled($checkboxIsDisabled); ?>
+			<?php readonly($checkboxIsReadOnly); ?>
 		/>
 		<label
 			for="<?php echo esc_attr($checkboxId); ?>"
@@ -60,7 +58,7 @@ $checkboxClass = Components::classnames([
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'error',
 		Components::props('error', $attributes, [
-			'errorId' => $checkboxName,
+			'errorId' => $checkboxId,
 			'blockClass' => $componentClass
 		])
 	);

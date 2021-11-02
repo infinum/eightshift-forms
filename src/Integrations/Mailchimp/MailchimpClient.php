@@ -97,7 +97,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postMailchimpSubscription(string $listId, array $params): array
 	{
-		$email = json_decode($params['email_address'], true)['value'];
+		$email = $params['email_address']['value'];
 		$emailHash = md5(strtolower($email));
 
 		$response = \wp_remote_request(
@@ -198,9 +198,7 @@ class MailchimpClient implements MailchimpClientInterface
 		unset($params['email_address']);
 
 		foreach ($params as $key => $value) {
-			$value = json_decode($value, true)['value'];
-
-			$output[$key] = $value;
+			$output[$key] = $value['value'] ?? '';
 		}
 
 		return (object) $output;

@@ -15,10 +15,6 @@ $submitId = $attributes['submitSubmitId'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
-if (empty($submitId)) {
-	$props['submitId'] = $unique;
-}
-
 $props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

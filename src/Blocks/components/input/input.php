@@ -22,10 +22,7 @@ $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $mani
 $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
-$inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
 $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
-$inputIsEmail = Components::checkAttr('inputIsEmail', $attributes, $manifest);
-$inputIsUrl = Components::checkAttr('inputIsUrl', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -36,8 +33,8 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputIsDisabled = $inputIsDisabled ? 'disabled' : '';
-$inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
+$inputIsDisabled = disabled($inputIsDisabled);
+$inputIsReadOnly = readonly($inputIsReadOnly);
 
 $input = '
 <input
@@ -47,9 +44,6 @@ $input = '
 	id="' . esc_attr($inputId) . '"
 	placeholder="' . esc_attr($inputPlaceholder) . '"
 	type="' . esc_attr($inputType) . '"
-	data-validation-required="' . $inputIsRequired . '"
-	data-validation-email="' . $inputIsEmail . '"
-	data-validation-url="' . $inputIsUrl . '"
 	data-tracking="' . $inputTracking . '"
 	' . $inputIsDisabled . '
 	' . $inputIsReadOnly . '

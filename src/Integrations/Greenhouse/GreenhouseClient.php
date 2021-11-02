@@ -205,9 +205,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 		$output = [];
 
 		foreach ($params as $key => $value) {
-			$value = json_decode($value, true)['value'];
-
-			$output[$key] = $value;
+			$output[$key] = $value['value'] ?? '';
 		}
 
 		return $output;

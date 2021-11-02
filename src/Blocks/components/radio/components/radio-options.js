@@ -2,7 +2,13 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, ComponentUseToggle, IconToggle } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	icons,
+	ComponentUseToggle,
+	IconToggle
+} from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const RadioOptions = (attributes) => {
@@ -14,7 +20,6 @@ export const RadioOptions = (attributes) => {
 	const radioValue = checkAttr('radioValue', attributes, manifest);
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
-	const radioIsReadOnly = checkAttr('radioIsReadOnly', attributes, manifest);
 	const radioTracking = checkAttr('radioTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
@@ -64,13 +69,6 @@ export const RadioOptions = (attributes) => {
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={radioIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Read Only', 'eightshift-forms')}
-						checked={radioIsReadOnly}
-						onChange={(value) => setAttributes({ [getAttrKey('radioIsReadOnly', attributes, manifest)]: value })}
 					/>
 				</>
 			}

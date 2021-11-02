@@ -21,7 +21,6 @@ $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
 $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);
 $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
-$textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $manifest);
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
@@ -33,15 +32,14 @@ $textareaClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$textareaIsDisabled = $textareaIsDisabled ? 'disabled' : '';
-$textareaIsReadOnly = $textareaIsReadOnly ? 'readonly' : '';
+$textareaIsDisabled = disabled($textareaIsDisabled);
+$textareaIsReadOnly = readonly($textareaIsReadOnly);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		placeholder="' . esc_attr($textareaPlaceholder) . '"
-		data-validation-required="' . $textareaIsRequired . '"
 		data-tracking="' . $textareaTracking . '"
 		' . $textareaIsDisabled . '
 		' . $textareaIsReadOnly . '

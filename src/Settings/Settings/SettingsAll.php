@@ -12,9 +12,8 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
-use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Integrations\Integrations;
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -22,25 +21,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, ServiceInterface
 {
-
-	/**
-	 * All settings.
-	 */
-	public const ALL_SETTINGS = [
-		SettingsGeneral::SETTINGS_TYPE_KEY    => SettingsGeneral::FILTER_SETTINGS_NAME,
-		SettingsValidation::SETTINGS_TYPE_KEY => SettingsValidation::FILTER_SETTINGS_NAME,
-		SettingsMailer::SETTINGS_TYPE_KEY     => SettingsMailer::FILTER_SETTINGS_NAME,
-	];
-
-	/**
-	 * All settings sidebars.
-	 */
-	public const ALL_SETTINGS_SIDEBARS = [
-		SettingsGeneral::SETTINGS_TYPE_KEY    => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
-		SettingsValidation::SETTINGS_TYPE_KEY => SettingsValidation::FILTER_SETTINGS_SIDEBAR_NAME,
-		SettingsMailer::SETTINGS_TYPE_KEY     => SettingsMailer::FILTER_SETTINGS_SIDEBAR_NAME,
-	];
-
 	/**
 	 * Filter block setting value key.
 	 */
@@ -118,7 +98,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 			$type = SettingsGeneral::SETTINGS_TYPE_KEY;
 		}
 
-		// Fiund settings page.
+		// Find settings page.
 		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
@@ -131,6 +111,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 
 		// Add additional props to form component.
 		$formAdditionalProps['formPostId'] = $formId;
+		$formAdditionalProps['formType'] = $type;
 
 		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
 			$formAdditionalProps['formSuccessRedirect'] = 'true';
@@ -163,10 +144,15 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	 */
 	private function getAllSettingsSidebars(): array
 	{
-		$allSettings = self::ALL_SETTINGS_SIDEBARS;
+		$allSettings = [];
 
-		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$allSettings[$key] = $integration['settingsSidebar'] ?? '';
+		foreach ($this->getAllSettings() as $key => $integration) {
+			$filter = Filters::ALL[$key] ?? '';
+
+			if (!$filter) {
+				continue;
+			}
+			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
 		}
 
 		return $allSettings;
@@ -179,10 +165,16 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 	 */
 	private function getAllSettings(): array
 	{
-		$allSettings = self::ALL_SETTINGS;
+		$allSettings = [];
 
-		foreach (Integrations::ALL_INTEGRATIONS as $key => $integration) {
-			$allSettings[$key] = $integration['settings'] ?? '';
+		foreach (Filters::ALL as $key => $integration) {
+			$settings = $integration['settings'] ?? '';
+
+			if (!$settings) {
+				continue;
+			}
+
+			$allSettings[$key] = $settings;
 		}
 
 		return $allSettings;

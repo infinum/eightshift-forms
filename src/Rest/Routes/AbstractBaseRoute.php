@@ -67,23 +67,23 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Sanitizes all received fields recursively. If a field is something we don't need to
 	 * sanitize then we don't touch it.
 	 *
-	 * @param array<string, mixed> $params Array of params.
+	 * @param array<string|int, mixed> $params Array of params.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string|int, mixed>
 	 */
 	protected function sanitizeFields(array $params)
 	{
 		foreach ($params as $key => $param) {
-			if (is_string($param)) {
-				$type = json_decode($param, true)['type'];
+			$type = $param['type'] ?? '';
 
-				if ($type === 'textarea') {
-					$params[$key] = \sanitize_textarea_field($param);
-				} else {
-					$params[$key] = \sanitize_text_field($param);
-				}
-			} elseif (is_array($param)) {
+			if (array_values($param) === $param) {
 				$params[$key] = $this->sanitizeFields($param);
+			} else {
+				if ($type === 'textarea') {
+					$params[$key]['value'] = \sanitize_textarea_field($param['value']);
+				} else {
+					$params[$key]['value'] = \sanitize_text_field($param['value']);
+				}
 			}
 		}
 
@@ -101,48 +101,21 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * WordPress replaces dots with underscores for some reason. This is undesired behavior when we need to map
-	 * need record field values to existing lookup fields (we need to use @odata.bind in field's key).
-	 *
-	 * Quick and dirty fix is to replace these values back to dots after receiving them.
-	 *
-	 * @param array<string, mixed> $params Request params.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function fixDotUnderscoreReplacement(array $params): array
-	{
-		foreach ($params as $key => $value) {
-			if (strpos($key, '@odata_bind') !== false) {
-				$newKey = str_replace('@odata_bind', '@odata.bind', $key);
-				unset($params[$key]);
-				$params[$newKey] = $value;
-			}
-		}
-
-		return $params;
-	}
-
-	/**
 	 * Verifies everything is ok with request.
 	 *
-	 * @param \WP_REST_Request $request WP_REST_Request object.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $formData Form data to validate.
 	 *
 	 * @throws UnverifiedRequestException When we should abort the request for some reason.
 	 *
-	 * @return array<string, mixed> Filtered request params.
+	 * @return void
 	 */
-	protected function verifyRequest(\WP_REST_Request $request, string $formId = ''): array
+	protected function verifyRequest(array $params, array $files = [], string $formId = '', array $formData = []): void
 	{
-		$params = $this->sanitizeFields($request->get_query_params());
-		$params = $this->fixDotUnderscoreReplacement($params);
-		$postParams = $this->sanitizeFields($request->get_body_params());
-		$files = $request->get_file_params();
-
-		// Quick hack for nested params like checkboxes and radios.
-		$params = $this->fixNestedParams($params);
-		$postParams = $this->fixNestedParams($postParams);
+		// Sanitize Fields.
+		$params = $this->sanitizeFields($params);
 
 		// Verify nonce if submitted.
 		if ($this->requiresNonceVerification()) {
@@ -157,37 +130,55 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			}
 		}
 
-		// Validate GET Params.
-		$validateParams = $this->validator->validate($params, [], $formId);
-		if (!empty($validateParams)) {
+		// Validate Params.
+		$validate = $this->validator->validate($params, $files, $formId, $formData);
+		if (!empty($validate)) {
 			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required GET parameters to process the request.', 'eightshift-forms'),
-				$validateParams
+				\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+				$validate
 			);
 		}
+	}
 
-		// Validate POST Params.
-		$validatePostParams = $this->validator->validate($postParams, [], $formId);
-		if (!empty($validatePostParams)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-				$validatePostParams
-			);
-		}
+	/**
+	 * Convert JS FormData object to usable data in php.
+	 * Check if array then output only value that is not empty.
+	 *
+	 * @param array<string, mixed> $params Params to convert.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareParams(array $params): array
+	{
+		return array_map(
+			function ($item) {
+				// Check if array then output only value that is not empty.
+				if (is_array($item)) {
+					$inner = array_filter(
+						$item,
+						function ($innerItem) {
+							$value = json_decode($innerItem, true);
 
-		$validatePostParams = $this->validator->validate($postParams, $files, $formId);
-		if (!empty($validatePostParams)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required POST parameters to process the request.', 'eightshift-forms'),
-				$validatePostParams
-			);
-		}
+							return !empty($value['value']);
+						}
+					);
 
-		return [
-			'get' => $params,
-			'post' => $postParams,
-			'files' => $files,
-		];
+					// If there is any items in array checked reset that and decode.
+					if ($inner) {
+						$inner = reset($inner);
+
+						return json_decode($inner, true);
+					}
+
+					// Fallback to empty array.
+					return [];
+				}
+
+				// Just decode value.
+				return json_decode($item, true);
+			},
+			$params
+		);
 	}
 
 	/**
@@ -205,9 +196,34 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return '';
 		}
 
-		$formType = json_decode($formType, true)['value'];
+		return $formType['value'] ?? '';
+	}
 
-		return $formType;
+	/**
+	 * Return form sender details from form params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getSenderDetails(array $params): array
+	{
+		$output = [];
+
+		foreach ($params as $param) {
+			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if (!$name) {
+				continue;
+			}
+
+			if (($name === 'sender-email') && !empty($value)) {
+				$output[$name] = $value;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -226,7 +242,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return '';
 		}
 
-		$formId = json_decode($formId, true)['value'];
+		$formId = $formId['value'] ?? '';
 
 		if ($decrypt) {
 			return (string) Helper::encryptor('decrypt', $formId);
@@ -255,29 +271,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 			if ($key === 'es-form-post-id') {
 				unset($params['es-form-post-id']);
-			}
-		}
-
-		return $params;
-	}
-
-	/**
-	 * Quick hack for nested params like checkboxes and radios.
-	 *
-	 * @param array<string, mixed> $params Prams array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function fixNestedParams(array $params): array
-	{
-		foreach ($params as $paramKey => $paramValue) {
-			if (is_array($paramValue)) {
-				foreach ($paramValue as $itemsKey => $itemsValue) {
-					foreach ($itemsValue as $itemKey => $itemValue) {
-						$params["{$paramKey}[{$itemsKey}][{$itemKey}]"] = $itemValue;
-					}
-				}
-				unset($params[$paramKey]);
 			}
 		}
 

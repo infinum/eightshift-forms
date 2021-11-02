@@ -23,7 +23,7 @@ trait UploadHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function prepareFiles(array $files): array
+	protected function uploadFiles(array $files): array
 	{
 		$output = [];
 		$hasError = false;
@@ -41,18 +41,30 @@ trait UploadHelper
 		add_filter('upload_dir', [$this, 'changeUploadDir'], 1, 10);
 
 		foreach ($files as $fileKey => $fileValue) {
-			$upload = \wp_handle_upload(
-				$fileValue,
-				[
-					'test_form' => false,
-				]
-			);
+			foreach ($fileValue['name'] as $key => $value) {
+				if ($fileValue['name'][$key]) {
+					$fileDetails = [
+						'name' => $fileValue['name'][$key],
+						'type' => $fileValue['type'][$key],
+						'tmp_name' => $fileValue['tmp_name'][$key],
+						'error' => $fileValue['error'][$key],
+						'size' => $fileValue['size'][$key],
+					];
 
-			if (array_key_exists('error', $upload)) {
-				$hasError = true;
-				$output[$fileKey] = 'error';
-			} else {
-				$output[$fileKey] = $upload['file'];
+					$upload = wp_handle_upload(
+						$fileDetails,
+						[
+							'test_form' => false,
+						]
+					);
+
+					if (isset($upload['error'])) {
+						$hasError = true;
+						$output[$fileKey] = 'error';
+					} else {
+						$output[$fileKey] = $upload['file'];
+					}
+				}
 			}
 		}
 
