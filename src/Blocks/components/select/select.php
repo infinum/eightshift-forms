@@ -30,7 +30,7 @@ $selectClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$selectIsDisabled = $selectIsDisabled ? 'disabled' : '';
+$selectIsDisabled = disabled($selectIsDisabled);
 
 $select = '
 	<select

@@ -142,10 +142,10 @@ class FormSubmitRoute extends AbstractBaseRoute
 		try {
 			$params = $this->prepareParams($request->get_body_params());
 
-			// Get encripted form ID and decrypt it.
+			// Get encrypted form ID and decrypt it.
 			$formId = $this->getFormId($params, true);
 
-			// Determin form type.
+			// Determine form type.
 			$formType = $this->getFormType($params);
 
 			// Get form fields for validation.

@@ -32,8 +32,8 @@ $textareaClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$textareaIsDisabled = $textareaIsDisabled ? 'disabled' : '';
-$textareaIsReadOnly = $textareaIsReadOnly ? 'readonly' : '';
+$textareaIsDisabled = disabled($textareaIsDisabled);
+$textareaIsReadOnly = readonly($textareaIsReadOnly);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"

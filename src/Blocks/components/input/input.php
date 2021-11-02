@@ -33,8 +33,8 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputIsDisabled = $inputIsDisabled ? 'disabled' : '';
-$inputIsReadOnly = $inputIsReadOnly ? 'readonly' : '';
+$inputIsDisabled = disabled($inputIsDisabled);
+$inputIsReadOnly = readonly($inputIsReadOnly);
 
 $input = '
 <input

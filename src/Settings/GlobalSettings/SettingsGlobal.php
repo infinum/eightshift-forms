@@ -108,9 +108,13 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$allSettings = [];
 
 		foreach ($this->getAllSettings() as $key => $integration) {
-			if (isset(Filters::ALL[$key])) {
-				$allSettings[$key] = Filters::ALL[$key]['settingsSidebar'] ?? '';
+			$filter = Filters::ALL[$key] ?? '';
+
+			if (!$filter) {
+				continue;
 			}
+
+			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
 		}
 
 		return $allSettings;
@@ -126,9 +130,13 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$allSettings = [];
 
 		foreach (Filters::ALL as $key => $integration) {
-			if (isset($integration['global'])) {
-				$allSettings[$key] = $integration['global'] ?? '';
+			$global = $integration['global'] ?? '';
+
+			if (!$global) {
+				continue;
 			}
+
+			$allSettings[$key] = $global;
 		}
 
 		return $allSettings;
