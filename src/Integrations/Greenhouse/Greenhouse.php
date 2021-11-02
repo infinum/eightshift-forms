@@ -79,7 +79,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function getForm(array $formAdditionalProps): string
 	{
 		// Get post ID prop.
-		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
+		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
 		if (empty($formId)) {
 			return '';
 		}

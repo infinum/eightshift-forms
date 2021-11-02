@@ -168,7 +168,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		$allSettings = [];
 
 		foreach (Filters::ALL as $key => $integration) {
-			$settings = $integration['settings'];
+			$settings = $integration['settings'] ?? '';
 
 			if (!$settings) {
 				continue;
