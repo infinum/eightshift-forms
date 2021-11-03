@@ -9,7 +9,7 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Form', 'eightshift-forms')}>
 			<FormOptionsComponent
 				{...props('form', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

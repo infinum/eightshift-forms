@@ -9,7 +9,7 @@ export const FileOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('File', 'eightshift-forms')}>
 			<FileOptionsComponent
 				{...props('file', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

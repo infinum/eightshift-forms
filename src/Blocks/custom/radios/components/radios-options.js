@@ -9,7 +9,7 @@ export const RadiosOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Radios', 'eightshift-forms')}>
 			<RadiosOptionsComponent
 				{...props('radios', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

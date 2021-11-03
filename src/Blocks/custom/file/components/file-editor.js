@@ -11,7 +11,7 @@ export const FileEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<FileEditorComponent
 			{...props('file', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId,
 			})}

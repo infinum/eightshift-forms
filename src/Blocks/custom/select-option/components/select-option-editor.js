@@ -12,7 +12,7 @@ export const SelectOptionEditor = ({ attributes, setAttributes }) => {
 		<div className={blockClass}>
 			<SelectOptionEditorComponent
 				{...props('selectOption', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</div>

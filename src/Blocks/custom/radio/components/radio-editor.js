@@ -11,7 +11,7 @@ export const RadioEditor = ({ attributes, setAttributes }) => {
 		<div className={blockClass}>
 			<RadioEditorComponent
 				{...props('radio', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</div>

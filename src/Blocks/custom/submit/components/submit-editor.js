@@ -11,7 +11,7 @@ export const SubmitEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<SubmitEditorComponent
 			{...props('submit', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId
 			})}

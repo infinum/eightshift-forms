@@ -18,7 +18,7 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<SelectEditorComponent
 			{...props('select', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId,
 				selectOptions: <InnerBlocks
