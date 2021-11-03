@@ -83,7 +83,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		if (empty($formId)) {
 			return '';
 		}
-		
 
 		// Return form to the frontend.
 		return $this->buildForm(
@@ -120,7 +119,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 * Map Hubspot fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
-	 * @param string $formId Form Id.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */

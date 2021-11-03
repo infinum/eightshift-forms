@@ -114,7 +114,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$consent = array_filter(
 			$params,
-			function($item) {
+			function ($item) {
 				$name = $item['name'] ?? '';
 				return strpos($name, 'CONSENT_') === 0;
 			}
@@ -125,7 +125,7 @@ class HubspotClient implements HubspotClientInterface
 		if ($consent) {
 			$outputConsent['consent'] = [];
 
-			foreach($consent as $key => $value) {
+			foreach ($consent as $key => $value) {
 				$name = explode('.', $value['name']);
 				$type = $name[0];
 				$id = $name[1] ?? '';
@@ -162,10 +162,14 @@ class HubspotClient implements HubspotClientInterface
 		$response = \wp_remote_post(
 			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$formId[1]}/{$formId[0]}"),
 			[
-				'headers' => $this->getHeaders(true),
+				'headers' => $this->getHeaders(),
 				'body' => wp_json_encode($body),
 			]
 		);
+
+		if (\is_wp_error($response)) {
+			return [];
+		}
 
 		$status = $response['response']['status'] ?? 200;
 		$code = $response['response']['code'] ?? '';
@@ -198,8 +202,6 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
-	 *
 	 * @return array<string, mixed>
 	 */
 	private function getHeaders(): array
@@ -216,7 +218,7 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param array<string, mixed> $form Form data got from the api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, array<int, array<string, mixed>>>>
 	 */
 	private function getConsentData(array $form): array
 	{
@@ -225,7 +227,7 @@ class HubspotClient implements HubspotClientInterface
 		// Find consent data from meta.
 		$consentData = array_filter(
 			$form['metaData'],
-			function($item) {
+			function ($item) {
 				return $item['name'] === 'legalConsentOptions';
 			}
 		);
@@ -310,7 +312,7 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param array<string, mixed>  $params Params.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
 	private function prepareParams(array $params): array
 	{
@@ -344,6 +346,9 @@ class HubspotClient implements HubspotClientInterface
 
 	/**
 	 * Return HubSpot base url.
+	 *
+	 * @param string $path Path to append.
+	 * @param bool $legacy If legacy use different url.
 	 *
 	 * @return string
 	 */

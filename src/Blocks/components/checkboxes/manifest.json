@@ -14,16 +14,32 @@
 		"field": "field"
 	},
 	"attributes": {
+		"checkboxesId": {
+			"type": "string"
+		},
 		"checkboxesContent": {
+			"type": "string"
+		},
+		"checkboxesName": {
 			"type": "string"
 		},
 		"checkboxesFieldType": {
 			"type": "string",
 			"default": "fieldset"
 		},
-		"checkboxesFieldUseError": {
+		"checkboxesIsRequired": {
 			"type": "boolean",
 			"default": false
+		},
+		"checkboxesIsRequiredCount": {
+			"type": "integer",
+			"default": 1
+		}
+	},
+	"options": {
+		"checkboxesIsRequiredCount": {
+			"min":  1,
+			"step": 1
 		}
 	}
 }

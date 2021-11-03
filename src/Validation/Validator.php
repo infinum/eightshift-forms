@@ -39,6 +39,7 @@ class Validator extends AbstractValidation
 	 */
 	private const VALIDATION_FIELDS = [
 		"IsRequired",
+		"IsRequiredCount",
 		"IsEmail",
 		"IsUrl",
 		"Accept",
@@ -69,8 +70,6 @@ class Validator extends AbstractValidation
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
 		if ($formData) {
-			error_log( print_r( ( $formData ), true ) );
-			
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
 			$blocks = parse_blocks(get_the_content(null, false, (int) $formId));
@@ -117,6 +116,12 @@ class Validator extends AbstractValidation
 					case 'isRequired':
 						if ($dataValue && $inputValue === '') {
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
+						}
+						break;
+					// Check validation for required count params.
+					case 'isRequiredCount':
+						if ($dataValue && count(explode(", ", $inputValue)) < $dataValue) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for email params.
@@ -216,20 +221,7 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
-			$innerOptions = [];
-
-			// Check inner blocks if there are checkboxes.
-			if ($name === 'checkboxes') {
-				foreach ($block['innerBlocks'] as $inner) {
-					$innerOptions = $this->getValidationReferenceInner($inner, 'checkbox');
-
-					if ($innerOptions) {
-						$output = array_merge($output, $innerOptions);
-					}
-				}
-			} else {
-				$innerOptions = $this->getValidationReferenceInner($block, $name);
-			}
+			$innerOptions = $this->getValidationReferenceInner($block, $name);
 
 			if ($innerOptions) {
 				$output = array_merge($output, $innerOptions);
@@ -304,20 +296,7 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
-			$innerOptions = [];
-
-			// Check inner blocks if there are checkboxes.
-			if ($name === 'checkboxes') {
-				foreach ($block['checkboxesContent'] as $inner) {
-					$innerOptions = $this->getValidationReferenceManualInner($inner, 'checkbox');
-
-					if ($innerOptions) {
-						$output = array_merge($output, $innerOptions);
-					}
-				}
-			} else {
-				$innerOptions = $this->getValidationReferenceManualInner($block, $name);
-			}
+			$innerOptions = $this->getValidationReferenceManualInner($block, $name);
 
 			if ($innerOptions) {
 				$output = array_merge($output, $innerOptions);

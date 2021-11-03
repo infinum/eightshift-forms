@@ -31,6 +31,10 @@ $checkboxClass = Components::classnames([
 	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
 ]);
 
+if (empty($checkboxLabel)) {
+	return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>">
@@ -53,14 +57,4 @@ $checkboxClass = Components::classnames([
 			<?php echo wp_kses_post(\apply_filters('the_content', $checkboxLabel)); ?>
 		</label>
 	</div>
-
-	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		'error',
-		Components::props('error', $attributes, [
-			'errorId' => $checkboxId,
-			'blockClass' => $componentClass
-		])
-	);
-	?>
 </div>

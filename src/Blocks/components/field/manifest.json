@@ -34,7 +34,12 @@
 			"type": "string"
 		},
 		"fieldLabel": {
-			"type": "string"
+			"type": "string",
+			"default": "Label"
+		},
+		"fieldHideLabel": {
+			"type": "boolean",
+			"default": false
 		},
 		"fieldHelp": {
 			"type": "string"

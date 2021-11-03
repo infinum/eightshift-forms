@@ -33,6 +33,7 @@ if (
 $unique = Components::getUnique();
 
 $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
+$fieldHideLabel = Components::checkAttr('fieldHideLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
 $fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
@@ -64,7 +65,7 @@ if ($fieldType === 'fieldset') {
 
 	<?php echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
-	<?php if ($fieldLabel) { ?>
+	<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 		<<?php echo esc_attr($labelTag); ?>
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 			for="<?php echo esc_attr($fieldId); ?>"
@@ -73,9 +74,19 @@ if ($fieldType === 'fieldset') {
 		</<?php echo esc_attr($labelTag); ?>>
 	<?php } ?>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-		<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php if ($fieldBeforeContent) { ?>
+			<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+				<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		<?php } ?>
+		<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
+			<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+		<?php if ($fieldAfterContent) { ?>
+			<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
+				<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		<?php } ?>
 	</div>
 	<?php if ($fieldHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">

@@ -90,7 +90,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
-	 * @param HubspotClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -443,9 +443,6 @@ class FormSubmitRoute extends AbstractBaseRoute
 		$status = $response['status'] ?? 200;
 		$message = $response['message'] ?? '';
 
-		error_log( print_r( ( $response ), true ) );
-		
-
 		if (!$response) {
 			return \rest_ensure_response([
 				'code' => 404,
@@ -462,8 +459,6 @@ class FormSubmitRoute extends AbstractBaseRoute
 				'message' => $message
 			]);
 		}
-
-		// error_log( print_r( ( $response ), true ) );
 
 		// Finish with success.
 		return \rest_ensure_response([

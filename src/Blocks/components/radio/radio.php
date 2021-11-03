@@ -30,6 +30,10 @@ $radioClass = Components::classnames([
 	Components::selector($radioIsDisabled, $componentClass, '', 'disabled'),
 ]);
 
+if (empty($radioLabel)) {
+	return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr($radioClass); ?>">

@@ -33,13 +33,6 @@ export const RadioOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={__('Value', 'eightshift-forms')}
-				help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
-				value={radioValue}
-				onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
-			/>
-
 			<ComponentUseToggle
 				label={__('Show advanced options', 'eightshift-forms')}
 				checked={showAdvanced}
@@ -50,6 +43,13 @@ export const RadioOptions = (attributes) => {
 
 			{showAdvanced &&
 				<>
+					<TextControl
+						label={__('Value', 'eightshift-forms')}
+						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
+						value={radioValue}
+						onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
+					/>
+
 					<TextControl
 						label={__('Tracking code', 'eightshift-forms')}
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}

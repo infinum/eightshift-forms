@@ -44,6 +44,7 @@
 			content: '';
 			position: absolute;
 			left: 0;
+			top: 0;
 			opacity: var(--es-checkbox-scoped-opacity, 1);
 			background-color: var(--es-checkbox-scoped-background-color, transform);
 			border: 1px solid var(--es-checkbox-scoped-border-color, var(--global-colors-es-chalice));

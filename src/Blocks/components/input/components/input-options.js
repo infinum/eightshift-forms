@@ -13,6 +13,7 @@ import {
 	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
+import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
 
 export const InputOptions = (attributes) => {
@@ -175,6 +176,10 @@ export const InputOptions = (attributes) => {
 					}
 				</>
 			}
+
+			<FieldOptionsAdvanced
+				{...props('field', attributes)}
+			/>
 		</>
 	);
 };

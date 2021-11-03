@@ -33,6 +33,10 @@
 		},
 		"submitAttrs": {
 			"type": "array"
+		},
+		"submitFieldHideLabel": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"options": {

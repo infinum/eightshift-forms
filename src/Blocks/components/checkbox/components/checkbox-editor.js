@@ -1,23 +1,18 @@
-import React, { useMemo, useEffect } from 'react';
+import React  from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import {
 	selector,
-	checkAttr,
-	getUnique,
-	getAttrKey
+	checkAttr
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
@@ -36,11 +31,6 @@ export const CheckboxEditor = (attributes) => {
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
 	]);
 
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('checkboxId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
 	return (
 		<div className={checkboxClass}>
 			<div className={`${componentClass}__content`}>
@@ -50,7 +40,7 @@ export const CheckboxEditor = (attributes) => {
 					readOnly
 				/>
 				<label className={checkboxLabelClass}>
-					{checkboxLabel ? checkboxLabel : __('Enter checkbox label in sidebar.', 'eightshift-forms')}
+					{checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}
 				</label>
 			</div>
 		</div>
