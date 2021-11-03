@@ -69,6 +69,8 @@ class Validator extends AbstractValidation
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
 		if ($formData) {
+			error_log( print_r( ( $formData ), true ) );
+			
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
 			$blocks = parse_blocks(get_the_content(null, false, (int) $formId));

@@ -183,11 +183,13 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 
 		$formIdOptions = array_map(
 			function ($option) use ($formId) {
+				$id = $option['id'] ?? '';
+
 				return [
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
-					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId) === $option['id'],
+					'selectOptionValue' => $id,
+					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId) === $id,
 				];
 			},
 			$forms

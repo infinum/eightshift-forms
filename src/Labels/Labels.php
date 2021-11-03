@@ -59,6 +59,12 @@ class Labels implements LabelsInterface
 			'mailchimpErrorSettingsMissing' => __('Mailchimp integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpErrorListMissing' => __('Mailchimp list is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpSuccess' => __('You have successfully subscribed to our newsletter.', 'eightshift-forms'),
+
+			// Hubspot.
+			'hubspotWpError' => __('There was some problem with saving your application. Please contact your admin.', 'eightshift-forms'),
+			'hubspotErrorSettingsMissing' => __('Hubspot integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
+			'hubspotErrorJobIdMissing' => __('Hubspot Form Id is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
+			'hubspotSuccess' => __('You have successfully submitted this form.', 'eightshift-forms'),
 		];
 	}
 

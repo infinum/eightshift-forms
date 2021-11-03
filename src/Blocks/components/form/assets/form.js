@@ -1,3 +1,5 @@
+import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+
 export class Form {
 	constructor(options) {
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl;
@@ -152,6 +154,8 @@ export class Form {
 
 		const formData = new FormData();
 
+		const formType = element.getAttribute('data-form-type');
+
 		// Iterate all form items.
 		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
 			const {
@@ -202,9 +206,27 @@ export class Form {
 
 		// Add form type field.
 		formData.append('es-form-type', JSON.stringify({
-			value: element.getAttribute('data-form-type'),
+			value: formType,
 			type: 'hidden',
 		}));
+
+		// Add additional options for HubSpot only.
+		if (formType === 'hubspot') {
+			formData.append('es-form-hubspot-cookie', JSON.stringify({
+				value: cookies.getCookie('hubspotutk'),
+				type: 'hidden',
+			}));
+
+			formData.append('es-form-hubspot-page-name', JSON.stringify({
+				value: document.title,
+				type: 'hidden',
+			}));
+
+			formData.append('es-form-hubspot-page-url', JSON.stringify({
+				value: window.location.href,
+				type: 'hidden',
+			}));
+		}
 
 		return formData;
 	}

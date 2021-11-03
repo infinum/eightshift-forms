@@ -113,7 +113,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return [];
 		}
 
-		return $this->getFields($form['fields'], (string) $formId);
+		return $this->getFields($form['fields']);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId): array
+	private function getFields(array $data): array
 	{
 		$output = [];
 
@@ -144,18 +144,18 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			}
 
 			foreach ($fields as $field) {
+				$property = $field['propertyObjectType'] ?? 'CONTACT';
 				$name = $field['name'] ?? '';
 				$label = $field['label'] ?? '';
 				$type = $field['fieldType'] ?? '';
 				$required = $field['required'] ?? false;
-				$enabled = $field['enabled'] ?? false;
 				$value = $field['default_value'] ?? '';
 				$placeholder = $field['placeholder'] ?? '';
 				$options = $field['options'] ?? '';
 				$id = $name;
 
-				if (!$enabled) {
-					continue;
+				if ($property !== 'CONTACT') {
+					$name = "{$property}.{$name}";
 				}
 
 				switch ($type) {
@@ -164,6 +164,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'component' => 'input',
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
+							'inputName' => $name,
 							'inputType' => 'text',
 							'inputPlaceholder' => $placeholder,
 							'inputIsRequired' => $required,
@@ -175,10 +176,23 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'component' => 'textarea',
 							'textareaFieldLabel' => $label,
 							'textareaId' => $id,
+							'textareaName' => $name,
 							'textareaType' => 'textarea',
 							'textareaPlaceholder' => $placeholder,
 							'textareaIsRequired' => $required,
 							'textareaValue' => $value,
+						];
+						break;
+					case 'file':
+						$output[] = [
+							'component' => 'file',
+							'fileFieldLabel' => $label,
+							'fileId' => $id,
+							'fileName' => $name,
+							'fileType' => 'text',
+							'filePlaceholder' => $placeholder,
+							'fileIsRequired' => $required,
+							'fileValue' => $value,
 						];
 						break;
 					case 'select':
@@ -186,6 +200,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'component' => 'select',
 							'selectFieldLabel' => $label,
 							'selectId' => $id,
+							'selectName' => $name,
 							'selectType' => 'select',
 							'selectPlaceholder' => $placeholder,
 							'selectIsRequired' => $required,
@@ -210,6 +225,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									'component' => 'checkbox',
 									'checkboxLabel' => $label,
 									'checkboxId' => $id,
+									'checkboxName' => $name,
 									'checkboxIsRequired' => $required,
 								]
 							],
@@ -219,14 +235,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						$output[] = [
 							'component' => 'checkboxes',
 							'checkboxesContent' => array_map(
-								function ($checkbox) {
+								function ($checkbox) use ($name, $required) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
-										'checkboxId' => $checkbox['value'],
-										'checkboxName' => $checkbox['value'],
+										'checkboxId' => "{$name}.{$checkbox['value']}",
+										'checkboxName' => "{$name}.{$checkbox['value']}",
 										'checkboxValue' => $checkbox['value'],
-										'checkboxIsReadOnly' => $checkbox['readOnly'],
+										'checkboxIsRequired' => $required,
 									];
 								},
 								$options
@@ -261,9 +277,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
-										'checkboxId' => 'consent_' . $checkbox['communicationTypeId'],
-										'checkboxName' => 'consent_' . $checkbox['communicationTypeId'],
+										'checkboxId' => $checkbox['id'],
+										'checkboxName' => $checkbox['name'],
 										'checkboxIsRequired' => $checkbox['required'],
+										'checkboxValue' => $checkbox['label'],
 									];
 								},
 								$options

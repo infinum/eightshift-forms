@@ -31,13 +31,13 @@ interface HubspotClientInterface
 	public function getForm(string $formId): array;
 
 	/**
-	 * API request to post job application to Hubspot.
+	 * API request to post form application to Hubspot.
 	 *
-	 * @param string $jobId Job id to search.
+	 * @param string $formId Form id to search.
 	 * @param array<string, mixed>  $params Params array.
 	 * @param array<string, mixed>  $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	// public function postHubspotApplication(string $jobId, array $params, array $files): array;
+	public function postHubspotApplication(string $formId, array $params, array $files): array;
 }

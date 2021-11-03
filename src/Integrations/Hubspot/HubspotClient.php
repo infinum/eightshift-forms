@@ -48,9 +48,9 @@ class HubspotClient implements HubspotClientInterface
 
 			if ($forms) {
 				foreach ($forms as $form) {
-					$guid = $form['guid'] ?? '';
+					$id = $form['guid'] ?? '';
 
-					if (!$guid) {
+					if (!$id) {
 						continue;
 					}
 
@@ -63,9 +63,11 @@ class HubspotClient implements HubspotClientInterface
 						$fields = array_merge($fields, $consentData);
 					}
 
-					$output[$guid] = [
-						'id' => $guid,
-						'portalId' => $form['portalId'] ?? '',
+					$portalId = $form['portalId'] ?? '';
+					$value = "{$id}---{$portalId}";
+
+					$output[$value] = [
+						'id' => $value,
 						'title' => $form['name'] ?? '',
 						'fields' => $fields,
 					];
@@ -94,7 +96,119 @@ class HubspotClient implements HubspotClientInterface
 			$output = $this->getForms();
 		}
 
-		return $output[$formId];
+		return $output[$formId] ?? [];
+	}
+
+	/**
+	 * API request to post form application to Hubspot.
+	 *
+	 * @param string $formId Form id to search.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postHubspotApplication(string $formId, array $params, array $files): array
+	{
+		$formId = explode('---', $formId);
+
+		$consent = array_filter(
+			$params,
+			function($item) {
+				$name = $item['name'] ?? '';
+				return strpos($name, 'CONSENT_') === 0;
+			}
+		);
+
+		$outputConsent = [];
+
+		if ($consent) {
+			$outputConsent['consent'] = [];
+
+			foreach($consent as $key => $value) {
+				$name = explode('.', $value['name']);
+				$type = $name[0];
+				$id = $name[1] ?? '';
+
+				if ($type === 'CONSENT_PROCESSING') {
+					$outputConsent['consent']['consentToProcess'] = true;
+					$outputConsent['consent']['text'] = $value['value'];
+				}
+
+				if ($type === 'CONSENT_COMMUNICATION') {
+					if ($value['value']) {
+						$outputConsent['consent']['communications'][] = [
+							'value' => true,
+							'subscriptionTypeId' => $id,
+							'text' => $value['value'],
+						];
+					}
+				}
+
+				unset($params[$key]);
+			}
+		}
+
+		$body = [
+			'fields' => $this->prepareParams($params),
+			'context' => [
+				'hutk' => $params['es-form-hubspot-cookie']['value'],
+				'pageUri' => $params['es-form-hubspot-page-url']['value'],
+				'pageName' => $params['es-form-hubspot-page-name']['value'],
+			],
+			'legalConsentOptions' => $outputConsent,
+		];
+
+		$response = \wp_remote_post(
+			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$formId[1]}/{$formId[0]}"),
+			[
+				'headers' => $this->getHeaders(true),
+				'body' => wp_json_encode($body),
+			]
+		);
+
+		$status = $response['response']['status'] ?? 200;
+		$code = $response['response']['code'] ?? '';
+
+		if ($status === 200 && empty($code)) {
+			return $response['response'];
+		}
+
+		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+	}
+
+	/**
+	 * API request to get all forms from Hubspot.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getHubspotForms()
+	{
+		$response = \wp_remote_get(
+			$this->getBaseUrl('forms/v2/forms', true),
+			[
+				'headers' => $this->getHeaders(),
+				'timeout' => 60,
+			]
+		);
+
+		return json_decode(\wp_remote_retrieve_body($response), true);
+	}
+
+	/**
+	 * Set headers used for fetching data.
+	 *
+	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getHeaders(): array
+	{
+		$headers = [
+			'Content-Type' => 'application/json; charset=utf-8',
+		];
+
+		return $headers;
 	}
 
 	/**
@@ -133,10 +247,21 @@ class HubspotClient implements HubspotClientInterface
 
 			if (!$isLegitimateInterest) {
 				// Populate checkbox for communication consent.
+				$name = $consentData[0]['name'] ?? '';
+
+				$consentCommunicationOptions = [];
+				foreach ($communicationConsentCheckboxes as $key => $value) {
+					$communicationTypeId = $value['communicationTypeId'] ?? '';
+					$consentCommunicationOptions[] = [
+						'name' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
+						'id' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
+						'label' => $value['label'] ?? '',
+						'required' => $value['required'] ?? false,
+					];
+				}
+
 				$output[]['fields'][0] = [
-					'name' => $consentData[0]['name'] ?? '',
-					'options' => $communicationConsentCheckboxes,
-					'enabled' => true,
+					'options' => $consentCommunicationOptions,
 					'fieldType' => 'consent',
 					'beforeText' => $communicationConsentText,
 				];
@@ -149,16 +274,16 @@ class HubspotClient implements HubspotClientInterface
 						$consentProcessingOptions = [
 							[
 								'label' => wp_strip_all_tags($processingConsentCheckboxLabel),
+								'name' => "CONSENT_PROCESSING",
+								'id' => "CONSENT_PROCESSING",
 								'required' => true,
-								'communicationTypeId' => '',
+								'communicationTypeId' => '', // Empty on purpose.
 							]
 						];
 					}
 
 					$output[]['fields'][0] = [
-						'name' => $consentData[0]['name'] ?? '',
 						'options' => $consentProcessingOptions,
-						'enabled' => true,
 						'fieldType' => 'consent',
 						'beforeText' => $processingConsentText,
 					];
@@ -168,9 +293,7 @@ class HubspotClient implements HubspotClientInterface
 			// Populate checbox for legal text.
 			if ($privacyPolicyText) {
 				$consentLegal['fields'][0] = [
-					'name' => $consentData[0]['name'] ?? '',
 					'options' => [],
-					'enabled' => true,
 					'fieldType' => 'consent',
 					'beforeText' => $privacyPolicyText,
 				];
@@ -183,105 +306,29 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
-	 * API request to post job application to Hubspot.
-	 *
-	 * @param string $jobId Job id to search.
-	 * @param array<string, mixed>  $params Params array.
-	 * @param array<string, mixed>  $files Files array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	// public function postHubspotApplication(string $jobId, array $params, array $files): array
-	// {
-	// 	$response = \wp_remote_post(
-	// 		"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}",
-	// 		[
-	// 			'headers' => $this->getHeaders(true),
-	// 			'body' => wp_json_encode(
-	// 				array_merge(
-	// 					$this->prepareParams($params),
-	// 					$this->prepareFiles($files)
-	// 				)
-	// 			),
-	// 		]
-	// 	);
-
-	// 	return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-	// }
-
-	/**
-	 * API request to get all forms from Hubspot.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getHubspotForms()
-	{
-		$response = \wp_remote_get(
-			$this->getBaseUrl('forms/v2/forms'),
-			[
-				'headers' => $this->getHeaders(),
-				'timeout' => 60,
-			]
-		);
-
-		return json_decode(\wp_remote_retrieve_body($response), true);
-	}
-
-	/**
-	 * Set headers used for fetching data.
-	 *
-	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getHeaders(): array
-	{
-		$headers = [
-			'Content-Type' => 'application/json; charset=utf-8',
-		];
-
-		return $headers;
-	}
-
-	/**
 	 * Prepare params
 	 *
 	 * @param array<string, mixed>  $params Params.
 	 *
 	 * @return array<string, mixed>
 	 */
-	// private function prepareParams(array $params): array
-	// {
-	// 	$output = [];
+	private function prepareParams(array $params): array
+	{
+		$output = [];
 
-	// 	foreach ($params as $key => $value) {
-	// 		$output[$key] = $value['value'] ?? '';
-	// 	}
+		unset($params['es-form-hubspot-cookie']);
+		unset($params['es-form-hubspot-page-name']);
+		unset($params['es-form-hubspot-page-url']);
 
-	// 	return $output;
-	// }
+		foreach ($params as $value) {
+			$output[] = [
+				'name' => $value['name'] ?? '',
+				'value' => $value['value'] ?? '',
+			];
+		}
 
-	/**
-	 * Prepare files.
-	 *
-	 * @param array<string, mixed>  $files Files.
-	 *
-	 * @return array<string, mixed>
-	 */
-	// private function prepareFiles(array $files): array
-	// {
-	// 	$output = [];
-
-	// 	foreach ($files as $key => $value) {
-	// 		$name = explode('-', $key);
-	// 		$fileName = explode('/', $value);
-
-	// 		$output["{$name[0]}_content"] = base64_encode((string) file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-	// 		$output["{$name[0]}_content_filename"] = end($fileName);
-	// 	}
-
-	// 	return $output;
-	// }
+		return $output;
+	}
 
 	/**
 	 * Return Api Key from settings or global vairaible.
@@ -300,8 +347,14 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @return string
 	 */
-	private function getBaseUrl(string $path): string
+	private function getBaseUrl(string $path, bool $legacy = false): string
 	{
-		return "https://api.hubapi.com/{$path}?hapikey={$this->getApiKey()}";
+		$url = 'https://api.hsforms.com';
+
+		if ($legacy) {
+			$url = 'https://api.hubapi.com';
+		}
+
+		return "{$url}/{$path}?hapikey={$this->getApiKey()}";
 	}
 }
