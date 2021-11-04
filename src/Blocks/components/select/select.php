@@ -30,15 +30,13 @@ $selectClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$selectIsDisabled = disabled($selectIsDisabled);
-
 $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		data-tracking="' . $selectTracking . '"
-		' . $selectIsDisabled . '
+		' . disabled($selectIsDisabled, true, false) . '
 	>
 		' . $selectOptions . '
 	</select>

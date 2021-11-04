@@ -14,6 +14,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $submitId = Components::checkAttr('submitId', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
@@ -21,14 +22,14 @@ $submitType = Components::checkAttr('submitType', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
+$submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 ]);
-
-$submitIsDisabled = disabled($submitIsDisabled);
 
 $submitAttrsOutput = '';
 foreach ($submitAttrs as $key => $value) {
@@ -43,7 +44,7 @@ $submit = '
 		class="' . esc_attr($submitClass) . '"
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
-		' . $submitIsDisabled . '
+		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
 	/>
 ';

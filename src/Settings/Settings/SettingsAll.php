@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
@@ -112,10 +111,6 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 		// Add additional props to form component.
 		$formAdditionalProps['formPostId'] = $formId;
 		$formAdditionalProps['formType'] = $type;
-
-		if ($type === SettingsMailer::SETTINGS_TYPE_KEY) {
-			$formAdditionalProps['formSuccessRedirect'] = 'true';
-		}
 
 		// Populate and build form.
 		return $this->buildSettingsForm(

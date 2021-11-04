@@ -54,17 +54,17 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * HubSpot Use key.
 	 */
-	public const SETTINGS_HUBSPOT_USE_KEY = 'hubspotUse';
+	public const SETTINGS_HUBSPOT_USE_KEY = 'hubspot-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
+	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspot-api-key';
 
 	/**
 	 * Form ID Key.
 	 */
-	public const SETTINGS_HUBSPOT_FORM_ID_KEY = 'HubspotFormId';
+	public const SETTINGS_HUBSPOT_FORM_ID_KEY = 'hubspot-form-id';
 
 	/**
 	 * Instance variable for Hubspot data.
@@ -125,7 +125,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
+		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -189,7 +189,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
 					'selectOptionValue' => $id,
-					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId) === $id,
+					'selectOptionIsSelected' => $this->isCheckedSettings($id, self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId),
 				];
 			},
 			$forms
@@ -230,9 +230,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$apiKey = Variables::getApiKeyHubspot();
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY);
 
-		return [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
@@ -250,29 +250,42 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
+				'checkboxesIsRequired' => true,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxLabel' => __('Use HubSpot', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY) === 'true',
-						'checkboxValue' => 'true',
-						'checkboxIsRequired' => true,
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY),
+						'checkboxValue' => self::SETTINGS_HUBSPOT_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputIsDisabled' => !empty($apiKey),
-			],
 		];
+
+		if ($isUsed) {
+			$apiKey = Variables::getApiKeyHubspot();
+
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputIsDisabled' => !empty($apiKey),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 }

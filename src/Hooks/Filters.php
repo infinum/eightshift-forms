@@ -38,6 +38,7 @@ class Filters
 			'settingsSidebar' => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsValidation::SETTINGS_TYPE_KEY => [
+			'global' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsValidation::FILTER_SETTINGS_SIDEBAR_NAME,
 		],

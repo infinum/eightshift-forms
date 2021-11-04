@@ -2,6 +2,7 @@
 	"componentName": "radio",
 	"title": "Radio",
 	"componentClass": "es-radio",
+	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
 	"description" : "Radio block.",
 	"category": "eightshift-forms",
 	"icon": {
@@ -51,6 +52,10 @@
 		"radioFieldType": {
 			"type": "string",
 			"default": "fieldset"
+		},
+		"radioSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

@@ -134,6 +134,9 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'inputIsRequired' => true,
 		];
 
+		error_log( print_r( ( $data ), true ) );
+		
+
 		foreach ($data as $field) {
 			if (empty($field)) {
 				continue;
@@ -145,6 +148,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$required = $field['required'] ?? false;
 			$public = $field['public'] ?? false;
 			$value = $field['default_value'] ?? '';
+			$dateFormat = $field['options']['date_format'] ?? '';
+			$options = $field['options']['choices'] ?? [];
 			$id = $name;
 
 			if (!$public) {
@@ -174,15 +179,54 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputValue' => $value,
 					];
 					break;
+				case 'number':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'number',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+					];
+					break;
 				case 'phone':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'text',
+						'inputType' => 'tel',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+					];
+				case 'birthday':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'date',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+					];
+					break;
+				case 'radio':
+					$output[] = [
+						'component' => 'radios',
+						'radiosId' => $id,
+						'radiosName' => $name,
+						'radiosIsRequired' => $required,
+						'radiosContent' => array_map(
+							function ($radio) {
+								return [
+									'component' => 'radio',
+									'radioLabel' => $radio,
+									'radioValue' => $radio,
+								];
+							},
+							$options
+						),
 					];
 					break;
 			}

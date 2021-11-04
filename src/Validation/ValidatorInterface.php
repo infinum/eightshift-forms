@@ -25,4 +25,11 @@ interface ValidatorInterface
 	 * @return array<string, mixed>
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = ''): array;
+
+	/**
+	 * Prepare validation patterns
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getValidationPatterns(): array;
 }

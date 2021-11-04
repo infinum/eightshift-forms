@@ -220,7 +220,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 */
 	private function sendEmail(string $formId, array $params = [], $files = [])
 	{
-		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
+		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
 		// If Mailer system is not used just respond with success.
 		if (!$isUsed) {

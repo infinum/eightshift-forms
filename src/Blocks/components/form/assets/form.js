@@ -5,6 +5,7 @@ export class Form {
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl;
 
 		this.formSelector = options.formSelector;
+		this.submitSingleSelector = `${this.formSelector}-single-submit`;
 		this.errorSelector = `${this.formSelector}-error`;
 		this.loaderSelector = `${this.formSelector}-loader`;
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
@@ -23,6 +24,16 @@ export class Form {
 
 		[...elements].forEach((element) => {
 			element.addEventListener('submit', this.onFormSubmit);
+
+			const items = element.querySelectorAll(this.submitSingleSelector);
+
+			[...items].forEach((item) => {
+				if (item.type === 'submit') {
+					item.addEventListener('click', this.onFormSubmitSingle);
+				} else {
+					item.addEventListener('change', this.onFormSubmitSingle);
+				}
+			});
 		});
 	}
 
@@ -30,7 +41,19 @@ export class Form {
 	onFormSubmit = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		this.formSubmit(event.target);
+	}
+
+	// Handle form submit and all logic for only one field click.
+	onFormSubmitSingle = (event) => {
+		event.preventDefault();
+		const {target} = event;
+
+		this.formSubmit(target.closest(this.formSelector), target);
+	}
+
+	// Handle form submit and all logic.
+	formSubmit = (element, singleSubmit = false) => {
 
 		// Dispatch event.
 		this.dispatchFormEvent(element, 'BeforeFormSubmit');
@@ -48,7 +71,7 @@ export class Form {
 			headers: {
 				Accept: 'multipart/form-data',
 			},
-			body: this.formatFormData(element),
+			body: this.formatFormData(element, singleSubmit),
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
@@ -77,7 +100,7 @@ export class Form {
 					let isRedirect = element?.dataset?.successRedirect ?? '';
 
 					// Redirect on success.
-					if (isRedirect !== '') {
+					if (isRedirect !== '' || singleSubmit) {
 						// Dispatch event.
 						this.dispatchFormEvent(element, 'AfterFormSubmitSuccessRedirect');
 
@@ -148,9 +171,15 @@ export class Form {
 	}
 
 	// Build form data object.
-	formatFormData = (element) => {
+	formatFormData = (element, singleSubmit = false) => {
 		// Find all interesting form items.
-		const items = element.querySelectorAll('input, select, button, textarea');
+		let items = element.querySelectorAll('input, select, button, textarea');
+
+		if (singleSubmit) {
+			items = [
+				singleSubmit
+			];
+		}
 
 		const formData = new FormData();
 
@@ -224,6 +253,13 @@ export class Form {
 
 			formData.append('es-form-hubspot-page-url', JSON.stringify({
 				value: window.location.href,
+				type: 'hidden',
+			}));
+		}
+
+		if (singleSubmit) {
+			formData.append('es-form-single-submit', JSON.stringify({
+				value: 'true',
 				type: 'hidden',
 			}));
 		}

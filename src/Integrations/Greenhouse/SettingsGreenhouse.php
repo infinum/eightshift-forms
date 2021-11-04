@@ -54,32 +54,32 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Greenhouse Use key.
 	 */
-	public const SETTINGS_GREENHOUSE_USE_KEY = 'greenhouseUse';
+	public const SETTINGS_GREENHOUSE_USE_KEY = 'greenhouse-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_GREENHOUSE_API_KEY_KEY = 'greenhouseApiKey';
+	public const SETTINGS_GREENHOUSE_API_KEY_KEY = 'greenhouse-api-key';
 
 	/**
 	 * Board Token Key.
 	 */
-	public const SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY = 'greenhouseBoardToken';
+	public const SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY = 'greenhouse-board-token';
 
 	/**
 	 * Job ID Key.
 	 */
-	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouseJobId';
+	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouse-job-id';
 
 	/**
 	 * Hide resume textarea Key.
 	 */
-	public const SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY = 'greenhouseHideResumeTextarea';
+	public const SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY = 'greenhouse-hide-resume-textarea';
 
 	/**
 	 * Hide Cover Letter textarea Key.
 	 */
-	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouseHideCoverLetterTextarea';
+	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouse-hide-cover-letter-textarea';
 
 	/**
 	 * Instance variable for Greenhouse data.
@@ -140,7 +140,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY);
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyGreenhouse()) ? Variables::getApiKeyGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
 		$boardToken = !empty(Variables::getBoardTokenGreenhouse()) ? Variables::getBoardTokenGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
 
@@ -203,7 +203,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
 					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId) === $option['id'],
+					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 				];
 			},
 			$jobs
@@ -235,27 +235,57 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 			],
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => __('Show/Hide specific fields', 'eightshift-forms'),
-				'checkboxesFieldHelp' => __('Select if you want to show additional textarea for input fields provided by Greenhouse.', 'eightshift-forms'),
-				'checkboxesContent' => [
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => __('Field Options', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+				'introSubtitle' => __('Setup additional options for individual fields.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
+				'selectFieldLabel' => __('Resume Textarea', 'eightshift-forms'),
+				'selectFieldHelp' => __('Show/Hide resume textarea', 'eightshift-forms'),
+				'selectOptions' => [
 					[
-						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
-						'checkboxLabel' => __('Hide resume textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId) === 'true',
-						'checkboxValue' => 'true',
+						'component' => 'select-option',
+						'selectOptionLabel' => 'Show',
+						'selectOptionValue' => 'show',
+						'selectOptionIsSelected' => $this->isCheckedSettings('show', self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
 					],
 					[
-						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
-						'checkboxLabel' => __('Hide cover letter textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId) === 'true',
-						'checkboxValue' => 'true',
-					]
-				]
+						'component' => 'select-option',
+						'selectOptionLabel' => 'Hide',
+						'selectOptionValue' => 'hide',
+						'selectOptionIsSelected' => $this->isCheckedSettings('hide', self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
+					],
+				],
+				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
+			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
+				'selectFieldLabel' => __('Cover Letter Textarea', 'eightshift-forms'),
+				'selectFieldHelp' => __('Show/Hide cover letter textarea', 'eightshift-forms'),
+				'selectOptions' => [
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => 'Show',
+						'selectOptionValue' => 'show',
+						'selectOptionIsSelected' => $this->isCheckedSettings('show', self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
+					],
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => 'Hide',
+						'selectOptionValue' => 'hide',
+						'selectOptionIsSelected' => $this->isCheckedSettings('hide', self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
+					],
+				],
+				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
 			],
 		];
 	}
@@ -267,10 +297,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$apiKey = Variables::getApiKeyGreenhouse();
-		$boardToken = Variables::getBoardTokenGreenhouse();
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
 
-		return [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
@@ -307,40 +336,54 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
+				'checkboxesIsRequired' => true,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 						'checkboxLabel' => __('Use Greenhouse', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_USE_KEY) === 'true',
-						'checkboxValue' => 'true',
-						'checkboxIsRequired' => true,
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY),
+						'checkboxValue' => self::SETTINGS_GREENHOUSE_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-				'inputIsDisabled' => !empty($apiKey),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-				'inputFieldLabel' => __('Job Board Name', 'eightshift-forms'),
-				'inputFieldHelp' => __('You can provide Board name using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-				'inputIsDisabled' => !empty($boardToken),
-			],
 		];
+
+		if ($isUsed) {
+			$apiKey = Variables::getApiKeyGreenhouse();
+			$boardToken = Variables::getBoardTokenGreenhouse();
+
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+						'inputIsDisabled' => !empty($apiKey),
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+						'inputFieldLabel' => __('Job Board Name', 'eightshift-forms'),
+						'inputFieldHelp' => __('You can provide Board name using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+						'inputIsDisabled' => !empty($boardToken),
+					],
+				]
+			);
+		}
+
+		return $output;
 	}
 }

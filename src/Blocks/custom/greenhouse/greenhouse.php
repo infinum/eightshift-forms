@@ -45,12 +45,14 @@ if ($isSettingsValid) {
 			'formType' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'formDisableScrollToFieldOnError' => (bool) \apply_filters(
-				Settings::FILTER_SETTINGS_OPTION_VALUE_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY
+				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
 			'formDisableScrollToGlobalMessageOnSuccess' => (bool) \apply_filters(
-				Settings::FILTER_SETTINGS_OPTION_VALUE_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY
+				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
 			'formTrackingEventName' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,

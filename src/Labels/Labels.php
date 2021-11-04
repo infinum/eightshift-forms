@@ -42,6 +42,8 @@ class Labels implements LabelsInterface
 			'validationMinSize' => __('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
+			// translators: %s used for displaying validation pattern to the user.
+			'validationPattern' => __('Your field doesn\'t satisfies this validation pattern %s!', 'eightshift-forms'),
 
 			// Mailer.
 			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please contact your admin.', 'eightshift-forms'),

@@ -33,9 +33,6 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputIsDisabled = disabled($inputIsDisabled);
-$inputIsReadOnly = readonly($inputIsReadOnly);
-
 $input = '
 <input
 	class="' . esc_attr($inputClass) . '"
@@ -45,8 +42,8 @@ $input = '
 	placeholder="' . esc_attr($inputPlaceholder) . '"
 	type="' . esc_attr($inputType) . '"
 	data-tracking="' . $inputTracking . '"
-	' . $inputIsDisabled . '
-	' . $inputIsReadOnly . '
+	' . disabled($inputIsDisabled, true, false) . '
+	' . readonly($inputIsReadOnly, true, false) . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -41,6 +41,60 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Determin if settings is checked (used for radio, and select box).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public function isCheckedSettings(string $key, string $id, string $formId): bool
+	{
+		return $this->getSettingsValue($id, $formId) === $key;
+	}
+
+	/**
+	 * Determin if global is checked (used for radio, and select box).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 *
+	 * @return bool
+	 */
+	public function isCheckedOption(string $key, string $id): bool
+	{
+		return $this->getOptionValue($id) === $key;
+	}
+
+	/**
+	 * Determin if checkbox settings is checked (used for checkbox).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public function isCheckboxSettingsChecked(string $key, string $id, string $formId): bool
+	{
+		return in_array($key, explode(', ', $this->getSettingsValue($id, $formId)), true);
+	}
+
+	/**
+	 * Determin if checkbox global is checked (used for checkbox).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 *
+	 * @return bool
+	 */
+	public function isCheckboxOptionChecked(string $key, string $id): bool
+	{
+		return in_array($key, explode(', ', $this->getOptionValue($id)), true);
+	}
+
+	/**
 	 * Get string name with locale.
 	 *
 	 * @param string $string Providing string to append to.

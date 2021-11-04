@@ -56,7 +56,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueScriptsLocal()
 	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -70,7 +70,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueStylesLocal()
 	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 

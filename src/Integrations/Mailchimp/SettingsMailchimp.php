@@ -55,22 +55,22 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Mailchimp Use key.
 	 */
-	public const SETTINGS_MAILCHIMP_USE_KEY = 'mailchimpUse';
+	public const SETTINGS_MAILCHIMP_USE_KEY = 'mailchimp-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimpApiKey';
+	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimp-api-key';
 
 	/**
 	 * Form url.
 	 */
-	public const SETTINGS_MAILCHIMP_FORM_URL_KEY = 'mailchimpFormUrl';
+	public const SETTINGS_MAILCHIMP_FORM_URL_KEY = 'mailchimp-form-url';
 
 	/**
 	 * List ID Key.
 	 */
-	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimpList';
+	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimp-list';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -131,7 +131,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
+		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -193,7 +193,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
 					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId) === $option['id'],
+					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
 				];
 			},
 			$lists
@@ -234,9 +234,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$apiKey = Variables::getApiKeyMailchimp();
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
 
-		return [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
@@ -259,29 +259,42 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
+				'checkboxesIsRequired' => true,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
 						'checkboxLabel' => __('Use Mailchimp', 'eightshift-forms'),
-						'checkboxIsRequired' => true,
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_USE_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY),
+						'checkboxValue' => self::SETTINGS_MAILCHIMP_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputIsDisabled' => !empty($apiKey),
-			]
 		];
+
+		if ($isUsed) {
+			$apiKey = Variables::getApiKeyMailchimp();
+
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputIsDisabled' => !empty($apiKey),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 }

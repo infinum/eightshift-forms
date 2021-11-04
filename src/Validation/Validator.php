@@ -12,6 +12,7 @@ namespace EightshiftForms\Validation;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -23,6 +24,11 @@ class Validator extends AbstractValidation
 	 * Use Object Helper
 	 */
 	use ObjectHelperTrait;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Instance variable for labels data.
@@ -45,6 +51,7 @@ class Validator extends AbstractValidation
 		"Accept",
 		"MinSize",
 		"MaxSize",
+		"ValidationPattern",
 	];
 
 	/**
@@ -69,6 +76,12 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
+		// If single submit skip all validations.
+		if (isset($params['es-form-single-submit'])) {
+			return [];
+		}
+
+		// Find out forms original data nad check for valition options.
 		if ($formData) {
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
@@ -82,6 +95,68 @@ class Validator extends AbstractValidation
 			$this->validateParams($params, $validationReference, $formId),
 			$this->validateFiles($files, $validationReference, $formId)
 		);
+	}
+
+	/**
+	 * Prepare validation patterns
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getValidationPatterns(): array
+	{
+		$localPatterns = SettingsValidation::VALIDATION_PATTERNS;
+
+		$userPatterns = preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+
+		if ($userPatterns) {
+			foreach ($userPatterns as $pattern) {
+				$pattern = explode(' : ', $pattern);
+
+				if (empty($pattern) || !isset($pattern[0]) || !isset($pattern[1])) {
+						continue;
+				};
+
+				$localPatterns[$pattern[0]] = $pattern[1];
+			}
+		}
+
+		$output = [
+			[
+				'value' => '',
+				'label' => '---'
+			]
+		];
+		foreach ($localPatterns as $key => $value) {
+			$output[] = [
+				'value' => $value,
+				'label' => $key
+			];
+		};
+
+		return $output;
+	}
+
+	/**
+	 * Prepare validation patterns
+	 *
+	 * @param string $pattern Pattern to serach.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getValidationPatternName(string $pattern): string
+	{
+		$patterns = array_filter(
+			$this->getValidationPatterns(),
+			function ($item) use ($pattern) {
+				return $item['value'] === $pattern;
+			}
+		);
+
+		if ($patterns) {
+			return reset($patterns)['label'] ?? $pattern;
+		}
+
+		return $pattern;
 	}
 
 	/**
@@ -134,6 +209,13 @@ class Validator extends AbstractValidation
 					case 'isUrl':
 						if ($dataValue && !$this->isUrl($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
+						}
+						break;
+					case 'validationPattern':
+						preg_match("/$dataValue/", $inputValue, $matches);
+
+						if ($dataValue && $inputValue === '' && !$matches) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;
 				}

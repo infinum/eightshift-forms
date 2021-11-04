@@ -218,13 +218,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'booleancheckbox':
 						$output[] = [
 							'component' => 'checkboxes',
+							'checkboxesId' => $id,
+							'checkboxesName' => $name,
+							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => [
 								[
 									'component' => 'checkbox',
 									'checkboxLabel' => $label,
-									'checkboxId' => $id,
-									'checkboxName' => $name,
-									'checkboxIsRequired' => $required,
 								]
 							],
 						];
@@ -232,15 +232,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'checkbox':
 						$output[] = [
 							'component' => 'checkboxes',
+							'checkboxesId' => $name,
+							'checkboxesName' => $name,
+							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => array_map(
-								function ($checkbox) use ($name, $required) {
+								function ($checkbox) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
-										'checkboxId' => "{$name}.{$checkbox['value']}",
-										'checkboxName' => "{$name}.{$checkbox['value']}",
 										'checkboxValue' => $checkbox['value'],
-										'checkboxIsRequired' => $required,
 									];
 								},
 								$options
@@ -270,14 +270,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'component' => 'checkboxes',
 							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
 							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
+							'checkboxesId' => $id,
+							'checkboxesName' => $name,
+							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => array_map(
 								function ($checkbox) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
-										'checkboxId' => $checkbox['id'],
-										'checkboxName' => $checkbox['name'],
-										'checkboxIsRequired' => $checkbox['required'],
 										'checkboxValue' => $checkbox['label'],
 									];
 								},

@@ -197,12 +197,12 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						if ($values[0]['label'] === 'No' && $values[0]['value'] === 0) {
 							$output[] = [
 								'component' => 'checkboxes',
+								'checkboxesName' => $name,
+								'checkboxesId' => $name,
+								'checkboxesIsRequired' => $required,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxName' => $name,
-										'checkboxId' => $name,
-										'checkboxIsRequired' => $required,
 										'checkboxLabel' => $label,
 										'checkboxValue' => 1,
 									],

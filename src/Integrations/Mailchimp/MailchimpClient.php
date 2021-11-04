@@ -116,6 +116,8 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
+		error_log( print_r( ( json_decode(\wp_remote_retrieve_body($response), true) ), true ) );
+
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 	}
 

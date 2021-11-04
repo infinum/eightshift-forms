@@ -1,4 +1,7 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
+import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl, SelectControl } from '@wordpress/components';
@@ -32,6 +35,7 @@ export const InputOptions = (attributes) => {
 		showInputTracking = true,
 		showInputIsEmail = true,
 		showInputIsUrl = true,
+		showInputValidationPattern = true,
 	} = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
@@ -44,9 +48,16 @@ export const InputOptions = (attributes) => {
 	const inputTracking = checkAttr('inputTracking', attributes, manifest);
 	const inputIsEmail = checkAttr('inputIsEmail', attributes, manifest);
 	const inputIsUrl = checkAttr('inputIsUrl', attributes, manifest);
+	const inputValidationPattern = checkAttr('inputValidationPattern', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
+
+	let inputValidationPatternOptions = [];
+
+	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.validationPatternsOptions)) {
+		inputValidationPatternOptions = esFormsBlocksLocalization.validationPatternsOptions;
+	}
 
 	return (
 		<>
@@ -170,6 +181,16 @@ export const InputOptions = (attributes) => {
 									label={__('Is Url', 'eightshift-forms')}
 									checked={inputIsUrl}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
+								/>
+							}
+
+							{showInputValidationPattern &&
+								<SelectControl
+									label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
+									help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
+									value={inputValidationPattern}
+									options={inputValidationPatternOptions}
+									onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
 								/>
 							}
 						</>

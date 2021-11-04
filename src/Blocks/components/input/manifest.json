@@ -56,6 +56,9 @@
 		"inputIsUrl": {
 			"type": "boolean",
 			"default": false
+		},
+		"inputValidationPattern": {
+			"type": "string"
 		}
 	},
 	"options": {
@@ -71,6 +74,14 @@
 			{
 				"label": "Number",
 				"value": "number"
+			},
+			{
+				"label": "Phone",
+				"value": "tel"
+			},
+			{
+				"label": "Date",
+				"value": "date"
 			},
 			{
 				"label": "Hidden",

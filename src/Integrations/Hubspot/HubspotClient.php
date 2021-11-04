@@ -24,14 +24,9 @@ class HubspotClient implements HubspotClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name for simple jobs.
+	 * Transient cache name for forms list.
 	 */
-	public const CACHE_HUBSPOT_JOBS_TRANSIENT_NAME = 'es_hubspot_jobs_cache';
-
-	/**
-	 * Transient cache name for jobs questions.
-	 */
-	public const CACHE_HUBSPOT_JOBS_QUESTIONS_TRANSIENT_NAME = 'es_hubspot_jobs_questions_cache';
+	public const CACHE_HUBSPOT_FORMS_TRANSIENT_NAME = 'es_hubspot_forms_cache';
 
 	/**
 	 * Return jobs simple list from Hubspot.
@@ -40,7 +35,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getForms(): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_JOBS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -73,7 +68,7 @@ class HubspotClient implements HubspotClientInterface
 					];
 				}
 
-				set_transient(self::CACHE_HUBSPOT_JOBS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -89,7 +84,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getForm(string $formId): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_JOBS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$formId]) || empty($output[$formId])) {

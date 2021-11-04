@@ -48,42 +48,42 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Mailer Use key.
 	 */
-	public const SETTINGS_MAILER_USE_KEY = 'mailerUse';
+	public const SETTINGS_MAILER_USE_KEY = 'mailer-use';
 
 	/**
 	 * Sender Name key.
 	 */
-	public const SETTINGS_MAILER_SENDER_NAME_KEY = 'mailerSenderName';
+	public const SETTINGS_MAILER_SENDER_NAME_KEY = 'mailer-sender-name';
 
 	/**
 	 * Sender Email key.
 	 */
-	public const SETTINGS_MAILER_SENDER_EMAIL_KEY = 'mailerSenderEmail';
+	public const SETTINGS_MAILER_SENDER_EMAIL_KEY = 'mailer-sender-email';
 
 	/**
 	 * Mail To key.
 	 */
-	public const SETTINGS_MAILER_TO_KEY = 'mailerTo';
+	public const SETTINGS_MAILER_TO_KEY = 'mailer-to';
 
 	/**
 	 * Subject key.
 	 */
-	public const SETTINGS_MAILER_SUBJECT_KEY = 'mailerSubject';
+	public const SETTINGS_MAILER_SUBJECT_KEY = 'mailer-subject';
 
 	/**
 	 * Template key.
 	 */
-	public const SETTINGS_MAILER_TEMPLATE_KEY = 'mailerTemplate';
+	public const SETTINGS_MAILER_TEMPLATE_KEY = 'mailer-template';
 
 	/**
 	 * Sender Subject key.
 	 */
-	public const SETTINGS_MAILER_SENDER_SUBJECT_KEY = 'mailerSenderSubject';
+	public const SETTINGS_MAILER_SENDER_SUBJECT_KEY = 'mailer-sender-subject';
 
 	/**
 	 * Sender Template key.
 	 */
-	public const SETTINGS_MAILER_SENDER_TEMPLATE_KEY = 'mailerSenderTemplate';
+	public const SETTINGS_MAILER_SENDER_TEMPLATE_KEY = 'mailer-sender-template';
 
 	/**
 	 * Register all the hooks
@@ -146,7 +146,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$isUsed = (bool) $this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId);
+		$isUsed = (bool) $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY, $formId);
 
 		$output = [
 			[
@@ -158,14 +158,15 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select if you want to use send email on form success.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 						'checkboxLabel' => __('Use Mailer', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getSettingsValue(self::SETTINGS_MAILER_USE_KEY, $formId) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY, $formId),
+						'checkboxValue' => self::SETTINGS_MAILER_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],

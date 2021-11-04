@@ -14,6 +14,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $checkboxLabel = Components::checkAttr('checkboxLabel', $attributes, $manifest);
 $checkboxId = Components::checkAttr('checkboxId', $attributes, $manifest);
@@ -23,12 +24,18 @@ $checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $ma
 $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
 $checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
 $checkboxTracking = Components::checkAttr('checkboxTracking', $attributes, $manifest);
+$checkboxSingleSubmit = Components::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
 
 $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
+]);
+
+$checkboxInputClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'input'),
+	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
 if (empty($checkboxLabel)) {
@@ -40,7 +47,7 @@ if (empty($checkboxLabel)) {
 <div class="<?php echo esc_attr($checkboxClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
-			class="<?php echo esc_attr("{$componentClass}__input"); ?>"
+			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxId); ?>"

@@ -47,32 +47,26 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Redirection Success key.
 	 */
-	public const SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY = 'generalRedirectionSuccess';
+	public const SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY = 'general-redirection-success';
 
 	/**
 	 * Tracking event name key.
 	 */
-	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'generalTrackingEventName';
+	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
 
 	/**
-	 * Disable default styles key.
+	 * Disable default enqueue key.
 	 */
-	public const SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY = 'generalDisableDefaultStyles';
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY = 'general-disable-default-enqueue';
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY = 'scripts';
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY = 'styles';
 
 	/**
-	 * Disable default scripts key.
+	 * Disable scroll settings key.
 	 */
-	public const SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY = 'generalDisableDefaultScripts';
-
-	/**
-	 * Disable scroll to field on error key.
-	 */
-	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY = 'generalDisableScrollToFieldOnError';
-
-	/**
-	 * Disable scroll to global msg on success key.
-	 */
-	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY = 'generalDisableScrollGlobalMsgOnSuccess';
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_KEY = 'general-disable-scroll';
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR = 'disable-scroll-to-field-on-error';
+	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
 
 	/**
 	 * Register all the hooks
@@ -150,41 +144,41 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
 					Disabling scripts will remove all scripts on the frontend, keep in mind this will make the frontend validation and form submitting stop working.
 				', 'eightshift-forms'),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY),
 						'checkboxLabel' => __('Disable default styles', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY),
 						'checkboxLabel' => __('Disable default scripts', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_DEFAULT_SCRIPTS_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
 					]
 				]
 			],
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Form behavior', 'eightshift-forms'),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 				'checkboxesFieldHelp' => __('Set all form behavior options in one place', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY),
 						'checkboxLabel' => __('Disable scroll to field on error', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY),
 						'checkboxLabel' => __('Disable scroll to global message on success', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 					]
 				]
 			],
