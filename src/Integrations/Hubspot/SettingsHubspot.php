@@ -176,7 +176,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				[
 					'component' => 'highlighted-content',
 					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Hubspot. Please check if you API key is valid.', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('we couldn\'t get the data from Hubspot. Please check if your API key is valid.', 'eightshift-forms'),
 				],
 			];
 		}
