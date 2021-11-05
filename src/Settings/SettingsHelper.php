@@ -68,7 +68,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Determin if checkbox settings is checked (used for checkbox).
+	 * Determine if checkbox settings is checked (used for checkbox).
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
