@@ -100,7 +100,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Prepare validation patterns
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, string>>
 	 */
 	public function getValidationPatterns(): array
 	{
@@ -137,11 +137,34 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Prepare validation patterns
+	 * Get validation pattern - pattern from name.
+	 *
+	 * @param string $name Name to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPattern(string $name): string
+	{
+		$patterns = array_filter(
+			$this->getValidationPatterns(),
+			function ($item) use ($name) {
+				return $item['label'] === $name;
+			}
+		);
+
+		if ($patterns) {
+			return reset($patterns)['value'] ?? $name;
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Get validation pattern - name from pattern.
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
 	public function getValidationPatternName(string $pattern): string
 	{
@@ -166,7 +189,7 @@ class Validator extends AbstractValidation
 	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int|string, mixed>
+	 * @return array<int|string, string>
 	 */
 	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
@@ -212,9 +235,11 @@ class Validator extends AbstractValidation
 						}
 						break;
 					case 'validationPattern':
-						preg_match("/$dataValue/", $inputValue, $matches);
+						preg_match("/$dataValue/", $inputValue, $matches, PREG_OFFSET_CAPTURE, 0);
 
-						if ($dataValue && $inputValue === '' && !$matches) {
+						$key = $matches[0] ?? '';
+
+						if ($dataValue && empty($key)) {
 							$output[$paramKey] = sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;

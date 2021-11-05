@@ -296,7 +296,6 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 						'radioValue' => 'radio-disabled-checked-id3',
 						'radioIsChecked' => $this->isCheckedOption('radio-disabled-checked-id3', 'radio-id'),
 						'radioIsDisabled' => true,
-						'radioIsChecked' => true,
 					],
 				]
 			],

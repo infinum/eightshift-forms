@@ -179,7 +179,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			delete_transient($key);
+			delete_transient((string) $key);
 		}
 
 		return \rest_ensure_response([

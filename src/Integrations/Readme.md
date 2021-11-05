@@ -11,3 +11,35 @@ Adding new integration steps:
 8. Add new block to for the specific integration.
 9. Add new Allowed block in the manifest.json in the form-selector block.
 10. Add transient cache to the cache busting list in the SettingsCache.php.
+
+# Mailchimp
+
+Supported fields:
+* Text
+* Address - partially
+* Number
+* Phone
+* Radio
+* Dropdown
+
+# Greenhouse
+
+Supported fields:
+* Short textbox
+* Long textbox
+* Multi select
+* Yes/No
+* Attachment
+
+# HubSpot
+
+Supported fields:
+* Text
+* Textarea
+* File
+* Select
+* Boolean Checkbox
+* Checkbox
+* Radio
+* Consent
+

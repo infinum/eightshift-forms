@@ -94,7 +94,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			]
 		];
 
-		foreach(self::ALL_CACHE as $item) {
+		foreach (self::ALL_CACHE as $item) {
 			$name = str_replace('es_', '', $item);
 			$name = str_replace('_', ' ', $name);
 

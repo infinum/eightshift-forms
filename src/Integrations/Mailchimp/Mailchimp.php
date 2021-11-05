@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,13 +44,24 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	protected $mailchimpClient;
 
 	/**
+	 * Instance variable of ValidatorInterface data.
+	 *
+	 * @var ValidatorInterface
+	 */
+	public $validator;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(MailchimpClientInterface $mailchimpClient)
-	{
+	public function __construct(
+		MailchimpClientInterface $mailchimpClient,
+		ValidatorInterface $validator
+	) {
 		$this->mailchimpClient = $mailchimpClient;
+		$this->validator = $validator;
 	}
 
 	/**
@@ -134,9 +146,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'inputIsRequired' => true,
 		];
 
-		error_log( print_r( ( $data ), true ) );
-		
-
 		foreach ($data as $field) {
 			if (empty($field)) {
 				continue;
@@ -146,15 +155,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$name = $field['tag'] ?? '';
 			$label = $field['name'] ?? '';
 			$required = $field['required'] ?? false;
-			$public = $field['public'] ?? false;
 			$value = $field['default_value'] ?? '';
-			$dateFormat = $field['options']['date_format'] ?? '';
+			$dateFormat = isset($field['options']['date_format']) ? $this->validator->getValidationPattern($field['options']['date_format']) : '';
 			$options = $field['options']['choices'] ?? [];
 			$id = $name;
-
-			if (!$public) {
-				continue;
-			}
 
 			switch ($type) {
 				case 'text':
@@ -166,17 +170,19 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
 					];
 					break;
 				case 'address':
 					$output[] = [
 						'component' => 'input',
-						'inputName' => $name,
+						'inputName' => 'address',
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
 					];
 					break;
 				case 'number':
@@ -188,6 +194,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputType' => 'number',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
 					];
 					break;
 				case 'phone':
@@ -199,16 +206,19 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputType' => 'tel',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
 					];
+					break;
 				case 'birthday':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'date',
+						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
 					];
 					break;
 				case 'radio':
@@ -223,6 +233,24 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 									'component' => 'radio',
 									'radioLabel' => $radio,
 									'radioValue' => $radio,
+								];
+							},
+							$options
+						),
+					];
+					break;
+				case 'dropdown':
+					$output[] = [
+						'component' => 'select',
+						'selectId' => $id,
+						'selectName' => $name,
+						'selectIsRequired' => $required,
+						'selectOptions' => array_map(
+							function ($option) {
+								return [
+									'component' => 'select-option',
+									'selectOptionLabel' => $option,
+									'selectOptionValue' => $option,
 								];
 							},
 							$options

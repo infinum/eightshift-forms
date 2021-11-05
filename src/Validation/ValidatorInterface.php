@@ -29,7 +29,25 @@ interface ValidatorInterface
 	/**
 	 * Prepare validation patterns
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, string>>
 	 */
 	public function getValidationPatterns(): array;
+
+	/**
+	 * Get validation pattern - pattern from name.
+	 *
+	 * @param string $name Name to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPattern(string $name): string;
+
+	/**
+	 * Get validation pattern - name from pattern.
+	 *
+	 * @param string $pattern Pattern to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPatternName(string $pattern): string;
 }

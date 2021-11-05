@@ -116,8 +116,6 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		error_log( print_r( ( json_decode(\wp_remote_retrieve_body($response), true) ), true ) );
-
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 	}
 
@@ -200,7 +198,21 @@ class MailchimpClient implements MailchimpClientInterface
 		unset($params['email_address']);
 
 		foreach ($params as $key => $value) {
-			$output[$key] = $value['value'] ?? '';
+			switch ($value['name']) {
+				case 'address':
+					$output[$key] = [
+						'addr1' => $value['value'],
+						'addr2' => '',
+						'city' => '&sbsp;',
+						'state' => '',
+						'zip' => '&sbsp;',
+						'country' => '',
+					];
+					break;
+				default:
+					$output[$key] = $value['value'] ?? '';
+					break;
+			}
 		}
 
 		return (object) $output;

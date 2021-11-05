@@ -46,13 +46,13 @@ if ($isSettingsValid) {
 			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'formDisableScrollToFieldOnError' => (bool) \apply_filters(
 				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
 			'formDisableScrollToGlobalMessageOnSuccess' => (bool) \apply_filters(
 				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
 			'formTrackingEventName' => \apply_filters(
 				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,

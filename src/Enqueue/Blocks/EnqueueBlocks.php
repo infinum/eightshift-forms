@@ -58,8 +58,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function __construct(
 		ManifestInterface $manifest,
 		ValidatorInterface $validator
-	)
-	{
+	) {
 		$this->manifest = $manifest;
 		$this->validator = $validator;
 	}

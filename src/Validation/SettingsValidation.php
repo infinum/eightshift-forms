@@ -29,8 +29,8 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	 * Custom validation patterns.
 	 */
 	public const VALIDATION_PATTERNS = [
-		'DD/MM' => '[1-12]{2}\/[01-31]{2}$',
-		'MM/DD' => '[01-31]{2}\/[1-12]{2}$'
+		'MM/DD' => '^(1[0-2]|0[1-9])\/(3[01]|[12][0-9]|0[1-9])$',
+		'DD/MM' => '^(3[01]|[12][0-9]|0[1-9])\/(1[0-2]|0[1-9])$'
 	];
 
 	/**
@@ -133,7 +133,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		return $output;
 	}
 
-		/**
+	/**
 	 * Get global settings array for building settings page.
 	 *
 	 * @return array<int, array<string, mixed>>
@@ -150,9 +150,10 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 				'textareaFieldLabel' => __('Validation Patterns', 'eightshift-forms'),
-				'textareaFieldHelp' => __("
+				// translators: %s will be replaced with local validation patterns.
+				'textareaFieldHelp' => sprintf(__("
 					List all your custom validation patterns here and they will show in the editor. Each item must be in a new line written like key value pair separated with colon(:) with space before and after.<br/><br/>
-					Here are our predefined patterns that you can use: <br/><br/> {$output}", 'eightshift-forms'),
+					Here are our predefined patterns that you can use: <br/><br/> %s", 'eightshift-forms'), $output),
 				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 			],
 		];
