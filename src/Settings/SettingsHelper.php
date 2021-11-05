@@ -82,7 +82,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Determin if checkbox global is checked (used for checkbox).
+	 * Determine if checkbox global is checked (used for checkbox).
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
