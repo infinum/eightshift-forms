@@ -55,7 +55,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Determin if global is checked (used for radio, and select box).
+	 * Determine if global is checked (used for radio, and select box).
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
