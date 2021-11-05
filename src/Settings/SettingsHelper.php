@@ -41,7 +41,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Determin if settings is checked (used for radio, and select box).
+	 * Determine if settings is checked (used for radio, and select box).
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
