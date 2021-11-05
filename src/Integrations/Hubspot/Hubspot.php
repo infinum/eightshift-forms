@@ -92,7 +92,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	}
 
 	/**
-	 * Get Hubspot maped form fields.
+	 * Get Hubspot mapped form fields.
 	 *
 	 * @param string $formId Form Id.
 	 *
