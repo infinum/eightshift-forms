@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -67,6 +68,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_FORM_ID_KEY = 'hubspot-form-id';
 
 	/**
+	 * Integration Breakpoints Key.
+	 */
+	public const SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY = 'hubspot-integration-breakpoints';
+
+	/**
 	 * Instance variable for Hubspot data.
 	 *
 	 * @var HubspotClientInterface
@@ -74,13 +80,24 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	protected $hubspotClient;
 
 	/**
+	 * Instance variable for HubSpot form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $hubspot;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
 	 */
-	public function __construct(HubspotClientInterface $hubspotClient)
-	{
+	public function __construct(
+		HubspotClientInterface $hubspotClient,
+		MapperInterface $hubspot
+	) {
 		$this->hubspotClient = $hubspotClient;
+		$this->hubspot = $hubspot;
 	}
 
 	/**
@@ -204,7 +221,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			]
 		);
 
-		return [
+		$selectedForm = $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId);
+
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
@@ -218,9 +237,39 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'selectFieldHelp' => __('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
 				'selectOptions' => $formIdOptions,
 				'selectIsRequired' => true,
-				'selectValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId),
+				'selectValue' => $selectedForm,
+				'selectSingleSubmit' => true,
 			],
 		];
+
+		// If the user has selected the list.
+		if ($selectedForm) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'group',
+						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY),
+						'groupContent' => $this->getIntegrationFieldsDetails(
+							self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
+							$this->hubspot->getFormFields($formId),
+							$formId
+						),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 
 	/**

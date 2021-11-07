@@ -1,0 +1,39 @@
+.es-group {
+	$this: &;
+
+	&--is-inner {
+		display: grid;
+		column-gap: 20px;
+		grid-template-columns: repeat(12, 1fr);
+
+		#{$this}__label {
+			font-size: 15px;
+			padding-top: 30px;
+			grid-column-start: 1;
+			grid-column-end: 4;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		#{$this}__content {
+			grid-column-start: 4;
+			grid-column-end: 13;
+
+			display: grid;
+			column-gap: 20px;
+			grid-template-columns: repeat(4, 1fr);
+
+			.es-field {
+				display: block;
+
+				&__label {
+					margin-bottom: 5px;
+					display: block;
+					padding-top: 0;
+					text-align: center;
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}

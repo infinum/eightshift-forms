@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
+use EightshiftForms\Helpers\Components;
+
 /**
  * SettingsHelper trait.
  */
@@ -26,6 +28,24 @@ trait SettingsHelper
 	public function getSettingsValue(string $key, string $formId): string
 	{
 		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+	}
+
+	/**
+	 * Get settings value array.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $formId Form Id.
+	 *
+	 * @return array
+	 */
+	public function getSettingsValueGroup(string $key, string $formId): array
+	{
+		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		if (!$value) {
+			return [];
+		}
+		
+		return $value;
 	}
 
 	/**
@@ -120,5 +140,101 @@ trait SettingsHelper
 		}
 
 		return $locale;
+	}
+
+	/**
+	 * Get Integration forms Fields details (used to set field width for rensponsive)
+	 *
+	 * @param string $key Key to save in db.
+	 * @param array $formFields All form fields got from helper.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getIntegrationFieldsDetails(string $key, array $formFields, string $formId): array
+	{
+		$globalManifest = Components::getManifest(dirname(__DIR__, 1) . '/Blocks');
+
+		// Find project breakpoints.
+		$breakpoints = array_flip($globalManifest['globalVariables']['breakpoints']);
+
+		// Loop form fields.
+		$fields = [];
+
+		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
+		$fieldsKey = $this->getSettingsName($key);
+
+		foreach ($formFields as $field) {
+			$component = $field['component'];
+
+			// Skip submit.
+			if ($component === 'submit') {
+				continue;
+			}
+
+			$id = $field["{$component}Id"] ?? '';
+			$label = $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '';
+			$fieldsOutput = [
+				[
+					'component' => 'group',
+					'groupLabel' => $label,
+					'groupName' => $fieldsKey,
+					'groupIsInner' => true,
+					'groupContent' => [],
+				]
+			];
+
+			// Loop breakpoints and output inputs.
+			$i = 0;
+			foreach ($breakpoints as $breakpoint) {
+				$item = [
+					'component' => 'input',
+					'inputId' => "{$id}---{$breakpoint}",
+					'inputFieldLabel' => ucfirst($breakpoint),
+					'inputType' => 'number',
+					'inputValue' => $fieldsValues["{$id}---{$breakpoint}"] ?? '',
+				];
+
+				$fieldsOutput[0]['groupContent'][] = $item;
+
+				$i++;
+			}
+
+			$fields = array_merge($fields, $fieldsOutput);
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Build integration fields value output with full component array.
+	 *
+	 * @param string $key Key to find settings.
+	 * @param string $formId Form ID.
+	 * @param array $fullField Fill component array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getIntegrationFieldsValue(string $key, string $formId, array $fullField): array
+	{
+		$fields = $this->getSettingsValueGroup($key, $formId);
+		$output = $fullField;
+
+		error_log( print_r( ( $formId ), true ) );
+		
+
+		foreach($fields as $fieldKey => $fieldValue) {
+			$item = explode('---', $fieldKey);
+
+			if ($fullField["{$fullField['component']}Id"] !== $item[0]) {
+				continue;
+			}
+
+			$breakpoint = ucfirst($item[1]);
+
+			$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
+		}
+
+		return $output;
 	}
 }

@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -82,6 +83,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouse-hide-cover-letter-textarea';
 
 	/**
+	 * Integration Breakpoints Key.
+	 */
+	public const SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY = 'greenhouse-integration-breakpoints';
+
+	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var GreenhouseClientInterface
@@ -89,13 +95,24 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	protected $greenhouseClient;
 
 	/**
+	 * Instance variable for Greenhouse form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $greenhouse;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
+	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
 	 */
-	public function __construct(GreenhouseClientInterface $greenhouseClient)
-	{
+	public function __construct(
+		GreenhouseClientInterface $greenhouseClient,
+		MapperInterface $greenhouse
+	) {
 		$this->greenhouseClient = $greenhouseClient;
+		$this->greenhouse = $greenhouse;
 	}
 
 	/**
@@ -218,7 +235,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			]
 		);
 
-		return [
+		$selectedJob = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+
+		$output =  [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
@@ -232,7 +251,8 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectFieldHelp' => __('Select what Greenhouse job you want to show on this form.', 'eightshift-forms'),
 				'selectOptions' => $jobIdOptions,
 				'selectIsRequired' => true,
-				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
+				'selectValue' => $selectedJob,
+				'selectSingleSubmit' => true,
 			],
 			[
 				'component' => 'divider',
@@ -288,6 +308,35 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
 			],
 		];
+
+		// If the user has selected the list.
+		if ($selectedJob) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'group',
+						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY),
+						'groupContent' => $this->getIntegrationFieldsDetails(
+							self::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+							$this->greenhouse->getFormFields($formId),
+							$formId
+						),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 
 	/**

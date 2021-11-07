@@ -8,12 +8,8 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Settings\Settings;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -40,31 +36,7 @@ $greenhouseClass = Components::classnames([
 if ($isSettingsValid) {
 	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		Greenhouse::FILTER_MAPPER_NAME,
-		[
-			'formPostId' => $greenhouseFormPostId,
-			'formType' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
-			'formResetOnSuccess' => !Variables::isDevelopMode(),
-			'formDisableScrollToFieldOnError' => (bool) \apply_filters(
-				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-			),
-			'formDisableScrollToGlobalMessageOnSuccess' => (bool) \apply_filters(
-				Settings::FILTER_IS_CHECKBOX_OPTION_CHECKED_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-			),
-			'formTrackingEventName' => \apply_filters(
-				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-				$greenhouseFormPostIdDecoded
-			),
-			'formSuccessRedirect' => \apply_filters(
-				SettingsAll::FILTER_BLOCK_SETTING_VALUE_NAME,
-				SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-				$greenhouseFormPostIdDecoded
-			),
-		]
+		$greenhouseFormPostId
 	);
 } else { ?>
 	<div class="<?php echo esc_attr($greenhouseClass); ?>">

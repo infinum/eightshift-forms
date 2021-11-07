@@ -23,6 +23,7 @@ $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
+$inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -32,6 +33,11 @@ $inputClass = Components::classnames([
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
+
+$inputAttrsOutput = '';
+foreach ($inputAttrs as $key => $value) {
+	$inputAttrsOutput .= \wp_kses_post("{$key}=" . $value . " ");
+}
 
 $input = '
 <input
@@ -44,6 +50,7 @@ $input = '
 	data-tracking="' . $inputTracking . '"
 	' . disabled($inputIsDisabled, true, false) . '
 	' . readonly($inputIsReadOnly, true, false) . '
+	' . $inputAttrsOutput . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

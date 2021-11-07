@@ -13,7 +13,9 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -70,23 +72,54 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	}
 
 	/**
-	 * Map Greenhouse form to our components.
+	 * Map form to our components.
 	 *
-	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	public function getForm(array $formAdditionalProps): string
+	public function getForm(string $formId): string
 	{
+		$formAdditionalProps = [];
+
+		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
+
 		// Get post ID prop.
-		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
-		if (empty($formId)) {
-			return '';
-		}
+		$formAdditionalProps['formPostId'] = $formId;
+
+		// Get form type.
+		$formAdditionalProps['formType'] = SettingsGreenhouse::SETTINGS_TYPE_KEY;
+
+		// Reset form on success.
+		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
+
+		// Disable scroll to field on error.
+		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Disable scroll to global message on success.
+		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Tracking event name.
+		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+			$formIdDecoded
+		);
+
+		// Success redirect url.
+		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+			$formIdDecoded
+		);
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields((string) $formId),
+			$this->getFormFields($formIdDecoded),
 			$formAdditionalProps
 		);
 	}
@@ -163,69 +196,89 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						$output[] = [
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $name,
-							'inputType' => $name === 'email' ? 'email' : 'text',
-							'inputIsRequired' => $required,
-							'inputIsEmail' => $name === 'email' ? 'true' : ''
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+							$formId,
+							[
+								'component' => 'input',
+								'inputName' => $name,
+								'inputFieldLabel' => $label,
+								'inputId' => $name,
+								'inputType' => $name === 'email' ? 'email' : 'text',
+								'inputIsRequired' => $required,
+								'inputIsEmail' => $name === 'email' ? 'true' : ''
+							]
+						);
 						break;
 					case 'input_file':
-						$output[] = [
-							'component' => 'file',
-							'fileName' => $name,
-							'fileFieldLabel' => $label,
-							'fileId' => $name,
-							'fileIsRequired' => $required,
-							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+							$formId,
+							[
+								'component' => 'file',
+								'fileName' => $name,
+								'fileFieldLabel' => $label,
+								'fileId' => $name,
+								'fileIsRequired' => $required,
+								'fileAccept' => 'pdf,doc,docx,txt,rtf',
+								'fileMinSize' => 1
+							]
+						);
 						break;
 					case 'textarea':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaName' => $name,
-							'textareaFieldLabel' => $label,
-							'textareaId' => $name,
-							'textareaIsRequired' => $required,
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+							$formId,
+							[
+								'component' => 'textarea',
+								'textareaName' => $name,
+								'textareaFieldLabel' => $label,
+								'textareaId' => $name,
+								'textareaIsRequired' => $required,
+							]
+						);
 						break;
 					case 'multi_value_single_select':
 						if ($values[0]['label'] === 'No' && $values[0]['value'] === 0) {
-							$output[] = [
-								'component' => 'checkboxes',
-								'checkboxesName' => $name,
-								'checkboxesId' => $name,
-								'checkboxesIsRequired' => $required,
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => $label,
-										'checkboxValue' => 1,
-									],
+							$output[] = $this->getIntegrationFieldsValue(
+								SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+								$formId,
+								[
+									'component' => 'checkboxes',
+									'checkboxesName' => $name,
+									'checkboxesId' => $name,
+									'checkboxesIsRequired' => $required,
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => $label,
+											'checkboxValue' => 1,
+										],
+									]
 								]
-							];
+							);
 						} else {
-							$output[] = [
-								'component' => 'select',
-								'selectName' => $name,
-								'selectId' => $name,
-								'selectFieldLabel' => $label,
-								'selectIsRequired' => $required,
-								'selectOptions' => array_map(
-									function ($selectOption) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $selectOption['label'],
-											'selectOptionValue' => $selectOption['value'],
-										];
-									},
-									$values
-								),
-							];
+							$output[] = $this->getIntegrationFieldsValue(
+								SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+								$formId,
+								[
+									'component' => 'select',
+									'selectName' => $name,
+									'selectId' => $name,
+									'selectFieldLabel' => $label,
+									'selectIsRequired' => $required,
+									'selectOptions' => array_map(
+										function ($selectOption) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $selectOption['label'],
+												'selectOptionValue' => $selectOption['value'],
+											];
+										},
+										$values
+									),
+								]
+							);
 						}
 						break;
 				}

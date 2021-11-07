@@ -165,7 +165,12 @@ abstract class AbstractFormBuilder
 		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
 		// Check children components for specific components.
-		if ($component === 'checkboxes' || $component === 'select' || $component === 'radios') {
+		if (
+			$component === 'checkboxes' ||
+			$component === 'select' ||
+			$component === 'radios' ||
+			$component === 'group'
+		) {
 			$output = '';
 			switch ($component) {
 				case 'checkboxes':
@@ -177,6 +182,9 @@ abstract class AbstractFormBuilder
 				case 'select':
 					$key = 'selectOptions';
 					break;
+				case 'group':
+					$key = 'groupContent';
+					break;
 				default:
 					$key = '';
 					break;
@@ -187,16 +195,22 @@ abstract class AbstractFormBuilder
 			// Loop children and do the same ad on top level.
 			foreach ($attributes[$key] as $innerKey => $item) {
 				// Determine the component's name.
-				$innercComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+				$innerComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
-				if ($key === 'radiosContent') {
-					$item["{$innercComponent}Id"] = "{$id}[{$innerKey}]";
+				// Add new nesting iteration if component is group.
+				if ($key === 'groupContent' && is_array($item["groupContent"])) {
+					$groupOutput = '';
+					foreach ($item["groupContent"] as $group) {
+						$groupOutput .= $this->buildComponent($group);
+					}
+
+					$item["groupContent"] = $groupOutput;
 				}
 
 				// Build child component.
 				$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					$item['component'],
-					Components::props($innercComponent, $item),
+					Components::props($innerComponent, $item),
 					'',
 					true
 				);

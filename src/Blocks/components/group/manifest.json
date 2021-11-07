@@ -1,0 +1,28 @@
+{
+	"componentName": "group",
+	"title": "Group",
+	"componentClass": "es-group",
+	"componentJsClass": "js-es-block-form-group",
+	"componentJsClassInner": "js-es-block-form-group-inner",
+	"example": {
+		"attributes": {
+			"groupLabel": "Label",
+			"groupContent": ""
+		}
+	},
+	"attributes": {
+		"groupIsInner": {
+			"type": "boolean",
+			"default": false
+		},
+		"groupLabel": {
+			"type": "string"
+		},
+		"groupContent": {
+			"type": "string"
+		},
+		"groupId": {
+			"type": "string"
+		}
+	}
+}
