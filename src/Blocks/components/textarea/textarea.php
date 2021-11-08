@@ -32,17 +32,14 @@ $textareaClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$textareaIsDisabled = disabled($textareaIsDisabled);
-$textareaIsReadOnly = readonly($textareaIsReadOnly);
-
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		placeholder="' . esc_attr($textareaPlaceholder) . '"
 		data-tracking="' . $textareaTracking . '"
-		' . $textareaIsDisabled . '
-		' . $textareaIsReadOnly . '
+		' . disabled($textareaIsDisabled, true, false) . '
+		' . readonly($textareaIsReadOnly, true, false) . '
 	>' . \apply_filters('the_content', $textareaValue) . '</textarea>
 ';
 

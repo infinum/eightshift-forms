@@ -16,11 +16,20 @@ namespace EightshiftForms\Integrations;
 interface MapperInterface
 {
 	/**
-	 * Map Greenhouse form to our components.
+	 * Map form to our components.
 	 *
-	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	public function getForm(array $formAdditionalProps): string;
+	public function getForm(string $formId): string;
+
+	/**
+	 * Get Mailchimp maped form fields.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getFormFields(string $formId): array;
 }

@@ -9,7 +9,7 @@ export const SubmitOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Submit', 'eightshift-forms')}>
 			<SubmitOptionsComponent
 				{...props('submit', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

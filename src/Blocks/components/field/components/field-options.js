@@ -1,13 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { TextControl, RangeControl } from '@wordpress/components';
+import { TextControl, RangeControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	Responsive,
+	Responsive
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -25,22 +25,22 @@ export const FieldOptions = (attributes) => {
 	} = attributes;
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
-	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
+	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 
 	return (
 		<>
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Label', 'eightshift-forms')} />}
-				help={__('Set label for grouping multiple checkboxes/radios in one field box.', 'eightshift-forms')}
+				help={__('Set label for your field or field group.', 'eightshift-forms')}
 				value={fieldLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
 			/>
 
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Help', 'eightshift-forms')} />}
-				help={__('Set field help info text.', 'eightshift-forms')}
-				value={fieldHelp}
-				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
+			<ToggleControl
+				label={__('Hide Label', 'eightshift-forms')}
+				help={__('Hide label from view. Keep in mind this is not the recommended option because label helps your form be more accessible!', 'eightshift-forms')}
+				checked={fieldHideLabel}
+				onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: value })}
 			/>
 
 			<Responsive

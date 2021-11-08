@@ -111,6 +111,18 @@ class Helper
 	}
 
 	/**
+	 * Method that returns trash page url.
+	 *
+	 * @return string
+	 */
+	public static function getFormsTrashPageUrl(): string
+	{
+		$postType = Forms::POST_TYPE_SLUG;
+
+		return "/wp-admin/edit.php?post_status=trash&post_type={$postType}";
+	}
+
+	/**
 	 * Method that returns form edit page url.
 	 *
 	 * @param string $formId Form ID.

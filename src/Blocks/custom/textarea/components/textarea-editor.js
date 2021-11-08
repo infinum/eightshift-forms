@@ -11,7 +11,7 @@ export const TextareaEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<TextareaEditorComponent
 			{...props('textarea', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId,
 			})}

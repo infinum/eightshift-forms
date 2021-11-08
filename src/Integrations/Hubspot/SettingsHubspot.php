@@ -13,6 +13,8 @@ namespace EightshiftForms\Integrations\Hubspot;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -42,6 +44,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
 
 	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_hubspot';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'hubspot';
@@ -49,12 +56,50 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * HubSpot Use key.
 	 */
-	public const SETTINGS_HUBSPOT_USE_KEY = 'hubspotUse';
+	public const SETTINGS_HUBSPOT_USE_KEY = 'hubspot-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspotApiKey';
+	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspot-api-key';
+
+	/**
+	 * Item ID Key.
+	 */
+	public const SETTINGS_HUBSPOT_ITEM_ID_KEY = 'hubspot-item-id';
+
+	/**
+	 * Integration Breakpoints Key.
+	 */
+	public const SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY = 'hubspot-integration-breakpoints';
+
+	/**
+	 * Instance variable for Hubspot data.
+	 *
+	 * @var ClientInterface
+	 */
+	protected $hubspotClient;
+
+	/**
+	 * Instance variable for HubSpot form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $hubspot;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
+	 */
+	public function __construct(
+		ClientInterface $hubspotClient,
+		MapperInterface $hubspot
+	) {
+		$this->hubspotClient = $hubspotClient;
+		$this->hubspot = $hubspot;
+	}
 
 	/**
 	 * Register all the hooks
@@ -66,6 +111,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -81,6 +127,12 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return false;
 		}
 
+		$itemId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+
+		if (empty($itemId)) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -91,7 +143,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
+		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -135,13 +187,90 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		return [
+		$items = $this->hubspotClient->getItems();
+
+		if (!$items) {
+			return [
+				[
+					'component' => 'highlighted-content',
+					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('we couldn\'t get the data from Hubspot. Please check if your API key is valid.', 'eightshift-forms'),
+				],
+			];
+		}
+
+		$itemOptions = array_map(
+			function ($option) use ($formId) {
+				$id = $option['id'] ?? '';
+
+				return [
+					'component' => 'select-option',
+					'selectOptionLabel' => $option['title'] ?? '',
+					'selectOptionValue' => $id,
+					'selectOptionIsSelected' => $this->isCheckedSettings($id, self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
+				];
+			},
+			$items
+		);
+
+		array_unshift(
+			$itemOptions,
+			[
+				'component' => 'select-option',
+				'selectOptionLabel' => '',
+				'selectOptionValue' => '',
+			]
+		);
+
+		$selectedItem = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
 				'introSubtitle' => __('Configure your HubSpot settings in one place.', 'eightshift-forms'),
 			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
+				'selectFieldLabel' => __('Form ID', 'eightshift-forms'),
+				'selectFieldHelp' => __('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
+				'selectOptions' => $itemOptions,
+				'selectIsRequired' => true,
+				'selectValue' => $selectedItem,
+				'selectSingleSubmit' => true,
+			],
 		];
+
+		// If the user has selected the list.
+		if ($selectedItem) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'group',
+						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY),
+						'groupContent' => $this->getIntegrationFieldsDetails(
+							self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
+							$this->hubspot->getFormFields($formId),
+							$formId
+						),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 
 	/**
@@ -151,9 +280,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$apiKey = Variables::getApiKeyHubspot();
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY);
 
-		return [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
@@ -171,29 +300,42 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
+				'checkboxesIsRequired' => true,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxLabel' => __('Use HubSpot', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_HUBSPOT_USE_KEY) === 'true',
-						'checkboxValue' => 'true',
-						'checkboxIsRequired' => true,
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY),
+						'checkboxValue' => self::SETTINGS_HUBSPOT_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-				'inputIsDisabled' => !empty($apiKey),
-			],
 		];
+
+		if ($isUsed) {
+			$apiKey = Variables::getApiKeyHubspot();
+
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputIsDisabled' => !empty($apiKey),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 }

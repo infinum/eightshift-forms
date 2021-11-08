@@ -9,7 +9,7 @@ export const SelectOptionOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Select Option', 'eightshift-forms')}>
 			<SelectOptionOptionsComponent
 				{...props('selectOption', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

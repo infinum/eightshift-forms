@@ -9,7 +9,7 @@ export const TextareaOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Textarea', 'eightshift-forms')}>
 			<TextareaOptionsComponent
 				{...props('textarea', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

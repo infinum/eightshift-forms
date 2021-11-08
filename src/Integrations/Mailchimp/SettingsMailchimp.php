@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -55,22 +56,32 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Mailchimp Use key.
 	 */
-	public const SETTINGS_MAILCHIMP_USE_KEY = 'mailchimpUse';
+	public const SETTINGS_MAILCHIMP_USE_KEY = 'mailchimp-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimpApiKey';
+	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimp-api-key';
 
 	/**
 	 * Form url.
 	 */
-	public const SETTINGS_MAILCHIMP_FORM_URL_KEY = 'mailchimpFormUrl';
+	public const SETTINGS_MAILCHIMP_FORM_URL_KEY = 'mailchimp-form-url';
 
 	/**
 	 * List ID Key.
 	 */
-	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimpList';
+	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimp-list';
+
+	/**
+	 * List Tags Key.
+	 */
+	public const SETTINGS_MAILCHIMP_LIST_TAGS_KEY = 'mailchimp-list-tags';
+
+	/**
+	 * Integration Breakpoints Key.
+	 */
+	public const SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY = 'mailchimp-integration-breakpoints';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -80,13 +91,24 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	protected $mailchimpClient;
 
 	/**
+	 * Instance variable for Mailchimp form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $mailchimp;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
 	 */
-	public function __construct(MailchimpClientInterface $mailchimpClient)
-	{
+	public function __construct(
+		MailchimpClientInterface $mailchimpClient,
+		MapperInterface $mailchimp
+	) {
 		$this->mailchimpClient = $mailchimpClient;
+		$this->mailchimp = $mailchimp;
 	}
 
 	/**
@@ -131,7 +153,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
+		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -175,9 +197,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			];
 		}
 
-		$lists = $this->mailchimpClient->getLists();
+		$items = $this->mailchimpClient->getItems();
 
-		if (!$lists) {
+		if (!$items) {
 			return [
 				[
 					'component' => 'highlighted-content',
@@ -187,20 +209,20 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			];
 		}
 
-		$listsOptions = array_map(
+		$itemOptions = array_map(
 			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
 					'selectOptionLabel' => $option['title'] ?? '',
 					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId) === $option['id'],
+					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
 				];
 			},
-			$lists
+			$items
 		);
 
 		array_unshift(
-			$listsOptions,
+			$itemOptions,
 			[
 				'component' => 'select-option',
 				'selectOptionLabel' => '',
@@ -208,11 +230,13 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			]
 		);
 
-		return [
+		$selectedItem = $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
+
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your mailchimp settings in one place.', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your Mailchimp settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
@@ -220,11 +244,59 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectFieldLabel' => __('List', 'eightshift-forms'),
 				'selectFieldHelp' => __('Select list for subscription.', 'eightshift-forms'),
-				'selectOptions' => $listsOptions,
+				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
-				'selectValue' => $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
+				'selectValue' => $selectedItem,
+				'selectSingleSubmit' => true,
 			],
 		];
+
+		// If the user has selected the list.
+		if ($selectedItem) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
+						'checkboxesFieldHelp' => __('Select tags assigned to this mailing list subscriber.', 'eightshift-forms'),
+						'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
+						'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
+						'checkboxesContent' => array_map(
+							function ($tag) use ($formId) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $tag['name'],
+									'checkboxIsChecked' => $this->isCheckboxSettingsChecked($tag['name'], self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId),
+									'checkboxValue' => $tag['name'],
+								];
+							},
+							$this->mailchimpClient->getTags($selectedItem)
+						),
+					],
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'group',
+						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY),
+						'groupContent' => $this->getIntegrationFieldsDetails(
+							self::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
+							$this->mailchimp->getFormFields($formId),
+							$formId
+						),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 
 	/**
@@ -234,9 +306,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$apiKey = Variables::getApiKeyMailchimp();
+		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
 
-		return [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
@@ -259,29 +331,42 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
 				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
+				'checkboxesIsRequired' => true,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
-						'checkboxId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
 						'checkboxLabel' => __('Use Mailchimp', 'eightshift-forms'),
-						'checkboxIsRequired' => true,
-						'checkboxIsChecked' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_USE_KEY) === 'true',
-						'checkboxValue' => 'true',
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY),
+						'checkboxValue' => self::SETTINGS_MAILCHIMP_USE_KEY,
+						'checkboxSingleSubmit' => true,
 					]
 				]
 			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-				'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
-				'inputType' => 'password',
-				'inputIsRequired' => true,
-				'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-				'inputIsDisabled' => !empty($apiKey),
-			]
 		];
+
+		if ($isUsed) {
+			$apiKey = Variables::getApiKeyMailchimp();
+
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputType' => 'password',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputIsDisabled' => !empty($apiKey),
+					]
+				]
+			);
+		}
+
+		return $output;
 	}
 }

@@ -23,6 +23,9 @@ $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
+$inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
+$inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
+$inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -33,8 +36,18 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputIsDisabled = disabled($inputIsDisabled);
-$inputIsReadOnly = readonly($inputIsReadOnly);
+$inputNumberOptions = '';
+if ($inputType === 'number') {
+	if ($inputMin || $inputMin === 0) {
+		$inputNumberOptions .= "min=" . $inputMin . " ";
+	}
+	if ($inputMax || $inputMax === 0) {
+		$inputNumberOptions .= "max=" . $inputMax . " ";
+	}
+	if ($inputStep || $inputStep === 0) {
+		$inputNumberOptions .= "step=" . $inputStep . " ";
+	}
+}
 
 $input = '
 <input
@@ -45,8 +58,9 @@ $input = '
 	placeholder="' . esc_attr($inputPlaceholder) . '"
 	type="' . esc_attr($inputType) . '"
 	data-tracking="' . $inputTracking . '"
-	' . $inputIsDisabled . '
-	' . $inputIsReadOnly . '
+	' . disabled($inputIsDisabled, true, false) . '
+	' . readonly($inputIsReadOnly, true, false) . '
+	' . $inputNumberOptions . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -57,6 +71,8 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldId' => $inputId,
 			'fieldName' => $inputName,
 			'fieldDisabled' => !empty($inputIsDisabled),
+			'fieldHideLabel' => $inputType === 'hidden',
+			'fieldUseError' => $inputType !== 'hidden'
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

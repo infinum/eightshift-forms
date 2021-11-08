@@ -24,38 +24,39 @@ class MailchimpClient implements MailchimpClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name for list.
+	 * Transient cache name for items.
 	 */
-	public const CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME = 'es_mailchimp_lists_cache';
+	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
 
 	/**
-	 * Transient cache name for list fields.
+	 * Transient cache name for item.
 	 */
-	public const CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME = 'es_mailchimp_list_fields_cache';
+	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
 
 	/**
-	 * Get Mailchimp lists with cache.
+	 * Return items.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getLists(): array
+	public function getItems(): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
+		// Check if form exists in cache.
 		if (empty($output)) {
-			$lists = $this->getMailchimpLists();
+			$items = $this->getMailchimpLists();
 
-			if ($lists) {
-				foreach ($lists as $job) {
-					$id = $job['id'] ?? '';
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
 
 					$output[$id] = [
 						'id' => $id,
-						'title' => $job['name'] ?? '',
+						'title' => $item['name'] ?? '',
 					];
 				}
 
-				set_transient(self::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -63,45 +64,48 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * Return list fields with cache option for faster loading.
+	 * Return item with cache option for faster loading.
 	 *
-	 * @param string $formId Form Id.
+	 * @param string $itemId Item ID to search by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getListFields(string $formId): array
+	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$formId]) || empty($output[$formId])) {
-			$fields = $this->getMailchimpListFields($formId);
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+			$fields = $this->getMailchimpListFields($itemId);
 
-			if ($formId && $fields) {
-				$output[$formId] = $fields ?? [];
+			if ($itemId && $fields) {
+				$output[$itemId] = $fields ?? [];
 
-				set_transient(self::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output[$formId] ?? [];
+		$this->getTags($itemId);
+
+		return $output[$itemId] ?? [];
 	}
 
 	/**
-	 * API request to post mailchimp subscription to Mailchimp.
+	 * API request to post application.
 	 *
-	 * @param string $listId List id.
-	 * @param array<string, mixed> $params Params array.
+	 * @param string $itemId Item id to search.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postMailchimpSubscription(string $listId, array $params): array
+	public function postApplication(string $itemId, array $params, array $files): array
 	{
 		$email = $params['email_address']['value'];
 		$emailHash = md5(strtolower($email));
 
 		$response = \wp_remote_request(
-			"{$this->getApiUrl()}lists/{$listId}/members/{$emailHash}",
+			"{$this->getApiUrl()}lists/{$itemId}/members/{$emailHash}",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'PUT',
@@ -110,13 +114,40 @@ class MailchimpClient implements MailchimpClientInterface
 						'email_address' => $email,
 						'status_if_new' => 'subscribed',
 						'status' => 'subscribed',
-						'merge_fields' => $this->prepareParams($params)
+						'merge_fields' => $this->prepareParams($params),
+						'tags' => $this->prepareTags($params),
 					]
 				),
 			]
 		);
 
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+	}
+
+	/**
+	 * Return Mailchimp tags for a list.
+	 *
+	 * @param string $itemId Item id to search.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getTags(string $itemId): array
+	{
+		$response = \wp_remote_get(
+			"{$this->getApiUrl()}lists/{$itemId}/tag-search",
+			[
+				'headers' => $this->getHeaders(),
+				'timeout' => 60,
+			]
+		);
+
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['tags'])) {
+			return [];
+		}
+
+		return $body['tags'];
 	}
 
 	/**
@@ -189,19 +220,51 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @param array<string, mixed> $params Params.
 	 *
-	 * @return object
+	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): object
+	private function prepareParams(array $params): array
 	{
 		$output = [];
 
 		unset($params['email_address']);
 
 		foreach ($params as $key => $value) {
-			$output[$key] = $value['value'] ?? '';
+			switch ($value['name']) {
+				case 'address':
+					$output[$key] = [
+						'addr1' => $value['value'],
+						'addr2' => '',
+						'city' => '&sbsp;',
+						'state' => '',
+						'zip' => '&sbsp;',
+						'country' => '',
+					];
+					break;
+				default:
+					$output[$key] = $value['value'] ?? '';
+					break;
+			}
 		}
 
-		return (object) $output;
+		return $output;
+	}
+
+	/**
+	 * Prepare tags
+	 *
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return array<int, string>
+	 */
+	private function prepareTags(array $params): array
+	{
+		$key = Mailchimp::FIELD_MAILCHIMP_TAGS_KEY;
+
+		if (!isset($params[$key])) {
+			return [];
+		}
+
+		return explode(', ', $params[$key]['value']);
 	}
 
 	/**

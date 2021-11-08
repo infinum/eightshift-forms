@@ -56,6 +56,18 @@
 		"inputIsUrl": {
 			"type": "boolean",
 			"default": false
+		},
+		"inputValidationPattern": {
+			"type": "string"
+		},
+		"inputMin": {
+			"type": "integer"
+		},
+		"inputMax": {
+			"type": "integer"
+		},
+		"inputStep": {
+			"type": "integer"
 		}
 	},
 	"options": {
@@ -73,9 +85,29 @@
 				"value": "number"
 			},
 			{
+				"label": "Phone",
+				"value": "tel"
+			},
+			{
+				"label": "Date",
+				"value": "date"
+			},
+			{
 				"label": "Hidden",
 				"value": "hidden"
 			}
-		]
+		],
+		"inputMin": {
+			"min":  0,
+			"step": 1
+		},
+		"inputMax": {
+			"min":  1,
+			"step": 1
+		},
+		"inputStep": {
+			"min":  1,
+			"step": 1
+		}
 	}
 }

@@ -21,6 +21,12 @@
 		"fieldContent": {
 			"type": "string"
 		},
+		"fieldBeforeContent": {
+			"type": "string"
+		},
+		"fieldAfterContent": {
+			"type": "string"
+		},
 		"fieldName": {
 			"type": "string"
 		},
@@ -28,7 +34,12 @@
 			"type": "string"
 		},
 		"fieldLabel": {
-			"type": "string"
+			"type": "string",
+			"default": "Label"
+		},
+		"fieldHideLabel": {
+			"type": "boolean",
+			"default": false
 		},
 		"fieldHelp": {
 			"type": "string"
@@ -49,10 +60,12 @@
 		"fieldWidthMobile": {
 			"type": "integer"
 		},
-
 		"fieldDisabled": {
 			"type": "boolean",
 			"default": false
+		},
+		"fieldOrder": {
+			"type": "integer"
 		}
 	},
 	"responsiveAttributes": {
@@ -69,6 +82,14 @@
 				"inverse": true,
 				"variable": {
 					"field-width": "calc((%value%/12)*100%)"
+				}
+			}
+		],
+		"fieldOrder": [
+			{
+				"inverse": true,
+				"variable": {
+					"field-order": "%value%"
 				}
 			}
 		]

@@ -154,24 +154,48 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			function ($item) {
 				// Check if array then output only value that is not empty.
 				if (is_array($item)) {
-					$inner = array_filter(
-						$item,
-						function ($innerItem) {
-							$value = json_decode($innerItem, true);
-
-							return !empty($value['value']);
-						}
+					// Loop all items and decode.
+					$inner = array_map(
+						function ($item) {
+							return json_decode($item, true);
+						},
+						$item
 					);
 
-					// If there is any items in array checked reset that and decode.
-					if ($inner) {
-						$inner = reset($inner);
+					// Find all items where value is not empty.
+					$innerNotEmpty = array_values(
+						array_filter(
+							$inner,
+							function ($innerItem) {
+								return !empty($innerItem['value']);
+							}
+						)
+					);
 
-						return json_decode($inner, true);
+					// Fallback if everything is empty.
+					if (!$innerNotEmpty) {
+						return $inner[0];
 					}
 
-					// Fallback to empty array.
-					return [];
+					// If multiple values this is checkbox or select multiple.
+					if (count($innerNotEmpty) > 1) {
+						$multiple = array_values(
+							array_map(
+								function ($item) {
+									return $item['value'];
+								},
+								$innerNotEmpty
+							)
+						);
+
+						// Append values to the first value.
+						$innerNotEmpty[0]['value'] = implode(", ", $multiple);
+
+						return $innerNotEmpty[0];
+					}
+
+					// If one item then this is probably radio.
+					return $innerNotEmpty[0];
 				}
 
 				// Just decode value.

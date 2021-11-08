@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File containing Mailchimp Connect interface
+ * File containing Connect interface
  *
  * @package EightshiftForms\Integrations\Mailchimp
  */
@@ -9,33 +9,44 @@
 namespace EightshiftForms\Integrations\Mailchimp;
 
 /**
- * Interface for a MailchimpClient
+ * Interface for a Client
  */
 interface MailchimpClientInterface
 {
-	/**
-	 * Get Mailchimp lists with cache.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getLists(): array;
 
 	/**
-	 * Return list fields with cache option for faster loading.
-	 *
-	 * @param string $formId Form Id.
+	 * Return items.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getListFields(string $formId): array;
+	public function getItems(): array;
 
 	/**
-	 * API request to post mailchimp subscription to Mailchimp.
+	 * Return item with cache option for faster loading.
 	 *
-	 * @param string $listId List id.
-	 * @param array<string, mixed> $params Params array.
+	 * @param string $itemId Item ID to search by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postMailchimpSubscription(string $listId, array $params): array;
+	public function getItem(string $itemId): array;
+
+	/**
+	 * API request to post application.
+	 *
+	 * @param string $itemId Item id to search.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postApplication(string $itemId, array $params, array $files): array;
+
+	/**
+	 * Return Mailchimp tags for a list.
+	 *
+	 * @param string $itemId Item id to search.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getTags(string $itemId): array;
 }

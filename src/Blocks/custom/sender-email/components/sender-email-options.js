@@ -9,7 +9,7 @@ export const SenderEmailOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Sender Email', 'eightshift-forms')}>
 			<InputOptionsComponent
 				{...props('input', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 				showInputName={false}
 				showInputType={false}

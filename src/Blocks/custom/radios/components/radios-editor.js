@@ -18,7 +18,7 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<RadiosEditorComponent
 			{...props('radios', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId,
 				radiosContent: <InnerBlocks

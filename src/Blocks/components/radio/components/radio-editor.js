@@ -37,7 +37,7 @@ export const RadioEditor = (attributes) => {
 					readOnly
 				/>
 				<label className={radioLabelClass}>
-					{radioLabel ? radioLabel : __('Enter radio label in sidebar.', 'eightshift-forms')}
+					{radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}
 				</label>
 			</div>
 		</div>

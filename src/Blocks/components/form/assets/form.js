@@ -1,11 +1,17 @@
+import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+
 export class Form {
 	constructor(options) {
+		this.formIsAdmin = options.formIsAdmin || false;
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl;
 
 		this.formSelector = options.formSelector;
+		this.submitSingleSelector = `${this.formSelector}-single-submit`;
 		this.errorSelector = `${this.formSelector}-error`;
 		this.loaderSelector = `${this.formSelector}-loader`;
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
+		this.groupSelector = `${this.formSelector}-group`;
+		this.groupInnerSelector = `${this.formSelector}-group-inner`;
 
 		this.CLASS_ACTIVE = 'is-active';
 		this.CLASS_LOADING = 'is-loading';
@@ -21,6 +27,18 @@ export class Form {
 
 		[...elements].forEach((element) => {
 			element.addEventListener('submit', this.onFormSubmit);
+
+			if (this.formIsAdmin) {
+				const items = element.querySelectorAll(this.submitSingleSelector);
+	
+				[...items].forEach((item) => {
+					if (item.type === 'submit') {
+						item.addEventListener('click', this.onFormSubmitSingle);
+					} else {
+						item.addEventListener('change', this.onFormSubmitSingle);
+					}
+				});
+			}
 		});
 	}
 
@@ -28,7 +46,19 @@ export class Form {
 	onFormSubmit = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		this.formSubmit(event.target);
+	}
+
+	// Handle form submit and all logic for only one field click.
+	onFormSubmitSingle = (event) => {
+		event.preventDefault();
+		const {target} = event;
+
+		this.formSubmit(target.closest(this.formSelector), target);
+	}
+
+	// Handle form submit and all logic.
+	formSubmit = (element, singleSubmit = false) => {
 
 		// Dispatch event.
 		this.dispatchFormEvent(element, 'BeforeFormSubmit');
@@ -39,6 +69,8 @@ export class Form {
 		// Clear all errors before resubmit.
 		this.reset(element);
 
+		const formData = this.getFormData(element, singleSubmit);
+
 		// Populate body data.
 		const body = {
 			method: element.getAttribute('method'),
@@ -46,7 +78,7 @@ export class Form {
 			headers: {
 				Accept: 'multipart/form-data',
 			},
-			body: this.formatFormData(element),
+			body: formData,
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
@@ -75,7 +107,7 @@ export class Form {
 					let isRedirect = element?.dataset?.successRedirect ?? '';
 
 					// Redirect on success.
-					if (isRedirect !== '') {
+					if (isRedirect !== '' || singleSubmit) {
 						// Dispatch event.
 						this.dispatchFormEvent(element, 'AfterFormSubmitSuccessRedirect');
 
@@ -83,7 +115,7 @@ export class Form {
 						this.setGlobalMsg(element, response.message, 'success');
 
 						// Replace string templates used for passing data via url.
-						for (var [key, val] of this.formatFormData(element).entries()) {
+						for (var [key, val] of formData.entries()) {
 							const { value } = JSON.parse(val);
 							isRedirect = isRedirect.replaceAll(`{${key}}`, encodeURIComponent(value));
 						}
@@ -146,11 +178,52 @@ export class Form {
 	}
 
 	// Build form data object.
-	formatFormData = (element) => {
-		// Find all interesting form items.
-		const items = element.querySelectorAll('input, select, button, textarea');
-
+	getFormData = (element, singleSubmit = false) => {
 		const formData = new FormData();
+
+		const groups = element.querySelectorAll(`${this.groupSelector}`);
+
+		// Check if we are saving group items in one key.
+		if (groups.length && !singleSubmit) {
+			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
+				const groupId = group.getAttribute('data-field-id');
+				const groupInner = group.querySelectorAll(`${this.groupInnerSelector} input`);
+
+				if (groupInner.length) {
+					const groupInnerItems = {}
+					for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
+						const {
+							id,
+							value,
+						} = groupInnerItem;
+		
+						groupInnerItems[id] = value;
+					}
+
+					formData.append(groupId, JSON.stringify({
+						value: groupInnerItems,
+						type: 'group',
+					}));
+				}
+			}
+		}
+
+		let items = element.querySelectorAll(`
+			input:not(${this.groupInnerSelector} input),
+			select:not(${this.groupInnerSelector} select),
+			button:not(${this.groupInnerSelector} button),
+			textarea:not(${this.groupInnerSelector} textarea)
+		`);
+
+		const formType = element.getAttribute('data-form-type');
+
+		// If single submit override items and pass only one item to submit.
+		if (singleSubmit) {
+			items = [
+				singleSubmit
+			];
+		}
+		
 
 		// Iterate all form items.
 		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
@@ -202,9 +275,34 @@ export class Form {
 
 		// Add form type field.
 		formData.append('es-form-type', JSON.stringify({
-			value: element.getAttribute('data-form-type'),
+			value: formType,
 			type: 'hidden',
 		}));
+
+		// Add additional options for HubSpot only.
+		if (formType === 'hubspot' && !this.formIsAdmin) {
+			formData.append('es-form-hubspot-cookie', JSON.stringify({
+				value: cookies.getCookie('hubspotutk'),
+				type: 'hidden',
+			}));
+
+			formData.append('es-form-hubspot-page-name', JSON.stringify({
+				value: document.title,
+				type: 'hidden',
+			}));
+
+			formData.append('es-form-hubspot-page-url', JSON.stringify({
+				value: window.location.href,
+				type: 'hidden',
+			}));
+		}
+
+		if (singleSubmit && this.formIsAdmin) {
+			formData.append('es-form-single-submit', JSON.stringify({
+				value: 'true',
+				type: 'hidden',
+			}));
+		}
 
 		return formData;
 	}

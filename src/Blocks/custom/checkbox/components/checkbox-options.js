@@ -9,7 +9,7 @@ export const CheckboxOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
 			<CheckboxOptionsComponent
 				{...props('checkbox', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

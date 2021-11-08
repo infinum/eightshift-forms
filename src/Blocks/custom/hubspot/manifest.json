@@ -1,0 +1,26 @@
+{
+	"blockName": "hubspot",
+	"title": "HubSpot Form",
+	"description" : "Block used to show HubSpot application form.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"hubspot"
+	],
+	"example": {
+	},
+	"attributes": {
+		"hubspotFormPostId": {
+			"type": "string"
+		},
+		"hubspotServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

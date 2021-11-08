@@ -13,6 +13,7 @@ namespace EightshiftForms\Enqueue\Blocks;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
@@ -25,6 +26,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Instance variable of ValidatorInterface data.
+	 *
+	 * @var ValidatorInterface
+	 */
+	public $validator;
 
 	/**
 	 * Filter additional blocks key.
@@ -45,10 +53,14 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(ManifestInterface $manifest)
-	{
+	public function __construct(
+		ManifestInterface $manifest,
+		ValidatorInterface $validator
+	) {
 		$this->manifest = $manifest;
+		$this->validator = $validator;
 	}
 
 	/**
@@ -76,7 +88,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function enqueueBlockEditorStyleLocal()
 	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -90,7 +102,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function enqueueBlockStyleLocal()
 	{
-		if ($this->getOptionValue(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_STYLES_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -130,6 +142,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (is_admin()) {
 			$output['additionalBlocks'] = apply_filters(self::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 			$output['formsBlockStyleOptions'] = apply_filters(self::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
+			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 		}
 
 		$output['mediaBreakpoints'] = apply_filters(self::FILTER_MEDIA_BREAKPOINTS_NAME, []);

@@ -18,7 +18,7 @@ export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<CheckboxesEditorComponent
 			{...props('checkboxes', attributes, {
-				setAttributes: setAttributes,
+				setAttributes,
 				blockClass,
 				clientId,
 				checkboxesContent: <InnerBlocks

@@ -41,10 +41,10 @@ class Deactivate implements HasDeactivationInterface
 		}
 
 		// Delet transients.
-		delete_transient(MailchimpClient::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME);
-		delete_transient(MailchimpClient::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME);
-		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME);
-		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME);
+		delete_transient(MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME);
+		delete_transient(MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME);
+		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME);
+		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME);
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

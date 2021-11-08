@@ -17,15 +17,13 @@ export const CheckboxOptions = (attributes) => {
 	} = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
-	const checkboxName = checkAttr('checkboxName', attributes, manifest);
+	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 	const checkboxIsDisabled = checkAttr('checkboxIsDisabled', attributes, manifest);
 	const checkboxIsReadOnly = checkAttr('checkboxIsReadOnly', attributes, manifest);
-	const checkboxIsRequired = checkAttr('checkboxIsRequired', attributes, manifest);
 	const checkboxTracking = checkAttr('checkboxTracking', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
-	const [showValidation, setShowValidation] = useState(false);
 
 	return (
 		<>
@@ -47,10 +45,10 @@ export const CheckboxOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={__('Name', 'eightshift-forms')}
-						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
-						value={checkboxName}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxName', attributes, manifest)]: value })}
+						label={__('Value', 'eightshift-forms')}
+						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
+						value={checkboxValue}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
@@ -79,25 +77,6 @@ export const CheckboxOptions = (attributes) => {
 						label={__('Is Read Only', 'eightshift-forms')}
 						checked={checkboxIsReadOnly}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
-					/>
-				</>
-			}
-
-			<ComponentUseToggle
-				label={__('Show validation options', 'eightshift-forms')}
-				checked={showValidation}
-				onChange={() => setShowValidation(!showValidation)}
-				showUseToggle={true}
-				showLabel={true}
-			/>
-
-			{showValidation &&
-				<>
-					<IconToggle
-						icon={icons.play}
-						label={__('Is Required', 'eightshift-forms')}
-						checked={checkboxIsRequired}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsRequired', attributes, manifest)]: value })}
 					/>
 				</>
 			}

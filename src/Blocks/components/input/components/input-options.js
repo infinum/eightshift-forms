@@ -1,7 +1,10 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
+import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { TextControl, SelectControl, RangeControl } from '@wordpress/components';
 import {
 	icons,
 	getOption,
@@ -13,9 +16,14 @@ import {
 	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
+import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
 
 export const InputOptions = (attributes) => {
+	const {
+		options,
+	} = manifest;
+
 	const {
 		setAttributes,
 
@@ -31,6 +39,10 @@ export const InputOptions = (attributes) => {
 		showInputTracking = true,
 		showInputIsEmail = true,
 		showInputIsUrl = true,
+		showInputValidationPattern = true,
+		showInputMin = true,
+		showInputMax = true,
+		showInputStep = true,
 	} = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
@@ -43,9 +55,19 @@ export const InputOptions = (attributes) => {
 	const inputTracking = checkAttr('inputTracking', attributes, manifest);
 	const inputIsEmail = checkAttr('inputIsEmail', attributes, manifest);
 	const inputIsUrl = checkAttr('inputIsUrl', attributes, manifest);
+	const inputValidationPattern = checkAttr('inputValidationPattern', attributes, manifest);
+	const inputMin = checkAttr('inputMin', attributes, manifest);
+	const inputMax = checkAttr('inputMax', attributes, manifest);
+	const inputStep = checkAttr('inputStep', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
+
+	let inputValidationPatternOptions = [];
+
+	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.validationPatternsOptions)) {
+		inputValidationPatternOptions = esFormsBlocksLocalization.validationPatternsOptions;
+	}
 
 	return (
 		<>
@@ -171,10 +193,60 @@ export const InputOptions = (attributes) => {
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
 								/>
 							}
+
+							{showInputValidationPattern &&
+								<SelectControl
+									label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
+									help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
+									value={inputValidationPattern}
+									options={inputValidationPatternOptions}
+									onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
+								/>
+							}
+
+							{(inputType === 'number' && showInputMin) &&
+								<RangeControl
+								label={<IconLabel icon={icons.id} label={__('Validation Min Number', 'eightshift-forms')} />}
+									help={__('Set minimum number a user can enter', 'eightshift-forms')}
+									allowReset={true}
+									value={inputMin}
+									onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
+									min={options.inputMin.min}
+									step={options.inputMin.step}
+								/>
+							}
+
+							{(inputType === 'number' && showInputMax) &&
+								<RangeControl
+								label={<IconLabel icon={icons.id} label={__('Validation Max Number', 'eightshift-forms')} />}
+									help={__('Set maximum number a user can enter', 'eightshift-forms')}
+									allowReset={true}
+									value={inputMax}
+									onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
+									min={options.inputMax.min}
+									step={options.inputMax.step}
+								/>
+							}
+
+							{(inputType === 'number' && showInputStep) &&
+								<RangeControl
+								label={<IconLabel icon={icons.id} label={__('Validation Step Number', 'eightshift-forms')} />}
+									help={__('Set step number a user can change', 'eightshift-forms')}
+									allowReset={true}
+									value={inputStep}
+									onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
+									min={options.inputStep.min}
+									step={options.inputStep.step}
+								/>
+							}
 						</>
 					}
 				</>
 			}
+
+			<FieldOptionsAdvanced
+				{...props('field', attributes)}
+			/>
 		</>
 	);
 };

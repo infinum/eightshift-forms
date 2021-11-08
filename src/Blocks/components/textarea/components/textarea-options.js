@@ -1,7 +1,10 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { isArray } from 'lodash';
 import { useState } from '@wordpress/element';
-import { TextControl } from '@wordpress/components';
+import { TextControl, SelectControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -12,6 +15,7 @@ import {
 	ComponentUseToggle
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
+import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
 
 export const TextareaOptions = (attributes) => {
@@ -26,9 +30,16 @@ export const TextareaOptions = (attributes) => {
 	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
 	const textareaIsRequired = checkAttr('textareaIsRequired', attributes, manifest);
 	const textareaTracking = checkAttr('textareaTracking', attributes, manifest);
+	const textareaValidationPattern = checkAttr('textareaValidationPattern', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
+
+	let textareaValidationPatternOptions = [];
+
+	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.validationPatternsOptions)) {
+		textareaValidationPatternOptions = esFormsBlocksLocalization.validationPatternsOptions;
+	}
 
 	return (
 		<>
@@ -106,8 +117,20 @@ export const TextareaOptions = (attributes) => {
 						checked={textareaIsRequired}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
 					/>
+
+					<SelectControl
+						label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
+						help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
+						value={textareaValidationPattern}
+						options={textareaValidationPatternOptions}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
+					/>
 				</>
 			}
+
+			<FieldOptionsAdvanced
+				{...props('field', attributes)}
+			/>
 		</>
 	);
 };

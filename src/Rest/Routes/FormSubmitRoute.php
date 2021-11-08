@@ -14,8 +14,9 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
@@ -60,9 +61,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 	protected $labels;
 
 	/**
-	 * Instance variable of GreenhouseClientInterface data.
+	 * Instance variable of ClientInterface data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
@@ -74,26 +75,36 @@ class FormSubmitRoute extends AbstractBaseRoute
 	protected $mailchimpClient;
 
 	/**
+	 * Instance variable for Hubspot data.
+	 *
+	 * @var ClientInterface
+	 */
+	protected $hubspotClient;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		MailerInterface $mailer,
 		LabelsInterface $labels,
-		GreenhouseClientInterface $greenhouseClient,
-		MailchimpClientInterface $mailchimpClient
+		ClientInterface $greenhouseClient,
+		MailchimpClientInterface $mailchimpClient,
+		ClientInterface $hubspotClient
 	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
 		$this->labels = $labels;
 		$this->greenhouseClient = $greenhouseClient;
 		$this->mailchimpClient = $mailchimpClient;
+		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
@@ -159,6 +170,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 				$formData
 			);
 
+			// Remove unecesery internal params before continue.
+			$params = $this->removeUneceseryParams($params);
+
 			// Upload files to temp folder.
 			$files = $this->uploadFiles($request->get_file_params() ?? []);
 
@@ -172,6 +186,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 				case SettingsMailchimp::SETTINGS_TYPE_KEY:
 					return $this->sendMailchimp($formId, $params);
+
+				case SettingsHubspot::SETTINGS_TYPE_KEY:
+					return $this->sendHubspot($formId, $params);
 			}
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -202,7 +219,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 */
 	private function sendEmail(string $formId, array $params = [], $files = [])
 	{
-		$isUsed = (bool) $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
+		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
 		// If Mailer system is not used just respond with success.
 		if (!$isUsed) {
@@ -301,7 +318,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		}
 
 		// Send application to Greenhouse.
-		$response = $this->greenhouseClient->postGreenhouseApplication(
+		$response = $this->greenhouseClient->postApplication(
 			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 			$params,
 			$files
@@ -359,13 +376,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 		}
 
 		// Send application to Mailchimp.
-		$response = $this->mailchimpClient->postMailchimpSubscription(
+		$response = $this->mailchimpClient->postApplication(
 			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
-			$params
+			$params,
+			[]
 		);
 
 		$status = $response['status'] ?? 'subscribed';
-		$message = $response['title'] ?? '';
+		$message = $response['detail'] ?? $response['title'] ?? '';
 
 		if (!$response) {
 			return \rest_ensure_response([
@@ -389,6 +407,64 @@ class FormSubmitRoute extends AbstractBaseRoute
 			'code' => 200,
 			'status' => 'success',
 			'message' => $this->labels->getLabel('mailchimpSuccess', $formId),
+		]);
+	}
+
+	/**
+	 * Use HubSpot function.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
+	 *
+	 * @return mixed
+	 */
+	private function sendHubspot(string $formId, array $params = [], $files = [])
+	{
+		// Check if Hubspot data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('hubspotErrorSettingsMissing', $formId),
+			]);
+		}
+
+		// Send application to Hubspot.
+		$response = $this->hubspotClient->postApplication(
+			$this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
+			$params,
+			$files
+		);
+
+		$status = $response['status'] ?? 200;
+		$message = $response['message'] ?? '';
+
+		if (!$response) {
+			return \rest_ensure_response([
+				'code' => 404,
+				'status' => 'error',
+				'message' => $this->labels->getLabel('hubspotWpError', $formId),
+			]);
+		}
+
+		// Bailout if Hubspot returns error.
+		if ($status !== 200) {
+			return \rest_ensure_response([
+				'code' => $status,
+				'status' => 'error',
+				'message' => $message
+			]);
+		}
+
+		// Finish with success.
+		return \rest_ensure_response([
+			'code' => 200,
+			'status' => 'success',
+			'message' => $this->labels->getLabel('hubspotSuccess', $formId),
 		]);
 	}
 }

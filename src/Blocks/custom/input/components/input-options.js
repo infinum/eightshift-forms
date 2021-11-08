@@ -9,7 +9,7 @@ export const InputOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Input', 'eightshift-forms')}>
 			<InputOptionsComponent
 				{...props('input', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</PanelBody>

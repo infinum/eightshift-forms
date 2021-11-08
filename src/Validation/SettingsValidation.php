@@ -26,6 +26,14 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
+	 * Custom validation patterns.
+	 */
+	public const VALIDATION_PATTERNS = [
+		'MM/DD' => '^(1[0-2]|0[1-9])\/(3[01]|[12][0-9]|0[1-9])$',
+		'DD/MM' => '^(3[01]|[12][0-9]|0[1-9])\/(1[0-2]|0[1-9])$'
+	];
+
+	/**
 	 * Filter settings sidebar key.
 	 */
 	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_validation';
@@ -36,9 +44,19 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	public const FILTER_SETTINGS_NAME = 'es_forms_settings_validation';
 
 	/**
+	 * Filter global settings key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_validation';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'validation';
+
+	/**
+	 * Validation Patterns key.
+	 */
+	public const SETTINGS_VALIDATION_PATTERNS_KEY = 'validation-patterns';
 
 	/**
 	 * Instance variable for labels data.
@@ -66,6 +84,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -112,5 +131,31 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get global settings array for building settings page.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsGlobalData(): array
+	{
+		$output = '';
+		foreach (self::VALIDATION_PATTERNS as $key => $value) {
+			$output .= "{$key} : {$value}<br/>";
+		}
+
+		return [
+			[
+				'component' => 'textarea',
+				'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+				'textareaFieldLabel' => __('Validation Patterns', 'eightshift-forms'),
+				// translators: %s will be replaced with local validation patterns.
+				'textareaFieldHelp' => sprintf(__("
+					List all your custom validation patterns here and they will show in the editor. Each item must be in a new line written like key value pair separated with colon(:) with space before and after.<br/><br/>
+					Here are our predefined patterns that you can use: <br/><br/> %s", 'eightshift-forms'), $output),
+				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+			],
+		];
 	}
 }

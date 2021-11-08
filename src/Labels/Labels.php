@@ -32,6 +32,8 @@ class Labels implements LabelsInterface
 		return [
 			// Validation.
 			'validationRequired' => __('This field is required!', 'eightshift-forms'),
+			// translators: %s used for displaying required number.
+			'validationRequiredCount' => __('This field is required with minimum %s selected items!', 'eightshift-forms'),
 			'validationEmail' => __('This field is not a valid email!', 'eightshift-forms'),
 			'validationUrl' => __('This field is not a valid url!', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
@@ -40,6 +42,8 @@ class Labels implements LabelsInterface
 			'validationMinSize' => __('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
+			// translators: %s used for displaying validation pattern to the user.
+			'validationPattern' => __('Your field doesn\'t satisfy this validation pattern %s!', 'eightshift-forms'),
 
 			// Mailer.
 			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please contact your admin.', 'eightshift-forms'),
@@ -59,6 +63,12 @@ class Labels implements LabelsInterface
 			'mailchimpErrorSettingsMissing' => __('Mailchimp integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpErrorListMissing' => __('Mailchimp list is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
 			'mailchimpSuccess' => __('You have successfully subscribed to our newsletter.', 'eightshift-forms'),
+
+			// Hubspot.
+			'hubspotWpError' => __('There was some problem with saving your application. Please contact your admin.', 'eightshift-forms'),
+			'hubspotErrorSettingsMissing' => __('Hubspot integration is not configured correctly. Please contact your admin.', 'eightshift-forms'),
+			'hubspotErrorJobIdMissing' => __('Hubspot Form Id is missing in the configuration. Please contact your admin.', 'eightshift-forms'),
+			'hubspotSuccess' => __('You have successfully submitted this form.', 'eightshift-forms'),
 		];
 	}
 

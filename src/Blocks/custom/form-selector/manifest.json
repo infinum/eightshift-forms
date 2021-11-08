@@ -16,7 +16,8 @@
 			"default": [
 				"eightshift-forms/form",
 				"eightshift-forms/mailchimp",
-				"eightshift-forms/greenhouse"
+				"eightshift-forms/greenhouse",
+				"eightshift-forms/hubspot"
 			]
 		}
 	},
@@ -73,6 +74,12 @@
 			"slug": "greenhouse",
 			"icon": "color",
 			"blockName": "eightshift-forms/mailchimp"
+		},
+		{
+			"label": "HubSpot",
+			"slug": "hubspot",
+			"icon": "color",
+			"blockName": "eightshift-forms/hubspot"
 		}
 	]
 }

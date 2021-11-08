@@ -12,6 +12,7 @@ namespace EightshiftForms\Validation;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -23,6 +24,11 @@ class Validator extends AbstractValidation
 	 * Use Object Helper
 	 */
 	use ObjectHelperTrait;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Instance variable for labels data.
@@ -39,11 +45,13 @@ class Validator extends AbstractValidation
 	 */
 	private const VALIDATION_FIELDS = [
 		"IsRequired",
+		"IsRequiredCount",
 		"IsEmail",
 		"IsUrl",
 		"Accept",
 		"MinSize",
 		"MaxSize",
+		"ValidationPattern",
 	];
 
 	/**
@@ -68,6 +76,12 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
+		// If single submit skip all validations.
+		if (isset($params['es-form-single-submit'])) {
+			return [];
+		}
+
+		// Find out forms original data nad check for valition options.
 		if ($formData) {
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
@@ -84,13 +98,98 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * Prepare validation patterns
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public function getValidationPatterns(): array
+	{
+		$localPatterns = SettingsValidation::VALIDATION_PATTERNS;
+
+		$userPatterns = preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+
+		if ($userPatterns) {
+			foreach ($userPatterns as $pattern) {
+				$pattern = explode(' : ', $pattern);
+
+				if (empty($pattern) || !isset($pattern[0]) || !isset($pattern[1])) {
+						continue;
+				};
+
+				$localPatterns[$pattern[0]] = $pattern[1];
+			}
+		}
+
+		$output = [
+			[
+				'value' => '',
+				'label' => '---'
+			]
+		];
+		foreach ($localPatterns as $key => $value) {
+			$output[] = [
+				'value' => $value,
+				'label' => $key
+			];
+		};
+
+		return $output;
+	}
+
+	/**
+	 * Get validation pattern - pattern from name.
+	 *
+	 * @param string $name Name to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPattern(string $name): string
+	{
+		$patterns = array_filter(
+			$this->getValidationPatterns(),
+			function ($item) use ($name) {
+				return $item['label'] === $name;
+			}
+		);
+
+		if ($patterns) {
+			return reset($patterns)['value'] ?? $name;
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Get validation pattern - name from pattern.
+	 *
+	 * @param string $pattern Pattern to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPatternName(string $pattern): string
+	{
+		$patterns = array_filter(
+			$this->getValidationPatterns(),
+			function ($item) use ($pattern) {
+				return $item['value'] === $pattern;
+			}
+		);
+
+		if ($patterns) {
+			return reset($patterns)['label'] ?? $pattern;
+		}
+
+		return $pattern;
+	}
+
+	/**
 	 * Validate params.
 	 *
 	 * @param array<int|string, mixed> $params Params to check.
 	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int|string, mixed>
+	 * @return array<int|string, string>
 	 */
 	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
@@ -117,6 +216,12 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
+					// Check validation for required count params.
+					case 'isRequiredCount':
+						if ($dataValue && count(explode(", ", $inputValue)) < $dataValue) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
+						}
+						break;
 					// Check validation for email params.
 					case 'IsEmail':
 						if ($dataValue && !$this->isEmail($inputValue)) {
@@ -127,6 +232,15 @@ class Validator extends AbstractValidation
 					case 'isUrl':
 						if ($dataValue && !$this->isUrl($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
+						}
+						break;
+					case 'validationPattern':
+						preg_match("/$dataValue/", $inputValue, $matches, PREG_OFFSET_CAPTURE, 0);
+
+						$key = $matches[0] ?? '';
+
+						if ($dataValue && empty($key)) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;
 				}
@@ -214,20 +328,7 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
-			$innerOptions = [];
-
-			// Check inner blocks if there are checkboxes.
-			if ($name === 'checkboxes') {
-				foreach ($block['innerBlocks'] as $inner) {
-					$innerOptions = $this->getValidationReferenceInner($inner, 'checkbox');
-
-					if ($innerOptions) {
-						$output = array_merge($output, $innerOptions);
-					}
-				}
-			} else {
-				$innerOptions = $this->getValidationReferenceInner($block, $name);
-			}
+			$innerOptions = $this->getValidationReferenceInner($block, $name);
 
 			if ($innerOptions) {
 				$output = array_merge($output, $innerOptions);
@@ -302,20 +403,7 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
-			$innerOptions = [];
-
-			// Check inner blocks if there are checkboxes.
-			if ($name === 'checkboxes') {
-				foreach ($block['checkboxesContent'] as $inner) {
-					$innerOptions = $this->getValidationReferenceManualInner($inner, 'checkbox');
-
-					if ($innerOptions) {
-						$output = array_merge($output, $innerOptions);
-					}
-				}
-			} else {
-				$innerOptions = $this->getValidationReferenceManualInner($block, $name);
-			}
+			$innerOptions = $this->getValidationReferenceManualInner($block, $name);
 
 			if ($innerOptions) {
 				$output = array_merge($output, $innerOptions);

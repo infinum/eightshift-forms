@@ -12,7 +12,7 @@ export const InputEditor = ({ attributes, setAttributes, clientId }) => {
 		<InputEditorComponent
 			{...props('input', attributes, {
 				blockClass,
-				setAttributes: setAttributes,
+				setAttributes,
 				clientId,
 			})}
 		/>

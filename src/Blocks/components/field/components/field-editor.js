@@ -36,7 +36,10 @@ export const FieldEditor = (attributes) => {
 	}
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
+	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
+	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
+	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 
@@ -47,27 +50,47 @@ export const FieldEditor = (attributes) => {
 	]);
 
 	const LabelDefault = () => (
-		<label className={`${componentClass}__label`}>
-			{fieldLabel}
-		</label>
+		<>
+			{!fieldHideLabel &&
+				<label className={`${componentClass}__label`}>
+					{fieldLabel}
+				</label>
+			}
+		</>
 	);
 
 	const LegendDefault = () => (
-		<legend className={`${componentClass}__label`}>
-			{fieldLabel}
-		</legend>
+		<>
+			{!fieldHideLabel &&
+				<legend className={`${componentClass}__label`}>
+					{fieldLabel}
+				</legend>
+			}
+		</>
 	);
 
 	const Content = () => (
 		<div className={`${componentClass}__content`}>
+			{fieldBeforeContent &&
+				<div className={`${componentClass}__before-content`}>
+					{fieldBeforeContent}
+				</div>
+			}
+			<div className={`${componentClass}__content-wrap`}>
 				{fieldContent}
 			</div>
+			{fieldAfterContent &&
+				<div className={`${componentClass}__after-content`}>
+					{fieldAfterContent}
+				</div>
+			}
+		</div>
 	);
 
 	const Help = () => (
 		<div className={`${componentClass}__help`}>
-				{fieldHelp}
-			</div>
+			{fieldHelp}
+		</div>
 	);
 
 	const DivContent = () => {

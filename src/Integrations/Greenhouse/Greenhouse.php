@@ -13,7 +13,10 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,16 +46,16 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Instance variable for Greenhouse data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 */
-	public function __construct(GreenhouseClientInterface $greenhouseClient)
+	public function __construct(ClientInterface $greenhouseClient)
 	{
 		$this->greenhouseClient = $greenhouseClient;
 	}
@@ -70,23 +73,54 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	}
 
 	/**
-	 * Map Greenhouse form to our components.
+	 * Map form to our components.
 	 *
-	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	public function getForm(array $formAdditionalProps): string
+	public function getForm(string $formId): string
 	{
+		$formAdditionalProps = [];
+
+		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
+
 		// Get post ID prop.
-		$formId = $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
-		if (empty($formId)) {
-			return '';
-		}
+		$formAdditionalProps['formPostId'] = (string) $formId;
+
+		// Get form type.
+		$formAdditionalProps['formType'] = SettingsGreenhouse::SETTINGS_TYPE_KEY;
+
+		// Reset form on success.
+		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
+
+		// Disable scroll to field on error.
+		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Disable scroll to global message on success.
+		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Tracking event name.
+		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+			$formIdDecoded
+		);
+
+		// Success redirect url.
+		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+			$formIdDecoded
+		);
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields((string) $formId),
+			$this->getFormFields($formIdDecoded),
 			$formAdditionalProps
 		);
 	}
@@ -100,19 +134,19 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	public function getFormFields(string $formId): array
 	{
-		// Get Job Id.
-		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
-		if (empty($jobId)) {
+		// Get Item Id.
+		$itemId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
+		if (empty($itemId)) {
 			return [];
 		}
 
-		// Get Job questions.
-		$questions = $this->greenhouseClient->getJobQuestions($jobId);
-		if (empty($questions)) {
+		// Get Form.
+		$fields = $this->greenhouseClient->getItem($itemId);
+		if (empty($fields)) {
 			return [];
 		}
 
-		return $this->getFields($questions, (string) $formId);
+		return $this->getFields($fields, $formId);
 	}
 
 	/**
@@ -131,14 +165,18 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $question) {
-			if (empty($question)) {
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$hideResumeTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId);
+		$hideCoverLetterTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId);
+
+		foreach ($data as $item) {
+			if (empty($item)) {
 				continue;
 			}
 
-			$fields = $question['fields'] ?? '';
-			$label = $question['label'] ?? '';
-			$required = $question['required'] ?? false;
+			$fields = $item['fields'] ?? '';
+			$label = $item['label'] ?? '';
+			$required = $item['required'] ?? false;
 
 
 			foreach ($fields as $field) {
@@ -146,86 +184,95 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				$name = $field['name'] ?? '';
 				$values = $field['values'];
 
-				if (
-					$field['name'] === 'resume_text' &&
-					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId)
-				) {
+				if ($field['name'] === 'resume_text' && $hideResumeTextarea) {
 					continue;
 				}
 
-				if (
-					$field['name'] === 'cover_letter_text' &&
-					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId)
-				) {
+				if ($field['name'] === 'cover_letter_text' && $hideCoverLetterTextarea) {
 					continue;
 				}
 
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						$output[] = [
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $name,
-							'inputType' => $name === 'email' ? 'email' : 'text',
-							'inputIsRequired' => $required,
-							'inputIsEmail' => $name === 'email' ? 'true' : ''
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'input',
+								'inputName' => $name,
+								'inputFieldLabel' => $label,
+								'inputId' => $name,
+								'inputType' => $name === 'email' ? 'email' : 'text',
+								'inputIsRequired' => $required,
+								'inputIsEmail' => $name === 'email' ? 'true' : ''
+							]
+						);
 						break;
 					case 'input_file':
-						$output[] = [
-							'component' => 'file',
-							'fileName' => $name,
-							'fileFieldLabel' => $label,
-							'fileId' => $name,
-							'fileIsRequired' => $required,
-							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'file',
+								'fileName' => $name,
+								'fileFieldLabel' => $label,
+								'fileId' => $name,
+								'fileIsRequired' => $required,
+								'fileAccept' => 'pdf,doc,docx,txt,rtf',
+								'fileMinSize' => 1
+							]
+						);
 						break;
 					case 'textarea':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaName' => $name,
-							'textareaFieldLabel' => $label,
-							'textareaId' => $name,
-							'textareaIsRequired' => $required,
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'textarea',
+								'textareaName' => $name,
+								'textareaFieldLabel' => $label,
+								'textareaId' => $name,
+								'textareaIsRequired' => $required,
+							]
+						);
 						break;
 					case 'multi_value_single_select':
 						if ($values[0]['label'] === 'No' && $values[0]['value'] === 0) {
-							$output[] = [
-								'component' => 'checkboxes',
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxName' => $name,
-										'checkboxId' => $name,
-										'checkboxIsRequired' => $required,
-										'checkboxLabel' => $label,
-										'checkboxValue' => 1,
-									],
+							$output[] = $this->getIntegrationFieldsValue(
+								$integrationBreakpointsFields,
+								[
+									'component' => 'checkboxes',
+									'checkboxesName' => $name,
+									'checkboxesId' => $name,
+									'checkboxesIsRequired' => $required,
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => $label,
+											'checkboxValue' => 1,
+										],
+									]
 								]
-							];
+							);
 						} else {
-							$output[] = [
-								'component' => 'select',
-								'selectName' => $name,
-								'selectId' => $name,
-								'selectFieldLabel' => $label,
-								'selectIsRequired' => $required,
-								'selectOptions' => array_map(
-									function ($selectOption) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $selectOption['label'],
-											'selectOptionValue' => $selectOption['value'],
-										];
-									},
-									$values
-								),
-							];
+							$output[] = $this->getIntegrationFieldsValue(
+								$integrationBreakpointsFields,
+								[
+									'component' => 'select',
+									'selectName' => $name,
+									'selectId' => $name,
+									'selectFieldLabel' => $label,
+									'selectIsRequired' => $required,
+									'selectOptions' => array_map(
+										function ($selectOption) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $selectOption['label'],
+												'selectOptionValue' => $selectOption['value'],
+											];
+										},
+										$values
+									),
+								]
+							);
 						}
 						break;
 				}
@@ -235,7 +282,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		$output[] = [
 			'component' => 'submit',
 			'submitValue' => __('Submit', 'eightshift-forms'),
-			'submitFieldUseError' => false
+			'submitFieldUseError' => false,
+			'submitFieldOrder' => count($output) + 1,
 		];
 
 		return $output;

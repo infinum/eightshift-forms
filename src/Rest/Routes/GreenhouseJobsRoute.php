@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
+use EightshiftForms\Integrations\ClientInterface;
 
 /**
  * Class GreenhouseJobsRoute
@@ -19,18 +19,18 @@ use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 class GreenhouseJobsRoute extends AbstractBaseRoute
 {
 	/**
-	 * Instance variable of GreenhouseClientInterface data.
+	 * Instance variable of ClientInterface data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
 	 */
-	public function __construct(GreenhouseClientInterface $greenhouseClient)
+	public function __construct(ClientInterface $greenhouseClient)
 	{
 		$this->greenhouseClient = $greenhouseClient;
 	}
@@ -89,7 +89,7 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 		try {
 			$output = [];
 
-			foreach ($this->greenhouseClient->getJobs() as $job) {
+			foreach ($this->greenhouseClient->getItems() as $job) {
 				// Remove unecesery data for security reasons.
 				unset($job['id']);
 				$output[] = $job;

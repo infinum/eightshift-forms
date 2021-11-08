@@ -13,6 +13,7 @@ namespace EightshiftForms\Hooks;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
@@ -37,6 +38,7 @@ class Filters
 			'settingsSidebar' => SettingsGeneral::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsValidation::SETTINGS_TYPE_KEY => [
+			'global' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsValidation::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
@@ -64,6 +66,7 @@ class Filters
 			'global' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsHubspot::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,

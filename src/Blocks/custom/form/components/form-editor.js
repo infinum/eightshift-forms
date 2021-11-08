@@ -16,7 +16,7 @@ export const FormEditor = ({ attributes, setAttributes }) => {
 		<div className={blockClass}>
 			<FormEditorComponent
 				{...props('form', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 					formContent: <InnerBlocks
 													allowedBlocks={(typeof formAllowedBlocks === 'undefined') || formAllowedBlocks}
 													templateLock={false}

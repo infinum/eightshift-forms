@@ -11,7 +11,7 @@ export const CheckboxEditor = ({ attributes, setAttributes }) => {
 		<div className={blockClass}>
 			<CheckboxEditorComponent
 				{...props('checkbox', attributes, {
-					setAttributes: setAttributes,
+					setAttributes,
 				})}
 			/>
 		</div>
