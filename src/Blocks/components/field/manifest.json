@@ -60,10 +60,12 @@
 		"fieldWidthMobile": {
 			"type": "integer"
 		},
-
 		"fieldDisabled": {
 			"type": "boolean",
 			"default": false
+		},
+		"fieldOrder": {
+			"type": "integer"
 		}
 	},
 	"responsiveAttributes": {
@@ -80,6 +82,14 @@
 				"inverse": true,
 				"variable": {
 					"field-width": "calc((%value%/12)*100%)"
+				}
+			}
+		],
+		"fieldOrder": [
+			{
+				"inverse": true,
+				"variable": {
+					"field-order": "%value%"
 				}
 			}
 		]

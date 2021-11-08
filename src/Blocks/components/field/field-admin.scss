@@ -7,9 +7,11 @@
 
 	&__label {
 		grid-column-start: 1;
-		grid-column-end: 3;
+		grid-column-end: 4;
 		padding-top: 12px;
 		font-size: 15px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	&__content {

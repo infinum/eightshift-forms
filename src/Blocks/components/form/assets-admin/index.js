@@ -12,6 +12,7 @@ domReady(() => {
 			const form = new Form({
 				formSelector: selector,
 				formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
+				formIsAdmin: true,
 			});
 
 			form.init();

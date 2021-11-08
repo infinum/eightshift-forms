@@ -55,7 +55,7 @@ $button = '
 		id="' . esc_attr($submitId) . '"
 		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
-		' . $submitIsDisabled . '
+		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
 	><span>' . esc_html($submitValue) . '
 	</span></button>

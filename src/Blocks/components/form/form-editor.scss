@@ -10,30 +10,36 @@
 		justify-content: center;
 	}
 
-	&__fields {
-		display: block;
-		margin-left: 0;
-		margin-right: 0;
-	}
+	&:not([data-form-type]) {
+		#{$this}__fields {
+			display: block;
+			margin-left: 0;
+			margin-right: 0;
+		}
 
-	> #{$this}__fields {
-		> .block-editor-inner-blocks {
-			padding-left: 0;
-			padding-right: 0;
+		> #{$this}__fields {
+			> .block-editor-inner-blocks {
+				padding-left: 0;
+				padding-right: 0;
 
-			> .block-editor-block-list__layout {
-				display: flex;
-				flex-wrap: wrap;
-				margin-left: calc(var(--es-form-scoped-spacing) * -1);
-				margin-right: calc(var(--es-form-scoped-spacing) * -1);
+				> .block-editor-block-list__layout { // stylelint-disable-line max-nesting-depth
+					display: flex;
+					flex-wrap: wrap;
+					margin-left: calc(var(--es-form-scoped-spacing) * -1);
+					margin-right: calc(var(--es-form-scoped-spacing) * -1);
 
-				> * { // stylelint-disable-line max-nesting-depth
-					padding-left: var(--es-form-scoped-spacing);
-					padding-right: var(--es-form-scoped-spacing);
-					margin-left: 0;
-					margin-right: 0;
-					flex: 0 0 var(--field-width, 100%);
-					max-width: var(--field-width, 100%);
+					> .block-editor-block-list__block { // stylelint-disable-line max-nesting-depth
+						padding-left: var(--es-form-scoped-spacing);
+						padding-right: var(--es-form-scoped-spacing);
+						margin: {
+							left: 0;
+							right: 0;
+							bottom: 20px;
+						};
+						margin-right: 0;
+						flex: 0 0 var(--field-width, 100%);
+						max-width: var(--field-width, 100%);
+					}
 				}
 			}
 		}

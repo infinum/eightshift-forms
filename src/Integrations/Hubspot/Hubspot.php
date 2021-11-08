@@ -13,7 +13,10 @@ namespace EightshiftForms\Integrations\Hubspot;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,16 +46,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var HubspotClientInterface
+	 * @var ClientInterface
 	 */
 	protected $hubspotClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(HubspotClientInterface $hubspotClient)
+	public function __construct(ClientInterface $hubspotClient)
 	{
 		$this->hubspotClient = $hubspotClient;
 	}
@@ -70,23 +73,54 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	}
 
 	/**
-	 * Map Hubspot form to our components.
+	 * Map form to our components.
 	 *
-	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	public function getForm(array $formAdditionalProps): string
+	public function getForm(string $formId): string
 	{
+		$formAdditionalProps = [];
+
+		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
+
 		// Get post ID prop.
-		$formId = (string) $formAdditionalProps['formPostId'] ? Helper::encryptor('decrypt', (string) $formAdditionalProps['formPostId']) : '';
-		if (empty($formId)) {
-			return '';
-		}
+		$formAdditionalProps['formPostId'] = $formId;
+
+		// Get form type.
+		$formAdditionalProps['formType'] = SettingsHubspot::SETTINGS_TYPE_KEY;
+
+		// Reset form on success.
+		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
+
+		// Disable scroll to field on error.
+		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Disable scroll to global message on success.
+		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Tracking event name.
+		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+			$formIdDecoded
+		);
+
+		// Success redirect url.
+		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+			$formIdDecoded
+		);
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields((string) $formId),
+			$this->getFormFields($formIdDecoded),
 			$formAdditionalProps
 		);
 	}
@@ -100,35 +134,38 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 */
 	public function getFormFields(string $formId): array
 	{
-		// Get Job Id.
-		$formId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FORM_ID_KEY, (string) $formId);
-		if (empty($formId)) {
+		// Get item Id.
+		$itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, (string) $formId);
+		if (empty($itemId)) {
 			return [];
 		}
 
-		// Get Form.
-		$form = $this->hubspotClient->getForm($formId);
-		if (empty($form)) {
+		// Get fields.
+		$item = $this->hubspotClient->getItem($itemId);
+		if (empty($item)) {
 			return [];
 		}
 
-		return $this->getFields($form['fields']);
+		return $this->getFields($item['fields'], $formId);
 	}
 
 	/**
 	 * Map Hubspot fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
+	 * @param string $formId Form ID.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
 		if (!$data) {
 			return $output;
 		}
+
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY, $formId);
 
 		foreach ($data as $item) {
 			if (empty($item)) {
@@ -158,132 +195,156 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 				switch ($type) {
 					case 'text':
-						$output[] = [
-							'component' => 'input',
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputName' => $name,
-							'inputType' => 'text',
-							'inputPlaceholder' => $placeholder,
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'input',
+								'inputFieldLabel' => $label,
+								'inputId' => $id,
+								'inputName' => $name,
+								'inputType' => 'text',
+								'inputPlaceholder' => $placeholder,
+								'inputIsRequired' => $required,
+								'inputValue' => $value,
+							]
+						);
 						break;
 					case 'textarea':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaFieldLabel' => $label,
-							'textareaId' => $id,
-							'textareaName' => $name,
-							'textareaType' => 'textarea',
-							'textareaPlaceholder' => $placeholder,
-							'textareaIsRequired' => $required,
-							'textareaValue' => $value,
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'textarea',
+								'textareaFieldLabel' => $label,
+								'textareaId' => $id,
+								'textareaName' => $name,
+								'textareaType' => 'textarea',
+								'textareaPlaceholder' => $placeholder,
+								'textareaIsRequired' => $required,
+								'textareaValue' => $value,
+							]
+						);
 						break;
 					case 'file':
-						$output[] = [
-							'component' => 'file',
-							'fileFieldLabel' => $label,
-							'fileId' => $id,
-							'fileName' => $name,
-							'fileType' => 'text',
-							'filePlaceholder' => $placeholder,
-							'fileIsRequired' => $required,
-							'fileValue' => $value,
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'file',
+								'fileFieldLabel' => $label,
+								'fileId' => $id,
+								'fileName' => $name,
+								'fileType' => 'text',
+								'filePlaceholder' => $placeholder,
+								'fileIsRequired' => $required,
+								'fileValue' => $value,
+							]
+						);
 						break;
 					case 'select':
-						$output[] = [
-							'component' => 'select',
-							'selectFieldLabel' => $label,
-							'selectId' => $id,
-							'selectName' => $name,
-							'selectType' => 'select',
-							'selectPlaceholder' => $placeholder,
-							'selectIsRequired' => $required,
-							'selectValue' => $value,
-							'selectOptions' => array_map(
-								function ($selectOption) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $selectOption['label'],
-										'selectOptionValue' => $selectOption['value'],
-									];
-								},
-								$options
-							),
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'select',
+								'selectFieldLabel' => $label,
+								'selectId' => $id,
+								'selectName' => $name,
+								'selectType' => 'select',
+								'selectPlaceholder' => $placeholder,
+								'selectIsRequired' => $required,
+								'selectValue' => $value,
+								'selectOptions' => array_map(
+									function ($selectOption) {
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $selectOption['label'],
+											'selectOptionValue' => $selectOption['value'],
+										];
+									},
+									$options
+								),
+							]
+						);
 						break;
 					case 'booleancheckbox':
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesId' => $id,
-							'checkboxesName' => $name,
-							'checkboxesIsRequired' => $required,
-							'checkboxesContent' => [
-								[
-									'component' => 'checkbox',
-									'checkboxLabel' => $label,
-								]
-							],
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'checkboxes',
+								'checkboxesId' => $id,
+								'checkboxesName' => $name,
+								'checkboxesIsRequired' => $required,
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $label,
+									]
+								],
+							]
+						);
 						break;
 					case 'checkbox':
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesId' => $name,
-							'checkboxesName' => $name,
-							'checkboxesIsRequired' => $required,
-							'checkboxesContent' => array_map(
-								function ($checkbox) {
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $checkbox['label'],
-										'checkboxValue' => $checkbox['value'],
-									];
-								},
-								$options
-							),
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'checkboxes',
+								'checkboxesId' => $name,
+								'checkboxesName' => $name,
+								'checkboxesIsRequired' => $required,
+								'checkboxesContent' => array_map(
+									function ($checkbox) {
+										return [
+											'component' => 'checkbox',
+											'checkboxLabel' => $checkbox['label'],
+											'checkboxValue' => $checkbox['value'],
+										];
+									},
+									$options
+								),
+							]
+						);
 						break;
 					case 'radio':
-						$output[] = [
-							'component' => 'radios',
-							'radiosId' => $id,
-							'radiosName' => $name,
-							'radiosIsRequired' => $required,
-							'radiosContent' => array_map(
-								function ($radio) {
-									return [
-										'component' => 'radio',
-										'radioLabel' => $radio['label'],
-										'radioValue' => $radio['value'],
-									];
-								},
-								$options
-							),
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'radios',
+								'radiosId' => $id,
+								'radiosName' => $name,
+								'radiosIsRequired' => $required,
+								'radiosContent' => array_map(
+									function ($radio) {
+										return [
+											'component' => 'radio',
+											'radioLabel' => $radio['label'],
+											'radioValue' => $radio['value'],
+										];
+									},
+									$options
+								),
+							]
+						);
 						break;
 					case 'consent':
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
-							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
-							'checkboxesId' => $id,
-							'checkboxesName' => $name,
-							'checkboxesIsRequired' => $required,
-							'checkboxesContent' => array_map(
-								function ($checkbox) {
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $checkbox['label'],
-										'checkboxValue' => $checkbox['label'],
-									];
-								},
-								$options
-							),
-						];
+						$output[] = $this->getIntegrationFieldsValue(
+							$integrationBreakpointsFields,
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
+								'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
+								'checkboxesId' => $id,
+								'checkboxesName' => $name,
+								'checkboxesIsRequired' => $required,
+								'checkboxesContent' => array_map(
+									function ($checkbox) {
+										return [
+											'component' => 'checkbox',
+											'checkboxLabel' => $checkbox['label'],
+											'checkboxValue' => $checkbox['label'],
+										];
+									},
+									$options
+								),
+							]
+						);
 						break;
 				}
 			}
@@ -292,7 +353,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$output[] = [
 			'component' => 'submit',
 			'submitValue' => __('Submit', 'eightshift-forms'),
-			'submitFieldUseError' => false
+			'submitFieldUseError' => false,
+			'submitFieldOrder' => count($output) + 1,
 		];
 
 		return $output;

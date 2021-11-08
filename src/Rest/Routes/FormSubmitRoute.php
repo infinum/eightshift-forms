@@ -14,9 +14,8 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
@@ -62,9 +61,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 	protected $labels;
 
 	/**
-	 * Instance variable of GreenhouseClientInterface data.
+	 * Instance variable of ClientInterface data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
@@ -78,7 +77,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var HubspotClientInterface
+	 * @var ClientInterface
 	 */
 	protected $hubspotClient;
 
@@ -88,17 +87,17 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param GreenhouseClientInterface $greenhouseClient Inject GreenhouseClientInterface which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
-	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
+	 * @param ClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		MailerInterface $mailer,
 		LabelsInterface $labels,
-		GreenhouseClientInterface $greenhouseClient,
+		ClientInterface $greenhouseClient,
 		MailchimpClientInterface $mailchimpClient,
-		HubspotClientInterface $hubspotClient
+		ClientInterface $hubspotClient
 	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
@@ -319,7 +318,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		}
 
 		// Send application to Greenhouse.
-		$response = $this->greenhouseClient->postGreenhouseApplication(
+		$response = $this->greenhouseClient->postApplication(
 			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 			$params,
 			$files
@@ -377,13 +376,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 		}
 
 		// Send application to Mailchimp.
-		$response = $this->mailchimpClient->postMailchimpSubscription(
+		$response = $this->mailchimpClient->postApplication(
 			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
-			$params
+			$params,
+			[]
 		);
 
 		$status = $response['status'] ?? 'subscribed';
-		$message = $response['title'] ?? '';
+		$message = $response['detail'] ?? $response['title'] ?? '';
 
 		if (!$response) {
 			return \rest_ensure_response([
@@ -434,8 +434,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		}
 
 		// Send application to Hubspot.
-		$response = $this->hubspotClient->postHubspotApplication(
-			$this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FORM_ID_KEY, $formId),
+		$response = $this->hubspotClient->postApplication(
+			$this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
 			$params,
 			$files
 		);

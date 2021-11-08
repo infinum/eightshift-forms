@@ -109,6 +109,9 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				$formData
 			);
 
+			// Remove unecesery internal params before continue.
+			$params = $this->removeUneceseryParams($params);
+
 			// Determine form type to use.
 			switch ($formType) {
 				case SettingsCache::SETTINGS_TYPE_KEY:

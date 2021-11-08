@@ -47,11 +47,11 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	 * List all cache options in the project.
 	 */
 	public const ALL_CACHE = [
-		MailchimpClient::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME,
-		MailchimpClient::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME,
-		GreenhouseClient::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME,
-		GreenhouseClient::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME,
-		HubspotClient::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME,
+		MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
+		MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
+		GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
+		GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
+		HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
 	];
 
 	/**

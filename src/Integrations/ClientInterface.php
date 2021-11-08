@@ -3,15 +3,15 @@
 /**
  * File containing Connect interface
  *
- * @package EightshiftForms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations
  */
 
-namespace EightshiftForms\Integrations\Mailchimp;
+namespace EightshiftForms\Integrations;
 
 /**
  * Interface for a Client
  */
-interface MailchimpClientInterface
+interface ClientInterface
 {
 
 	/**
@@ -40,13 +40,4 @@ interface MailchimpClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function postApplication(string $itemId, array $params, array $files): array;
-
-	/**
-	 * Return Mailchimp tags for a list.
-	 *
-	 * @param string $itemId Item id to search.
-	 *
-	 * @return array<int, mixed>
-	 */
-	public function getTags(string $itemId): array;
 }

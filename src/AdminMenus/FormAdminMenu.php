@@ -185,6 +185,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'adminListingPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
 			'adminListingSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
 			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
+			'adminListingTrashLink' => Helper::getFormsTrashPageUrl(),
 			'adminListingForms' => $this->formsListing->getFormsList(),
 		];
 	}
