@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Greenhouse;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -90,7 +91,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Instance variable for Greenhouse data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
@@ -104,11 +105,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
 	 */
 	public function __construct(
-		GreenhouseClientInterface $greenhouseClient,
+		ClientInterface $greenhouseClient,
 		MapperInterface $greenhouse
 	) {
 		$this->greenhouseClient = $greenhouseClient;
@@ -202,9 +203,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$jobs = $this->greenhouseClient->getJobs();
+		$items = $this->greenhouseClient->getItems();
 
-		if (!$jobs) {
+		if (!$items) {
 			return [
 				[
 					'component' => 'highlighted-content',
@@ -214,7 +215,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$jobIdOptions = array_map(
+		$itemOptions = array_map(
 			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
@@ -223,11 +224,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 				];
 			},
-			$jobs
+			$items
 		);
 
 		array_unshift(
-			$jobIdOptions,
+			$itemOptions,
 			[
 				'component' => 'select-option',
 				'selectOptionLabel' => '',
@@ -235,9 +236,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			]
 		);
 
-		$selectedJob = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+		$selectedItem = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
 
-		$output =  [
+		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
@@ -249,9 +250,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectFieldLabel' => __('Job ID', 'eightshift-forms'),
 				'selectFieldHelp' => __('Select what Greenhouse job you want to show on this form.', 'eightshift-forms'),
-				'selectOptions' => $jobIdOptions,
+				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
-				'selectValue' => $selectedJob,
+				'selectValue' => $selectedItem,
 				'selectSingleSubmit' => true,
 			],
 			[
@@ -310,7 +311,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		];
 
 		// If the user has selected the list.
-		if ($selectedJob) {
+		if ($selectedItem) {
 			$output = array_merge(
 				$output,
 				[

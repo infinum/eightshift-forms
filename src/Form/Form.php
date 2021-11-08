@@ -45,9 +45,9 @@ class Form implements ServiceInterface
 	/**
 	 * Create array of additonal form options
 	 *
-	 * @param array<string, string|int> $formAdditionalProps Additional props to pass to form.
+	 * @param string $formId Form ID.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getFormSettingsOptions(string $formId): array
 	{
@@ -90,5 +90,4 @@ class Form implements ServiceInterface
 
 		return $output;
 	}
-
 }

@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -46,7 +47,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Instance variable for Mailchimp data.
 	 *
-	 * @var MailchimpClientInterface
+	 * @var ClientInterface
 	 */
 	protected $mailchimpClient;
 
@@ -60,11 +61,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Create a new instance.
 	 *
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		MailchimpClientInterface $mailchimpClient,
+		ClientInterface $mailchimpClient,
 		ValidatorInterface $validator
 	) {
 		$this->mailchimpClient = $mailchimpClient;
@@ -144,14 +145,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 */
 	public function getFormFields(string $formId): array
 	{
-		// Get List Id.
-		$listId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
-		if (empty($listId)) {
+		// Get item Id.
+		$itemId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
+		if (empty($itemId)) {
 			return [];
 		}
 
 		// Get fields.
-		$fields = $this->mailchimpClient->getListFields($listId);
+		$fields = $this->mailchimpClient->getItem($itemId);
 		if (empty($fields)) {
 			return [];
 		}
@@ -175,9 +176,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY, $formId);
+
 		$output[] = $this->getIntegrationFieldsValue(
-			SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-			$formId,
+			$integrationBreakpointsFields,
 			[
 				'component' => 'input',
 				'inputName' => 'email_address',
@@ -206,8 +208,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			switch ($type) {
 				case 'text':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'input',
 							'inputName' => $name,
@@ -222,8 +223,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'address':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'input',
 							'inputName' => 'address',
@@ -238,8 +238,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'number':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'input',
 							'inputName' => $name,
@@ -254,8 +253,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'phone':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'input',
 							'inputName' => $name,
@@ -270,8 +268,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'birthday':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'input',
 							'inputName' => $name,
@@ -286,8 +283,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'radio':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'radios',
 							'radiosId' => $id,
@@ -308,8 +304,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					break;
 				case 'dropdown':
 					$output[] = $this->getIntegrationFieldsValue(
-						SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
-						$formId,
+						$integrationBreakpointsFields,
 						[
 							'component' => 'select',
 							'selectId' => $id,

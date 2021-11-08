@@ -36,7 +36,7 @@ trait SettingsHelper
 	 * @param string $key Providing string to append to.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getSettingsValueGroup(string $key, string $formId): array
 	{
@@ -44,7 +44,7 @@ trait SettingsHelper
 		if (!$value) {
 			return [];
 		}
-		
+
 		return $value;
 	}
 
@@ -146,10 +146,10 @@ trait SettingsHelper
 	 * Get Integration forms Fields details (used to set field width for rensponsive)
 	 *
 	 * @param string $key Key to save in db.
-	 * @param array $formFields All form fields got from helper.
+	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getIntegrationFieldsDetails(string $key, array $formFields, string $formId): array
 	{
@@ -209,21 +209,16 @@ trait SettingsHelper
 	/**
 	 * Build integration fields value output with full component array.
 	 *
-	 * @param string $key Key to find settings.
-	 * @param string $formId Form ID.
-	 * @param array $fullField Fill component array.
+	 * @param array<string, mixed> $fields Field to search settings in.
+	 * @param array<string, mixed> $fullField Fill component array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIntegrationFieldsValue(string $key, string $formId, array $fullField): array
+	public function getIntegrationFieldsValue(array $fields, array $fullField): array
 	{
-		$fields = $this->getSettingsValueGroup($key, $formId);
 		$output = $fullField;
 
-		error_log( print_r( ( $formId ), true ) );
-		
-
-		foreach($fields as $fieldKey => $fieldValue) {
+		foreach ($fields as $fieldKey => $fieldValue) {
 			$item = explode('---', $fieldKey);
 
 			if ($fullField["{$fullField['component']}Id"] !== $item[0]) {

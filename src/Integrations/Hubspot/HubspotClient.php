@@ -12,11 +12,12 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 
 /**
  * HubspotClient integration class.
  */
-class HubspotClient implements HubspotClientInterface
+class HubspotClient implements ClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -24,51 +25,51 @@ class HubspotClient implements HubspotClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name for forms list.
+	 * Transient cache name for items.
 	 */
-	public const CACHE_HUBSPOT_FORMS_TRANSIENT_NAME = 'es_hubspot_forms_cache';
+	public const CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME = 'es_hubspot_items_cache';
 
 	/**
-	 * Return jobs simple list from Hubspot.
+	 * Return items.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getForms(): array
+	public function getItems(): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
-			$forms = $this->getHubspotForms();
+			$items = $this->getHubspotItems();
 
-			if ($forms) {
-				foreach ($forms as $form) {
-					$id = $form['guid'] ?? '';
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['guid'] ?? '';
 
 					if (!$id) {
 						continue;
 					}
 
-					$fields = $form['formFieldGroups'] ?? [];
+					$fields = $item['formFieldGroups'] ?? [];
 
 					// Find and populate consent data.
-					$consentData = $this->getConsentData($form);
+					$consentData = $this->getConsentData($item);
 
 					if ($consentData) {
 						$fields = array_merge($fields, $consentData);
 					}
 
-					$portalId = $form['portalId'] ?? '';
+					$portalId = $item['portalId'] ?? '';
 					$value = "{$id}---{$portalId}";
 
 					$output[$value] = [
 						'id' => $value,
-						'title' => $form['name'] ?? '',
+						'title' => $item['name'] ?? '',
 						'fields' => $fields,
 					];
 				}
 
-				set_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -76,36 +77,36 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
-	 * Return form with cache option for faster loading.
+	 * Return item with cache option for faster loading.
 	 *
-	 * @param string $formId Form id to search by.
+	 * @param string $itemId Item id to search by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getForm(string $formId): array
+	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_FORMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$formId]) || empty($output[$formId])) {
-			$output = $this->getForms();
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+			$output = $this->getItems();
 		}
 
-		return $output[$formId] ?? [];
+		return $output[$itemId] ?? [];
 	}
 
 	/**
-	 * API request to post form application to Hubspot.
+	 * API request to post application.
 	 *
-	 * @param string $formId Form id to search.
+	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed>  $params Params array.
 	 * @param array<string, mixed>  $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postHubspotApplication(string $formId, array $params, array $files): array
+	public function postApplication(string $itemId, array $params, array $files): array
 	{
-		$formId = explode('---', $formId);
+		$itemId = explode('---', $itemId);
 
 		$consent = array_filter(
 			$params,
@@ -155,7 +156,7 @@ class HubspotClient implements HubspotClientInterface
 		];
 
 		$response = \wp_remote_post(
-			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$formId[1]}/{$formId[0]}"),
+			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}"),
 			[
 				'headers' => $this->getHeaders(),
 				'body' => wp_json_encode($body),
@@ -177,11 +178,11 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
-	 * API request to get all forms from Hubspot.
+	 * API request to get all items from Hubspot.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHubspotForms()
+	private function getHubspotItems()
 	{
 		$response = \wp_remote_get(
 			$this->getBaseUrl('forms/v2/forms', true),
@@ -211,17 +212,17 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Populate and prepare consent checkboxes.
 	 *
-	 * @param array<string, mixed> $form Form data got from the api.
+	 * @param array<string, mixed> $item Form data got from the api.
 	 *
 	 * @return array<int, array<string, array<int, array<string, mixed>>>>
 	 */
-	private function getConsentData(array $form): array
+	private function getConsentData(array $item): array
 	{
 		$output = [];
 
 		// Find consent data from meta.
 		$consentData = array_filter(
-			$form['metaData'],
+			$item['metaData'],
 			function ($item) {
 				return $item['name'] === 'legalConsentOptions';
 			}
@@ -305,7 +306,7 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Prepare params
 	 *
-	 * @param array<string, mixed>  $params Params.
+	 * @param array<string, mixed> $params Params.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */

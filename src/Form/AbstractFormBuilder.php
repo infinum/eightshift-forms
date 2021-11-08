@@ -28,7 +28,7 @@ abstract class AbstractFormBuilder
 	 * Build public facing form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
+	 * @param array<string, bool|string> $formAdditionalProps Additional attributes for form component.
 	 *
 	 * @return string
 	 */

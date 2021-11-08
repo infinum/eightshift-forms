@@ -26,7 +26,7 @@
 			.es-field {
 				display: block;
 
-				&__label {
+				&__label { // stylelint-disable-line max-nesting-depth
 					margin-bottom: 5px;
 					display: block;
 					padding-top: 0;

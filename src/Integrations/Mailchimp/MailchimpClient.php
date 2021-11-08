@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
  * MailchimpClient integration class.
  */
-class MailchimpClient implements MailchimpClientInterface
+class MailchimpClient implements ClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -24,38 +25,39 @@ class MailchimpClient implements MailchimpClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name for list.
+	 * Transient cache name for items.
 	 */
-	public const CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME = 'es_mailchimp_lists_cache';
+	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
 
 	/**
-	 * Transient cache name for list fields.
+	 * Transient cache name for item.
 	 */
-	public const CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME = 'es_mailchimp_list_fields_cache';
+	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
 
 	/**
-	 * Get Mailchimp lists with cache.
+	 * Return items.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getLists(): array
+	public function getItems(): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
+		// Check if form exists in cache.
 		if (empty($output)) {
-			$lists = $this->getMailchimpLists();
+			$items = $this->getMailchimpLists();
 
-			if ($lists) {
-				foreach ($lists as $job) {
-					$id = $job['id'] ?? '';
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
 
 					$output[$id] = [
 						'id' => $id,
-						'title' => $job['name'] ?? '',
+						'title' => $item['name'] ?? '',
 					];
 				}
 
-				set_transient(self::CACHE_MAILCHIMP_LISTS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -63,45 +65,46 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * Return list fields with cache option for faster loading.
+	 * Return item with cache option for faster loading.
 	 *
-	 * @param string $formId Form Id.
+	 * @param string $itemId Item ID to search by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getListFields(string $formId): array
+	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$formId]) || empty($output[$formId])) {
-			$fields = $this->getMailchimpListFields($formId);
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+			$fields = $this->getMailchimpListFields($itemId);
 
-			if ($formId && $fields) {
-				$output[$formId] = $fields ?? [];
+			if ($itemId && $fields) {
+				$output[$itemId] = $fields ?? [];
 
-				set_transient(self::CACHE_MAILCHIMP_LIST_FIELDS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output[$formId] ?? [];
+		return $output[$itemId] ?? [];
 	}
 
 	/**
-	 * API request to post mailchimp subscription to Mailchimp.
+	 * API request to post application.
 	 *
-	 * @param string $listId List id.
-	 * @param array<string, mixed> $params Params array.
+	 * @param string $itemId Item id to search.
+	 * @param array<string, mixed>  $params Params array.
+	 * @param array<string, mixed>  $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postMailchimpSubscription(string $listId, array $params): array
+	public function postApplication(string $itemId, array $params, array $files): array
 	{
 		$email = $params['email_address']['value'];
 		$emailHash = md5(strtolower($email));
 
 		$response = \wp_remote_request(
-			"{$this->getApiUrl()}lists/{$listId}/members/{$emailHash}",
+			"{$this->getApiUrl()}lists/{$itemId}/members/{$emailHash}",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'PUT',

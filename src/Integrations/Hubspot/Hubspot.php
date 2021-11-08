@@ -14,6 +14,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -45,16 +46,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var HubspotClientInterface
+	 * @var ClientInterface
 	 */
 	protected $hubspotClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(HubspotClientInterface $hubspotClient)
+	public function __construct(ClientInterface $hubspotClient)
 	{
 		$this->hubspotClient = $hubspotClient;
 	}
@@ -133,25 +134,26 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 */
 	public function getFormFields(string $formId): array
 	{
-		// Get Job Id.
-		$formId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FORM_ID_KEY, (string) $formId);
-		if (empty($formId)) {
+		// Get item Id.
+		$itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, (string) $formId);
+		if (empty($itemId)) {
 			return [];
 		}
 
-		// Get Form.
-		$form = $this->hubspotClient->getForm($formId);
-		if (empty($form)) {
+		// Get fields.
+		$item = $this->hubspotClient->getItem($itemId);
+		if (empty($item)) {
 			return [];
 		}
 
-		return $this->getFields($form['fields'], $formId);
+		return $this->getFields($item['fields'], $formId);
 	}
 
 	/**
 	 * Map Hubspot fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
+	 * @param string $formId Form ID.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
@@ -162,6 +164,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		if (!$data) {
 			return $output;
 		}
+
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY, $formId);
 
 		foreach ($data as $item) {
 			if (empty($item)) {
@@ -192,8 +196,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				switch ($type) {
 					case 'text':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'input',
 								'inputFieldLabel' => $label,
@@ -208,8 +211,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'textarea':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => $label,
@@ -224,8 +226,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'file':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'file',
 								'fileFieldLabel' => $label,
@@ -240,8 +241,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'select':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'select',
 								'selectFieldLabel' => $label,
@@ -266,8 +266,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'booleancheckbox':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'checkboxes',
 								'checkboxesId' => $id,
@@ -284,8 +283,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'checkbox':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'checkboxes',
 								'checkboxesId' => $name,
@@ -306,8 +304,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'radio':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'radios',
 								'radiosId' => $id,
@@ -328,8 +325,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						break;
 					case 'consent':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',

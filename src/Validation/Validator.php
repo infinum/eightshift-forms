@@ -86,7 +86,7 @@ class Validator extends AbstractValidation
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
 			$blocks = parse_blocks(get_the_content(null, false, (int) $formId));
-			
+
 			$validationReference = $this->getValidationReference($blocks[0]['innerBlocks'][0]['innerBlocks']);
 		}
 

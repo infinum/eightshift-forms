@@ -12,11 +12,12 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 
 /**
  * GreenhouseClient integration class.
  */
-class GreenhouseClient implements GreenhouseClientInterface
+class GreenhouseClient implements ClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -24,23 +25,23 @@ class GreenhouseClient implements GreenhouseClientInterface
 	use SettingsHelper;
 
 	/**
-	 * Transient cache name for simple jobs.
+	 * Transient cache name for items.
 	 */
-	public const CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME = 'es_greenhouse_jobs_cache';
+	public const CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME = 'es_greenhouse_items_cache';
 
 	/**
-	 * Transient cache name for jobs questions.
+	 * Transient cache name for item.
 	 */
-	public const CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME = 'es_greenhouse_jobs_questions_cache';
+	public const CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME = 'es_greenhouse_item_cache';
 
 	/**
-	 * Return jobs simple list from Greenhouse.
+	 * Return items.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getJobs(): array
+	public function getItems(): array
 	{
-		$output = get_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -62,7 +63,7 @@ class GreenhouseClient implements GreenhouseClientInterface
 					];
 				}
 
-				set_transient(self::CACHE_GREENHOUSE_JOBS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -70,45 +71,45 @@ class GreenhouseClient implements GreenhouseClientInterface
 	}
 
 	/**
-	 * Return job with cache option for faster loading.
+	 * Return item with cache option for faster loading.
 	 *
-	 * @param string $jobId Job id to search by.
+	 * @param string $itemId Item ID to search by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getJobQuestions(string $jobId): array
+	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$jobId]) || empty($output[$jobId])) {
-			$job = $this->getGreenhouseJob($jobId);
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+			$job = $this->getGreenhouseJob($itemId);
 
 			$questions = $job['questions'] ?? [];
 
-			if ($jobId && $questions) {
-				$output[$jobId] = $job['questions'] ?? [];
+			if ($itemId && $questions) {
+				$output[$itemId] = $job['questions'] ?? [];
 
-				set_transient(self::CACHE_GREENHOUSE_JOBS_QUESTIONS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output[$jobId] ?? [];
+		return $output[$itemId] ?? [];
 	}
 
 	/**
-	 * API request to post job application to Greenhouse.
+	 * API request to post application.
 	 *
-	 * @param string $jobId Job id to search.
+	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed>  $params Params array.
 	 * @param array<string, mixed>  $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postGreenhouseApplication(string $jobId, array $params, array $files): array
+	public function postApplication(string $itemId, array $params, array $files): array
 	{
 		$response = \wp_remote_post(
-			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}",
+			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
 				'body' => wp_json_encode(

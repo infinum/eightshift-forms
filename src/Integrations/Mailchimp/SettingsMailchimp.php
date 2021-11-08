@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -81,7 +82,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Instance variable for Mailchimp data.
 	 *
-	 * @var MailchimpClientInterface
+	 * @var ClientInterface
 	 */
 	protected $mailchimpClient;
 
@@ -95,11 +96,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Create a new instance.
 	 *
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
 	 */
 	public function __construct(
-		MailchimpClientInterface $mailchimpClient,
+		ClientInterface $mailchimpClient,
 		MapperInterface $mailchimp
 	) {
 		$this->mailchimpClient = $mailchimpClient;
@@ -192,9 +193,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			];
 		}
 
-		$lists = $this->mailchimpClient->getLists();
+		$items = $this->mailchimpClient->getItems();
 
-		if (!$lists) {
+		if (!$items) {
 			return [
 				[
 					'component' => 'highlighted-content',
@@ -204,7 +205,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			];
 		}
 
-		$listsOptions = array_map(
+		$itemOptions = array_map(
 			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
@@ -213,11 +214,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
 				];
 			},
-			$lists
+			$items
 		);
 
 		array_unshift(
-			$listsOptions,
+			$itemOptions,
 			[
 				'component' => 'select-option',
 				'selectOptionLabel' => '',
@@ -225,7 +226,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			]
 		);
 
-		$selectedList = $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
+		$selectedItem = $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
 
 		$output = [
 			[
@@ -239,15 +240,15 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectFieldLabel' => __('List', 'eightshift-forms'),
 				'selectFieldHelp' => __('Select list for subscription.', 'eightshift-forms'),
-				'selectOptions' => $listsOptions,
+				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
-				'selectValue' => $selectedList,
+				'selectValue' => $selectedItem,
 				'selectSingleSubmit' => true,
 			],
 		];
 
 		// If the user has selected the list.
-		if ($selectedList) {
+		if ($selectedItem) {
 			$output = array_merge(
 				$output,
 				[

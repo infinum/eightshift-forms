@@ -14,6 +14,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -45,16 +46,16 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	/**
 	 * Instance variable for Greenhouse data.
 	 *
-	 * @var GreenhouseClientInterface
+	 * @var ClientInterface
 	 */
 	protected $greenhouseClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param GreenhouseClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
+	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 */
-	public function __construct(GreenhouseClientInterface $greenhouseClient)
+	public function __construct(ClientInterface $greenhouseClient)
 	{
 		$this->greenhouseClient = $greenhouseClient;
 	}
@@ -85,7 +86,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
 
 		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
+		$formAdditionalProps['formPostId'] = (string) $formId;
 
 		// Get form type.
 		$formAdditionalProps['formType'] = SettingsGreenhouse::SETTINGS_TYPE_KEY;
@@ -133,19 +134,19 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	public function getFormFields(string $formId): array
 	{
-		// Get Job Id.
-		$jobId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
-		if (empty($jobId)) {
+		// Get Item Id.
+		$itemId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
+		if (empty($itemId)) {
 			return [];
 		}
 
-		// Get Job questions.
-		$questions = $this->greenhouseClient->getJobQuestions($jobId);
-		if (empty($questions)) {
+		// Get Form.
+		$fields = $this->greenhouseClient->getItem($itemId);
+		if (empty($fields)) {
 			return [];
 		}
 
-		return $this->getFields($questions, (string) $formId);
+		return $this->getFields($fields, $formId);
 	}
 
 	/**
@@ -164,14 +165,18 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $question) {
-			if (empty($question)) {
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$hideResumeTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId);
+		$hideCoverLetterTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId);
+
+		foreach ($data as $item) {
+			if (empty($item)) {
 				continue;
 			}
 
-			$fields = $question['fields'] ?? '';
-			$label = $question['label'] ?? '';
-			$required = $question['required'] ?? false;
+			$fields = $item['fields'] ?? '';
+			$label = $item['label'] ?? '';
+			$required = $item['required'] ?? false;
 
 
 			foreach ($fields as $field) {
@@ -179,17 +184,11 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				$name = $field['name'] ?? '';
 				$values = $field['values'];
 
-				if (
-					$field['name'] === 'resume_text' &&
-					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId)
-				) {
+				if ($field['name'] === 'resume_text' && $hideResumeTextarea) {
 					continue;
 				}
 
-				if (
-					$field['name'] === 'cover_letter_text' &&
-					$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId)
-				) {
+				if ($field['name'] === 'cover_letter_text' && $hideCoverLetterTextarea) {
 					continue;
 				}
 
@@ -197,8 +196,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				switch ($type) {
 					case 'input_text':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'input',
 								'inputName' => $name,
@@ -212,8 +210,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						break;
 					case 'input_file':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'file',
 								'fileName' => $name,
@@ -227,8 +224,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						break;
 					case 'textarea':
 						$output[] = $this->getIntegrationFieldsValue(
-							SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
-							$formId,
+							$integrationBreakpointsFields,
 							[
 								'component' => 'textarea',
 								'textareaName' => $name,
@@ -241,8 +237,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 					case 'multi_value_single_select':
 						if ($values[0]['label'] === 'No' && $values[0]['value'] === 0) {
 							$output[] = $this->getIntegrationFieldsValue(
-								SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
-								$formId,
+								$integrationBreakpointsFields,
 								[
 									'component' => 'checkboxes',
 									'checkboxesName' => $name,
@@ -259,8 +254,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							);
 						} else {
 							$output[] = $this->getIntegrationFieldsValue(
-								SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
-								$formId,
+								$integrationBreakpointsFields,
 								[
 									'component' => 'select',
 									'selectName' => $name,
