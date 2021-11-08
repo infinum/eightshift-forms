@@ -50,6 +50,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public const FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME = 'es_forms_block_forms_style_options';
 
 	/**
+	 * Filter block field style options key.
+	 */
+	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
@@ -142,6 +147,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (is_admin()) {
 			$output['additionalBlocks'] = apply_filters(self::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 			$output['formsBlockStyleOptions'] = apply_filters(self::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
+			$output['fieldBlockStyleOptions'] = apply_filters(self::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 		}
 

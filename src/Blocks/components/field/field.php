@@ -16,6 +16,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+$blockJsClass = $attributes['blockJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
 $customMediaBreakpoints = apply_filters(EnqueueBlocks::FILTER_MEDIA_BREAKPOINTS_NAME, []);
@@ -43,12 +44,15 @@ $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
+$fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
+	Components::selector($blockJsClass, $blockJsClass),
+	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
 ]);
 
 $fieldTag = 'div';
