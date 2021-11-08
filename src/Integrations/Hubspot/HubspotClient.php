@@ -118,42 +118,45 @@ class HubspotClient implements ClientInterface
 
 		$outputConsent = [];
 
+		$body = [
+			'context' => [
+				'ipAddress' => isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'hutk' => $params['es-form-hubspot-cookie']['value'],
+				'pageUri' => $params['es-form-hubspot-page-url']['value'],
+				'pageName' => $params['es-form-hubspot-page-name']['value'],
+			],
+		];
+
 		if ($consent) {
-			$outputConsent['consent'] = [];
+			$outputConsent = [];
 
 			foreach ($consent as $key => $value) {
 				$name = explode('.', $value['name']);
 				$type = $name[0];
 				$id = $name[1] ?? '';
 
-				if ($type === 'CONSENT_PROCESSING') {
-					$outputConsent['consent']['consentToProcess'] = true;
-					$outputConsent['consent']['text'] = $value['value'];
+				if ($type === 'CONSENT_PROCESSING' && $value['value']) {
+					$outputConsent['consentToProcess'] = true;
+					$outputConsent['text'] = $value['value'];
 				}
 
-				if ($type === 'CONSENT_COMMUNICATION') {
-					if ($value['value']) {
-						$outputConsent['consent']['communications'][] = [
-							'value' => true,
-							'subscriptionTypeId' => $id,
-							'text' => $value['value'],
-						];
-					}
+				if ($type === 'CONSENT_COMMUNICATION' && $value['value']) {
+					$outputConsent['communications'][] = [
+						'value' => true,
+						'subscriptionTypeId' => $id,
+						'text' => $value['value'],
+					];
 				}
 
 				unset($params[$key]);
 			}
+
+			if ($outputConsent) {
+				$body['legalConsentOptions']['consent'] = $outputConsent;
+			}
 		}
 
-		$body = [
-			'fields' => $this->prepareParams($params),
-			'context' => [
-				'hutk' => $params['es-form-hubspot-cookie']['value'],
-				'pageUri' => $params['es-form-hubspot-page-url']['value'],
-				'pageName' => $params['es-form-hubspot-page-name']['value'],
-			],
-			'legalConsentOptions' => $outputConsent,
-		];
+		$body['fields'] = $this->prepareParams($params);
 
 		$response = \wp_remote_post(
 			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}"),
@@ -245,20 +248,20 @@ class HubspotClient implements ClientInterface
 
 			if (!$isLegitimateInterest) {
 				// Populate checkbox for communication consent.
-				$name = $consentData[0]['name'] ?? '';
-
 				$consentCommunicationOptions = [];
+				$communicationTypeId = '';
+
 				foreach ($communicationConsentCheckboxes as $key => $value) {
 					$communicationTypeId = $value['communicationTypeId'] ?? '';
 					$consentCommunicationOptions[] = [
-						'name' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
-						'id' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
 						'label' => $value['label'] ?? '',
 						'required' => $value['required'] ?? false,
 					];
 				}
 
 				$output[]['fields'][0] = [
+					'name' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
+					'id' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
 					'options' => $consentCommunicationOptions,
 					'fieldType' => 'consent',
 					'beforeText' => $communicationConsentText,
@@ -272,8 +275,6 @@ class HubspotClient implements ClientInterface
 						$consentProcessingOptions = [
 							[
 								'label' => wp_strip_all_tags($processingConsentCheckboxLabel),
-								'name' => "CONSENT_PROCESSING",
-								'id' => "CONSENT_PROCESSING",
 								'required' => true,
 								'communicationTypeId' => '', // Empty on purpose.
 							]
@@ -281,6 +282,8 @@ class HubspotClient implements ClientInterface
 					}
 
 					$output[]['fields'][0] = [
+						'name' => "CONSENT_PROCESSING",
+						'id' => "CONSENT_PROCESSING",
 						'options' => $consentProcessingOptions,
 						'fieldType' => 'consent',
 						'beforeText' => $processingConsentText,

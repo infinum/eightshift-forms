@@ -251,15 +251,28 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'selectPlaceholder' => $placeholder,
 								'selectIsRequired' => $required,
 								'selectValue' => $value,
-								'selectOptions' => array_map(
-									function ($selectOption) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $selectOption['label'],
-											'selectOptionValue' => $selectOption['value'],
-										];
-									},
-									$options
+								'selectOptions' => array_values(
+									array_merge(
+										[
+											[
+												'component' => 'select-option',
+												'selectOptionLabel' => __('Select option', 'eightshift-forms'),
+												'selectOptionValue' => ' ',
+												'selectOptionIsSelected' => true,
+												'selectOptionIsDisabled' => true,
+											],
+										],
+										array_map(
+											function ($selectOption) {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $selectOption['label'],
+													'selectOptionValue' => $selectOption['value'],
+												];
+											},
+											$options
+										)
+									)
 								),
 							]
 						);
@@ -286,8 +299,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							$integrationBreakpointsFields,
 							[
 								'component' => 'checkboxes',
-								'checkboxesId' => $name,
+								'checkboxesId' => $id,
 								'checkboxesName' => $name,
+								'checkboxesFieldLabel' => $label,
 								'checkboxesIsRequired' => $required,
 								'checkboxesContent' => array_map(
 									function ($checkbox) {
@@ -309,6 +323,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'component' => 'radios',
 								'radiosId' => $id,
 								'radiosName' => $name,
+								'radiosFieldLabel' => $label,
 								'radiosIsRequired' => $required,
 								'radiosContent' => array_map(
 									function ($radio) {
@@ -331,6 +346,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
 								'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
 								'checkboxesId' => $id,
+								'checkboxesFieldHideLabel' => true,
 								'checkboxesName' => $name,
 								'checkboxesIsRequired' => $required,
 								'checkboxesContent' => array_map(
