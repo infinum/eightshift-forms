@@ -453,11 +453,19 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 		// Bailout if Hubspot returns error.
 		if ($status !== 200) {
-			return \rest_ensure_response([
-				'code' => $status,
-				'status' => 'error',
-				'message' => $message
-			]);
+			if (isset($response['errors'][0])) {
+				switch ($response['errors'][0]['errorType']) {
+					case 'INVALID_EMAIL':
+						$message = $this->labels->getLabel('validationEmailField');
+						break;
+				}
+
+				return \rest_ensure_response([
+					'code' => $status,
+					'status' => 'error',
+					'message' => $message
+				]);
+			}
 		}
 
 		// Finish with success.

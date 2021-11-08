@@ -35,6 +35,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying required number.
 			'validationRequiredCount' => __('This field is required with minimum %s selected items!', 'eightshift-forms'),
 			'validationEmail' => __('This field is not a valid email!', 'eightshift-forms'),
+			'validationEmailField' => __('Email field is not a valid email!', 'eightshift-forms'),
 			'validationUrl' => __('This field is not a valid url!', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationAccept' => __('Your file type is not supported. Please use only %s file type.', 'eightshift-forms'),
