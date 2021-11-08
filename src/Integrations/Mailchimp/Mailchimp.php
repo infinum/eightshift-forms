@@ -329,7 +329,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$output[] = [
 			'component' => 'submit',
 			'submitValue' => __('Subscribe', 'eightshift-forms'),
-			'submitFieldUseError' => false
+			'submitFieldUseError' => false,
+			'submitFieldOrder' => count($output) + 1,
 		];
 
 		return $output;

@@ -163,8 +163,9 @@ trait SettingsHelper
 
 		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
 		$fieldsKey = $this->getSettingsName($key);
+		$totalFields = count($formFields) - 1;
 
-		foreach ($formFields as $field) {
+		foreach ($formFields as $fieldKey => $field) {
 			$component = $field['component'];
 
 			// Skip submit.
@@ -203,6 +204,17 @@ trait SettingsHelper
 				$i++;
 			}
 
+			$fieldsOutput[0]['groupContent'][] = [
+				'component' => 'input',
+				'inputId' => "{$id}---order",
+				'inputFieldLabel' => __('Order', 'eightshift-forms'),
+				'inputType' => 'number',
+				'inputValue' => $fieldsValues["{$id}---order"] ?? $fieldKey + 1,
+				'inputMin' => 1,
+				'inputMax' => $totalFields,
+				'inputStep' => 1,
+			];
+
 			$fields = array_merge($fields, $fieldsOutput);
 		}
 
@@ -230,8 +242,13 @@ trait SettingsHelper
 
 			$breakpoint = ucfirst($item[1]);
 
-			$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
+			if ($item[1] === 'order') {
+				$output["{$fullField['component']}FieldOrder"] = $fieldValue;
+			} else {
+				$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
+			}
 		}
+
 
 		return $output;
 	}

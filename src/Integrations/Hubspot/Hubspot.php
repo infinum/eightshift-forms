@@ -353,7 +353,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$output[] = [
 			'component' => 'submit',
 			'submitValue' => __('Submit', 'eightshift-forms'),
-			'submitFieldUseError' => false
+			'submitFieldUseError' => false,
+			'submitFieldOrder' => count($output) + 1,
 		];
 
 		return $output;

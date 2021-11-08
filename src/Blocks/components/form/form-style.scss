@@ -1,4 +1,5 @@
 .es-form {
+	$this: &;
 	--es-form-scoped-spacing: 10px;
 
 	max-width: 600px;
@@ -12,9 +13,12 @@
 		margin-left: calc(var(--es-form-scoped-spacing) * -1);
 		margin-right: calc(var(--es-form-scoped-spacing) * -1);
 
-		> * {
+		> .es-field {
+			flex: 0 0 var(--field-width, 100%);
+			max-width: var(--field-width, 100%);
 			padding-left: var(--es-form-scoped-spacing);
 			padding-right: var(--es-form-scoped-spacing);
+			margin: 0 0 20px 0;
 		}
 	}
 }

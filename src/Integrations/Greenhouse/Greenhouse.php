@@ -282,7 +282,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		$output[] = [
 			'component' => 'submit',
 			'submitValue' => __('Submit', 'eightshift-forms'),
-			'submitFieldUseError' => false
+			'submitFieldUseError' => false,
+			'submitFieldOrder' => count($output) + 1,
 		];
 
 		return $output;
