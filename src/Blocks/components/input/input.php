@@ -23,6 +23,9 @@ $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
+$inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
+$inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
+$inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -32,6 +35,22 @@ $inputClass = Components::classnames([
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
+
+$inputNumberOptions = '';
+if ($inputType === 'number') {
+	if ($inputMin || $inputMin === 0) {
+		$inputNumberOptions .= "min=" . $inputMin . " ";
+	}
+	if ($inputMax || $inputMax === 0) {
+		$inputNumberOptions .= "max=" . $inputMax . " ";
+	}
+	if ($inputStep || $inputStep === 0) {
+		$inputNumberOptions .= "step=" . $inputStep . " ";
+	}
+}
+
+error_log( print_r( ( $attributes ), true ) );
+
 
 $input = '
 <input
@@ -44,6 +63,7 @@ $input = '
 	data-tracking="' . $inputTracking . '"
 	' . disabled($inputIsDisabled, true, false) . '
 	' . readonly($inputIsReadOnly, true, false) . '
+	' . $inputNumberOptions . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

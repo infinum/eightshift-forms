@@ -193,6 +193,9 @@ trait SettingsHelper
 					'inputFieldLabel' => ucfirst($breakpoint),
 					'inputType' => 'number',
 					'inputValue' => $fieldsValues["{$id}---{$breakpoint}"] ?? '',
+					'inputMin' => 0,
+					'inputMax' => 12,
+					'inputStep' => 1,
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
