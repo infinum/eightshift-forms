@@ -101,3 +101,60 @@ public function getFormsStyleOptions(): array
 	];
 }
 ```
+
+## Add additional style options to field block
+
+This filter will add new options to the style select dropdown in the field block.
+
+Field style option selector will not show unless a filter is provided.
+
+**Default values:**
+```php
+[]
+```
+
+**Filter:**
+```php
+// Provide custom field style options.
+add_filter('es_forms_block_field_style_options', [$this, 'getFieldStyleOptions']);
+
+/**
+ * Provide custom field style options.
+ * Available options:
+ * - input
+ * - textarea
+ * - checkboxes
+ * - radios
+ * - sender-email
+ * - select
+ * - file
+ * - submit
+ *
+ * @return array
+ */
+public function getFieldStyleOptions(): array
+{
+	return [
+		'input' => [
+			[
+				'label' => 'Default',
+				'value' => 'default'
+			],
+			[
+				'label' => 'Custom Style',
+				'value' => 'custom-style'
+			],
+		],
+		'select' => [
+			[
+				'label' => 'Default',
+				'value' => 'default'
+			],
+			[
+				'label' => 'Custom Style',
+				'value' => 'custom-style'
+			],
+		]
+	];
+}
+```
