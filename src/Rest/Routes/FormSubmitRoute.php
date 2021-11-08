@@ -17,6 +17,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
+use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
@@ -69,7 +70,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Instance variable for Mailchimp data.
 	 *
-	 * @var ClientInterface
+	 * @var MailchimpClientInterface
 	 */
 	protected $mailchimpClient;
 
@@ -87,7 +88,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
-	 * @param ClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param ClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 */
 	public function __construct(
@@ -95,7 +96,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		MailerInterface $mailer,
 		LabelsInterface $labels,
 		ClientInterface $greenhouseClient,
-		ClientInterface $mailchimpClient,
+		MailchimpClientInterface $mailchimpClient,
 		ClientInterface $hubspotClient
 	) {
 		$this->validator = $validator;
@@ -382,7 +383,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		);
 
 		$status = $response['status'] ?? 'subscribed';
-		$message = $response['title'] ?? '';
+		$message = $response['detail'] ?? $response['title'] ?? '';
 
 		if (!$response) {
 			return \rest_ensure_response([

@@ -14,6 +14,8 @@ Adding new integration steps:
 
 # Mailchimp
 
+[Documentation](https://mailchimp.com/developer/marketing/docs/merge-fields/#structure)
+
 Supported fields:
 * Text
 * Address - partially

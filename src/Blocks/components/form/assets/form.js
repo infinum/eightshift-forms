@@ -179,12 +179,7 @@ export class Form {
 
 	// Build form data object.
 	getFormData = (element, singleSubmit = false) => {
-		// Find all interesting form items.
-		let items = element.querySelectorAll('input, select, button, textarea');
-
 		const formData = new FormData();
-
-		const formType = element.getAttribute('data-form-type');
 
 		const groups = element.querySelectorAll(`${this.groupSelector}`);
 
@@ -211,54 +206,64 @@ export class Form {
 					}));
 				}
 			}
-		} else {
-			// If single submit override items and pass only one item to submit.
-			if (singleSubmit) {
-				items = [
-					singleSubmit
-				];
+		}
+
+		let items = element.querySelectorAll(`
+			input:not(${this.groupInnerSelector} input),
+			select:not(${this.groupInnerSelector} select),
+			button:not(${this.groupInnerSelector} button),
+			textarea:not(${this.groupInnerSelector} textarea)
+		`);
+
+		const formType = element.getAttribute('data-form-type');
+
+		// If single submit override items and pass only one item to submit.
+		if (singleSubmit) {
+			items = [
+				singleSubmit
+			];
+		}
+		
+
+		// Iterate all form items.
+		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
+			const {
+				type,
+				name,
+				id,
+				files,
+				disabled,
+				checked,
+			} = item;
+
+			if (disabled) {
+				continue;
 			}
 
-			// Iterate all form items.
-			for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
-				const {
-					type,
-					name,
-					id,
-					files,
-					disabled,
-					checked,
-				} = item;
+			let {
+				value,
+			} = item;
 
-				if (disabled) {
-					continue;
+			// Build data object.
+			const data = {
+				name,
+				value,
+				type,
+			};
+
+			// If checkbox/radio on empty change to empty value.
+			if ((type === 'checkbox' || type === 'radio') && !checked) {
+				data.value = '';
+			}
+
+			// Append files field.
+			if (type === 'file' && files.length) {
+				for (const [key, file] of Object.entries(files)) {
+					formData.append(`${id}[${key}]`, file);
 				}
-
-				let {
-					value,
-				} = item;
-
-				// Build data object.
-				const data = {
-					name,
-					value,
-					type,
-				};
-
-				// If checkbox/radio on empty change to empty value.
-				if ((type === 'checkbox' || type === 'radio') && !checked) {
-					data.value = '';
-				}
-
-				// Append files field.
-				if (type === 'file' && files.length) {
-					for (const [key, file] of Object.entries(files)) {
-						formData.append(`${id}[${key}]`, file);
-					}
-				} else {
-					// Output/append all fields.
-					formData.append(id, JSON.stringify(data));
-				}
+			} else {
+				// Output/append all fields.
+				formData.append(id, JSON.stringify(data));
 			}
 		}
 

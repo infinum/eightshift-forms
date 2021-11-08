@@ -71,6 +71,8 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldId' => $inputId,
 			'fieldName' => $inputName,
 			'fieldDisabled' => !empty($inputIsDisabled),
+			'fieldHideLabel' => $inputType === 'hidden',
+			'fieldUseError' => $inputType !== 'hidden'
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

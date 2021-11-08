@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -45,9 +44,16 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
 
 	/**
+	 * Field Mailchimp Tags.
+	 *
+	 * @var string
+	 */
+	public const FIELD_MAILCHIMP_TAGS_KEY = 'es-form-mailchimp-tags';
+
+	/**
 	 * Instance variable for Mailchimp data.
 	 *
-	 * @var ClientInterface
+	 * @var MailchimpClientInterface
 	 */
 	protected $mailchimpClient;
 
@@ -61,11 +67,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		ClientInterface $mailchimpClient,
+		MailchimpClientInterface $mailchimpClient,
 		ValidatorInterface $validator
 	) {
 		$this->mailchimpClient = $mailchimpClient;
@@ -324,6 +330,18 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					);
 					break;
 			}
+		}
+
+		$tags = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
+
+		if ($tags) {
+			$output[] = [
+				'component' => 'input',
+				'inputType' => 'hidden',
+				'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+				'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+				'inputValue' => $tags,
+			];
 		}
 
 		$output[] = [
