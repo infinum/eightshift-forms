@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -75,6 +74,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimp-list';
 
 	/**
+	 * List Tags Key.
+	 */
+	public const SETTINGS_MAILCHIMP_LIST_TAGS_KEY = 'mailchimp-list-tags';
+
+	/**
 	 * Integration Breakpoints Key.
 	 */
 	public const SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY = 'mailchimp-integration-breakpoints';
@@ -82,7 +86,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Instance variable for Mailchimp data.
 	 *
-	 * @var ClientInterface
+	 * @var MailchimpClientInterface
 	 */
 	protected $mailchimpClient;
 
@@ -96,11 +100,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
 	 */
 	public function __construct(
-		ClientInterface $mailchimpClient,
+		MailchimpClientInterface $mailchimpClient,
 		MapperInterface $mailchimp
 	) {
 		$this->mailchimpClient = $mailchimpClient;
@@ -252,6 +256,24 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
+						'checkboxesFieldHelp' => __('Select tags assigned to this mailing list subscriber.', 'eightshift-forms'),
+						'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
+						'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
+						'checkboxesContent' => array_map(
+							function ($tag) use ($formId) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $tag['name'],
+									'checkboxIsChecked' => $this->isCheckboxSettingsChecked($tag['name'], self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId),
+									'checkboxValue' => $tag['name'],
+								];
+							},
+							$this->mailchimpClient->getTags($selectedItem)
+						),
+					],
 					[
 						'component' => 'divider',
 					],

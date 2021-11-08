@@ -3,7 +3,7 @@
 /**
  * Class that holds all filter used in the component and blocks regarding form.
  *
- * @package EightshiftLibs\Foirm
+ * @package EightshiftLibs\Form
  */
 
 declare(strict_types=1);

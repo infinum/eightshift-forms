@@ -11,13 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
  * MailchimpClient integration class.
  */
-class MailchimpClient implements ClientInterface
+class MailchimpClient implements MailchimpClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -86,6 +85,8 @@ class MailchimpClient implements ClientInterface
 			}
 		}
 
+		$this->getTags($itemId);
+
 		return $output[$itemId] ?? [];
 	}
 
@@ -113,13 +114,40 @@ class MailchimpClient implements ClientInterface
 						'email_address' => $email,
 						'status_if_new' => 'subscribed',
 						'status' => 'subscribed',
-						'merge_fields' => $this->prepareParams($params)
+						'merge_fields' => $this->prepareParams($params),
+						'tags' => $this->prepareTags($params),
 					]
 				),
 			]
 		);
 
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+	}
+
+	/**
+	 * Return Mailchimp tags for a list.
+	 *
+	 * @param string $itemId Item id to search.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getTags(string $itemId): array
+	{
+		$response = \wp_remote_get(
+			"{$this->getApiUrl()}lists/{$itemId}/tag-search",
+			[
+				'headers' => $this->getHeaders(),
+				'timeout' => 60,
+			]
+		);
+
+		$body = json_decode(\wp_remote_retrieve_body($response), true);
+
+		if (!isset($body['tags'])) {
+			return [];
+		}
+
+		return $body['tags'];
 	}
 
 	/**
@@ -192,9 +220,9 @@ class MailchimpClient implements ClientInterface
 	 *
 	 * @param array<string, mixed> $params Params.
 	 *
-	 * @return object
+	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): object
+	private function prepareParams(array $params): array
 	{
 		$output = [];
 
@@ -218,7 +246,25 @@ class MailchimpClient implements ClientInterface
 			}
 		}
 
-		return (object) $output;
+		return $output;
+	}
+
+	/**
+	 * Prepare tags
+	 *
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return array<int, string>
+	 */
+	private function prepareTags(array $params): array
+	{
+		$key = Mailchimp::FIELD_MAILCHIMP_TAGS_KEY;
+
+		if (!isset($params[$key])) {
+			return [];
+		}
+
+		return explode(', ', $params[$key]['value']);
 	}
 
 	/**
