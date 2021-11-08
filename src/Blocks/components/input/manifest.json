@@ -59,9 +59,6 @@
 		},
 		"inputValidationPattern": {
 			"type": "string"
-		},
-		"inputAttrs": {
-			"type": "array"
 		}
 	},
 	"options": {
