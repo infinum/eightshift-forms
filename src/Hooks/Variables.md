@@ -41,3 +41,12 @@ This variable will set forms Mailchimp api key and you will not be able to chang
 
 ```php
 define('ES_API_KEY_MAILCHIMP', '<api-key>');
+```
+
+## Set Mailerlite api key
+
+This variable will set forms Mailerlite api key and you will not be able to change it from the admin.
+
+```php
+define('ES_API_KEY_MAILERLITE', '<api-key>');
+```

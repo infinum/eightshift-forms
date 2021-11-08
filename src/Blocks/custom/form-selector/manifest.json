@@ -17,7 +17,8 @@
 				"eightshift-forms/form",
 				"eightshift-forms/mailchimp",
 				"eightshift-forms/greenhouse",
-				"eightshift-forms/hubspot"
+				"eightshift-forms/hubspot",
+				"eightshift-forms/mailerlite"
 			]
 		}
 	},
@@ -73,13 +74,19 @@
 			"label": "Greenhouse",
 			"slug": "greenhouse",
 			"icon": "color",
-			"blockName": "eightshift-forms/mailchimp"
+			"blockName": "eightshift-forms/greenhouse"
 		},
 		{
 			"label": "HubSpot",
 			"slug": "hubspot",
 			"icon": "color",
 			"blockName": "eightshift-forms/hubspot"
+		},
+		{
+			"label": "Mailerlite",
+			"slug": "mailerlite",
+			"icon": "color",
+			"blockName": "eightshift-forms/mailerlite"
 		}
 	]
 }

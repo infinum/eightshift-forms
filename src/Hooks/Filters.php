@@ -17,6 +17,8 @@ use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Integrations\Mailerlite\Mailerlite;
+use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsTest;
@@ -67,6 +69,12 @@ class Filters
 			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsHubspot::FILTER_SETTINGS_SIDEBAR_NAME,
 			'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
+		],
+		SettingsMailerlite::SETTINGS_TYPE_KEY => [
+			'global' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsMailerlite::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsMailerlite::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,

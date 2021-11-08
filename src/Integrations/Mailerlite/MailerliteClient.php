@@ -1,22 +1,23 @@
 <?php
 
 /**
- * Mailchimp Client integration class.
+ * Mailerlite Client integration class.
  *
- * @package EightshiftForms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations\Mailerlite
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Mailchimp;
+namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
- * MailchimpClient integration class.
+ * MailerliteClient integration class.
  */
-class MailchimpClient implements MailchimpClientInterface
+class MailerliteClient implements ClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -26,12 +27,12 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * Transient cache name for items.
 	 */
-	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
+	public const CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME = 'es_mailerlite_items_cache';
 
 	/**
 	 * Transient cache name for item.
 	 */
-	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
+	public const CACHE_MAILERLITE_ITEM_TRANSIENT_NAME = 'es_mailerlite_item_cache';
 
 	/**
 	 * Return items.
@@ -40,11 +41,11 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItems(): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
-			$items = $this->getMailchimpLists();
+		// if (empty($output)) {
+			$items = $this->getMailerliteLists();
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -56,9 +57,9 @@ class MailchimpClient implements MailchimpClientInterface
 					];
 				}
 
-				set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
-		}
+		// }
 
 		return $output;
 	}
@@ -72,16 +73,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = get_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$fields = $this->getMailchimpListFields($itemId);
+			$fields = $this->getMailerliteListFields($itemId);
 
 			if ($itemId && $fields) {
 				$output[$itemId] = $fields ?? [];
 
-				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
+				set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -113,39 +114,12 @@ class MailchimpClient implements MailchimpClientInterface
 						'status_if_new' => 'subscribed',
 						'status' => 'subscribed',
 						'merge_fields' => $this->prepareParams($params),
-						'tags' => $this->prepareTags($params),
 					]
 				),
 			]
 		);
 
 		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-	}
-
-	/**
-	 * Return Mailchimp tags for a list.
-	 *
-	 * @param string $itemId Item id to search.
-	 *
-	 * @return array<int, mixed>
-	 */
-	public function getTags(string $itemId): array
-	{
-		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$itemId}/tag-search",
-			[
-				'headers' => $this->getHeaders(),
-				'timeout' => 60,
-			]
-		);
-
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
-
-		if (!isset($body['tags'])) {
-			return [];
-		}
-
-		return $body['tags'];
 	}
 
 	/**
@@ -157,7 +131,7 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$headers = [
 			'Content-Type' => 'application/json; charset=utf-8',
-			'Authorization' => "Bearer {$this->getApiKey()}"
+			'X-MailerLite-ApiKey' => $this->getApiKey(),
 		];
 
 		return $headers;
@@ -170,7 +144,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMailchimpListFields(string $listId)
+	private function getMailerliteListFields(string $listId)
 	{
 		$response = \wp_remote_get(
 			"{$this->getBaseUrl()}lists/{$listId}/merge-fields",
@@ -190,27 +164,21 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * API request to get all lists from Mailchimp.
+	 * API request to get all lists from Mailerlite.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMailchimpLists()
+	private function getMailerliteLists()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists",
+			"{$this->getBaseUrl()}groups",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
-
-		if (!isset($body['lists'])) {
-			return [];
-		}
-
-		return $body['lists'];
+		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 	}
 
 	/**
@@ -248,34 +216,13 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * Prepare tags
-	 *
-	 * @param array<string, mixed> $params Params.
-	 *
-	 * @return array<int, string>
-	 */
-	private function prepareTags(array $params): array
-	{
-		$key = Mailchimp::FIELD_MAILCHIMP_TAGS_KEY;
-
-		if (!isset($params[$key])) {
-			return [];
-		}
-
-		return explode(', ', $params[$key]['value']);
-	}
-
-	/**
-	 * Return Mailchimp base url.
+	 * Return Mailerlite base url.
 	 *
 	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{
-		$key = explode('-', $this->getApiKey());
-		$server = end($key);
-
-		return "https://{$server}.api.mailchimp.com/3.0/";
+		return "https://api.mailerlite.com/api/v2/";
 	}
 
 	/**
@@ -285,8 +232,8 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyMailchimp();
+		$apiKey = Variables::getApiKeyMailerlite();
 
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
 	}
 }

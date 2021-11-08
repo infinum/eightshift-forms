@@ -1,0 +1,26 @@
+{
+	"blockName": "mailerlite",
+	"title": "Mailerlite Form",
+	"description" : "Block used to show Mailerlite subscription form.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"mailerlite"
+	],
+	"example": {
+	},
+	"attributes": {
+		"mailerliteFormPostId": {
+			"type": "string"
+		},
+		"mailerliteServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

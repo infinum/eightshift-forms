@@ -64,4 +64,14 @@ class Variables
 	{
 		return defined('ES_API_KEY_MAILCHIMP') ? ES_API_KEY_MAILCHIMP : '';
 	}
+
+	/**
+	 * Get API Key for Mailerlite.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyMailerlite(): string
+	{
+		return defined('ES_API_KEY_MAILERLITE') ? ES_API_KEY_MAILERLITE : '';
+	}
 }

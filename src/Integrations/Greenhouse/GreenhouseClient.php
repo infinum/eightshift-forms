@@ -109,7 +109,7 @@ class GreenhouseClient implements ClientInterface
 	public function postApplication(string $itemId, array $params, array $files): array
 	{
 		$response = \wp_remote_post(
-			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$itemId}",
+			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
 				'body' => wp_json_encode(
@@ -132,7 +132,7 @@ class GreenhouseClient implements ClientInterface
 	private function getGreenhouseJobs()
 	{
 		$response = \wp_remote_get(
-			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs",
+			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -158,7 +158,7 @@ class GreenhouseClient implements ClientInterface
 	private function getGreenhouseJob(string $jobId)
 	{
 		$response = \wp_remote_get(
-			"{$this->getJobBoardUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
+			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -259,11 +259,11 @@ class GreenhouseClient implements ClientInterface
 	}
 
 	/**
-	 * Return Job Board Url.
+	 * Return Greenhouse base url.
 	 *
 	 * @return string
 	 */
-	private function getJobBoardUrl(): string
+	private function getBaseUrl(): string
 	{
 		return 'https://boards-api.greenhouse.io/v1/';
 	}

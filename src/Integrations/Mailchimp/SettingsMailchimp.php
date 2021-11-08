@@ -64,11 +64,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimp-api-key';
 
 	/**
-	 * Form url.
-	 */
-	public const SETTINGS_MAILCHIMP_FORM_URL_KEY = 'mailchimp-form-url';
-
-	/**
 	 * List ID Key.
 	 */
 	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimp-list';
