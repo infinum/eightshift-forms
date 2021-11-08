@@ -20,6 +20,7 @@ $sectionClass = $manifestSection['componentClass'] ?? '';
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
 $adminListingSubTitle = Components::checkAttr('adminListingSubTitle', $attributes, $manifest);
 $adminListingNewFormLink = Components::checkAttr('adminListingNewFormLink', $attributes, $manifest);
+$adminListingTrashLink = Components::checkAttr('adminListingTrashLink', $attributes, $manifest);
 $adminListingForms = Components::checkAttr('adminListingForms', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
@@ -37,6 +38,10 @@ $layoutClass = Components::classnames([
 			</div>
 
 			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
+				<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
+					<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
+				</a>
 				<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
 					<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>

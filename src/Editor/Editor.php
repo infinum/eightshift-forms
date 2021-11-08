@@ -41,7 +41,13 @@ class Editor implements ServiceInterface
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
 
-		if ($request === "/wp-admin/edit.php?post_type={$postType}") {
+		$links = [
+			"/wp-admin/edit.php?post_type={$postType}",
+			"/wp-admin/edit.php?post_status=publish&post_type={$postType}",
+			"/wp-admin/edit.php?post_status=draft&post_type={$postType}",
+		];
+
+		if (in_array($request, $links, true)) {
 			wp_safe_redirect("/wp-admin/admin.php?page={$page}");
 			exit;
 		}
