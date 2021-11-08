@@ -90,9 +90,6 @@ class Validator extends AbstractValidation
 			$validationReference = $this->getValidationReference($blocks[0]['innerBlocks'][0]['innerBlocks']);
 		}
 
-		error_log( print_r( ( $validationReference ), true ) );
-		
-
 		// Merge params and files validations.
 		return array_merge(
 			$this->validateParams($params, $validationReference, $formId),

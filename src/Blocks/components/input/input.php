@@ -49,9 +49,6 @@ if ($inputType === 'number') {
 	}
 }
 
-error_log( print_r( ( $attributes ), true ) );
-
-
 $input = '
 <input
 	class="' . esc_attr($inputClass) . '"
