@@ -42,6 +42,9 @@
 		},
 		"textareaTracking": {
 			"type": "string"
+		},
+		"textareaValidationPattern": {
+			"type": "string"
 		}
 	}
 }
