@@ -1,20 +1,20 @@
 # Integrations
 
 Adding new integration steps:
-1. Add new folder in the Integrations
-2. Add new top-level class in integration used for mapping field in the integration and our components.
-3. Add client class where you mak function to connect to the integration.
-4. Add Setting class where you setup global and form specific options.
-5. If there is a global option that needs global variable add it to the variables namespace.
-6. Add new integration internal keys to the Integrations.php file.
-7. Add new switch and callback to the FormSubmitRoute.php class.
-8. Add new block to for the specific integration.
-9. Add new Allowed block in the manifest.json in the form-selector block.
-10. Add transient cache to the cache busting list in the SettingsCache.php.
+1. Add new folder in the Integrations.
+2. Add new class `Integrations/<Integration_Name>.php`. This holds mappings for API to our components.
+3. Add new class `Integrations/<Integration_Name>Client.php`. This holds all data connections to the API.
+4. Add new class `Integrations/Settings<Integration_Name>.php`. This holds all settings, global/local.
+5. Populate new key with the filters in the `Hooks/Filters.php::ALL`.
+6. Add new class `Rest/Routes/FormSubmit<Integration_Name>Route.php`.
+7. Add new block to for the specific integration in the `Blocks/custom` folder.
+8. Add new allowed block in the manifest.json of the `Blocks/custom/form-selector/manifest.json` block.
+9. Add transient cache to the cache busting list in the `Cache/SettingsCache.php::ALL_CACHE`.
+10. Add new API key global variable in the `Hooks/Variables.php`.
 
 # Mailchimp
 
-[Documentation](https://mailchimp.com/developer/marketing/docs/merge-fields/#structure)
+[Documentation](https://mailchimp.com/developer/marketing/api/lists/)
 
 Supported fields:
 * Text
@@ -26,6 +26,8 @@ Supported fields:
 
 # Greenhouse
 
+[Documentation](https://developers.greenhouse.io/job-board.html)
+
 Supported fields:
 * Short textbox
 * Long textbox
@@ -34,6 +36,8 @@ Supported fields:
 * Attachment
 
 # HubSpot
+
+[Documentation](https://legacydocs.hubspot.com/docs/methods/forms/submit_form)
 
 Supported fields:
 * Text
@@ -45,3 +49,9 @@ Supported fields:
 * Radio
 * Consent
 
+# Goodbits
+
+[Documentation](https://gist.github.com/kalv/84c37780d277da5b7a3cdf5c28359c6b)
+
+Supported fields:
+*
