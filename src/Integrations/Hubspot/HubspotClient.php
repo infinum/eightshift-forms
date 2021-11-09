@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -99,8 +100,8 @@ class HubspotClient implements ClientInterface
 	 * API request to post application.
 	 *
 	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed>  $params Params array.
-	 * @param array<string, mixed>  $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -166,18 +167,92 @@ class HubspotClient implements ClientInterface
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			return [];
+		if (is_wp_error($response)) {
+			return [
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->getErrorMsg('submitWpError'),
+			];
 		}
 
-		$status = $response['response']['status'] ?? 200;
-		$code = $response['response']['code'] ?? '';
+		$code = $response['response']['code'] ?? 200;
 
-		if ($status === 200 && empty($code)) {
-			return $response['response'];
+		if ($code === 200) {
+			return [
+				'status' => 'success',
+				'code' => $code,
+				'message' => 'hubspotSuccess',
+			];
 		}
 
-		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseMessage = $responseBody['message'] ?? '';
+		$responseErrors = $responseBody['errors'] ?? [];
+
+		$output = [
+			'status' => 'error',
+			'code' => $code,
+			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
+		];
+
+		Helper::logger([
+			'integration' => 'hubspot',
+			'body' => $body,
+			'response' => $response['response'],
+			'responseBody' => $responseBody,
+			'output' => $output,
+		]);
+
+		return $output;
+	}
+
+
+	/**
+	 * Map service messages with our own.
+	 *
+	 * @param string $msg Message got from the API.
+	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 *
+	 * @return string
+	 */
+	private function getErrorMsg(string $msg, array $errors = []): string
+	{
+		if ($errors) {
+			$invalidEmail = array_filter(
+				$errors,
+				function ($error) {
+					return $error['errorType'] === 'INVALID_EMAIL';
+				}
+			);
+
+			if ($invalidEmail) {
+				$msg === 'INVALID_EMAIL';
+			}
+
+			$requiredField = array_filter(
+				$errors,
+				function ($error) {
+					return $error['errorType'] === 'REQUIRED_FIELD';
+				}
+			);
+
+			if ($requiredField) {
+				$msg === 'REQUIRED_FIELD';
+			}
+		}
+
+		switch ($msg) {
+			case 'Bad Request':
+				return 'hubspotBadRequestError';
+			case 'The request is not valid':
+				return 'hubspotInvalidRequestError';
+			case 'INVALID_EMAIL':
+				return 'hubspotInvalidEmailError';
+			case 'REQUIRED_FIELD':
+				return 'hubspotMissingFieldsError';
+			default:
+				return 'submitWpError';
+		}
 	}
 
 	/**

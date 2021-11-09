@@ -96,7 +96,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputId' => $this->getSettingsName('input-email-id'),
 				'inputFieldLabel' => __('input email label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input email', 'eightshift-forms'),
-				'inputType' => 'email',
+				'inputType' => 'text',
 				'inputValue' => $this->getOptionValue('input-email-id'),
 				'inputIsEmail' => true,
 			],

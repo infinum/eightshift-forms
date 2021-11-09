@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 
@@ -85,8 +86,6 @@ class MailchimpClient implements MailchimpClientInterface
 			}
 		}
 
-		$this->getTags($itemId);
-
 		return $output[$itemId] ?? [];
 	}
 
@@ -94,8 +93,8 @@ class MailchimpClient implements MailchimpClientInterface
 	 * API request to post application.
 	 *
 	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed>  $params Params array.
-	 * @param array<string, mixed>  $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -104,24 +103,98 @@ class MailchimpClient implements MailchimpClientInterface
 		$email = $params['email_address']['value'];
 		$emailHash = md5(strtolower($email));
 
+		$body = [
+			'email_address' => $email,
+			'status_if_new' => 'subscribed',
+			'status' => 'subscribed',
+			'merge_fields' => $this->prepareParams($params),
+			'tags' => $this->prepareTags($params),
+		];
+
 		$response = \wp_remote_request(
-			"{$this->getApiUrl()}lists/{$itemId}/members/{$emailHash}",
+			"{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'PUT',
-				'body' => wp_json_encode(
-					[
-						'email_address' => $email,
-						'status_if_new' => 'subscribed',
-						'status' => 'subscribed',
-						'merge_fields' => $this->prepareParams($params),
-						'tags' => $this->prepareTags($params),
-					]
-				),
+				'body' => wp_json_encode($body),
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		if (is_wp_error($response)) {
+			return [
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->getErrorMsg('submitWpError'),
+			];
+		}
+
+		$code = $response['response']['code'] ?? 200;
+
+		if ($code === 200) {
+			return [
+				'status' => 'success',
+				'code' => $code,
+				'message' => 'mailchimpSuccess',
+			];
+		}
+
+		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseMessage = $responseBody['detail'] ?? '';
+		$responseErrors = $responseBody['errors'] ?? [];
+
+		$output = [
+			'status' => 'error',
+			'code' => $code,
+			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
+		];
+
+		Helper::logger([
+			'integration' => 'mailchimp',
+			'body' => $body,
+			'response' => $response['response'],
+			'responseBody' => $responseBody,
+			'output' => $output,
+		]);
+
+		return $output;
+	}
+
+	/**
+	 * Map service messages with our own.
+	 *
+	 * @param string $msg Message got from the API.
+	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 *
+	 * @return string
+	 */
+	private function getErrorMsg(string $msg, array $errors = []): string
+	{
+		if ($errors) {
+			$invalidEmail = array_filter(
+				$errors,
+				function ($error) {
+					return $error['field'] === 'email_address';
+				}
+			);
+
+			if ($invalidEmail) {
+				$msg === 'INVALID_EMAIL';
+			}
+		}
+
+		switch ($msg) {
+			case 'Bad Request':
+				return 'mailchimpBadRequestError';
+			case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
+				return 'mailchimpInvalidResourceError';
+			case 'INVALID_EMAIL':
+			case 'Please provide a valid email address.':
+				return 'mailchimpInvalidEmailError';
+			case 'Your merge fields were invalid.':
+				return 'mailchimpMissingFieldsError';
+			default:
+				return 'submitWpError';
+		}
 	}
 
 	/**
@@ -134,7 +207,7 @@ class MailchimpClient implements MailchimpClientInterface
 	public function getTags(string $itemId): array
 	{
 		$response = \wp_remote_get(
-			"{$this->getApiUrl()}lists/{$itemId}/tag-search",
+			"{$this->getBaseUrl()}lists/{$itemId}/tag-search",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -166,7 +239,7 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * API request to get one job by ID from Greenhouse.
+	 * API request to get one job by ID from Mailchimp.
 	 *
 	 * @param string $listId List id to search.
 	 *
@@ -175,7 +248,7 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getMailchimpListFields(string $listId)
 	{
 		$response = \wp_remote_get(
-			"{$this->getApiUrl()}lists/{$listId}/merge-fields",
+			"{$this->getBaseUrl()}lists/{$listId}/merge-fields",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -199,7 +272,7 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getMailchimpLists()
 	{
 		$response = \wp_remote_get(
-			"{$this->getApiUrl()}lists",
+			"{$this->getBaseUrl()}lists",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -268,11 +341,11 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
-	 * Return API url.
+	 * Return Mailchimp base url.
 	 *
 	 * @return string
 	 */
-	private function getApiUrl(): string
+	private function getBaseUrl(): string
 	{
 		$key = explode('-', $this->getApiKey());
 		$server = end($key);

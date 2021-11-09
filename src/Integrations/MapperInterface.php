@@ -25,7 +25,7 @@ interface MapperInterface
 	public function getForm(string $formId): string;
 
 	/**
-	 * Get Mailchimp maped form fields.
+	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
 	 *

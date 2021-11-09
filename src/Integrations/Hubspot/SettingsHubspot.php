@@ -69,9 +69,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_ITEM_ID_KEY = 'hubspot-item-id';
 
 	/**
-	 * Integration Breakpoints Key.
+	 * Integration fields Key.
 	 */
-	public const SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY = 'hubspot-integration-breakpoints';
+	public const SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY = 'hubspot-integration-fields';
 
 	/**
 	 * Instance variable for Hubspot data.
@@ -115,7 +115,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Determin if settings are valid.
+	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
 	 *
@@ -137,7 +137,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Determin if settings global are valid.
+	 * Determine if settings global are valid.
 	 *
 	 * @return boolean
 	 */
@@ -259,9 +259,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY),
+						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY,
+							self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
 							$this->hubspot->getFormFields($formId),
 							$formId
 						),

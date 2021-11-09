@@ -1,18 +1,19 @@
 <?php
 
 /**
- * Mailchimp integration class.
+ * Mailerlite integration class.
  *
- * @package EightshiftForms\Integrations\Mailchimp
+ * @package EightshiftForms\Integrations\Mailerlite
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Mailchimp;
+namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -20,9 +21,9 @@ use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Mailchimp integration class.
+ * Mailerlite integration class.
  */
-class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceInterface
+class Mailerlite extends AbstractFormBuilder implements MapperInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -34,28 +35,28 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @var string
 	 */
-	public const FILTER_MAPPER_NAME = 'es_mailchimp_mapper_filter';
+	public const FILTER_MAPPER_NAME = 'es_mailerlite_mapper_filter';
 
 	/**
 	 * Filter form fields.
 	 *
 	 * @var string
 	 */
-	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
+	public const FILTER_FORM_FIELDS_NAME = 'es_mailerlite_form_fields_filter';
 
 	/**
-	 * Field Mailchimp Tags.
+	 * Field Mailerlite Tags.
 	 *
 	 * @var string
 	 */
-	public const FIELD_MAILCHIMP_TAGS_KEY = 'es-form-mailchimp-tags';
+	public const FIELD_MAILERLITE_TAGS_KEY = 'es-form-mailerlite-tags';
 
 	/**
-	 * Instance variable for Mailchimp data.
+	 * Instance variable for Mailerlite data.
 	 *
-	 * @var MailchimpClientInterface
+	 * @var ClientInterface
 	 */
-	protected $mailchimpClient;
+	protected $mailerliteClient;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -67,14 +68,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Create a new instance.
 	 *
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		MailchimpClientInterface $mailchimpClient,
+		ClientInterface $mailerliteClient,
 		ValidatorInterface $validator
 	) {
-		$this->mailchimpClient = $mailchimpClient;
+		$this->mailerliteClient = $mailerliteClient;
 		$this->validator = $validator;
 	}
 
@@ -107,7 +108,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$formAdditionalProps['formPostId'] = $formId;
 
 		// Get form type.
-		$formAdditionalProps['formType'] = SettingsMailchimp::SETTINGS_TYPE_KEY;
+		$formAdditionalProps['formType'] = SettingsMailerlite::SETTINGS_TYPE_KEY;
 
 		// Reset form on success.
 		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
@@ -152,13 +153,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function getFormFields(string $formId): array
 	{
 		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
+		$itemId = $this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, (string) $formId);
 		if (empty($itemId)) {
 			return [];
 		}
 
 		// Get fields.
-		$fields = $this->mailchimpClient->getItem($itemId);
+		$fields = $this->mailerliteClient->getItem($itemId);
 		if (empty($fields)) {
 			return [];
 		}
@@ -167,7 +168,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	}
 
 	/**
-	 * Map Mailchimp fields to our components.
+	 * Map Mailerlite fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form Id.
@@ -182,33 +183,16 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId);
-
-		$output[] = $this->getIntegrationFieldsValue(
-			$integrationBreakpointsFields,
-			[
-				'component' => 'input',
-				'inputName' => 'email_address',
-				'inputFieldLabel' => __('Email address', 'eightshift-forms'),
-				'inputId' => 'email_address',
-				'inputType' => 'text',
-				'inputIsEmail' => true,
-				'inputIsRequired' => true,
-			]
-		);
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId);
 
 		foreach ($data as $field) {
 			if (empty($field)) {
 				continue;
 			}
 
-			$type = $field['type'] ?? '';
-			$name = $field['tag'] ?? '';
-			$label = $field['name'] ?? '';
-			$required = $field['required'] ?? false;
-			$value = $field['default_value'] ?? '';
-			$dateFormat = isset($field['options']['date_format']) ? $this->validator->getValidationPattern($field['options']['date_format']) : '';
-			$options = $field['options']['choices'] ?? [];
+			$type = $field['type'] ? strtolower($field['type']) : '';
+			$name = $field['key'] ?? '';
+			$label = $field['title'] ?? '';
 			$id = $name;
 
 			switch ($type) {
@@ -221,24 +205,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'address':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => 'address',
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
 						]
 					);
 					break;
@@ -251,28 +217,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'number',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
+							'inputIsEmail' => true,
 						]
 					);
 					break;
-				case 'phone':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'tel',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'birthday':
+				case 'date':
 					$output[] = $this->getIntegrationFieldsValue(
 						$integrationBreakpointsFields,
 						[
@@ -281,67 +230,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'radio':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'radios',
-							'radiosId' => $id,
-							'radiosName' => $name,
-							'radiosIsRequired' => $required,
-							'radiosContent' => array_map(
-								function ($radio) {
-									return [
-										'component' => 'radio',
-										'radioLabel' => $radio,
-										'radioValue' => $radio,
-									];
-								},
-								$options
-							),
-						]
-					);
-					break;
-				case 'dropdown':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'select',
-							'selectId' => $id,
-							'selectName' => $name,
-							'selectIsRequired' => $required,
-							'selectOptions' => array_map(
-								function ($option) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
-									];
-								},
-								$options
-							),
 						]
 					);
 					break;
 			}
-		}
-
-		$tags = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
-
-		if ($tags) {
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-				'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-				'inputValue' => $tags,
-			];
 		}
 
 		$output[] = [

@@ -14,11 +14,13 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Mailer\SettingsMailer;
@@ -82,6 +84,13 @@ class FormSubmitRoute extends AbstractBaseRoute
 	protected $hubspotClient;
 
 	/**
+	 * Instance variable for Mailerlite data.
+	 *
+	 * @var ClientInterface
+	 */
+	protected $mailerliteClient;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -90,6 +99,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param ClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
+	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -97,7 +107,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		LabelsInterface $labels,
 		ClientInterface $greenhouseClient,
 		MailchimpClientInterface $mailchimpClient,
-		ClientInterface $hubspotClient
+		ClientInterface $hubspotClient,
+		ClientInterface $mailerliteClient
 	) {
 		$this->validator = $validator;
 		$this->mailer = $mailer;
@@ -105,6 +116,7 @@ class FormSubmitRoute extends AbstractBaseRoute
 		$this->greenhouseClient = $greenhouseClient;
 		$this->mailchimpClient = $mailchimpClient;
 		$this->hubspotClient = $hubspotClient;
+		$this->mailerliteClient = $mailerliteClient;
 	}
 
 	/**
@@ -163,12 +175,14 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType]['fields']) ? apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
 
 			// Validate request.
-			$this->verifyRequest(
-				$params,
-				$request->get_file_params(),
-				$formId,
-				$formData
-			);
+			if (!Variables::skipFormValidation()) {
+				$this->verifyRequest(
+					$params,
+					$request->get_file_params(),
+					$formId,
+					$formData
+				);
+			}
 
 			// Remove unecesery internal params before continue.
 			$params = $this->removeUneceseryParams($params);
@@ -189,6 +203,9 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 				case SettingsHubspot::SETTINGS_TYPE_KEY:
 					return $this->sendHubspot($formId, $params);
+
+				case SettingsMailerlite::SETTINGS_TYPE_KEY:
+					return $this->sendMailerlite($formId, $params);
 			}
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -200,11 +217,6 @@ class FormSubmitRoute extends AbstractBaseRoute
 					'validation' => $e->getData(),
 				]
 			);
-		} finally {
-			// Always delete the files from the disk.
-			if ($files) {
-				$this->deleteFiles($files);
-			}
 		}
 	}
 
@@ -224,8 +236,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// If Mailer system is not used just respond with success.
 		if (!$isUsed) {
 			return \rest_ensure_response([
-				'code' => 200,
 				'status' => 'success',
+				'code' => 200,
 				'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
 			]);
 		}
@@ -236,8 +248,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
+				'code' => 400,
 				'message' => $this->labels->getLabel('mailerErrorSettingsMissing', $formId),
 			]);
 		}
@@ -255,8 +267,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// If email fails.
 		if (!$mailer) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
+				'code' => 400,
 				'message' => $this->labels->getLabel('mailerErrorEmailSend', $formId),
 			]);
 		}
@@ -278,8 +290,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 			// If email fails.
 			if (!$mailerConfirmation) {
 				return \rest_ensure_response([
-					'code' => 404,
 					'status' => 'error',
+					'code' => 400,
 					'message' => $this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
 				]);
 			}
@@ -287,8 +299,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 
 		// If email success.
 		return \rest_ensure_response([
-			'code' => 200,
 			'status' => 'success',
+			'code' => 200,
 			'message' => $this->labels->getLabel('mailerSuccess', $formId),
 		]);
 	}
@@ -311,8 +323,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
+				'code' => 400,
 				'message' => $this->labels->getLabel('greenhouseErrorSettingsMissing', $formId),
 			]);
 		}
@@ -324,31 +336,16 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$files
 		);
 
-		$status = $response['status'] ?? 200;
-		$message = $response['error'] ?? '';
-
-		if (!$response) {
-			return \rest_ensure_response([
-				'code' => 404,
-				'status' => 'error',
-				'message' => $this->labels->getLabel('greenhouseWpError', $formId),
-			]);
+		// Always delete the files from the disk.
+		if ($files) {
+			$this->deleteFiles($files);
 		}
 
-		// Bailout if Greenhouse returns error.
-		if ($status !== 200) {
-			return \rest_ensure_response([
-				'code' => $status,
-				'status' => 'error',
-				'message' => $message
-			]);
-		}
-
-		// Finish with success.
+		// Finish.
 		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'message' => $this->labels->getLabel('greenhouseSuccess', $formId),
+			'code' => $response['code'],
+			'status' => $response['status'],
+			'message' => $this->labels->getLabel($response['message'], $formId),
 		]);
 	}
 
@@ -369,8 +366,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
+				'code' => 400,
 				'message' => $this->labels->getLabel('mailchimpErrorSettingsMissing', $formId),
 			]);
 		}
@@ -382,31 +379,11 @@ class FormSubmitRoute extends AbstractBaseRoute
 			[]
 		);
 
-		$status = $response['status'] ?? 'subscribed';
-		$message = $response['detail'] ?? $response['title'] ?? '';
-
-		if (!$response) {
-			return \rest_ensure_response([
-				'code' => 404,
-				'status' => 'error',
-				'message' => $this->labels->getLabel('mailchimpWpError', $formId),
-			]);
-		}
-
-		// Bailout if Mailchimp returns error.
-		if ($status !== 'subscribed') {
-			return \rest_ensure_response([
-				'code' => $status,
-				'status' => 'error',
-				'message' => $message
-			]);
-		}
-
-		// Finish with success.
+		// Finish.
 		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'message' => $this->labels->getLabel('mailchimpSuccess', $formId),
+			'code' => $response['code'],
+			'status' => $response['status'],
+			'message' => $this->labels->getLabel($response['message'], $formId),
 		]);
 	}
 
@@ -427,8 +404,8 @@ class FormSubmitRoute extends AbstractBaseRoute
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
+				'code' => 400,
 				'message' => $this->labels->getLabel('hubspotErrorSettingsMissing', $formId),
 			]);
 		}
@@ -440,39 +417,54 @@ class FormSubmitRoute extends AbstractBaseRoute
 			$files
 		);
 
-		$status = $response['status'] ?? 200;
-		$message = $response['message'] ?? '';
+		// Always delete the files from the disk.
+		if ($files) {
+			$this->deleteFiles($files);
+		}
 
-		if (!$response) {
+		// Finish.
+		return \rest_ensure_response([
+			'code' => $response['code'],
+			'status' => $response['status'],
+			'message' => $this->labels->getLabel($response['message'], $formId),
+		]);
+	}
+
+	/**
+	 * Use Mailerlite function.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $params Params array.
+	 *
+	 * @return mixed
+	 */
+	private function sendMailerlite(string $formId, array $params = [])
+	{
+
+		// Check if Mailerlite data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
 			return \rest_ensure_response([
-				'code' => 404,
 				'status' => 'error',
-				'message' => $this->labels->getLabel('hubspotWpError', $formId),
+				'code' => 400,
+				'message' => $this->labels->getLabel('mailerliteErrorSettingsMissing', $formId),
 			]);
 		}
 
-		// Bailout if Hubspot returns error.
-		if ($status !== 200) {
-			if (isset($response['errors'][0])) {
-				switch ($response['errors'][0]['errorType']) {
-					case 'INVALID_EMAIL':
-						$message = $this->labels->getLabel('validationEmailField');
-						break;
-				}
+		// Send application to Mailerlite.
+		$response = $this->mailerliteClient->postApplication(
+			$this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
+			$params,
+			[]
+		);
 
-				return \rest_ensure_response([
-					'code' => $status,
-					'status' => 'error',
-					'message' => $message
-				]);
-			}
-		}
-
-		// Finish with success.
+		// Finish.
 		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'message' => $this->labels->getLabel('hubspotSuccess', $formId),
+			'code' => $response['code'],
+			'status' => $response['status'],
+			'message' => $this->labels->getLabel($response['message'], $formId),
 		]);
 	}
 }

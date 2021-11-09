@@ -126,7 +126,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	}
 
 	/**
-	 * Get Greenhouse maped form fields.
+	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -165,7 +165,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId);
 		$hideResumeTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId);
 		$hideCoverLetterTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId);
 
@@ -202,7 +202,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'inputName' => $name,
 								'inputFieldLabel' => $label,
 								'inputId' => $name,
-								'inputType' => $name === 'email' ? 'email' : 'text',
+								'inputType' => 'text',
 								'inputIsRequired' => $required,
 								'inputIsEmail' => $name === 'email' ? 'true' : ''
 							]

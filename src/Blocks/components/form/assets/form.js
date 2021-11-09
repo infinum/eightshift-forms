@@ -187,7 +187,11 @@ export class Form {
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
 				const groupId = group.getAttribute('data-field-id');
-				const groupInner = group.querySelectorAll(`${this.groupInnerSelector} input`);
+				const groupInner = group.querySelectorAll(`
+					${this.groupInnerSelector} input,
+					${this.groupInnerSelector} select,
+					${this.groupInnerSelector} textarea
+				`);
 
 				if (groupInner.length) {
 					const groupInnerItems = {}

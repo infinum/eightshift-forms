@@ -161,6 +161,10 @@ abstract class AbstractFormBuilder
 	 */
 	private function buildComponent(array $attributes): string
 	{
+		if (!$attributes) {
+			return '';
+		}
+
 		// Determin component name.
 		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
 
