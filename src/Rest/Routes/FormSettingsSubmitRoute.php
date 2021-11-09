@@ -24,12 +24,6 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
 
 	/**
-	 * Route slug.
-	 */
-	public const ROUTE_SLUG = '/form-settings-submit';
-
-
-	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -46,6 +40,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	) {
 		$this->validator = $validator;
 	}
+
+	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/form-settings-submit';
 
 	/**
 	 * Get the base url of the route

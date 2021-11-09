@@ -36,18 +36,13 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Route slug.
-	 */
-	public const ROUTE_SLUG = '/greenhouse-jobs';
-
-	/**
 	 * Get the base url of the route
 	 *
 	 * @return string The base URL for route you are adding.
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/greenhouse-jobs';
 	}
 
 	/**
