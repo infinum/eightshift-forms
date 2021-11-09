@@ -189,9 +189,9 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			[
 				'component' => 'input',
 				'inputName' => 'email_address',
-				'inputFieldLabel' => __('Email adress', 'eightshift-forms'),
+				'inputFieldLabel' => __('Email address', 'eightshift-forms'),
 				'inputId' => 'email_address',
-				'inputType' => 'email',
+				'inputType' => 'text',
 				'inputIsEmail' => true,
 				'inputIsRequired' => true,
 			]

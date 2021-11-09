@@ -26,7 +26,6 @@ trait UploadHelper
 	protected function uploadFiles(array $files): array
 	{
 		$output = [];
-		$hasError = false;
 
 		if (empty($files)) {
 			return $output;
@@ -59,17 +58,12 @@ trait UploadHelper
 					);
 
 					if (isset($upload['error'])) {
-						$hasError = true;
 						$output[$fileKey] = 'error';
 					} else {
 						$output[$fileKey] = $upload['file'];
 					}
 				}
 			}
-		}
-
-		if ($hasError) {
-			$this->deleteFiles($output);
 		}
 
 		// Set everything back to normal.

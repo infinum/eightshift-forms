@@ -185,31 +185,14 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 
 		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY, $formId);
 
-		$output[] = $this->getIntegrationFieldsValue(
-			$integrationBreakpointsFields,
-			[
-				'component' => 'input',
-				'inputName' => 'email_address',
-				'inputFieldLabel' => __('Email adress', 'eightshift-forms'),
-				'inputId' => 'email_address',
-				'inputType' => 'email',
-				'inputIsEmail' => true,
-				'inputIsRequired' => true,
-			]
-		);
-
 		foreach ($data as $field) {
 			if (empty($field)) {
 				continue;
 			}
 
-			$type = $field['type'] ?? '';
-			$name = $field['tag'] ?? '';
-			$label = $field['name'] ?? '';
-			$required = $field['required'] ?? false;
-			$value = $field['default_value'] ?? '';
-			$dateFormat = isset($field['options']['date_format']) ? $this->validator->getValidationPattern($field['options']['date_format']) : '';
-			$options = $field['options']['choices'] ?? [];
+			$type = $field['type'] ? strtolower($field['type']) : '';
+			$name = $field['key'] ?? '';
+			$label = $field['title'] ?? '';
 			$id = $name;
 
 			switch ($type) {
@@ -222,24 +205,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'address':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => 'address',
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
 						]
 					);
 					break;
@@ -252,28 +217,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'number',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
+							'inputIsEmail' => true,
 						]
 					);
 					break;
-				case 'phone':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'tel',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'birthday':
+				case 'date':
 					$output[] = $this->getIntegrationFieldsValue(
 						$integrationBreakpointsFields,
 						[
@@ -282,51 +230,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
-					break;
-				case 'radio':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'radios',
-							'radiosId' => $id,
-							'radiosName' => $name,
-							'radiosIsRequired' => $required,
-							'radiosContent' => array_map(
-								function ($radio) {
-									return [
-										'component' => 'radio',
-										'radioLabel' => $radio,
-										'radioValue' => $radio,
-									];
-								},
-								$options
-							),
-						]
-					);
-					break;
-				case 'dropdown':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'select',
-							'selectId' => $id,
-							'selectName' => $name,
-							'selectIsRequired' => $required,
-							'selectOptions' => array_map(
-								function ($option) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
-									];
-								},
-								$options
-							),
 						]
 					);
 					break;

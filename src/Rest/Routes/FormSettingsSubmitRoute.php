@@ -14,6 +14,7 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -102,12 +103,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : []; // @phpstan-ignore-line
 
 			// Validate request.
-			$this->verifyRequest(
-				$params,
-				$request->get_file_params(),
-				$formId,
-				$formData
-			);
+			if (!Variables::skipFormValidation()) {
+				$this->verifyRequest(
+					$params,
+					$request->get_file_params(),
+					$formId,
+					$formData
+				);
+			}
 
 			// Remove unecesery internal params before continue.
 			$params = $this->removeUneceseryParams($params);

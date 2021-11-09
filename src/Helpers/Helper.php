@@ -14,6 +14,7 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 /**
@@ -163,5 +164,23 @@ class Helper
 		}
 
 		return implode(', ', $output);
+	}
+
+	/**
+	 * Provide error log output to a custom log file.
+	 *
+	 * @param mixed $message Any type of message.
+	 *
+	 * @return void
+	 */
+	public static function logger($message): void
+	{
+		if (Variables::isLogMode()) {
+			$wpContentDir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : '';
+
+			if (!empty($wpContentDir)) {
+				error_log((string) wp_json_encode($message), 3, WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+		}
 	}
 }

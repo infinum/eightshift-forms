@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -72,22 +73,33 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	 */
 	public const SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY = 'mailerlite-integration-breakpoints';
 
-		/**
-	 * Instance variable for Mailerlite data.
+	/**
+	 * Instance variable for mailerlite data.
 	 *
 	 * @var ClientInterface
 	 */
 	protected $mailerliteClient;
 
 	/**
+	 * Instance variable for Mailerlite form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $mailerlite;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
+	 * @param MapperInterface $mailerlite Inject Mailerlite which holds Mailerlite form data.
 	 */
-	public function __construct(ClientInterface $mailerliteClient) {
+	public function __construct(
+		ClientInterface $mailerliteClient,
+		MapperInterface $mailerlite
+	) {
 		$this->mailerliteClient = $mailerliteClient;
+		$this->mailerlite = $mailerlite;
 	}
-
 	/**
 	 * Register all the hooks
 	 *
@@ -154,7 +166,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 		];
 	}
 
-		/**
+	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -227,6 +239,33 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 				'selectSingleSubmit' => true,
 			],
 		];
+
+		// If the user has selected the list.
+		if ($selectedItem) {
+			$output = array_merge(
+				$output,
+				[
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailerlite form frontend view in one place.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'group',
+						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY),
+						'groupContent' => $this->getIntegrationFieldsDetails(
+							self::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY,
+							$this->mailerlite->getFormFields($formId),
+							$formId
+						),
+					]
+				]
+			);
+		}
 
 		return $output;
 	}

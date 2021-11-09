@@ -202,7 +202,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'inputName' => $name,
 								'inputFieldLabel' => $label,
 								'inputId' => $name,
-								'inputType' => $name === 'email' ? 'email' : 'text',
+								'inputType' => 'text',
 								'inputIsRequired' => $required,
 								'inputIsEmail' => $name === 'email' ? 'true' : ''
 							]

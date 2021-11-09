@@ -156,7 +156,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	/**
 	 * Render the current view.
 	 *
-	 * @param array<string, mixed>  $attributes Array of attributes passed to the view.
+	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.

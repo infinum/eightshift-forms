@@ -34,8 +34,8 @@ interface MailchimpClientInterface
 	 * API request to post application.
 	 *
 	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed>  $params Params array.
-	 * @param array<string, mixed>  $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */

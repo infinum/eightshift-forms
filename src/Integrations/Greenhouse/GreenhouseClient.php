@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -101,27 +102,108 @@ class GreenhouseClient implements ClientInterface
 	 * API request to post application.
 	 *
 	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed>  $params Params array.
-	 * @param array<string, mixed>  $files Files array.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, mixed> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function postApplication(string $itemId, array $params, array $files): array
 	{
+		$body = array_merge(
+			$this->prepareParams($params),
+			$this->prepareFiles($files)
+		);
+
 		$response = \wp_remote_post(
 			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
-				'body' => wp_json_encode(
-					array_merge(
-						$this->prepareParams($params),
-						$this->prepareFiles($files)
-					)
-				),
+				'body' => wp_json_encode($body),
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		if (is_wp_error($response)) {
+			return [
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->getErrorMsg('submitWpError'),
+			];
+		}
+
+		$code = $response['response']['code'] ?? 200;
+
+		if ($code === 200) {
+			return [
+				'status' => 'success',
+				'code' => $code,
+				'message' => 'greenhouseSuccess',
+			];
+		}
+
+		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseMessage = $responseBody['error'] ?? '';
+
+		$output = [
+			'status' => 'error',
+			'code' => $code,
+			'message' => $this->getErrorMsg($responseMessage),
+		];
+
+		Helper::logger([
+			'body' => $body,
+			'response' => $response['response'],
+			'responseBody' => $responseBody,
+			'output' => $output,
+		]);
+
+		return $output;
+	}
+
+	/**
+	 * Map service messages with our own.
+	 *
+	 * @param string $msg Message got from the API.
+	 *
+	 * @return string
+	 */
+	private function getErrorMsg(string $msg): string
+	{
+		switch ($msg) {
+			case 'Bad Request':
+				return 'greenhouseBadRequestError';
+			case 'Uploaded resume has an unsupported file type.':
+				return 'greenhouseUnsupportedFileTypeError';
+			case 'Invalid attributes: first_name':
+				return 'greenhouseInvalidFirstNameError';
+			case 'Invalid attributes: last_name':
+				return 'greenhouseInvalidLastNameError';
+			case 'Invalid attributes: email':
+				return 'greenhouseInvalidEmailError';
+			case 'Invalid attributes: first_name,last_name,email':
+				return 'greenhouseInvalidFirstNameLastNameEmailError';
+			case 'Invalid attributes: first_name,last_name':
+				return 'greenhouseInvalidFirstNameLastNameError';
+			case 'Invalid attributes: first_name,email':
+				return 'greenhouseInvalidFirstNameEmailError';
+			case 'Invalid attributes: last_name,email':
+				return 'greenhouseInvalidLastNameEmailError';
+			case 'Invalid attributes: first_name,phone':
+				return 'greenhouseInvalidFirstNamePhoneError';
+			case 'Invalid attributes: last_name,phone':
+				return 'greenhouseInvalidLastNamePhoneError';
+			case 'Invalid attributes: email,phone':
+				return 'greenhouseInvalidEmailPhoneError';
+			case 'Invalid attributes: first_name,last_name,email,phone':
+				return 'greenhouseInvalidFirstNameLastNameEmailPhoneError';
+			case 'Invalid attributes: first_name,last_name,phone':
+				return 'greenhouseInvalidFirstNameLastNamePhoneError';
+			case 'Invalid attributes: first_name,email,phone':
+				return 'greenhouseInvalidFirstNameEmailPhoneError';
+			case 'Invalid attributes: last_name,email,phone':
+				return 'greenhouseInvalidLastNameEmailPhoneError';
+			default:
+				return 'submitWpError';
+		}
 	}
 
 	/**
@@ -197,7 +279,7 @@ class GreenhouseClient implements ClientInterface
 	/**
 	 * Prepare params
 	 *
-	 * @param array<string, mixed>  $params Params.
+	 * @param array<string, mixed> $params Params.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -215,7 +297,7 @@ class GreenhouseClient implements ClientInterface
 	/**
 	 * Prepare files.
 	 *
-	 * @param array<string, mixed>  $files Files.
+	 * @param array<string, mixed> $files Files.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -224,11 +306,14 @@ class GreenhouseClient implements ClientInterface
 		$output = [];
 
 		foreach ($files as $key => $value) {
-			$name = explode('-', $key);
+			if ($value === 'error') {
+				continue;
+			}
+
 			$fileName = explode('/', $value);
 
-			$output["{$name[0]}_content"] = base64_encode((string) file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			$output["{$name[0]}_content_filename"] = end($fileName);
+			$output["{$key}_content"] = base64_encode((string) file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$output["{$key}_content_filename"] = end($fileName);
 		}
 
 		return $output;

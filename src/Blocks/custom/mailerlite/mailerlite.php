@@ -8,8 +8,8 @@
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Integrations\mailerlite\mailerlite;
-use EightshiftForms\Integrations\mailerlite\Settingsmailerlite;
+use EightshiftForms\Integrations\Mailerlite\Mailerlite;
+use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 
 $manifest = Components::getManifest(__DIR__);
 
