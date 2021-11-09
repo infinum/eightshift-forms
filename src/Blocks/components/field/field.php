@@ -8,6 +8,7 @@
 
 use EightshiftForms\Enqueue\Blocks\EnqueueBlocks;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
@@ -19,9 +20,9 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $attributes['blockJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
-$customMediaBreakpoints = apply_filters(EnqueueBlocks::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+$customMediaBreakpoints = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
 if (
-	has_filter(EnqueueBlocks::FILTER_MEDIA_BREAKPOINTS_NAME) &&
+	has_filter(Filters::FILTER_MEDIA_BREAKPOINTS_NAME) &&
 	is_array($customMediaBreakpoints) &&
 	isset($customMediaBreakpoints['mobile']) &&
 	isset($customMediaBreakpoints['tablet']) &&

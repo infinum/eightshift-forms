@@ -91,4 +91,24 @@ class Filters
 	 * Filter form js hide global message timeout key.
 	 */
 	public const FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME = 'es_forms_form_js_hide_global_message_timeout';
+
+	/**
+	 * Filter additional blocks key.
+	 */
+	public const FILTER_ADDITIONAL_BLOCKS_NAME = 'es_forms_additional_blocks';
+
+	/**
+	 * Filter media breakpoints key.
+	 */
+	public const FILTER_MEDIA_BREAKPOINTS_NAME = 'es_forms_media_breakpoints';
+
+	/**
+	 * Filter block forms style options key.
+	 */
+	public const FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME = 'es_forms_block_forms_style_options';
+
+	/**
+	 * Filter block field style options key.
+	 */
+	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
 }
