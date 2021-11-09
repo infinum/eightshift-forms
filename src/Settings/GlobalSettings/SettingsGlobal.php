@@ -12,8 +12,10 @@ namespace EightshiftForms\Settings\GlobalSettings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingsTest;
 
 /**
  * SettingsGlobal class.
@@ -128,6 +130,10 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 			$global = $integration['global'] ?? '';
 
 			if (!$global) {
+				continue;
+			}
+
+			if (!Variables::isDevelopMode() && $key === SettingsTest::SETTINGS_TYPE_KEY) {
 				continue;
 			}
 
