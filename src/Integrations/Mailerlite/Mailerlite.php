@@ -144,7 +144,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	}
 
 	/**
-	 * Get Mailerlite maped form fields.
+	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -183,7 +183,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId);
 
 		foreach ($data as $field) {
 			if (empty($field)) {

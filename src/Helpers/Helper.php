@@ -179,7 +179,8 @@ class Helper
 			$wpContentDir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : '';
 
 			if (!empty($wpContentDir)) {
-				error_log((string) wp_json_encode($message), 3, WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				$message['time'] = gmdate("Y-m-d H:i:s");
+				error_log((string) wp_json_encode($message) . "\n -------------------------------------", 3, WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 	}

@@ -150,6 +150,7 @@ class GreenhouseClient implements ClientInterface
 		];
 
 		Helper::logger([
+			'integration' => 'greenhouse',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

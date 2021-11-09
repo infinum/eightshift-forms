@@ -149,6 +149,7 @@ class MailchimpClient implements MailchimpClientInterface
 		];
 
 		Helper::logger([
+			'integration' => 'mailchimp',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

@@ -196,6 +196,7 @@ class HubspotClient implements ClientInterface
 		];
 
 		Helper::logger([
+			'integration' => 'hubspot',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

@@ -165,7 +165,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId);
 
 		foreach ($data as $item) {
 			if (empty($item)) {

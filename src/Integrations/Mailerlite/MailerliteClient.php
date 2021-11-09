@@ -148,6 +148,7 @@ class MailerliteClient implements ClientInterface
 		];
 
 		Helper::logger([
+			'integration' => 'mailerlite',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,
@@ -171,6 +172,8 @@ class MailerliteClient implements ClientInterface
 				return 'mailerliteBadRequestError';
 			case 'Invalid email address':
 				return 'mailerliteInvalidEmailError';
+			case 'Email temporarily blocked':
+				return 'mailerliteEmailTemporarilyBlockedError';
 			default:
 				return 'submitWpError';
 		}

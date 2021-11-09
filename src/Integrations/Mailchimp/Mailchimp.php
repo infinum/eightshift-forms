@@ -143,7 +143,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	}
 
 	/**
-	 * Get Mailchimp maped form fields.
+	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -182,7 +182,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY, $formId);
+		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId);
 
 		$output[] = $this->getIntegrationFieldsValue(
 			$integrationBreakpointsFields,

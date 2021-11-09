@@ -148,10 +148,11 @@ trait SettingsHelper
 	 * @param string $key Key to save in db.
 	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
 	 * @param string $formId Form ID.
+	 * @param array<string> $additional Provide additional field options. Available are: 'toggle'.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getIntegrationFieldsDetails(string $key, array $formFields, string $formId): array
+	public function getIntegrationFieldsDetails(string $key, array $formFields, string $formId, array $additional = []): array
 	{
 		$globalManifest = Components::getManifest(dirname(__DIR__, 1) . '/Blocks');
 
@@ -166,6 +167,10 @@ trait SettingsHelper
 		$totalFields = count($formFields) - 1;
 
 		foreach ($formFields as $fieldKey => $field) {
+			if (!$field) {
+				continue;
+			}
+
 			$component = $field['component'];
 
 			// Skip submit.
@@ -215,6 +220,31 @@ trait SettingsHelper
 				'inputStep' => 1,
 			];
 
+			if (in_array('toggle', $additional, true)) {
+				$toggleValue = $fieldsValues["{$id}---toggle"] ?? '';
+				$fieldsOutput[0]['groupContent'][] = [
+					'component' => 'select',
+					'selectId' => "{$id}---toggle",
+					'selectFieldLabel' => __('Show/Hide', 'eightshift-forms'),
+					'selectValue' => $toggleValue,
+					'selectIsDisabled' => $id === 'email',
+					'selectOptions' => [
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Show', 'eightshift-forms'),
+							'selectOptionValue' => 'show',
+							'selectOptionIsSelected' => $toggleValue === 'show',
+						],
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Hide', 'eightshift-forms'),
+							'selectOptionValue' => 'hide',
+							'selectOptionIsSelected' => $toggleValue === 'hide',
+						]
+					]
+				];
+			}
+
 			$fields = array_merge($fields, $fieldsOutput);
 		}
 
@@ -242,13 +272,24 @@ trait SettingsHelper
 
 			$breakpoint = ucfirst($item[1]);
 
-			if ($item[1] === 'order') {
-				$output["{$fullField['component']}FieldOrder"] = $fieldValue;
-			} else {
-				$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
+			switch ($item[1]) {
+				case 'order':
+					$output["{$fullField['component']}FieldOrder"] = $fieldValue;
+					break;
+				case 'toggle':
+					if ($fieldValue === 'hide') {
+						$output["hide"] = true;
+					}
+					break;
+				default:
+					$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
+					break;
 			}
 		}
 
+		if (isset($output['hide'])) {
+			return [];
+		}
 
 		return $output;
 	}

@@ -31,7 +31,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			// Generic.
-			'submitWpError' => __('There was a problem wit submitting your form. Please try again.', 'eightshift-forms'),
+			'submitWpError' => __('There was a problem with submitting your form. Please try again.', 'eightshift-forms'),
 
 			// Validation.
 			'validationRequired' => __('This field is required.', 'eightshift-forms'),
@@ -58,7 +58,7 @@ class Labels implements LabelsInterface
 			// Greenhouse.
 			'greenhouseErrorSettingsMissing' => __('Greenhouse is not configured correctly. Please try again.', 'eightshift-forms'),
 			'greenhouseBadRequestError' => __('There is something wrong with your application. Please check all the fields and try again.', 'eightshift-forms'),
-			'greenhouseUnsupportedFileTypeError' => __('You have submitted and unsupported file type. Please try again.', 'eightshift-forms'),
+			'greenhouseUnsupportedFileTypeError' => __('You have submitted an unsupported file type. Please try again.', 'eightshift-forms'),
 			'greenhouseInvalidFirstNameError' => __('Your application has some invalid fields: first name.', 'eightshift-forms'),
 			'greenhouseInvalidLastNameError' => __('Your application has some invalid fields: last name.', 'eightshift-forms'),
 			'greenhouseInvalidEmailError' => __('Your application has some invalid fields: email.', 'eightshift-forms'),
@@ -95,6 +95,7 @@ class Labels implements LabelsInterface
 			'mailerliteErrorSettingsMissing' => __('Mailerlite is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailerliteInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
+			'mailerliteEmailTemporarilyBlockedError' => __('It looks like your email is temporarily blocked by our email client. Please try again later or use a different email.', 'eightshift-forms'),
 			'mailerliteSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
 		];
 	}

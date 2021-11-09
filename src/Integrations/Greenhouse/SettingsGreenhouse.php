@@ -84,9 +84,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouse-hide-cover-letter-textarea';
 
 	/**
-	 * Integration Breakpoints Key.
+	 * Integration fields Key.
 	 */
-	public const SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY = 'greenhouse-integration-breakpoints';
+	public const SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY = 'greenhouse-integration-fields';
 
 	/**
 	 * Instance variable for Greenhouse data.
@@ -326,9 +326,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY),
+						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_GREENHOUSE_INTEGRATION_BREAKPOINTS_KEY,
+							self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
 							$this->greenhouse->getFormFields($formId),
 							$formId
 						),

@@ -98,7 +98,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Determin if settings are valid.
+	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
 	 *

@@ -74,9 +74,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const SETTINGS_MAILCHIMP_LIST_TAGS_KEY = 'mailchimp-list-tags';
 
 	/**
-	 * Integration Breakpoints Key.
+	 * Integration fields Key.
 	 */
-	public const SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY = 'mailchimp-integration-breakpoints';
+	public const SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY = 'mailchimp-integration-fields';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -120,7 +120,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	}
 
 	/**
-	 * Determin if settings are valid.
+	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
 	 *
@@ -142,7 +142,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	}
 
 	/**
-	 * Determin if settings global are valid.
+	 * Determine if settings global are valid.
 	 *
 	 * @return boolean
 	 */
@@ -280,9 +280,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					],
 					[
 						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY),
+						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_MAILCHIMP_INTEGRATION_BREAKPOINTS_KEY,
+							self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
 							$this->mailchimp->getFormFields($formId),
 							$formId
 						),

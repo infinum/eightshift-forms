@@ -69,9 +69,9 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_MAILERLITE_LIST_KEY = 'mailerlite-list';
 
 	/**
-	 * Integration Breakpoints Key.
+	 * Integration fields Key.
 	 */
-	public const SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY = 'mailerlite-integration-breakpoints';
+	public const SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY = 'mailerlite-integration-fields';
 
 	/**
 	 * Instance variable for mailerlite data.
@@ -114,7 +114,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Determin if settings are valid.
+	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
 	 *
@@ -136,7 +136,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Determin if settings global are valid.
+	 * Determine if settings global are valid.
 	 *
 	 * @return boolean
 	 */
@@ -193,7 +193,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 				[
 					'component' => 'highlighted-content',
 					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Mailerlite. Please check if you API key is valid.', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Mailerlite. Please check if your API key is valid.', 'eightshift-forms'),
 				],
 			];
 		}
@@ -256,11 +256,14 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY),
+						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_MAILERLITE_INTEGRATION_BREAKPOINTS_KEY,
+							self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY,
 							$this->mailerlite->getFormFields($formId),
-							$formId
+							$formId,
+							[
+								'toggle'
+							]
 						),
 					]
 				]
