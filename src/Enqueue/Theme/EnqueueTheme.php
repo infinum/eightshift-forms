@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Rest\Routes\FormSubmitRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
@@ -108,7 +107,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		return [
 			'esFormsLocalization' => [
-				'formSubmitRestApiUrl' => $restRoutesPath . FormSubmitRoute::ROUTE_SLUG,
+				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
 				'hideGlobalMessageTimeout' => apply_filters(Filters::FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME, 6000),
 				'redirectionTimeout' => apply_filters(Filters::FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME, 600),
 			]

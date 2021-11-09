@@ -197,6 +197,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 
 			switch ($type) {
 				case 'text':
+				case 'date':
 					$output[] = $this->getIntegrationFieldsValue(
 						$integrationBreakpointsFields,
 						[
@@ -205,6 +206,8 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'text',
+							'inputIsRequired' => $name === 'email',
+							'inputIsEmail' => $name === 'email',
 						]
 					);
 					break;
@@ -217,19 +220,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'number',
-							'inputIsEmail' => true,
-						]
-					);
-					break;
-				case 'date':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
 						]
 					);
 					break;

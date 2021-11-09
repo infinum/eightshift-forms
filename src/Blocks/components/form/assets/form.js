@@ -71,6 +71,8 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
+		const formType = element.getAttribute('data-form-type');
+
 		// Populate body data.
 		const body = {
 			method: element.getAttribute('method'),
@@ -84,7 +86,7 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.formSubmitRestApiUrl, body)
+		fetch(`${this.formSubmitRestApiUrl}-${formType}`, body)
 			.then((response) => {
 				return response.json();
 			})

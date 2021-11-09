@@ -397,6 +397,10 @@ class Validator extends AbstractValidation
 
 		// Loop multiple levels form-selector > form.
 		foreach ($blocks as $block) {
+			if (!$block) {
+				continue;
+			}
+
 			$name = $block['component'];
 
 			if (!$name) {
