@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
+use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
@@ -35,6 +36,7 @@ class Labels implements LabelsInterface
 		'mailchimpSuccess',
 		'hubspotSuccess',
 		'mailerliteSuccess',
+		'goodbitsSuccess',
 	];
 
 	/**
@@ -65,9 +67,14 @@ class Labels implements LabelsInterface
 			$output = array_merge($output, $this->getHubspotLabels());
 		}
 
-		// Mailer.
+		// Mailerlite.
 		if ((bool) $this->isCheckboxOptionChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
 			$output = array_merge($output, $this->getMailerliteLabels());
+		}
+
+		// Goodbits.
+		if ((bool) $this->isCheckboxOptionChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
+			$output = array_merge($output, $this->getGoodbitsLabels());
 		}
 
 		return $output;
@@ -196,12 +203,27 @@ class Labels implements LabelsInterface
 	private function getMailerliteLabels(): array
 	{
 		return [
-			// MailerLite.
 			'mailerliteErrorSettingsMissing' => __('Mailerlite is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailerliteInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
 			'mailerliteEmailTemporarilyBlockedError' => __('It looks like your email is temporarily blocked by our email client. Please try again later or use a different email.', 'eightshift-forms'),
 			'mailerliteSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Goodbits
+	 *
+	 * @return array
+	 */
+	private function getGoodbitsLabels(): array
+	{
+		return [
+			'goodbitsErrorSettingsMissing' => __('Goodbits is not configured correctly. Please try again.', 'eightshift-forms'),
+			'goodbitsBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'goodbitsInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
+			'goodbitsEmailTemporarilyBlockedError' => __('It looks like your email is temporarily blocked by our email client. Please try again later or use a different email.', 'eightshift-forms'),
+			'goodbitsSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
 		];
 	}
 

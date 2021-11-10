@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
+use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
@@ -75,6 +77,12 @@ class Filters
 			'settings' => SettingsMailerlite::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsMailerlite::FILTER_SETTINGS_SIDEBAR_NAME,
 			'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
+		],
+		SettingsGoodbits::SETTINGS_TYPE_KEY => [
+			'global' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsGoodbits::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsGoodbits::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,

@@ -94,4 +94,14 @@ class Variables
 	{
 		return defined('ES_API_KEY_MAILERLITE') ? ES_API_KEY_MAILERLITE : '';
 	}
+
+	/**
+	 * Get API Key for Goodbits.
+	 *
+	 * @return string|array
+	 */
+	public static function getApiKeyGoodbits()
+	{
+		return defined('ES_API_KEY_GOODBITS') ? ES_API_KEY_GOODBITS : '';
+	}
 }

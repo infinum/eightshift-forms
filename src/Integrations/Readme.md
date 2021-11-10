@@ -11,6 +11,7 @@ Adding new integration steps:
 8. Add new allowed block in the manifest.json of the `Blocks/custom/form-selector/manifest.json` block.
 9. Add transient cache to the cache busting list in the `Cache/SettingsCache.php::ALL_CACHE`.
 10. Add new API key global variable in the `Hooks/Variables.php`.
+11. Add labels for new integration `Labels/Labels.php`.
 
 # Mailchimp
 

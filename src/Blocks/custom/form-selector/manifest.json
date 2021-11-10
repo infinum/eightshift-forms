@@ -18,7 +18,8 @@
 				"eightshift-forms/mailchimp",
 				"eightshift-forms/greenhouse",
 				"eightshift-forms/hubspot",
-				"eightshift-forms/mailerlite"
+				"eightshift-forms/mailerlite",
+				"eightshift-forms/goodbits"
 			]
 		}
 	},
@@ -87,6 +88,12 @@
 			"slug": "mailerlite",
 			"icon": "color",
 			"blockName": "eightshift-forms/mailerlite"
+		},
+		{
+			"label": "Goodbits",
+			"slug": "goodbits",
+			"icon": "color",
+			"blockName": "eightshift-forms/goodbits"
 		}
 	]
 }

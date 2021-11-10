@@ -66,3 +66,11 @@ This variable will set forms Mailerlite api key and you will not be able to chan
 ```php
 define('ES_API_KEY_MAILERLITE', '<api-key>');
 ```
+
+## Set Goodbits api key
+
+This variable will set forms Goodbits api key and you will not be able to change it from the admin.
+
+```php
+define('ES_API_KEY_GOODBITS', '<api-key>');
+```

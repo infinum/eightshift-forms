@@ -1,0 +1,26 @@
+{
+	"blockName": "goodbits",
+	"title": "Goodbits Form",
+	"description" : "Block used to show Goodbits subscription form.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"goodbits"
+	],
+	"example": {
+	},
+	"attributes": {
+		"goodbitsFormPostId": {
+			"type": "string"
+		},
+		"goodbitsServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}
