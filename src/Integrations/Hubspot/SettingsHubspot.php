@@ -262,6 +262,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
+							self::SETTINGS_TYPE_KEY,
 							$this->hubspot->getFormFields($formId),
 							$formId
 						),

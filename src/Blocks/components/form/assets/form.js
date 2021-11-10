@@ -86,7 +86,13 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(`${this.formSubmitRestApiUrl}-${formType}`, body)
+		let url = this.formSubmitRestApiUrl;
+
+		if (!this.formIsAdmin) {
+			url = `${this.formSubmitRestApiUrl}-${formType}`;
+		}
+
+		fetch(url, body)
 			.then((response) => {
 				return response.json();
 			})
@@ -217,7 +223,6 @@ export class Form {
 		let items = element.querySelectorAll(`
 			input:not(${this.groupInnerSelector} input),
 			select:not(${this.groupInnerSelector} select),
-			button:not(${this.groupInnerSelector} button),
 			textarea:not(${this.groupInnerSelector} textarea)
 		`);
 
@@ -229,7 +234,6 @@ export class Form {
 				singleSubmit
 			];
 		}
-		
 
 		// Iterate all form items.
 		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars

@@ -165,8 +165,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId);
-
 		foreach ($data as $item) {
 			if (empty($item)) {
 				continue;
@@ -195,172 +193,148 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 				switch ($type) {
 					case 'text':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'input',
-								'inputFieldLabel' => $label,
-								'inputId' => $id,
-								'inputName' => $name,
-								'inputType' => 'text',
-								'inputPlaceholder' => $placeholder,
-								'inputIsRequired' => $required,
-								'inputValue' => $value,
-							]
-						);
+						$output[] = [
+							'component' => 'input',
+							'inputFieldLabel' => $label,
+							'inputId' => $id,
+							'inputName' => $name,
+							'inputType' => 'text',
+							'inputPlaceholder' => $placeholder,
+							'inputIsRequired' => $required,
+							'inputValue' => $value,
+							];
 						break;
 					case 'textarea':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'textarea',
-								'textareaFieldLabel' => $label,
-								'textareaId' => $id,
-								'textareaName' => $name,
-								'textareaType' => 'textarea',
-								'textareaPlaceholder' => $placeholder,
-								'textareaIsRequired' => $required,
-								'textareaValue' => $value,
-							]
-						);
+						$output[] = [
+							'component' => 'textarea',
+							'textareaFieldLabel' => $label,
+							'textareaId' => $id,
+							'textareaName' => $name,
+							'textareaType' => 'textarea',
+							'textareaPlaceholder' => $placeholder,
+							'textareaIsRequired' => $required,
+							'textareaValue' => $value,
+						];
 						break;
 					case 'file':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'file',
-								'fileFieldLabel' => $label,
-								'fileId' => $id,
-								'fileName' => $name,
-								'fileType' => 'text',
-								'filePlaceholder' => $placeholder,
-								'fileIsRequired' => $required,
-								'fileValue' => $value,
-							]
-						);
+						$output[] = [
+							'component' => 'file',
+							'fileFieldLabel' => $label,
+							'fileId' => $id,
+							'fileName' => $name,
+							'fileType' => 'text',
+							'filePlaceholder' => $placeholder,
+							'fileIsRequired' => $required,
+							'fileValue' => $value,
+						];
 						break;
 					case 'select':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'select',
-								'selectFieldLabel' => $label,
-								'selectId' => $id,
-								'selectName' => $name,
-								'selectType' => 'select',
-								'selectPlaceholder' => $placeholder,
-								'selectIsRequired' => $required,
-								'selectValue' => $value,
-								'selectOptions' => array_values(
-									array_merge(
+						$output[] = [
+							'component' => 'select',
+							'selectFieldLabel' => $label,
+							'selectId' => $id,
+							'selectName' => $name,
+							'selectType' => 'select',
+							'selectPlaceholder' => $placeholder,
+							'selectIsRequired' => $required,
+							'selectValue' => $value,
+							'selectOptions' => array_values(
+								array_merge(
+									[
 										[
-											[
-												'component' => 'select-option',
-												'selectOptionLabel' => __('Select option', 'eightshift-forms'),
-												'selectOptionValue' => ' ',
-												'selectOptionIsSelected' => true,
-												'selectOptionIsDisabled' => true,
-											],
+											'component' => 'select-option',
+											'selectOptionLabel' => __('Select option', 'eightshift-forms'),
+											'selectOptionValue' => ' ',
+											'selectOptionIsSelected' => true,
+											'selectOptionIsDisabled' => true,
 										],
-										array_map(
-											function ($selectOption) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $selectOption['label'],
-													'selectOptionValue' => $selectOption['value'],
-												];
-											},
-											$options
-										)
+									],
+									array_map(
+										function ($selectOption) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $selectOption['label'],
+												'selectOptionValue' => $selectOption['value'],
+											];
+										},
+										$options
 									)
-								),
-							]
-						);
+								)
+							),
+						];
 						break;
 					case 'booleancheckbox':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'checkboxes',
-								'checkboxesId' => $id,
-								'checkboxesName' => $name,
-								'checkboxesIsRequired' => $required,
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => $label,
-									]
-								],
-							]
-						);
+						$output[] = [
+							'component' => 'checkboxes',
+							'checkboxesId' => $id,
+							'checkboxesName' => $name,
+							'checkboxesIsRequired' => $required,
+							'checkboxesContent' => [
+								[
+									'component' => 'checkbox',
+									'checkboxLabel' => $label,
+								]
+							],
+						];
 						break;
 					case 'checkbox':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'checkboxes',
-								'checkboxesId' => $id,
-								'checkboxesName' => $name,
-								'checkboxesFieldLabel' => $label,
-								'checkboxesIsRequired' => $required,
-								'checkboxesContent' => array_map(
-									function ($checkbox) {
-										return [
-											'component' => 'checkbox',
-											'checkboxLabel' => $checkbox['label'],
-											'checkboxValue' => $checkbox['value'],
-										];
-									},
-									$options
-								),
-							]
-						);
+						$output[] = [
+							'component' => 'checkboxes',
+							'checkboxesId' => $id,
+							'checkboxesName' => $name,
+							'checkboxesFieldLabel' => $label,
+							'checkboxesIsRequired' => $required,
+							'checkboxesContent' => array_map(
+								function ($checkbox) {
+									return [
+										'component' => 'checkbox',
+										'checkboxLabel' => $checkbox['label'],
+										'checkboxValue' => $checkbox['value'],
+									];
+								},
+								$options
+							),
+						];
 						break;
 					case 'radio':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'radios',
-								'radiosId' => $id,
-								'radiosName' => $name,
-								'radiosFieldLabel' => $label,
-								'radiosIsRequired' => $required,
-								'radiosContent' => array_map(
-									function ($radio) {
-										return [
-											'component' => 'radio',
-											'radioLabel' => $radio['label'],
-											'radioValue' => $radio['value'],
-										];
-									},
-									$options
-								),
-							]
-						);
+						$output[] = [
+							'component' => 'radios',
+							'radiosId' => $id,
+							'radiosName' => $name,
+							'radiosFieldLabel' => $label,
+							'radiosIsRequired' => $required,
+							'radiosContent' => array_map(
+								function ($radio) {
+									return [
+										'component' => 'radio',
+										'radioLabel' => $radio['label'],
+										'radioValue' => $radio['value'],
+									];
+								},
+								$options
+							),
+						];
 						break;
 					case 'consent':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
-								'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
-								'checkboxesId' => $id,
-								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => $name,
-								'checkboxesIsRequired' => $required,
-								'checkboxesContent' => array_map(
-									function ($checkbox) {
-										return [
-											'component' => 'checkbox',
-											'checkboxLabel' => $checkbox['label'],
-											'checkboxValue' => $checkbox['label'],
-										];
-									},
-									$options
-								),
-							]
-						);
+						$output[] = [
+							'component' => 'checkboxes',
+							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
+							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
+							'checkboxesId' => $id,
+							'checkboxesFieldHideLabel' => true,
+							'checkboxesName' => $name,
+							'checkboxesIsRequired' => $required,
+							'checkboxesContent' => array_map(
+								function ($checkbox) {
+									return [
+										'component' => 'checkbox',
+										'checkboxLabel' => $checkbox['label'],
+										'checkboxValue' => $checkbox['label'],
+									];
+								},
+								$options
+							),
+						];
 						break;
 				}
 			}
@@ -368,11 +342,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 		$output[] = [
 			'component' => 'submit',
-			'submitValue' => __('Submit', 'eightshift-forms'),
+			'submitName' => 'submit',
+			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 		];
 
-		return $output;
+		return $this->getIntegrationFieldsValue(
+			$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId),
+			$output
+		);
 	}
 }

@@ -6,12 +6,16 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Enqueue\Blocks\EnqueueBlocks;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
+
+$fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
+if (!$fieldUse) {
+	return;
+}
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';

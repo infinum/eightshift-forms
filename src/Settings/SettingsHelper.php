@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings;
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 /**
  * SettingsHelper trait.
@@ -143,16 +144,16 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Get Integration forms Fields details (used to set field width for rensponsive)
+	 * Get Integration forms Fields details (used to set field width, order, etc for rensponsive)
 	 *
 	 * @param string $key Key to save in db.
+	 * @param string $type Form type.
 	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
 	 * @param string $formId Form ID.
-	 * @param array<string> $additional Provide additional field options. Available are: 'toggle'.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getIntegrationFieldsDetails(string $key, array $formFields, string $formId, array $additional = []): array
+	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId): array
 	{
 		$globalManifest = Components::getManifest(dirname(__DIR__, 1) . '/Blocks');
 
@@ -164,33 +165,34 @@ trait SettingsHelper
 
 		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
 		$fieldsKey = $this->getSettingsName($key);
-		$totalFields = count($formFields) - 1;
+		$totalFields = count($formFields);
 
 		foreach ($formFields as $fieldKey => $field) {
 			if (!$field) {
 				continue;
 			}
 
-			$component = $field['component'];
-
-			// Skip submit.
-			if ($component === 'submit') {
-				continue;
-			}
+			$component = $field['component'] ?? '';
 
 			$id = $field["{$component}Id"] ?? '';
+			$required = $field["{$component}IsRequired"] ?? false;
 			$label = $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '';
+
+			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
+				$label = "{$label} Text";
+			}
+
 			$fieldsOutput = [
 				[
 					'component' => 'group',
-					'groupLabel' => $label,
+					'groupLabel' => ucfirst($label),
 					'groupName' => $fieldsKey,
 					'groupIsInner' => true,
 					'groupContent' => [],
 				]
 			];
 
-			// Loop breakpoints and output inputs.
+			// Breakpoints.
 			$i = 0;
 			foreach ($breakpoints as $breakpoint) {
 				$item = [
@@ -209,6 +211,7 @@ trait SettingsHelper
 				$i++;
 			}
 
+			// Order.
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'input',
 				'inputId' => "{$id}---order",
@@ -220,28 +223,43 @@ trait SettingsHelper
 				'inputStep' => 1,
 			];
 
-			if (in_array('toggle', $additional, true)) {
-				$toggleValue = $fieldsValues["{$id}---toggle"] ?? '';
-				$fieldsOutput[0]['groupContent'][] = [
-					'component' => 'select',
-					'selectId' => "{$id}---toggle",
-					'selectFieldLabel' => __('Show/Hide', 'eightshift-forms'),
-					'selectValue' => $toggleValue,
-					'selectIsDisabled' => $id === 'email',
-					'selectOptions' => [
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => __('Show', 'eightshift-forms'),
-							'selectOptionValue' => 'show',
-							'selectOptionIsSelected' => $toggleValue === 'show',
-						],
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => __('Hide', 'eightshift-forms'),
-							'selectOptionValue' => 'hide',
-							'selectOptionIsSelected' => $toggleValue === 'hide',
-						]
+			// Use.
+			$toggleValue = $fieldsValues["{$id}---use"] ?? '';
+			$toggleDisabled = $required;
+
+			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
+				$toggleDisabled = false;
+			}
+
+			$fieldsOutput[0]['groupContent'][] = [
+				'component' => 'select',
+				'selectId' => "{$id}---use",
+				'selectFieldLabel' => __('Show/Hide', 'eightshift-forms'),
+				'selectValue' => $toggleValue,
+				'selectIsDisabled' => $toggleDisabled,
+				'selectOptions' => [
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => __('Show', 'eightshift-forms'),
+						'selectOptionValue' => 'true',
+						'selectOptionIsSelected' => $toggleValue === 'true',
+					],
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => __('Hide', 'eightshift-forms'),
+						'selectOptionValue' => 'false',
+						'selectOptionIsSelected' => $toggleValue === 'false',
 					]
+				]
+			];
+
+			// Submit label.
+			if ($component === 'submit') {
+				$fieldsOutput[0]['groupContent'][] = [
+					'component' => 'input',
+					'inputId' => "{$id}---submit",
+					'inputFieldLabel' => __('Label', 'eightshift-forms'),
+					'inputValue' => $fieldsValues["{$id}---submit"] ?? __('Submit', 'eightshift-forms'),
 				];
 			}
 
@@ -254,43 +272,74 @@ trait SettingsHelper
 	/**
 	 * Build integration fields value output with full component array.
 	 *
-	 * @param array<string, mixed> $fields Field to search settings in.
-	 * @param array<string, mixed> $fullField Fill component array.
+	 * @param array<string, mixed> $dbSettingsValue Field to search in settings.
+	 * @param array<int, array<string, mixed>> $formFields Full form components array.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
-	public function getIntegrationFieldsValue(array $fields, array $fullField): array
+	public function getIntegrationFieldsValue(array $dbSettingsValue, array $formFields): array
 	{
-		$output = $fullField;
+		if (!$dbSettingsValue) {
+			return $formFields;
+		}
 
-		foreach ($fields as $fieldKey => $fieldValue) {
-			$item = explode('---', $fieldKey);
+		// Get value saved in the db and loop all fields inside.
+		$dbSettingsValuePrepared = [];
+		foreach ($dbSettingsValue as $key => $value) {
+			$item = explode('---', $key);
 
-			if ($fullField["{$fullField['component']}Id"] !== $item[0]) {
+			if (isset($item[0]) && isset($item[1])) {
+				$dbSettingsValuePrepared[$item[0]][$item[1]] = $value;
+			}
+		}
+
+		// Bailout if notihing is saved in the db.
+		if (!$dbSettingsValuePrepared) {
+			return $formFields;
+		}
+
+		// Loop each component and populate new values.
+		foreach ($formFields as $key => $value) {
+			if (!$value) {
 				continue;
 			}
 
-			$breakpoint = ucfirst($item[1]);
+			// Find field component name.
+			$component = $value['component'] ?? '';
 
-			switch ($item[1]) {
-				case 'order':
-					$output["{$fullField['component']}FieldOrder"] = $fieldValue;
-					break;
-				case 'toggle':
-					if ($fieldValue === 'hide') {
-						$output["hide"] = true;
-					}
-					break;
-				default:
-					$output["{$fullField['component']}FieldWidth{$breakpoint}"] = $fieldValue;
-					break;
+			// Find field id.
+			$id = $value["{$component}Id"] ?? '';
+
+			// Get saved values in relation with current field.
+			$dbSettingsValuePreparedItem = $dbSettingsValuePrepared[$id] ?? [];
+			if (!$dbSettingsValuePreparedItem) {
+				continue;
+			}
+
+			// Iterate saved values and populate new fields.
+			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
+				switch ($itemKey) {
+					case 'order':
+						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
+						break;
+					case 'use':
+						$formFields[$key]["{$component}FieldUse"] = filter_var($itemValue, FILTER_VALIDATE_BOOLEAN);
+						break;
+					case 'submit':
+						if (!empty($itemValue)) {
+							$formFields[$key]["{$component}Value"] = $itemValue;
+						}
+						break;
+					default:
+						// Uppercase for output.
+						$breakpointLabel = ucfirst($itemKey);
+
+						$formFields[$key]["{$component}FieldWidth{$breakpointLabel}"] = $itemValue;
+						break;
+				}
 			}
 		}
 
-		if (isset($output['hide'])) {
-			return [];
-		}
-
-		return $output;
+		return $formFields;
 	}
 }

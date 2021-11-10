@@ -19,11 +19,7 @@
 		},
 		"submitValue": {
 			"type": "string",
-			"default": "Send"
-		},
-		"submitType": {
-			"type": "string",
-			"default": "button"
+			"default": "Submit"
 		},
 		"submitIsDisabled": {
 			"type": "boolean",
@@ -43,17 +39,5 @@
 			"type": "boolean",
 			"default": false
 		}
-	},
-	"options": {
-		"submitType": [
-			{
-				"label": "Button",
-				"value": "button"
-			},
-			{
-				"label": "Input",
-				"value": "input"
-			}
-		]
 	}
 }

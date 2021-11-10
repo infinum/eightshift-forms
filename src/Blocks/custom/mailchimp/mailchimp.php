@@ -35,15 +35,19 @@ $mailchimpClass = Components::classnames([
 	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
 ]);
 
-// Bailout if settings are not ok.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		Mailchimp::FILTER_MAPPER_NAME,
-		$mailchimpFormPostId
-	);
-} else { ?>
-	<div class="<?php echo esc_attr($mailchimpClass); ?>">
-		<?php esc_html_e('Sorry, it looks like your Mailchimp settings are not configured correctly. Please contact your admin.', 'eightshift-forms'); ?>
-	</div>
-		<?php
+// Bailout if settings are not ok but show msg only in editor.
+if (!$isSettingsValid && $mailchimpServerSideRender) {
+	?>
+		<div class="<?php echo esc_attr($mailchimpClass); ?>">
+			<?php esc_html_e('Sorry, it looks like your Mailchimp settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
+		</div>
+	<?php
+
+	return;
 }
+
+// Output form.
+echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	Mailchimp::FILTER_MAPPER_NAME,
+	$mailchimpFormPostId
+);

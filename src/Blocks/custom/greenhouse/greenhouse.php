@@ -32,15 +32,19 @@ $greenhouseClass = Components::classnames([
 	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
 ]);
 
-// Bailout if settings are not ok.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		Greenhouse::FILTER_MAPPER_NAME,
-		$greenhouseFormPostId
-	);
-} else { ?>
-	<div class="<?php echo esc_attr($greenhouseClass); ?>">
-		<?php esc_html_e('Sorry, it looks like your Greenhose settings are not configured correctly. Please contact your admin.', 'eightshift-forms'); ?>
-	</div>
-		<?php
+// Bailout if settings are not ok but show msg only in editor.
+if (!$isSettingsValid && $greenhouseServerSideRender) {
+	?>
+		<div class="<?php echo esc_attr($greenhouseClass); ?>">
+			<?php esc_html_e('Sorry, it looks like your Greenhouse settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
+		</div>
+	<?php
+
+	return;
 }
+
+// Output form.
+echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	Greenhouse::FILTER_MAPPER_NAME,
+	$greenhouseFormPostId
+);

@@ -37,6 +37,10 @@
 			"type": "string",
 			"default": "Label"
 		},
+		"fieldUse": {
+			"type": "boolean",
+			"default": true
+		},
 		"fieldHideLabel": {
 			"type": "boolean",
 			"default": false

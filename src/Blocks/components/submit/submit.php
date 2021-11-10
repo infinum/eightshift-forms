@@ -18,7 +18,6 @@ $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $submitId = Components::checkAttr('submitId', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
-$submitType = Components::checkAttr('submitType', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
@@ -36,24 +35,10 @@ foreach ($submitAttrs as $key => $value) {
 	$submitAttrsOutput .= \wp_kses_post("{$key}=" . $value . " ");
 }
 
-$submit = '
-	<input
-		type="submit"
-		id="' . esc_attr($submitId) . '"
-		value="' . esc_attr($submitValue) . '"
-		class="' . esc_attr($submitClass) . '"
-		name="es-form-submit"
-		data-tracking="' . $submitTracking . '"
-		' . disabled($submitIsDisabled, true, false) . '
-		' . $submitAttrsOutput . '
-	/>
-';
-
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		id="' . esc_attr($submitId) . '"
-		name="es-form-submit"
 		data-tracking="' . $submitTracking . '"
 		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
@@ -65,7 +50,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [
-			'fieldContent' => $submitType === 'button' ? $button : $submit,
+			'fieldContent' => $button,
 			'fieldId' => $submitId,
 			'fieldDisabled' => !empty($submitIsDisabled),
 		]),

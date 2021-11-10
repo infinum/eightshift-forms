@@ -165,10 +165,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId);
-		$hideResumeTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId);
-		$hideCoverLetterTextarea = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId);
-
 		foreach ($data as $item) {
 			if (empty($item)) {
 				continue;
@@ -184,95 +180,72 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				$name = $field['name'] ?? '';
 				$values = $field['values'];
 
-				if ($field['name'] === 'resume_text' && $hideResumeTextarea) {
-					continue;
-				}
-
-				if ($field['name'] === 'cover_letter_text' && $hideCoverLetterTextarea) {
-					continue;
-				}
-
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'input',
-								'inputName' => $name,
-								'inputFieldLabel' => $label,
-								'inputId' => $name,
-								'inputType' => 'text',
-								'inputIsRequired' => $required,
-								'inputIsEmail' => $name === 'email' ? 'true' : ''
-							]
-						);
+						$output[] = [
+							'component' => 'input',
+							'inputName' => $name,
+							'inputFieldLabel' => $label,
+							'inputId' => $name,
+							'inputType' => 'text',
+							'inputIsRequired' => $required,
+							'inputIsEmail' => $name === 'email' ? 'true' : ''
+						];
 						break;
 					case 'input_file':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'file',
-								'fileName' => $name,
-								'fileFieldLabel' => $label,
-								'fileId' => $name,
-								'fileIsRequired' => $required,
-								'fileAccept' => 'pdf,doc,docx,txt,rtf',
-								'fileMinSize' => 1
-							]
-						);
+						$output[] = [
+							'component' => 'file',
+							'fileName' => $name,
+							'fileFieldLabel' => $label,
+							'fileId' => $name,
+							'fileIsRequired' => $required,
+							'fileAccept' => 'pdf,doc,docx,txt,rtf',
+							'fileMinSize' => 1
+						];
 						break;
 					case 'textarea':
-						$output[] = $this->getIntegrationFieldsValue(
-							$integrationBreakpointsFields,
-							[
-								'component' => 'textarea',
-								'textareaName' => $name,
-								'textareaFieldLabel' => $label,
-								'textareaId' => $name,
-								'textareaIsRequired' => $required,
-							]
-						);
+						$output[] = [
+							'component' => 'textarea',
+							'textareaName' => $name,
+							'textareaFieldLabel' => $label,
+							'textareaId' => $name,
+							'textareaIsRequired' => $required,
+						];
 						break;
 					case 'multi_value_single_select':
 						if ($values[0]['label'] === 'No' && $values[0]['value'] === 0) {
-							$output[] = $this->getIntegrationFieldsValue(
-								$integrationBreakpointsFields,
-								[
-									'component' => 'checkboxes',
-									'checkboxesName' => $name,
-									'checkboxesId' => $name,
-									'checkboxesIsRequired' => $required,
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => $label,
-											'checkboxValue' => 1,
-										],
-									]
+							$output[] = [
+								'component' => 'checkboxes',
+								'checkboxesName' => $name,
+								'checkboxesId' => $name,
+								'checkboxesIsRequired' => $required,
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $label,
+										'checkboxValue' => 1,
+									],
 								]
-							);
+							];
 						} else {
-							$output[] = $this->getIntegrationFieldsValue(
-								$integrationBreakpointsFields,
-								[
-									'component' => 'select',
-									'selectName' => $name,
-									'selectId' => $name,
-									'selectFieldLabel' => $label,
-									'selectIsRequired' => $required,
-									'selectOptions' => array_map(
-										function ($selectOption) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $selectOption['label'],
-												'selectOptionValue' => $selectOption['value'],
-											];
-										},
-										$values
-									),
-								]
-							);
+							$output[] = [
+								'component' => 'select',
+								'selectName' => $name,
+								'selectId' => $name,
+								'selectFieldLabel' => $label,
+								'selectIsRequired' => $required,
+								'selectOptions' => array_map(
+									function ($selectOption) {
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $selectOption['label'],
+											'selectOptionValue' => $selectOption['value'],
+										];
+									},
+									$values
+								),
+							];
 						}
 						break;
 				}
@@ -281,11 +254,15 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		$output[] = [
 			'component' => 'submit',
-			'submitValue' => __('Submit', 'eightshift-forms'),
+			'submitName' => 'submit',
+			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 		];
 
-		return $output;
+		return $this->getIntegrationFieldsValue(
+			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),
+			$output
+		);
 	}
 }

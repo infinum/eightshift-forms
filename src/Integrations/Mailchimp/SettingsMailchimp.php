@@ -283,6 +283,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
+							self::SETTINGS_TYPE_KEY,
 							$this->mailchimp->getFormFields($formId),
 							$formId
 						),

@@ -183,8 +183,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId);
-
 		foreach ($data as $field) {
 			if (empty($field)) {
 				continue;
@@ -198,41 +196,39 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			switch ($type) {
 				case 'text':
 				case 'date':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $name === 'email',
-							'inputIsEmail' => $name === 'email',
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'text',
+						'inputIsRequired' => $name === 'email',
+						'inputIsEmail' => $name === 'email',
+					];
 					break;
 				case 'number':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'number',
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'number',
+					];
 					break;
 			}
 		}
 
 		$output[] = [
 			'component' => 'submit',
-			'submitValue' => __('Subscribe', 'eightshift-forms'),
+			'submitName' => 'submit',
+			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 		];
 
-		return $output;
+		return $this->getIntegrationFieldsValue(
+			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId),
+			$output
+		);
 	}
 }

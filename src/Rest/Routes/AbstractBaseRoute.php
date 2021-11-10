@@ -289,10 +289,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				unset($params['es-form-type']);
 			}
 
-			if ($key === 'es-form-submit') {
-				unset($params['es-form-submit']);
-			}
-
 			if ($key === 'es-form-post-id') {
 				unset($params['es-form-post-id']);
 			}

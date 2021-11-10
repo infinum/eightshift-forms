@@ -182,20 +182,15 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
-		$integrationBreakpointsFields = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId);
-
-		$output[] = $this->getIntegrationFieldsValue(
-			$integrationBreakpointsFields,
-			[
-				'component' => 'input',
-				'inputName' => 'email_address',
-				'inputFieldLabel' => __('Email address', 'eightshift-forms'),
-				'inputId' => 'email_address',
-				'inputType' => 'text',
-				'inputIsEmail' => true,
-				'inputIsRequired' => true,
-			]
-		);
+		$output[] = [
+			'component' => 'input',
+			'inputName' => 'email_address',
+			'inputFieldLabel' => __('Email address', 'eightshift-forms'),
+			'inputId' => 'email_address',
+			'inputType' => 'text',
+			'inputIsEmail' => true,
+			'inputIsRequired' => true,
+		];
 
 		foreach ($data as $field) {
 			if (empty($field)) {
@@ -213,121 +208,100 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 			switch ($type) {
 				case 'text':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
+					];
 					break;
 				case 'address':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => 'address',
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => 'address',
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
+					];
 					break;
 				case 'number':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'number',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'number',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
+					];
 					break;
 				case 'phone':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'tel',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'tel',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
+					];
 					break;
 				case 'birthday':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'input',
-							'inputName' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $id,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputValue' => $value,
-							'inputValidationPattern' => $dateFormat,
-						]
-					);
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						'inputValue' => $value,
+						'inputValidationPattern' => $dateFormat,
+					];
 					break;
 				case 'radio':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'radios',
-							'radiosId' => $id,
-							'radiosName' => $name,
-							'radiosIsRequired' => $required,
-							'radiosContent' => array_map(
-								function ($radio) {
-									return [
-										'component' => 'radio',
-										'radioLabel' => $radio,
-										'radioValue' => $radio,
-									];
-								},
-								$options
-							),
-						]
-					);
+					$output[] = [
+						'component' => 'radios',
+						'radiosId' => $id,
+						'radiosName' => $name,
+						'radiosIsRequired' => $required,
+						'radiosContent' => array_map(
+							function ($radio) {
+								return [
+									'component' => 'radio',
+									'radioLabel' => $radio,
+									'radioValue' => $radio,
+								];
+							},
+							$options
+						),
+					];
 					break;
 				case 'dropdown':
-					$output[] = $this->getIntegrationFieldsValue(
-						$integrationBreakpointsFields,
-						[
-							'component' => 'select',
-							'selectId' => $id,
-							'selectName' => $name,
-							'selectIsRequired' => $required,
-							'selectOptions' => array_map(
-								function ($option) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
-									];
-								},
-								$options
-							),
-						]
-					);
+					$output[] = [
+						'component' => 'select',
+						'selectId' => $id,
+						'selectName' => $name,
+						'selectIsRequired' => $required,
+						'selectOptions' => array_map(
+							function ($option) {
+								return [
+									'component' => 'select-option',
+									'selectOptionLabel' => $option,
+									'selectOptionValue' => $option,
+								];
+							},
+							$options
+						),
+					];
 					break;
 			}
 		}
@@ -346,11 +320,15 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		$output[] = [
 			'component' => 'submit',
-			'submitValue' => __('Subscribe', 'eightshift-forms'),
+			'submitName' => 'submit',
+			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 		];
 
-		return $output;
+		return $this->getIntegrationFieldsValue(
+			$this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId),
+			$output
+		);
 	}
 }

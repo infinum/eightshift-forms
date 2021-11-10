@@ -100,6 +100,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 
 			$output[] = [
 				'component' => 'submit',
+				'submitName' => $item,
 				'submitId' => $item,
 				'submitFieldWidthLarge' => 6,
 				'submitValue' => "Delete " . ucfirst($name),

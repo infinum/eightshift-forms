@@ -1,10 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { TextControl } from '@wordpress/components';
 import {
 	icons,
-	getOption,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
@@ -19,7 +18,6 @@ export const SubmitOptions = (attributes) => {
 	} = attributes;
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
-	const submitType = checkAttr('submitType', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
 	const submitTracking = checkAttr('submitTracking', attributes, manifest);
 
@@ -50,14 +48,6 @@ export const SubmitOptions = (attributes) => {
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={submitTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
-					/>
-
-					<SelectControl
-						label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
-						help={__('Select type of button to be used.', 'eightshift-forms')}
-						value={submitType}
-						options={getOption('submitType', attributes, manifest)}
-						onChange={(value) => setAttributes({ [getAttrKey('submitType', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle

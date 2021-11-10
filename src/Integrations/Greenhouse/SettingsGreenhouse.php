@@ -74,16 +74,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouse-job-id';
 
 	/**
-	 * Hide resume textarea Key.
-	 */
-	public const SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY = 'greenhouse-hide-resume-textarea';
-
-	/**
-	 * Hide Cover Letter textarea Key.
-	 */
-	public const SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY = 'greenhouse-hide-cover-letter-textarea';
-
-	/**
 	 * Integration fields Key.
 	 */
 	public const SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY = 'greenhouse-integration-fields';
@@ -255,59 +245,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectValue' => $selectedItem,
 				'selectSingleSubmit' => true,
 			],
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => __('Field Options', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-				'introSubtitle' => __('Setup additional options for individual fields.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY),
-				'selectFieldLabel' => __('Resume Textarea', 'eightshift-forms'),
-				'selectFieldHelp' => __('Show/Hide resume textarea', 'eightshift-forms'),
-				'selectOptions' => [
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => 'Show',
-						'selectOptionValue' => 'show',
-						'selectOptionIsSelected' => $this->isCheckedSettings('show', self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
-					],
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => 'Hide',
-						'selectOptionValue' => 'hide',
-						'selectOptionIsSelected' => $this->isCheckedSettings('hide', self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
-					],
-				],
-				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_RESUME_TEXTAREA_KEY, $formId),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY),
-				'selectFieldLabel' => __('Cover Letter Textarea', 'eightshift-forms'),
-				'selectFieldHelp' => __('Show/Hide cover letter textarea', 'eightshift-forms'),
-				'selectOptions' => [
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => 'Show',
-						'selectOptionValue' => 'show',
-						'selectOptionIsSelected' => $this->isCheckedSettings('show', self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
-					],
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => 'Hide',
-						'selectOptionValue' => 'hide',
-						'selectOptionIsSelected' => $this->isCheckedSettings('hide', self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
-					],
-				],
-				'selectValue' => $this->getSettingsValue(self::SETTINGS_GREENHOUSE_HIDE_COVER_LETTER_TEXTAREA_KEY, $formId),
-			],
 		];
 
 		// If the user has selected the list.
@@ -329,6 +266,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
+							self::SETTINGS_TYPE_KEY,
 							$this->greenhouse->getFormFields($formId),
 							$formId
 						),

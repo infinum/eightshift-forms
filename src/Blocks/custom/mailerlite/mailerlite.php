@@ -35,15 +35,19 @@ $mailerliteClass = Components::classnames([
 	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
 ]);
 
-// Bailout if settings are not ok.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		Mailerlite::FILTER_MAPPER_NAME,
-		$mailerliteFormPostId
-	);
-} else { ?>
-	<div class="<?php echo esc_attr($mailerliteClass); ?>">
-		<?php esc_html_e('Sorry, it looks like your Mailerlite settings are not configured correctly. Please contact your admin.', 'eightshift-forms'); ?>
-	</div>
-		<?php
+// Bailout if settings are not ok but show msg only in editor.
+if (!$isSettingsValid && $mailerliteServerSideRender) {
+	?>
+		<div class="<?php echo esc_attr($mailerliteClass); ?>">
+			<?php esc_html_e('Sorry, it looks like your Mailerlite settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
+		</div>
+	<?php
+
+	return;
 }
+
+// Output form.
+echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	Mailerlite::FILTER_MAPPER_NAME,
+	$mailerliteFormPostId
+);

@@ -16,21 +16,12 @@ export const SubmitEditor = (attributes) => {
 	} = attributes;
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
-	const submitType = checkAttr('submitType', attributes, manifest);
 
 	const submitClass = classnames([
 		selector(componentClass, componentClass),
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
-
-	const submit = (
-		<input
-			type='submit'
-			value={submitValue}
-			className={submitClass}
-		/>
-	);
 
 	const button = (
 		<button className={submitClass}>
@@ -42,7 +33,7 @@ export const SubmitEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: submitType  === 'button' ? button : submit
+					fieldContent: button
 				})}
 			/>
 		</>

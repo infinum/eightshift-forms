@@ -259,11 +259,9 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY),
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY,
+							self::SETTINGS_TYPE_KEY,
 							$this->mailerlite->getFormFields($formId),
-							$formId,
-							[
-								'toggle'
-							]
+							$formId
 						),
 					]
 				]
