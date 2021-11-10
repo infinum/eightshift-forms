@@ -176,7 +176,7 @@ export const InputOptions = (attributes) => {
 								/>
 							}
 
-							{showInputIsEmail &&
+							{(showInputIsEmail && !inputIsUrl && inputValidationPattern == '' && inputType !== 'number') &&
 								<IconToggle
 									icon={icons.play}
 									label={__('Is Email', 'eightshift-forms')}
@@ -185,7 +185,7 @@ export const InputOptions = (attributes) => {
 								/>
 							}
 
-							{showInputIsUrl &&
+							{(showInputIsUrl && !inputIsEmail && inputValidationPattern === '' && inputType !== 'number') &&
 								<IconToggle
 									icon={icons.play}
 									label={__('Is Url', 'eightshift-forms')}
@@ -194,7 +194,7 @@ export const InputOptions = (attributes) => {
 								/>
 							}
 
-							{showInputValidationPattern &&
+							{(showInputValidationPattern && !inputIsUrl && !inputIsEmail) &&
 								<SelectControl
 									label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
 									help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}

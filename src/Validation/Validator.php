@@ -212,25 +212,25 @@ class Validator extends AbstractValidation
 				switch ($dataKey) {
 					// Check validation for required params.
 					case 'isRequired':
-						if ($dataValue && $inputValue === '') {
+						if ($dataValue && empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if ($dataValue && count(explode(", ", $inputValue)) < $dataValue) {
+						if ($dataValue && count(explode(", ", $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for email params.
-					case 'IsEmail':
-						if ($dataValue && !$this->isEmail($inputValue)) {
+					case 'isEmail':
+						if ($dataValue && !$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						}
 						break;
 					// Check validation for url params.
 					case 'isUrl':
-						if ($dataValue && !$this->isUrl($inputValue)) {
+						if ($dataValue && !$this->isUrl($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
@@ -239,7 +239,7 @@ class Validator extends AbstractValidation
 
 						$key = $matches[0] ?? '';
 
-						if ($dataValue && empty($key)) {
+						if ($dataValue && empty($key) && !empty($inputValue)) {
 							$output[$paramKey] = sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;
@@ -349,6 +349,12 @@ class Validator extends AbstractValidation
 	private function getValidationReferenceInner($block, $name): array
 	{
 		$output = [];
+
+		// Append attributes defined in the manifest as defaults.
+		if ($name === 'senderEmail') {
+			$block['attrs']['senderEmailInputIsRequired'] = true;
+			$block['attrs']['senderEmailInputIsEmail'] = true;
+		}
 
 		// Check all attributes.
 		foreach ($block['attrs'] as $attributeKey => $attributeValue) {

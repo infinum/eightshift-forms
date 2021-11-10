@@ -19,7 +19,6 @@
 	"example": {
 		"attributes": {
 			"inputName": "sender-email",
-			"inputType": "email",
 			"inputIsRequired": true,
 			"inputIsEmail": true
 		}
@@ -28,10 +27,6 @@
 		"inputName": {
 			"type": "string",
 			"default": "sender-email"
-		},
-		"inputType": {
-			"type": "string",
-			"default": "email"
 		},
 		"inputIsRequired": {
 			"type": "boolean",
