@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -118,8 +119,14 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 			]
 		];
 
+		$local = array_flip(Labels::ALL_LOCAL_LABELS);
+
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
+			if (!isset($local[$key])) {
+				continue;
+			}
+
 			$output[] = [
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
@@ -140,12 +147,17 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$output = '';
+		$validationPatterns = '';
 		foreach (self::VALIDATION_PATTERNS as $key => $value) {
-			$output .= "{$key} : {$value}<br/>";
+			$validationPatterns .= "{$key} : {$value}<br/>";
 		}
 
-		return [
+		$output = [
+			[
+				'component' => 'intro',
+				'introTitle' => __('Form validation messages', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your form validation messages in one place.', 'eightshift-forms'),
+			],
 			[
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
@@ -153,9 +165,38 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				// translators: %s will be replaced with local validation patterns.
 				'textareaFieldHelp' => sprintf(__("
 					List all your custom validation patterns here and they will show in the editor. Each item must be in a new line written like key value pair separated with colon(:) with space before and after.<br/><br/>
-					Here are our predefined patterns that you can use: <br/><br/> %s", 'eightshift-forms'), $output),
+					Here are our predefined patterns that you can use: <br/><br/> %s", 'eightshift-forms'), $validationPatterns),
 				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 			],
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => __('Form validation messages', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+				'introSubtitle' => __('Configure your form validation messages in one place.', 'eightshift-forms'),
+			],
 		];
+
+		$local = array_flip(Labels::ALL_LOCAL_LABELS);
+
+		// List all labels for settings override.
+		foreach ($this->labels->getLabels() as $key => $label) {
+			if (isset($local[$key])) {
+				continue;
+			}
+
+			$output[] = [
+				'component' => 'input',
+				'inputName' => $this->getSettingsName($key),
+				'inputId' => $this->getSettingsName($key),
+				'inputFieldLabel' => ucfirst($key),
+				'inputPlaceholder' => $label,
+				'inputValue' => $this->getOptionValue($key),
+			];
+		}
+
+		return $output;
 	}
 }

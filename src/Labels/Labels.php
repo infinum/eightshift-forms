@@ -23,6 +23,17 @@ class Labels implements LabelsInterface
 	use SettingsHelper;
 
 	/**
+	 * List all label keys that are stored in local form everything else is global settings.
+	 */
+	public const ALL_LOCAL_LABELS = [
+		'mailerSuccess',
+		'greenhouseSuccess',
+		'mailchimpSuccess',
+		'hubspotSuccess',
+		'mailerliteSuccess',
+	];
+
+	/**
 	 * Get all labels
 	 *
 	 * @return array<string, string>
@@ -112,7 +123,13 @@ class Labels implements LabelsInterface
 	{
 		// If form ID is not missing check form settings for the overrides.
 		if (!empty($formId)) {
-			$dbLabel = $this->getSettingsValue($key, $formId);
+			$local = array_flip(self::ALL_LOCAL_LABELS);
+
+			if (isset($local[$key])) {
+				$dbLabel = $this->getSettingsValue($key, $formId);
+			} else {
+				$dbLabel = $this->getOptionValue($key);
+			}
 
 			// If there is an override in the DB use that.
 			if (!empty($dbLabel)) {
