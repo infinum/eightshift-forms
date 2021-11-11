@@ -178,7 +178,7 @@ class MailchimpClient implements MailchimpClientInterface
 			);
 
 			if ($invalidEmail) {
-				$msg === 'INVALID_EMAIL';
+				$msg = 'INVALID_EMAIL';
 			}
 		}
 

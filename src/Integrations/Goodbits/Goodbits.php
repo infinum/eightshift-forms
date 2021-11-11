@@ -157,7 +157,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	/**
 	 * Map Goodbits fields to our components.
 	 *
-	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form Id.
 	 *
 	 * @return array<int, array<string, mixed>>

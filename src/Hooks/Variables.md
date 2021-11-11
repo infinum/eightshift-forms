@@ -71,6 +71,17 @@ define('ES_API_KEY_MAILERLITE', '<api-key>');
 
 This variable will set forms Goodbits api key and you will not be able to change it from the admin.
 
+This key can be string as one api key or array for multiple keys that will be showed in the list selector.
+
+string:
 ```php
 define('ES_API_KEY_GOODBITS', '<api-key>');
+```
+
+array:
+```php
+define('ES_API_KEY_GOODBITS', [
+	'List name 1' => '<api-key-1>',
+	'List name 2' => '<api-key-2>',
+]);
 ```

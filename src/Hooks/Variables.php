@@ -98,7 +98,7 @@ class Variables
 	/**
 	 * Get API Key for Goodbits.
 	 *
-	 * @return string|array
+	 * @return string|array<string, mixed>
 	 */
 	public static function getApiKeyGoodbits()
 	{

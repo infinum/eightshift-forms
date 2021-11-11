@@ -83,7 +83,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Generic
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getGenericLabels(): array
 	{
@@ -95,7 +95,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Validation
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getValidationLabels(): array
 	{
@@ -119,7 +119,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Maler
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getMailerLabels(): array
 	{
@@ -135,7 +135,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Greenhouse
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getGreenhouseLabels(): array
 	{
@@ -164,7 +164,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Mailchimp
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getMailchimpLabels(): array
 	{
@@ -181,7 +181,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - HubSpot
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getHubspotLabels(): array
 	{
@@ -198,7 +198,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Mailerlite
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getMailerliteLabels(): array
 	{
@@ -214,7 +214,7 @@ class Labels implements LabelsInterface
 	/**
 	 * Return labels - Goodbits
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getGoodbitsLabels(): array
 	{
@@ -222,7 +222,7 @@ class Labels implements LabelsInterface
 			'goodbitsErrorSettingsMissing' => __('Goodbits is not configured correctly. Please try again.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'goodbitsInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
-			'goodbitsEmailTemporarilyBlockedError' => __('It looks like your email is temporarily blocked by our email client. Please try again later or use a different email.', 'eightshift-forms'),
+			'goodbitsUnauthorizedError' => __('It looks like your api key is not valid.', 'eightshift-forms'),
 			'goodbitsSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
 		];
 	}

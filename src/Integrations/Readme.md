@@ -13,21 +13,22 @@ Adding new integration steps:
 10. Add new API key global variable in the `Hooks/Variables.php`.
 11. Add labels for new integration `Labels/Labels.php`.
 
-# Mailchimp
+# Goodbits
 
-[Documentation](https://mailchimp.com/developer/marketing/api/lists/)
+[Documentation](https://gist.github.com/kalv/84c37780d277da5b7a3cdf5c28359c6b)
+
+Version: **v1**
 
 Supported fields:
-* Text
-* Address - partially
-* Number
-* Phone
-* Radio
-* Dropdown
+* Email
+* First name
+* Last name
 
 # Greenhouse
 
 [Documentation](https://developers.greenhouse.io/job-board.html)
+
+Version: **v1**
 
 Supported fields:
 * Short textbox
@@ -40,6 +41,9 @@ Supported fields:
 
 [Documentation](https://legacydocs.hubspot.com/docs/methods/forms/submit_form)
 
+Version Submit: **v3**
+Version Items: **v2**
+
 Supported fields:
 * Text
 * Textarea
@@ -50,9 +54,27 @@ Supported fields:
 * Radio
 * Consent
 
-# Goodbits
+# Mailchimp
 
-[Documentation](https://gist.github.com/kalv/84c37780d277da5b7a3cdf5c28359c6b)
+[Documentation](https://mailchimp.com/developer/marketing/api/)
+
+Version: **v3**
 
 Supported fields:
-*
+* Text
+* Address - partially
+* Number
+* Phone
+* Radio
+* Dropdown
+
+# Mailerlite
+
+[Documentation](https://developers.mailerlite.com/docs)
+
+Version: **v2**
+
+Supported fields:
+* Text
+* Date
+* Number

@@ -226,7 +226,7 @@ class HubspotClient implements ClientInterface
 			);
 
 			if ($invalidEmail) {
-				$msg === 'INVALID_EMAIL';
+				$msg = 'INVALID_EMAIL';
 			}
 
 			$requiredField = array_filter(
@@ -237,7 +237,7 @@ class HubspotClient implements ClientInterface
 			);
 
 			if ($requiredField) {
-				$msg === 'REQUIRED_FIELD';
+				$msg = 'REQUIRED_FIELD';
 			}
 		}
 

@@ -43,20 +43,20 @@ class GoodbitsClient implements ClientInterface
 		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
 		if (is_array($key)) {
-			return array_map(
-				function($title, $id) {
-					return [
-						'title' => $title,
-						'id' => $id,
-					];
-				},
-				array_keys($key),
-				$key
-			);
+			$output = [];
+
+			foreach ($key as $itemKey => $itemValue) {
+				$output[$itemKey] = [
+					'title' => $itemKey,
+					'id' => $itemValue,
+				];
+			}
+
+			return $output;
 		}
 
 		return [
-			[
+			'Goodbits' => [
 				'title' => __('Goodbits', 'eightshift-forms'),
 				'id' => $key,
 			],
@@ -86,17 +86,15 @@ class GoodbitsClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files): array
 	{
-		$email = $params['email']['value'];
-
 		$body = [
 			'subscriber' => $this->prepareParams($params),
 		];
 
 		$response = \wp_remote_request(
-			"{$this->getBaseUrl()}subscribers/{$email}",
+			"{$this->getBaseUrl()}subscribers",
 			[
 				'headers' => $this->getHeaders($itemId),
-				'method' => 'PUT',
+				'method' => 'POST',
 				'body' => wp_json_encode($body),
 			]
 		);
@@ -109,10 +107,8 @@ class GoodbitsClient implements ClientInterface
 			];
 		}
 
-		
 		$code = $response['response']['code'] ?? 200;
-		
-		error_log( print_r( ( $response ), true ) );
+
 		if ($code === 200 || $code === 201) {
 			return [
 				'status' => 'success',
@@ -122,12 +118,13 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['error']['message'] ?? '';
+		$responseMessage = !is_array($responseBody['errors']) ? $responseBody['errors'] : '';
+		$responseErrors = is_array($responseBody['errors']) ? $responseBody['errors']['message'] : [];
 
 		$output = [
 			'status' => 'error',
 			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage),
+			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
 		];
 
 		Helper::logger([
@@ -145,18 +142,32 @@ class GoodbitsClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param string $msg Message got from the API.
+	 * @param array<string, mixed> $errors Additional errors got from the API.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(string $msg, array $errors = []): string
 	{
+		if ($errors) {
+			$invalidEmail = array_filter(
+				$errors,
+				function ($error) {
+					return $error === 'Email is invalid';
+				}
+			);
+
+			if ($invalidEmail) {
+				$msg = 'INVALID_EMAIL';
+			}
+		}
+
 		switch ($msg) {
 			case 'Bad Request':
 				return 'goodbitsBadRequestError';
-			case 'Invalid email address':
+			case 'Invalid API Key has been submitted, please refer to your API key under your settings':
+				return 'goodbitsUnauthorizedError';
+			case 'INVALID_EMAIL':
 				return 'goodbitsInvalidEmailError';
-			case 'Email temporarily blocked':
-				return 'goodbitsEmailTemporarilyBlockedError';
 			default:
 				return 'submitWpError';
 		}
@@ -190,8 +201,6 @@ class GoodbitsClient implements ClientInterface
 	{
 		$output = [];
 
-		unset($params['email']);
-
 		foreach ($params as $key => $value) {
 			$output[$key] = $value['value'] ?? '';
 		}
@@ -212,7 +221,7 @@ class GoodbitsClient implements ClientInterface
 	/**
 	 * Return Api Keys from settings or global vairaible.
 	 *
-	 * @return string
+	 * @return array<int, array<string, string>>
 	 */
 	private function getApiKeys(): array
 	{
@@ -222,7 +231,7 @@ class GoodbitsClient implements ClientInterface
 
 		if (is_array($key)) {
 			return array_map(
-				function($title, $id) {
+				function ($title, $id) {
 					return [
 						'title' => $title,
 						'id' => $id,
