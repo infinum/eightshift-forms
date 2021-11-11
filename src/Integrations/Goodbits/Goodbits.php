@@ -12,10 +12,8 @@ namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -103,36 +101,9 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Get form type.
 		$formAdditionalProps['formType'] = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
-		// Reset form on success.
-		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
-
-		// Disable scroll to field on error.
-		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
-		// Disable scroll to global message on success.
-		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
-		// Tracking event name.
-		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
-			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$formIdDecoded
-		);
-
-		// Success redirect url.
-		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
-			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$formIdDecoded
-		);
-
 		return $this->buildForm(
 			$this->getFormFields($formIdDecoded),
-			$formAdditionalProps
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
 		);
 	}
 

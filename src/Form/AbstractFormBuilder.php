@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
@@ -78,24 +80,6 @@ abstract class AbstractFormBuilder
 
 		// Build form.
 		return $this->getForm($formItems, $formAdditionalProps, $formContent);
-	}
-
-	/**
-	 * Get Integration remote form body.
-	 *
-	 * @param string $url Remote url.
-	 *
-	 * @return string
-	 */
-	protected function getIntegrationRemoteForm(string $url): string
-	{
-		$form = wp_remote_get($url);
-
-		if (\is_wp_error($form)) {
-			return '';
-		}
-
-		return $form['body'] ?? '';
 	}
 
 	/**
@@ -240,5 +224,46 @@ abstract class AbstractFormBuilder
 			'',
 			true
 		);
+	}
+
+	/**
+	 * Return Integration form additional props
+	 *
+	 * @param string $formID Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormAdditionalProps(string $formID): array
+	{
+		$formAdditionalProps = [];
+
+		// Reset form on success.
+		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
+
+		// Disable scroll to field on error.
+		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Disable scroll to global message on success.
+		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+		);
+
+		// Tracking event name.
+		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+			$formID
+		);
+
+		// Success redirect url.
+		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
+			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+			$formID
+		);
+
+		return $formAdditionalProps;
 	}
 }
