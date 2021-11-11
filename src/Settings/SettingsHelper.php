@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 
 /**
  * SettingsHelper trait.
@@ -150,11 +151,13 @@ trait SettingsHelper
 	 * @param string $type Form type.
 	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
 	 * @param string $formId Form ID.
+	 * @param array<int, string> $additionalLabel Additional label to show.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId): array
+	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId, array $additionalLabel = []): array
 	{
+		$additionalLabel = array_flip($additionalLabel);
 		$globalManifest = Components::getManifest(dirname(__DIR__, 1) . '/Blocks');
 
 		// Find project breakpoints.
@@ -173,6 +176,11 @@ trait SettingsHelper
 			}
 
 			$component = $field['component'] ?? '';
+
+			$inputType = $field["{$component}Type"] ?? '';
+			if ($inputType === 'hidden') {
+				continue;
+			}
 
 			$id = $field["{$component}Id"] ?? '';
 			$required = $field["{$component}IsRequired"] ?? false;
@@ -254,12 +262,12 @@ trait SettingsHelper
 			];
 
 			// Submit label.
-			if ($component === 'submit') {
+			if (isset($additionalLabel[$id]) || $component === 'submit') {
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'input',
-					'inputId' => "{$id}---submit",
+					'inputId' => "{$id}---label",
 					'inputFieldLabel' => __('Label', 'eightshift-forms'),
-					'inputValue' => $fieldsValues["{$id}---submit"] ?? __('Submit', 'eightshift-forms'),
+					'inputValue' => $fieldsValues["{$id}---label"] ?? '',
 				];
 			}
 
@@ -325,9 +333,13 @@ trait SettingsHelper
 					case 'use':
 						$formFields[$key]["{$component}FieldUse"] = filter_var($itemValue, FILTER_VALIDATE_BOOLEAN);
 						break;
-					case 'submit':
+					case 'label':
 						if (!empty($itemValue)) {
-							$formFields[$key]["{$component}Value"] = $itemValue;
+							if ($component === 'submit') {
+								$formFields[$key]["{$component}Value"] = $itemValue;
+							} else {
+								$formFields[$key]["{$component}FieldLabel"] = $itemValue;
+							}
 						}
 						break;
 					default:

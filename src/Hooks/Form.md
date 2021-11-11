@@ -2,6 +2,15 @@
 
 This document contains all actions/filters you can take on the frontend form submitting logic. Some filters are done using JavaScript and some using PHP.
 
+# Scripts
+
+You can manually trigger and initialize all JavaScript functions needed for the forms to run. We have exposed the global window object called `esForms`. Here you can find init function, selectors, events and much more.
+
+## Reinit all forms JavaScript.
+```js
+window.esForms.init();
+```
+
 # Events JavaScript
 
 Here are events that you can trigger using JavaScript to hook you custom logic in the process.

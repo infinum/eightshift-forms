@@ -232,7 +232,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your greenhouse settings in one place.', 'eightshift-forms'),
+				'introSubtitle' => __('Configure your Greenhouse settings in one place.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
@@ -259,7 +259,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'component' => 'intro',
 						'introTitle' => __('Form View Details', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+						'introSubtitle' => __('Configure your Greenhouse form frontend view.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',

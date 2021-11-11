@@ -74,6 +74,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const SETTINGS_MAILCHIMP_LIST_TAGS_KEY = 'mailchimp-list-tags';
 
 	/**
+	 * List Tags Show Key.
+	 */
+	public const SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY = 'mailchimp-list-tags-show';
+
+	/**
 	 * Integration fields Key.
 	 */
 	public const SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY = 'mailchimp-integration-fields';
@@ -248,9 +253,21 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 
 		// If the user has selected the list.
 		if ($selectedItem) {
-			$output = array_merge(
-				$output,
-				[
+			$tags = $this->mailchimpClient->getTags($selectedItem);
+
+			$tagsOutput = [];
+
+			if ($tags) {
+				$tagsOutput = [
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Tags Details', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+						'introSubtitle' => __('Configure your Mailchimp tags.', 'eightshift-forms'),
+					],
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
@@ -270,13 +287,48 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						),
 					],
 					[
+						'component' => 'select',
+						'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+						'selectFieldLabel' => __('Show Tags', 'eightshift-forms'),
+						'selectFieldHelp' => __('Set if you want to show tags on the frontend as a field n user can select. Selected tags will be set as default on the frontend.', 'eightshift-forms'),
+						'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+						'selectSingleSubmit' => true,
+						'selectOptions' => [
+							[
+								'component' => 'select-option',
+								'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
+								'selectOptionValue' => 'hidden',
+								'selectOptionIsSelected' => $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+							],
+							[
+								'component' => 'select-option',
+								'selectOptionLabel' => __('Select', 'eightshift-forms'),
+								'selectOptionValue' => 'select',
+								'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+							],
+							[
+								'component' => 'select-option',
+								'selectOptionLabel' => __('Checkbox', 'eightshift-forms'),
+								'selectOptionValue' => 'checkboxes',
+								'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+							],
+						]
+					],
+				];
+			}
+
+			$output = array_merge(
+				$output,
+				$tagsOutput,
+				[
+					[
 						'component' => 'divider',
 					],
 					[
 						'component' => 'intro',
 						'introTitle' => __('Form View Details', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+						'introSubtitle' => __('Configure your Mailchimp form frontend view.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -285,7 +337,10 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 							self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,
 							$this->mailchimp->getFormFields($formId),
-							$formId
+							$formId,
+							[
+								Mailchimp::FIELD_MAILCHIMP_TAGS_KEY
+							]
 						),
 					]
 				]

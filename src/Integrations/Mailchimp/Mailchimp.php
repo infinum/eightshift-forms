@@ -277,16 +277,74 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			}
 		}
 
-		$tags = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
+		$tagsItems = $this->mailchimpClient->getTags($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId));
 
-		if ($tags) {
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-				'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-				'inputValue' => $tags,
-			];
+		if ($tagsItems) {
+			$tagsSelected = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
+			$tagsShow = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
+
+			switch ($tagsShow) {
+				case 'select':
+					$selectedOption = explode(', ', $tagsSelected) ?? [];
+
+					$output[] = [
+						'component' => 'select',
+						'selectFieldLabel' => __('Tags', 'eightshift-forms'),
+						'selectId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'selectName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'selectOptions' => array_merge(
+							[
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => '',
+									'selectOptionValue' => '',
+								],
+							],
+							array_map(
+								function ($option) use ($selectedOption) {
+									return [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['name'],
+										'selectOptionValue' => $option['name'],
+										'selectOptionIsSelected' => $selectedOption[0] === $option['name'],
+									];
+								},
+								$tagsItems
+							)
+						),
+					];
+					break;
+				case 'checkboxes':
+					$selectedOption = explode(', ', $tagsSelected) ?? [];
+
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
+						'checkboxesId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'checkboxesName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'checkboxesContent' => array_map(
+							function ($option) use ($selectedOption) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $option['name'],
+									'checkboxValue' => $option['name'],
+									'checkboxIsChecked' => $selectedOption[0] === $option['name'],
+								];
+							},
+							$tagsItems
+						),
+					];
+					break;
+				default:
+					$output[] = [
+						'component' => 'input',
+						'inputType' => 'hidden',
+						'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+						'inputValue' => $tagsSelected,
+					];
+					break;
+			}
 		}
 
 		$output[] = [

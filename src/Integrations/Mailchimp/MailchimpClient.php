@@ -337,6 +337,12 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
+		$value = $params[$key]['value'];
+
+		if (empty($value)) {
+			return [];
+		}
+
 		return explode(', ', $params[$key]['value']);
 	}
 

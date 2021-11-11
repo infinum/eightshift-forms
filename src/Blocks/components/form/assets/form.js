@@ -1,5 +1,17 @@
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
+export const FORM_EVENTS = {
+	BEFORE_FORM_SUBMIT: 'BeforeFormSubmit',
+	AFTER_FORM_SUBMIT: 'AfterFormSubmit',
+	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: 'AfterFormSubmitSuccessRedirect',
+	AFTER_FORM_SUBMIT_SUCCESS: 'AfterFormSubmitSuccess',
+	AFTER_FORM_SUBMIT_ERROR: 'AfterFormSubmitError',
+	AFTER_FORM_SUBMIT_ERROR_FATAL: 'AfterFormSubmitErrorFatal',
+	AFTER_FORM_SUBMIT_ERROR_VALIDATION: 'AfterFormSubmitErrorValidation',
+	AFTER_FORM_SUBMIT_END: 'AfterFormSubmitEnd',
+	BEFORE_GTM_DATA_PUSH: 'BeforeGtmDataPush',
+};
+
 export class Form {
 	constructor(options) {
 		this.formIsAdmin = options.formIsAdmin || false;
@@ -61,7 +73,7 @@ export class Form {
 	formSubmit = (element, singleSubmit = false) => {
 
 		// Dispatch event.
-		this.dispatchFormEvent(element, 'BeforeFormSubmit');
+		this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
 		this.showLoader(element);
@@ -98,7 +110,7 @@ export class Form {
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.dispatchFormEvent(element, 'AfterFormSubmit');
+				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT);
 
 				// Clear all form errors.
 				this.resetErrors(element);
@@ -117,7 +129,7 @@ export class Form {
 					// Redirect on success.
 					if (isRedirect !== '' || singleSubmit) {
 						// Dispatch event.
-						this.dispatchFormEvent(element, 'AfterFormSubmitSuccessRedirect');
+						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
@@ -135,7 +147,7 @@ export class Form {
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
-						this.dispatchFormEvent(element, 'AfterFormSubmitSuccess');
+						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
@@ -148,7 +160,7 @@ export class Form {
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, 'AfterFormSubmitError');
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR);
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -157,7 +169,7 @@ export class Form {
 				// Fatal errors, trigger bugsnag.
 				if (response.status === 'error_fatal') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, 'AfterFormSubmitErrorFatal');
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_FATAL);
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -169,7 +181,7 @@ export class Form {
 				// Validate fields error.
 				if (response.status === 'error_validation') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, 'AfterFormSubmitErrorValidation');
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
 
 					// Output field errors.
 					this.outputErrors(element, response.validation);
@@ -181,7 +193,7 @@ export class Form {
 				}, parseInt(this.hideGlobalMessageTimeout, 10));
 
 				// Dispatch event.
-				this.dispatchFormEvent(element, 'AfterFormSubmitEnd');
+				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_END);
 			});
 	}
 
@@ -356,10 +368,10 @@ export class Form {
 	}
 
 	// Show loader.
-	showLoader = (form) => {
-		const loader = form.querySelector(this.loaderSelector);
+	showLoader = (element) => {
+		const loader = element.querySelector(this.loaderSelector);
 
-		form?.classList?.add(this.CLASS_LOADING);
+		element?.classList?.add(this.CLASS_LOADING);
 
 		if (!loader) {
 			return;
@@ -369,10 +381,10 @@ export class Form {
 	}
 
 	// Hide loader.
-	hideLoader = (form) => {
-		const loader = form.querySelector(this.loaderSelector);
+	hideLoader = (element) => {
+		const loader = element.querySelector(this.loaderSelector);
 
-		form?.classList?.remove(this.CLASS_LOADING);
+		element?.classList?.remove(this.CLASS_LOADING);
 
 		if (!loader) {
 			return;
@@ -382,14 +394,14 @@ export class Form {
 	}
 
 	// Reset all error classes.
-	resetErrors = (form) => {
+	resetErrors = (element) => {
 		// Reset all error classes on fields.
-		form.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
+		element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
 	}
 
 	// Set global message.
-	setGlobalMsg = (form, msg, status) => {
-		const messageContainer = form.querySelector(this.globalMsgSelector);
+	setGlobalMsg = (element, msg, status) => {
+		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
@@ -400,14 +412,14 @@ export class Form {
 		messageContainer.innerHTML = `<span>${msg}</span>`;
 
 		// Scroll to msg if the condition is right.
-		if (status === 'success' && form.getAttribute('data-disable-scroll-to-global-message-on-success') !== '1') {
+		if (status === 'success' && element.getAttribute('data-disable-scroll-to-global-message-on-success') !== '1') {
 			this.scrollToElement(messageContainer);
 		}
 	}
 
 	// Unset global message.
-	unsetGlobalMsg(form) {
-		const messageContainer = form.querySelector(this.globalMsgSelector);
+	unsetGlobalMsg(element) {
+		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
@@ -419,8 +431,8 @@ export class Form {
 	}
 
 	// Hide global message.
-	hideGlobalMsg(form) {
-		const messageContainer = form.querySelector(this.globalMsgSelector);
+	hideGlobalMsg(element) {
+		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
@@ -437,7 +449,7 @@ export class Form {
 			const gtmData = this.getGtmData(element, eventName);
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(element, 'BeforeGtmDataPush');
+				this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_GTM_DATA_PUSH);
 				window.dataLayer.push(gtmData);
 			}
 		}
