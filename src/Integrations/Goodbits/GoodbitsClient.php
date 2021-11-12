@@ -40,7 +40,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$apiKey = Variables::getApiKeyGoodbits();
 
-		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
+		$key = !empty($apiKey) ? $apiKey : $this->getOptionsValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
 		if (is_array($key)) {
 			$output = [];
@@ -227,7 +227,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$apiKey = Variables::getApiKeyGoodbits();
 
-		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
+		$key = !empty($apiKey) ? $apiKey : $this->getOptionsValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
 		if (is_array($key)) {
 			return array_map(

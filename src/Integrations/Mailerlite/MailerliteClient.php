@@ -271,6 +271,6 @@ class MailerliteClient implements ClientInterface
 	{
 		$apiKey = Variables::getApiKeyMailerlite();
 
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
+		return !empty($apiKey) ? $apiKey : $this->getOptionsValue(SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
 	}
 }

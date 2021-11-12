@@ -15,6 +15,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -22,6 +23,10 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -121,23 +126,35 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				default:
 					// If form ID is not set this is considered an global setting.
 					if (empty($formId)) {
-						// Save all fields in the settings.
+						// Save all fields in the options.
 						foreach ($params as $key => $value) {
 							// Check if key needs updating or deleting.
+							$finalValue = $value['value'];
+
 							if ($value['value']) {
-								\update_option($key, $value['value']);
+								if (is_array($finalValue)) {
+									$finalValue = wp_json_encode($finalValue);
+								}
+
+								$this->updateOptionsValue($key, $finalValue);
 							} else {
-								\delete_option($key);
+								$this->deleteOptionsValue($key);
 							}
 						}
 					} else {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
 							// Check if key needs updating or deleting.
-							if ($value['value']) {
-								\update_post_meta((int) $formId, $key, $value['value']);
+							$finalValue = $value['value'];
+
+							if ($finalValue) {
+								if (is_array($finalValue)) {
+									$finalValue = wp_json_encode($finalValue);
+								}
+
+								$this->updateSettingsValue($key, $finalValue, $formId);
 							} else {
-								\delete_post_meta((int) $formId, $key);
+								$this->deleteSettingsValue($key, $formId);
 							}
 						}
 					}

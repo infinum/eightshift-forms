@@ -149,8 +149,8 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyGreenhouse()) ? Variables::getApiKeyGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
-		$boardToken = !empty(Variables::getBoardTokenGreenhouse()) ? Variables::getBoardTokenGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+		$apiKey = !empty(Variables::getApiKeyGreenhouse()) ? Variables::getApiKeyGreenhouse() : $this->getOptionsValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
+		$boardToken = !empty(Variables::getBoardTokenGreenhouse()) ? Variables::getBoardTokenGreenhouse() : $this->getOptionsValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
 
 		if (!$isUsed || empty($apiKey) || empty($boardToken)) {
 			return false;
@@ -354,7 +354,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionsValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
 					[
@@ -365,7 +365,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide Board name using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionsValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 						'inputIsDisabled' => !empty($boardToken),
 					],
 				]

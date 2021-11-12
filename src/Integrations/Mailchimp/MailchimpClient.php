@@ -368,6 +368,6 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$apiKey = Variables::getApiKeyMailchimp();
 
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		return !empty($apiKey) ? $apiKey : $this->getOptionsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 	}
 }

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 
 /**
  * SettingsHelper trait.
@@ -24,12 +24,217 @@ trait SettingsHelper
 	 *
 	 * @param string $key Providing string to append to.
 	 * @param string $formId Form Id.
+	 * @param bool $useCleanKey Is true prefix and locale will be added to the key.
 	 *
 	 * @return string
 	 */
-	public function getSettingsValue(string $key, string $formId): string
+	public function getSettingsValue(string $key, string $formId, bool $useCleanKey = false): string
 	{
-		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		global $wpdb;
+
+		if (!$useCleanKey) {
+			$key = $this->getSettingsName($key);
+		}
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbSettingsName();
+
+		$result = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT meta_value
+				FROM %s
+				WHERE (meta_key = %s AND post_id = %d)",
+				$tableName,
+				$key,
+				$formId
+			),
+			ARRAY_A
+		);
+
+		return (string) isset($result['meta_value']) ? $result['meta_value'] : '';
+	}
+
+	/**
+	 * Update settings value
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $value Value to store.
+	 * @param string $formId Form Id.
+	 *
+	 * @return void
+	 */
+	public function updateSettingsValue(string $key, string $value, string $formId): void
+	{
+		global $wpdb;
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbSettingsName();
+
+		$data = [
+			'data' => [
+				'post_id' => (int) $formId,
+				'meta_key' => (string) $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => (string) $value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			],
+			'formats' => [
+				'%d',
+				'%s',
+				'%s',
+			],
+		];
+
+		$item = $this->getSettingsValue($key, $formId, true);
+
+		if (!$item) {
+			$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$tableName,
+				$data['data'],
+				$data['formats']
+			);
+		} else {
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$tableName,
+				$data['data'],
+				[
+					'post_id' => (int) $formId,
+					'meta_key' => (string) $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				],
+				$data['formats'],
+				[
+					'%d',
+					'%s',
+				]
+			);
+		}
+	}
+
+	/**
+	 * Delete settings value
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $formId Form Id.
+	 *
+	 * @return void
+	 */
+	public function deleteSettingsValue(string $key, string $formId): void
+	{
+		global $wpdb;
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbSettingsName();
+
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$tableName,
+			[
+				'post_id' => (int) $formId,
+				'meta_key' => (string) $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			],
+			[
+				'%d',
+				'%s',
+			]
+		);
+	}
+
+	/**
+	 * Get option value.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param bool $useCleanKey Is true prefix and locale will be added to the key.
+	 *
+	 * @return string
+	 */
+	public function getOptionsValue(string $key, bool $useCleanKey = false): string
+	{
+		global $wpdb;
+
+		if (!$useCleanKey) {
+			$key = $this->getSettingsName($key);
+		}
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbOptionsName();
+
+		$result = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT option_value
+				FROM %s
+				WHERE option_name = %s",
+				$tableName,
+				$key
+			),
+			ARRAY_A
+		);
+
+		return (string) isset($result['option_value']) ? $result['option_value'] : '';
+	}
+
+	/**
+	 * Update options value.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $value Value to store.
+	 *
+	 * @return void
+	 */
+	public function updateOptionsValue(string $key, string $value): void
+	{
+		global $wpdb;
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbOptionsName();
+
+		$data = [
+			'data' => [
+				'option_name' => (string) $key,
+				'option_value' => (string) $value,
+			],
+			'formats' => [
+				'%s',
+				'%s',
+			],
+		];
+
+		$item = $this->getOptionsValue($key, true);
+
+		if (!$item) {
+			$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$tableName,
+				$data['data'],
+				$data['formats']
+			);
+		} else {
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$tableName,
+				$data['data'],
+				[
+					'option_name' => (string) $key,
+				],
+				$data['formats'],
+				[
+					'%s',
+				]
+			);
+		}
+	}
+
+	/**
+	 * Delete options value.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return void
+	 */
+	public function deleteOptionsValue(string $key): void
+	{
+		global $wpdb;
+
+		$tableName = "{$wpdb->prefix}" . Config::getDbOptionsName();
+
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$tableName,
+			[
+				'option_name' => (string) $key,
+			],
+			[
+				'%s',
+			]
+		);
 	}
 
 	/**
@@ -42,24 +247,13 @@ trait SettingsHelper
 	 */
 	public function getSettingsValueGroup(string $key, string $formId): array
 	{
-		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		$value = $this->getSettingsValue($key, $formId);
+
 		if (!$value) {
 			return [];
 		}
 
-		return $value;
-	}
-
-	/**
-	 * Get option value.
-	 *
-	 * @param string $key Providing string to append to.
-	 *
-	 * @return string
-	 */
-	public function getOptionValue(string $key): string
-	{
-		return (string) \get_option($this->getSettingsName($key), false);
+		return json_decode($value, true);
 	}
 
 	/**
@@ -86,7 +280,7 @@ trait SettingsHelper
 	 */
 	public function isCheckedOption(string $key, string $id): bool
 	{
-		return $this->getOptionValue($id) === $key;
+		return $this->getOptionsValue($id) === $key;
 	}
 
 	/**
@@ -113,7 +307,7 @@ trait SettingsHelper
 	 */
 	public function isCheckboxOptionChecked(string $key, string $id): bool
 	{
-		return in_array($key, explode(', ', $this->getOptionValue($id)), true);
+		return in_array($key, explode(', ', $this->getOptionsValue($id)), true);
 	}
 
 	/**
@@ -353,5 +547,43 @@ trait SettingsHelper
 		}
 
 		return $formFields;
+	}
+
+	/**
+	 * Create our custom tables, used on plugin activation.
+	 *
+	 * @return void
+	 */
+	public function createDbTables(): void
+	{
+		global $wpdb;
+
+		$tableNameSettings = "{$wpdb->prefix}" . Config::getDbSettingsName();
+		$tableNameOptions = "{$wpdb->prefix}" . Config::getDbOptionsName();
+
+		$sqlSettings = "CREATE TABLE {$tableNameSettings} ( 
+			meta_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			post_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+			meta_key VARCHAR(255) NULL DEFAULT NULL,
+			meta_value LONGTEXT NULL DEFAULT NULL,
+			PRIMARY KEY (meta_id),
+			INDEX post_id (post_id),
+			INDEX meta_key (meta_key)
+		)";
+
+		$sqlOptions = "CREATE TABLE {$tableNameOptions} ( 
+			option_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			option_name VARCHAR(255) NULL DEFAULT NULL,
+			option_value LONGTEXT NULL DEFAULT NULL,
+			PRIMARY KEY (option_id),
+			INDEX option_name (option_name)
+		)";
+
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+		dbDelta([
+			$sqlSettings,
+			$sqlOptions,
+		]);
 	}
 }

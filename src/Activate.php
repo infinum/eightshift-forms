@@ -15,6 +15,7 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
 
 /**
@@ -22,6 +23,11 @@ use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
  */
 class Activate implements HasActivationInterface
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Activate the plugin.
 	 */
@@ -37,6 +43,9 @@ class Activate implements HasActivationInterface
 			$role->add_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
 			$role->add_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
 		}
+
+		// Create new tables.
+		$this->createDbTables();
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

@@ -143,7 +143,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyMailerlite()) ? Variables::getApiKeyMailerlite() : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY);
+		$apiKey = !empty(Variables::getApiKeyMailerlite()) ? Variables::getApiKeyMailerlite() : $this->getOptionsValue(self::SETTINGS_MAILERLITE_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -331,7 +331,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionsValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
 				]

@@ -106,7 +106,7 @@ class Validator extends AbstractValidation
 	{
 		$localPatterns = SettingsValidation::VALIDATION_PATTERNS;
 
-		$userPatterns = preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+		$userPatterns = preg_split("/\\r\\n|\\r|\\n/", $this->getOptionsValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
 
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {

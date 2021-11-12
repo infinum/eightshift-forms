@@ -89,7 +89,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputValue' => $this->getOptionValue('input-id'),
+				'inputValue' => $this->getOptionsValue('input-id'),
 			],
 			[
 				'component' => 'input',
@@ -97,7 +97,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input email label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input email', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputValue' => $this->getOptionValue('input-email-id'),
+				'inputValue' => $this->getOptionsValue('input-email-id'),
 				'inputIsEmail' => true,
 			],
 			[
@@ -106,7 +106,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input number label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input number', 'eightshift-forms'),
 				'inputType' => 'number',
-				'inputValue' => $this->getOptionValue('input-number-id'),
+				'inputValue' => $this->getOptionsValue('input-number-id'),
 			],
 			[
 				'component' => 'input',
@@ -114,7 +114,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input url label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input url', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputValue' => $this->getOptionValue('input-url-id'),
+				'inputValue' => $this->getOptionsValue('input-url-id'),
 				'inputIsUrl' => true,
 			],
 			[
@@ -123,7 +123,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input hidden label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input hidden', 'eightshift-forms'),
 				'inputType' => 'hidden',
-				'inputValue' => $this->getOptionValue('input-hidden-id'),
+				'inputValue' => $this->getOptionsValue('input-hidden-id'),
 			],
 			[
 				'component' => 'input',
@@ -131,7 +131,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'inputFieldLabel' => __('input required label', 'eightshift-forms'),
 				'inputFieldHelp' => __('help field input required', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputValue' => $this->getOptionValue('input-required-id'),
+				'inputValue' => $this->getOptionsValue('input-required-id'),
 				'inputIsRequired' => true,
 			],
 			[
@@ -139,14 +139,14 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'textareaId' => $this->getSettingsName('textarea-id'),
 				'textareaFieldLabel' => __('textarea label', 'eightshift-forms'),
 				'textareaFieldHelp' => __('help field textarea', 'eightshift-forms'),
-				'textareaValue' => $this->getOptionValue('textarea-id'),
+				'textareaValue' => $this->getOptionsValue('textarea-id'),
 			],
 			[
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName('textarea-required-id'),
 				'textareaFieldLabel' => __('textarea required label', 'eightshift-forms'),
 				'textareaFieldHelp' => __('help field textarea required', 'eightshift-forms'),
-				'textareaValue' => $this->getOptionValue('textarea-required-id'),
+				'textareaValue' => $this->getOptionsValue('textarea-required-id'),
 				'textareaIsRequired' => true,
 			],
 			[
@@ -154,7 +154,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'selectId' => $this->getSettingsName('select-id'),
 				'selectFieldLabel' => __('select label', 'eightshift-forms'),
 				'selectFieldHelp' => __('help field select', 'eightshift-forms'),
-				'selectValue' => $this->getOptionValue('select-id'),
+				'selectValue' => $this->getOptionsValue('select-id'),
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
@@ -175,7 +175,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 				'selectId' => $this->getSettingsName('select-required-id'),
 				'selectFieldLabel' => __('select required label', 'eightshift-forms'),
 				'selectFieldHelp' => __('help field select required', 'eightshift-forms'),
-				'selectValue' => $this->getOptionValue('select-required-id'),
+				'selectValue' => $this->getOptionsValue('select-required-id'),
 				'selectIsRequired' => true,
 				'selectOptions' => [
 					[

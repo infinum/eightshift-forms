@@ -64,4 +64,20 @@ class Config extends AbstractConfigData
 	{
 		return 'v1';
 	}
+
+	/**
+	 * Database name for settings.
+	 */
+	public static function getDbSettingsName(): string
+	{
+		return "esforms_meta";
+	}
+
+	/**
+	 * Database name for options.
+	 */
+	public static function getDbOptionsName(): string
+	{
+		return "esforms_options";
+	}
 }

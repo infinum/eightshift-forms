@@ -166,7 +166,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'textareaFieldHelp' => sprintf(__("
 					List all your custom validation patterns here and they will show in the editor. Each item must be in a new line written like key value pair separated with colon(:) with space before and after. Here is a useful to help you on <a href='%1\$s' target='_blank' rel='noopener noreferrer'>this link</a>.<br/><br/>
 					Here are our predefined patterns that you can use: <br/><br/> %2\$s", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns),
-				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+				'textareaValue' => $this->getOptionsValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 			],
 			[
 				'component' => 'divider',
@@ -193,7 +193,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => ucfirst($key),
 				'inputPlaceholder' => $label,
-				'inputValue' => $this->getOptionValue($key),
+				'inputValue' => $this->getOptionsValue($key),
 			];
 		}
 

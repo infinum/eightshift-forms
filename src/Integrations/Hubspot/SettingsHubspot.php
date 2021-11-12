@@ -144,7 +144,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
+		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionsValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -330,7 +330,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionsValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					]
 				]

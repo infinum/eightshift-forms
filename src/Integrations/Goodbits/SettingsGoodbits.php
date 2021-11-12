@@ -143,7 +143,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyGoodbits()) ? Variables::getApiKeyGoodbits() : $this->getOptionValue(self::SETTINGS_GOODBITS_API_KEY_KEY);
+		$apiKey = !empty(Variables::getApiKeyGoodbits()) ? Variables::getApiKeyGoodbits() : $this->getOptionsValue(self::SETTINGS_GOODBITS_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -331,7 +331,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GOODBITS_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionsValue(self::SETTINGS_GOODBITS_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
 				]

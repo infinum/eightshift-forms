@@ -154,7 +154,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -291,7 +291,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 						'selectFieldLabel' => __('Show Tags', 'eightshift-forms'),
 						'selectFieldHelp' => __('Set if you want to show tags on the frontend as a field n user can select. Selected tags will be set as default on the frontend.', 'eightshift-forms'),
-						'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+						'selectValue' => $this->getOptionsValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 						'selectSingleSubmit' => true,
 						'selectOptions' => [
 							[
@@ -411,7 +411,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionsValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					]
 				]

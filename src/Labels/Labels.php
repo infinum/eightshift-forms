@@ -244,7 +244,7 @@ class Labels implements LabelsInterface
 			if (isset($local[$key])) {
 				$dbLabel = $this->getSettingsValue($key, $formId);
 			} else {
-				$dbLabel = $this->getOptionValue($key);
+				$dbLabel = $this->getOptionsValue($key);
 			}
 
 			// If there is an override in the DB use that.

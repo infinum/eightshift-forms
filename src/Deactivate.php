@@ -17,6 +17,7 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 
 /**
@@ -24,6 +25,11 @@ use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
  */
 class Deactivate implements HasDeactivationInterface
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Deactivate the plugin.
 	 */
