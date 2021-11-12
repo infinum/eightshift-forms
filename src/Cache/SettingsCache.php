@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Components;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
+use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -52,6 +53,8 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
 		GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
 		HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
+		MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
+		MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
 	];
 
 	/**
