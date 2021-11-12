@@ -123,7 +123,7 @@ class Mailer implements MailerInterface
 			$template = str_replace("{" . $name . "}", $value, $template);
 		}
 
-		return nl2br($template);
+		return str_replace("\n", '<br />', $template);
 	}
 
 	/**
