@@ -129,6 +129,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['additionalBlocks'] = apply_filters(Filters::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 			$output['formsBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
 			$output['fieldBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+			$output['queryBlockOptions'] = apply_filters(Filters::FILTER_BLOCK_QUERY_OPTIONS_NAME, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 		}
 

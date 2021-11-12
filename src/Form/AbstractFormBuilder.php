@@ -143,7 +143,7 @@ abstract class AbstractFormBuilder
 	 *
 	 * @return string
 	 */
-	private function buildComponent(array $attributes): string
+	public function buildComponent(array $attributes): string
 	{
 		if (!$attributes) {
 			return '';

@@ -1,0 +1,56 @@
+{
+	"blockName": "query",
+	"title": "Query",
+	"description" : "Block used to show custom query build using WordPress filters.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"query"
+	],
+	"example": {
+	},
+	"attributes": {
+		"queryFieldType": {
+			"type": "string"
+		},
+		"queryData": {
+			"type": "string"
+		},
+		"queryId": {
+			"type": "string"
+		},
+		"queryFormPostId": {
+			"type": "string"
+		},
+		"queryServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"parent": [
+		"eightshift-forms/form"
+	],
+	"components": {
+		"select": "select",
+		"checkboxes": "checkboxes",
+		"radios": "radios"
+	},
+	"options": {
+		"queryFieldType": [
+			{
+				"label": "Select",
+				"value": "select"
+			},
+			{
+				"label": "Checkbox",
+				"value": "checkboxes"
+			},
+			{
+				"label": "Radio",
+				"value": "radios"
+			}
+		]
+	}
+}
