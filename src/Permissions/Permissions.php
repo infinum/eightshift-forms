@@ -32,7 +32,7 @@ class Permissions
 	/**
 	 * All permissions.
 	 *
-	 * @return string
+	 * @return array <string>
 	 */
 	static public function getPermissions(): array
 	{
