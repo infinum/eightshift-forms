@@ -26,7 +26,8 @@ $customDataClass = Components::classnames([
 if (!$block) {
 	?>
 	<div class="<?php echo esc_attr($customDataClass); ?>">
-		<?php esc_html_e('Sorry, it looks like your custom data block not configured correctly. In order for this block to work you must provide data using our filters. Please check our documentation for details.', 'eightshift-forms'); ?>
+		<?php esc_html_e('Sorry, it looks like your Custom data block is not configured correctly. In order for the block to work, you must provide data using filters. Check the documentation for details.', 'eightshift-forms'); ?>
+
 	</div>
 <?php }
 
