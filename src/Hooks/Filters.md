@@ -161,22 +161,22 @@ public function getFieldStyleOptions(): array
 
 ## Add data to query block
 
-This two filters will add necessary data to the query block. This block can show any kind of data provided via filter.
+These filters will add the necessary data for the Query block to work.
 
-Field data option selector will not show unless a filter is provided.
+Field data option selector will not be shown unless a filter is added.
 
 **Default values:**
 ```php
 []
 ```
 
-**Filter for providing editor options:**
+**Filter for providing Block editor options:**
 ```php
 // Provide custom query block options.
 add_filter('es_forms_block_query_options', [$this, 'getQueryBlockOptions']);
 
 /**
- * Provide custom query block options.
+ * Provide custom Query block options.
  *
  * @return array
  */
@@ -195,15 +195,15 @@ public function getQueryBlockOptions(): array
 }
 ```
 
-**Filter for providing options data:**
+**Filter for providing option data:**
 ```php
-// Provide custom query block options.
+// Provide custom Query block options.
 add_filter('es_forms_block_query_options_data', [$this, 'getQueryBlockOptionsData']);
 
 /**
- * Provide custom query block options data.
+ * Provide custom Query block options data.
  *
- * @param string $type Type of option selected in the editor.
+ * @param string $type Type of option selected in the Block editor.
  *
  * @return array
  */
