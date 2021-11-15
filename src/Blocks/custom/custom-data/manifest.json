@@ -1,6 +1,6 @@
 {
 	"blockName": "custom-data",
-	"title": "customData",
+	"title": "Custom data",
 	"description" : "Block used to show custom data using WordPress filters.",
 	"category": "eightshift-forms",
 	"icon": {
