@@ -22,7 +22,7 @@ if ($greenhouseServerSideRender) {
 	$greenhouseFormPostId = Helper::encryptor('encrypt', $greenhouseFormPostId);
 }
 
-$greenhouseFormPostIdDecoded = Helper::encryptor('decode', $greenhouseFormPostId);
+$greenhouseFormPostIdDecoded = Helper::encryptor('decrypt', $greenhouseFormPostId);
 
 // Check if Greenhouse data is set and valid.
 $isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $greenhouseFormPostIdDecoded);

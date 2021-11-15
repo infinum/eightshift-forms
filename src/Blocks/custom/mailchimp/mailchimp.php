@@ -22,7 +22,7 @@ if ($mailchimpServerSideRender) {
 	$mailchimpFormPostId = Helper::encryptor('encrypt', $mailchimpFormPostId);
 }
 
-$mailchimpFormPostIdDecoded = Helper::encryptor('decode', $mailchimpFormPostId);
+$mailchimpFormPostIdDecoded = Helper::encryptor('decrypt', $mailchimpFormPostId);
 
 // Check if mailchimp data is set and valid.
 $isSettingsValid = \apply_filters(

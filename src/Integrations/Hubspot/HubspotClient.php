@@ -111,7 +111,7 @@ class HubspotClient implements ClientInterface
 
 		$consent = array_filter(
 			$params,
-			function ($item) {
+			static function ($item) {
 				$name = $item['name'] ?? '';
 				return strpos($name, 'CONSENT_') === 0;
 			}
@@ -220,7 +220,7 @@ class HubspotClient implements ClientInterface
 		if ($errors) {
 			$invalidEmail = array_filter(
 				$errors,
-				function ($error) {
+				static function ($error) {
 					return $error['errorType'] === 'INVALID_EMAIL';
 				}
 			);
@@ -231,7 +231,7 @@ class HubspotClient implements ClientInterface
 
 			$requiredField = array_filter(
 				$errors,
-				function ($error) {
+				static function ($error) {
 					return $error['errorType'] === 'REQUIRED_FIELD';
 				}
 			);
@@ -301,7 +301,7 @@ class HubspotClient implements ClientInterface
 		// Find consent data from meta.
 		$consentData = array_filter(
 			$item['metaData'],
-			function ($item) {
+			static function ($item) {
 				return $item['name'] === 'legalConsentOptions';
 			}
 		);

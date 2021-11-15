@@ -22,7 +22,7 @@ if ($mailerliteServerSideRender) {
 	$mailerliteFormPostId = Helper::encryptor('encrypt', $mailerliteFormPostId);
 }
 
-$mailerliteFormPostIdDecoded = Helper::encryptor('decode', $mailerliteFormPostId);
+$mailerliteFormPostIdDecoded = Helper::encryptor('decrypt', $mailerliteFormPostId);
 
 // Check if mailerlite data is set and valid.
 $isSettingsValid = \apply_filters(

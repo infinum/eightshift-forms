@@ -207,7 +207,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $required,
 								'selectOptions' => array_map(
-									function ($selectOption) {
+									static function ($selectOption) {
 										return [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['label'],

@@ -151,7 +151,7 @@ class GoodbitsClient implements ClientInterface
 		if ($errors) {
 			$invalidEmail = array_filter(
 				$errors,
-				function ($error) {
+				static function ($error) {
 					return $error === 'Email is invalid';
 				}
 			);
@@ -231,7 +231,7 @@ class GoodbitsClient implements ClientInterface
 
 		if (is_array($key)) {
 			return array_map(
-				function ($title, $id) {
+				static function ($title, $id) {
 					return [
 						'title' => $title,
 						'id' => $id,

@@ -27,7 +27,7 @@ class Deactivate implements HasDeactivationInterface
 		// Remove caps.
 		foreach (Permissions::DEFAULT_MINIMAL_ROLES as $roleName) {
 			$role = get_role($roleName);
-	
+
 			if ($role instanceof \WP_Role) {
 				foreach (Permissions::getPermissions() as $item) {
 					$role->remove_cap($item);

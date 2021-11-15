@@ -56,7 +56,7 @@ class Form implements ServiceInterface
 		// Get post ID prop.
 		$output['formPostId'] = $formId;
 
-		$formIdDecoded = (string) Helper::encryptor($formId, 'decrypt');
+		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
 
 		// Get form type.
 		$output['formType'] = SettingsMailer::SETTINGS_TYPE_KEY;

@@ -147,7 +147,7 @@ class Validator extends AbstractValidation
 	{
 		$patterns = array_filter(
 			$this->getValidationPatterns(),
-			function ($item) use ($name) {
+			static function ($item) use ($name) {
 				return $item['label'] === $name;
 			}
 		);
@@ -170,7 +170,7 @@ class Validator extends AbstractValidation
 	{
 		$patterns = array_filter(
 			$this->getValidationPatterns(),
-			function ($item) use ($pattern) {
+			static function ($item) use ($pattern) {
 				return $item['value'] === $pattern;
 			}
 		);
@@ -378,7 +378,7 @@ class Validator extends AbstractValidation
 			// Get all validation fields with the correct prefix.
 			$valid = array_flip(
 				array_map(
-					function ($item) use ($attrName) {
+					static function ($item) use ($attrName) {
 						return "{$attrName}{$item}";
 					},
 					self::VALIDATION_FIELDS

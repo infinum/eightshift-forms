@@ -135,9 +135,9 @@ export class Form {
 						this.setGlobalMsg(element, response.message, 'success');
 
 						// Replace string templates used for passing data via url.
-						for (var [key, val] of formData.entries()) {
-							const { value } = JSON.parse(val);
-							isRedirect = isRedirect.replaceAll(`{${key}}`, encodeURIComponent(value));
+						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
+							const { value, name } = JSON.parse(val);
+							isRedirect = isRedirect.replaceAll(`{${name}}`, encodeURIComponent(value));
 						}
 
 						// Do the actual redirect after some time.

@@ -22,7 +22,7 @@ if ($hubspotServerSideRender) {
 	$hubspotFormPostId = Helper::encryptor('encrypt', $hubspotFormPostId);
 }
 
-$hubspotFormPostIdDecoded = Helper::encryptor('decode', $hubspotFormPostId);
+$hubspotFormPostIdDecoded = Helper::encryptor('decrypt', $hubspotFormPostId);
 
 // Check if hubspot data is set and valid.
 $isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $hubspotFormPostIdDecoded);

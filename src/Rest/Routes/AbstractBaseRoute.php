@@ -151,12 +151,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function prepareParams(array $params): array
 	{
 		return array_map(
-			function ($item) {
+			static function ($item) {
 				// Check if array then output only value that is not empty.
 				if (is_array($item)) {
 					// Loop all items and decode.
 					$inner = array_map(
-						function ($item) {
+						static function ($item) {
 							return json_decode($item, true);
 						},
 						$item
@@ -166,7 +166,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					$innerNotEmpty = array_values(
 						array_filter(
 							$inner,
-							function ($innerItem) {
+							static function ($innerItem) {
 								return !empty($innerItem['value']);
 							}
 						)
@@ -181,7 +181,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					if (count($innerNotEmpty) > 1) {
 						$multiple = array_values(
 							array_map(
-								function ($item) {
+								static function ($item) {
 									return $item['value'];
 								},
 								$innerNotEmpty

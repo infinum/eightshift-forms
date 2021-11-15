@@ -172,7 +172,7 @@ class MailchimpClient implements MailchimpClientInterface
 		if ($errors) {
 			$invalidEmail = array_filter(
 				$errors,
-				function ($error) {
+				static function ($error) {
 					return $error['field'] === 'email_address';
 				}
 			);

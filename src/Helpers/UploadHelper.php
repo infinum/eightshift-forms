@@ -99,7 +99,7 @@ trait UploadHelper
 	protected function deleteFiles(array $files): void
 	{
 		array_map(
-			function ($file) {
+			static function ($file) {
 				if (!empty($file)) {
 					\wp_delete_file($file);
 				}

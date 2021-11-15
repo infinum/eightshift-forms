@@ -34,7 +34,7 @@ class Permissions
 	 *
 	 * @return array <string>
 	 */
-	static public function getPermissions(): array
+	public static function getPermissions(): array
 	{
 		$postType = Forms::POST_CAPABILITY_TYPE;
 

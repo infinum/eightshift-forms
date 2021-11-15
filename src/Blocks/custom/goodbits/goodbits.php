@@ -22,7 +22,7 @@ if ($goodbitsServerSideRender) {
 	$goodbitsFormPostId = Helper::encryptor('encrypt', $goodbitsFormPostId);
 }
 
-$goodbitsFormPostIdDecoded = Helper::encryptor('decode', $goodbitsFormPostId);
+$goodbitsFormPostIdDecoded = Helper::encryptor('decrypt', $goodbitsFormPostId);
 
 // Check if goodbits data is set and valid.
 $isSettingsValid = \apply_filters(

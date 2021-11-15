@@ -245,7 +245,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosName' => $name,
 						'radiosIsRequired' => $required,
 						'radiosContent' => array_map(
-							function ($radio) {
+							static function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio,
@@ -263,7 +263,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectName' => $name,
 						'selectIsRequired' => $required,
 						'selectOptions' => array_map(
-							function ($option) {
+							static function ($option) {
 								return [
 									'component' => 'select-option',
 									'selectOptionLabel' => $option,
@@ -301,7 +301,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								],
 							],
 							array_map(
-								function ($option) use ($selectedOption) {
+								static function ($option) use ($selectedOption) {
 									return [
 										'component' => 'select-option',
 										'selectOptionLabel' => $option['name'],
@@ -323,7 +323,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'checkboxesId' => self::FIELD_MAILCHIMP_TAGS_KEY,
 						'checkboxesName' => self::FIELD_MAILCHIMP_TAGS_KEY,
 						'checkboxesContent' => array_map(
-							function ($option) use ($selectedOption) {
+							static function ($option) use ($selectedOption) {
 								return [
 									'component' => 'checkbox',
 									'checkboxLabel' => $option['name'],
