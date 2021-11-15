@@ -40,8 +40,8 @@ export const QueryOptions = ({ attributes, setAttributes, clientId }) => {
 			/>
 
 			<SelectControl
-				label={<IconLabel icon={icons.color} label={__('Field Type', 'eightshift-forms')} />}
-				help={__('Set what field type you want to use.', 'eightshift-forms')}
+				label={<IconLabel icon={icons.color} label={__('Data to show', 'eightshift-forms')} />}
+				help={__('Set what data type you want to use.', 'eightshift-forms')}
 				value={queryData}
 				options={queryDataOptions}
 				onChange={(value) => setAttributes({ [getAttrKey('queryData', attributes, manifest)]: value })}

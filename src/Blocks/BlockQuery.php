@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -33,31 +34,31 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_BLOCK_QUERY_COMPONENT_NAME, [$this, 'getQueryComponent'], 10, 2);
+		\add_filter(static::FILTER_BLOCK_QUERY_COMPONENT_NAME, [$this, 'getQueryComponent'], 50);
 	}
 
 	/**
 	 * Build block from query data.
 	 *
-	 * @param array $attributes Block attributes.
-	 * @param array $data Data built options.
+	 * @param array<string, mixed> $attributes Block attributes.
 	 *
 	 * @return string
 	 */
-	public function getQueryComponent(array $attributes, array $data): string
+	public function getQueryComponent(array $attributes): string
 	{
-		error_log( print_r( ( $data ), true ) );
+		if (!has_filter(Filters::FILTER_BLOCK_QUERY_OPTIONS_DATA_NAME)) {
+			return '';
+		}
+
+		$queryData = $attributes['queryData'] ?? '';
+
+		$data = apply_filters(Filters::FILTER_BLOCK_QUERY_OPTIONS_DATA_NAME, $queryData);
 
 		if (!$data) {
 			return '';
 		}
 
-		$queryData = $attributes['queryData'] ?? '';
 		$queryFieldType = $attributes['queryFieldType'] ?? '';
-
-		if (!isset($data[$queryData])) {
-			return '';
-		}
 
 		switch ($queryFieldType) {
 			case 'checkboxes':
@@ -75,7 +76,7 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 								'checkboxIsChecked' => $option['selected'] ?? false,
 							];
 						},
-						$data[$queryData]
+						$data
 					),
 				];
 				break;
@@ -94,7 +95,7 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 								'radioIsChecked' => $option['selected'] ?? false,
 							];
 						},
-						$data[$queryData]
+						$data
 					),
 				];
 				break;
@@ -113,7 +114,7 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 								'selectOptionIsSelected' => $option['selected'] ?? false,
 							];
 						},
-						$data[$queryData]
+						$data
 					),
 				];
 				break;

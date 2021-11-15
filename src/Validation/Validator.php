@@ -362,9 +362,16 @@ class Validator extends AbstractValidation
 				// If something custom add corrections.
 				case 'senderEmail':
 					$attrName = "{$name}Input";
+					$id = $block['attrs']["{$attrName}Id"] ?? '';
+					break;
+				case 'query':
+					$type = $block['attrs']['queryFieldType'] ?? '';
+					$attrName = $name . ucfirst($type);
+					$id = $block['attrs']["{$name}Id"] ?? '';
 					break;
 				default:
 					$attrName = $name . ucfirst($name);
+					$id = $block['attrs']["{$attrName}Id"] ?? '';
 					break;
 			}
 
@@ -377,9 +384,6 @@ class Validator extends AbstractValidation
 					self::VALIDATION_FIELDS
 				)
 			);
-
-			// Get Block Id.
-			$id = $block['attrs']["{$attrName}Id"] ?? '';
 
 			// Output validation items with correct value for the matching ID.
 			if (isset($valid[$attributeKey]) && !empty($id)) {
