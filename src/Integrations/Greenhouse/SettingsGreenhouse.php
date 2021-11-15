@@ -354,7 +354,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
 					[
@@ -363,7 +363,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 						'inputFieldLabel' => __('Job Board Name', 'eightshift-forms'),
 						'inputFieldHelp' => __('You can provide Board name using global variable also.', 'eightshift-forms'),
-						'inputType' => 'password',
+						'inputType' => 'text',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 						'inputIsDisabled' => !empty($boardToken),

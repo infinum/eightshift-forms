@@ -331,7 +331,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
 				]
