@@ -10,11 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftForms\AdminMenus\FormAdminMenu;
-use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
-use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
 
 /**
@@ -28,14 +24,14 @@ class Activate implements HasActivationInterface
 	public function activate(): void
 	{
 		// Add caps.
-		$role = get_role('administrator');
-
-		if ($role instanceof \WP_Role) {
-			$role->add_cap(Forms::POST_CAPABILITY_TYPE);
-			$role->add_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
-			$role->add_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
-			$role->add_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
-			$role->add_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		foreach (Permissions::DEFAULT_MINIMAL_ROLES as $roleName) {
+			$role = get_role($roleName);
+	
+			if ($role instanceof \WP_Role) {
+				foreach (Permissions::getPermissions() as $item) {
+					$role->add_cap($item);
+				}
+			}
 		}
 
 		// Do a cleanup.

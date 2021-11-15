@@ -10,13 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftForms\AdminMenus\FormAdminMenu;
-use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
-use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
-use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 
 /**
@@ -30,21 +25,20 @@ class Deactivate implements HasDeactivationInterface
 	public function deactivate(): void
 	{
 		// Remove caps.
-		$role = get_role('administrator');
-
-		if ($role instanceof \WP_Role) {
-			$role->remove_cap(Forms::POST_CAPABILITY_TYPE);
-			$role->remove_cap(FormAdminMenu::ADMIN_MENU_CAPABILITY);
-			$role->remove_cap(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
-			$role->remove_cap(FormListingAdminSubMenu::ADMIN_MENU_CAPABILITY);
-			$role->remove_cap(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY);
+		foreach (Permissions::DEFAULT_MINIMAL_ROLES as $roleName) {
+			$role = get_role($roleName);
+	
+			if ($role instanceof \WP_Role) {
+				foreach (Permissions::getPermissions() as $item) {
+					$role->remove_cap($item);
+				}
+			}
 		}
 
 		// Delet transients.
-		delete_transient(MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME);
-		delete_transient(MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME);
-		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME);
-		delete_transient(GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME);
+		foreach (SettingsCache::ALL_CACHE as $cache) {
+			delete_transient($cache);
+		}
 
 		// Do a cleanup.
 		\flush_rewrite_rules();
