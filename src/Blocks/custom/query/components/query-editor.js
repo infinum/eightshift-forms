@@ -14,7 +14,7 @@ export const QueryEditor = ({ attributes, setAttributes, }) => {
 
 	const formPostId = useSelect((select) => select('core/editor').getCurrentPostId());
 
-		// Populate ID manually and make it generic.
+	// Populate ID manually and make it generic.
 	useEffect(() => {
 		setAttributes({ [getAttrKey('queryId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
