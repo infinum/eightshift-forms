@@ -1,30 +1,30 @@
 {
-	"blockName": "query",
-	"title": "Query",
-	"description" : "Block used to show custom query build using WordPress filters.",
+	"blockName": "custom-data",
+	"title": "customData",
+	"description" : "Block used to show custom data using WordPress filters.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "es-paragraph"
 	},
 	"keywords": [
-		"query"
+		"customData"
 	],
 	"example": {
 	},
 	"attributes": {
-		"queryFieldType": {
+		"customDataFieldType": {
 			"type": "string"
 		},
-		"queryData": {
+		"customDataData": {
 			"type": "string"
 		},
-		"queryId": {
+		"customDataId": {
 			"type": "string"
 		},
-		"queryFormPostId": {
+		"customDataFormPostId": {
 			"type": "string"
 		},
-		"queryServerSideRender": {
+		"customDataServerSideRender": {
 			"type": "boolean",
 			"default": false
 		}
@@ -38,7 +38,7 @@
 		"radios": "radios"
 	},
 	"options": {
-		"queryFieldType": [
+		"customDataFieldType": [
 			{
 				"label": "Select",
 				"value": "select"

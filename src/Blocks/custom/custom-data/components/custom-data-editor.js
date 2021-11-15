@@ -2,9 +2,9 @@ import React, { useMemo, useEffect } from 'react';
 import { useSelect } from "@wordpress/data";
 import { getAttrKey, getUnique } from '@eightshift/frontend-libs/scripts';
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
-import manifest from './../manifest.json';
+import manifest from '../manifest.json';
 
-export const QueryEditor = ({ attributes, setAttributes, }) => {
+export const CustomDataEditor = ({ attributes, setAttributes, }) => {
 	const unique = useMemo(() => getUnique(), []);
 
 	const {
@@ -16,7 +16,7 @@ export const QueryEditor = ({ attributes, setAttributes, }) => {
 
 	// Populate ID manually and make it generic.
 	useEffect(() => {
-		setAttributes({ [getAttrKey('queryId', attributes, manifest)]: unique });
+		setAttributes({ [getAttrKey('customDataId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
 	return (
@@ -26,8 +26,8 @@ export const QueryEditor = ({ attributes, setAttributes, }) => {
 				attributes={
 					{
 						...attributes,
-						queryServerSideRender: true,
-						queryFormPostId: formPostId.toString(),
+						customDataServerSideRender: true,
+						customDataFormPostId: formPostId.toString(),
 					}
 				}
 			/>

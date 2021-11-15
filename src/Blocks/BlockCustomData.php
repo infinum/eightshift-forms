@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BlockQuery integration class.
+ * BlockCustomData integration class.
  *
  * @package EightshiftForms\Blocks
  */
@@ -15,16 +15,16 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * BlockQuery integration class.
+ * BlockCustomData integration class.
  */
-class BlockQuery extends AbstractFormBuilder implements ServiceInterface
+class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
-	 * Filter return query component from filter.
+	 * Filter return custom data component from filter.
 	 *
 	 * @var string
 	 */
-	public const FILTER_BLOCK_QUERY_COMPONENT_NAME = 'es_forms_block_query_component';
+	public const FILTER_BLOCK_CUSTOM_DATA_COMPONENT_NAME = 'es_forms_block_custom_data_component';
 
 	/**
 	 * Register all the hooks
@@ -34,39 +34,39 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_BLOCK_QUERY_COMPONENT_NAME, [$this, 'getQueryComponent'], 50);
+		\add_filter(static::FILTER_BLOCK_CUSTOM_DATA_COMPONENT_NAME, [$this, 'getCustomDataComponent'], 50);
 	}
 
 	/**
-	 * Build block from query data.
+	 * Build block from Custom data.
 	 *
 	 * @param array<string, mixed> $attributes Block attributes.
 	 *
 	 * @return string
 	 */
-	public function getQueryComponent(array $attributes): string
+	public function getCustomDataComponent(array $attributes): string
 	{
-		if (!has_filter(Filters::FILTER_BLOCK_QUERY_OPTIONS_DATA_NAME)) {
+		if (!has_filter(Filters::FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME)) {
 			return '';
 		}
 
-		$queryData = $attributes['queryData'] ?? '';
+		$customDataData = $attributes['customDataData'] ?? '';
 
-		$data = apply_filters(Filters::FILTER_BLOCK_QUERY_OPTIONS_DATA_NAME, $queryData);
+		$data = apply_filters(Filters::FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME, $customDataData);
 
 		if (!$data) {
 			return '';
 		}
 
-		$queryFieldType = $attributes['queryFieldType'] ?? '';
+		$customDataFieldType = $attributes['customDataFieldType'] ?? '';
 
-		switch ($queryFieldType) {
+		switch ($customDataFieldType) {
 			case 'checkboxes':
 				$output = [
 					'component' => 'checkboxes',
-					'checkboxesFieldLabel' => $attributes['queryCheckboxesFieldLabel'] ?? '',
-					'checkboxesId' => $attributes['queryId'] ?? '',
-					'checkboxesName' => $attributes['queryCheckboxesName'] ?? '',
+					'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
+					'checkboxesId' => $attributes['customDataId'] ?? '',
+					'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
 					'checkboxesContent' => array_map(
 						function ($option) {
 							return [
@@ -83,9 +83,9 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 			case 'radios':
 				$output = [
 					'component' => 'radios',
-					'radiosFieldLabel' => $attributes['queryRadiosFieldLabel'] ?? '',
-					'radiosId' => $attributes['queryId'] ?? '',
-					'radiosName' => $attributes['queryRadiosName'] ?? '',
+					'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
+					'radiosId' => $attributes['customDataId'] ?? '',
+					'radiosName' => $attributes['customDataRadiosName'] ?? '',
 					'radiosContent' => array_map(
 						function ($option) {
 							return [
@@ -102,9 +102,9 @@ class BlockQuery extends AbstractFormBuilder implements ServiceInterface
 			default:
 				$output = [
 					'component' => 'select',
-					'selectFieldLabel' => $attributes['querySelectFieldLabel'] ?? '',
-					'selectId' => $attributes['queryId'] ?? '',
-					'selectName' => $attributes['querySelectName'] ?? '',
+					'selectFieldLabel' => $attributes['customDataSelectFieldLabel'] ?? '',
+					'selectId' => $attributes['customDataId'] ?? '',
+					'selectName' => $attributes['customDataSelectName'] ?? '',
 					'selectOptions' => array_map(
 						function ($option) {
 							return [

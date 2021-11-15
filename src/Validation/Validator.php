@@ -364,8 +364,8 @@ class Validator extends AbstractValidation
 					$attrName = "{$name}Input";
 					$id = $block['attrs']["{$attrName}Id"] ?? '';
 					break;
-				case 'query':
-					$type = $block['attrs']['queryFieldType'] ?? '';
+				case 'customData':
+					$type = $block['attrs']['customDataFieldType'] ?? '';
 					$attrName = $name . ucfirst($type);
 					$id = $block['attrs']["{$name}Id"] ?? '';
 					break;

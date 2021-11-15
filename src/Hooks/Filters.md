@@ -159,9 +159,9 @@ public function getFieldStyleOptions(): array
 }
 ```
 
-## Add data to query block
+## Add data to custom data block
 
-These filters will add the necessary data for the Query block to work.
+These filters will add the necessary data for the custom data block to work.
 
 Field data option selector will not be shown unless a filter is added.
 
@@ -172,15 +172,15 @@ Field data option selector will not be shown unless a filter is added.
 
 **Filter for providing Block editor options:**
 ```php
-// Provide custom query block options.
-add_filter('es_forms_block_query_options', [$this, 'getQueryBlockOptions']);
+// Provide custom data block options.
+add_filter('es_forms_block_custom_data_options', [$this, 'getCustomDataBlockOptions']);
 
 /**
- * Provide custom Query block options.
+ * Provide custom data block options.
  *
  * @return array
  */
-public function getQueryBlockOptions(): array
+public function getCustomDataBlockOptions(): array
 {
 	return [
 		[
@@ -197,17 +197,17 @@ public function getQueryBlockOptions(): array
 
 **Filter for providing option data:**
 ```php
-// Provide custom Query block options.
-add_filter('es_forms_block_query_options_data', [$this, 'getQueryBlockOptionsData']);
+// Provide custom data block options.
+add_filter('es_forms_block_custom_data_options_data', [$this, 'getCustomDataBlockOptionsData']);
 
 /**
- * Provide custom Query block options data.
+ * Provide custom data block options data.
  *
  * @param string $type Type of option selected in the Block editor.
  *
  * @return array
  */
-public function getQueryBlockOptionsData(string $type): array
+public function getCustomDataBlockOptionsData(string $type): array
 {
 	switch ($type) {
 		case 'blog-posts':

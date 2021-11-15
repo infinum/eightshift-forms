@@ -121,12 +121,12 @@ class Filters
 	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
 
 	/**
-	 * Filter block query options key.
+	 * Filter block custom data options key.
 	 */
-	public const FILTER_BLOCK_QUERY_OPTIONS_NAME = 'es_forms_block_query_options';
+	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME = 'es_forms_block_custom_data_options';
 
 	/**
-	 * Filter block query options data key.
+	 * Filter block custom data options data key.
 	 */
-	public const FILTER_BLOCK_QUERY_OPTIONS_DATA_NAME = 'es_forms_block_query_options_data';
+	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME = 'es_forms_block_custom_data_options_data';
 }

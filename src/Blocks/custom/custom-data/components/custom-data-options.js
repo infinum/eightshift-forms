@@ -18,36 +18,36 @@ import { CheckboxesOptions } from '../../../components/checkboxes/components/che
 import { RadiosOptions } from '../../../components/radios/components/radios-options';
 import manifest from '../manifest.json';
 
-export const QueryOptions = ({ attributes, setAttributes, clientId }) => {
+export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 
-	const queryData = checkAttr('queryData', attributes, manifest);
-	const queryFieldType = checkAttr('queryFieldType', attributes, manifest);
+	const customDataData = checkAttr('customDataData', attributes, manifest);
+	const customDataFieldType = checkAttr('customDataFieldType', attributes, manifest);
 
-	let queryDataOptions = [];
+	let customDataDataOptions = [];
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.queryBlockOptions)) {
-		queryDataOptions = esFormsBlocksLocalization.queryBlockOptions;
+	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.customDataBlockOptions)) {
+		customDataDataOptions = esFormsBlocksLocalization.customDataBlockOptions;
 	}
 
 	return (
-		<PanelBody title={__('Query', 'eightshift-forms')}>
+		<PanelBody title={__('Custom Data', 'eightshift-forms')}>
 			<SelectControl
 				label={<IconLabel icon={icons.color} label={__('Field Type', 'eightshift-forms')} />}
 				help={__('Set what field type you want to use.', 'eightshift-forms')}
-				value={queryFieldType}
-				options={getOption('queryFieldType', attributes, manifest)}
-				onChange={(value) => setAttributes({ [getAttrKey('queryFieldType', attributes, manifest)]: value })}
+				value={customDataFieldType}
+				options={getOption('customDataFieldType', attributes, manifest)}
+				onChange={(value) => setAttributes({ [getAttrKey('customDataFieldType', attributes, manifest)]: value })}
 			/>
 
 			<SelectControl
 				label={<IconLabel icon={icons.color} label={__('Data to show', 'eightshift-forms')} />}
 				help={__('Set what data type you want to use.', 'eightshift-forms')}
-				value={queryData}
-				options={queryDataOptions}
-				onChange={(value) => setAttributes({ [getAttrKey('queryData', attributes, manifest)]: value })}
+				value={customDataData}
+				options={customDataDataOptions}
+				onChange={(value) => setAttributes({ [getAttrKey('customDataData', attributes, manifest)]: value })}
 			/>
 
-			{(queryFieldType === 'select' || queryFieldType === '') &&
+			{(customDataFieldType === 'select' || customDataFieldType === '') &&
 				<SelectOptions
 					{...props('select', attributes, {
 						setAttributes,
@@ -55,7 +55,7 @@ export const QueryOptions = ({ attributes, setAttributes, clientId }) => {
 				/>
 			}
 
-			{queryFieldType === 'checkboxes' &&
+			{customDataFieldType === 'checkboxes' &&
 				<CheckboxesOptions
 					{...props('checkboxes', attributes, {
 						setAttributes,
@@ -64,7 +64,7 @@ export const QueryOptions = ({ attributes, setAttributes, clientId }) => {
 				/>
 			}
 
-			{queryFieldType === 'radios' &&
+			{customDataFieldType === 'radios' &&
 				<RadiosOptions
 					{...props('radios', attributes, {
 						setAttributes,
