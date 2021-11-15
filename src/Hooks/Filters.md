@@ -158,3 +158,90 @@ public function getFieldStyleOptions(): array
 	];
 }
 ```
+
+## Add data to query block
+
+This two filters will add necessary data to the query block. This block can show any kind of data provided via filter.
+
+Field data option selector will not show unless a filter is provided.
+
+**Default values:**
+```php
+[]
+```
+
+**Filter for providing editor options:**
+```php
+// Provide custom query block options.
+add_filter('es_forms_block_query_options', [$this, 'getQueryBlockOptions']);
+
+/**
+ * Provide custom query block options.
+ *
+ * @return array
+ */
+public function getQueryBlockOptions(): array
+{
+	return [
+		[
+			'label' => 'Blog posts',
+			'value' => 'blog-posts'
+		],
+		[
+			"label" => "Jobs",
+			"value" => "jobs"
+		],
+	];
+}
+```
+
+**Filter for providing options data:**
+```php
+// Provide custom query block options.
+add_filter('es_forms_block_query_options_data', [$this, 'getQueryBlockOptionsData']);
+
+/**
+ * Provide custom query block options data.
+ *
+ * @param string $type Type of option selected in the editor.
+ *
+ * @return array
+ */
+public function getQueryBlockOptionsData(string $type): array
+{
+	switch ($type) {
+		case 'blog-posts':
+			return [
+				[
+					'label' => '',
+					'value' => ''
+				],
+				[
+					'label' => 'Post 1',
+					'value' => 'post1'
+				],
+				[
+					"label" => "Post 2",
+					"value" => "post2"
+				],
+			];
+		case 'jobs':
+			return [
+				[
+					'label' => '',
+					'value' => ''
+				],
+				[
+					'label' => 'Job 1',
+					'value' => 'job1'
+				],
+				[
+					"label" => "Job 2",
+					"value" => "job2"
+				],
+			];
+		default:
+			return [];
+	}
+}
+```
