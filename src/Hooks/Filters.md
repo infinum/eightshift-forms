@@ -158,3 +158,90 @@ public function getFieldStyleOptions(): array
 	];
 }
 ```
+
+## Add data to custom data block
+
+These filters will add the necessary data for the custom data block to work.
+
+Field data option selector will not be shown unless a filter is added.
+
+**Default values:**
+```php
+[]
+```
+
+**Filter for providing Block editor options:**
+```php
+// Provide custom data block options.
+add_filter('es_forms_block_custom_data_options', [$this, 'getCustomDataBlockOptions']);
+
+/**
+ * Provide custom data block options.
+ *
+ * @return array
+ */
+public function getCustomDataBlockOptions(): array
+{
+	return [
+		[
+			'label' => 'Blog posts',
+			'value' => 'blog-posts'
+		],
+		[
+			"label" => "Jobs",
+			"value" => "jobs"
+		],
+	];
+}
+```
+
+**Filter for providing option data:**
+```php
+// Provide custom data block options.
+add_filter('es_forms_block_custom_data_options_data', [$this, 'getCustomDataBlockOptionsData']);
+
+/**
+ * Provide custom data block options data.
+ *
+ * @param string $type Type of option selected in the Block editor.
+ *
+ * @return array
+ */
+public function getCustomDataBlockOptionsData(string $type): array
+{
+	switch ($type) {
+		case 'blog-posts':
+			return [
+				[
+					'label' => '',
+					'value' => ''
+				],
+				[
+					'label' => 'Post 1',
+					'value' => 'post1'
+				],
+				[
+					"label" => "Post 2",
+					"value" => "post2"
+				],
+			];
+		case 'jobs':
+			return [
+				[
+					'label' => '',
+					'value' => ''
+				],
+				[
+					'label' => 'Job 1',
+					'value' => 'job1'
+				],
+				[
+					"label" => "Job 2",
+					"value" => "job2"
+				],
+			];
+		default:
+			return [];
+	}
+}
+```

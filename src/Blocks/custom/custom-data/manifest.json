@@ -1,0 +1,56 @@
+{
+	"blockName": "custom-data",
+	"title": "Custom data",
+	"description" : "Block used to show custom data using WordPress filters.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-paragraph"
+	},
+	"keywords": [
+		"customData"
+	],
+	"example": {
+	},
+	"attributes": {
+		"customDataFieldType": {
+			"type": "string"
+		},
+		"customDataData": {
+			"type": "string"
+		},
+		"customDataId": {
+			"type": "string"
+		},
+		"customDataFormPostId": {
+			"type": "string"
+		},
+		"customDataServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"parent": [
+		"eightshift-forms/form"
+	],
+	"components": {
+		"select": "select",
+		"checkboxes": "checkboxes",
+		"radios": "radios"
+	},
+	"options": {
+		"customDataFieldType": [
+			{
+				"label": "Select",
+				"value": "select"
+			},
+			{
+				"label": "Checkbox",
+				"value": "checkboxes"
+			},
+			{
+				"label": "Radio",
+				"value": "radios"
+			}
+		]
+	}
+}

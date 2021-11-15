@@ -119,4 +119,14 @@ class Filters
 	 * Filter block field style options key.
 	 */
 	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
+
+	/**
+	 * Filter block custom data options key.
+	 */
+	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME = 'es_forms_block_custom_data_options';
+
+	/**
+	 * Filter block custom data options data key.
+	 */
+	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME = 'es_forms_block_custom_data_options_data';
 }
