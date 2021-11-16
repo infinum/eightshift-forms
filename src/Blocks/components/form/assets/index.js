@@ -14,6 +14,9 @@ domReady(() => {
 				formSubmitRestApiUrl: esFormsLocalization.formSubmitRestApiUrl,
 				redirectionTimeout: esFormsLocalization.redirectionTimeout,
 				hideGlobalMessageTimeout: esFormsLocalization.hideGlobalMessageTimeout,
+				formDisableScrollToFieldOnError: esFormsLocalization.formDisableScrollToFieldOnError,
+				formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
+				formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 			});
 
 			form.init();
@@ -72,6 +75,17 @@ domReady(() => {
 					form.scrollToElement(event);
 				},
 			}
+		});
+
+		import('./line-input').then(({ LineInput }) => {
+			const lineInput = new LineInput({
+				formSelector: selector,
+				textareaCustom: esFormsLocalization.textareaCustom,
+				selectCustom: esFormsLocalization.selectCustom,
+				fileCustom: esFormsLocalization.fileCustom,
+			});
+
+			lineInput.init();
 		});
 	}
 });

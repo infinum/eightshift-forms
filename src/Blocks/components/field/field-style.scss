@@ -1,9 +1,28 @@
 .es-field {
+	$this: &;
 	order: var(--field-order);
 	border: none; // Because of fieldset.
 
 	&__label {
 		margin-bottom: 10px;
 		display: block;
+	}
+
+	&.is-active {
+		#{$this}__label {
+			color: blue;
+		}
+	}
+
+	&.is-filled {
+		#{$this}__label {
+			color: green;
+		}
+
+		&.is-active {
+			#{$this}__label {
+				color: purple;
+			}
+		}
 	}
 }

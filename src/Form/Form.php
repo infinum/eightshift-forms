@@ -61,21 +61,6 @@ class Form implements ServiceInterface
 		// Get form type.
 		$output['formType'] = SettingsMailer::SETTINGS_TYPE_KEY;
 
-		// Reset form on success.
-		$output['formResetOnSuccess'] = !Variables::isDevelopMode();
-
-		// Disable scroll to field on error.
-		$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
-		// Disable scroll to global message on success.
-		$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
 		// Tracking event name.
 		$output['formTrackingEventName'] = $this->getSettingsValue(
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,

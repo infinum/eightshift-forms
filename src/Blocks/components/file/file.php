@@ -40,6 +40,10 @@ $file = '
 		data-tracking="' . $fileTracking . '"
 		' . $fileIsMultiple . '
 	/>
+	<button class="' . esc_attr($componentClass) . '__trigger">
+		' . esc_html__('Drop your files', 'eightshift-forms') . '
+	</button>
+	<div class="' . esc_attr($componentClass) . '__list"></div>
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

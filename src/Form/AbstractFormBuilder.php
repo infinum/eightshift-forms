@@ -237,21 +237,6 @@ abstract class AbstractFormBuilder
 	{
 		$formAdditionalProps = [];
 
-		// Reset form on success.
-		$formAdditionalProps['formResetOnSuccess'] = !Variables::isDevelopMode();
-
-		// Disable scroll to field on error.
-		$formAdditionalProps['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
-		// Disable scroll to global message on success.
-		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-			SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-
 		// Tracking event name.
 		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,

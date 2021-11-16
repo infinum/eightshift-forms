@@ -14,6 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -110,6 +111,27 @@ class EnqueueTheme extends AbstractEnqueueTheme
 				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
 				'hideGlobalMessageTimeout' => apply_filters(Filters::FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME, 6000),
 				'redirectionTimeout' => apply_filters(Filters::FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME, 600),
+				'textareaCustom' => !$this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
+				),
+				'selectCustom' => !$this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
+				),
+				'fileCustom' => !$this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
+					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
+				),
+				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				),
+				'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				),
+				'formResetOnSuccess' => !Variables::isDevelopMode(),
 			]
 		];
 	}

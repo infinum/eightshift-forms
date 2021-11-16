@@ -22,6 +22,7 @@ $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $attributes['blockJsClass'] ?? '';
+$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
 $customMediaBreakpoints = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
@@ -57,6 +58,7 @@ $fieldClass = Components::classnames([
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($blockJsClass, $blockJsClass),
+	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
 ]);
 

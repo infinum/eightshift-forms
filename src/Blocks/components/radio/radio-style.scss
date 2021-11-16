@@ -14,7 +14,9 @@
 	}
 
 	&__input {
-		display: none;
+		// Important because if hidden focus/blur is not working.
+		position: absolute;
+		left: -99999px;
 	}
 
 	&__input:checked + #{$this}__label::after {

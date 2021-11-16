@@ -69,6 +69,14 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
 
 	/**
+	 * Disable custom options on fields key.
+	 */
+	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY = 'general-custom-options';
+	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT = 'select';
+	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA = 'textarea';
+	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE = 'file';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -180,6 +188,33 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 					]
+				]
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => __('Field behavior', 'eightshift-forms'),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+				'checkboxesFieldHelp' => __('Set all form field behavior options in one place', 'eightshift-forms'),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => __('Disable custom select', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => __('Disable custom texarea', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => __('Disable custom file', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
+					],
 				]
 			],
 		];

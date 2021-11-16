@@ -29,6 +29,9 @@ export class Form {
 		this.CLASS_LOADING = 'is-loading';
 		this.CLASS_HAS_ERROR = 'has-error';
 
+		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
+		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
+		this.formResetOnSuccess = options.formResetOnSuccess ?? true;
 		this.redirectionTimeout = options.redirectionTimeout ?? 600;
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
 	}
@@ -343,7 +346,7 @@ export class Form {
 		}
 
 		// Scroll to element if the condition is right.
-		if (typeof fields !== 'undefined' && element.getAttribute('data-disable-scroll-to-field-on-error') !== '1') {
+		if (typeof fields !== 'undefined' && this.formDisableScrollToFieldOnError !== '1') {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
@@ -352,7 +355,7 @@ export class Form {
 
 	// Reset form values if the condition is right.
 	resetForm = (element) => {
-		if (element.getAttribute('data-reset-on-success') === '1') {
+		if (this.formResetOnSuccess === '1') {
 			element.reset();
 		}
 	}
@@ -412,7 +415,7 @@ export class Form {
 		messageContainer.innerHTML = `<span>${msg}</span>`;
 
 		// Scroll to msg if the condition is right.
-		if (status === 'success' && element.getAttribute('data-disable-scroll-to-global-message-on-success') !== '1') {
+		if (status === 'success' && this.formDisableScrollToGlobalMessageOnSuccess !== '1') {
 			this.scrollToElement(messageContainer);
 		}
 	}
