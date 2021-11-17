@@ -56,7 +56,7 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          filename: 'eightshift-forms.zip'
+          filename: 'release.zip'
           exclusions: '*.git* *tests/ bin/ assets/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json node_modules/*'
           path: 'eightshift-forms/'
           directory: '.'
@@ -64,5 +64,5 @@ jobs:
       - name: Upload zip to release
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'eightshift-forms.zip'
+          files: 'release.zip'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
