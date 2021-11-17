@@ -12,4 +12,4 @@ export const FormsEditor = ({ attributes }) => {
 			attributes={attributes}
 		/>
 	);
-}
+};

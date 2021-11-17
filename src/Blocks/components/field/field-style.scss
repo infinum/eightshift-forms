@@ -6,22 +6,27 @@
 	&__label {
 		margin-bottom: 10px;
 		display: block;
+		transition: {
+			property: color;
+			timing-function: ease-in-out;
+			duration: 0.3s;
+		}
 	}
 
 	&.is-active {
 		#{$this}__label {
-			color: blue;
+			color: var(--global-colors-es-matisse);
 		}
 	}
 
 	&.is-filled {
 		#{$this}__label {
-			color: green;
+			color: var(--global-colors-es-reef);
 		}
 
 		&.is-active {
 			#{$this}__label {
-				color: purple;
+				color: var(--global-colors-es-blumine);
 			}
 		}
 	}

@@ -17,4 +17,4 @@ export const SubmitEditor = ({ attributes, setAttributes, clientId }) => {
 			})}
 		/>
 	);
-}
+};

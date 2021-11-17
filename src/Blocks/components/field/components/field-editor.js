@@ -104,7 +104,7 @@ export const FieldEditor = (attributes) => {
 				<Content />
 				<Help />
 			</div>
-		)
+		);
 	};
 
 	const FieldsetContent = () => {
@@ -118,7 +118,7 @@ export const FieldEditor = (attributes) => {
 				<Content />
 				<Help />
 			</fieldset>
-		)
+		);
 	};
 
 	return (

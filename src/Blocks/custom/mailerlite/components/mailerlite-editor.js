@@ -24,4 +24,4 @@ export const MailerliteEditor = ({ attributes }) => {
 			/>
 		</div>
 	);
-}
+};

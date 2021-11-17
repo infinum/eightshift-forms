@@ -16,4 +16,4 @@ export const RadioEditor = ({ attributes, setAttributes }) => {
 			/>
 		</div>
 	);
-}
+};

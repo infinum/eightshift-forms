@@ -29,4 +29,4 @@ export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 			})}
 		/>
 	);
-}
+};

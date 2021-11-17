@@ -17,4 +17,4 @@ export const SenderEmailEditor = ({ attributes, setAttributes, clientId }) => {
 			})}
 		/>
 	);
-}
+};

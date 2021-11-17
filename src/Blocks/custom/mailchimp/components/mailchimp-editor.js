@@ -24,4 +24,4 @@ export const MailchimpEditor = ({ attributes }) => {
 			/>
 		</div>
 	);
-}
+};

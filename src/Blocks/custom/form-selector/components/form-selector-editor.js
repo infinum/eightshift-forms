@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element'
+import { useState } from '@wordpress/element';
 import { createBlock } from '@wordpress/blocks';
 import { Button } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
@@ -90,7 +90,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 											label={sprintf(__('%s form', 'eightshift-forms'), label)}
 										/>
 									</Button>
-								)
+								);
 							})}
 						</div>
 						<div className={`${blockClass}__title-after`}>
@@ -106,4 +106,4 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 			/>
 		</>
 	);
-}
+};

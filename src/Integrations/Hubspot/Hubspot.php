@@ -136,8 +136,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		error_log( print_r( ( $data ), true ) );
-
 		foreach ($data as $item) {
 			if (empty($item)) {
 				continue;

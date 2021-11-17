@@ -78,7 +78,7 @@ domReady(() => {
 				scrollToElement: (event) => {
 					form.scrollToElement(event);
 				},
-			}
+			};
 		});
 	}
 });

@@ -261,7 +261,8 @@ export class Form {
 				`);
 
 				if (groupInner.length) {
-					const groupInnerItems = {}
+					const groupInnerItems = {};
+
 					for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
 						const {
 							id,
@@ -527,7 +528,7 @@ export class Form {
 
 			if (tracking) {
 				const value = item.value;
-				data[tracking] = value
+				data[tracking] = value;
 			}
 		});
 

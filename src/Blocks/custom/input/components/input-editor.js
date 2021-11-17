@@ -17,4 +17,4 @@ export const InputEditor = ({ attributes, setAttributes, clientId }) => {
 			})}
 		/>
 	);
-}
+};

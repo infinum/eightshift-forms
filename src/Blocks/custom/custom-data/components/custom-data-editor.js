@@ -33,4 +33,4 @@ export const CustomDataEditor = ({ attributes, setAttributes, }) => {
 			/>
 		</div>
 	);
-}
+};

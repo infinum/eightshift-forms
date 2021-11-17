@@ -25,4 +25,4 @@ export const FormEditor = ({ attributes, setAttributes }) => {
 			/>
 		</div>
 	);
-}
+};

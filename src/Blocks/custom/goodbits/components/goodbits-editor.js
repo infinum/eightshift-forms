@@ -24,4 +24,4 @@ export const GoodbitsEditor = ({ attributes }) => {
 			/>
 		</div>
 	);
-}
+};

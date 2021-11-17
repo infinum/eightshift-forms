@@ -16,4 +16,4 @@ export const CheckboxEditor = ({ attributes, setAttributes }) => {
 			/>
 		</div>
 	);
-}
+};

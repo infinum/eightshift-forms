@@ -29,4 +29,4 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 			})}
 		/>
 	);
-}
+};

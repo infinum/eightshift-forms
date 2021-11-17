@@ -88,7 +88,7 @@ export const CheckboxesOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
 
 							if (!value) {
-								setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: requiredCountDefaultValue })
+								setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: requiredCountDefaultValue });
 							}
 						}}
 					/>
