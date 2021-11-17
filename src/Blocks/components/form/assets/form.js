@@ -568,7 +568,7 @@ export class Form {
 				shouldSort: false,
 				placeholderValue: 'Choose'
 			});
-	
+
 			select.closest('.choices').addEventListener('focus', this.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.onBlurEvent);
 		} else {
@@ -655,8 +655,13 @@ export class Form {
 
 		let toCheck = element;
 		let condition = false;
+		let type = element.type;
 
-		switch (element.type) {
+		if (element.classList.contains('choices')) {
+			type = 'choices';
+		}
+
+		switch (type) {
 			case 'radio':
 				condition = element.checked;
 				break;
@@ -665,6 +670,11 @@ export class Form {
 				break;
 			case 'select':
 				toCheck = element.options[element.options.selectedIndex];
+
+				condition = toCheck.value && toCheck.value.length;
+				break;
+			case 'choices':
+				toCheck = element.querySelector('option');
 
 				condition = toCheck.value && toCheck.value.length;
 				break;
