@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
@@ -19,6 +20,10 @@ use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
  */
 class Blocks extends AbstractBlocks
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
 
 	/**
 	 * Blocks dependency filter name constant.
@@ -40,6 +45,13 @@ class Blocks extends AbstractBlocks
 	 * @var string
 	 */
 	public const BLOCKS_STRING_TO_VALUE_FILTER_NAME = 'es_blocks_string_to_filter';
+
+	/**
+	 * Blocks option checkbox is checked name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME = 'es_blocks_options_checkbox_is_checked_filter';
 
 	/**
 	 * Register all the hooks
@@ -67,6 +79,9 @@ class Blocks extends AbstractBlocks
 
 		// Blocks string to value filter name constant.
 		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);
+
+		// Blocks option checkbox is checked name constant.
+		\add_filter(static::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME, [$this, 'isCheckboxOptionChecked'], 10, 2);
 	}
 
 	/**

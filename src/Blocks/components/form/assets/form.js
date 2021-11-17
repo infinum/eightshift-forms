@@ -1,4 +1,7 @@
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import Dropzone from "dropzone";
+import autosize from 'autosize';
+import Choices from 'choices.js';
 
 export const FORM_EVENTS = {
 	BEFORE_FORM_SUBMIT: 'BeforeFormSubmit',
@@ -25,7 +28,14 @@ export class Form {
 		this.groupSelector = `${this.formSelector}-group`;
 		this.groupInnerSelector = `${this.formSelector}-group-inner`;
 
+		this.fieldSelector = `${this.formSelector}-field`;
+		this.inputSelector = `${this.fieldSelector} input`;
+		this.textareaSelector = `${this.fieldSelector} textarea`;
+		this.selectSelector = `${this.fieldSelector} select`;
+		this.fileSelector = `${this.fieldSelector} input[type='file']`;
+
 		this.CLASS_ACTIVE = 'is-active';
+		this.CLASS_FILLED = 'is-filled';
 		this.CLASS_LOADING = 'is-loading';
 		this.CLASS_HAS_ERROR = 'has-error';
 
@@ -34,6 +44,13 @@ export class Form {
 		this.formResetOnSuccess = options.formResetOnSuccess ?? true;
 		this.redirectionTimeout = options.redirectionTimeout ?? 600;
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
+		this.textareaCustom = options.textareaCustom ?? true;
+		this.selectCustom = options.selectCustom ?? true;
+		this.fileCustom = options.fileCustom ?? true;
+		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
+
+		// If using custom file create global object to store files.
+		this.files = {};
 	}
 
 	// Init all actions.
@@ -41,11 +58,13 @@ export class Form {
 		const elements = document.querySelectorAll(this.formSelector);
 
 		[...elements].forEach((element) => {
+			// Regular submit.
 			element.addEventListener('submit', this.onFormSubmit);
 
+			// Single submit.
 			if (this.formIsAdmin) {
 				const items = element.querySelectorAll(this.submitSingleSelector);
-	
+
 				[...items].forEach((item) => {
 					if (item.type === 'submit') {
 						item.addEventListener('click', this.onFormSubmitSingle);
@@ -54,6 +73,31 @@ export class Form {
 					}
 				});
 			}
+
+			const inputs = element.querySelectorAll(this.inputSelector);
+			const textareas = element.querySelectorAll(this.textareaSelector);
+			const selects = element.querySelectorAll(this.selectSelector);
+			const files = element.querySelectorAll(this.fileSelector);
+
+			// Setup regular inputs.
+			[...inputs].forEach((input) => {
+				this.setupInputField(input);
+			});
+	
+			// Setup select inputs.
+			[...selects].forEach((select) => {
+				this.setupSelectField(select);
+			});
+	
+			// Setup textarea inputs.
+			[...textareas].forEach((textarea) => {
+				this.setupTextareaField(textarea);
+			});
+
+			// Setup file single inputs.
+			[...files].forEach((file) => {
+				this.setupFileField(file);
+			});
 		});
 	}
 
@@ -282,9 +326,20 @@ export class Form {
 			}
 
 			// Append files field.
-			if (type === 'file' && files.length) {
-				for (const [key, file] of Object.entries(files)) {
-					formData.append(`${id}[${key}]`, file);
+			if (type === 'file') {
+				// Default use normal files form input.
+				let fileList = files;
+
+				// If custom file use files got from the global object of files uploaded.
+				if (this.fileCustom === '1') {
+					fileList = this.files[id];
+				}
+
+				// Loop files and append.
+				if (fileList.length) {
+					for (const [key, file] of Object.entries(fileList)) {
+						formData.append(`${id}[${key}]`, file);
+					}
 				}
 			} else {
 				// Output/append all fields.
@@ -491,5 +546,138 @@ export class Form {
 		const event = new CustomEvent(`esForms${name}`);
 
 		element.dispatchEvent(event);
+	}
+
+	// Setup Regular field.
+	setupInputField = (input) => {
+		this.preFillOnInit(input);
+
+		input.addEventListener('focus', this.onFocusEvent);
+		input.addEventListener('blur', this.onBlurEvent);
+	}
+
+	// Setup Select field.
+	setupSelectField = (select) => {
+		const option = select.querySelector('option');
+
+		this.preFillOnInit(option);
+
+		if (this.selectCustom === '1') {
+			new Choices(select, {
+				searchEnabled: false,
+				shouldSort: false,
+				placeholderValue: 'Choose'
+			});
+	
+			select.closest('.choices').addEventListener('focus', this.onFocusEvent);
+			select.closest('.choices').addEventListener('blur', this.onBlurEvent);
+		} else {
+			select.addEventListener('focus', this.onFocusEvent);
+			select.addEventListener('blur', this.onBlurEvent);
+		}
+
+	}
+
+	// Setup Textarea field.
+	setupTextareaField = (textarea) => {
+		this.preFillOnInit(textarea);
+
+		textarea.addEventListener('focus', this.onFocusEvent);
+		textarea.addEventListener('blur', this.onBlurEvent);
+
+		if (this.textareaCustom === '1') {
+			textarea.setAttribute('rows', '');
+			textarea.setAttribute('cols', '');
+
+			autosize(textarea);
+		}
+	}
+
+	// Setup file single field.
+	setupFileField = (file) => {
+		if (this.fileCustom === '1') {
+			// Create an empty array for each file.
+			this.files[file.id] = [];
+
+			// Init dropzone.
+			const myDropzone = new Dropzone(
+				file.closest(this.fieldSelector),
+				{
+					url: "/",
+					addRemoveLinks: true,
+					autoProcessQueue: false,
+					maxFiles: !file.multiple ? 1 : null,
+					dictRemoveFile: this.fileCustomRemoveLabel,
+				}
+			);
+
+			// On add files.
+			myDropzone.on("addedfiles", () => {
+				this.files[file.id] = myDropzone.files;
+			});
+
+			// On remove files.
+			myDropzone.on("removedfile", () => {
+				this.files[file.id] = myDropzone.files;
+			});
+
+			// Trigger on wrap click.
+			file.nextElementSibling.addEventListener('click', (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				myDropzone.hiddenFileInput.click();
+			});
+		}
+	}
+
+	// // Prefill inputs active/filled on init.
+	preFillOnInit = (input) => {
+		if (input.type === 'checkbox' || input.type === 'radio') {
+			if (input.checked) {
+				input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+			}
+		} else {
+			if (input.value && input.value.length) {
+				input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+			}
+		}
+	}
+
+	// On Focus event for regular fields.
+	onFocusEvent = (event) => {
+		event.target.closest(this.fieldSelector).classList.add(this.CLASS_ACTIVE);
+	}
+
+	// On Blur generic method. Check for length of value.
+	onBlurEvent = (event) => {
+		const element = event.target;
+		const field = element.closest(this.fieldSelector);
+
+		let toCheck = element;
+		let condition = false;
+
+		switch (element.type) {
+			case 'radio':
+				condition = element.checked;
+				break;
+			case 'checkbox':
+				condition = field.querySelectorAll('input:checked').length;
+				break;
+			case 'select':
+				toCheck = element.options[element.options.selectedIndex];
+
+				condition = toCheck.value && toCheck.value.length;
+				break;
+			default:
+				condition = element.value && element.value.length;
+				break;
+		}
+
+		if (condition) {
+			field.classList.remove(this.CLASS_ACTIVE);
+			field.classList.add(this.CLASS_FILLED);
+		} else {
+			field.classList.remove(this.CLASS_ACTIVE, this.CLASS_FILLED);
+		}
 	}
 }

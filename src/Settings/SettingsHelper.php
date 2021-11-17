@@ -12,7 +12,6 @@ namespace EightshiftForms\Settings;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 
 /**
  * SettingsHelper trait.

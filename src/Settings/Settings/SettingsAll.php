@@ -13,28 +13,12 @@ namespace EightshiftForms\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsAll class.
  */
-class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, ServiceInterface
+class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 {
-	/**
-	 * Filter block setting value key.
-	 */
-	public const FILTER_BLOCK_SETTING_VALUE_NAME = 'es_forms_block_setting_value';
-
-	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_filter(self::FILTER_BLOCK_SETTING_VALUE_NAME, [$this, 'getBlockSettingValue'], 10, 2);
-	}
-
 	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
@@ -117,19 +101,6 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface, S
 			$data ?? [],
 			$formAdditionalProps
 		);
-	}
-
-	/**
-	 * Return one setting value used in blocks.
-	 *
-	 * @param string $key Key to find.
-	 * @param string $formId Form ID.
-	 *
-	 * @return mixed
-	 */
-	public function getBlockSettingValue(string $key, string $formId)
-	{
-		return $this->getSettingsValue($key, $formId);
 	}
 
 	/**

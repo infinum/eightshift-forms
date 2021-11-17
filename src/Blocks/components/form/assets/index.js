@@ -17,6 +17,10 @@ domReady(() => {
 				formDisableScrollToFieldOnError: esFormsLocalization.formDisableScrollToFieldOnError,
 				formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 				formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
+				textareaCustom: esFormsLocalization.textareaCustom,
+				selectCustom: esFormsLocalization.selectCustom,
+				fileCustom: esFormsLocalization.fileCustom,
+				fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
 			});
 
 			form.init();
@@ -75,17 +79,6 @@ domReady(() => {
 					form.scrollToElement(event);
 				},
 			}
-		});
-
-		import('./line-input').then(({ LineInput }) => {
-			const lineInput = new LineInput({
-				formSelector: selector,
-				textareaCustom: esFormsLocalization.textareaCustom,
-				selectCustom: esFormsLocalization.selectCustom,
-				fileCustom: esFormsLocalization.fileCustom,
-			});
-
-			lineInput.init();
 		});
 	}
 });

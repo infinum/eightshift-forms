@@ -101,6 +101,11 @@ class Filters
 	public const FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME = 'es_forms_form_js_hide_global_message_timeout';
 
 	/**
+	 * Filter form js file preview remove key.
+	 */
+	public const FILTER_FORM_JS_FILE_PREVIEW_REMOVE_LABEL_NAME = 'es_forms_file_js_preview_remove_label';
+
+	/**
 	 * Filter additional blocks key.
 	 */
 	public const FILTER_ADDITIONAL_BLOCKS_NAME = 'es_forms_additional_blocks';

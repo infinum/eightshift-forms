@@ -1,3 +1,5 @@
+@import '~choices.js/public/assets/styles/choices.min.css';
+
 .es-select {
 	width: 100%;
 	border: 1px solid var(--global-colors-es-chalice);
@@ -6,4 +8,87 @@
 	height: var(--global-es-input-height);
 	padding: 0 10px;
 	border-radius: 0;
+}
+
+.es-select-is-custom {
+	select {
+		display: none;
+	}
+
+	.choices {
+		$this: &;
+		color: red;
+
+		&::after {
+			display: none;
+		}
+	
+		&.is-open {
+			.choices__inner::after {
+				transform: translateY(-50%) rotate(180deg);
+			}
+		}
+	
+		.choices__inner {
+			position: relative;
+			z-index: 4;
+			background-color: transparent;
+			border: none;
+			display: flex;
+			align-items: center;
+			font-size: 20px;
+			padding: 0;
+			padding-right: 30px;
+			padding-bottom: 0 !important; // stylelint-disable-line declaration-no-important
+	
+			&::after {
+				content: '';
+				background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNsaXBQYXRoIGlkPSJhIj48cGF0aCBkPSJNMCAwaDE2djE2SDB6Ii8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjYSkiIHN0cm9rZT0iIzExMSIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNOCAwdjE0TTIuNjQgOC42NzggOCAxNGw1LjM2LTUuMzIyIi8+PC9nPjwvc3ZnPg==");
+				width: 16px;
+				height: 16px;
+				position: absolute;
+				right: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				transition: {
+					property: transform;
+					timing-function: ease-in-out;
+					duration: 0.2s;
+				}
+			}
+		}
+	
+		.choices__list {
+			&--dropdown {
+				background-color: var(--global-colors-es-white);
+				border: 1px solid var(--global-colors-es-chalice);
+				border-radius: 0;
+				margin: 0;
+				z-index: 3;
+	
+				& .choices__item {
+					padding: 0 20px;
+				}
+			}
+	
+			&--single {
+				padding: 0;
+			}
+	
+			.choices__item {
+				display: flex;
+				align-items: center;
+		
+				&--choice {
+					padding: 15px;
+					font-size: 20px;
+		
+					&.is-highlighted {
+						color: var(--global-colors-es-white);
+						background-color: var(--global-colors-es-matisse);
+					}
+				}
+			}
+		}
+	}
 }

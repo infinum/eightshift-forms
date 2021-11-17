@@ -111,3 +111,28 @@ public function getHideGlobalMessageTimeout(): string
 	return '10000'; // 10 seconds.
 }
 ```
+
+## Changing the default custom file preview remove button label
+
+This filter will override our default file preview remove button label.
+
+**Default value:**
+```php
+'Remove'
+```
+
+**Filter:**
+```php
+// Provide custom file preview remove button label.
+add_filter('es_forms_file_js_preview_remove_label', [$this, 'getCustomFilePreviewRemoveButtonLabel']);
+
+/**
+ * Provide custom file preview remove button label.
+ *
+ * @return string
+ */
+public function getCustomFilePreviewRemoveButtonLabel(): string
+{
+	return 'Remove item'; // This can be string or svg.
+}
+```

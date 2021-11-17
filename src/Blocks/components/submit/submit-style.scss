@@ -1,9 +1,9 @@
 .es-submit {
 	width: 100%;
-	background-color: #2271B1;
-	color: #FFFFFF;
+	background-color: var(--global-colors-es-matisse);
+	color: var(--global-colors-es-white);
 	padding: 10px 30px;
-	border: #2271B1;
+	border: var(--global-colors-es-matisse);
 	cursor: pointer;
 	transition: {
 		property: background-color;
@@ -12,6 +12,6 @@
 	}
 
 	&:hover {
-		background-color: #1A5483;
+		background-color: var(--global-colors-es-blumine);
 	}
 }

@@ -124,9 +124,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			$params
 		);
 
-		error_log( print_r( ( $files ), true ) );
-		
-
 		// If email fails.
 		if (!$mailer) {
 			return \rest_ensure_response([
