@@ -1,1 +1,8 @@
 @import './select-style.scss';
+@import './select-editor.scss';
+
+.es-select-is-custom {
+	select {
+		display: initial;
+	}
+}
