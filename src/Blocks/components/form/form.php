@@ -31,6 +31,7 @@ $formClass = Components::classnames([
 	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($componentJsClass, $componentJsClass),
+	$attributes['className'] ?? '',
 ]);
 
 ?>
