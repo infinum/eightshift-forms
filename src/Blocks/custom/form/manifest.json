@@ -31,6 +31,9 @@
 		},
 		"formFormPostId": {
 			"type": "string"
+		},
+		"formTypeSelector": {
+			"type": "string"
 		}
 	}
 }

@@ -12,15 +12,12 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $highlightedContentTitle = Components::checkAttr('highlightedContentTitle', $attributes, $manifest);
 $highlightedContentSubtitle = Components::checkAttr('highlightedContentSubtitle', $attributes, $manifest);
 
 $highlightedContentClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
 

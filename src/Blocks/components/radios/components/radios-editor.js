@@ -11,11 +11,17 @@ import manifest from '../manifest.json';
 export const RadiosEditor = (attributes) => {
 	const unique = useMemo(() => getUnique(), []);
 
-	const radiosContent = checkAttr('radiosContent', attributes, manifest);
+	const {
+		componentName
+	} = manifest;
 
 	const {
 		setAttributes,
+
+		additionalFieldClass,
 	} = attributes;
+
+	const radiosContent = checkAttr('radiosContent', attributes, manifest);
 
 	// Populate ID manually and make it generic.
 	useEffect(() => {
@@ -28,6 +34,8 @@ export const RadiosEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: radiosContent
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);

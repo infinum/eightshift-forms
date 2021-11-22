@@ -46,6 +46,9 @@
 		},
 		"formType": {
 			"type": "string"
+		},
+		"formTypeSelector": {
+			"type": "string"
 		}
 	},
 	"options": {

@@ -18,7 +18,6 @@ $formFormPostId = Components::checkAttr('formFormPostId', $attributes, $manifest
 $formFormPostIdDecoded = Helper::encryptor('decrypt', $formFormPostId);
 
 // Check if mailer data is set and valid.
-
 $formClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 ]);

@@ -19,10 +19,11 @@ interface MapperInterface
 	 * Map form to our components.
 	 *
 	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $formAdditionalProps Additional props.
 	 *
 	 * @return string
 	 */
-	public function getForm(string $formId): string;
+	public function getForm(string $formId, array $formAdditionalProps = []): string;
 
 	/**
 	 * Get mapped form fields.

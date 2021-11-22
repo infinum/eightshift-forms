@@ -25,34 +25,61 @@ $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
+$formTypeSelector = Components::checkAttr('formTypeSelector', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($componentJsClass, $componentJsClass),
-	$attributes['className'] ?? '',
 ]);
+
+$attrsOutput = '';
+if ($formTypeSelector) {
+	$attrsOutput .= " data-type-selector='" . esc_attr($formTypeSelector) . "'";
+}
+
+if ($formSuccessRedirect) {
+	$attrsOutput .= " data-success-redirect='" . esc_attr($formSuccessRedirect) . "'";
+}
+
+if ($formTrackingEventName) {
+	$attrsOutput .= " data-tracking-event-name='" . esc_attr($formTrackingEventName) . "'";
+}
+
+if ($formPostId) {
+	$attrsOutput .= " data-form-post-id='" . esc_attr($formPostId) . "'";
+}
+
+if ($formType) {
+	$attrsOutput .= " data-form-type='" . esc_html($formType) . "'";
+}
+
+if ($formId) {
+	$attrsOutput .= " id='" . esc_attr($formId) . "'";
+}
+
+if ($formName) {
+	$attrsOutput .= " name='" . esc_attr($formName) . "'";
+}
+
+if ($formAction) {
+	$attrsOutput .= " action='" . esc_attr($formAction) . "'";
+}
+
+if ($formMethod) {
+	$attrsOutput .= " method='" . esc_attr($formMethod) . "'";
+}
 
 ?>
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	name="<?php echo esc_attr($formName); ?>"
-	id="<?php echo esc_attr($formId); ?>"
-	action="<?php echo esc_attr($formAction); ?>"
-	method="<?php echo esc_attr($formMethod); ?>"
-	data-success-redirect="<?php echo esc_attr($formSuccessRedirect); ?>"
-	data-tracking-event-name="<?php echo esc_attr($formTrackingEventName); ?>"
-	data-form-post-id="<?php echo esc_attr($formPostId); ?>"
-	data-form-type="<?php echo esc_attr($formType); ?>"
+	<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 >
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'global-msg',
-		Components::props('globalMsg', $attributes, [
-			'blockClass' => $componentClass
-		])
+		Components::props('globalMsg', $attributes)
 	);
 	?>
 
@@ -65,9 +92,7 @@ $formClass = Components::classnames([
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'loader',
-		Components::props('loader', $attributes, [
-			'blockClass' => $componentClass
-		])
+		Components::props('loader', $attributes)
 	);
 	?>
 </form>

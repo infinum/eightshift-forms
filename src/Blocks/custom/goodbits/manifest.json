@@ -18,6 +18,9 @@
 		"goodbitsServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"goodbitsFormTypeSelector": {
+			"type": "string"
 		}
 	},
 	"parent": [

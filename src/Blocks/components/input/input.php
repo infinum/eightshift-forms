@@ -12,8 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $inputId = Components::checkAttr('inputId', $attributes, $manifest);
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
@@ -32,35 +30,43 @@ $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attrib
 
 $inputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputNumberOptions = '';
+$attrsOutput = '';
 if ($inputType === 'number') {
 	if ($inputMin || $inputMin === 0) {
-		$inputNumberOptions .= "min=" . $inputMin . " ";
+		$attrsOutput .= " min='" . esc_attr($inputMin) . "'";
 	}
 	if ($inputMax || $inputMax === 0) {
-		$inputNumberOptions .= "max=" . $inputMax . " ";
+		$attrsOutput .= " max='" . esc_attr($inputMax) . "'";
 	}
 	if ($inputStep || $inputStep === 0) {
-		$inputNumberOptions .= "step=" . $inputStep . " ";
+		$attrsOutput .= " step='" . esc_attr($inputStep) . "'";
 	}
+}
+
+if ($inputTracking) {
+	$attrsOutput .= " data-tracking='" . esc_attr($inputTracking) . "'";
+}
+
+if ($inputValue) {
+	$attrsOutput .= " value='" . esc_attr($inputValue) . "'";
+}
+
+if ($inputPlaceholder) {
+	$attrsOutput .= " placeholder='" . esc_attr($inputPlaceholder) . "'";
 }
 
 $input = '
 <input
 	class="' . esc_attr($inputClass) . '"
 	name="' . esc_attr($inputName) . '"
-	value="' . esc_attr($inputValue) . '"
 	id="' . esc_attr($inputId) . '"
-	placeholder="' . esc_attr($inputPlaceholder) . '"
 	type="' . esc_attr($inputType) . '"
-	data-tracking="' . $inputTracking . '"
 	' . disabled($inputIsDisabled, true, false) . '
 	' . readonly($inputIsReadOnly, true, false) . '
-	' . $inputNumberOptions . '
+	' . $attrsOutput . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -76,6 +82,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

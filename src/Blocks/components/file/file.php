@@ -14,7 +14,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
@@ -34,7 +33,6 @@ $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attribut
 
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($isCustomFile, $componentClass, '', 'custom'),
 ]);
@@ -54,14 +52,19 @@ if ($isCustomFile) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
+$attrsOutput = '';
+if ($fileTracking) {
+	$attrsOutput .= " data-tracking='" . esc_attr($fileTracking) . "'";
+}
+
 $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
 		id="' . esc_attr($fileId) . '"
 		type="file"
-		data-tracking="' . $fileTracking . '"
 		' . $fileIsMultiple . '
+		' . $attrsOutput . '
 	/>
 	' . $customFile . '
 ';
@@ -76,6 +79,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

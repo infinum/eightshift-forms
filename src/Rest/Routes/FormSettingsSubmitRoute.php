@@ -179,12 +179,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			]);
 		}
 
-		foreach ($params as $key => $value) {
-			if (!isset(array_flip(SettingsCache::ALL_CACHE)[$key])) {
+		foreach ($params as $key => $items) {
+			if (!isset(SettingsCache::ALL_CACHE[$key])) {
 				continue;
 			}
 
-			delete_transient((string) $key);
+			foreach (SettingsCache::ALL_CACHE[$key] as $item) {
+				delete_transient($item);
+			}
 		}
 
 		return \rest_ensure_response([

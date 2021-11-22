@@ -304,14 +304,16 @@ class MailchimpClient implements MailchimpClientInterface
 		foreach ($params as $key => $value) {
 			switch ($value['name']) {
 				case 'address':
-					$output[$key] = [
-						'addr1' => $value['value'],
-						'addr2' => '',
-						'city' => '&sbsp;',
-						'state' => '',
-						'zip' => '&sbsp;',
-						'country' => '',
-					];
+					if ($value['value']) {
+						$output[$key] = [
+							'addr1' => $value['value'],
+							'addr2' => '',
+							'city' => '&sbsp;',
+							'state' => '',
+							'zip' => '&sbsp;',
+							'country' => '',
+						];
+					}
 					break;
 				default:
 					$output[$key] = $value['value'] ?? '';

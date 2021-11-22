@@ -69,7 +69,7 @@
 			"label": "Mailchimp",
 			"slug": "mailchimp",
 			"icon": "color",
-			"blockName": "eightshift-forms/greenhouse"
+			"blockName": "eightshift-forms/mailchimp"
 		},
 		{
 			"label": "Greenhouse",

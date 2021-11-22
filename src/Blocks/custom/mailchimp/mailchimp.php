@@ -17,6 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $mailchimpServerSideRender = Components::checkAttr('mailchimpServerSideRender', $attributes, $manifest);
 $mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes, $manifest);
+$mailchimpFormTypeSelector = Components::checkAttr('mailchimpFormTypeSelector', $attributes, $manifest);
 
 if ($mailchimpServerSideRender) {
 	$mailchimpFormPostId = Helper::encryptor('encrypt', $mailchimpFormPostId);
@@ -49,5 +50,8 @@ if (!$isSettingsValid && $mailchimpServerSideRender) {
 // Output form.
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Mailchimp::FILTER_MAPPER_NAME,
-	$mailchimpFormPostId
+	$mailchimpFormPostId,
+	[
+		'formTypeSelector' => $mailchimpFormTypeSelector
+	]
 );

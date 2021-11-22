@@ -12,14 +12,11 @@ $unique = Components::getUnique();
 
 $fileName = $attributes['fileFileName'] ?? '';
 $fileId = $attributes['fileFileId'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($fileName)) {
 	$props['fileName'] = $fileId;
 }
-
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'file',

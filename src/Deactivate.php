@@ -36,8 +36,10 @@ class Deactivate implements HasDeactivationInterface
 		}
 
 		// Delet transients.
-		foreach (SettingsCache::ALL_CACHE as $cache) {
-			delete_transient($cache);
+		foreach (SettingsCache::ALL_CACHE as $items) {
+			foreach ($items as $item) {
+				delete_transient($item);
+			}
 		}
 
 		// Do a cleanup.

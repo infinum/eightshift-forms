@@ -14,8 +14,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
@@ -37,7 +35,6 @@ $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attr
 
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
 	Components::selector($isCustomSelect, $componentClass, '', 'custom'),
@@ -47,13 +44,19 @@ if ($isCustomSelect) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
+$attrsOutput = '';
+
+if ($selectTracking) {
+	$attrsOutput .= " data-tracking='" . esc_attr($selectTracking) . "'";
+}
+
 $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
-		data-tracking="' . $selectTracking . '"
 		' . disabled($selectIsDisabled, true, false) . '
+		' . $attrsOutput . '
 	>
 		' . $selectOptions . '
 	</select>
@@ -70,6 +73,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

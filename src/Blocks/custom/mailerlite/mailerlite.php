@@ -17,6 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $mailerliteServerSideRender = Components::checkAttr('mailerliteServerSideRender', $attributes, $manifest);
 $mailerliteFormPostId = Components::checkAttr('mailerliteFormPostId', $attributes, $manifest);
+$mailerliteFormTypeSelector = Components::checkAttr('mailerliteFormTypeSelector', $attributes, $manifest);
 
 if ($mailerliteServerSideRender) {
 	$mailerliteFormPostId = Helper::encryptor('encrypt', $mailerliteFormPostId);
@@ -49,5 +50,8 @@ if (!$isSettingsValid && $mailerliteServerSideRender) {
 // Output form.
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Mailerlite::FILTER_MAPPER_NAME,
-	$mailerliteFormPostId
+	$mailerliteFormPostId,
+	[
+		'formTypeSelector' => $mailerliteFormTypeSelector
+	]
 );

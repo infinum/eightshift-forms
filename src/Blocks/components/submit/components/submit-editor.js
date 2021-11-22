@@ -7,11 +7,11 @@ import manifest from '../manifest.json';
 export const SubmitEditor = (attributes) => {
 	const {
 		componentClass,
+		componentName
 	} = manifest;
 
 	const {
-		selectorClass = componentClass,
-		blockClass,
+		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
@@ -19,7 +19,6 @@ export const SubmitEditor = (attributes) => {
 
 	const submitClass = classnames([
 		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -35,6 +34,8 @@ export const SubmitEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: button
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);

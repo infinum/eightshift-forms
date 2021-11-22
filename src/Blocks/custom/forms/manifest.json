@@ -17,6 +17,13 @@
 		},
 		"formsStyle": {
 			"type": "string"
+		},
+		"formsFormTypeSelector": {
+			"type": "string"
+		},
+		"formsServerSideRender": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"postType": "eightshift-forms"

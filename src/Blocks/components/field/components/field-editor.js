@@ -18,7 +18,6 @@ export const FieldEditor = (attributes) => {
 
 	const {
 		selectorClass = componentClass,
-		blockClass,
 		additionalFieldClass,
 		clientId,
 	} = attributes;
@@ -45,7 +44,7 @@ export const FieldEditor = (attributes) => {
 
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
+		selector(componentClass, componentClass, selectorClass),
 		selector(additionalFieldClass, additionalFieldClass),
 	]);
 

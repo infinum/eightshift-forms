@@ -12,14 +12,11 @@ $unique = Components::getUnique();
 
 $inputName = $attributes['inputInputName'] ?? '';
 $inputId = $attributes['inputInputId'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($inputName)) {
 	$props['inputName'] = $inputId;
 }
-
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'input',

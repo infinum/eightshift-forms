@@ -3,7 +3,7 @@
 import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -22,6 +22,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
 	const formsStyle = checkAttr('formsStyle', attributes, manifest);
+	const formsFormTypeSelector = checkAttr('formsFormTypeSelector', attributes, manifest);
 
 	let formsStyleOptions = [];
 
@@ -40,6 +41,13 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 				isClearable={false}
 				reFetchOnSearch={true}
 				multiple={false}
+			/>
+
+			<TextControl
+				label={__('Type Selector', 'eightshift-forms')}
+				help={__('Set additional data type selector for the form.', 'eightshift-forms')}
+				value={formsFormTypeSelector}
+				onChange={(value) => setAttributes({ [getAttrKey('formsFormTypeSelector', attributes, manifest)]: value })}
 			/>
 
 			{formsStyleOptions &&

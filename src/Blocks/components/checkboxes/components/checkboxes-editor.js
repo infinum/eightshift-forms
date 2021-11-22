@@ -11,12 +11,17 @@ import manifest from '../manifest.json';
 
 export const CheckboxesEditor = (attributes) => {
 	const unique = useMemo(() => getUnique(), []);
-
-	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
+	const {
+		componentName
+	} = manifest;
 
 	const {
 		setAttributes,
+
+		additionalFieldClass,
 	} = attributes;
+
+	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 
 	// Populate ID manually and make it generic.
 	useEffect(() => {
@@ -29,6 +34,8 @@ export const CheckboxesEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: checkboxesContent
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);

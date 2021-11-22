@@ -14,13 +14,13 @@ export const InputEditor = (attributes) => {
 	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
+		componentName
 	} = manifest;
 
 	const {
 		setAttributes,
 
-		selectorClass = componentClass,
-		blockClass,
+		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
@@ -40,7 +40,6 @@ export const InputEditor = (attributes) => {
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -60,6 +59,8 @@ export const InputEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: input,
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);

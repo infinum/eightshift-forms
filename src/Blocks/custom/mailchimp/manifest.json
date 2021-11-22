@@ -18,6 +18,9 @@
 		"mailchimpServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"mailchimpFormTypeSelector": {
+			"type": "string"
 		}
 	},
 	"parent": [

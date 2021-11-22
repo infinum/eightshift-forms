@@ -54,7 +54,7 @@ $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
+	Components::selector($componentClass, $componentClass, $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($blockJsClass, $blockJsClass),
@@ -110,7 +110,6 @@ if ($fieldType === 'fieldset') {
 			'error',
 			Components::props('error', $attributes, [
 				'errorId' => $fieldId,
-				'blockClass' => $componentClass
 			])
 		);
 	}

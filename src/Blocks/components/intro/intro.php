@@ -12,8 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
 $introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
@@ -21,7 +19,6 @@ $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
 
 $introClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
 ]);

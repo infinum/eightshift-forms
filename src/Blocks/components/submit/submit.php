@@ -12,7 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
@@ -25,25 +24,31 @@ $submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-$submitAttrsOutput = '';
-foreach ($submitAttrs as $key => $value) {
-	$submitAttrsOutput .= \wp_kses_post("{$key}=" . $value . " ");
+$attrsOutput = '';
+if ($submitTracking) {
+	$attrsOutput .= " data-tracking='" . esc_attr($submitTracking) . "'";
+}
+
+if ($submitId) {
+	$attrsOutput .= " data-id='" . esc_attr($submitId) . "'";
+}
+
+if ($submitAttrs) {
+	foreach ($submitAttrs as $key => $value) {
+		$attrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
-		id="' . esc_attr($submitId) . '"
-		data-tracking="' . $submitTracking . '"
 		' . disabled($submitIsDisabled, true, false) . '
-		' . $submitAttrsOutput . '
-	><span>' . esc_html($submitValue) . '
-	</span></button>
+		' . $attrsOutput . '
+	><span>' . esc_html($submitValue) . '</span></button>
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -56,6 +61,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

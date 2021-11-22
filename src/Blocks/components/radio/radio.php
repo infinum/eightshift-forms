@@ -12,8 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
@@ -27,7 +25,6 @@ $radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $ma
 
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($radioIsDisabled, $componentClass, '', 'disabled'),
 ]);
@@ -41,6 +38,15 @@ if (empty($radioLabel)) {
 	return;
 }
 
+$attrsOutput = '';
+if ($radioTracking) {
+	$attrsOutput .= " data-tracking='" . esc_attr($radioTracking) . "'";
+}
+
+if ($radioValue) {
+	$attrsOutput .= " value='" . esc_attr($radioValue) . "'";
+}
+
 ?>
 
 <div class="<?php echo esc_attr($radioClass); ?>">
@@ -50,10 +56,9 @@ if (empty($radioLabel)) {
 			type="radio"
 			name="<?php echo esc_attr($radioName); ?>"
 			id="<?php echo esc_attr($radioId); ?>"
-			value="<?php echo esc_attr($radioValue); ?>"
-			data-tracking="<?php echo esc_attr($radioTracking); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
+			<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		/>
 		<label
 			for="<?php echo esc_attr($radioId); ?>"

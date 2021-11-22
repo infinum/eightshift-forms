@@ -42,6 +42,7 @@ echo Components::render(
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

@@ -14,14 +14,11 @@ $unique = Components::getUnique();
 $radioLabel = $attributes['radioRadioLabel'] ?? '';
 $radioId = $attributes['radioRadioId'] ?? '';
 $radioValue = $attributes['radioRadioValue'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($radioValue)) {
 	$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
 }
-
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'radio',

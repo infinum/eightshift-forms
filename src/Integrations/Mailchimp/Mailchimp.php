@@ -84,7 +84,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm']);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
 	}
 
@@ -92,13 +92,12 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 * Map form to our components.
 	 *
 	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $formAdditionalProps Additional props.
 	 *
 	 * @return string
 	 */
-	public function getForm(string $formId): string
+	public function getForm(string $formId, array $formAdditionalProps = []): string
 	{
-		$formAdditionalProps = [];
-
 		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
 
 		// Get post ID prop.

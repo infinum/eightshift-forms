@@ -9,7 +9,12 @@ export const FormsEditor = ({ attributes }) => {
 	return (
 		<ServerSideRender
 			block={blockFullName}
-			attributes={attributes}
+			attributes={
+				{
+					...attributes,
+					formsServerSideRender: true,
+				}
+			}
 		/>
 	);
 };

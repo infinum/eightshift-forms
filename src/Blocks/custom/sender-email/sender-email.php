@@ -11,7 +11,6 @@ use EightshiftForms\Helpers\Components;
 $unique = Components::getUnique();
 
 $inputName = $attributes['senderEmailInputName'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'input',

@@ -20,6 +20,8 @@ $blockClass = $attributes['blockClass'] ?? '';
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
+$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
+$formsFormTypeSelector = Components::checkAttr('formsFormTypeSelector', $attributes, $manifest);
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -33,6 +35,13 @@ $formsClass = Components::classnames([
 <div class="<?php echo esc_attr($formsClass); ?>">
 	<?php
 	// Bailout if form post ID is missing.
+	if (!$formsFormPostId && $formsServerSideRender) {
+		?>
+			<img class="<?php echo esc_attr("{$blockClass}__image") ?>" src="<?php echo esc_url(\apply_filters(Manifest::MANIFEST_ITEM, 'cover.png')); ?>" />
+			<div class="<?php echo esc_attr("{$blockClass}__text") ?>"><?php esc_html_e('Please select form to show from the blocks sidebar.', 'eightshift-forms'); ?></div>
+		<?php
+	}
+
 	if ($formsFormPostId) {
 		// Convert blocks to array.
 		$blocks = parse_blocks(get_the_content(null, false, $formsFormPostId));
@@ -53,6 +62,7 @@ $formsClass = Components::classnames([
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormTypeSelector"] = $formsFormTypeSelector;
 				}
 			}
 		}
@@ -62,8 +72,6 @@ $formsClass = Components::classnames([
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo \apply_filters('the_content', \render_block($block));
 		}
-	} else { ?>
-			<img class="<?php echo esc_attr("{$blockClass}__image") ?>" src="<?php echo esc_url(\apply_filters(Manifest::MANIFEST_ITEM, 'cover.png')); ?>" />
-			<div class="<?php echo esc_attr("{$blockClass}__text") ?>"><?php esc_html_e('Please select form to show from the blocks sidebar.', 'eightshift-forms'); ?></div>
-	<?php } ?>
+	}
+	?>
 </div>

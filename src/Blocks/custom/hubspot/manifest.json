@@ -18,6 +18,9 @@
 		"hubspotServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"hubspotFormTypeSelector": {
+			"type": "string"
 		}
 	},
 	"parent": [

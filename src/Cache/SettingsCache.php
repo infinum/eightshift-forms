@@ -48,13 +48,21 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	 * List all cache options in the project.
 	 */
 	public const ALL_CACHE = [
-		MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
-		MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
-		GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
-		GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
-		HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
-		MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
-		MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
+		'mailchimp' => [
+			MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
+			MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
+		],
+		'greenhouse' => [
+			GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
+			GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
+		],
+		'hubspot' => [
+			HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
+		],
+		'mailerlite' => [
+			MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
+			MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
+		],
 	];
 
 	/**
@@ -97,16 +105,13 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			]
 		];
 
-		foreach (self::ALL_CACHE as $item) {
-			$name = str_replace('es_', '', $item);
-			$name = str_replace('_', ' ', $name);
-
+		foreach (self::ALL_CACHE as $key => $value) {
 			$output[] = [
 				'component' => 'submit',
-				'submitName' => $item,
-				'submitId' => $item,
+				'submitName' => $key,
+				'submitId' => $key,
 				'submitFieldWidthLarge' => 6,
-				'submitValue' => "Delete " . ucfirst($name),
+				'submitValue' => "Delete " . ucfirst($key) . ' cache',
 				'submitSingleSubmit' => true,
 			];
 		};

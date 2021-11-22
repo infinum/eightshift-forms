@@ -17,6 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $greenhouseServerSideRender = Components::checkAttr('greenhouseServerSideRender', $attributes, $manifest);
 $greenhouseFormPostId = Components::checkAttr('greenhouseFormPostId', $attributes, $manifest);
+$greenhouseFormTypeSelector = Components::checkAttr('greenhouseFormTypeSelector', $attributes, $manifest);
 
 if ($greenhouseServerSideRender) {
 	$greenhouseFormPostId = Helper::encryptor('encrypt', $greenhouseFormPostId);
@@ -46,5 +47,8 @@ if (!$isSettingsValid && $greenhouseServerSideRender) {
 // Output form.
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Greenhouse::FILTER_MAPPER_NAME,
-	$greenhouseFormPostId
+	$greenhouseFormPostId,
+	[
+		'formTypeSelector' => $greenhouseFormTypeSelector
+	]
 );

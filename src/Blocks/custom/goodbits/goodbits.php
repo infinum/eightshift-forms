@@ -17,6 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $goodbitsServerSideRender = Components::checkAttr('goodbitsServerSideRender', $attributes, $manifest);
 $goodbitsFormPostId = Components::checkAttr('goodbitsFormPostId', $attributes, $manifest);
+$goodbitsFormTypeSelector = Components::checkAttr('goodbitsFormTypeSelector', $attributes, $manifest);
 
 if ($goodbitsServerSideRender) {
 	$goodbitsFormPostId = Helper::encryptor('encrypt', $goodbitsFormPostId);
@@ -49,5 +50,8 @@ if (!$isSettingsValid && $goodbitsServerSideRender) {
 // Output form.
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Goodbits::FILTER_MAPPER_NAME,
-	$goodbitsFormPostId
+	$goodbitsFormPostId,
+	[
+		'formTypeSelector' => $goodbitsFormTypeSelector
+	]
 );

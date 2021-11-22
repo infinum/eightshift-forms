@@ -40,6 +40,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

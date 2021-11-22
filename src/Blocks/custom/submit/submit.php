@@ -12,10 +12,7 @@ $unique = Components::getUnique();
 
 $submitName = $attributes['submitSubmitName'] ?? '';
 $submitId = $attributes['submitSubmitId'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
-
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'submit',

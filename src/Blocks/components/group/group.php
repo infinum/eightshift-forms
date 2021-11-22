@@ -12,8 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 $componentJsClassInner = $manifest['componentJsClassInner'] ?? '';
 
@@ -24,7 +22,6 @@ $groupIsInner = Components::checkAttr('groupIsInner', $attributes, $manifest);
 
 $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalGroupClass, $additionalGroupClass),
 	Components::selector($groupIsInner, $componentClass, '', 'is-inner'),
 	Components::selector(!$groupIsInner && $componentJsClass, $componentJsClass),

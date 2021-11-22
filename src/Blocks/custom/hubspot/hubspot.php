@@ -17,6 +17,7 @@ $blockClass = $attributes['blockClass'] ?? '';
 
 $hubspotServerSideRender = Components::checkAttr('hubspotServerSideRender', $attributes, $manifest);
 $hubspotFormPostId = Components::checkAttr('hubspotFormPostId', $attributes, $manifest);
+$hubspotFormTypeSelector = Components::checkAttr('hubspotFormTypeSelector', $attributes, $manifest);
 
 if ($hubspotServerSideRender) {
 	$hubspotFormPostId = Helper::encryptor('encrypt', $hubspotFormPostId);
@@ -46,5 +47,8 @@ if (!$isSettingsValid && $hubspotServerSideRender) {
 // Output form.
 echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	Hubspot::FILTER_MAPPER_NAME,
-	$hubspotFormPostId
+	$hubspotFormPostId,
+	[
+		'formTypeSelector' => $hubspotFormTypeSelector
+	]
 );

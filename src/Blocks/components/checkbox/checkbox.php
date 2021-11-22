@@ -12,7 +12,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
@@ -28,7 +27,6 @@ $checkboxSingleSubmit = Components::checkAttr('checkboxSingleSubmit', $attribute
 
 $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
 ]);
@@ -42,6 +40,15 @@ if (empty($checkboxLabel)) {
 	return;
 }
 
+$attrsOutput = '';
+if ($checkboxTracking) {
+	$attrsOutput .= " data-tracking='" . $checkboxTracking . "'";
+}
+
+if ($checkboxValue) {
+	$attrsOutput .= " value='" . $checkboxValue . "'";
+}
+
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>">
@@ -51,8 +58,7 @@ if (empty($checkboxLabel)) {
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxId); ?>"
-			value="<?php echo esc_attr($checkboxValue); ?>"
-			data-tracking="<?php echo esc_attr($checkboxTracking); ?>"
+			<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php readonly($checkboxIsReadOnly); ?>

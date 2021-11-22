@@ -13,19 +13,18 @@ export const FileEditor = (attributes) => {
 	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
+		componentName
 	} = manifest;
 
 	const {
 		setAttributes,
 
-		selectorClass = componentClass,
-		blockClass,
+		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
 	const fileClass = classnames([
 		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -49,6 +48,8 @@ export const FileEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: file,
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);

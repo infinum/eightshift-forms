@@ -18,6 +18,9 @@
 		"mailerliteServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"mailerliteFormTypeSelector": {
+			"type": "string"
 		}
 	},
 	"parent": [

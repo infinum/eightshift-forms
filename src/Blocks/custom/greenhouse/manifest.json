@@ -18,6 +18,9 @@
 		"greenhouseServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"greenhouseFormTypeSelector": {
+			"type": "string"
 		}
 	},
 	"parent": [

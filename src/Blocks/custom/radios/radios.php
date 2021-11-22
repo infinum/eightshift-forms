@@ -12,7 +12,6 @@ $unique = Components::getUnique();
 
 $radiosName = $attributes['radiosRadiosName'] ?? '';
 $radiosId = $attributes['radiosRadiosId'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($radiosName)) {
@@ -20,7 +19,6 @@ if (empty($radiosName)) {
 }
 
 $props['radiosContent'] = $innerBlockContent;
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'radios',

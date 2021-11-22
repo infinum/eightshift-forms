@@ -12,7 +12,6 @@ $unique = Components::getUnique();
 
 $selectName = $attributes['selectSelectName'] ?? '';
 $selectId = $attributes['selectSelectId'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $props = [];
 
 if (empty($selectName)) {
@@ -20,7 +19,6 @@ if (empty($selectName)) {
 }
 
 $props['selectOptions'] = $innerBlockContent;
-$props['blockClass'] = $blockClass;
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'select',

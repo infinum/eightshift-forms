@@ -14,13 +14,13 @@ export const TextareaEditor = (attributes) => {
 	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
+		componentName
 	} = manifest;
 
 	const {
 		setAttributes,
 
-		selectorClass = componentClass,
-		blockClass,
+		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
@@ -29,7 +29,6 @@ export const TextareaEditor = (attributes) => {
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -54,6 +53,8 @@ export const TextareaEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: textarea,
 				})}
+				additionalFieldClass={additionalFieldClass}
+				selectorClass={componentName}
 			/>
 		</>
 	);
