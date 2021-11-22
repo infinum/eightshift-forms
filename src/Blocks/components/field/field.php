@@ -19,7 +19,6 @@ if (!$fieldUse) {
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $attributes['blockJsClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';

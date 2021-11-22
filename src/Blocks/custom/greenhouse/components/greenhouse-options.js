@@ -5,7 +5,7 @@ import { PanelBody, BaseControl, Button } from '@wordpress/components';
 import { IconLabel, icons } from '@eightshift/frontend-libs/scripts';
 import globalManifest from '../../../manifest.json';
 
-export const FormSelectorOptions = () => {
+export const GreenhouseOptions = () => {
 	const {
 		settingsPageUrl,
 	} = globalManifest;
@@ -13,16 +13,16 @@ export const FormSelectorOptions = () => {
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
-		<PanelBody title={__('Form', 'eightshift-forms')}>
+		<PanelBody title={__('Greenhouse', 'eightshift-forms')}>
 			<BaseControl
 				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms')}
+				help={__('On Greenhouse settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${formId}&type=general`}
+					href={`${settingsPageUrl}&formId=${formId}&type=greenhouse`}
 					isSecondary
 				>
-					{__('Open Form Settings', 'eightshift-forms')}
+					{__('Open Greenhouse Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>

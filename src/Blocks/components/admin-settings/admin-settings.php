@@ -20,6 +20,7 @@ $sectionClass = $manifestSection['componentClass'] ?? '';
 $adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attributes, $manifest);
 $adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
+$adminSettingsFormEditLink = Components::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
 $adminSettingsLink = Components::checkAttr('adminSettingsLink', $attributes, $manifest);
 $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
@@ -74,7 +75,11 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 					<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-arrow-left"); ?> "></span>
-						<?php echo esc_html__('Back to forms', 'eightshift-forms'); ?>
+						<?php echo esc_html__('Back to all forms', 'eightshift-forms'); ?>
+					</a>
+					<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>
+						<?php echo esc_html__('Edit this form', 'eightshift-forms'); ?>
 					</a>
 				</div>
 			</div>

@@ -12,6 +12,9 @@
 		"adminSettingsBackLink": {
 			"type": "string"
 		},
+		"adminSettingsFormEditLink": {
+			"type": "string"
+		},
 		"adminSettingsLink": {
 			"type": "string"
 		},
