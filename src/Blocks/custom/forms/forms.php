@@ -24,7 +24,8 @@ $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector($formsStyle, $blockClass, '', $formsStyle),
-	Components::selector(!$formsFormPostId, $blockClass, '', 'not-set')
+	Components::selector(!$formsFormPostId, $blockClass, '', 'not-set'),
+	$attributes['className'] ?? '',
 ]);
 
 ?>
