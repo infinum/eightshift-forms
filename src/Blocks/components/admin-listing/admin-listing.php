@@ -32,28 +32,30 @@ $layoutClass = Components::classnames([
 
 <div class="<?php echo \esc_attr($layoutClass); ?>">
 	<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
-		<div class="<?php echo \esc_attr("{$sectionClass}__heading"); ?>">
-			<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-				<?php echo esc_html($adminListingPageTitle); ?>
-			</div>
+		<div class="<?php echo \esc_attr("{$sectionClass}__heading {$sectionClass}__heading--no-spacing"); ?>">
+			<div class="<?php echo \esc_attr("{$sectionClass}__heading-wrap"); ?>">
+				<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
+					<?php echo esc_html($adminListingPageTitle); ?>
+				</div>
 
-			<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-				<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
-					<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
-				</a>
-				<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-					<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
-					<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
-				</a>
+				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
+					<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
+						<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
+					</a>
+					<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
+						<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
+					</a>
+				</div>
 			</div>
-		</div>
-		<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-			<?php echo esc_html($adminListingSubTitle); ?>
+			<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
+				<?php echo esc_html($adminListingSubTitle); ?>
+			</div>
 		</div>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
 			<?php if ($adminListingForms) { ?>
-				<ul class="<?php echo \esc_attr("{$componentClass}__list {$sectionClass}--reset-spacing"); ?>">
+				<ul class="<?php echo \esc_attr("{$componentClass}__list"); ?>">
 					<?php foreach ($adminListingForms as $form) { ?>
 						<?php
 						$id = $form['id']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited

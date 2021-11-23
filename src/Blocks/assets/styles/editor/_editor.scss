@@ -1,16 +1,10 @@
 // Override default editor styles.
-@import '@eightshift/frontend-libs/styles/override-editor.scss';
+// @import '@eightshift/frontend-libs/styles/override-editor.scss';
 
 body .editor-styles-wrapper {
-	@include font-smoothing;
-	font-family: var(--global-font-family);
-	font-size: var(--base-font-size);
-	color: var(--global-colors-es-black);
-	background-color: var(--global-colors-es-white);
-}
-
-// Sets base font size value only to editor part.
-body.sb-show-main,
-body .interface-interface-skeleton__content {
-	font-size: 16px;
+	// @include font-smoothing;
+	// font-family: var(--global-font-family);
+	// font-size: var(--base-font-size);
+	// color: var(--global-colors-es-black);
+	// background-color: var(--global-colors-es-white);
 }

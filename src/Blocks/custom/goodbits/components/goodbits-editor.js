@@ -1,14 +1,11 @@
 import React from 'react';
-import { useSelect } from "@wordpress/data";
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
 
-export const GoodbitsEditor = ({ attributes }) => {
+export const GoodbitsEditor = ({ attributes, postId }) => {
 	const {
 		blockClass,
-		blockFullName
+		blockFullName,
 	} = attributes;
-
-	const formPostId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
 		<div className={blockClass}>
@@ -18,7 +15,7 @@ export const GoodbitsEditor = ({ attributes }) => {
 					{
 						...attributes,
 						goodbitsServerSideRender: true,
-						goodbitsFormPostId: formPostId.toString(),
+						goodbitsFormPostId: postId.toString(),
 					}
 				}
 			/>

@@ -1,39 +1,77 @@
 .es-field {
 	$this: &;
-	margin-bottom: 10px;
-	display: grid;
-	column-gap: 20px;
-	grid-template-columns: repeat(12, 1fr);
+	margin-bottom: 15px;
+
+	@include media(desktop up) {
+		display: grid;
+		column-gap: 20px;
+		grid-template-columns: repeat(12, 1fr);
+	}
 
 	&__label {
-		grid-column-start: 1;
-		grid-column-end: 4;
-		padding-top: 12px;
 		font-size: 15px;
+		padding: 0;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		margin-bottom: 10px;
+		display: block;
+
+		@include media(desktop up) {
+			padding-top: 12px;
+			margin-bottom: 0;
+			grid-column-start: 1;
+			grid-column-end: 4;
+		}
 	}
 
 	&__content {
-		grid-column-start: 4;
-		grid-column-end: 13;
+		@include media(desktop up) {
+			grid-column-start: 4;
+			grid-column-end: 13;
+		}
+
+		@include media(large up) {
+			grid-column-end: 11;
+		}
 	}
 
 	&__help {
 		color: var(--global-colors-es-chalice);
-		grid-column-start: 4;
-		grid-column-end: 13;
 		margin-top: 5px;
+
+		@include media(desktop up) {
+			grid-column-start: 4;
+			grid-column-end: 13;
+		}
+
+		@include media(large up) {
+			grid-column-end: 11;
+		}
 	}
 
 	&__es-error {
-		grid-column-start: 4;
-		grid-column-end: 13;
-		margin-top: 5px;
+		@include media(desktop up) {
+			grid-column-start: 4;
+			grid-column-end: 13;
+		}
+
+		@include media(large up) {
+			grid-column-end: 11;
+		}
+	}
+
+	&__submit {
+		margin-bottom: 30px;
+
+		#{$this}__content-wrap {
+			text-align: right;
+		}
 	}
 }
 
 legend.es-field__label {
-	padding-top: 12px;
-	margin-bottom: -18px;
+	@include media(desktop up) {
+		padding-top: 12px;
+		margin-bottom: -18px;
+	}
 }

@@ -1,8 +1,15 @@
+// stylelint-disable declaration-no-important
 @import './select-style.scss';
 @import './select-editor.scss';
 
 .es-select-is-custom {
 	select {
 		display: initial;
+
+		&:focus {
+			outline: none !important;
+			box-shadow: none !important;
+			border-color: var(--global-colors-es-matisse) !important;
+		}
 	}
 }

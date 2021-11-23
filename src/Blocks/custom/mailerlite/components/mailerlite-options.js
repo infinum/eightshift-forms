@@ -1,16 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from "@wordpress/data";
 import { PanelBody, BaseControl, Button } from '@wordpress/components';
 import { IconLabel, icons } from '@eightshift/frontend-libs/scripts';
 import globalManifest from '../../../manifest.json';
 
-export const MailerliteOptions = () => {
+export const MailerliteOptions = ({ postId }) => {
 	const {
 		settingsPageUrl,
 	} = globalManifest;
-
-	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
 		<PanelBody title={__('Mailerlite', 'eightshift-forms')}>
@@ -19,7 +16,7 @@ export const MailerliteOptions = () => {
 				help={__('On Mailerlite settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${formId}&type=mailerlite`}
+					href={`${settingsPageUrl}&formId=${postId}&type=mailerlite`}
 					isSecondary
 				>
 					{__('Open Mailerlite Form Settings', 'eightshift-forms')}

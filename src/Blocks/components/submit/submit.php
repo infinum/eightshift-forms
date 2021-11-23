@@ -57,6 +57,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		Components::props('field', $attributes, [
 			'fieldContent' => $button,
 			'fieldId' => $submitId,
+			'fieldUseError' => false,
 			'fieldDisabled' => !empty($submitIsDisabled),
 		]),
 		[

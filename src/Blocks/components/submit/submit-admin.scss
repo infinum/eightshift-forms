@@ -1,8 +1,5 @@
 @import './submit-style.scss';
 
-.es-submit {
-	&--global {
-		float: right;
-		width: initial;
-	}
+.es-submit--global {
+	width: auto;
 }

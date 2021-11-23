@@ -25,6 +25,7 @@ $adminSettingsLink = Components::checkAttr('adminSettingsLink', $attributes, $ma
 $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
 $adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
+$adminSettingsIsGlobal = Components::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -41,7 +42,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 <div class="<?php echo \esc_attr($layoutClass); ?>">
 	<div class="<?php echo \esc_attr("{$sectionClass}__sidebar"); ?>">
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
-			<div class="<?php echo \esc_attr("{$sectionClass}__content {$sectionClass}--reset-spacing"); ?>">
+			<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
 				<?php if (!empty($adminSettingsSidebar)) { ?>
 					<ul class="<?php echo \esc_attr("{$sectionClass}__menu"); ?>">
 						<?php foreach ($adminSettingsSidebar as $item) { ?>
@@ -55,8 +56,10 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 									href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
 									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 								>
-									<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									<?php echo esc_html($label); ?>
+									<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
+										<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										<?php echo esc_html($label); ?>
+									</span>
 								</a>
 							</li>
 						<?php } ?>
@@ -64,27 +67,35 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				<?php } ?>
 			</div>
 		</div>
+
+		<div class="<?php echo \esc_attr("{$sectionClass}__section {$sectionClass}__section--clean"); ?>">
+			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+				<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-arrow-left"); ?> "></span>
+				<?php echo esc_html__('Back to all forms', 'eightshift-forms'); ?>
+			</a>
+		</div>
 	</div>
 	<div class="<?php echo \esc_attr("{$sectionClass}__main"); ?>">
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__heading"); ?>">
-				<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-					<?php echo esc_html($adminSettingsPageTitle); ?>
+				<div class="<?php echo \esc_attr("{$sectionClass}__heading-wrap"); ?>">
+					<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
+						<?php echo esc_html($adminSettingsPageTitle); ?>
+					</div>
+
+					<?php if (!$adminSettingsIsGlobal) { ?>
+						<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
+							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>
+								<?php echo esc_html__('Edit this form', 'eightshift-forms'); ?>
+							</a>
+						</div>
+					<?php } ?>
 				</div>
 
-				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-					<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-arrow-left"); ?> "></span>
-						<?php echo esc_html__('Back to all forms', 'eightshift-forms'); ?>
-					</a>
-					<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>
-						<?php echo esc_html__('Edit this form', 'eightshift-forms'); ?>
-					</a>
+				<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
+					<?php echo esc_html($adminSettingsSubTitle); ?>
 				</div>
-			</div>
-			<div class="<?php echo \esc_attr("{$sectionClass}__description {$sectionClass}__description--with-spacing"); ?>">
-				<?php echo esc_html($adminSettingsSubTitle); ?>
 			</div>
 			<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
 				<?php echo $adminSettingsForm; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

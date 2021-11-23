@@ -109,6 +109,7 @@ if ($fieldType === 'fieldset') {
 			'error',
 			Components::props('error', $attributes, [
 				'errorId' => $fieldId,
+				'selectorClass' => $componentClass
 			])
 		);
 	}

@@ -7,8 +7,8 @@
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"esMaxCols": 12,
-		"esSpacingVertical": "20px",
-		"esSpacingHorizontal": "15px",
+		"esSpacingVertical": "25px",
+		"esSpacingHorizontal": "30px",
 		"esInputHeight": "42px",
 		"breakpoints": {
 			"mobile": 480,
@@ -41,6 +41,11 @@
 				"name": "White",
 				"slug": "es-white",
 				"color": "#FFFFFF"
+			},
+			{
+				"name": "Alto",
+				"slug": "es-ebb",
+				"color": "#DBDBDB"
 			},
 			{
 				"name": "Alto",

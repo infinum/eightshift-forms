@@ -183,6 +183,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsSidebar' => $this->settingsGlobal->getSettingsSidebar($type),
 			'adminSettingsForm' => $this->settingsGlobal->getSettingsForm($type),
 			'adminSettingsType' => $type,
+			'adminSettingsIsGlobal' => true,
 		];
 	}
 }

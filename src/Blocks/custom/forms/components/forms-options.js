@@ -35,12 +35,14 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 			<CustomSelect
 				label={<IconLabel icon={icons.file} label={__('Select form', 'eightshift-forms')} />}
 				help={__('Select form from the list that is going to be shown to the user.', 'eightshift-forms')}
-				value={formsFormPostId}
+				value={parseInt(formsFormPostId)}
 				loadOptions={getFetchWpApi(postType, {processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle) })}
-				onChange={(value) => setAttributes({[getAttrKey('formsFormPostId', attributes, manifest)]: value.value.toString()})}
+				onChange={(value) => setAttributes({[getAttrKey('formsFormPostId', attributes, manifest)]: value.toString()})}
 				isClearable={false}
 				reFetchOnSearch={true}
 				multiple={false}
+				simpleValue
+				loadingMessage={() => <>Loading...</>}
 			/>
 
 			<TextControl

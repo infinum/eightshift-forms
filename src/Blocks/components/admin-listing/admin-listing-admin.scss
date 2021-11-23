@@ -1,18 +1,21 @@
 .es-admin-listing {
+	$this: &;
+
 	&__list {
 		margin: 0;
 	}
 
 	&__list-item {
-		border-bottom: 1px solid var(--global-colors-es-french);
+		border-bottom: 1px solid var(--global-colors-es-ebb);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 10px var(--global-es-spacing-horizontal);
+		padding: 0 var(--global-es-spacing-horizontal);
 		margin: 0;
-
-		&:last-child {
-			border-bottom: none;
+		transition: {
+			property: background-color;
+			timing-function: ease-in-out;
+			duration: 0.3s;
 		}
 
 		&:hover {
@@ -23,17 +26,20 @@
 	&__item-intro {
 		display: flex;
 		align-items: center;
+		flex: 1;
 	}
 
 	&__label {
+		padding: 13px 10px 13px 0;
 		font-size: 16px;
 		text-decoration: none;
 		display: flex;
+		width: 100%;
 		align-items: center;
 		transition: {
 			property: color;
 			timing-function: ease-in-out;
-			duration: 0.2s;
+			duration: 0.3s;
 		}
 	}
 

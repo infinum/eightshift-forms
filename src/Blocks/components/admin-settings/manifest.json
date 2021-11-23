@@ -26,6 +26,10 @@
 		},
 		"adminSettingsType": {
 			"type": "string"
+		},
+		"adminSettingsIsGlobal": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

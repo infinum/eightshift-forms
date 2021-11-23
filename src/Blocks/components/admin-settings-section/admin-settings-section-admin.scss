@@ -1,49 +1,63 @@
 .es-admin-settings-section {
 	$this: &;
-	padding: var(--global-es-spacing-horizontal) var(--global-es-spacing-vertical) 0 0;
+	background-color: var(--global-colors-es-white);
+	margin-left: -20px;
+	min-height: 100vh;
 
 	&--with-sidebar {
 		display: grid;
-		column-gap: var(--global-es-spacing-vertical);
-		grid-template-columns: 20% auto;
+		grid-template-columns: 180px auto;
+	}
+
+	&__sidebar {
+		background-color: var(--global-colors-es-alto);
+
+		> * {
+			margin-bottom: var(--global-es-spacing-horizontal);
+		}
+	}
+
+	&__main {
+		box-shadow: 0 0 5px rgba(#000000, 0.2);
+
+		#{$this}__content {
+			padding: 0 var(--global-es-spacing-horizontal);
+		}
 	}
 
 	&__section {
-		background-color: var(--global-colors-es-white);
-		border: 1px solid var(--global-colors-es-french);
+		&--clean {
+			text-align: center;
+		}
 	}
 
 	&__heading {
+		padding: 16px var(--global-es-spacing-vertical);
+		border-bottom: 1px solid var(--global-colors-es-ebb);
+		margin-bottom: var(--global-es-spacing-horizontal);
+
+		&--no-spacing {
+			margin-bottom: 0;
+		}
+	}
+
+	&__heading-wrap {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--global-es-spacing-horizontal) var(--global-es-spacing-vertical);
-		border-bottom: 1px solid var(--global-colors-es-french);
 	}
 
 	&__heading-title {
-		font-size: 22px;
+		font-size: 24px;
 		font-weight: bold;
-	}
-
-	&__content {
-		padding: 0 var(--global-es-spacing-horizontal);
-	}
-
-	&--reset-spacing {
-		margin-left: calc(var(--global-es-spacing-horizontal) * -1);
-		margin-right: calc(var(--global-es-spacing-horizontal) * -1);
+		min-height: 20px;
+		line-height: 1.2;
 	}
 
 	&__description {
 		font-size: 13px;
 		color: var(--global-colors-es-boulder);
-		border-bottom: 1px solid var(--global-colors-es-french);
-		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal);
-
-		&--with-spacing {
-			margin-bottom: var(--global-es-spacing-vertical);
-		}
+		margin-top: 8px;
 	}
 
 	&__link {
@@ -52,7 +66,7 @@
 		transition: {
 			property: color;
 			timing-function: ease-in-out;
-			duration: 0.2s;
+			duration: 0.3s;
 		}
 	}
 
@@ -60,7 +74,7 @@
 		> * {
 			margin-left: 10px;
 			padding-left: 10px;
-			border-left: 1px solid var(--global-colors-es-french);
+			border-left: 1px solid var(--global-colors-es-ebb);
 
 			&:first-child {
 				margin-left: 0;
@@ -78,41 +92,75 @@
 
 	&__menu-item {
 		margin: 0;
+	}
 
-		&:last-child {
-			#{$this}__menu-link {
-				border-bottom: none;
-			}
-		}
+	&__menu-link-wrap {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-size: 14px;
 	}
 
 	&__menu-link {
-		padding: 10px var(--global-es-spacing-vertical);
-		border-bottom: 1px solid var(--global-colors-es-french);
-		display: flex;
-		align-items: center;
+		padding: 13px 5px;
+		display: block;
+		border-bottom: 1px solid var(--global-colors-es-ebb);
+		position: relative;
 		text-decoration: none;
 		color: var(--global-colors-es-boulder);
 		transition: {
-			property: color, background-color;
+			property: color, background-color, border-bottom;
 			timing-function: ease-in-out;
-			duration: 0.2s;
+			duration: 0.3s;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+
+		&::before {
+			content: '';
+			background-color: var(--global-colors-es-matisse);
+			position: absolute;
+			left: 0;
+			z-index: 1;
+			top: 0;
+			width: 0;
+			height: 100%;
+			transition: {
+				property: width;
+				timing-function: ease-in-out;
+				duration: 0.3s;
+			}
 		}
 
 		svg {
-			margin-right: 15px;
-		}
-
-		&:hover,
-		&:hover:focus {
-			color: var(--global-colors-es-matisse);
+			margin-bottom: 12px;
+			transition: {
+				property: transform;
+				timing-function: ease-in-out;
+				duration: 0.3s;
+			}
 		}
 
 		&--active,
 		&--active:focus,
-		&--active:hover {
-			background-color: var(--global-colors-es-matisse);
+		&--active:hover,
+		&:hover,
+		&:hover:focus {
+			border-bottom-color: var(--global-colors-es-matisse);
 			color: var(--global-colors-es-white);
+
+			svg {
+				transform: scale(1.15);
+			}
+
+			&::before {
+				width: 100%;
+			}
 		}
 	}
 }

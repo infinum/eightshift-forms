@@ -8,6 +8,12 @@
 	height: var(--global-es-input-height);
 	padding: 0 10px;
 	border-radius: 0;
+
+	&:focus {
+		outline: none;
+		box-shadow: none;
+		border-color: var(--global-colors-es-matisse);
+	}
 }
 
 .es-select-is-custom {
@@ -51,7 +57,7 @@
 			transition: {
 				property: transform;
 				timing-function: ease-in-out;
-				duration: 0.2s;
+				duration: 0.3s;
 			}
 		}
 	}

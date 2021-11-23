@@ -1,14 +1,11 @@
 import React from 'react';
-import { useSelect } from "@wordpress/data";
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
 
-export const MailchimpEditor = ({ attributes }) => {
+export const MailchimpEditor = ({ attributes, postId }) => {
 	const {
 		blockClass,
 		blockFullName
 	} = attributes;
-
-	const formPostId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
 		<div className={blockClass}>
@@ -18,7 +15,7 @@ export const MailchimpEditor = ({ attributes }) => {
 					{
 						...attributes,
 						mailchimpServerSideRender: true,
-						mailchimpFormPostId: formPostId.toString(),
+						mailchimpFormPostId: postId.toString(),
 					}
 				}
 			/>
