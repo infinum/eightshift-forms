@@ -4,7 +4,7 @@ import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
 import manifest from '../manifest.json';
 
-export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
+export const RadiosEditor = ({ attributes, setAttributes }) => {
 	const {
 		template,
 	} = manifest;
@@ -20,7 +20,6 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('radios', attributes, {
 				setAttributes,
 				blockClass,
-				clientId,
 				radiosContent: <InnerBlocks
 												allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
 												templateLock={false}

@@ -245,3 +245,44 @@ public function getCustomDataBlockOptionsData(string $type): array
 	}
 }
 ```
+
+## Override default submit button with your own component
+
+These filter will remove the default forms submit button component and use your callback
+
+**Data values example:**
+```php
+[
+	'value' => 'Submit' // String.
+	'isDisabled' => 1, // Boolean.
+	'class' => 'es-submit' // String with spaces.
+	'attrs' => [] // Key value pair for additional attributes like tracking, etc.
+]
+```
+
+**Filter**
+```php
+// Provide project submit button component.
+add_filter('es_forms_block_submit', [$this, 'getFormsSubmitComponent']);
+
+/**
+ * Provide project submit button component.
+ *
+ * @param array<string, mixed> $data Data provided from the forms.
+ *
+ * @return array
+ */
+public function getFormsSubmitComponent(array $data): array
+{
+	return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		'button',
+		Components::props('button', [
+			'buttonTypographyContent' => $data['value'] ?? '',
+			'additionalClass' => $data['class'] ?? '',
+			'buttonAttrs' => $data['attrs'] ?? [],
+		]),
+		'',
+		true
+	);
+}
+```

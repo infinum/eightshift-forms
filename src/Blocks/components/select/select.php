@@ -44,10 +44,16 @@ if ($isCustomSelect) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
-$attrsOutput = '';
-
+$selectAttrs = [];
 if ($selectTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($selectTracking) . "'";
+	$selectAttrs['data-tracking'] = esc_attr($selectTracking);
+}
+
+$selectAttrsOutput = '';
+if ($selectAttrs) {
+	foreach ($selectAttrs as $key => $value) {
+		$selectAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 $select = '
@@ -56,7 +62,7 @@ $select = '
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
-		' . $attrsOutput . '
+		' . $selectAttrsOutput . '
 	>
 		' . $selectOptions . '
 	</select>

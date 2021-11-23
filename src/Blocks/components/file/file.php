@@ -52,9 +52,16 @@ if ($isCustomFile) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
-$attrsOutput = '';
+$fileAttrs = [];
 if ($fileTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($fileTracking) . "'";
+	$fileAttrs['data-tracking'] = esc_attr($fileTracking);
+}
+
+$fileAttrsOutput = '';
+if ($fileAttrs) {
+	foreach ($fileAttrs as $key => $value) {
+		$fileAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 $file = '
@@ -64,7 +71,7 @@ $file = '
 		id="' . esc_attr($fileId) . '"
 		type="file"
 		' . $fileIsMultiple . '
-		' . $attrsOutput . '
+		' . $fileAttrsOutput . '
 	/>
 	' . $customFile . '
 ';

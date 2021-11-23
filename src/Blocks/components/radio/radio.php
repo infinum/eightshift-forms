@@ -38,13 +38,20 @@ if (empty($radioLabel)) {
 	return;
 }
 
-$attrsOutput = '';
+$radioAttrs = [];
 if ($radioTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($radioTracking) . "'";
+	$radioAttrs['data-tracking'] = esc_attr($radioTracking);
 }
 
 if ($radioValue) {
-	$attrsOutput .= " value='" . esc_attr($radioValue) . "'";
+	$radioAttrs['value'] = esc_attr($radioValue);
+}
+
+$radioAttrsOutput = '';
+if ($radioAttrs) {
+	foreach ($radioAttrs as $key => $value) {
+		$radioAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 ?>
@@ -58,7 +65,7 @@ if ($radioValue) {
 			id="<?php echo esc_attr($radioId); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $radioAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		/>
 		<label
 			for="<?php echo esc_attr($radioId); ?>"

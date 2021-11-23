@@ -33,48 +33,55 @@ $formClass = Components::classnames([
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
-$attrsOutput = '';
+$formAttrs = [];
 if ($formTypeSelector) {
-	$attrsOutput .= " data-type-selector='" . esc_attr($formTypeSelector) . "'";
+	$formAttrs['data-type-selector'] = esc_attr($formTypeSelector);
 }
 
 if ($formSuccessRedirect) {
-	$attrsOutput .= " data-success-redirect='" . esc_attr($formSuccessRedirect) . "'";
+	$formAttrs['data-success-redirect'] = esc_attr($formSuccessRedirect);
 }
 
 if ($formTrackingEventName) {
-	$attrsOutput .= " data-tracking-event-name='" . esc_attr($formTrackingEventName) . "'";
+	$formAttrs['data-tracking-event-name'] = esc_attr($formTrackingEventName);
 }
 
 if ($formPostId) {
-	$attrsOutput .= " data-form-post-id='" . esc_attr($formPostId) . "'";
+	$formAttrs['data-form-post-id'] = esc_attr($formPostId);
 }
 
 if ($formType) {
-	$attrsOutput .= " data-form-type='" . esc_html($formType) . "'";
+	$formAttrs['data-form-type'] = esc_html($formType);
 }
 
 if ($formId) {
-	$attrsOutput .= " id='" . esc_attr($formId) . "'";
+	$formAttrs['id'] = esc_attr($formId);
 }
 
 if ($formName) {
-	$attrsOutput .= " name='" . esc_attr($formName) . "'";
+	$formAttrs['name'] = esc_attr($formName);
 }
 
 if ($formAction) {
-	$attrsOutput .= " action='" . esc_attr($formAction) . "'";
+	$formAttrs['action'] = esc_attr($formAction);
 }
 
 if ($formMethod) {
-	$attrsOutput .= " method='" . esc_attr($formMethod) . "'";
+	$formAttrs['method'] = esc_attr($formMethod);
+}
+
+$formAttrsOutput = '';
+if ($formAttrs) {
+	foreach ($formAttrs as $key => $value) {
+		$formAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 ?>
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php echo $formAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 >
 	<?php
 	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

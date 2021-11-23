@@ -98,11 +98,11 @@ $layoutClass = Components::classnames([
 								<a href="<?php echo esc_url($trashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 									<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
 									<?php
-										if ($adminListingType === 'trash') {
-											echo esc_html__('Delete permanently', 'eightshift-forms');
-										} else {
-											echo esc_html__('Delete', 'eightshift-forms');
-										}
+									if ($adminListingType === 'trash') {
+										echo esc_html__('Delete permanently', 'eightshift-forms');
+									} else {
+										echo esc_html__('Delete', 'eightshift-forms');
+									}
 									?>
 								</a>
 

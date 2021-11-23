@@ -40,13 +40,20 @@ if (empty($checkboxLabel)) {
 	return;
 }
 
-$attrsOutput = '';
+$checkboxAttrs = [];
 if ($checkboxTracking) {
-	$attrsOutput .= " data-tracking='" . $checkboxTracking . "'";
+	$checkboxAttrs['data-tracking'] = esc_attr($checkboxTracking);
 }
 
 if ($checkboxValue) {
-	$attrsOutput .= " value='" . $checkboxValue . "'";
+	$checkboxAttrs['value'] = esc_attr($checkboxValue);
+}
+
+$checkboxAttrsOutput = '';
+if ($checkboxAttrs) {
+	foreach ($checkboxAttrs as $key => $value) {
+		$checkboxAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 ?>
@@ -58,7 +65,7 @@ if ($checkboxValue) {
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxId); ?>"
-			<?php echo $attrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $checkboxAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php readonly($checkboxIsReadOnly); ?>

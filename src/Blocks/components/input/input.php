@@ -33,29 +33,36 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$attrsOutput = '';
+$inputAttrs = [];
 if ($inputType === 'number') {
 	if ($inputMin || $inputMin === 0) {
-		$attrsOutput .= " min='" . esc_attr($inputMin) . "'";
+		$inputAttrs['min'] = esc_attr($inputMin);
 	}
 	if ($inputMax || $inputMax === 0) {
-		$attrsOutput .= " max='" . esc_attr($inputMax) . "'";
+		$inputAttrs['max'] = esc_attr($inputMax);
 	}
 	if ($inputStep || $inputStep === 0) {
-		$attrsOutput .= " step='" . esc_attr($inputStep) . "'";
+		$inputAttrs['step'] = esc_attr($inputStep);
 	}
 }
 
 if ($inputTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($inputTracking) . "'";
+	$inputAttrs['data-tracking'] = esc_attr($inputTracking);
 }
 
 if ($inputValue) {
-	$attrsOutput .= " value='" . esc_attr($inputValue) . "'";
+	$inputAttrs['value'] = esc_attr($inputValue);
 }
 
 if ($inputPlaceholder) {
-	$attrsOutput .= " placeholder='" . esc_attr($inputPlaceholder) . "'";
+	$inputAttrs['placeholder'] = esc_attr($inputPlaceholder);
+}
+
+$inputAttrsOutput = '';
+if ($inputAttrs) {
+	foreach ($inputAttrs as $key => $value) {
+		$inputAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 $input = '
@@ -66,7 +73,7 @@ $input = '
 	type="' . esc_attr($inputType) . '"
 	' . disabled($inputIsDisabled, true, false) . '
 	' . readonly($inputIsReadOnly, true, false) . '
-	' . $attrsOutput . '
+	' . $inputAttrsOutput . '
 />';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

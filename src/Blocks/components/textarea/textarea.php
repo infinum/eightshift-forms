@@ -44,13 +44,20 @@ if ($isCustomTextarea) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
-$attrsOutput = '';
+$textareaAttrs = [];
 if ($textareaTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($textareaTracking) . "'";
+	$textareaAttrs['data-tracking'] = esc_attr($textareaTracking);
 }
 
 if ($textareaPlaceholder) {
-	$attrsOutput .= " placeholder='" . esc_attr($textareaPlaceholder) . "'";
+	$textareaAttrs['placeholder'] = esc_attr($textareaPlaceholder);
+}
+
+$textareaAttrsOutput = '';
+if ($textareaAttrs) {
+	foreach ($textareaAttrs as $key => $value) {
+		$textareaAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 $textarea = '<textarea
@@ -59,7 +66,7 @@ $textarea = '<textarea
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . readonly($textareaIsReadOnly, true, false) . '
-		' . $attrsOutput . '
+		' . $textareaAttrsOutput . '
 	>' . \apply_filters('the_content', $textareaValue) . '</textarea>
 ';
 

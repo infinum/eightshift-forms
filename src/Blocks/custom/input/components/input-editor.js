@@ -2,7 +2,7 @@ import React from 'react';
 import { props } from '@eightshift/frontend-libs/scripts';
 import { InputEditor as InputEditorComponent } from '../../../components/input/components/input-editor';
 
-export const InputEditor = ({ attributes, setAttributes, clientId }) => {
+export const InputEditor = ({ attributes, setAttributes }) => {
 
 	const {
 		blockClass,
@@ -13,7 +13,6 @@ export const InputEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('input', attributes, {
 				blockClass,
 				setAttributes,
-				clientId,
 			})}
 		/>
 	);

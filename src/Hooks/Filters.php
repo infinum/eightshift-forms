@@ -134,4 +134,9 @@ class Filters
 	 * Filter block custom data options data key.
 	 */
 	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME = 'es_forms_block_custom_data_options_data';
+
+	/**
+	 * Filter block submit key.
+	 */
+	public const FILTER_BLOCK_SUBMIT_NAME = 'es_forms_block_submit';
 }

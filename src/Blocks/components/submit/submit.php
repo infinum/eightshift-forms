@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -28,18 +29,18 @@ $submitClass = Components::classnames([
 	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-$attrsOutput = '';
 if ($submitTracking) {
-	$attrsOutput .= " data-tracking='" . esc_attr($submitTracking) . "'";
+	$submitAttrs['data-tracking'] = esc_attr($submitTracking);
 }
 
 if ($submitId) {
-	$attrsOutput .= " data-id='" . esc_attr($submitId) . "'";
+	$submitAttrs['data-id'] = esc_attr($submitId);
 }
 
+$submitAttrsOutput = '';
 if ($submitAttrs) {
 	foreach ($submitAttrs as $key => $value) {
-		$attrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$submitAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -47,9 +48,19 @@ $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-		' . $attrsOutput . '
+		' . $submitAttrsOutput . '
 	><span>' . esc_html($submitValue) . '</span></button>
 ';
+
+// With this filder you can override default submit component and provide your own.
+if (has_filter(Filters::FILTER_BLOCK_SUBMIT_NAME)) {
+	$button = apply_filters(Filters::FILTER_BLOCK_SUBMIT_NAME, [
+		'value' => $submitValue,
+		'isDisabled' => $submitIsDisabled,
+		'class' => $submitClass,
+		'attrs' => $submitAttrs,
+	]);
+}
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
