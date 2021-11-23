@@ -19,7 +19,9 @@ interface FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
+	 * @param string $status Status for listing to output.
+	 *
 	 * @return array<int, array<string, int|string|bool>>
 	 */
-	public function getFormsList(): array;
+	public function getFormsList(string $status): array;
 }

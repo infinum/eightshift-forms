@@ -30,6 +30,11 @@ $formsClass = Components::classnames([
 	$attributes['className'] ?? '',
 ]);
 
+// If form is not published exit.
+if (get_post_status($formsFormPostId) !== 'publish') {
+	return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr($formsClass); ?>">

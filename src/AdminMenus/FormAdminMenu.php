@@ -181,12 +181,22 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
+		$status = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$title = \esc_html__('All your forms', 'eightshift-forms');
+		$trashLink = Helper::getFormsTrashPageUrl();
+
+		if ($status === 'trash') {
+			$title = \esc_html__('All your trashed forms', 'eightshift-forms');
+			$trashLink = '';
+		}
+
 		return [
-			'adminListingPageTitle' => \esc_html__('All your forms', 'eightshift-forms'),
+			'adminListingPageTitle' => $title,
 			'adminListingSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
 			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
-			'adminListingTrashLink' => Helper::getFormsTrashPageUrl(),
-			'adminListingForms' => $this->formsListing->getFormsList(),
+			'adminListingTrashLink' => $trashLink,
+			'adminListingForms' => $this->formsListing->getFormsList($status),
+			'adminListingType' => $status,
 		];
 	}
 }

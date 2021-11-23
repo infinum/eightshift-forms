@@ -22,19 +22,24 @@ class FormsListing implements FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
+	 * @param string $status Status for listing to output.
+	 *
 	 * @return array<int, array<string, int|string|bool>>
 	 */
-	public function getFormsList(): array
+	public function getFormsList(string $status): array
 	{
 		// Prepare query args.
 		$args = [
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+			'post_status' => $status
 		];
 
 		$theQuery = new \WP_Query($args);
 
 		$output = [];
+
+		$permanent = $status === 'trash' ?? false;
 
 		if ($theQuery->have_posts()) {
 			while ($theQuery->have_posts()) {
@@ -46,10 +51,11 @@ class FormsListing implements FormListingInterface
 				$output[] = [
 					'id' => $id,
 					'title' => get_the_title($id),
-					'slug' => \get_the_permalink($id),
 					'status' => \get_post_status($id),
-					'settingsLink' => Helper::getSettingsPageUrl((string) $id),
-					'editLink' => Helper::getFormEditPageUrl((string) $id),
+					'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
+					'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
+					'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
+					'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
 				];
 			}
 		}

@@ -17,6 +17,9 @@
 		},
 		"adminListingTrashLink": {
 			"type": "string"
+		},
+		"adminListingType": {
+			"type": "string"
 		}
 	}
 }

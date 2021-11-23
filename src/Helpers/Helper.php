@@ -118,9 +118,7 @@ class Helper
 	 */
 	public static function getFormsTrashPageUrl(): string
 	{
-		$postType = Forms::POST_TYPE_SLUG;
-
-		return "/wp-admin/edit.php?post_status=trash&post_type={$postType}";
+		return self::getListingPageUrl() . '&type=trash';
 	}
 
 	/**
@@ -132,7 +130,32 @@ class Helper
 	 */
 	public static function getFormEditPageUrl(string $formId): string
 	{
-		return "/wp-admin/post.php?post={$formId}&action=edit";
+		return get_edit_post_link((int) $formId) ?? '';
+	}
+
+	/**
+	 * Method that returns form trash action url.
+	 *
+	 * @param string $formId Form ID.
+	 * @param bool $permanent Permanently delete.
+	 *
+	 * @return string
+	 */
+	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
+	{
+		return get_delete_post_link((int) $formId, '', $permanent); // @phpstan-ignore-line
+	}
+
+	/**
+	 * Method that returns form trash restore action url.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public static function getFormTrashRestoreActionUrl(string $formId): string
+	{
+		return wp_nonce_url("/wp-admin/post.php?post={$formId}&action=untrash", 'untrash-post_' . $formId);
 	}
 
 	/**
