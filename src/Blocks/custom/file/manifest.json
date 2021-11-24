@@ -4,7 +4,7 @@
 	"description" : "Block used for file upload.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-file"
 	},
 	"keywords": [
 		"file"

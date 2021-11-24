@@ -4,7 +4,7 @@
 	"description" : "Select what form type you would like to use for this specific form.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-form-picker"
 	},
 	"keywords": [
 		"forms"
@@ -27,13 +27,13 @@
 		{
 			"label": "Empty",
 			"slug": "empty",
-			"icon": "color",
+			"icon": "esf-form-custom",
 			"blockName": "eightshift-forms/form"
 		},
 		{
 			"label": "Simple Contact",
 			"slug": "contact",
-			"icon": "color",
+			"icon": "esf-form-custom",
 			"blockName": "eightshift-forms/form",
 			"innerBlocks": [
 				[
@@ -68,31 +68,31 @@
 		{
 			"label": "Mailchimp",
 			"slug": "mailchimp",
-			"icon": "color",
+			"icon": "esf-form-mailchimp",
 			"blockName": "eightshift-forms/mailchimp"
 		},
 		{
 			"label": "Greenhouse",
 			"slug": "greenhouse",
-			"icon": "color",
+			"icon": "esf-form-greenhouse",
 			"blockName": "eightshift-forms/greenhouse"
 		},
 		{
 			"label": "HubSpot",
 			"slug": "hubspot",
-			"icon": "color",
+			"icon": "esf-form-hubspot",
 			"blockName": "eightshift-forms/hubspot"
 		},
 		{
 			"label": "Mailerlite",
 			"slug": "mailerlite",
-			"icon": "color",
+			"icon": "esf-form-mailerlite",
 			"blockName": "eightshift-forms/mailerlite"
 		},
 		{
 			"label": "Goodbits",
 			"slug": "goodbits",
-			"icon": "color",
+			"icon": "esf-form-goodbits",
 			"blockName": "eightshift-forms/goodbits"
 		}
 	]

@@ -48,7 +48,7 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 				help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
 				value={textareaPlaceholder}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
@@ -65,35 +65,35 @@ export const TextareaOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 						value={textareaName}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
 						help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
 						value={textareaValue}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={textareaTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldDisabled}
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={textareaIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldReadonly}
 						label={__('Is Read Only', 'eightshift-forms')}
 						checked={textareaIsReadOnly}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaIsReadOnly', attributes, manifest)]: value })}
@@ -112,14 +112,14 @@ export const TextareaOptions = (attributes) => {
 			{showValidation &&
 				<>
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldRequired}
 						label={__('Is Required', 'eightshift-forms')}
 						checked={textareaIsRequired}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
 					/>
 
 					<SelectControl
-						label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.regex} label={__('Validation Pattern', 'eightshift-forms')} />}
 						help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
 						value={textareaValidationPattern}
 						options={textareaValidationPatternOptions}

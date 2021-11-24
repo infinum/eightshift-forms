@@ -4,7 +4,7 @@
 	"description" : "Block used to show custom data using WordPress filters.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-custom-data"
 	},
 	"keywords": [
 		"customData"

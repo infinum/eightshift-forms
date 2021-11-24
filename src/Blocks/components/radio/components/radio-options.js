@@ -7,7 +7,8 @@ import {
 	getAttrKey,
 	icons,
 	ComponentUseToggle,
-	IconToggle
+	IconToggle,
+	IconLabel
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -27,7 +28,7 @@ export const RadioOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
-				label={__('Label', 'eightshift-forms')}
+				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
 				help={__('Set label used next to the radio.', 'eightshift-forms')}
 				value={radioLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
@@ -44,28 +45,28 @@ export const RadioOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={__('Value', 'eightshift-forms')}
+						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
 						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
 						value={radioValue}
 						onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={__('Tracking code', 'eightshift-forms')}
+						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={radioTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.checkCircle}
 						label={__('Is Checked', 'eightshift-forms')}
 						checked={radioIsChecked}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldDisabled}
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={radioIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}

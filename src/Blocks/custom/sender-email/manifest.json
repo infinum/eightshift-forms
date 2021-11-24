@@ -4,7 +4,7 @@
 	"description" : "Block used for sender email field used for user confirmation email.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-sender-email"
 	},
 	"keywords": [
 		"sender",

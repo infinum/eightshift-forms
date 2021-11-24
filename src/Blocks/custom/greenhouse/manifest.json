@@ -4,7 +4,7 @@
 	"description" : "Block used to show Greenhouse application form.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-form-greenhouse"
 	},
 	"keywords": [
 		"greenhouse"

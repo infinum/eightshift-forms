@@ -24,7 +24,7 @@ export const FormOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 				help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 				value={formName}
 				onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}

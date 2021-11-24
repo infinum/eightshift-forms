@@ -1,13 +1,15 @@
 import React from 'react';
+import _ from "lodash";
 import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
-import { TextControl, RangeControl, ToggleControl } from '@wordpress/components';
+import { TextControl, RangeControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	Responsive
+	Responsive,
+	IconToggle
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -30,13 +32,14 @@ export const FieldOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Label', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
 				help={__('Set label for your field or field group.', 'eightshift-forms')}
 				value={fieldLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
 			/>
 
-			<ToggleControl
+			<IconToggle
+				icon={icons.hide}
 				label={__('Hide Label', 'eightshift-forms')}
 				help={__('Hide label from view. Keep in mind this is not the recommended option because label helps your form be more accessible!', 'eightshift-forms')}
 				checked={fieldHideLabel}
@@ -44,7 +47,7 @@ export const FieldOptions = (attributes) => {
 			/>
 
 			<Responsive
-				label={<IconLabel icon={icons.Width} label={__('Width', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.fieldWidth} label={__('Width', 'eightshift-forms')} />}
 			>
 				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
 					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
@@ -52,7 +55,7 @@ export const FieldOptions = (attributes) => {
 					return (
 						<Fragment key={index}>
 							<RangeControl
-								label={breakpoint}
+								label={_.capitalize(breakpoint)}
 								allowReset={true}
 								value={checkAttr(responsiveAttribute, attributes, manifest, true)}
 								onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}

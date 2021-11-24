@@ -4,7 +4,7 @@
 	"description" : "Block used for custom form builder.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-form"
 	},
 	"keywords": [
 		"form"

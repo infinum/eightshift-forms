@@ -4,7 +4,7 @@
 	"description" : "Block used for grouping multiple checkboxes.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-checkboxes"
 	},
 	"keywords": [
 		"checkboxes"

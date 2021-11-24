@@ -77,7 +77,7 @@ export const InputOptions = (attributes) => {
 
 			{showInputPlaceholder &&
 				<TextControl
-					label={<IconLabel icon={icons.id} label={__('Placeholder', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 					help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
 					value={inputPlaceholder}
 					onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
@@ -86,7 +86,7 @@ export const InputOptions = (attributes) => {
 
 			{showInputType &&
 				<SelectControl
-					label={<IconLabel icon={icons.id} label={__('Type', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.fieldType} label={__('Type', 'eightshift-forms')} />}
 					help={__('Set what type of input filed it is used.', 'eightshift-forms')}
 					value={inputType}
 					options={getOption('inputType', attributes, manifest)}
@@ -108,7 +108,7 @@ export const InputOptions = (attributes) => {
 						<>
 							{showInputName &&
 								<TextControl
-									label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+								label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 									help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 									value={inputName}
 									onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
@@ -117,7 +117,7 @@ export const InputOptions = (attributes) => {
 
 							{showInputValue &&
 								<TextControl
-									label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
+								label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
 									help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
 									value={inputValue}
 									onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
@@ -126,7 +126,7 @@ export const InputOptions = (attributes) => {
 
 							{showInputTracking &&
 								<TextControl
-									label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+									label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
 									help={__('Provide GTM tracking code.', 'eightshift-forms')}
 									value={inputTracking}
 									onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
@@ -135,7 +135,7 @@ export const InputOptions = (attributes) => {
 
 							{showInputIsDisabled &&
 								<IconToggle
-									icon={icons.play}
+									icon={icons.fieldDisabled}
 									label={__('Is Disabled', 'eightshift-forms')}
 									checked={inputIsDisabled}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
@@ -144,7 +144,7 @@ export const InputOptions = (attributes) => {
 
 							{showInputIsReadOnly &&
 								<IconToggle
-									icon={icons.play}
+									icon={icons.fieldReadonly}
 									label={__('Is Read Only', 'eightshift-forms')}
 									checked={inputIsReadOnly}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
@@ -169,7 +169,7 @@ export const InputOptions = (attributes) => {
 						<>
 							{showInputIsRequired &&
 								<IconToggle
-									icon={icons.play}
+									icon={icons.fieldRequired}
 									label={__('Is Required', 'eightshift-forms')}
 									checked={inputIsRequired}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
@@ -178,7 +178,7 @@ export const InputOptions = (attributes) => {
 
 							{(showInputIsEmail && !inputIsUrl && inputValidationPattern == '' && inputType !== 'number') &&
 								<IconToggle
-									icon={icons.play}
+									icon={icons.email}
 									label={__('Is Email', 'eightshift-forms')}
 									checked={inputIsEmail}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: value })}
@@ -187,7 +187,7 @@ export const InputOptions = (attributes) => {
 
 							{(showInputIsUrl && !inputIsEmail && inputValidationPattern === '' && inputType !== 'number') &&
 								<IconToggle
-									icon={icons.play}
+									icon={icons.link}
 									label={__('Is Url', 'eightshift-forms')}
 									checked={inputIsUrl}
 									onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
@@ -196,7 +196,7 @@ export const InputOptions = (attributes) => {
 
 							{(showInputValidationPattern && !inputIsUrl && !inputIsEmail) &&
 								<SelectControl
-									label={<IconLabel icon={icons.id} label={__('Validation Pattern', 'eightshift-forms')} />}
+									label={<IconLabel icon={icons.regex} label={__('Validation Pattern', 'eightshift-forms')} />}
 									help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
 									value={inputValidationPattern}
 									options={inputValidationPatternOptions}
@@ -206,7 +206,7 @@ export const InputOptions = (attributes) => {
 
 							{(inputType === 'number' && showInputMin) &&
 								<RangeControl
-								label={<IconLabel icon={icons.id} label={__('Validation Min Number', 'eightshift-forms')} />}
+								label={<IconLabel icon={icons.rangeMin} label={__('Validation Min Number', 'eightshift-forms')} />}
 									help={__('Set minimum number a user can enter', 'eightshift-forms')}
 									allowReset={true}
 									value={inputMin}
@@ -218,7 +218,7 @@ export const InputOptions = (attributes) => {
 
 							{(inputType === 'number' && showInputMax) &&
 								<RangeControl
-								label={<IconLabel icon={icons.id} label={__('Validation Max Number', 'eightshift-forms')} />}
+								label={<IconLabel icon={icons.rangeMax} label={__('Validation Max Number', 'eightshift-forms')} />}
 									help={__('Set maximum number a user can enter', 'eightshift-forms')}
 									allowReset={true}
 									value={inputMax}
@@ -230,7 +230,7 @@ export const InputOptions = (attributes) => {
 
 							{(inputType === 'number' && showInputStep) &&
 								<RangeControl
-								label={<IconLabel icon={icons.id} label={__('Validation Step Number', 'eightshift-forms')} />}
+								label={<IconLabel icon={icons.step} label={__('Validation Step Number', 'eightshift-forms')} />}
 									help={__('Set step number a user can change', 'eightshift-forms')}
 									allowReset={true}
 									value={inputStep}

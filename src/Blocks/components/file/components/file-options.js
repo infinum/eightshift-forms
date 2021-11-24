@@ -48,21 +48,21 @@ export const FileOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Name', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 						value={fileName}
 						onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking code', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.code} label={__('Tracking code', 'eightshift-forms')} />}
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={fileTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.files}
 						label={__('Is Multiple', 'eightshift-forms')}
 						checked={fileIsMultiple}
 						onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
@@ -81,21 +81,21 @@ export const FileOptions = (attributes) => {
 			{showValidation &&
 				<>
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldRequired}
 						label={__('Is Required', 'eightshift-forms')}
 						checked={fileIsRequired}
 						onChange={(value) => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Accept', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fileType} label={__('Accept', 'eightshift-forms')} />}
 						value={fileAccept}
 						help={__('Use comma as separator. Example: .jpg,.png,.pdf', 'eightshift-forms')}
 						onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Min Size', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fileSizeMin} label={__('Min Size', 'eightshift-forms')} />}
 						help={__('Min size of the file in kilobytes.', 'eightshift-forms')}
 						value={fileMinSize}
 						type={'number'}
@@ -103,7 +103,7 @@ export const FileOptions = (attributes) => {
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Max Size', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fileSizeMax} label={__('Max Size', 'eightshift-forms')} />}
 						help={__('Max size of the file in kilobytes.', 'eightshift-forms')}
 						value={fileMaxSize}
 						type={'number'}

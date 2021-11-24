@@ -1,6 +1,6 @@
 {
 	"namespace": "eightshift-forms",
-	"background": "#BEA600",
+	"background": "#29A3A3",
 	"foreground": "#FBF9FF",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "/wp-admin/admin.php?page=es-settings",

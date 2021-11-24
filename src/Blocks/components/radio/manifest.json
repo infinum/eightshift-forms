@@ -3,14 +3,6 @@
 	"title": "Radio",
 	"componentClass": "es-radio",
 	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
-	"description" : "Radio block.",
-	"category": "eightshift-forms",
-	"icon": {
-		"src": "es-paragraph"
-	},
-	"keywords": [
-		"radio"
-	],
 	"example": {
 		"attributes": {
 			"radioLabel": "Label",

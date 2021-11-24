@@ -24,11 +24,14 @@
 		height: auto;
 		width: 100%;
 		padding: 15px !important;
-		font-style: 16px;
 
 		svg {
 			margin-bottom: 10px;
 		}
+	}
+
+	&__button-label {
+		font-size: 15px;
 	}
 
 	&__title-after {

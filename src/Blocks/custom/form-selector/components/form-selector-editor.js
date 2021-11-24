@@ -7,8 +7,7 @@ import { InnerBlocks } from '@wordpress/block-editor';
 import { dispatch, useSelect } from '@wordpress/data';
 import {
 	checkAttr,
-	icons,
-	IconLabel
+	blockIcons
 } from '@eightshift/frontend-libs/scripts';
 import manifest from './../manifest.json';
 
@@ -76,6 +75,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 								const {
 									label,
 									slug,
+									icon
 								} = form;
 
 								return (
@@ -85,10 +85,13 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 										isPrimary
 										onClick={() => createFormType(slug)}
 										>
-										<IconLabel
-											icon={icons.options}
-											label={sprintf(__('%s form', 'eightshift-forms'), label)}
-										/>
+											<div
+												className={`${blockClass}__button-icon`}
+												dangerouslySetInnerHTML={{__html: blockIcons[icon]}}
+											></div>
+											<div className={`${blockClass}__button-label`}>
+												{sprintf(__('%s form', 'eightshift-forms'), label)}
+											</div>
 									</Button>
 								);
 							})}

@@ -4,7 +4,7 @@
 	"description" : "Block used for form submit button.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-submit"
 	},
 	"keywords": [
 		"submit"

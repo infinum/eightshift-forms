@@ -8,7 +8,9 @@ import {
 	getAttrKey,
 	props,
 	ComponentUseToggle,
-	IconToggle
+	IconToggle,
+	IconLabel,
+	icons
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -63,7 +65,7 @@ export const CheckboxesOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={__('Name', 'eightshift-forms')}
+						label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 						value={checkboxesName}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
@@ -83,6 +85,7 @@ export const CheckboxesOptions = (attributes) => {
 				<>
 					<IconToggle
 						label={__('Is Required', 'eightshift-forms')}
+						icon={icons.fieldRequired}
 						checked={checkboxesIsRequired}
 						onChange={(value) => {
 							setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });

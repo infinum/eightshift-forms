@@ -56,21 +56,21 @@ export const FieldOptionsAdvanced = (attributes) => {
 					}
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Help', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldHelp} label={__('Help', 'eightshift-forms')} />}
 						help={__('Set field help info text.', 'eightshift-forms')}
 						value={fieldHelp}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Before Content', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldBeforeText} label={__('Before Content', 'eightshift-forms')} />}
 						help={__('Set some additional text before main field content.', 'eightshift-forms')}
 						value={fieldBeforeContent}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('After Content', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.fieldAfterText} label={__('After Content', 'eightshift-forms')} />}
 						help={__('Set some additional text after main field content.', 'eightshift-forms')}
 						value={fieldAfterContent}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}

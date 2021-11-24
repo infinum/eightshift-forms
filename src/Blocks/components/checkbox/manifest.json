@@ -3,14 +3,6 @@
 	"title": "Checkbox",
 	"componentClass": "es-checkbox",
 	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
-	"description" : "Checkbox block.",
-	"category": "eightshift-forms",
-	"icon": {
-		"src": "es-paragraph"
-	},
-	"keywords": [
-		"checkbox"
-	],
 	"component": {
 		"error": "error"
 	},

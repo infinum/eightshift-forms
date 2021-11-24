@@ -33,7 +33,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 	return (
 		<PanelBody title={__('Forms', 'eightshift-forms')}>
 			<CustomSelect
-				label={<IconLabel icon={icons.file} label={__('Select form', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.dropdown} label={__('Select form', 'eightshift-forms')} />}
 				help={__('Select form from the list that is going to be shown to the user.', 'eightshift-forms')}
 				value={parseInt(formsFormPostId)}
 				loadOptions={getFetchWpApi(postType, {processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle) })}
@@ -42,11 +42,10 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 				reFetchOnSearch={true}
 				multiple={false}
 				simpleValue
-				loadingMessage={() => <>Loading...</>}
 			/>
 
 			<TextControl
-				label={__('Type Selector', 'eightshift-forms')}
+				label={<IconLabel icon={icons.code} label={__('Type Selector', 'eightshift-forms')} />}
 				help={__('Set additional data type selector for the form.', 'eightshift-forms')}
 				value={formsFormTypeSelector}
 				onChange={(value) => setAttributes({ [getAttrKey('formsFormTypeSelector', attributes, manifest)]: value })}
@@ -54,7 +53,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 
 			{formsStyleOptions &&
 				<SelectControl
-					label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.paletteColor} label={__('Style', 'eightshift-forms')} />}
 					help={__('Set what style type is your form.', 'eightshift-forms')}
 					value={formsStyle}
 					options={formsStyleOptions}

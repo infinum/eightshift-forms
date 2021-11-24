@@ -26,8 +26,8 @@ export const SubmitOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Value', 'eightshift-forms')} />}
-				help={__('Provide button text..', 'eightshift-forms')}
+				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
+				help={__('Provide button text.', 'eightshift-forms')}
 				value={submitValue}
 				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 			/>
@@ -44,14 +44,14 @@ export const SubmitOptions = (attributes) => {
 				<>
 
 					<TextControl
-						label={<IconLabel icon={icons.id} label={__('Tracking Code', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
 						help={__('Provide GTM tracking code.', 'eightshift-forms')}
 						value={submitTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldDisabled}
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={submitIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}

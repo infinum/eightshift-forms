@@ -2,7 +2,14 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, ComponentUseToggle, IconToggle } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	icons,
+	ComponentUseToggle,
+	IconToggle,
+	IconLabel
+} from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const SelectOptionOptions = (attributes) => {
@@ -20,10 +27,10 @@ export const SelectOptionOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
+				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
 				help={__('Set label used for select option.', 'eightshift-forms')}
-				label={__('Label', 'eightshift-forms')}
 			/>
 
 			<ComponentUseToggle
@@ -37,21 +44,21 @@ export const SelectOptionOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={__('Value', 'eightshift-forms')}
+						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
 						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
 						value={selectOptionValue}
 						onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.checkSquare}
 						label={__('Is Selected', 'eightshift-forms')}
 						checked={selectOptionIsSelected}
 						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
 					/>
 
 					<IconToggle
-						icon={icons.play}
+						icon={icons.fieldDisabled}
 						label={__('Is Disabled', 'eightshift-forms')}
 						checked={selectOptionIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}

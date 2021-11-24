@@ -4,7 +4,7 @@
 	"description" : "Block used for checkbox.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-checkbox"
 	},
 	"keywords": [
 		"checkbox"

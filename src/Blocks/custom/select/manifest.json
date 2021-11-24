@@ -4,7 +4,7 @@
 	"description" : "Block used for select/dropdown.",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "es-paragraph"
+		"src": "esf-select"
 	},
 	"keywords": [
 		"select"

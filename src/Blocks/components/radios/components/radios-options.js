@@ -7,7 +7,9 @@ import {
 	getAttrKey,
 	props,
 	ComponentUseToggle,
-	IconToggle
+	IconToggle,
+	icons,
+	IconLabel
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -41,7 +43,7 @@ export const RadiosOptions = (attributes) => {
 			{showAdvanced &&
 				<>
 					<TextControl
-						label={__('Name', 'eightshift-forms')}
+						label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 						help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
 						value={radiosName}
 						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
@@ -61,6 +63,7 @@ export const RadiosOptions = (attributes) => {
 				<>
 					<IconToggle
 						label={__('Is Required', 'eightshift-forms')}
+						icon={icons.fieldRequired}
 						checked={radiosIsRequired}
 						onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
 					/>
