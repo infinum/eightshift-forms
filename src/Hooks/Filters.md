@@ -248,7 +248,7 @@ public function getCustomDataBlockOptionsData(string $type): array
 
 ## Override default submit button with your own component
 
-These filter will remove the default forms submit button component and use your callback
+These filter will remove the default forms submit button component and use your callback string. This will not apply to form settings pages.
 
 **Data values example:**
 ```php
@@ -280,6 +280,7 @@ public function getFormsSubmitComponent(array $data): array
 			'buttonTypographyContent' => $data['value'] ?? '',
 			'additionalClass' => $data['class'] ?? '',
 			'buttonAttrs' => $data['attrs'] ?? [],
+			'buttonIsDisabled' => $data['isDisabled'] ?? false,
 		]),
 		'',
 		true
