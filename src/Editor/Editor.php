@@ -45,6 +45,9 @@ class Editor implements ServiceInterface
 			"/wp-admin/edit.php?post_type={$postType}",
 			"/wp-admin/edit.php?post_status=publish&post_type={$postType}",
 			"/wp-admin/edit.php?post_status=draft&post_type={$postType}",
+			"/wp-admin/edit.php?post_status=trash&post_type={$postType}",
+			"/wp-admin/edit.php?post_status=publish&post_type={$postType}",
+			"/wp-admin/edit.php?post_status=future&post_type={$postType}",
 		];
 
 		if (in_array($request, $links, true)) {

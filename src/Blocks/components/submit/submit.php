@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
@@ -53,7 +54,7 @@ $button = '
 ';
 
 // With this filder you can override default submit component and provide your own.
-if (has_filter(Filters::FILTER_BLOCK_SUBMIT_NAME)) {
+if (has_filter(Filters::FILTER_BLOCK_SUBMIT_NAME) && !Helper::isSettingsPage()) {
 	$button = apply_filters(Filters::FILTER_BLOCK_SUBMIT_NAME, [
 		'value' => $submitValue,
 		'isDisabled' => $submitIsDisabled,

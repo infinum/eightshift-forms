@@ -207,4 +207,16 @@ class Helper
 			}
 		}
 	}
+
+	/**
+	 * Check if current page is part of the settings page
+	 *
+	 * @return boolean
+	 */
+	public static function isSettingsPage(): bool
+	{
+		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+
+		return !empty($plugin_page) ?? false; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+	}
 }
