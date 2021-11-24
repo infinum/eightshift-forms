@@ -112,11 +112,11 @@ class EnqueueTheme extends AbstractEnqueueTheme
 				'hideGlobalMessageTimeout' => apply_filters(Filters::FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME, 6000),
 				'redirectionTimeout' => apply_filters(Filters::FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME, 600),
 				'fileCustomRemoveLabel' => apply_filters(Filters::FILTER_FORM_JS_FILE_PREVIEW_REMOVE_LABEL_NAME, esc_html__('Remove', 'eightshift-forms')),
-				'textareaCustom' => !$this->isCheckboxOptionChecked(
+				'selectCustom' => !$this->isCheckboxOptionChecked(
 					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
 					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
 				),
-				'selectCustom' => !$this->isCheckboxOptionChecked(
+				'textareaCustom' => !$this->isCheckboxOptionChecked(
 					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
 					SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
 				),

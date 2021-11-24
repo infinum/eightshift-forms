@@ -41,12 +41,12 @@ export class Form {
 
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
 		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
-		this.formResetOnSuccess = options.formResetOnSuccess ?? true;
+		this.formResetOnSuccess = Boolean(options.formResetOnSuccess);
 		this.redirectionTimeout = options.redirectionTimeout ?? 600;
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
-		this.textareaCustom = options.textareaCustom ?? true;
-		this.selectCustom = options.selectCustom ?? true;
-		this.fileCustom = options.fileCustom ?? true;
+		this.textareaCustom = Boolean(options.textareaCustom);
+		this.selectCustom = Boolean(options.selectCustom);
+		this.fileCustom = Boolean(options.fileCustom);
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 
 		// If using custom file create global object to store files.
@@ -332,7 +332,7 @@ export class Form {
 				let fileList = files;
 
 				// If custom file use files got from the global object of files uploaded.
-				if (this.fileCustom === '1') {
+				if (this.fileCustom) {
 					fileList = this.files[id];
 				}
 
@@ -411,9 +411,17 @@ export class Form {
 
 	// Reset form values if the condition is right.
 	resetForm = (element) => {
-		if (this.formResetOnSuccess === '1') {
+		if (this.formResetOnSuccess) {
 			element.reset();
 		}
+
+		const fields = element.querySelectorAll(this.fieldSelector);
+
+		[...fields].forEach((item) => {
+			item.classList.remove(this.CLASS_ACTIVE);
+			item.classList.remove(this.CLASS_FILLED);
+			item.classList.remove(this.CLASS_HAS_ERROR);
+		});
 	}
 
 	// Reset for in general.
@@ -563,7 +571,7 @@ export class Form {
 
 		this.preFillOnInit(option);
 
-		if (this.selectCustom === '1') {
+		if (this.selectCustom) {
 			new Choices(select, {
 				searchEnabled: false,
 				shouldSort: false,
@@ -586,7 +594,7 @@ export class Form {
 		textarea.addEventListener('focus', this.onFocusEvent);
 		textarea.addEventListener('blur', this.onBlurEvent);
 
-		if (this.textareaCustom === '1') {
+		if (this.textareaCustom) {
 			textarea.setAttribute('rows', '');
 			textarea.setAttribute('cols', '');
 
@@ -596,7 +604,7 @@ export class Form {
 
 	// Setup file single field.
 	setupFileField = (file) => {
-		if (this.fileCustom === '1') {
+		if (this.fileCustom) {
 			// Create an empty array for each file.
 			this.files[file.id] = [];
 
