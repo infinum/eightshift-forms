@@ -270,9 +270,9 @@ add_filter('es_forms_block_submit', [$this, 'getFormsSubmitComponent']);
  *
  * @param array<string, mixed> $data Data provided from the forms.
  *
- * @return array
+ * @return string
  */
-public function getFormsSubmitComponent(array $data): array
+public function getFormsSubmitComponent(array $data): string
 {
 	return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'button',
