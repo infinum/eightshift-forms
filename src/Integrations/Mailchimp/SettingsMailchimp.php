@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
+use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
@@ -232,6 +233,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 
 		$selectedItem = $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
 
+		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/blocks/components/form');
+
 		$output = [
 			[
 				'component' => 'intro',
@@ -243,7 +246,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 				'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectFieldLabel' => __('List', 'eightshift-forms'),
-				'selectFieldHelp' => __('Select list for subscription.', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
+				'selectFieldHelp' => sprintf(__('Select list for subscription. If you don\'t see your lists correctly try clearing cache on this <a href="#" class="%1$s" data-type="%2$s">link</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,

@@ -1,7 +1,7 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { componentJsClass } from './../manifest.json';
+import { componentJsClass, componentCacheJsClass } from './../manifest.json';
 
 domReady(() => {
 	const selector = `.${componentJsClass}`;
@@ -16,6 +16,21 @@ domReady(() => {
 			});
 
 			form.init();
+		});
+	}
+
+	const selectorCache = `.${componentCacheJsClass}`;
+	const elementsCache = document.querySelectorAll(selectorCache);
+
+	if (elementsCache.length) {
+		import('./cache').then(({ Cache }) => {
+			const cache = new Cache({
+				selector: selectorCache,
+				formSelector: selector,
+				clearCacheRestUrl: esFormsLocalization.clearCacheRestUrl,
+			});
+
+			cache.init();
 		});
 	}
 });

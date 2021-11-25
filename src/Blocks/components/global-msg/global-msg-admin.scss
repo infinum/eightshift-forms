@@ -16,6 +16,10 @@
 		duration: 0.3s;
 	}
 
+	&[data-status='error'] {
+		background-color: var(--global-colors-es-pome);
+	}
+
 	&.is-active {
 		transform: translateX(0);
 	}

@@ -35,7 +35,7 @@ if ($submitTracking) {
 }
 
 if ($submitId) {
-	$submitAttrs['data-id'] = esc_attr($submitId);
+	$submitAttrs['id'] = esc_attr($submitId);
 }
 
 $submitAttrsOutput = '';
@@ -50,7 +50,7 @@ $button = '
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
-	><span>' . esc_html($submitValue) . '</span></button>
+	><span class="' . $componentClass . '__inner">' . esc_html($submitValue) . '</span></button>
 ';
 
 // With this filder you can override default submit component and provide your own.

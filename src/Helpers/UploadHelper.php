@@ -58,9 +58,9 @@ trait UploadHelper
 					);
 
 					if (isset($upload['error'])) {
-						$output["{$fileKey}-{$key}"] = 'error';
+						$output["{$fileKey}---{$key}"] = 'error';
 					} else {
-						$output["{$fileKey}-{$key}"] = $upload['file'];
+						$output["{$fileKey}---{$key}"] = $upload['file'];
 					}
 				}
 			}

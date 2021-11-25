@@ -14,4 +14,8 @@
 	&:hover {
 		background-color: var(--global-colors-es-blumine);
 	}
+
+	&__inner {
+		pointer-events: none;
+	}
 }

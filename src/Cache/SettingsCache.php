@@ -105,14 +105,17 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			]
 		];
 
+		$manifestForm = Components::getManifest(dirname(__DIR__, 1) . '/blocks/components/form');
+
 		foreach (self::ALL_CACHE as $key => $value) {
 			$output[] = [
 				'component' => 'submit',
-				'submitName' => $key,
-				'submitId' => $key,
 				'submitFieldWidthLarge' => 6,
 				'submitValue' => "Delete " . ucfirst($key) . ' cache',
-				'submitSingleSubmit' => true,
+				'submitAttrs' => [
+					'data-type' => $key,
+				],
+				'additionalClass' => $manifestForm['componentCacheJsClass'],
 			];
 		};
 

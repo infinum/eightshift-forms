@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
+use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
@@ -223,6 +224,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		);
 
 		$selectedItem = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/blocks/components/form');
 
 		$output = [
 			[
@@ -235,7 +237,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
 				'selectFieldLabel' => __('Form ID', 'eightshift-forms'),
-				'selectFieldHelp' => __('Select what HubSpot form you want to show on this form.', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
+				'selectFieldHelp' => sprintf(__('Select what HubSpot form you want to show on this form. If you don\'t see your lists correctly try clearing cache on this <a href="#" class="%1$s" data-type="%2$s">link</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,

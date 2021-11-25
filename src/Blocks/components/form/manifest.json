@@ -3,6 +3,7 @@
 	"title": "form",
 	"componentClass": "es-form",
 	"componentJsClass": "js-es-block-form",
+	"componentCacheJsClass": "js-es-cache-delete",
 	"components": {
 		"loader": "loader",
 		"field": "field",
