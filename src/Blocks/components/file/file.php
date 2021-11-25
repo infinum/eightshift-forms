@@ -21,6 +21,10 @@ $fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
+$fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
+$fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
+$fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
+$fileCustomInfoButtonTextUse = Components::checkAttr('fileCustomInfoButtonTextUse', $attributes, $manifest);
 
 $isCustomFile = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -42,10 +46,23 @@ $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 $customFile = '';
 
 if ($isCustomFile) {
+	$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
+	$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
+
+	$infoTextContent = '<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_html($infoText) . '</div>';
+	if (!$fileCustomInfoTextUse) {
+		$infoTextContent = '';
+	}
+
+	$infoButtonContent = '<a href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
+	if (!$fileCustomInfoButtonTextUse) {
+		$infoButtonContent = '';
+	}
+
 	$customFile = '
 		<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
-			<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_attr__('Drag and drop files here', 'eighitshift-forms') . '</div>
-			<a href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_attr__('Add files', 'eighitshift-forms') . '</a>
+			' . $infoTextContent . '
+			' . $infoButtonContent . '
 		</div>
 	';
 

@@ -1,1 +1,31 @@
 // This file is added so the automatic imports will work on the custom folder name.
+.es-block-forms {
+	&__edit-wrap {
+		display: flex;
+		position: absolute;
+		right: 10px;
+		flex-direction: column;
+	}
+
+	&__edit-link {
+		text-decoration: none;
+		margin-bottom: 10px;
+		font-size: 13px;
+		display: flex;
+		align-items: center;
+		color: var(--global-colors-es-matisse);
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&:hover {
+			color: var(--global-colors-es-blumine);
+		}
+	}
+
+	&__edit-link-icon {
+		margin-right: 5px;
+		display: block;
+	}
+}

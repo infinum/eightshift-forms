@@ -260,6 +260,31 @@ trait SettingsHelper
 				]
 			];
 
+			if ($component === 'file') {
+				$fileInfoLabelValue = $fieldsValues["{$id}---file-info-label"] ?? '';
+
+				$fieldsOutput[0]['groupContent'][] = [
+					'component' => 'select',
+					'selectId' => "{$id}---file-info-label",
+					'selectFieldLabel' => __('Use/Not use', 'eightshift-forms'),
+					'selectValue' => $fileInfoLabelValue,
+					'selectOptions' => [
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Not use', 'eightshift-forms'),
+							'selectOptionValue' => 'false',
+							'selectOptionIsSelected' => $fileInfoLabelValue === 'false',
+						],
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Use', 'eightshift-forms'),
+							'selectOptionValue' => 'true',
+							'selectOptionIsSelected' => $fileInfoLabelValue === 'true',
+						]
+					]
+				];
+			}
+
 			// Submit label.
 			if (isset($additionalLabel[$id]) || $component === 'submit') {
 				$fieldsOutput[0]['groupContent'][] = [
@@ -317,6 +342,9 @@ trait SettingsHelper
 			// Find field id.
 			$id = $value["{$component}Id"] ?? '';
 
+			// Find field label.
+			$label = $value["{$component}FieldLabel"] ?? '';
+
 			// Get saved values in relation with current field.
 			$dbSettingsValuePreparedItem = $dbSettingsValuePrepared[$id] ?? [];
 			if (!$dbSettingsValuePreparedItem) {
@@ -331,6 +359,12 @@ trait SettingsHelper
 						break;
 					case 'use':
 						$formFields[$key]["{$component}FieldUse"] = filter_var($itemValue, FILTER_VALIDATE_BOOLEAN);
+						break;
+					case 'file-info-label':
+						if ($itemValue === 'true') {
+							$formFields[$key]["{$component}CustomInfoButtonTextUse"] = false;
+							$formFields[$key]["{$component}CustomInfoText"] = $label;
+						}
 						break;
 					case 'label':
 						if (!empty($itemValue)) {

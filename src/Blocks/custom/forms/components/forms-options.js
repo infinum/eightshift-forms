@@ -3,7 +3,7 @@
 import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl, Button, BaseControl } from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -14,8 +14,13 @@ import {
 	unescapeHTML
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import globalManifest from '../../../manifest.json';
 
 export const FormsOptions = ({ attributes, setAttributes }) => {
+	const {
+		editFormUrl,
+	} = globalManifest;
+
 	const {
 		postType,
 	} = manifest;
@@ -43,6 +48,17 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 				multiple={false}
 				simpleValue
 			/>
+
+			{formsFormPostId &&
+				<BaseControl>
+					<Button
+						href={`${editFormUrl}&post=${formsFormPostId}`}
+						isSecondary
+					>
+						{__('Edit Form details', 'eightshift-forms')}
+					</Button>
+				</BaseControl>
+			}
 
 			<TextControl
 				label={<IconLabel icon={icons.code} label={__('Type Selector', 'eightshift-forms')} />}

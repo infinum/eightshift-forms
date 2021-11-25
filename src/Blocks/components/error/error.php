@@ -31,7 +31,5 @@ $errorClass = Components::classnames([
 	class="<?php echo esc_attr($errorClass); ?>"
 	data-id="<?php echo esc_attr($errorId); ?>"
 >
-	<span class="<?php  echo esc_attr("{$componentClass}__inner")?>">
-		<?php echo esc_html($errorValue); ?>
-	</span>
+	<?php echo esc_html($errorValue); ?>
 </div>

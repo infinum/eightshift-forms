@@ -6,6 +6,8 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
@@ -65,6 +67,25 @@ if ($formsServerSideRender) {
 ?>
 
 <div class="<?php echo esc_attr($formsClass); ?>">
+
+	<?php if (is_user_logged_in() && !is_admin()) { ?>
+		<div class="<?php echo esc_attr("{$blockClass}__edit-wrap") ?>">
+			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
+				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formsFormPostId)) ?>">
+					<span class="<?php echo \esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-edit"); ?> "></span>
+					<?php esc_html_e('Edit form', 'eightshift-forms'); ?>
+				</a>
+			<?php } ?>
+
+			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
+				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formsFormPostId)) ?>">
+					<span class="<?php echo \esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-admin-settings"); ?> "></span>
+					<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>
+				</a>
+			<?php } ?>
+		</div>
+	<?php } ?>
+
 	<?php
 	// Convert blocks to array.
 	$blocks = parse_blocks(get_the_content(null, false, $formsFormPostId));

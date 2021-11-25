@@ -27,6 +27,10 @@ export const FileOptions = (attributes) => {
 	const fileTracking = checkAttr('fileTracking', attributes, manifest);
 	const fileMinSize = checkAttr('fileMinSize', attributes, manifest);
 	const fileMaxSize = checkAttr('fileMaxSize', attributes, manifest);
+	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
+	const fileCustomInfoTextUse = checkAttr('fileCustomInfoTextUse', attributes, manifest);
+	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
+	const fileCustomInfoButtonTextUse = checkAttr('fileCustomInfoButtonTextUse', attributes, manifest);
 
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
@@ -67,6 +71,44 @@ export const FileOptions = (attributes) => {
 						checked={fileIsMultiple}
 						onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
 					/>
+
+					<hr />
+
+					<IconToggle
+						icon={icons.visible}
+						label={__('Use infobox custom text', 'eightshift-forms')}
+						checked={fileCustomInfoTextUse}
+						onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value })}
+					/>
+
+					{fileCustomInfoTextUse &&
+						<TextControl
+							label={<IconLabel icon={icons.altText} label={__('Infobox custom text', 'eightshift-forms')} />}
+							value={fileCustomInfoText}
+							placeholder={__('Default: Drag and drop files here', 'eightshift-forms')}
+							help={__('Label showed in the info box when using custom file upload.', 'eightshift-forms')}
+							onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoText', attributes, manifest)]: value })}
+						/>
+					}
+
+					<hr />
+
+					<IconToggle
+						icon={icons.visible}
+						label={__('Use infobox custom button text', 'eightshift-forms')}
+						checked={fileCustomInfoButtonTextUse}
+						onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonTextUse', attributes, manifest)]: value })}
+					/>
+
+					{fileCustomInfoButtonTextUse &&
+						<TextControl
+							label={<IconLabel icon={icons.altText} label={__('Infobox custom button text', 'eightshift-forms')} />}
+							value={fileCustomInfoButtonText}
+							placeholder={__('Default: Add files', 'eightshift-forms')}
+							help={__('Label showed in the info box button when using custom file upload.', 'eightshift-forms')}
+							onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
+						/>
+					}
 				</>
 			}
 

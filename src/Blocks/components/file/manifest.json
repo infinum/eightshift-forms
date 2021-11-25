@@ -39,6 +39,20 @@
 		},
 		"fileTracking": {
 			"type": "string"
+		},
+		"fileCustomInfoText": {
+			"type": "string"
+		},
+		"fileCustomInfoTextUse": {
+			"type": "boolean",
+			"default": true
+		},
+		"fileCustomInfoButtonText": {
+			"type": "string"
+		},
+		"fileCustomInfoButtonTextUse": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }
