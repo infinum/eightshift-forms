@@ -6,7 +6,7 @@
  * Description: Eightshift form builder plugin.
  * Author: Team Eightshift
  * Author URI: https://eightshift.com/
- * Version: 0.4.15-alpha
+ * Version: 0.4.16-alpha
  * Text Domain: eightshift-forms
  *
  * @package EightshiftForms
