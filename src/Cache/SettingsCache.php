@@ -105,7 +105,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			]
 		];
 
-		$manifestForm = Components::getManifest(dirname(__DIR__, 1) . '/blocks/components/form');
+		$manifestForm = Components::getManifest(dirname(__DIR__, 1) . '/Blocks/components/form');
 
 		foreach (self::ALL_CACHE as $key => $value) {
 			$output[] = [

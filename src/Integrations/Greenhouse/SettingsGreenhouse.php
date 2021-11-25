@@ -229,7 +229,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 
 		$selectedItem = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
 
-		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/blocks/components/form');
+		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/Blocks/components/form');
 
 		$output = [
 			[
