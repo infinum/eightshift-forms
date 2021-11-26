@@ -266,7 +266,7 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
 					'selectId' => "{$id}---file-info-label",
-					'selectFieldLabel' => __('Use/Not use', 'eightshift-forms'),
+					'selectFieldLabel' => __('Label as infobox text', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
 					'selectOptions' => [
 						[
@@ -363,6 +363,7 @@ trait SettingsHelper
 					case 'file-info-label':
 						if ($itemValue === 'true') {
 							$formFields[$key]["{$component}CustomInfoButtonTextUse"] = false;
+							$formFields[$key]["{$component}FieldHideLabel"] = true;
 							$formFields[$key]["{$component}CustomInfoText"] = $label;
 						}
 						break;
