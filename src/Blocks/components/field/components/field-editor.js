@@ -97,11 +97,13 @@ export const FieldEditor = (attributes) => {
 			<div className={fieldClass}>
 				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
 
-				{fieldLabel &&
-					<LabelDefault />
-				}
-				<Content />
-				<Help />
+				<div className={`${componentClass}__inner`}>
+					{fieldLabel &&
+						<LabelDefault />
+					}
+					<Content />
+					<Help />
+				</div>
 			</div>
 		);
 	};
@@ -111,11 +113,13 @@ export const FieldEditor = (attributes) => {
 			<fieldset className={fieldClass}>
 				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
 
-				{fieldLabel &&
-					<LegendDefault />
-				}
-				<Content />
-				<Help />
+				<div className={`${componentClass}__inner`}>
+					{fieldLabel &&
+						<LegendDefault />
+					}
+					<Content />
+					<Help />
+				</div>
 			</fieldset>
 		);
 	};

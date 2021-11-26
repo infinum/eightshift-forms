@@ -74,44 +74,45 @@ if ($fieldType === 'fieldset') {
 <<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
 
 	<?php echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-	<?php if ($fieldLabel && !$fieldHideLabel) { ?>
-		<<?php echo esc_attr($labelTag); ?>
-			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-			for="<?php echo esc_attr($fieldId); ?>"
-		>
-			<?php echo esc_html($fieldLabel); ?>
-		</<?php echo esc_attr($labelTag); ?>>
-	<?php } ?>
-	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-		<?php if ($fieldBeforeContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
-				<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</div>
+	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
+		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
+			<<?php echo esc_attr($labelTag); ?>
+				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+				for="<?php echo esc_attr($fieldId); ?>"
+			>
+				<?php echo esc_html($fieldLabel); ?>
+			</<?php echo esc_attr($labelTag); ?>>
 		<?php } ?>
-		<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
-			<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+			<?php if ($fieldBeforeContent) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+					<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</div>
+			<?php } ?>
+			<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
+				<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+			<?php if ($fieldAfterContent) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
+					<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</div>
+			<?php } ?>
 		</div>
-		<?php if ($fieldAfterContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
-				<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php if ($fieldHelp) { ?>
+			<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+				<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		<?php } ?>
+		<?php
+		if ($fieldUseError) {
+			echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				'error',
+				Components::props('error', $attributes, [
+					'errorId' => $fieldId,
+					'selectorClass' => $componentClass
+				])
+			);
+		}
+		?>
 	</div>
-	<?php if ($fieldHelp) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-			<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div>
-	<?php } ?>
-	<?php
-	if ($fieldUseError) {
-		echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			'error',
-			Components::props('error', $attributes, [
-				'errorId' => $fieldId,
-				'selectorClass' => $componentClass
-			])
-		);
-	}
-	?>
 </<?php echo esc_attr($fieldTag); ?>>

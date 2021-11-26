@@ -595,7 +595,7 @@ export class Form {
 		textarea.addEventListener('blur', this.onBlurEvent);
 
 		if (this.textareaCustom) {
-			textarea.setAttribute('rows', '');
+			textarea.setAttribute('rows', '1');
 			textarea.setAttribute('cols', '');
 
 			autosize(textarea);
