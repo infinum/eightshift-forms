@@ -2,11 +2,14 @@
 	$this: &;
 	margin-bottom: 15px;
 
-	@include media(desktop up) {
-		display: grid;
-		column-gap: 20px;
-		grid-template-columns: repeat(12, 1fr);
+	&__inner {
+		@include media(desktop up) {
+			display: grid;
+			column-gap: 20px;
+			grid-template-columns: repeat(12, 1fr);
+		}
 	}
+
 
 	&__label {
 		font-size: 15px;
