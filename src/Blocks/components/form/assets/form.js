@@ -625,6 +625,17 @@ export class Form {
 				this.files[file.id] = myDropzone.files;
 			});
 
+			// On add one file.
+			myDropzone.on("addedfile", (file) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.CLASS_ACTIVE);
+				}, 200);
+
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.CLASS_FILLED);
+				}, 1200);
+			});
+
 			// On remove files.
 			myDropzone.on("removedfile", () => {
 				this.files[file.id] = myDropzone.files;
@@ -636,6 +647,11 @@ export class Form {
 				event.stopPropagation();
 				myDropzone.hiddenFileInput.click();
 			});
+
+			const button = file.parentNode.querySelector('a');
+
+			button.addEventListener('focus', this.onFocusEvent);
+			button.addEventListener('blur', this.onBlurEvent);
 		}
 	}
 
