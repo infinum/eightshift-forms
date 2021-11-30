@@ -12,8 +12,12 @@ use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
+$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
+$invalidClass = $manifestInvalid['componentClass'] ?? '';
+$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
 $greenhouseServerSideRender = Components::checkAttr('greenhouseServerSideRender', $attributes, $manifest);
 $greenhouseFormPostId = Components::checkAttr('greenhouseFormPostId', $attributes, $manifest);
@@ -30,7 +34,8 @@ $isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_N
 
 $greenhouseClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
+	Components::selector(!$isSettingsValid, $invalidClass),
+	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.

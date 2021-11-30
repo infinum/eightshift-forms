@@ -12,8 +12,12 @@ use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
+$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
+$invalidClass = $manifestInvalid['componentClass'] ?? '';
+$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
 $hubspotServerSideRender = Components::checkAttr('hubspotServerSideRender', $attributes, $manifest);
 $hubspotFormPostId = Components::checkAttr('hubspotFormPostId', $attributes, $manifest);
@@ -30,7 +34,8 @@ $isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME
 
 $hubspotClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
+	Components::selector(!$isSettingsValid, $invalidClass),
+	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.

@@ -12,8 +12,12 @@ use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
+$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
+$invalidClass = $manifestInvalid['componentClass'] ?? '';
+$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
 $mailchimpServerSideRender = Components::checkAttr('mailchimpServerSideRender', $attributes, $manifest);
 $mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes, $manifest);
@@ -33,7 +37,8 @@ $isSettingsValid = \apply_filters(
 
 $mailchimpClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
+	Components::selector(!$isSettingsValid, $invalidClass),
+	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.

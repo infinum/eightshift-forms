@@ -20,12 +20,18 @@
 			grid-column-start: 4;
 			grid-column-end: 13;
 
+			@include media(large up) {
+				grid-column-end: 11;
+			}
+
 			display: grid;
 			column-gap: 20px;
 			grid-template-columns: repeat(4, 1fr);
 
 			.es-field {
-				display: block;
+				&__inner { // stylelint-disable-line max-nesting-depth
+					display: block;
+				}
 
 				&__label { // stylelint-disable-line max-nesting-depth
 					margin-bottom: 5px;

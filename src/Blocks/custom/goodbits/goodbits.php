@@ -12,8 +12,12 @@ use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
+$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
+$invalidClass = $manifestInvalid['componentClass'] ?? '';
+$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
 $goodbitsServerSideRender = Components::checkAttr('goodbitsServerSideRender', $attributes, $manifest);
 $goodbitsFormPostId = Components::checkAttr('goodbitsFormPostId', $attributes, $manifest);
@@ -33,7 +37,8 @@ $isSettingsValid = \apply_filters(
 
 $goodbitsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector(!$isSettingsValid, $blockClass, '', 'invalid')
+	Components::selector(!$isSettingsValid, $invalidClass),
+	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.
