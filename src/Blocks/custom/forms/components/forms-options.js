@@ -19,6 +19,7 @@ import globalManifest from '../../../manifest.json';
 export const FormsOptions = ({ attributes, setAttributes }) => {
 	const {
 		editFormUrl,
+		settingsPageUrl
 	} = globalManifest;
 
 	const {
@@ -50,18 +51,29 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 			/>
 
 			{formsFormPostId &&
-				<BaseControl>
-					<Button
-						href={`${editFormUrl}&post=${formsFormPostId}`}
-						isSecondary
-					>
-						{__('Edit Form details', 'eightshift-forms')}
-					</Button>
-				</BaseControl>
+				<>
+					<BaseControl>
+						<Button
+							href={`${editFormUrl}&post=${formsFormPostId}`}
+							isSecondary
+							icon={'edit'}
+						>
+
+							{__('Edit details', 'eightshift-forms')}
+						</Button>
+						<Button
+							href={`${settingsPageUrl}&formId=${formsFormPostId}`}
+							isSecondary
+							icon={'admin-settings'}
+						>
+							{__('Edit settings', 'eightshift-forms')}
+						</Button>
+					</BaseControl>
+				</>
 			}
 
 			<TextControl
-				label={<IconLabel icon={icons.code} label={__('Type Selector', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
 				help={__('Set additional data type selector for the form.', 'eightshift-forms')}
 				value={formsFormTypeSelector}
 				onChange={(value) => setAttributes({ [getAttrKey('formsFormTypeSelector', attributes, manifest)]: value })}
