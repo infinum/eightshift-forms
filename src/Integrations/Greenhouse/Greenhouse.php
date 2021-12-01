@@ -165,7 +165,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'inputId' => $name,
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
-							'inputIsEmail' => $name === 'email' ? 'true' : ''
+							'inputIsEmail' => $name === 'email' ? 'true' : '',
+							'inputIsNumber' => $name === 'phone' ? 'true' : ''
 						];
 						break;
 					case 'input_file':

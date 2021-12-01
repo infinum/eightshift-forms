@@ -105,6 +105,7 @@ class Labels implements LabelsInterface
 			'validationRequiredCount' => __('This field is required with minimum %s selected items.', 'eightshift-forms'),
 			'validationEmail' => __('This field is not a valid email.', 'eightshift-forms'),
 			'validationUrl' => __('This field is not a valid url.', 'eightshift-forms'),
+			'validationNumber' => __('This field is not a valid. Only numbers are accepted.', 'eightshift-forms'),
 			// translators: %s used for displaying validation pattern to the user.
 			'validationPattern' => __('Your field doesn\'t satisfy this validation pattern %s.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.

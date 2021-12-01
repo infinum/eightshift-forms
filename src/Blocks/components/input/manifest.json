@@ -57,6 +57,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"inputIsNumber": {
+			"type": "boolean",
+			"default": false
+		},
 		"inputValidationPattern": {
 			"type": "string"
 		},

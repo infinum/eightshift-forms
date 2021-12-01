@@ -44,14 +44,15 @@ class Validator extends AbstractValidation
 	 * @var array<int, string>
 	 */
 	private const VALIDATION_FIELDS = [
-		"IsRequired",
-		"IsRequiredCount",
-		"IsEmail",
-		"IsUrl",
-		"Accept",
-		"MinSize",
-		"MaxSize",
-		"ValidationPattern",
+		'IsRequired',
+		'IsRequiredCount',
+		'IsEmail',
+		'IsNumber',
+		'IsUrl',
+		'Accept',
+		'MinSize',
+		'MaxSize',
+		'ValidationPattern',
 	];
 
 	/**
@@ -226,6 +227,11 @@ class Validator extends AbstractValidation
 					case 'isEmail':
 						if ($dataValue && !$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
+						}
+						break;
+					case 'isNumber':
+						if ($dataValue && !is_numeric($inputValue) && !empty($inputValue)) {
+							$output[$paramKey] = $this->labels->getLabel('validationNumber', $formId);
 						}
 						break;
 					// Check validation for url params.
