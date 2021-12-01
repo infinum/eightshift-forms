@@ -49,10 +49,6 @@
 		},
 		"fileCustomInfoButtonText": {
 			"type": "string"
-		},
-		"fileCustomInfoButtonTextUse": {
-			"type": "boolean",
-			"default": true
 		}
 	}
 }

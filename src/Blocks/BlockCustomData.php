@@ -60,66 +60,123 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 
 		$customDataFieldType = $attributes['customDataFieldType'] ?? '';
 
+		$ssr = $attributes['customDataServerSideRender'] ?? false;
+
 		switch ($customDataFieldType) {
 			case 'checkboxes':
-				$output = [
-					'component' => 'checkboxes',
-					'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
-					'checkboxesId' => $attributes['customDataId'] ?? '',
-					'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
-					'checkboxesContent' => array_map(
-						static function ($option) {
-							return [
-								'component' => 'checkbox',
-								'checkboxLabel' => $option['label'] ?? '',
-								'checkboxValue' => $option['value'] ?? $option['label'] ?? '',
-								'checkboxIsChecked' => $option['selected'] ?? false,
-							];
-						},
-						$data
-					),
-				];
+				$output = array_merge(
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
+						'checkboxesId' => $attributes['customDataId'] ?? '',
+						'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
+						'checkboxesContent' => array_map(
+							static function ($option) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $option['label'] ?? '',
+									'checkboxValue' => $option['value'] ?? $option['label'] ?? '',
+									'checkboxIsChecked' => $option['selected'] ?? false,
+								];
+							},
+							$data
+						),
+					],
+					$this->getFieldAttributes('customDataCheckboxesField', $attributes)
+				);
+
+				if ($ssr) {
+					$output['checkboxesFieldUniqueId'] = $attributes['customDataUniqueId'] ?? '';
+				}
 				break;
 			case 'radios':
-				$output = [
-					'component' => 'radios',
-					'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
-					'radiosId' => $attributes['customDataId'] ?? '',
-					'radiosName' => $attributes['customDataRadiosName'] ?? '',
-					'radiosContent' => array_map(
-						static function ($option) {
-							return [
-								'component' => 'radio',
-								'radioLabel' => $option['label'] ?? '',
-								'radioValue' => $option['value'] ?? $option['label'] ?? '',
-								'radioIsChecked' => $option['selected'] ?? false,
-							];
-						},
-						$data
-					),
-				];
+				$output = array_merge(
+					[
+						'component' => 'radios',
+						'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
+						'radiosId' => $attributes['customDataId'] ?? '',
+						'radiosName' => $attributes['customDataRadiosName'] ?? '',
+						'radiosContent' => array_map(
+							static function ($option) {
+								return [
+									'component' => 'radio',
+									'radioLabel' => $option['label'] ?? '',
+									'radioValue' => $option['value'] ?? $option['label'] ?? '',
+									'radioIsChecked' => $option['selected'] ?? false,
+								];
+							},
+							$data
+						),
+					],
+					$this->getFieldAttributes('customDataRadiosField', $attributes)
+				);
+
+				if ($ssr) {
+					$output['radiosFieldUniqueId'] = $attributes['customDataUniqueId'] ?? '';
+				}
 				break;
 			default:
-				$output = [
-					'component' => 'select',
-					'selectFieldLabel' => $attributes['customDataSelectFieldLabel'] ?? '',
-					'selectId' => $attributes['customDataId'] ?? '',
-					'selectName' => $attributes['customDataSelectName'] ?? '',
-					'selectOptions' => array_map(
-						static function ($option) {
-							return [
-								'component' => 'select-option',
-								'selectOptionLabel' => $option['label'] ?? '',
-								'selectOptionValue' => $option['value'] ?? $option['label'] ?? '',
-								'selectOptionIsSelected' => $option['selected'] ?? false,
-							];
-						},
-						$data
-					),
-				];
+				$output = array_merge(
+					[
+						'component' => 'select',
+						'selectId' => $attributes['customDataId'] ?? '',
+						'selectName' => $attributes['customDataSelectName'] ?? '',
+						'selectOptions' => array_map(
+							static function ($option) {
+								return [
+									'component' => 'select-option',
+									'selectOptionLabel' => $option['label'] ?? '',
+									'selectOptionValue' => $option['value'] ?? $option['label'] ?? '',
+									'selectOptionIsSelected' => $option['selected'] ?? false,
+								];
+							},
+							$data
+						),
+					],
+					$this->getFieldAttributes('customDataSelectField', $attributes)
+				);
+
+				if ($ssr) {
+					$output['selectFieldUniqueId'] = $attributes['customDataUniqueId'] ?? '';
+				}
 				break;
 		}
 
 		return $this->buildComponent($output);
+	}
+
+	/**
+	 * Get field attributes.
+	 *
+	 * @param string $key Key to check.
+	 * @param array<string, mixed> $attributes Block attributes.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getFieldAttributes(string $key, array $attributes): array
+	{
+		$fields = array_filter(
+			$attributes,
+			function ($item) use ($key) {
+				if (strpos($item, $key) === 0) {
+					return true;
+				}
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+
+		if (!$fields) {
+			return [];
+		}
+
+		$output = [];
+
+		foreach ($fields as $fieldKey => $fieldValue) {
+			$fieldKey = lcfirst(str_replace('customData', '', $fieldKey));
+
+			$output[$fieldKey] = $fieldValue;
+		}
+
+		return $output;
 	}
 }

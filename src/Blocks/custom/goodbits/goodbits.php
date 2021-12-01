@@ -13,17 +13,15 @@ use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
-$goodbitsServerSideRender = Components::checkAttr('goodbitsServerSideRender', $attributes, $manifest);
+$goodbitsFormServerSideRender = Components::checkAttr('goodbitsFormServerSideRender', $attributes, $manifest);
 $goodbitsFormPostId = Components::checkAttr('goodbitsFormPostId', $attributes, $manifest);
 $goodbitsFormTypeSelector = Components::checkAttr('goodbitsFormTypeSelector', $attributes, $manifest);
 
-if ($goodbitsServerSideRender) {
+if ($goodbitsFormServerSideRender && !$goodbitsFormTypeSelector) {
 	$goodbitsFormPostId = Helper::encryptor('encrypt', $goodbitsFormPostId);
 }
 
@@ -38,11 +36,10 @@ $isSettingsValid = \apply_filters(
 $goodbitsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector(!$isSettingsValid, $invalidClass),
-	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.
-if (!$isSettingsValid && $goodbitsServerSideRender) {
+if (!$isSettingsValid && $goodbitsFormServerSideRender) {
 	?>
 		<div class="<?php echo esc_attr($goodbitsClass); ?>">
 			<?php esc_html_e('Sorry, it looks like your Goodbits settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
@@ -57,6 +54,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Goodbits::FILTER_MAPPER_NAME,
 	$goodbitsFormPostId,
 	[
-		'formTypeSelector' => $goodbitsFormTypeSelector
+		'formTypeSelector' => $goodbitsFormTypeSelector,
+		'ssr' => $goodbitsFormServerSideRender,
 	]
 );

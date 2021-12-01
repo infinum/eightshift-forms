@@ -15,7 +15,7 @@
 		"mailchimpFormPostId": {
 			"type": "string"
 		},
-		"mailchimpServerSideRender": {
+		"mailchimpFormServerSideRender": {
 			"type": "boolean",
 			"default": false
 		},

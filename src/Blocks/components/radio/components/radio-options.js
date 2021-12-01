@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl } from '@wordpress/components';
+import { TextControl, TextareaControl } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
@@ -27,7 +27,7 @@ export const RadioOptions = (attributes) => {
 
 	return (
 		<>
-			<TextControl
+			<TextareaControl
 				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
 				help={__('Set label used next to the radio.', 'eightshift-forms')}
 				value={radioLabel}

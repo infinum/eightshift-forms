@@ -13,17 +13,15 @@ use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
-$hubspotServerSideRender = Components::checkAttr('hubspotServerSideRender', $attributes, $manifest);
+$hubspotFormServerSideRender = Components::checkAttr('hubspotFormServerSideRender', $attributes, $manifest);
 $hubspotFormPostId = Components::checkAttr('hubspotFormPostId', $attributes, $manifest);
 $hubspotFormTypeSelector = Components::checkAttr('hubspotFormTypeSelector', $attributes, $manifest);
 
-if ($hubspotServerSideRender) {
+if ($hubspotFormServerSideRender && !$hubspotFormTypeSelector) {
 	$hubspotFormPostId = Helper::encryptor('encrypt', $hubspotFormPostId);
 }
 
@@ -35,11 +33,10 @@ $isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME
 $hubspotClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector(!$isSettingsValid, $invalidClass),
-	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.
-if (!$isSettingsValid && $hubspotServerSideRender) {
+if (!$isSettingsValid && $hubspotFormServerSideRender) {
 	?>
 		<div class="<?php echo esc_attr($hubspotClass); ?>">
 			<?php esc_html_e('Sorry, it looks like your HubSpot settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
@@ -54,6 +51,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Hubspot::FILTER_MAPPER_NAME,
 	$hubspotFormPostId,
 	[
-		'formTypeSelector' => $hubspotFormTypeSelector
+		'formTypeSelector' => $hubspotFormTypeSelector,
+		'ssr' => $hubspotFormServerSideRender,
 	]
 );

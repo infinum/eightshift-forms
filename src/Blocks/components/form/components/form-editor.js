@@ -23,10 +23,10 @@ export const FormEditor = (attributes) => {
 	]);
 
 	return (
-		<form className={formClass}>
+		<div className={formClass}>
 			<div className={`${componentClass}__fields`}>
 				{formContent}
 			</div>
-		</form>
+		</div>
 	);
 };

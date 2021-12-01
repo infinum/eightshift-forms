@@ -11,11 +11,11 @@ use EightshiftForms\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
+
+$customDataServerSideRender = Components::checkAttr('customDataServerSideRender', $attributes, $manifest);
 
 $block = apply_filters(
 	BlockCustomData::FILTER_BLOCK_CUSTOM_DATA_COMPONENT_NAME,
@@ -24,9 +24,12 @@ $block = apply_filters(
 
 $customDataClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector(!$isSettingsValid, $invalidClass),
-	Components::selector($overlayClass, $overlayClass),
+	Components::selector($invalidClass, $invalidClass),
 ]);
+
+if (!$block && !$customDataServerSideRender) {
+	return;
+}
 
 if (!$block) {
 	?>

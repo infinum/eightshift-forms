@@ -47,6 +47,8 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 				onChange={(value) => setAttributes({ [getAttrKey('customDataData', attributes, manifest)]: value })}
 			/>
 
+			<hr />
+
 			{(customDataFieldType === 'select' || customDataFieldType === '') &&
 				<SelectOptions
 					{...props('select', attributes, {

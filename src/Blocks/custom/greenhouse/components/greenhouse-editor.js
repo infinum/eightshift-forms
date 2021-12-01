@@ -14,7 +14,7 @@ export const GreenhouseEditor = ({ attributes, postId }) => {
 				attributes={
 					{
 						...attributes,
-						greenhouseServerSideRender: true,
+						greenhouseFormServerSideRender: true,
 						greenhouseFormPostId: postId.toString(),
 					}
 				}

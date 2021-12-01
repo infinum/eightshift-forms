@@ -26,6 +26,7 @@ $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes,
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formTypeSelector = Components::checkAttr('formTypeSelector', $attributes, $manifest);
+$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -77,9 +78,15 @@ if ($formAttrs) {
 	}
 }
 
+$formTag = 'form';
+
+if ($formServerSideRender) {
+	$formTag = 'div';
+}
+
 ?>
 
-<form
+<<?php echo esc_attr($formTag); ?>
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 >
@@ -102,4 +109,4 @@ if ($formAttrs) {
 		Components::props('loader', $attributes)
 	);
 	?>
-</form>
+</<?php echo esc_attr($formTag); ?>>

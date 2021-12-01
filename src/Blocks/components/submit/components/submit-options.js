@@ -8,8 +8,11 @@ import {
 	getAttrKey,
 	IconLabel,
 	IconToggle,
-	ComponentUseToggle
+	ComponentUseToggle,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { FieldOptions } from '../../../components/field/components/field-options';
+import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
 
 export const SubmitOptions = (attributes) => {
@@ -25,6 +28,11 @@ export const SubmitOptions = (attributes) => {
 
 	return (
 		<>
+			<FieldOptions
+				{...props('field', attributes)}
+				showFieldLabel={false}
+			/>
+
 			<TextControl
 				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
 				help={__('Provide button text.', 'eightshift-forms')}
@@ -58,6 +66,10 @@ export const SubmitOptions = (attributes) => {
 					/>
 				</>
 			}
+
+			<FieldOptionsAdvanced
+				{...props('field', attributes)}
+			/>
 		</>
 	);
 };

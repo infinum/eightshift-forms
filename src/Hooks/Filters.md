@@ -184,6 +184,10 @@ public function getCustomDataBlockOptions(): array
 {
 	return [
 		[
+			'label' => '',
+			'value' => ''
+		],
+		[
 			'label' => 'Blog posts',
 			'value' => 'blog-posts'
 		],

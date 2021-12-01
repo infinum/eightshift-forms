@@ -78,8 +78,8 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
 	/**
@@ -100,8 +100,11 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Get form type.
 		$formAdditionalProps['formType'] = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
+		// Check if it is loaded on the front or the backend.
+		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
+
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded),
+			$this->getFormFields($formIdDecoded, $ssr),
 			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
 		);
 	}
@@ -110,10 +113,11 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormFields(string $formId): array
+	public function getFormFields(string $formId, bool $ssr = false): array
 	{
 		// Get item Id.
 		$itemId = $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, (string) $formId);
@@ -121,17 +125,18 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return [];
 		}
 
-		return $this->getFields($formId);
+		return $this->getFields($formId, $ssr);
 	}
 
 	/**
 	 * Map Goodbits fields to our components.
 	 *
 	 * @param string $formId Form Id.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(string $formId): array
+	private function getFields(string $formId, bool $ssr): array
 	{
 		$output = [
 			[
@@ -163,6 +168,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'submitId' => 'submit',
 				'submitFieldUseError' => false,
 				'submitFieldOrder' => 4,
+				'submitServerSideRender' => $ssr,
 			],
 		];
 

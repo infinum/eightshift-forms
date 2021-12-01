@@ -14,7 +14,7 @@ export const HubspotEditor = ({ attributes, postId }) => {
 				attributes={
 					{
 						...attributes,
-						hubspotServerSideRender: true,
+						hubspotFormServerSideRender: true,
 						hubspotFormPostId: postId.toString(),
 					}
 				}

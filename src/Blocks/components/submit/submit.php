@@ -23,6 +23,9 @@ $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $mani
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
 $submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $manifest);
+$submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
+$submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
+
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -63,6 +66,12 @@ if (has_filter(Filters::FILTER_BLOCK_SUBMIT_NAME) && !Helper::isSettingsPage()) 
 	]);
 }
 
+// Replace button with div for the editor.
+if ($submitServerSideRender) {
+	$button = str_replace('<button', '<div', $button);
+	$button = str_replace('</button>', '</div>', $button);
+}
+
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
 	array_merge(
@@ -71,6 +80,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldId' => $submitId,
 			'fieldUseError' => false,
 			'fieldDisabled' => !empty($submitIsDisabled),
+			'fieldUniqueId' => $submitUniqueId,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

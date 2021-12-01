@@ -122,6 +122,13 @@ abstract class AbstractFormBuilder
 			'formContent' => $form,
 		];
 
+		// Check if it is loaded on the front or the backend.
+		if (isset($formAdditionalProps['ssr'])) {
+			$formProps['formServerSideRender'] = $formAdditionalProps['ssr'];
+
+			unset($formAdditionalProps['ssr']);
+		}
+
 		// Add additional form props.
 		if ($formAdditionalProps) {
 			$formProps = array_merge($formProps, $formAdditionalProps);
@@ -177,8 +184,6 @@ abstract class AbstractFormBuilder
 					$key = '';
 					break;
 			}
-
-			$id = $attributes["{$component}Id"] ?? '';
 
 			// Loop children and do the same ad on top level.
 			foreach ($attributes[$key] as $innerKey => $item) {

@@ -40,7 +40,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 		<PanelBody title={__('Forms', 'eightshift-forms')}>
 			<CustomSelect
 				label={<IconLabel icon={icons.dropdown} label={__('Select form', 'eightshift-forms')} />}
-				help={__('Select form from the list that is going to be shown to the user.', 'eightshift-forms')}
+				help={__('Select form from the list that is going to be shown to the user. Hint: If you can\'t find your form try typing its name.', 'eightshift-forms')}
 				value={parseInt(formsFormPostId)}
 				loadOptions={getFetchWpApi(postType, {processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle) })}
 				onChange={(value) => setAttributes({[getAttrKey('formsFormPostId', attributes, manifest)]: value.toString()})}

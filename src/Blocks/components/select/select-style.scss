@@ -31,6 +31,12 @@
 				transform: translateY(-50%) rotate(180deg);
 			}
 		}
+
+		&.is-focused {
+			.choices__inner { // stylelint-disable-line selector-max-specificity
+				border-color: var(--global-colors-es-matisse);
+			}
+		}
 	}
 
 	.choices__inner {

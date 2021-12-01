@@ -29,8 +29,9 @@ interface MapperInterface
 	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormFields(string $formId): array;
+	public function getFormFields(string $formId, bool $ssr = false): array;
 }

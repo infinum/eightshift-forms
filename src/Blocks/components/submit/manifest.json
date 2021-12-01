@@ -14,6 +14,9 @@
 		"field": "field"
 	},
 	"attributes": {
+		"submitUniqueId": {
+			"type": "string"
+		},
 		"submitId": {
 			"type": "string"
 		},
@@ -36,6 +39,10 @@
 			"default": true
 		},
 		"submitSingleSubmit": {
+			"type": "boolean",
+			"default": false
+		},
+		"submitServerSideRender": {
 			"type": "boolean",
 			"default": false
 		}

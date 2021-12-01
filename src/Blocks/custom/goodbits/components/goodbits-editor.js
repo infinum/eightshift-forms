@@ -14,7 +14,7 @@ export const GoodbitsEditor = ({ attributes, postId }) => {
 				attributes={
 					{
 						...attributes,
-						goodbitsServerSideRender: true,
+						goodbitsFormServerSideRender: true,
 						goodbitsFormPostId: postId.toString(),
 					}
 				}

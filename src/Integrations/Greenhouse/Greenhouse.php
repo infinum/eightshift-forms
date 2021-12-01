@@ -66,8 +66,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
 	/**
@@ -88,9 +88,12 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Get form type.
 		$formAdditionalProps['formType'] = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
+		// Check if it is loaded on the front or the backend.
+		$ssr = $formAdditionalProps['ssr'] ?? false;
+
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded),
+			$this->getFormFields($formIdDecoded, $ssr),
 			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
 		);
 	}
@@ -99,10 +102,11 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 * Get mapped form fields.
 	 *
 	 * @param string $formId Form Id.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormFields(string $formId): array
+	public function getFormFields(string $formId, bool $ssr = false): array
 	{
 		// Get Item Id.
 		$itemId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
@@ -116,18 +120,19 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return [];
 		}
 
-		return $this->getFields($fields, $formId);
+		return $this->getFields($fields, $formId, $ssr);
 	}
 
 	/**
 	 * Map Greenhouse fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
-	 * @param string $formId Form Id.
+	 * @param string $formId Form ID.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId): array
+	private function getFields(array $data, string $formId, bool $ssr): array
 	{
 		$output = [];
 
@@ -228,6 +233,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
+			'submitServerSideRender' => $ssr,
 		];
 
 		return $this->getIntegrationFieldsValue(

@@ -13,3 +13,9 @@
 div.es-select {
 	height: auto !important;
 }
+
+.es-select-is-custom {
+	select {
+		display: block;
+	}
+}

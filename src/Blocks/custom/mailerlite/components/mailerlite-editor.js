@@ -14,7 +14,7 @@ export const MailerliteEditor = ({ attributes, postId }) => {
 				attributes={
 					{
 						...attributes,
-						mailerliteServerSideRender: true,
+						mailerliteFormServerSideRender: true,
 						mailerliteFormPostId: postId.toString(),
 					}
 				}

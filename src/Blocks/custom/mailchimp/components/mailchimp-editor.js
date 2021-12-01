@@ -14,7 +14,7 @@ export const MailchimpEditor = ({ attributes, postId }) => {
 				attributes={
 					{
 						...attributes,
-						mailchimpServerSideRender: true,
+						mailchimpFormServerSideRender: true,
 						mailchimpFormPostId: postId.toString(),
 					}
 				}

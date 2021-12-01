@@ -13,17 +13,15 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
-$greenhouseServerSideRender = Components::checkAttr('greenhouseServerSideRender', $attributes, $manifest);
+$greenhouseFormServerSideRender = Components::checkAttr('greenhouseFormServerSideRender', $attributes, $manifest);
 $greenhouseFormPostId = Components::checkAttr('greenhouseFormPostId', $attributes, $manifest);
 $greenhouseFormTypeSelector = Components::checkAttr('greenhouseFormTypeSelector', $attributes, $manifest);
 
-if ($greenhouseServerSideRender) {
+if ($greenhouseFormServerSideRender && !$greenhouseFormTypeSelector) {
 	$greenhouseFormPostId = Helper::encryptor('encrypt', $greenhouseFormPostId);
 }
 
@@ -35,11 +33,10 @@ $isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_N
 $greenhouseClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector(!$isSettingsValid, $invalidClass),
-	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.
-if (!$isSettingsValid && $greenhouseServerSideRender) {
+if (!$isSettingsValid && $greenhouseFormServerSideRender) {
 	?>
 		<div class="<?php echo esc_attr($greenhouseClass); ?>">
 			<?php esc_html_e('Sorry, it looks like your Greenhouse settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
@@ -54,6 +51,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Greenhouse::FILTER_MAPPER_NAME,
 	$greenhouseFormPostId,
 	[
-		'formTypeSelector' => $greenhouseFormTypeSelector
+		'formTypeSelector' => $greenhouseFormTypeSelector,
+		'ssr' => $greenhouseFormServerSideRender,
 	]
 );

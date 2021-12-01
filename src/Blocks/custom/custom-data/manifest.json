@@ -12,6 +12,9 @@
 	"example": {
 	},
 	"attributes": {
+		"customDataUniqueId": {
+			"type": "string"
+		},
 		"customDataFieldType": {
 			"type": "string"
 		},

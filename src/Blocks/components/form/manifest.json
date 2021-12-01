@@ -50,6 +50,10 @@
 		},
 		"formTypeSelector": {
 			"type": "string"
+		},
+		"formServerSideRender": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

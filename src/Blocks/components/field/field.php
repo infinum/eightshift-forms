@@ -50,6 +50,7 @@ $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
+$fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -73,7 +74,13 @@ if ($fieldType === 'fieldset') {
 
 <<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
 
-	<?php echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php
+	if ($fieldUniqueId) {
+		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, $globalManifest, 'wp-block'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	} else {
+		echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	?>
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>

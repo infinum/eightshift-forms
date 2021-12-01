@@ -4,7 +4,7 @@ import { getAttrKey, getUnique } from '@eightshift/frontend-libs/scripts';
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
-export const CustomDataEditor = ({ attributes, setAttributes, }) => {
+export const CustomDataEditor = ({ attributes, setAttributes, clientId }) => {
 	const unique = useMemo(() => getUnique(), []);
 
 	const {
@@ -26,6 +26,7 @@ export const CustomDataEditor = ({ attributes, setAttributes, }) => {
 				attributes={
 					{
 						...attributes,
+						customDataUniqueId: clientId,
 						customDataServerSideRender: true,
 						customDataFormPostId: formPostId.toString(),
 					}

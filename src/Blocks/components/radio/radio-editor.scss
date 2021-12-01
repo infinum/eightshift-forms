@@ -9,7 +9,13 @@
 		--es-radio-scoped-spacing: 10px;
 	}
 
-	&__label--placeholder {
-		opacity: 0.5;
+	&__label {
+		&--placeholder {
+			opacity: 0.5;
+		}
+
+		a {
+			pointer-events: none;
+		}
 	}
 }

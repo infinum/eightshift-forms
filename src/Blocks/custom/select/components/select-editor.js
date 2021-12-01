@@ -4,14 +4,10 @@ import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { SelectEditor as SelectEditorComponent } from '../../../components/select/components/select-editor';
 import manifest from './../manifest.json';
 
-export const SelectEditor = ({ attributes, setAttributes }) => {
+export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 	const {
 		template,
 	} = manifest;
-
-	const {
-		blockClass,
-	} = attributes;
 
 	const selectAllowedBlocks = checkAttr('selectAllowedBlocks', attributes, manifest);
 
@@ -19,7 +15,7 @@ export const SelectEditor = ({ attributes, setAttributes }) => {
 		<SelectEditorComponent
 			{...props('select', attributes, {
 				setAttributes,
-				blockClass,
+				clientId,
 				selectOptions: <InnerBlocks
 												allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
 												templateLock={false}

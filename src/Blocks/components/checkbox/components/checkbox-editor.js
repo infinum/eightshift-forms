@@ -31,6 +31,8 @@ export const CheckboxEditor = (attributes) => {
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
 	]);
 
+	const label = <label className={checkboxLabelClass} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />; // eslint-disable-line jsx-a11y/label-has-associated-control
+
 	return (
 		<div className={checkboxClass}>
 			<div className={`${componentClass}__content`}>
@@ -39,9 +41,7 @@ export const CheckboxEditor = (attributes) => {
 					type={'checkbox'}
 					readOnly
 				/>
-				<label className={checkboxLabelClass}>
-					{checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}
-				</label>
+				{label}
 			</div>
 		</div>
 	);

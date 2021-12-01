@@ -13,17 +13,15 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
-$mailerliteServerSideRender = Components::checkAttr('mailerliteServerSideRender', $attributes, $manifest);
+$mailerliteFormServerSideRender = Components::checkAttr('mailerliteFormServerSideRender', $attributes, $manifest);
 $mailerliteFormPostId = Components::checkAttr('mailerliteFormPostId', $attributes, $manifest);
 $mailerliteFormTypeSelector = Components::checkAttr('mailerliteFormTypeSelector', $attributes, $manifest);
 
-if ($mailerliteServerSideRender) {
+if ($mailerliteFormServerSideRender && !$mailerliteFormTypeSelector) {
 	$mailerliteFormPostId = Helper::encryptor('encrypt', $mailerliteFormPostId);
 }
 
@@ -38,11 +36,10 @@ $isSettingsValid = \apply_filters(
 $mailerliteClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector(!$isSettingsValid, $invalidClass),
-	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Bailout if settings are not ok but show msg only in editor.
-if (!$isSettingsValid && $mailerliteServerSideRender) {
+if (!$isSettingsValid && $mailerliteFormServerSideRender) {
 	?>
 		<div class="<?php echo esc_attr($mailerliteClass); ?>">
 			<?php esc_html_e('Sorry, it looks like your Mailerlite settings are not configured correctly. Please go to your form setting and input all required settings.', 'eightshift-forms'); ?>
@@ -57,6 +54,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Mailerlite::FILTER_MAPPER_NAME,
 	$mailerliteFormPostId,
 	[
-		'formTypeSelector' => $mailerliteFormTypeSelector
+		'formTypeSelector' => $mailerliteFormTypeSelector,
+		'ssr' => $mailerliteFormServerSideRender,
 	]
 );

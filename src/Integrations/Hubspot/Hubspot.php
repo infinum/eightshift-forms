@@ -66,8 +66,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields']);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
 	/**
@@ -88,9 +88,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Get form type.
 		$formAdditionalProps['formType'] = SettingsHubspot::SETTINGS_TYPE_KEY;
 
+			// Check if it is loaded on the front or the backend.
+			$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
+
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded),
+			$this->getFormFields($formIdDecoded, $ssr),
 			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
 		);
 	}
@@ -99,10 +102,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 * Get Hubspot mapped form fields.
 	 *
 	 * @param string $formId Form Id.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormFields(string $formId): array
+	public function getFormFields(string $formId, bool $ssr = false): array
 	{
 		// Get item Id.
 		$itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, (string) $formId);
@@ -116,7 +120,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return [];
 		}
 
-		return $this->getFields($item['fields'], $formId);
+		return $this->getFields($item['fields'], $formId, $ssr);
 	}
 
 	/**
@@ -124,10 +128,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
+	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId): array
+	private function getFields(array $data, string $formId, bool $ssr): array
 	{
 		$output = [];
 
@@ -316,6 +321,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
+			'submitServerSideRender' => $ssr,
 		];
 
 		return $this->getIntegrationFieldsValue(

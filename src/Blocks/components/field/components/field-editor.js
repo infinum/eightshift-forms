@@ -41,19 +41,19 @@ export const FieldEditor = (attributes) => {
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
+	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
 		selector(componentClass, componentClass, selectorClass),
 		selector(additionalFieldClass, additionalFieldClass),
+		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
 	]);
 
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<label className={`${componentClass}__label`}>
-					{fieldLabel}
-				</label>
+				<label className={`${componentClass}__label`} dangerouslySetInnerHTML={{__html: fieldLabel}} /> // eslint-disable-line jsx-a11y/label-has-associated-control
 			}
 		</>
 	);
@@ -61,9 +61,7 @@ export const FieldEditor = (attributes) => {
 	const LegendDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<legend className={`${componentClass}__label`}>
-					{fieldLabel}
-				</legend>
+				<legend className={`${componentClass}__label`} dangerouslySetInnerHTML={{__html: fieldLabel}} />
 			}
 		</>
 	);

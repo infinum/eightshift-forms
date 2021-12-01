@@ -362,7 +362,6 @@ trait SettingsHelper
 						break;
 					case 'file-info-label':
 						if ($itemValue === 'true') {
-							$formFields[$key]["{$component}CustomInfoButtonTextUse"] = false;
 							$formFields[$key]["{$component}FieldHideLabel"] = true;
 							$formFields[$key]["{$component}CustomInfoText"] = $label;
 						}

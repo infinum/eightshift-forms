@@ -15,7 +15,7 @@
 		"goodbitsFormPostId": {
 			"type": "string"
 		},
-		"goodbitsServerSideRender": {
+		"goodbitsFormServerSideRender": {
 			"type": "boolean",
 			"default": false
 		},

@@ -15,7 +15,7 @@
 		"greenhouseFormPostId": {
 			"type": "string"
 		},
-		"greenhouseServerSideRender": {
+		"greenhouseFormServerSideRender": {
 			"type": "boolean",
 			"default": false
 		},

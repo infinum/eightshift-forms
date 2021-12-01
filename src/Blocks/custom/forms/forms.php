@@ -15,13 +15,11 @@ use EightshiftForms\Manifest\Manifest;
 $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
-$manifestOverlay = Components::getManifest(dirname(__DIR__, 2) . '/components/overlay');
 
 echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
-$overlayClass = $manifestOverlay['componentClass'] ?? '';
 
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -33,7 +31,6 @@ $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector($formsStyle, $blockClass, '', $formsStyle),
 	$attributes['className'] ?? '',
-	Components::selector($overlayClass, $overlayClass),
 ]);
 
 // Return nothing if it is on frontend.
@@ -108,10 +105,23 @@ if ($formsServerSideRender) {
 		if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
 			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
-			foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-				$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
-				$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-				$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormTypeSelector"] = $formsFormTypeSelector;
+			if (isset($block['innerBlocks'])) {
+				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormTypeSelector"] = $formsFormTypeSelector;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
+
+					if (isset($innerBlock['innerBlocks'])) {
+						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
+							$name = Components::kebabToCamelCase(explode('/', $inBlock['blockName'])[1]);
+
+							if ($name === 'submit') {
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
