@@ -394,7 +394,7 @@ export class Form {
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
 
-			item?.parentElement?.classList.add(this.CLASS_HAS_ERROR);
+			item?.closest(this.fieldSelector).classList.add(this.CLASS_HAS_ERROR);
 
 			if (item !== null) {
 				item.innerHTML = fields[key];
@@ -419,7 +419,6 @@ export class Form {
 
 		[...fields].forEach((item) => {
 			item.classList.remove(this.CLASS_ACTIVE);
-			item.classList.remove(this.CLASS_FILLED);
 			item.classList.remove(this.CLASS_HAS_ERROR);
 		});
 	}

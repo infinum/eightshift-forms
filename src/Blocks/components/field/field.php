@@ -54,7 +54,7 @@ $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($componentClass, $componentClass, $selectorClass),
+	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($blockJsClass, $blockJsClass),
