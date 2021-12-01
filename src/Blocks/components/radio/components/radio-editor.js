@@ -28,7 +28,13 @@ export const RadioEditor = (attributes) => {
 		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
 	]);
 
-	const label = <label className={radioLabelClass} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />; // eslint-disable-line jsx-a11y/label-has-associated-control
+	const Label = () => {
+		return (
+			<label className={radioLabelClass} htmlFor="id">
+				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
+			</label>
+		);
+	};
 
 	return (
 		<div className={radioClass}>
@@ -38,7 +44,7 @@ export const RadioEditor = (attributes) => {
 					type={'radio'}
 					readOnly
 				/>
-				{label}
+				<Label />
 			</div>
 		</div>
 	);

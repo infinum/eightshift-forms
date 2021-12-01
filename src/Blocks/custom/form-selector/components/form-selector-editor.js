@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
@@ -62,6 +64,16 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 		setHasInnerBlocks(!hasInnerBlocks);
 	};
 
+	let beforeContent = '';
+
+	// Update media breakpoints from the filter.
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.beforeContent) !== ''
+	) {
+		beforeContent = esFormsBlocksLocalization.formSelectorBlockBeforeContent;
+	}
+
 	return (
 		<>
 			{!hasInnerBlocks &&
@@ -102,6 +114,8 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 					</div>
 				</>
 			}
+
+			<div dangerouslySetInnerHTML={{__html: beforeContent}} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}

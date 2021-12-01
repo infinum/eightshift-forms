@@ -126,6 +126,11 @@ class Filters
 	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
 
 	/**
+	 * Filter block form selector before content key.
+	 */
+	public const FILTER_BLOCK_FORM_SELECTOR_BEFORE_CONTENT_NAME = 'es_forms_block_form_selector_before_content';
+
+	/**
 	 * Filter block custom data options key.
 	 */
 	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME = 'es_forms_block_custom_data_options';

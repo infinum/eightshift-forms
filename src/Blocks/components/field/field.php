@@ -87,7 +87,9 @@ if ($fieldType === 'fieldset') {
 				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
-				<?php echo esc_html($fieldLabel); ?>
+				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+					<?php echo esc_html($fieldLabel); ?>
+				</span>
 			</<?php echo esc_attr($labelTag); ?>>
 		<?php } ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">

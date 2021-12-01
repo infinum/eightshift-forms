@@ -129,12 +129,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['additionalBlocks'] = apply_filters(Filters::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 			$output['formsBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
 			$output['fieldBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+			$output['formSelectorBlockBeforeContent'] = apply_filters(Filters::FILTER_BLOCK_FORM_SELECTOR_BEFORE_CONTENT_NAME, '');
 			$output['customDataBlockOptions'] = apply_filters(Filters::FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
+			$output['mediaBreakpoints'] = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+			$output['postType'] = get_post_type() ?? '';
 		}
-
-		$output['mediaBreakpoints'] = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
-		$output['postType'] = get_post_type() ?? '';
 
 		return [
 			'esFormsBlocksLocalization' => $output,

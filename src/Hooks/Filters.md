@@ -19,7 +19,7 @@ add_filter('es_forms_additional_blocks', [$this, 'getAdditionalBlocks']);
 /**
  * Provide additional block to the custom forms block.
  *
- * @return array
+ * @return array<string>
  */
 public function getAdditionalBlocks(): array
 {
@@ -53,7 +53,7 @@ add_filter('es_forms_media_breakpoints', [$this, 'getMediaBreakpoints']);
 /**
  * Provide custom media breakpoints.
  *
- * @return array
+ * @return array<string, int>
  */
 public function getMediaBreakpoints(): array
 {
@@ -85,7 +85,7 @@ add_filter('es_forms_block_forms_style_options', [$this, 'getFormsStyleOptions']
 /**
  * Provide custom forms style options.
  *
- * @return array
+ * @return array<string, mixed>
  */
 public function getFormsStyleOptions(): array
 {
@@ -130,7 +130,7 @@ add_filter('es_forms_block_field_style_options', [$this, 'getFieldStyleOptions']
  * - file
  * - submit
  *
- * @return array
+ * @return array<string, mixed>
  */
 public function getFieldStyleOptions(): array
 {
@@ -178,7 +178,7 @@ add_filter('es_forms_block_custom_data_options', [$this, 'getCustomDataBlockOpti
 /**
  * Provide custom data block options.
  *
- * @return array
+ * @return array<string, mixed>
  */
 public function getCustomDataBlockOptions(): array
 {
@@ -209,7 +209,7 @@ add_filter('es_forms_block_custom_data_options_data', [$this, 'getCustomDataBloc
  *
  * @param string $type Type of option selected in the Block editor.
  *
- * @return array
+ * @return array<string, mixed>
  */
 public function getCustomDataBlockOptionsData(string $type): array
 {
@@ -289,5 +289,30 @@ public function getFormsSubmitComponent(array $data): string
 		'',
 		true
 	);
+}
+```
+
+## Adding additional content in the form selector block
+
+This filter is used if you want to add some custom string/component/css variables, etc. to the custom form builder.
+
+**Default value:**
+```php
+''
+```
+
+**Filter:**
+```php
+// Provide additional content before form selector block.
+add_filter('es_forms_block_form_selector_before_content', [$this, 'getFormSelectorBeforeContent']);
+
+/**
+ * Provide additional content before form selector block.
+ *
+ * @return string
+ */
+public function getFormSelectorBeforeContent(): string
+{
+	return 'custom string';
 }
 ```

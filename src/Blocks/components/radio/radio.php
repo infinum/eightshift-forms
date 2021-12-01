@@ -71,7 +71,9 @@ if ($radioAttrs) {
 			for="<?php echo esc_attr($radioId); ?>"
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
-			<?php echo wp_kses_post(\apply_filters('the_content', $radioLabel)); ?>
+			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+				<?php echo wp_kses_post(\apply_filters('the_content', $radioLabel)); ?>
+			</span>
 		</label>
 	</div>
 </div>
