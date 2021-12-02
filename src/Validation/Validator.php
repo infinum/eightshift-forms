@@ -450,7 +450,7 @@ class Validator extends AbstractValidation
 			// Get all validation fields with the correct prefix.
 			$valid = array_flip(
 				array_map(
-					function ($item) use ($name) {
+					static function ($item) use ($name) {
 						return "{$name}{$item}";
 					},
 					self::VALIDATION_FIELDS

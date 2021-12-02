@@ -24,6 +24,7 @@ $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
 $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
+$fileUseCustom = Components::checkAttr('fileUseCustom', $attributes, $manifest);
 
 $isCustomFile = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -37,14 +38,14 @@ $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attribut
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($isCustomFile, $componentClass, '', 'custom'),
+	Components::selector($isCustomFile && $fileUseCustom, $componentClass, '', 'custom'),
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $customFile = '';
 
-if ($isCustomFile) {
+if ($isCustomFile && $fileUseCustom) {
 	$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
 	$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
 

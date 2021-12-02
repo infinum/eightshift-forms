@@ -237,6 +237,7 @@ trait SettingsHelper
 			$toggleValue = $fieldsValues["{$id}---use"] ?? '';
 			$toggleDisabled = $required;
 
+			// Changes for resume and cover specific to Greenhouse.
 			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
 				$toggleDisabled = false;
 			}
@@ -263,6 +264,7 @@ trait SettingsHelper
 				]
 			];
 
+			// Label for file type.
 			if ($component === 'file') {
 				$fileInfoLabelValue = $fieldsValues["{$id}---file-info-label"] ?? '';
 
@@ -288,6 +290,7 @@ trait SettingsHelper
 				];
 			}
 
+			// Field style.
 			if ($fieldStyle && isset($fieldStyle[$component])) {
 				$fieldStyleValue = $fieldsValues["{$id}---field-style"] ?? '';
 
@@ -297,7 +300,7 @@ trait SettingsHelper
 					'selectFieldLabel' => __('Field Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
 					'selectOptions' => array_map(
-						function ($item) use ($fieldStyleValue) {
+						static function ($item) use ($fieldStyleValue) {
 							return [
 								'component' => 'select-option',
 								'selectOptionLabel' => $item['label'],
@@ -380,6 +383,24 @@ trait SettingsHelper
 			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
 				switch ($itemKey) {
 					case 'field-style':
+						$fieldStyle = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+
+						// If we want to provide.
+						if (isset($fieldStyle[$component])) {
+							$selectedItem = array_filter(
+								$fieldStyle[$component],
+								static function ($item) use ($itemValue) {
+									return $item['value'] === $itemValue;
+								}
+							);
+
+							$selectedItem = reset($selectedItem);
+
+							if ($selectedItem) {
+								$formFields[$key]["{$component}UseCustom"] = isset($selectedItem['useCustom']) ? (bool) $selectedItem['useCustom'] : true;
+							}
+						}
+
 						$formFields[$key]["{$component}FieldStyle"] = $itemValue;
 						break;
 					case 'order':

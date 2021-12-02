@@ -157,7 +157,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 	{
 		$fields = array_filter(
 			$attributes,
-			function ($item) use ($key) {
+			static function ($item) use ($key) {
 				if (strpos($item, $key) === 0) {
 					return true;
 				}

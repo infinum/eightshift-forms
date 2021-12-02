@@ -152,7 +152,8 @@ public function getFieldStyleOptions(): array
 			],
 			[
 				'label' => 'Custom Style',
-				'value' => 'custom-style'
+				'value' => 'custom-style',
+				'useCustom' => false, // This key can be used only on select, file and textarea and it removes the custom JS library from the component.
 			],
 		]
 	];

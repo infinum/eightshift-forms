@@ -23,6 +23,7 @@ $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $mani
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
+$selectUseCustom = Components::checkAttr('selectUseCustom', $attributes, $manifest);
 
 $isCustomSelect = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -37,10 +38,10 @@ $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
-	Components::selector($isCustomSelect, $componentClass, '', 'custom'),
+	Components::selector($isCustomSelect && $selectUseCustom, $componentClass, '', 'custom'),
 ]);
 
-if ($isCustomSelect) {
+if ($isCustomSelect && $selectUseCustom) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 

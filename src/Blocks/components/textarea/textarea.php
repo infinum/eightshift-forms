@@ -24,6 +24,7 @@ $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes,
 $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);
 $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
+$textareaUseCustom = Components::checkAttr('textareaUseCustom', $attributes, $manifest);
 
 $isCustomTextarea = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -37,10 +38,10 @@ $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $
 $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($isCustomTextarea, $componentClass, '', 'custom'),
+	Components::selector($isCustomTextarea && $textareaUseCustom, $componentClass, '', 'custom'),
 ]);
 
-if ($isCustomTextarea) {
+if ($isCustomTextarea && $textareaUseCustom) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
 }
 
