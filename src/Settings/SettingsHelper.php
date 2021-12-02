@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings;
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
 /**
@@ -169,6 +170,8 @@ trait SettingsHelper
 		$fieldsKey = $this->getSettingsName($key);
 		$totalFields = count($formFields);
 
+		$fieldStyle = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+
 		foreach ($formFields as $fieldKey => $field) {
 			if (!$field) {
 				continue;
@@ -285,6 +288,28 @@ trait SettingsHelper
 				];
 			}
 
+			if ($fieldStyle && isset($fieldStyle[$component])) {
+				$fieldStyleValue = $fieldsValues["{$id}---field-style"] ?? '';
+
+				$fieldsOutput[0]['groupContent'][] = [
+					'component' => 'select',
+					'selectId' => "{$id}---field-style",
+					'selectFieldLabel' => __('Field Style', 'eightshift-forms'),
+					'selectValue' => $fieldStyleValue,
+					'selectOptions' => array_map(
+						function ($item) use ($fieldStyleValue) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $item['label'],
+								'selectOptionValue' => $item['value'],
+								'selectOptionIsSelected' => $fieldStyleValue === $item['value'],
+							];
+						},
+						$fieldStyle[$component]
+					),
+				];
+			}
+
 			// Submit label.
 			if (isset($additionalLabel[$id]) || $component === 'submit') {
 				$fieldsOutput[0]['groupContent'][] = [
@@ -354,6 +379,9 @@ trait SettingsHelper
 			// Iterate saved values and populate new fields.
 			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
 				switch ($itemKey) {
+					case 'field-style':
+						$formFields[$key]["{$component}FieldStyle"] = $itemValue;
+						break;
 					case 'order':
 						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
 						break;
