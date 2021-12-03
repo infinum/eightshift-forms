@@ -18,7 +18,7 @@
 		"formsStyle": {
 			"type": "string"
 		},
-		"formsFormTypeSelector": {
+		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
 		"formsServerSideRender": {

@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 
@@ -19,18 +18,12 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 $mailchimpFormServerSideRender = Components::checkAttr('mailchimpFormServerSideRender', $attributes, $manifest);
 $mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes, $manifest);
-$mailchimpFormTypeSelector = Components::checkAttr('mailchimpFormTypeSelector', $attributes, $manifest);
-
-if ($mailchimpFormServerSideRender && !$mailchimpFormTypeSelector) {
-	$mailchimpFormPostId = Helper::encryptor('encrypt', $mailchimpFormPostId);
-}
-
-$mailchimpFormPostIdDecoded = Helper::encryptor('decrypt', $mailchimpFormPostId);
+$mailchimpFormDataTypeSelector = Components::checkAttr('mailchimpFormDataTypeSelector', $attributes, $manifest);
 
 // Check if mailchimp data is set and valid.
 $isSettingsValid = \apply_filters(
 	SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME,
-	$mailchimpFormPostIdDecoded
+	$mailchimpFormPostId
 );
 
 $mailchimpClass = Components::classnames([
@@ -54,7 +47,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Mailchimp::FILTER_MAPPER_NAME,
 	$mailchimpFormPostId,
 	[
-		'formTypeSelector' => $mailchimpFormTypeSelector,
+		'formDataTypeSelector' => $mailchimpFormDataTypeSelector,
 		'ssr' => $mailchimpFormServerSideRender,
 	]
 );

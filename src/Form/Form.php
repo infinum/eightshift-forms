@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -56,21 +54,19 @@ class Form implements ServiceInterface
 		// Get post ID prop.
 		$output['formPostId'] = $formId;
 
-		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
-
 		// Get form type.
 		$output['formType'] = SettingsMailer::SETTINGS_TYPE_KEY;
 
 		// Tracking event name.
 		$output['formTrackingEventName'] = $this->getSettingsValue(
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$formIdDecoded
+			$formId
 		);
 
 		// Success redirect url.
 		$output['formSuccessRedirect'] = $this->getSettingsValue(
 			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$formIdDecoded
+			$formId
 		);
 
 		return $output;

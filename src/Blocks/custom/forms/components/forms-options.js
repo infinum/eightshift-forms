@@ -28,7 +28,7 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
 	const formsStyle = checkAttr('formsStyle', attributes, manifest);
-	const formsFormTypeSelector = checkAttr('formsFormTypeSelector', attributes, manifest);
+	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
 
 	let formsStyleOptions = [];
 
@@ -75,8 +75,8 @@ export const FormsOptions = ({ attributes, setAttributes }) => {
 			<TextControl
 				label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
 				help={__('Set additional data type selector for the form.', 'eightshift-forms')}
-				value={formsFormTypeSelector}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormTypeSelector', attributes, manifest)]: value })}
+				value={formsFormDataTypeSelector}
+				onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 			/>
 
 			{formsStyleOptions &&

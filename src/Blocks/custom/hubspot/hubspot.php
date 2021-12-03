@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 
@@ -19,16 +18,10 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 $hubspotFormServerSideRender = Components::checkAttr('hubspotFormServerSideRender', $attributes, $manifest);
 $hubspotFormPostId = Components::checkAttr('hubspotFormPostId', $attributes, $manifest);
-$hubspotFormTypeSelector = Components::checkAttr('hubspotFormTypeSelector', $attributes, $manifest);
-
-if ($hubspotFormServerSideRender && !$hubspotFormTypeSelector) {
-	$hubspotFormPostId = Helper::encryptor('encrypt', $hubspotFormPostId);
-}
-
-$hubspotFormPostIdDecoded = Helper::encryptor('decrypt', $hubspotFormPostId);
+$hubspotFormDataTypeSelector = Components::checkAttr('hubspotFormDataTypeSelector', $attributes, $manifest);
 
 // Check if hubspot data is set and valid.
-$isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $hubspotFormPostIdDecoded);
+$isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $hubspotFormPostId);
 
 $hubspotClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -51,7 +44,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Hubspot::FILTER_MAPPER_NAME,
 	$hubspotFormPostId,
 	[
-		'formTypeSelector' => $hubspotFormTypeSelector,
+		'formDataTypeSelector' => $hubspotFormDataTypeSelector,
 		'ssr' => $hubspotFormServerSideRender,
 	]
 );

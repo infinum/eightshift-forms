@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 
@@ -19,18 +18,12 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 $goodbitsFormServerSideRender = Components::checkAttr('goodbitsFormServerSideRender', $attributes, $manifest);
 $goodbitsFormPostId = Components::checkAttr('goodbitsFormPostId', $attributes, $manifest);
-$goodbitsFormTypeSelector = Components::checkAttr('goodbitsFormTypeSelector', $attributes, $manifest);
-
-if ($goodbitsFormServerSideRender && !$goodbitsFormTypeSelector) {
-	$goodbitsFormPostId = Helper::encryptor('encrypt', $goodbitsFormPostId);
-}
-
-$goodbitsFormPostIdDecoded = Helper::encryptor('decrypt', $goodbitsFormPostId);
+$goodbitsFormDataTypeSelector = Components::checkAttr('goodbitsFormDataTypeSelector', $attributes, $manifest);
 
 // Check if goodbits data is set and valid.
 $isSettingsValid = \apply_filters(
 	SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME,
-	$goodbitsFormPostIdDecoded
+	$goodbitsFormPostId
 );
 
 $goodbitsClass = Components::classnames([
@@ -54,7 +47,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Goodbits::FILTER_MAPPER_NAME,
 	$goodbitsFormPostId,
 	[
-		'formTypeSelector' => $goodbitsFormTypeSelector,
+		'formDataTypeSelector' => $goodbitsFormDataTypeSelector,
 		'ssr' => $goodbitsFormServerSideRender,
 	]
 );

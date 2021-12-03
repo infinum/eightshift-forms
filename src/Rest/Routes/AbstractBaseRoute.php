@@ -254,11 +254,10 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Return form ID from form params and determins if ID needs decrypting.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
-	 * @param bool $decrypt Use decryption on post ID.
 	 *
 	 * @return string
 	 */
-	protected function getFormId(array $params, bool $decrypt = false): string
+	protected function getFormId(array $params): string
 	{
 		$formId = $params['es-form-post-id'] ?? '';
 
@@ -267,10 +266,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		$formId = $formId['value'] ?? '';
-
-		if ($decrypt) {
-			return (string) Helper::encryptor('decrypt', $formId);
-		}
 
 		return $formId;
 	}

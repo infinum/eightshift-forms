@@ -28,7 +28,7 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-$formsFormTypeSelector = Components::checkAttr('formsFormTypeSelector', $attributes, $manifest);
+$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -100,9 +100,6 @@ if ($formsServerSideRender) {
 		return;
 	}
 
-	// Encrypt.
-	$formsFormPostId = (string) Helper::encryptor('encrypt', $formsFormPostId);
-
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
 		if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
@@ -112,7 +109,7 @@ if ($formsServerSideRender) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormTypeSelector"] = $formsFormTypeSelector;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 
 					if (isset($innerBlock['innerBlocks'])) {

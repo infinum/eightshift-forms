@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -80,8 +79,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	public function getForm(string $formId, array $formAdditionalProps = []): string
 	{
-		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
-
 		// Get post ID prop.
 		$formAdditionalProps['formPostId'] = (string) $formId;
 
@@ -93,8 +90,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		// Return form to the frontend.
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
+			$this->getFormFields($formId, $ssr),
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
 		);
 	}
 

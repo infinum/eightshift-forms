@@ -19,7 +19,7 @@
 			"type": "boolean",
 			"default": false
 		},
-		"goodbitsFormTypeSelector": {
+		"goodbitsFormDataTypeSelector": {
 			"type": "string"
 		}
 	},

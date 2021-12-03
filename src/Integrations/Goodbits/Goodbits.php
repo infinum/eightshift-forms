@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
@@ -92,8 +91,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 */
 	public function getForm(string $formId, array $formAdditionalProps = []): string
 	{
-		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
-
 		// Get post ID prop.
 		$formAdditionalProps['formPostId'] = $formId;
 
@@ -104,8 +101,8 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
 
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
+			$this->getFormFields($formId, $ssr),
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
 		);
 	}
 

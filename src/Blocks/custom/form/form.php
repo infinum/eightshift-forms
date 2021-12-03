@@ -8,14 +8,12 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
 $formFormPostId = Components::checkAttr('formFormPostId', $attributes, $manifest);
-$formFormPostIdDecoded = Helper::encryptor('decrypt', $formFormPostId);
 
 // Check if mailer data is set and valid.
 $formClass = Components::classnames([
