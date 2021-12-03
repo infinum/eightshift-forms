@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import {
 	checkAttr,
@@ -28,11 +30,28 @@ export const RadiosEditor = (attributes) => {
 		setAttributes({ [getAttrKey('radiosId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
+	// Additional content filter.
+	let additionalContent = '';
+
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.radiosBlockAdditionalContent) !== ''
+	) {
+		additionalContent = esFormsBlocksLocalization.radiosBlockAdditionalContent;
+	}
+
+	const radios = (
+		<>
+			{radiosContent}
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
+	);
+
 	return (
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: radiosContent
+					fieldContent: radios
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

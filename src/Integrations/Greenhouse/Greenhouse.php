@@ -147,8 +147,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 			$fields = $item['fields'] ?? '';
 			$label = $item['label'] ?? '';
+			$description = $item['description'] ?? '';
 			$required = $item['required'] ?? false;
-
 
 			foreach ($fields as $field) {
 				$type = $field['type'] ?? '';
@@ -209,6 +209,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'select',
 								'selectName' => $name,
 								'selectId' => $name,
+								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $required,
 								'selectOptions' => array_map(

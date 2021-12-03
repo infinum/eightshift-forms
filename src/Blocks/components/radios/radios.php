@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -31,12 +32,23 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
+$radios = '
+	' . $radiosContent . '
+	' . $additionalContent . '
+';
+
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [
-			'fieldContent' => $radiosContent,
+			'fieldContent' => $radios,
 			'fieldName' => $radiosName,
 			'fieldId' => $radiosId,
 		]),

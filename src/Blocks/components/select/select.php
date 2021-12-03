@@ -8,13 +8,17 @@
 
 use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
+$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
 $selectId = Components::checkAttr('selectId', $attributes, $manifest);
@@ -43,6 +47,7 @@ $selectClass = Components::classnames([
 
 if ($isCustomSelect && $selectUseCustom) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
+	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
 $selectAttrs = [];
@@ -57,6 +62,13 @@ if ($selectAttrs) {
 	}
 }
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME)) {
+	$attributes['selectOptions'] = Helper::convetInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
 $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
@@ -67,6 +79,7 @@ $select = '
 	>
 		' . $selectOptions . '
 	</select>
+	' . $additionalContent . '
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

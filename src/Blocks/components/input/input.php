@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -65,16 +66,24 @@ if ($inputAttrs) {
 	}
 }
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
 $input = '
-<input
-	class="' . esc_attr($inputClass) . '"
-	name="' . esc_attr($inputName) . '"
-	id="' . esc_attr($inputId) . '"
-	type="' . esc_attr($inputType) . '"
-	' . disabled($inputIsDisabled, true, false) . '
-	' . readonly($inputIsReadOnly, true, false) . '
-	' . $inputAttrsOutput . '
-/>';
+	<input
+		class="' . esc_attr($inputClass) . '"
+		name="' . esc_attr($inputName) . '"
+		id="' . esc_attr($inputId) . '"
+		type="' . esc_attr($inputType) . '"
+		' . disabled($inputIsDisabled, true, false) . '
+		' . readonly($inputIsReadOnly, true, false) . '
+		' . $inputAttrsOutput . '
+	/>
+	' . $additionalContent . '
+';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',

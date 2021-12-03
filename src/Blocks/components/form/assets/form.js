@@ -27,6 +27,7 @@ export class Form {
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 		this.groupSelector = `${this.formSelector}-group`;
 		this.groupInnerSelector = `${this.formSelector}-group-inner`;
+		this.customSelector = `${this.formSelector}-custom`;
 
 		this.fieldSelector = `${this.formSelector}-field`;
 		this.inputSelector = `${this.fieldSelector} input`;
@@ -44,9 +45,6 @@ export class Form {
 		this.formResetOnSuccess = Boolean(options.formResetOnSuccess);
 		this.redirectionTimeout = options.redirectionTimeout ?? 600;
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
-		this.textareaCustom = Boolean(options.textareaCustom);
-		this.selectCustom = Boolean(options.selectCustom);
-		this.fileCustom = Boolean(options.fileCustom);
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 
 		// If using custom file create global object to store files.
@@ -332,7 +330,7 @@ export class Form {
 				let fileList = files;
 
 				// If custom file use files got from the global object of files uploaded.
-				if (this.fileCustom) {
+				if (this.isCustom(item)) {
 					fileList = this.files[id];
 				}
 
@@ -570,7 +568,7 @@ export class Form {
 
 		this.preFillOnInit(option);
 
-		if (this.selectCustom) {
+		if (this.isCustom(select)) {
 			new Choices(select, {
 				searchEnabled: false,
 				shouldSort: false,
@@ -583,7 +581,6 @@ export class Form {
 			select.addEventListener('focus', this.onFocusEvent);
 			select.addEventListener('blur', this.onBlurEvent);
 		}
-
 	}
 
 	// Setup Textarea field.
@@ -593,7 +590,7 @@ export class Form {
 		textarea.addEventListener('focus', this.onFocusEvent);
 		textarea.addEventListener('blur', this.onBlurEvent);
 
-		if (this.textareaCustom) {
+		if (this.isCustom(textarea)) {
 			textarea.setAttribute('rows', '1');
 			textarea.setAttribute('cols', '');
 
@@ -603,7 +600,7 @@ export class Form {
 
 	// Setup file single field.
 	setupFileField = (file) => {
-		if (this.fileCustom) {
+		if (this.isCustom(file)) {
 			// Create an empty array for each file.
 			this.files[file.id] = [];
 
@@ -713,5 +710,10 @@ export class Form {
 		} else {
 			field.classList.remove(this.CLASS_ACTIVE, this.CLASS_FILLED);
 		}
+	}
+
+	// Determine if field is custom type or normal.
+	isCustom(item) {
+		return item.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
 	}
 }

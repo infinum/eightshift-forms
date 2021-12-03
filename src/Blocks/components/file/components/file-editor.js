@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import {
@@ -33,13 +35,27 @@ export const FileEditor = (attributes) => {
 		setAttributes({ [getAttrKey('fileId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
+		// Additional content filter.
+		let additionalContent = '';
+
+		if (
+			typeof esFormsBlocksLocalization !== 'undefined' &&
+			(esFormsBlocksLocalization?.fileBlockAdditionalContent) !== ''
+		) {
+			additionalContent = esFormsBlocksLocalization.fileBlockAdditionalContent;
+		}
+
 	const file = (
-		<input
-			className={fileClass}
-			type={'file'}
-			readOnly
-			disabled
-		/>
+		<>
+			<input
+				className={fileClass}
+				type={'file'}
+				readOnly
+				disabled
+			/>
+
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
 	);
 
 	return (

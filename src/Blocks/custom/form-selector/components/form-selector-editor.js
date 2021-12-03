@@ -64,14 +64,14 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 		setHasInnerBlocks(!hasInnerBlocks);
 	};
 
-	let beforeContent = '';
+	// Additional content filter.
+	let additionalContent = '';
 
-	// Update media breakpoints from the filter.
 	if (
 		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.beforeContent) !== ''
+		(esFormsBlocksLocalization?.formSelectorBlockAdditionalContent) !== ''
 	) {
-		beforeContent = esFormsBlocksLocalization.formSelectorBlockBeforeContent;
+		additionalContent = esFormsBlocksLocalization.formSelectorBlockAdditionalContent;
 	}
 
 	return (
@@ -115,7 +115,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 				</>
 			}
 
-			<div dangerouslySetInnerHTML={{__html: beforeContent}} />
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}

@@ -129,7 +129,14 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['additionalBlocks'] = apply_filters(Filters::FILTER_ADDITIONAL_BLOCKS_NAME, []);
 			$output['formsBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
 			$output['fieldBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
-			$output['formSelectorBlockBeforeContent'] = apply_filters(Filters::FILTER_BLOCK_FORM_SELECTOR_BEFORE_CONTENT_NAME, '');
+			$output['formSelectorBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_FORM_SELECTOR_ADDITIONAL_CONTENT_NAME, []);
+			$output['inputBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME, []);
+			$output['textareaBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME, []);
+			$output['selectBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME, []);
+			$output['fileBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME, []);
+			$output['checkboxesBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME, []);
+			$output['radiosBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME, []);
+			$output['submitBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME, []);
 			$output['customDataBlockOptions'] = apply_filters(Filters::FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 			$output['mediaBreakpoints'] = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);

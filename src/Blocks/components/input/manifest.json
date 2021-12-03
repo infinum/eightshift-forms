@@ -72,6 +72,9 @@
 		},
 		"inputStep": {
 			"type": "integer"
+		},
+		"inputMeta": {
+			"type": "string"
 		}
 	},
 	"options": {

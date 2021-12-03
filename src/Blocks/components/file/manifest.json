@@ -2,6 +2,7 @@
 	"componentName": "file",
 	"title": "file",
 	"componentClass": "es-file",
+	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"fileName": "Name",
@@ -53,6 +54,9 @@
 		"fileUseCustom": {
 			"type": "boolean",
 			"default": true
+		},
+		"fileMeta": {
+			"type": "string"
 		}
 	}
 }

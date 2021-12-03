@@ -11,12 +11,15 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
-echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+if (!$this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+	echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';

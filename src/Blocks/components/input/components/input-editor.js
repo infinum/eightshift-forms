@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import {
@@ -43,14 +45,28 @@ export const InputEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	// Additional content filter.
+	let additionalContent = '';
+
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.inputBlockAdditionalContent) !== ''
+	) {
+		additionalContent = esFormsBlocksLocalization.inputBlockAdditionalContent;
+	}
+
 	const input = (
-		<input
-			className={inputClass}
-			value={inputValue}
-			placeholder={inputPlaceholder}
-			type={inputType}
-			readOnly
-		/>
+		<>
+			<input
+				className={inputClass}
+				value={inputValue}
+				placeholder={inputPlaceholder}
+				type={inputType}
+				readOnly
+			/>
+
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
 	);
 
 	return (

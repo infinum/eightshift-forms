@@ -2,6 +2,7 @@
 	"componentName": "select",
 	"title": "Select",
 	"componentClass": "es-select",
+	"componentCustomJsClass": "js-es-block-form-custom",
 	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
 	"example": {
 		"attributes": {
@@ -42,6 +43,9 @@
 		"selectUseCustom": {
 			"type": "boolean",
 			"default": true
+		},
+		"selectMeta": {
+			"type": "string"
 		}
 	}
 }

@@ -48,12 +48,19 @@ if ($submitAttrs) {
 	}
 }
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
 	><span class="' . $componentClass . '__inner">' . esc_html($submitValue) . '</span></button>
+	' . $additionalContent . '
 ';
 
 // With this filder you can override default submit component and provide your own.

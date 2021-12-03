@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import {
@@ -36,10 +38,25 @@ export const SelectEditor = (attributes) => {
 		setAttributes({ [getAttrKey('selectId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
+
+	// Additional content filter.
+	let additionalContent = '';
+
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.selectBlockAdditionalContent) !== ''
+	) {
+		additionalContent = esFormsBlocksLocalization.selectBlockAdditionalContent;
+	}
+
 	const select = (
-		<div className={selectClass}>
-			{selectOptions}
-		</div>
+		<>
+			<div className={selectClass}>
+				{selectOptions}
+			</div>
+
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
 	);
 
 	return (

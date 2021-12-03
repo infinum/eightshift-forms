@@ -26,6 +26,9 @@
 		"checkboxesIsRequiredCount": {
 			"type": "integer",
 			"default": 1
+		},
+		"checkboxesMeta": {
+			"type": "string"
 		}
 	},
 	"options": {

@@ -54,6 +54,9 @@
 		"formServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"formMeta": {
+			"type": "string"
 		}
 	},
 	"options": {

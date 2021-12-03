@@ -126,11 +126,6 @@ class Filters
 	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
 
 	/**
-	 * Filter block form selector before content key.
-	 */
-	public const FILTER_BLOCK_FORM_SELECTOR_BEFORE_CONTENT_NAME = 'es_forms_block_form_selector_before_content';
-
-	/**
 	 * Filter block custom data options key.
 	 */
 	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME = 'es_forms_block_custom_data_options';
@@ -144,4 +139,16 @@ class Filters
 	 * Filter block submit key.
 	 */
 	public const FILTER_BLOCK_SUBMIT_NAME = 'es_forms_block_submit';
+
+	/**
+	 * Filter additional content key - form selector select.
+	 */
+	public const FILTER_BLOCK_FORM_SELECTOR_ADDITIONAL_CONTENT_NAME = 'es_forms_block_form_selector_additional_content';
+	public const FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_input_additional_content';
+	public const FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME = 'es_forms_block_textarea_additional_content';
+	public const FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_select_additional_content';
+	public const FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME = 'es_forms_block_file_additional_content';
+	public const FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME = 'es_forms_block_checkboxes_additional_content';
+	public const FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME = 'es_forms_block_radios_additional_content';
+	public const FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_submit_additional_content';
 }
