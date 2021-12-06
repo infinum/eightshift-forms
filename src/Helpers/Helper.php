@@ -227,7 +227,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function minifiString(string $string): string
+	public static function minifyString(string $string): string
 	{
 		$string = str_replace(PHP_EOL, ' ', $string);
 		$string = preg_replace('/[\r\n]+/', "\n", $string);
@@ -260,7 +260,7 @@ class Helper
 			return $output;
 		}
 
-		$string = Helper::minifiString($string);
+		$string = Helper::minifyString($string);
 
 		preg_match_all($re, $string, $matches, PREG_SET_ORDER, 0);
 
