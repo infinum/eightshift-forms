@@ -219,4 +219,63 @@ class Helper
 
 		return !empty($plugin_page) ?? false; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 	}
+
+	/**
+	 * Minify string
+	 *
+	 * @param string $string String to check.
+	 *
+	 * @return string
+	 */
+	public static function minifyString(string $string): string
+	{
+		$string = str_replace(PHP_EOL, ' ', $string);
+		$string = preg_replace('/[\r\n]+/', "\n", $string);
+		return (string) preg_replace('/[ \t]+/', ' ', (string) $string);
+	}
+
+
+	/**
+	 * Convert inner blocks to array
+	 *
+	 * @param string $string String to convert.
+	 * @param string $type Type of content.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function convetInnerBlocksToArray(string $string, string $type): array
+	{
+		$output = [];
+
+		switch ($type) {
+			case 'select':
+				$re = '/<option value="(.*?)".> (.*?)<\/option>/m';
+				break;
+			default:
+				$re = '';
+				break;
+		}
+
+		if (!$re) {
+			return $output;
+		}
+
+		$string = Helper::minifyString($string);
+
+		preg_match_all($re, $string, $matches, PREG_SET_ORDER, 0);
+
+		if (!$matches) {
+			return $output;
+		}
+
+		foreach ($matches as $match) {
+			$output[] = [
+				'label' => $match[2] ?? '',
+				'value' => $match[1] ?? '',
+				'original' => $match[0] ?? '',
+			];
+		}
+
+		return $output;
+	}
 }

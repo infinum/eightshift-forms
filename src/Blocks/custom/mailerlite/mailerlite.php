@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 
@@ -19,18 +18,12 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 $mailerliteFormServerSideRender = Components::checkAttr('mailerliteFormServerSideRender', $attributes, $manifest);
 $mailerliteFormPostId = Components::checkAttr('mailerliteFormPostId', $attributes, $manifest);
-$mailerliteFormTypeSelector = Components::checkAttr('mailerliteFormTypeSelector', $attributes, $manifest);
-
-if ($mailerliteFormServerSideRender && !$mailerliteFormTypeSelector) {
-	$mailerliteFormPostId = Helper::encryptor('encrypt', $mailerliteFormPostId);
-}
-
-$mailerliteFormPostIdDecoded = Helper::encryptor('decrypt', $mailerliteFormPostId);
+$mailerliteFormDataTypeSelector = Components::checkAttr('mailerliteFormDataTypeSelector', $attributes, $manifest);
 
 // Check if mailerlite data is set and valid.
 $isSettingsValid = \apply_filters(
 	SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME,
-	$mailerliteFormPostIdDecoded
+	$mailerliteFormPostId
 );
 
 $mailerliteClass = Components::classnames([
@@ -54,7 +47,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Mailerlite::FILTER_MAPPER_NAME,
 	$mailerliteFormPostId,
 	[
-		'formTypeSelector' => $mailerliteFormTypeSelector,
+		'formDataTypeSelector' => $mailerliteFormDataTypeSelector,
 		'ssr' => $mailerliteFormServerSideRender,
 	]
 );

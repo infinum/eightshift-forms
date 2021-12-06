@@ -25,7 +25,7 @@ $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
-$formTypeSelector = Components::checkAttr('formTypeSelector', $attributes, $manifest);
+$formDataTypeSelector = Components::checkAttr('formDataTypeSelector', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 
 $formClass = Components::classnames([
@@ -35,8 +35,8 @@ $formClass = Components::classnames([
 ]);
 
 $formAttrs = [];
-if ($formTypeSelector) {
-	$formAttrs['data-type-selector'] = esc_attr($formTypeSelector);
+if ($formDataTypeSelector) {
+	$formAttrs['data-type-selector'] = esc_attr($formDataTypeSelector);
 }
 
 if ($formSuccessRedirect) {

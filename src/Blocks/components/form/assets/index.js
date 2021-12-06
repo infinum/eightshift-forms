@@ -17,9 +17,6 @@ domReady(() => {
 				formDisableScrollToFieldOnError: esFormsLocalization.formDisableScrollToFieldOnError,
 				formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 				formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
-				textareaCustom: esFormsLocalization.textareaCustom,
-				selectCustom: esFormsLocalization.selectCustom,
-				fileCustom: esFormsLocalization.fileCustom,
 				fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
 			});
 

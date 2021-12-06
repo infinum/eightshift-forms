@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import {
 	checkAttr,
@@ -28,11 +30,28 @@ export const CheckboxesEditor = (attributes) => {
 		setAttributes({ [getAttrKey('checkboxesId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
+	// Additional content filter.
+	let additionalContent = '';
+
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.checkboxesBlockAdditionalContent) !== ''
+	) {
+		additionalContent = esFormsBlocksLocalization.checkboxesBlockAdditionalContent;
+	}
+
+	const checkboxes = (
+		<>
+			{checkboxesContent}
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
+	);
+
 	return (
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: checkboxesContent
+					fieldContent: checkboxes,
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

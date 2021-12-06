@@ -48,12 +48,15 @@
 		"formType": {
 			"type": "string"
 		},
-		"formTypeSelector": {
+		"formDataTypeSelector": {
 			"type": "string"
 		},
 		"formServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"formMeta": {
+			"type": "string"
 		}
 	},
 	"options": {

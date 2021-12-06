@@ -2,6 +2,7 @@
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "es-textarea",
+	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"textareaName": "Name",
@@ -49,6 +50,9 @@
 		"textareaUseCustom": {
 			"type": "boolean",
 			"default": true
+		},
+		"textareaMeta": {
+			"type": "string"
 		}
 	}
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -98,8 +97,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 */
 	public function getForm(string $formId, array $formAdditionalProps = []): string
 	{
-		$formIdDecoded = (string) Helper::encryptor('decrypt', $formId);
-
 		// Get post ID prop.
 		$formAdditionalProps['formPostId'] = $formId;
 
@@ -110,8 +107,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
 
 		return $this->buildForm(
-			$this->getFormFields($formIdDecoded, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formIdDecoded))
+			$this->getFormFields($formId, $ssr),
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
 		);
 	}
 

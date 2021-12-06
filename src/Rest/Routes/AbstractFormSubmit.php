@@ -62,8 +62,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		try {
 			$params = $this->prepareParams($request->get_body_params());
 
-			// Get encrypted form ID and decrypt it.
-			$formId = $this->getFormId($params, true);
+			// Get form ID.
+			$formId = $this->getFormId($params);
 
 			// Determine form type.
 			$formType = $this->getFormType($params);

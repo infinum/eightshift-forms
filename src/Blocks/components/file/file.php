@@ -8,12 +8,14 @@
 
 use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
+$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
@@ -64,6 +66,7 @@ if ($isCustomFile && $fileUseCustom) {
 	';
 
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
+	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
 $fileAttrs = [];
@@ -78,6 +81,12 @@ if ($fileAttrs) {
 	}
 }
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
 $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
@@ -88,6 +97,7 @@ $file = '
 		' . $fileAttrsOutput . '
 	/>
 	' . $customFile . '
+	' . $additionalContent . '
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

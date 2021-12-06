@@ -8,12 +8,14 @@
 
 use EightshiftForms\Blocks\Blocks;
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
+$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
@@ -43,6 +45,7 @@ $textareaClass = Components::classnames([
 
 if ($isCustomTextarea && $textareaUseCustom) {
 	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
+	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
 $textareaAttrs = [];
@@ -61,6 +64,12 @@ if ($textareaAttrs) {
 	}
 }
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
@@ -69,6 +78,7 @@ $textarea = '<textarea
 		' . readonly($textareaIsReadOnly, true, false) . '
 		' . $textareaAttrsOutput . '
 	>' . \apply_filters('the_content', $textareaValue) . '</textarea>
+	' . $additionalContent . '
 ';
 
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

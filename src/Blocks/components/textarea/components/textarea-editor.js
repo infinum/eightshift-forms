@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import {
@@ -37,14 +39,28 @@ export const TextareaEditor = (attributes) => {
 		setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: unique });
 	}, []); // eslint-disable-line
 
+	// Additional content filter.
+	let additionalContent = '';
+
+	if (
+		typeof esFormsBlocksLocalization !== 'undefined' &&
+		(esFormsBlocksLocalization?.textareaBlockAdditionalContent) !== ''
+	) {
+		additionalContent = esFormsBlocksLocalization.textareaBlockAdditionalContent;
+	}
+
 	const textarea = (
-		<textarea
-			className={textareaClass}
-			placeholder={textareaPlaceholder}
-			readOnly
-		>
-			{textareaValue}
-		</textarea>
+		<>
+			<textarea
+				className={textareaClass}
+				placeholder={textareaPlaceholder}
+				readOnly
+			>
+				{textareaValue}
+			</textarea>
+
+			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+		</>
 	);
 
 	return (

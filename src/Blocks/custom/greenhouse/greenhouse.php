@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
@@ -19,16 +18,10 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 $greenhouseFormServerSideRender = Components::checkAttr('greenhouseFormServerSideRender', $attributes, $manifest);
 $greenhouseFormPostId = Components::checkAttr('greenhouseFormPostId', $attributes, $manifest);
-$greenhouseFormTypeSelector = Components::checkAttr('greenhouseFormTypeSelector', $attributes, $manifest);
-
-if ($greenhouseFormServerSideRender && !$greenhouseFormTypeSelector) {
-	$greenhouseFormPostId = Helper::encryptor('encrypt', $greenhouseFormPostId);
-}
-
-$greenhouseFormPostIdDecoded = Helper::encryptor('decrypt', $greenhouseFormPostId);
+$greenhouseFormDataTypeSelector = Components::checkAttr('greenhouseFormDataTypeSelector', $attributes, $manifest);
 
 // Check if Greenhouse data is set and valid.
-$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $greenhouseFormPostIdDecoded);
+$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $greenhouseFormPostId);
 
 $greenhouseClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -51,7 +44,7 @@ echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsc
 	Greenhouse::FILTER_MAPPER_NAME,
 	$greenhouseFormPostId,
 	[
-		'formTypeSelector' => $greenhouseFormTypeSelector,
+		'formDataTypeSelector' => $greenhouseFormDataTypeSelector,
 		'ssr' => $greenhouseFormServerSideRender,
 	]
 );

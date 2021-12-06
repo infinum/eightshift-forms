@@ -11,12 +11,15 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
-echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+if (!$this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+	echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
 
 $blockClass = $attributes['blockClass'] ?? '';
 $invalidClass = $manifestInvalid['componentClass'] ?? '';
@@ -25,7 +28,7 @@ $invalidClass = $manifestInvalid['componentClass'] ?? '';
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-$formsFormTypeSelector = Components::checkAttr('formsFormTypeSelector', $attributes, $manifest);
+$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -97,9 +100,6 @@ if ($formsServerSideRender) {
 		return;
 	}
 
-	// Encrypt.
-	$formsFormPostId = (string) Helper::encryptor('encrypt', $formsFormPostId);
-
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
 		if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
@@ -109,7 +109,7 @@ if ($formsServerSideRender) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormTypeSelector"] = $formsFormTypeSelector;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 
 					if (isset($innerBlock['innerBlocks'])) {

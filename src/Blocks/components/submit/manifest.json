@@ -45,6 +45,9 @@
 		"submitServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"submitMeta": {
+			"type": "string"
 		}
 	}
 }

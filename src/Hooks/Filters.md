@@ -293,26 +293,38 @@ public function getFormsSubmitComponent(array $data): string
 }
 ```
 
-## Adding additional content in the form selector block
+## Adding additional content in blocks
 
-This filter is used if you want to add some custom string/component/css variables, etc. to the custom form builder.
+This filter is used if you want to add some custom string/component/css variables, etc. to the block. By changing the name of the filter you will target different blocks.
+
+**Supported blocks:**
+* form selector - `es_forms_block_form_selector_additional_content`
+* input - `es_forms_block_input_additional_content`
+* textarea - `es_forms_block_textarea_additional_content`
+* select - `es_forms_block_select_additional_content`
+* file - `es_forms_block_file_additional_content`
+* checkboxes - `es_forms_block_checkboxes_additional_content`
+* radios - `es_forms_block_radios_additional_content`
+* submit - `es_forms_block_submit_additional_content`
 
 **Default value:**
 ```php
 ''
 ```
 
-**Filter:**
+**Filter example for form selector:**
 ```php
-// Provide additional content before form selector block.
-add_filter('es_forms_block_form_selector_before_content', [$this, 'getFormSelectorBeforeContent']);
+// Provide additional content in form selector block.
+add_filter('es_forms_block_form_selector_additional_content', [$this, 'getFormSelectorAdditionalContent']);
 
 /**
- * Provide additional content before form selector block.
+ * Provide additional content in form selector block.
+ *
+ * @param array<string, mixed> $attributes Block attributes.
  *
  * @return string
  */
-public function getFormSelectorBeforeContent(): string
+public function getFormSelectorAdditionalContent($attributes): string
 {
 	return 'custom string';
 }

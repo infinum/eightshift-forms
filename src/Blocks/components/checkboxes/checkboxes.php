@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -31,11 +32,23 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 	return 'for="' . $checkboxesId . '[' . $indexLabel++ . ']"';
 }, $checkboxesContent);
 
+// Additional content filter.
+$additionalContent = '';
+if (has_filter(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME)) {
+	$additionalContent = apply_filters(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+}
+
+$checkboxes = '
+	' . $checkboxesContent . '
+	' . $additionalContent . '
+';
+
+
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [
-			'fieldContent' => $checkboxesContent,
+			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesId,
 		]),
 		[
