@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -356,6 +357,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
 		];
+
+		// Change the final output if necesery.
+		if (has_filter(Filters::FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME) && !is_admin()) {
+			$output = \apply_filters(Filters::FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME, $output) ?? [];
+		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId),

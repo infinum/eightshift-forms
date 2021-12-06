@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -168,6 +169,11 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'submitServerSideRender' => $ssr,
 			],
 		];
+
+		// Change the final output if necesery.
+		if (has_filter(Filters::FILTER_INTEGRATION_GOODBITS_FORM_DATA_NAME) && !is_admin()) {
+			$output = \apply_filters(Filters::FILTER_INTEGRATION_GOODBITS_FORM_DATA_NAME, $output) ?? [];
+		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsGoodbits::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY, $formId),

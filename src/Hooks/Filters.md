@@ -329,3 +329,33 @@ public function getFormSelectorAdditionalContent($attributes): string
 	return 'custom string';
 }
 ```
+
+## Change integration form data before output.
+
+This filter is used if you want to change form data before output. By changing the name of the filter you will target different blocks.
+
+**Supported blocks:**
+* goodbits - `es_forms_integration_goodbits_form_data`
+* greenhouse - `es_forms_integration_greenhouse_form_data`
+* hubspot - `es_forms_integration_hubspot_form_data`
+* mailchimp - `es_forms_integration_mailchimp_form_data`
+* mailerlite - `es_forms_integration_mailerlite_form_data`
+
+
+**Filter example for Greenhouse integration:**
+```php
+// Provide integration from data.
+add_filter('es_forms_integration_greenhouse_form_data', [$this, 'getIntegrationFormData']);
+
+/**
+ * Provide integration form data changes - Greenhouse.
+ *
+ * @param array<string, mixed> $data Array of component/attributes data.
+ *
+ * @return array<string, mixed>
+ */
+public function getIntegrationFormData(array $data): array
+{
+	return $data;
+}
+```

@@ -141,7 +141,7 @@ class Filters
 	public const FILTER_BLOCK_SUBMIT_NAME = 'es_forms_block_submit';
 
 	/**
-	 * Filter additional content key - form selector select.
+	 * Filter additional content key.
 	 */
 	public const FILTER_BLOCK_FORM_SELECTOR_ADDITIONAL_CONTENT_NAME = 'es_forms_block_form_selector_additional_content';
 	public const FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_input_additional_content';
@@ -151,4 +151,13 @@ class Filters
 	public const FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME = 'es_forms_block_checkboxes_additional_content';
 	public const FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME = 'es_forms_block_radios_additional_content';
 	public const FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_submit_additional_content';
+
+	/**
+	 * Filter integration form data key
+	 */
+	public const FILTER_INTEGRATION_GOODBITS_FORM_DATA_NAME = 'es_forms_integration_goodbits_form_data';
+	public const FILTER_INTEGRATION_GREENHOUSE_FORM_DATA_NAME = 'es_forms_integration_greenhouse_form_data';
+	public const FILTER_INTEGRATION_HUBSPOT_FORM_DATA_NAME = 'es_forms_integration_hubspot_form_data';
+	public const FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME = 'es_forms_integration_mailchimp_form_data';
+	public const FILTER_INTEGRATION_MAILERLITE_FORM_DATA_NAME = 'es_forms_integration_mailerlite_form_data';
 }

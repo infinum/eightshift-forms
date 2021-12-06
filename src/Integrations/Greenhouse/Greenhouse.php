@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -234,6 +235,11 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
 		];
+
+		// Change the final output if necesery.
+		if (has_filter(Filters::FILTER_INTEGRATION_GREENHOUSE_FORM_DATA_NAME) && !is_admin()) {
+			$output = \apply_filters(Filters::FILTER_INTEGRATION_GREENHOUSE_FORM_DATA_NAME, $output) ?? [];
+		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),

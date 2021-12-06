@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
@@ -198,6 +199,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
 		];
+
+		// Change the final output if necesery.
+		if (has_filter(Filters::FILTER_INTEGRATION_MAILERLITE_FORM_DATA_NAME) && !is_admin()) {
+			$output = \apply_filters(Filters::FILTER_INTEGRATION_MAILERLITE_FORM_DATA_NAME, $output) ?? [];
+		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId),
