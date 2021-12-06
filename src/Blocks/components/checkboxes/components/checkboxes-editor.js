@@ -51,7 +51,7 @@ export const CheckboxesEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: checkboxes
+					fieldContent: checkboxes,
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}
