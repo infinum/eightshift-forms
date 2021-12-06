@@ -77,6 +77,9 @@
 		},
 		"fieldStyle": {
 			"type": "string"
+		},
+		"fieldAttrs": {
+			"type": "array"
 		}
 	},
 	"responsiveAttributes": {

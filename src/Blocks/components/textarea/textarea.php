@@ -27,6 +27,7 @@ $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $
 $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaUseCustom = Components::checkAttr('textareaUseCustom', $attributes, $manifest);
+$textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 
 $isCustomTextarea = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -48,7 +49,6 @@ if ($isCustomTextarea && $textareaUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-$textareaAttrs = [];
 if ($textareaTracking) {
 	$textareaAttrs['data-tracking'] = esc_attr($textareaTracking);
 }

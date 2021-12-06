@@ -27,6 +27,7 @@ $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $
 $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
 $fileUseCustom = Components::checkAttr('fileUseCustom', $attributes, $manifest);
+$fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
 
 $isCustomFile = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -69,7 +70,6 @@ if ($isCustomFile && $fileUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-$fileAttrs = [];
 if ($fileTracking) {
 	$fileAttrs['data-tracking'] = esc_attr($fileTracking);
 }

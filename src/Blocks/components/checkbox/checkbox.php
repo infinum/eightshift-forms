@@ -24,6 +24,7 @@ $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $
 $checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
 $checkboxTracking = Components::checkAttr('checkboxTracking', $attributes, $manifest);
 $checkboxSingleSubmit = Components::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
+$checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
 
 $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -40,7 +41,6 @@ if (empty($checkboxLabel)) {
 	return;
 }
 
-$checkboxAttrs = [];
 if ($checkboxTracking) {
 	$checkboxAttrs['data-tracking'] = esc_attr($checkboxTracking);
 }

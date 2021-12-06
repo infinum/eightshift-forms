@@ -57,6 +57,9 @@
 		},
 		"formMeta": {
 			"type": "string"
+		},
+		"formAttrs": {
+			"type": "array"
 		}
 	},
 	"options": {

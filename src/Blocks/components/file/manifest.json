@@ -57,6 +57,9 @@
 		},
 		"fileMeta": {
 			"type": "string"
+		},
+		"fileAttrs": {
+			"type": "array"
 		}
 	}
 }

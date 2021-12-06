@@ -51,6 +51,7 @@ $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
+$fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -70,9 +71,20 @@ if ($fieldType === 'fieldset') {
 	$labelTag = 'legend';
 }
 
+$fieldAttrsOutput = '';
+if ($fieldAttrs) {
+	foreach ($fieldAttrs as $key => $value) {
+		$fieldAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 ?>
 
-<<?php echo esc_attr($fieldTag); ?> class="<?php echo esc_attr($fieldClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
+<<?php echo esc_attr($fieldTag); ?>
+	class="<?php echo esc_attr($fieldClass); ?>"
+	data-id="<?php echo esc_attr($unique); ?>"
+	<?php echo $fieldAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+>
 
 	<?php
 	if ($fieldUniqueId) {

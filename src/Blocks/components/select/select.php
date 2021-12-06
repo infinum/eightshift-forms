@@ -28,6 +28,7 @@ $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
 $selectUseCustom = Components::checkAttr('selectUseCustom', $attributes, $manifest);
+$selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 
 $isCustomSelect = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -50,7 +51,6 @@ if ($isCustomSelect && $selectUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-$selectAttrs = [];
 if ($selectTracking) {
 	$selectAttrs['data-tracking'] = esc_attr($selectTracking);
 }

@@ -56,6 +56,9 @@
 		"checkboxSingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"checkboxAttrs": {
+			"type": "array"
 		}
 	}
 }

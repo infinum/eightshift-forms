@@ -27,6 +27,7 @@ $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attribu
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formDataTypeSelector = Components::checkAttr('formDataTypeSelector', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
+$formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -34,7 +35,6 @@ $formClass = Components::classnames([
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
-$formAttrs = [];
 if ($formDataTypeSelector) {
 	$formAttrs['data-type-selector'] = esc_attr($formDataTypeSelector);
 }

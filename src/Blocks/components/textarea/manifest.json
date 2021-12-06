@@ -53,6 +53,9 @@
 		},
 		"textareaMeta": {
 			"type": "string"
+		},
+		"textareaAttrs": {
+			"type": "array"
 		}
 	}
 }

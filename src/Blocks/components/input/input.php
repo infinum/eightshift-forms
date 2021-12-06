@@ -25,6 +25,7 @@ $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
 $inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
 $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
 $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
+$inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -34,7 +35,6 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$inputAttrs = [];
 if ($inputType === 'number') {
 	if ($inputMin || $inputMin === 0) {
 		$inputAttrs['min'] = esc_attr($inputMin);
@@ -94,11 +94,14 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldName' => $inputName,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldHideLabel' => $inputType === 'hidden',
-			'fieldUseError' => $inputType !== 'hidden'
+			'fieldUseError' => $inputType !== 'hidden',
+			'fieldAttrs' => [
+				'data-input-type' => $inputType,
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
-			'selectorClass' => $manifest['componentName'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? ''
 		]
 	)
 );

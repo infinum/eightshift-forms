@@ -227,6 +227,21 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			}
 		}
 
+		if (!is_admin()) {
+			$output[] = [
+				'component' => 'input',
+				'inputType' => 'hidden',
+				'inputId' => 'longitude',
+				'inputName' => 'longitude',
+			];
+			$output[] = [
+				'component' => 'input',
+				'inputType' => 'hidden',
+				'inputId' => 'latitude',
+				'inputName' => 'latitude',
+			];
+		}
+
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',

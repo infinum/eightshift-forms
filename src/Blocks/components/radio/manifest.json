@@ -48,6 +48,9 @@
 		"radioSingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"radioAttrs": {
+			"type": "array"
 		}
 	}
 }

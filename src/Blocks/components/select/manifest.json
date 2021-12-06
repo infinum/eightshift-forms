@@ -46,6 +46,9 @@
 		},
 		"selectMeta": {
 			"type": "string"
+		},
+		"selectAttrs": {
+			"type": "array"
 		}
 	}
 }
