@@ -7,7 +7,7 @@ domReady(() => {
 	const selector = `.${componentJsClass}`;
 	const elements = document.querySelectorAll(selector);
 
-	if (elements.length) {
+	if (elements.length && typeof esFormsLocalization !== 'undefined') {
 		import('./form').then(({ Form, FORM_EVENTS }) => {
 			const form = new Form({
 				formSelector: selector,
