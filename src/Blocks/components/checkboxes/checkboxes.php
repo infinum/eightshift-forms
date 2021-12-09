@@ -34,8 +34,9 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 
 // Additional content filter.
 $additionalContent = '';
-if (has_filter(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME)) {
-	$additionalContent = apply_filters(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+$filterName = Filters::getBlockFilterName('checkboxes', 'additionalContent');
+if (has_filter($filterName)) {
+	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 $checkboxes = '

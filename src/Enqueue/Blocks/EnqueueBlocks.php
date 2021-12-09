@@ -126,20 +126,34 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Only for block editor.
 		if (is_admin()) {
-			$output['additionalBlocks'] = apply_filters(Filters::FILTER_ADDITIONAL_BLOCKS_NAME, []);
-			$output['formsBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME, []);
-			$output['fieldBlockStyleOptions'] = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
-			$output['formSelectorBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_FORM_SELECTOR_ADDITIONAL_CONTENT_NAME, []);
-			$output['inputBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME, []);
-			$output['textareaBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME, []);
-			$output['selectBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME, []);
-			$output['fileBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME, []);
-			$output['checkboxesBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME, []);
-			$output['radiosBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME, []);
-			$output['submitBlockAdditionalContent'] = apply_filters(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME, []);
-			$output['customDataBlockOptions'] = apply_filters(Filters::FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME, []);
+			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
+			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
+			$fieldStyleOptionsFilterName = Filters::getBlockFilterName('field', 'styleOptions');
+			$formSelectorAdditionalContentFilterName = Filters::getBlockFilterName('formSelector', 'additionalContent');
+			$inputAdditionalContentFilterName = Filters::getBlockFilterName('input', 'additionalContent');
+			$textareaAdditionalContentFilterName = Filters::getBlockFilterName('textarea', 'additionalContent');
+			$selectAdditionalContentFilterName = Filters::getBlockFilterName('select', 'additionalContent');
+			$fileAdditionalContentFilterName = Filters::getBlockFilterName('file', 'additionalContent');
+			$checkboxesAdditionalContentFilterName = Filters::getBlockFilterName('checkboxes', 'additionalContent');
+			$radiosAdditionalContentFilterName = Filters::getBlockFilterName('radios', 'additionalContent');
+			$submitAdditionalContentFilterName = Filters::getBlockFilterName('submit', 'additionalContent');
+			$customDataOptionsFilterName = Filters::getBlockFilterName('customData', 'options');
+			$breakpointsFilterName = Filters::getBlocksFilterName('breakpoints');
+
+			$output['additionalBlocks'] = apply_filters($additionalBlocksFilterName, []);
+			$output['formsBlockStyleOptions'] = apply_filters($formsStyleOptionsFilterName, []);
+			$output['fieldBlockStyleOptions'] = apply_filters($fieldStyleOptionsFilterName, []);
+			$output['formSelectorBlockAdditionalContent'] = apply_filters($formSelectorAdditionalContentFilterName, []);
+			$output['inputBlockAdditionalContent'] = apply_filters($inputAdditionalContentFilterName, []);
+			$output['textareaBlockAdditionalContent'] = apply_filters($textareaAdditionalContentFilterName, []);
+			$output['selectBlockAdditionalContent'] = apply_filters($selectAdditionalContentFilterName, []);
+			$output['fileBlockAdditionalContent'] = apply_filters($fileAdditionalContentFilterName, []);
+			$output['checkboxesBlockAdditionalContent'] = apply_filters($checkboxesAdditionalContentFilterName, []);
+			$output['radiosBlockAdditionalContent'] = apply_filters($radiosAdditionalContentFilterName, []);
+			$output['submitBlockAdditionalContent'] = apply_filters($submitAdditionalContentFilterName, []);
+			$output['customDataBlockOptions'] = apply_filters($customDataOptionsFilterName, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
-			$output['mediaBreakpoints'] = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+			$output['mediaBreakpoints'] = apply_filters($breakpointsFilterName, []);
 			$output['postType'] = get_post_type() ?? '';
 		}
 

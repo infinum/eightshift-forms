@@ -24,9 +24,9 @@ $blockJsClass = $attributes['blockJsClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
-$customMediaBreakpoints = apply_filters(Filters::FILTER_MEDIA_BREAKPOINTS_NAME, []);
+$customMediaBreakpoints = apply_filters(Filters::getBlocksFilterName('breakpoints'), []);
 if (
-	has_filter(Filters::FILTER_MEDIA_BREAKPOINTS_NAME) &&
+	has_filter(Filters::getBlocksFilterName('breakpoints')) &&
 	is_array($customMediaBreakpoints) &&
 	isset($customMediaBreakpoints['mobile']) &&
 	isset($customMediaBreakpoints['tablet']) &&
@@ -76,6 +76,13 @@ if ($fieldAttrs) {
 	foreach ($fieldAttrs as $key => $value) {
 		$fieldAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
 	}
+}
+
+// Additional content filter.
+$additionalContent = '';
+$filterName = Filters::getBlockFilterName('field', 'additionalContent');
+if (has_filter($filterName)) {
+	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 ?>
@@ -136,4 +143,6 @@ if ($fieldAttrs) {
 		}
 		?>
 	</div>
+
+	<?php echo $additionalContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </<?php echo esc_attr($fieldTag); ?>>

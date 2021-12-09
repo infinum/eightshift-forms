@@ -50,8 +50,9 @@ if ($submitAttrs) {
 
 // Additional content filter.
 $additionalContent = '';
-if (has_filter(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME)) {
-	$additionalContent = apply_filters(Filters::FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+$filterName = Filters::getBlockFilterName('submit', 'additionalContent');
+if (has_filter($filterName)) {
+	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 $button = '
@@ -64,8 +65,9 @@ $button = '
 ';
 
 // With this filder you can override default submit component and provide your own.
-if (has_filter(Filters::FILTER_BLOCK_SUBMIT_NAME) && !Helper::isSettingsPage()) {
-	$button = apply_filters(Filters::FILTER_BLOCK_SUBMIT_NAME, [
+$filterNameComponent = Filters::getBlockFilterName('submit', 'component');
+if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
+	$button = apply_filters($filterNameComponent, [
 		'value' => $submitValue,
 		'isDisabled' => $submitIsDisabled,
 		'class' => $submitClass,

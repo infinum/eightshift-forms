@@ -68,8 +68,9 @@ if ($inputAttrs) {
 
 // Additional content filter.
 $additionalContent = '';
-if (has_filter(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME)) {
-	$additionalContent = apply_filters(Filters::FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+$filterName = Filters::getBlockFilterName('input', 'additionalContent');
+if (has_filter($filterName)) {
+	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 $input = '

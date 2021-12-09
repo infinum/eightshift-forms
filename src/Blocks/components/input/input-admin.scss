@@ -12,4 +12,10 @@
 		box-shadow: none !important;
 		border-color: var(--global-colors-es-matisse) !important;
 	}
+
+	&:disabled {
+		background-color: var(--global-colors-es-alto);
+		color: var(--global-colors-es-boulder);
+		cursor: default;
+	}
 }

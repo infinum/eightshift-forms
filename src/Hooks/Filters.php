@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
@@ -31,6 +32,14 @@ use EightshiftForms\Validation\SettingsValidation;
  */
 class Filters
 {
+
+	/**
+	 * Prefix added to all filters.
+	 *
+	 * @var string
+	 */
+	public const FILTER_PREFIX = 'es_forms';
+
 	/**
 	 * All settings, panels and integrations.
 	 * Order of items here will determin the order in the browser sidebar for settings.
@@ -91,73 +100,130 @@ class Filters
 	];
 
 	/**
-	 * Filter form js redirection timeout key.
+	 * All public filters.
 	 */
-	public const FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME = 'es_forms_form_js_redirection_timeout';
+	public const ALL_PUBLIC = [
+		'integrations' => [
+			SettingsMailchimp::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+			],
+			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+			],
+			SettingsHubspot::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+			],
+			SettingsMailerlite::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+			],
+			SettingsGoodbits::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+			],
+		],
+		'blocks' => [
+			'additionalBlocks' => 'additional_blocks',
+			'breakpoints' => 'media_breakpoints',
+		],
+		'block' => [
+			'forms' => [
+				'styleOptions' => 'style_options',
+			],
+			'form' => [
+				'redirectionTimeout' => 'redirection_timeout',
+				'hideGlobalMsgTimeout' => 'hide_global_message_timeout',
+			],
+			'formSelector' => [
+				'additionalContent' => 'additional_content',
+			],
+			'field' => [
+				'styleOptions' => 'style_options',
+				'additionalContent' => 'additional_content',
+			],
+			'input' => [
+				'additionalContent' => 'additional_content',
+			],
+			'textarea' => [
+				'additionalContent' => 'additional_content',
+			],
+			'select' => [
+				'additionalContent' => 'additional_content',
+			],
+			'file' => [
+				'additionalContent' => 'additional_content',
+				'previewRemoveLabel' => 'preview_remove_label',
+			],
+			'checkboxes' => [
+				'additionalContent' => 'additional_content',
+			],
+			'radios' => [
+				'additionalContent' => 'additional_content',
+			],
+			'customData' => [
+				'options' => 'options',
+				'data' => 'options_data',
+			],
+			'submit' => [
+				'component' => 'component',
+				'additionalContent' => 'additional_content',
+			],
+		]
+	];
 
 	/**
-	 * Filter form js hide global message timeout key.
+	 * Get Integration filter by name and type.
+	 *
+	 * @param string $type Integration type.
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_integration_mailchimp_fields_settings
 	 */
-	public const FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME = 'es_forms_form_js_hide_global_message_timeout';
+	public static function getIntegrationFilterName(string $type, string $name): string
+	{
+		$internalType = Helper::camelToSnakeCase($type);
+
+		return self::FILTER_PREFIX . "_integration_{$internalType}_" . self::ALL_PUBLIC['integrations'][$type][$name];
+	}
 
 	/**
-	 * Filter form js file preview remove key.
+	 * Get Blocks filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_blocks_additional_blocks
 	 */
-	public const FILTER_FORM_JS_FILE_PREVIEW_REMOVE_LABEL_NAME = 'es_forms_file_js_preview_remove_label';
+	public static function getBlocksFilterName(string $name): string
+	{
+		return self::FILTER_PREFIX . '_blocks_' . self::ALL_PUBLIC['blocks'][$name];
+	}
 
 	/**
-	 * Filter additional blocks key.
+	 * Get Blocks filter by name.
+	 *
+	 * @param string $type Block type.
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_block_input_additional_content
 	 */
-	public const FILTER_ADDITIONAL_BLOCKS_NAME = 'es_forms_additional_blocks';
+	public static function getBlockFilterName(string $type, string $name): string
+	{
+		$internalType = Helper::camelToSnakeCase($type);
 
-	/**
-	 * Filter media breakpoints key.
-	 */
-	public const FILTER_MEDIA_BREAKPOINTS_NAME = 'es_forms_media_breakpoints';
-
-	/**
-	 * Filter block forms style options key.
-	 */
-	public const FILTER_BLOCK_FORMS_STYLE_OPTIONS_NAME = 'es_forms_block_forms_style_options';
-
-	/**
-	 * Filter block field style options key.
-	 */
-	public const FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME = 'es_forms_block_field_style_options';
-
-	/**
-	 * Filter block custom data options key.
-	 */
-	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_NAME = 'es_forms_block_custom_data_options';
-
-	/**
-	 * Filter block custom data options data key.
-	 */
-	public const FILTER_BLOCK_CUSTOM_DATA_OPTIONS_DATA_NAME = 'es_forms_block_custom_data_options_data';
-
-	/**
-	 * Filter block submit key.
-	 */
-	public const FILTER_BLOCK_SUBMIT_NAME = 'es_forms_block_submit';
-
-	/**
-	 * Filter additional content key.
-	 */
-	public const FILTER_BLOCK_FORM_SELECTOR_ADDITIONAL_CONTENT_NAME = 'es_forms_block_form_selector_additional_content';
-	public const FILTER_BLOCK_INPUT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_input_additional_content';
-	public const FILTER_BLOCK_TEXTAREA_ADDITIONAL_CONTENT_NAME = 'es_forms_block_textarea_additional_content';
-	public const FILTER_BLOCK_SELECT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_select_additional_content';
-	public const FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME = 'es_forms_block_file_additional_content';
-	public const FILTER_BLOCK_CHECKBOXES_ADDITIONAL_CONTENT_NAME = 'es_forms_block_checkboxes_additional_content';
-	public const FILTER_BLOCK_RADIOS_ADDITIONAL_CONTENT_NAME = 'es_forms_block_radios_additional_content';
-	public const FILTER_BLOCK_SUBMIT_ADDITIONAL_CONTENT_NAME = 'es_forms_block_submit_additional_content';
-
-	/**
-	 * Filter integration form data key
-	 */
-	public const FILTER_INTEGRATION_GOODBITS_FORM_DATA_NAME = 'es_forms_integration_goodbits_form_data';
-	public const FILTER_INTEGRATION_GREENHOUSE_FORM_DATA_NAME = 'es_forms_integration_greenhouse_form_data';
-	public const FILTER_INTEGRATION_HUBSPOT_FORM_DATA_NAME = 'es_forms_integration_hubspot_form_data';
-	public const FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME = 'es_forms_integration_mailchimp_form_data';
-	public const FILTER_INTEGRATION_MAILERLITE_FORM_DATA_NAME = 'es_forms_integration_mailerlite_form_data';
+		return self::FILTER_PREFIX . "_block_{$internalType}_" . self::ALL_PUBLIC['block'][$type][$name]; // @phpstan-ignore-line
+	}
 }

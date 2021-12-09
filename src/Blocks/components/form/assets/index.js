@@ -25,6 +25,7 @@ domReady(() => {
 			window['esForms'] = {
 				events: FORM_EVENTS,
 				CLASS_ACTIVE: form.CLASS_ACTIVE,
+				CLASS_FILLED: form.CLASS_FILLED,
 				CLASS_LOADING: form.CLASS_LOADING,
 				CLASS_HAS_ERROR: form.CLASS_HAS_ERROR,
 				redirectionTimeout: form.redirectionTimeout,
@@ -44,6 +45,9 @@ domReady(() => {
 				},
 				outputErrors: (element, fields) => {
 					form.outputErrors(element, fields);
+				},
+				resetForm: (element) => {
+					form.resetForm(element);
 				},
 				reset: (element) => {
 					form.reset(element);
@@ -74,6 +78,33 @@ domReady(() => {
 				},
 				scrollToElement: (event) => {
 					form.scrollToElement(event);
+				},
+				dispatchFormEvent: (event) => {
+					form.dispatchFormEvent(event);
+				},
+				setupInputField: (input) => {
+					form.setupInputField(input);
+				},
+				setupSelectField: (select) => {
+					form.setupSelectField(select);
+				},
+				setupTextareaField: (textarea) => {
+					form.setupTextareaField(textarea);
+				},
+				setupFileField: (file) => {
+					form.setupFileField(file);
+				},
+				preFillOnInit: (input) => {
+					form.preFillOnInit(input);
+				},
+				onFocusEvent: (event) => {
+					form.onFocusEvent(event);
+				},
+				onBlurEvent: (event) => {
+					form.onBlurEvent(event);
+				},
+				isCustom: (item) => {
+					form.isCustom(item);
 				},
 			};
 		});

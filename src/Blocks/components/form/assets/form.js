@@ -265,7 +265,12 @@ export class Form {
 						const {
 							id,
 							value,
+							disabled,
 						} = groupInnerItem;
+
+						if (disabled) {
+							continue;
+						}
 		
 						groupInnerItems[id] = value;
 					}
