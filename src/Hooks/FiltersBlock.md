@@ -173,7 +173,7 @@ public function getBlockCustomDataOptionsData(string $type): array
 ```
 
 ## Override default submit button with your own component
-These filter will remove the default forms submit button component and use your callback. This will not apply to form settings pages.
+This filter will remove the default forms submit button component and use your callback. This will not apply to form settings pages.
 
 **Filter name:**
 `es_forms_block_submit_component`
