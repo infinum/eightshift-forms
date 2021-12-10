@@ -64,7 +64,7 @@ add_filter('es_forms_integration_greenhouse_fields_settings', [$this, 'getIntegr
 /**
  * Change Greenhouse integration fields settings data.
  *
- * @param array<string, mixed> $data Array of fields and values.
+ * @param array<string, mixed> $fields Array of fields and values.
  *
  * @return array<string, mixed>
  */
