@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -253,6 +254,13 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 
 		// If the user has selected the list.
 		if ($selectedItem) {
+			$beforeContent = '';
+
+			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
+			if (has_filter($filterName)) {
+				$beforeContent = \apply_filters($filterName, '') ?? '';
+			}
+
 			$output = array_merge(
 				$output,
 				[
@@ -268,6 +276,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY),
+						'groupBeforeContent' => $beforeContent,
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,

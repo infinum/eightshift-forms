@@ -176,14 +176,10 @@ trait SettingsHelper
 		if (\has_filter($formViewDetailsIsEditableFilterName)) {
 			$disabledEdit = true;
 			$fieldsValues = [];
+		}
 
-			if (\has_filter($formViewDetailsFilterName)) {
-				$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
-			}
-		} else {
-			if (\has_filter($formViewDetailsFilterName) && !$fieldsValues) {
-				$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
-			}
+		if (!$fieldsValues && \has_filter($formViewDetailsFilterName)) {
+			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
 		}
 
 		$fieldsKey = $this->getSettingsName($key);
@@ -367,6 +363,12 @@ trait SettingsHelper
 	{
 		// Provide project default if nothing is set in the DB.
 		$formViewDetailsFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettings');
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettingsIsEditable');
+
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$dbSettingsValue = [];
+		}
+
 		if (!$dbSettingsValue && \has_filter($formViewDetailsFilterName)) {
 			$dbSettingsValue = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
 		}

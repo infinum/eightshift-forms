@@ -19,6 +19,7 @@ $groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
 $groupContent = Components::checkAttr('groupContent', $attributes, $manifest);
 $groupId = Components::checkAttr('groupId', $attributes, $manifest);
 $groupIsInner = Components::checkAttr('groupIsInner', $attributes, $manifest);
+$groupBeforeContent = Components::checkAttr('groupBeforeContent', $attributes, $manifest);
 
 $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -38,6 +39,12 @@ $groupClass = Components::classnames([
 	<?php if ($groupLabel) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__label"); ?>">
 			<?php echo esc_html($groupLabel); ?>
+		</div>
+	<?php } ?>
+
+	<?php if ($groupBeforeContent) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+			<?php echo $groupBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 

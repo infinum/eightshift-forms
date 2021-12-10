@@ -108,26 +108,31 @@ class Filters
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
 		'blocks' => [

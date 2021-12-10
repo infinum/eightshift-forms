@@ -15,6 +15,9 @@
 		"groupContent": {
 			"type": "string"
 		},
+		"groupBeforeContent": {
+			"type": "string"
+		},
 		"groupId": {
 			"type": "string"
 		}
