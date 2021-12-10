@@ -2,7 +2,7 @@
 This document will provide you with the code examples for forms filters used in individual blocks.
 
 ## Add additional style options to forms block
-This filter will add new options to the style select dropdown in the forms block. Forms style option selector will not show unless a filter is provided. This option is showed in Block Editor.
+This filter will add new options to the style select dropdown in the forms block. Forms style option selector will not show unless a filter is provided. This option is shown in Block Editor.
 
 **Filter name:**
 `es_forms_block_forms_style_options`
