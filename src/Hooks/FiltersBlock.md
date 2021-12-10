@@ -87,7 +87,7 @@ public function getBlockFieldStyleOptions(): array
 ```
 
 ## Add to custom data block
-These filters will add the necessary data for the custom data block to work. Field data option selector will not be shown unless a filter is added. This option is showed in Block Editor.
+These filters will add the necessary data for the custom data block to work. Field data option selector will not be shown unless a filter is added. This option is shown in Block Editor.
 
 **Filter name:**
 `es_forms_block_custom_data_options`
