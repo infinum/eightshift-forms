@@ -2,7 +2,7 @@
 This document will provide you with the code examples for forms filters used in individual blocks.
 
 ## Add additional style options to forms block
-This filter will add new options to the style select dropdown in the forms block. Forms style option selector will not show unless a filter is provided. This option is showed in Block Editor.
+This filter will add new options to the style select dropdown in the forms block. Forms style option selector will not show unless a filter is provided. This option is shown in Block Editor.
 
 **Filter name:**
 `es_forms_block_forms_style_options`
@@ -33,7 +33,7 @@ public function getBlockFormsStyleOptions(): array
 ```
 
 ## Add additional style options to field block
-This filter will add new options to the style select dropdown in the field block. Field style option selector will not show unless a filter is provided. This option is showed in Block Editor.
+This filter will add new options to the style select dropdown in the field block. Field style option selector will not show unless a filter is provided. This option is shown in Block Editor.
 
 **Filter name:**
 `es_forms_block_field_style_options`
@@ -87,7 +87,7 @@ public function getBlockFieldStyleOptions(): array
 ```
 
 ## Add to custom data block
-These filters will add the necessary data for the custom data block to work. Field data option selector will not be shown unless a filter is added. This option is showed in Block Editor.
+These filters will add the necessary data for the custom data block to work. Field data option selector will not be shown unless a filter is added. This option is shown in Block Editor.
 
 **Filter name:**
 `es_forms_block_custom_data_options`
@@ -173,7 +173,7 @@ public function getBlockCustomDataOptionsData(string $type): array
 ```
 
 ## Override default submit button with your own component
-These filter will remove the default forms submit button component and use your callback. This will not apply to form settings pages.
+This filter will remove the default forms submit button component and use your callback. This will not apply to form settings pages.
 
 **Filter name:**
 `es_forms_block_submit_component`
