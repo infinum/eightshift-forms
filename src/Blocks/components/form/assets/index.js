@@ -14,6 +14,7 @@ domReady(() => {
 				formSubmitRestApiUrl: esFormsLocalization.formSubmitRestApiUrl,
 				redirectionTimeout: esFormsLocalization.redirectionTimeout,
 				hideGlobalMessageTimeout: esFormsLocalization.hideGlobalMessageTimeout,
+				hideLoadingStateTimeout: esFormsLocalization.hideLoadingStateTimeout,
 				formDisableScrollToFieldOnError: esFormsLocalization.formDisableScrollToFieldOnError,
 				formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 				formResetOnSuccess: esFormsLocalization.formResetOnSuccess,

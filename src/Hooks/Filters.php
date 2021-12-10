@@ -146,6 +146,7 @@ class Filters
 			'form' => [
 				'redirectionTimeout' => 'redirection_timeout',
 				'hideGlobalMsgTimeout' => 'hide_global_message_timeout',
+				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',

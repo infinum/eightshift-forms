@@ -305,6 +305,33 @@ public function getBlockFormHideGlobalMessageTimeout(): string
 }
 ```
 
+## Changing the default hide loading state wait time
+This filter will override our default wait time before the loading state is removed. The time is calculated in milliseconds. *Example: 1000ms = 1s*.
+
+**Filter name:**
+`es_forms_block_form_hide_loading_state_timeout`
+
+**Default:**
+```php
+600 // 0.6 seconds.
+```
+
+**Filter example:**
+```php
+// Set block form hide loading state timeout.
+add_filter('es_forms_block_form_hide_loading_state_timeout', [$this, 'getBlockFormHideLoadingStateTimeout']);
+
+/**
+ * Set block form hide loading state timeout.
+ *
+ * @return string
+ */
+public function getBlockFormHideLoadingStateTimeout(): string
+{
+	return '600'; // 0.6 seconds.
+}
+```
+
 ## Changing the default custom file preview remove label
 This filter will override our default file preview remove label.
 
