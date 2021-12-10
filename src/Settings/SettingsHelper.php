@@ -491,8 +491,8 @@ trait SettingsHelper
 			}
 
 			foreach ($values as $itemKey => $itemValue) {
-				if (!$itemValue) {
-					continue;
+				if (is_bool($itemValue)) {
+					$itemValue = wp_json_encode($itemValue);
 				}
 
 				$output["{$key}---{$itemKey}"] = $itemValue;
