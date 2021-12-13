@@ -83,8 +83,9 @@ if ($fileAttrs) {
 
 // Additional content filter.
 $additionalContent = '';
-if (has_filter(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME)) {
-	$additionalContent = apply_filters(Filters::FILTER_BLOCK_FILE_ADDITIONAL_CONTENT_NAME, $attributes ?? []);
+$filterName = Filters::getBlockFilterName('file', 'additionalContent');
+if (has_filter($filterName)) {
+	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 $file = '

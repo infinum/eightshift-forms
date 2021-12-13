@@ -323,13 +323,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		];
 
 		// Change the final output if necesery.
-		if (has_filter(Filters::FILTER_INTEGRATION_HUBSPOT_FORM_DATA_NAME) && !is_admin()) {
-			$output = \apply_filters(Filters::FILTER_INTEGRATION_HUBSPOT_FORM_DATA_NAME, $output) ?? [];
+		$dataFilterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'data');
+		if (has_filter($dataFilterName) && !is_admin()) {
+			$output = \apply_filters($dataFilterName, $output) ?? [];
 		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId),
-			$output
+			$output,
+			SettingsHubspot::SETTINGS_TYPE_KEY
 		);
 	}
 }

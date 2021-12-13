@@ -106,12 +106,18 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	{
 		$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
 
+		$hideGlobalMsgTimeoutFilterName = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
+		$redirectionTimeoutFilterName = Filters::getBlockFilterName('form', 'redirectionTimeout');
+		$previewRemoveLabelFilterName = Filters::getBlockFilterName('file', 'previewRemoveLabel');
+		$hideLoadingStateTimeoutFilterName = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
+
 		return [
 			'esFormsLocalization' => [
 				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
-				'hideGlobalMessageTimeout' => apply_filters(Filters::FILTER_FORM_JS_REDIRECTION_TIMEOUT_NAME, 6000),
-				'redirectionTimeout' => apply_filters(Filters::FILTER_FORM_JS_HIDE_GLOBAL_MESSAGE_TIMEOUT_NAME, 600),
-				'fileCustomRemoveLabel' => apply_filters(Filters::FILTER_FORM_JS_FILE_PREVIEW_REMOVE_LABEL_NAME, esc_html__('Remove', 'eightshift-forms')),
+				'hideGlobalMessageTimeout' => apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
+				'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 600),
+				'hideLoadingStateTimeout' => apply_filters($hideLoadingStateTimeoutFilterName, 600),
+				'fileCustomRemoveLabel' => apply_filters($previewRemoveLabelFilterName, esc_html__('Remove', 'eightshift-forms')),
 				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
 					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY

@@ -278,4 +278,16 @@ class Helper
 
 		return $output;
 	}
+
+	/**
+	 * Convert camel to snake case
+	 *
+	 * @param string $input Name to change.
+	 *
+	 * @return string
+	 */
+	public static function camelToSnakeCase($input): string
+	{
+		return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+	}
 }

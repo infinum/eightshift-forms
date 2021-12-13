@@ -359,13 +359,15 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		];
 
 		// Change the final output if necesery.
-		if (has_filter(Filters::FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME) && !is_admin()) {
-			$output = \apply_filters(Filters::FILTER_INTEGRATION_MAILCHIMP_FORM_DATA_NAME, $output) ?? [];
+		$dataFilterName = Filters::getIntegrationFilterName(SettingsMailchimp::SETTINGS_TYPE_KEY, 'data');
+		if (has_filter($dataFilterName) && !is_admin()) {
+			$output = \apply_filters($dataFilterName, $output) ?? [];
 		}
 
 		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId),
-			$output
+			$output,
+			SettingsMailchimp::SETTINGS_TYPE_KEY
 		);
 	}
 }

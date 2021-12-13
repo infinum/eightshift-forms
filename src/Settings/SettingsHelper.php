@@ -167,10 +167,26 @@ trait SettingsHelper
 		$fields = [];
 
 		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
+		$disabledEdit = false;
+
+		// Filter for editable option and data.
+		$formViewDetailsFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettings');
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettingsIsEditable');
+
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$disabledEdit = true;
+			$fieldsValues = [];
+		}
+
+		if (!$fieldsValues && \has_filter($formViewDetailsFilterName)) {
+			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
+		}
+
 		$fieldsKey = $this->getSettingsName($key);
 		$totalFields = count($formFields);
 
-		$fieldStyle = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+		$filterName = Filters::getBlockFilterName('field', 'styleOptions');
+		$fieldStyle = apply_filters($filterName, []);
 
 		foreach ($formFields as $fieldKey => $field) {
 			if (!$field) {
@@ -214,6 +230,7 @@ trait SettingsHelper
 					'inputMin' => 0,
 					'inputMax' => 12,
 					'inputStep' => 1,
+					'inputIsDisabled' => $disabledEdit,
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
@@ -231,6 +248,7 @@ trait SettingsHelper
 				'inputMin' => 1,
 				'inputMax' => $totalFields,
 				'inputStep' => 1,
+				'inputIsDisabled' => $disabledEdit,
 			];
 
 			// Use.
@@ -247,7 +265,7 @@ trait SettingsHelper
 				'selectId' => "{$id}---use",
 				'selectFieldLabel' => __('Show/Hide', 'eightshift-forms'),
 				'selectValue' => $toggleValue,
-				'selectIsDisabled' => $toggleDisabled,
+				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
@@ -273,6 +291,7 @@ trait SettingsHelper
 					'selectId' => "{$id}---file-info-label",
 					'selectFieldLabel' => __('Label as infobox text', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
+					'selectIsDisabled' => $disabledEdit,
 					'selectOptions' => [
 						[
 							'component' => 'select-option',
@@ -299,6 +318,7 @@ trait SettingsHelper
 					'selectId' => "{$id}---field-style",
 					'selectFieldLabel' => __('Field Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
+					'selectIsDisabled' => $disabledEdit,
 					'selectOptions' => array_map(
 						static function ($item) use ($fieldStyleValue) {
 							return [
@@ -320,6 +340,7 @@ trait SettingsHelper
 					'inputId' => "{$id}---label",
 					'inputFieldLabel' => __('Label', 'eightshift-forms'),
 					'inputValue' => $fieldsValues["{$id}---label"] ?? '',
+					'inputIsDisabled' => $disabledEdit,
 				];
 			}
 
@@ -334,11 +355,24 @@ trait SettingsHelper
 	 *
 	 * @param array<string, mixed> $dbSettingsValue Field to search in settings.
 	 * @param array<int, array<string, mixed>> $formFields Full form components array.
+	 * @param string $type Form type.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getIntegrationFieldsValue(array $dbSettingsValue, array $formFields): array
+	public function getIntegrationFieldsValue(array $dbSettingsValue, array $formFields, string $type): array
 	{
+		// Provide project default if nothing is set in the DB.
+		$formViewDetailsFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettings');
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName($type, 'fieldsSettingsIsEditable');
+
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$dbSettingsValue = [];
+		}
+
+		if (!$dbSettingsValue && \has_filter($formViewDetailsFilterName)) {
+			$dbSettingsValue = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
+		}
+
 		if (!$dbSettingsValue) {
 			return $formFields;
 		}
@@ -383,7 +417,8 @@ trait SettingsHelper
 			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
 				switch ($itemKey) {
 					case 'field-style':
-						$fieldStyle = apply_filters(Filters::FILTER_BLOCK_FIELD_STYLE_OPTIONS_NAME, []);
+						$filterName = Filters::getBlockFilterName('field', 'styleOptions');
+						$fieldStyle = apply_filters($filterName, []);
 
 						// If we want to provide.
 						if (isset($fieldStyle[$component])) {
@@ -435,5 +470,37 @@ trait SettingsHelper
 		}
 
 		return $formFields;
+	}
+
+	/**
+	 * Convert nested array from filter to data in db.
+	 *
+	 * @param array<string, mixed> $data Data provided by filter for group.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function prepareFormViewDetails(array $data): array
+	{
+		$output = [];
+
+		if (!$data) {
+			return $output;
+		}
+
+		foreach ($data as $key => $values) {
+			if (!$values) {
+				continue;
+			}
+
+			foreach ($values as $itemKey => $itemValue) {
+				if (is_bool($itemValue)) {
+					$itemValue = wp_json_encode($itemValue);
+				}
+
+				$output["{$key}---{$itemKey}"] = $itemValue;
+			}
+		}
+
+		return $output;
 	}
 }

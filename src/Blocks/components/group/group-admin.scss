@@ -1,5 +1,19 @@
 .es-group {
 	$this: &;
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	column-gap: 20px;
+
+	&__label,
+	&__content {
+		grid-column-start: 1;
+		grid-column-end: 13;
+	}
+
+	&__before-content {
+		grid-column-start: 4;
+		grid-column-end: 13;
+	}
 
 	&--is-inner {
 		padding-top: 20px;

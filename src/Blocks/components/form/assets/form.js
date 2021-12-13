@@ -45,6 +45,7 @@ export class Form {
 		this.formResetOnSuccess = Boolean(options.formResetOnSuccess);
 		this.redirectionTimeout = options.redirectionTimeout ?? 600;
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
+		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 
 		// If using custom file create global object to store files.
@@ -265,7 +266,12 @@ export class Form {
 						const {
 							id,
 							value,
+							disabled,
 						} = groupInnerItem;
+
+						if (disabled) {
+							continue;
+						}
 		
 						groupInnerItems[id] = value;
 					}
@@ -448,13 +454,15 @@ export class Form {
 	hideLoader = (element) => {
 		const loader = element.querySelector(this.loaderSelector);
 
-		element?.classList?.remove(this.CLASS_LOADING);
+		setTimeout(() => {
+			element?.classList?.remove(this.CLASS_LOADING);
 
-		if (!loader) {
-			return;
-		}
+			if (!loader) {
+				return;
+			}
 
-		loader.classList.remove(this.CLASS_ACTIVE);
+			loader.classList.remove(this.CLASS_ACTIVE);
+		}, parseInt(this.hideLoadingStateTimeout, 10));
 	}
 
 	// Reset all error classes.

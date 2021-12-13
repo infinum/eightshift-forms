@@ -14,6 +14,9 @@ module.exports = (env, argv) => {
 			projectUrl: 'eightshift.com', // Used for providing browsersync functionality.
 			projectPath: 'wp-content/plugins/eightshift-forms', // Project path relative to project root.
 		},
+		overrides: [
+			'browserSyncPlugin'
+		],
 	};
 
 	// Generate webpack config for this project using options object.
