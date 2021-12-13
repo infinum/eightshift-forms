@@ -77,7 +77,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('Location settings', 'eightshift-forms'),
-				'introSubtitle' => __('Check all locations where your block is assigned in one place.', 'eightshift-forms'),
+				'introSubtitle' => __('Check all locations where your block is assigned in one place. Keep in mind that this page can take a litte wile to open if you have a lot of content on your website.', 'eightshift-forms'),
 			],
 		];
 
