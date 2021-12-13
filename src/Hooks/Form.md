@@ -57,3 +57,20 @@ domReady(() => {
 	});
 });
 ```
+
+## esFormsBeforeGtmDataPush
+
+This events will trigger **only** if your form has tracking event attribute set in the form settings and will search for all `data-tracking` attributes. If you want to add custom fields keep in mind to add this attribute. Like this example:
+
+```php
+$data[] = [
+	'component' => 'input',
+	'inputType' => 'hidden',
+	'inputId' => 'inputId',
+	'inputName' => 'inputName',
+	'inputValue' => '<your-key-value>',
+	'inputAttrs' => [
+		'data-tracking' => '<your-key-name>'
+	]
+];
+```

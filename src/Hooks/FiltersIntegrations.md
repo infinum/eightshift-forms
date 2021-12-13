@@ -10,16 +10,17 @@ This filter is used if you want to change form fields data before output. By cha
 **Filter example for Greenhouse:**
 ```php
 // Change Greenhouse integration form data.
-add_filter('es_forms_integration_greenhouse_data', [$this, 'getIntegrationGreenhouseData']);
+add_filter('es_forms_integration_greenhouse_data', [$this, 'getIntegrationGreenhouseData'], 10, 2);
 
 /**
  * Change Greenhouse integration form data.
  *
  * @param array<string, mixed> $data Array of component/attributes data.
+ * @param string $fromId Form Id.
  *
  * @return array<string, mixed>
  */
-public function getIntegrationGreenhouseData(array $data): array
+public function getIntegrationGreenhouseData(array $data, string $formId): array
 {
 	return $data;
 }
@@ -65,10 +66,11 @@ add_filter('es_forms_integration_greenhouse_fields_settings', [$this, 'getIntegr
  * Change Greenhouse integration fields settings data.
  *
  * @param array<string, mixed> $fields Array of fields and values.
+ * @param string $fromId Form Id.
  *
  * @return array<int|string, array<string, bool|int|string>>
  */
-public function getIntegrationGreenhouseFieldsSettings(array $fields): array
+public function getIntegrationGreenhouseFieldsSettings(array $fields, string $formId): array
 {
 	return [
 		'first_name' => [
