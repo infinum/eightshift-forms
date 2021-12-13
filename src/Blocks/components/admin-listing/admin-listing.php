@@ -59,7 +59,7 @@ $layoutClass = Components::classnames([
 
 				<?php if ($adminListingSubTitle) { ?>
 					<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-						<?php echo esc_html($adminListingSubTitle); ?>
+						<?php echo \esc_html($adminListingSubTitle); ?>
 					</div>
 				<?php } ?>
 			</div>
