@@ -61,10 +61,3 @@ register_deactivation_hook(
 if (class_exists(Main::class)) {
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 }
-
-/**
- * Run all WPCLI commands.
- */
-if (class_exists(Cli::class)) {
-	(new Cli())->load('eightshift-forms');
-}
