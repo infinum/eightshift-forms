@@ -122,7 +122,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 
 		$items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT *
+				"SELECT ID, post_type, post_title, post_status
 				 FROM $wpdb->posts
 				 WHERE post_content
 				 LIKE %s
