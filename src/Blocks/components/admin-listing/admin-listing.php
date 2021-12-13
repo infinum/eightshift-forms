@@ -37,7 +37,7 @@ $layoutClass = Components::classnames([
 			<div class="<?php echo \esc_attr("{$sectionClass}__heading {$sectionClass}__heading--no-spacing"); ?>">
 				<div class="<?php echo \esc_attr("{$sectionClass}__heading-wrap"); ?>">
 					<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-						<?php echo esc_html($adminListingPageTitle); ?>
+						<?php echo \esc_html($adminListingPageTitle); ?>
 					</div>
 
 					<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
