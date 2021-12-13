@@ -24,6 +24,7 @@ use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsTest;
 use EightshiftForms\Validation\SettingsValidation;
 
@@ -92,6 +93,10 @@ class Filters
 			'settings' => SettingsGoodbits::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsGoodbits::FILTER_SETTINGS_SIDEBAR_NAME,
 			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
+		],
+		SettingsLocation::SETTINGS_TYPE_KEY => [
+			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,

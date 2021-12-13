@@ -33,41 +33,51 @@ $layoutClass = Components::classnames([
 
 <div class="<?php echo \esc_attr($layoutClass); ?>">
 	<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
-		<div class="<?php echo \esc_attr("{$sectionClass}__heading {$sectionClass}__heading--no-spacing"); ?>">
-			<div class="<?php echo \esc_attr("{$sectionClass}__heading-wrap"); ?>">
-				<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
-					<?php echo esc_html($adminListingPageTitle); ?>
+		<?php if ($adminListingPageTitle || $adminListingSubTitle) { ?>
+			<div class="<?php echo \esc_attr("{$sectionClass}__heading {$sectionClass}__heading--no-spacing"); ?>">
+				<div class="<?php echo \esc_attr("{$sectionClass}__heading-wrap"); ?>">
+					<div class="<?php echo \esc_attr("{$sectionClass}__heading-title"); ?>">
+						<?php echo \esc_html($adminListingPageTitle); ?>
+					</div>
+
+					<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
+						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
+							<a href="<?php echo \esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
+								<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
+							</a>
+						<?php } ?>
+
+						<?php if ($adminListingNewFormLink) { ?>
+							<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
+								<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
+							</a>
+						<?php } ?>
+					</div>
 				</div>
 
-				<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
-					<?php if ($adminListingType !== 'trash') { ?>
-						<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-							<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
-							<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
-						</a>
-					<?php } ?>
-					<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-						<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
-						<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
-					</a>
-				</div>
+				<?php if ($adminListingSubTitle) { ?>
+					<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
+						<?php echo \esc_html($adminListingSubTitle); ?>
+					</div>
+				<?php } ?>
 			</div>
-			<div class="<?php echo \esc_attr("{$sectionClass}__description"); ?>">
-				<?php echo esc_html($adminListingSubTitle); ?>
-			</div>
-		</div>
+		<?php } ?>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
 			<?php if ($adminListingForms) { ?>
 				<ul class="<?php echo \esc_attr("{$componentClass}__list"); ?>">
 					<?php foreach ($adminListingForms as $form) { ?>
 						<?php
-						$id = $form['id']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$editLink = $form['editLink'];
-						$trashLink = $form['trashLink'];
-						$trashRestoreLink = $form['trashRestoreLink'];
-						$settingsLink = $form['settingsLink'];
-						$title = $form['title']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$status = $form['status']; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+						$id = $form['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+						$editLink = $form['editLink'] ?? '';
+						$postType = $form['postType'] ?? '';
+						$viewLink = $form['viewLink'] ?? '';
+						$trashLink = $form['trashLink'] ?? '';
+						$trashRestoreLink = $form['trashRestoreLink'] ?? '';
+						$settingsLink = $form['settingsLink'] ?? '';
+						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 						$slug = $editLink;
 						if (!$editLink) {
@@ -86,6 +96,12 @@ $layoutClass = Components::classnames([
 										<?php echo esc_html($status); ?>
 									</span>
 								<?php } ?>
+
+								<?php if ($postType) { ?>
+									<span class="<?php echo esc_attr("{$componentClass}__item-post-type"); ?>">
+										<?php echo esc_html($postType); ?>
+									</span>
+								<?php } ?>
 							</div>
 							<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 								<?php if ($editLink) { ?>
@@ -95,16 +111,18 @@ $layoutClass = Components::classnames([
 									</a>
 								<?php } ?>
 
-								<a href="<?php echo esc_url($trashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-									<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
-									<?php
-									if ($adminListingType === 'trash') {
-										echo esc_html__('Delete permanently', 'eightshift-forms');
-									} else {
-										echo esc_html__('Delete', 'eightshift-forms');
-									}
-									?>
-								</a>
+								<?php if ($trashLink) { ?>
+									<a href="<?php echo esc_url($trashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
+										<?php
+										if ($adminListingType === 'trash') {
+											echo esc_html__('Delete permanently', 'eightshift-forms');
+										} else {
+											echo esc_html__('Delete', 'eightshift-forms');
+										}
+										?>
+									</a>
+								<?php } ?>
 
 								<?php if ($adminListingType === 'trash') { ?>
 									<a href="<?php echo esc_url($trashRestoreLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
@@ -117,6 +135,13 @@ $layoutClass = Components::classnames([
 									<a href="<?php echo esc_url($settingsLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-admin-settings"); ?> "></span>
 										<?php echo esc_html__('Settings', 'eightshift-forms'); ?>
+									</a>
+								<?php } ?>
+
+								<?php if ($viewLink) { ?>
+									<a href="<?php echo esc_url($viewLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-welcome-view-site"); ?> "></span>
+										<?php echo esc_html__('View', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
 							</div>
