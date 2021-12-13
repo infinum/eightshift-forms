@@ -42,7 +42,7 @@ $layoutClass = Components::classnames([
 
 					<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
-							<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+							<a href="<?php echo \esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
 								<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
 							</a>
