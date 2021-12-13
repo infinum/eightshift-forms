@@ -116,7 +116,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	 *
 	 * @return array<int, mixed>
 	 */
-	private function getBlockLocaitons(string $formId): array
+	private function getBlockLocations(string $formId): array
 	{
 		global $wpdb;
 
