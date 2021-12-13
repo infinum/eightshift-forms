@@ -258,7 +258,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data');
 		if (has_filter($dataFilterName) && !is_admin()) {
-			$output = \apply_filters($dataFilterName, $output) ?? [];
+			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
 		return $this->getIntegrationFieldsValue(

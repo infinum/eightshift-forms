@@ -179,7 +179,7 @@ trait SettingsHelper
 		}
 
 		if (!$fieldsValues && \has_filter($formViewDetailsFilterName)) {
-			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields) ?? []);
+			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields, $formId) ?? []);
 		}
 
 		$fieldsKey = $this->getSettingsName($key);
