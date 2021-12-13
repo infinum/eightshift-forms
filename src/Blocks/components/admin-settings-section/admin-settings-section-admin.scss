@@ -22,6 +22,10 @@
 
 		#{$this}__content {
 			padding: 0 var(--global-es-spacing-horizontal);
+
+			#{$this}__content {
+				padding: 0;
+			}
 		}
 	}
 

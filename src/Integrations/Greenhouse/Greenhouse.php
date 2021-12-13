@@ -161,6 +161,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'inputName' => $name,
 							'inputFieldLabel' => $label,
 							'inputId' => $name,
+							'inputMeta' => $description,
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
 							'inputIsEmail' => $name === 'email' ? 'true' : '',
@@ -173,6 +174,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileName' => $name,
 							'fileFieldLabel' => $label,
 							'fileId' => $name,
+							'fileMeta' => $description,
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => 1
@@ -184,6 +186,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaName' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaId' => $name,
+							'textareaMeta' => $description,
 							'textareaIsRequired' => $required,
 						];
 						break;
@@ -193,6 +196,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'checkboxes',
 								'checkboxesName' => $name,
 								'checkboxesId' => $name,
+								'checkboxesMeta' => $description,
 								'checkboxesIsRequired' => $required,
 								'checkboxesContent' => [
 									[

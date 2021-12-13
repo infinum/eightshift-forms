@@ -56,4 +56,13 @@
 		font-size: 10px;
 		letter-spacing: 1px;
 	}
+
+	&__item-post-type {
+		background-color: var(--global-colors-es-matisse);
+		color: var(--global-colors-es-white);
+		padding: 2px 5px;
+		margin-left: 20px;
+		font-size: 10px;
+		letter-spacing: 1px;
+	}
 }
