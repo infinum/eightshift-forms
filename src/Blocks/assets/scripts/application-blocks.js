@@ -7,9 +7,11 @@
  *
  * Usage: `WordPress frontend screen`.
  */
-import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+if (!window?._babelPolyfill) { // eslint-disable-line no-underscore-dangle
+	require('@babel/polyfill');
+}
 
-import "@babel/polyfill";
+import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 
 // Find all blocks and require assets index.js inside it.
 dynamicImport(require.context('./../../components', true, /assets\/index\.js$/));

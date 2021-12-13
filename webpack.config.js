@@ -19,6 +19,18 @@ module.exports = (env, argv) => {
 		],
 	};
 
-	// Generate webpack config for this project using options object.
-	return require('./node_modules/@eightshift/frontend-libs/webpack')(argv.mode, projectConfig);
+	// Generate Webpack config for this project using options object.
+	const project = require('./node_modules/@eightshift/frontend-libs/webpack')(argv.mode, projectConfig);
+
+	return {
+		// Load all projects config from eightshift-frontend-libs.
+		...project,
+
+		output: {
+			// Load all output config from eightshift-frontend-libs.
+			...project.output,
+
+			library: 'EightshiftForms',
+		},
+	};
 };
