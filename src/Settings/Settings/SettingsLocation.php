@@ -81,7 +81,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 			],
 		];
 
-		$locations = $this->getBlockLocaitons($formId);
+		$locations = $this->getBlockLocations($formId);
 
 		if (!$locations) {
 			$output[] = [
