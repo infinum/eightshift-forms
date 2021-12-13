@@ -87,7 +87,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 			$output[] = [
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-				'highlightedContentSubtitle' => __('It looks like you form is not showing on any page.', 'eightshift-forms'),
+				'highlightedContentSubtitle' => __('It looks like your form hasn\'t been added to any page.', 'eightshift-forms'),
 			];
 		}
 
