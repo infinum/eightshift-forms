@@ -93,7 +93,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 
 		$output[] = [
 			'component' => 'admin-listing',
-			'adminListingForms' => $this->getBlockLocaitons($formId),
+			'adminListingForms' => $this->getBlockLocations($formId),
 		];
 
 		return $output;
