@@ -29,7 +29,7 @@ class StylesheetSet implements ServiceInterface
 	}
 
 	/**
-	 * Register actial command in WP-CLI.
+	 * Register actual command in WP-CLI.
 	 *
 	 * @return void
 	 */
