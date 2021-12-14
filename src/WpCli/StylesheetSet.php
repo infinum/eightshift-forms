@@ -55,7 +55,7 @@ class StylesheetSet implements ServiceInterface
 	/**
 	 * Return WPCLI command documentation.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDocs(): array
 	{
