@@ -150,7 +150,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 					Select options you want to disable on your forms. <br /><br />
 					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
-					Disabling scripts will remove all scripts on the frontend, keep in mind this will make the frontend validation and form submitting stop working.
+					Disabling scripts will remove all scripts on the front end. Keep in mind this will make the frontend validation and submitting the form stop working. <br /><br />
+					Note: If you need a preset of stylesheet component use WP-CLI command.
 				', 'eightshift-forms'),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
