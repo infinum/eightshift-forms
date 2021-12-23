@@ -72,6 +72,7 @@ if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
 		'isDisabled' => $submitIsDisabled,
 		'class' => $submitClass,
 		'attrs' => $submitAttrs,
+		'attributes' => $attributes,
 	]);
 }
 

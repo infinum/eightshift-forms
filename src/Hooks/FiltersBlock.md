@@ -181,10 +181,11 @@ This filter will remove the default forms submit button component and use your c
 **Data values:**
 ```php
 [
-	'value' => 'Submit' // String.
+	'value' => 'Submit', // String.
 	'isDisabled' => 1, // Boolean.
-	'class' => 'es-submit' // String with spaces.
-	'attrs' => [] // Key value pair for additional attributes like tracking, etc.
+	'class' => 'es-submit', // String with spaces.
+	'attrs' => [], // Key value pair for additional attributes like tracking, etc.
+	'attributes' => {}, // This key gives you the full attributes data of the forms attributes.
 ]
 ```
 
