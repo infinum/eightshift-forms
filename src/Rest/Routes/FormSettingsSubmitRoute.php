@@ -22,7 +22,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *

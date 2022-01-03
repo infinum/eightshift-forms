@@ -17,7 +17,6 @@ use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
  */
 final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Create a new instance of the exception if the view file itself created
 	 * an exception.

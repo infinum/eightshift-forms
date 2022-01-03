@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations;
  */
 interface ClientInterface
 {
-
 	/**
 	 * Return items.
 	 *

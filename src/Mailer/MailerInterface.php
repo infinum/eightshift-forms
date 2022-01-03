@@ -15,7 +15,6 @@ namespace EightshiftForms\Mailer;
  */
 interface MailerInterface
 {
-
 	/**
 	 * Send email function for form ID.
 	 *

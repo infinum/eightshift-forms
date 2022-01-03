@@ -22,7 +22,6 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
  */
 class Helper
 {
-
 	/**
 	 * Encript/Decrypt method.
 	 *

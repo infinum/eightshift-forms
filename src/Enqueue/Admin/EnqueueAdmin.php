@@ -23,7 +23,6 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
  */
 class EnqueueAdmin extends AbstractEnqueueAdmin
 {
-
 	/**
 	 * Create a new admin instance.
 	 *

@@ -33,7 +33,6 @@ use EightshiftForms\Validation\SettingsValidation;
  */
 class Filters
 {
-
 	/**
 	 * Prefix added to all filters.
 	 *

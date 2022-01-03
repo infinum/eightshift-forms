@@ -18,7 +18,6 @@ use EightshiftForms\Helpers\Helper;
  */
 class FormsListing implements FormListingInterface
 {
-
 	/**
 	 * Get Forms List.
 	 *

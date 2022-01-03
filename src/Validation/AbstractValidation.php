@@ -15,7 +15,6 @@ namespace EightshiftForms\Validation;
  */
 abstract class AbstractValidation implements ValidatorInterface
 {
-
 	/**
 	 * Check if string is url.
 	 *

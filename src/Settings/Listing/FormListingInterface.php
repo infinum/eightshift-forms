@@ -15,7 +15,6 @@ namespace EightshiftForms\Settings\Listing;
  */
 interface FormListingInterface
 {
-
 	/**
 	 * Get Forms List.
 	 *

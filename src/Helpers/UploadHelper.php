@@ -15,7 +15,6 @@ namespace EightshiftForms\Helpers;
  */
 trait UploadHelper
 {
-
 	/**
 	 * Prepare all files and upload to uploads folder.
 	 *

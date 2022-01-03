@@ -15,7 +15,6 @@ namespace EightshiftForms;
  */
 class PluginFactory
 {
-
 	/**
 	 * Activate the plugin.
 	 */

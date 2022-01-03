@@ -17,7 +17,6 @@ use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
  */
 class Forms extends AbstractPostType
 {
-
 	/**
 	 * Post type slug constant.
 	 *

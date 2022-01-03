@@ -26,7 +26,6 @@ use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
  */
 class Main extends AbstractMain
 {
-
 	/**
 	 * Register the project with the WordPress system.
 	 *

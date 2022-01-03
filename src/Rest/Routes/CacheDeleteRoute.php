@@ -19,7 +19,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class CacheDeleteRoute extends AbstractBaseRoute
 {
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *

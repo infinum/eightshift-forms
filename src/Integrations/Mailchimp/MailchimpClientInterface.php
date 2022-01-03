@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailchimp;
  */
 interface MailchimpClientInterface
 {
-
 	/**
 	 * Return items.
 	 *
