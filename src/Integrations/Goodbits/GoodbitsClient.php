@@ -42,7 +42,9 @@ class GoodbitsClient implements ClientInterface
 
 		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
-		if (is_array($key)) {
+		if ($this->isJson($key)) {
+			$key = json_decode($key);
+
 			$output = [];
 
 			foreach ($key as $itemKey => $itemValue) {
@@ -216,37 +218,5 @@ class GoodbitsClient implements ClientInterface
 	private function getBaseUrl(): string
 	{
 		return "https://app.goodbits.io/api/v1/";
-	}
-
-	/**
-	 * Return Api Keys from settings or global vairaible.
-	 *
-	 * @return array<int, array<string, string>>
-	 */
-	private function getApiKeys(): array
-	{
-		$apiKey = Variables::getApiKeyGoodbits();
-
-		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
-
-		if (is_array($key)) {
-			return array_map(
-				static function ($title, $id) {
-					return [
-						'title' => $title,
-						'id' => $id,
-					];
-				},
-				array_keys($key),
-				$key
-			);
-		}
-
-		return [
-			[
-				'title' => __('Goodbits', 'eightshift-forms'),
-				'id' => $key,
-			],
-		];
 	}
 }
