@@ -42,13 +42,13 @@ class GoodbitsClient implements ClientInterface
 
 		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
-		if ($this->isJson($key)) {
+		if (is_string($key) && $this->isJson($key)) {
 			$key = json_decode($key);
 
 			$output = [];
 
 			foreach ($key as $itemKey => $itemValue) {
-				$output[$itemKey] = [
+				$output[(string) $itemKey] = [
 					'title' => $itemKey,
 					'id' => $itemValue,
 				];

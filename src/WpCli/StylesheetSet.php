@@ -72,6 +72,7 @@ class StylesheetSet implements ServiceInterface
 		];
 	}
 
+	// @phpstan-ignore-next-line
 	public function __invoke(array $args, array $argsAsoc) // phpcs:ignore
 	{
 		$path = $argsAsoc['additional-path'] ?? '';
