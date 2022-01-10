@@ -18,7 +18,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * Form class.
  */
-class Form implements ServiceInterface
+class Form extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -55,20 +55,9 @@ class Form implements ServiceInterface
 		$output['formPostId'] = $formId;
 
 		// Get form type.
-		$output['formType'] = SettingsMailer::SETTINGS_TYPE_KEY;
+		$type = SettingsMailer::SETTINGS_TYPE_KEY;
+		$output['formType'] = $type;
 
-		// Tracking event name.
-		$output['formTrackingEventName'] = $this->getSettingsValue(
-			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$formId
-		);
-
-		// Success redirect url.
-		$output['formSuccessRedirect'] = $this->getSettingsValue(
-			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$formId
-		);
-
-		return $output;
+		return array_merge($output, $this->getFormAdditionalProps($formId, $type));
 	}
 }
