@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -111,27 +112,39 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$successRedirectUrl = [
+			'component' => 'input',
+			'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
+			'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
+			'inputFieldLabel' => __('Success Redirection Url', 'eightshift-forms'),
+			// translators: %s will be replaced with forms field name.
+			'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), Helper::getFormNames($formId)),
+			'inputType' => 'url',
+			'inputIsUrl' => true,
+			'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
+		];
+
+		if (has_filter(Filters::getBlockFilterName('form', 'successRedirectUrl'))) {
+			$successRedirectUrl['inputFieldHelp'] = $successRedirectUrl['inputFieldHelp'] . ' <strong>' . __('We have detected a success redirect url filter in your project, this filter can override the value of this field on the final output.', 'eightshift-forms') . '</strong>';
+		}
+
+		$trackingEventName = [
+			'component' => 'input',
+			'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+			'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+			'inputFieldLabel' => __('Tracking Event Name', 'eightshift-forms'),
+			'inputFieldHelp' => __('Define event name used to push data to GTM.', 'eightshift-forms'),
+			'inputType' => 'text',
+			'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
+		];
+
+		if (has_filter(Filters::getBlockFilterName('form', 'trackingEventName'))) {
+			$trackingEventName['inputFieldHelp'] = $trackingEventName['inputFieldHelp'] . ' <strong>' . __('We have detected a tracking event name filter in your project, this filter can override the value of this field on the final output.', 'eightshift-forms') . '</strong>';
+		}
+
 		return [
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
-				'inputFieldLabel' => __('Success Redirection Url', 'eightshift-forms'),
-				// translators: %s will be replaced with forms field name.
-				'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), Helper::getFormNames($formId)),
-				'inputType' => 'url',
-				'inputIsUrl' => true,
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
-				'inputFieldLabel' => __('Tracking Event Name', 'eightshift-forms'),
-				'inputFieldHelp' => __('Define event name used to push data to GTM.', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
-			],
+			$successRedirectUrl,
+			$trackingEventName,
 		];
 	}
 

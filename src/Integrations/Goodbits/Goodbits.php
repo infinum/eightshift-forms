@@ -96,14 +96,15 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		$formAdditionalProps['formPostId'] = $formId;
 
 		// Get form type.
-		$formAdditionalProps['formType'] = SettingsGoodbits::SETTINGS_TYPE_KEY;
+		$type = SettingsGoodbits::SETTINGS_TYPE_KEY;
+		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 

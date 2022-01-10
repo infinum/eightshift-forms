@@ -333,6 +333,56 @@ public function getBlockFormHideLoadingStateTimeout(): string
 }
 ```
 
+## Set success redirect url value
+This filter will override settings for success redirect url.
+
+**Filter name:**
+`es_forms_block_form_success_redirect_url`
+
+**Filter example:**
+```php
+// Set success redirect url value.
+add_filter('es_forms_block_form_success_redirect_url', [$this, 'getBlockFormSuccessRedirectUrl'], 10, 2);
+
+/**
+ * Set success redirect url value.
+ *
+ * @param string $formType Type of form used like greenhouse, hubspot, etc.
+ * @param string $formId Form ID.
+ *
+ * @return string
+ */
+public function getBlockFormSuccessRedirectUrl(string $formType, string $formId): string
+{
+	return 'https://infinum.com/';
+}
+```
+
+## Set tracking event name value
+This filter will override settings for tracking event name.
+
+**Filter name:**
+`es_forms_block_form_tracking_event_name`
+
+**Filter example:**
+```php
+// Set tracking event name value.
+add_filter('es_forms_block_form_tracking_event_name', [$this, 'getBlockFormTrackingEventName'], 10, 2);
+
+/**
+ * Set tracking event name value.
+ *
+ * @param string $formType Type of form used like greenhouse, hubspot, etc.
+ * @param string $formId Form ID.
+ *
+ * @return string
+ */
+public function getBlockFormTrackingEventName(string $formType, string $formId): string
+{
+	return 'Event-Name';
+}
+```
+
 ## Changing the default custom file preview remove label
 This filter will override our default file preview remove label.
 

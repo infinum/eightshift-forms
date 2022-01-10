@@ -151,6 +151,8 @@ class Filters
 				'redirectionTimeout' => 'redirection_timeout',
 				'hideGlobalMsgTimeout' => 'hide_global_message_timeout',
 				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
+				'successRedirectUrl' => 'success_redirect_url',
+				'trackingEventName' => 'tracking_event_name',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',

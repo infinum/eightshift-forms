@@ -84,7 +84,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		$formAdditionalProps['formPostId'] = (string) $formId;
 
 		// Get form type.
-		$formAdditionalProps['formType'] = SettingsGreenhouse::SETTINGS_TYPE_KEY;
+		$type = SettingsGreenhouse::SETTINGS_TYPE_KEY;
+		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = $formAdditionalProps['ssr'] ?? false;
@@ -92,7 +93,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Return form to the frontend.
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 

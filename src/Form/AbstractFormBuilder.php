@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
@@ -234,26 +234,61 @@ abstract class AbstractFormBuilder
 	/**
 	 * Return Integration form additional props
 	 *
-	 * @param string $formID Form ID.
+	 * @param string $formId Form ID.
+	 * @param string $type Form Type.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getFormAdditionalProps(string $formID): array
+	protected function getFormAdditionalProps(string $formId, string $type): array
 	{
 		$formAdditionalProps = [];
 
 		// Tracking event name.
-		$formAdditionalProps['formTrackingEventName'] = $this->getSettingsValue(
+		$formAdditionalProps['formTrackingEventName'] = $this->getAdditionalPropsItem(
+			$formId,
+			$type,
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			$formID
+			'trackingEventName'
 		);
 
 		// Success redirect url.
-		$formAdditionalProps['formSuccessRedirect'] = $this->getSettingsValue(
+		$formAdditionalProps['formSuccessRedirect'] = $this->getAdditionalPropsItem(
+			$formId,
+			$type,
 			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			$formID
+			'successRedirectUrl'
 		);
 
 		return $formAdditionalProps;
+	}
+
+	/**
+	 * Get additional props item details with filter.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $type Form Type.
+	 * @param string $key Settings key.
+	 * @param string $filter Filter name.
+	 *
+	 * @return string
+	 */
+	private function getAdditionalPropsItem(string $formId, string $type, string $key, string $filter): string
+	{
+		$output = $this->getSettingsValue(
+			$key,
+			$formId
+		);
+
+		$filterName = Filters::getBlockFilterName('form', $filter);
+		if (has_filter($filterName)) {
+			$value = \apply_filters($filterName, $type, $formId) ?? '';
+
+			// Ignore filter if empty.
+			if (!empty($value)) {
+				$output = $value;
+			}
+		}
+
+		return $output ?? '';
 	}
 }

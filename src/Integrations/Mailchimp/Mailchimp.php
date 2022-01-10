@@ -102,14 +102,15 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$formAdditionalProps['formPostId'] = $formId;
 
 		// Get form type.
-		$formAdditionalProps['formType'] = SettingsMailchimp::SETTINGS_TYPE_KEY;
+		$type = SettingsMailchimp::SETTINGS_TYPE_KEY;
+		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId))
+			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
