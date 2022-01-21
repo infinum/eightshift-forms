@@ -15,6 +15,22 @@ export const FORM_EVENTS = {
 	BEFORE_GTM_DATA_PUSH: 'BeforeGtmDataPush',
 };
 
+export const FORM_SELECTORS = {
+	CLASS_ACTIVE: 'is-active',
+	CLASS_FILLED: 'is-filled',
+	CLASS_LOADING: 'is-loading',
+	CLASS_HAS_ERROR: 'has-error',
+};
+
+export const FORM_DATA_ATTRIBUTES = {
+	DATA_ATTR_FORM_TYPE: 'data-form-type',
+	DATA_ATTR_FIELD_ID: 'data-field-id',
+	DATA_ATTR_FORM_POST_ID: 'data-form-post-id',
+	DATA_ATTR_TRACKING_EVENT_NAME: 'data-tracking-event-name',
+	DATA_ATTR_TRACKING: 'data-tracking',
+	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
+};
+
 export class Form {
 	constructor(options) {
 		this.formIsAdmin = options.formIsAdmin || false;
@@ -35,10 +51,10 @@ export class Form {
 		this.selectSelector = `${this.fieldSelector} select`;
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
 
-		this.CLASS_ACTIVE = 'is-active';
-		this.CLASS_FILLED = 'is-filled';
-		this.CLASS_LOADING = 'is-loading';
-		this.CLASS_HAS_ERROR = 'has-error';
+		this.CLASS_ACTIVE = FORM_SELECTORS.CLASS_ACTIVE;
+		this.CLASS_FILLED = FORM_SELECTORS.CLASS_FILLED;
+		this.CLASS_LOADING = FORM_SELECTORS.CLASS_LOADING;
+		this.CLASS_HAS_ERROR = FORM_SELECTORS.CLASS_HAS_ERROR;
 
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
 		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
@@ -50,6 +66,13 @@ export class Form {
 
 		// If using custom file create global object to store files.
 		this.files = {};
+
+		this.DATA_ATTR_FORM_TYPE = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE;
+		this.DATA_ATTR_FIELD_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID;
+		this.DATA_ATTR_FORM_POST_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID;
+		this.DATA_ATTR_TRACKING_EVENT_NAME = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_EVENT_NAME;
+		this.DATA_ATTR_TRACKING = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING;
+		this.DATA_ATTR_TRACKING_SELECT_LABEL = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_SELECT_LABEL;
 	}
 
 	// Init all actions.
@@ -129,7 +152,7 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute('data-form-type');
+		const formType = element.getAttribute(this.DATA_ATTR_FORM_TYPE);
 
 		// Populate body data.
 		const body = {
@@ -252,7 +275,7 @@ export class Form {
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute('data-field-id');
+				const groupId = group.getAttribute(this.DATA_ATTR_FIELD_ID);
 				const groupInner = group.querySelectorAll(`
 					${this.groupInnerSelector} input,
 					${this.groupInnerSelector} select,
@@ -290,7 +313,7 @@ export class Form {
 			textarea:not(${this.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute('data-form-type');
+		const formType = element.getAttribute(this.DATA_ATTR_FORM_TYPE);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -354,7 +377,7 @@ export class Form {
 
 		// Add form ID field.
 		formData.append('es-form-post-id', JSON.stringify({
-			value: element.getAttribute('data-form-post-id'),
+			value: element.getAttribute(this.DATA_ATTR_FORM_POST_ID),
 			type: 'hidden',
 		}));
 
@@ -515,7 +538,7 @@ export class Form {
 
 	// Submit GTM event.
 	gtmSubmit(element) {
-		const eventName = element.getAttribute('data-tracking-event-name');
+		const eventName = element.getAttribute(this.DATA_ATTR_TRACKING_EVENT_NAME);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
@@ -529,7 +552,7 @@ export class Form {
 
 	// Build GTM data for the data layer.
 	getGtmData(element, eventName) {
-		const items = element.querySelectorAll('[data-tracking]');
+		const items = element.querySelectorAll(`[${this.DATA_ATTR_TRACKING}]`);
 		const data = {};
 
 		if (!items.length) {
@@ -537,11 +560,15 @@ export class Form {
 		}
 
 		[...items].forEach((item) => {
-			const tracking = item.getAttribute('data-tracking');
+			const tracking = item.getAttribute(this.DATA_ATTR_TRACKING);
 
 			if (tracking) {
-				const value = item.value;
-				data[tracking] = value;
+				// Check if you have this data attr and if so use select label.
+				if (item.hasAttribute(this.DATA_ATTR_TRACKING_SELECT_LABEL)) {
+					data[tracking] = item.selectedOptions[0].label;
+				} else {
+					data[tracking] = item.value;
+				}
 			}
 		});
 
@@ -580,7 +607,6 @@ export class Form {
 			new Choices(select, {
 				searchEnabled: false,
 				shouldSort: false,
-				placeholderValue: 'Choose'
 			});
 
 			select.closest('.choices').addEventListener('focus', this.onFocusEvent);

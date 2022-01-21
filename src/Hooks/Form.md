@@ -6,7 +6,9 @@ This document contains all actions/filters you can take on the frontend form sub
 
 You can manually trigger and initialize all JavaScript functions needed for the forms to run. We have exposed the global window object called `esForms`. Here you can find init function, selectors, events and much more.
 
-## Reinit all forms JavaScript.
+**Please use this as much as possible so if we change something in our implementation your code will not break.**
+
+## Re-init all forms JavaScript.
 ```js
 window.esForms.init();
 ```
@@ -28,10 +30,12 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 
 ## Code example one form:
 ```js
-import domReady from '@wordpress/dom-ready';
+window.addEventListener('load', function () {
+	const {
+		formSelector
+	} = window.esForms;
 
-domReady(() => {
-	const form = document.querySelector('.js-es-block-form');
+	const form = document.querySelector(formSelector);
 
 	form?.addEventListener('esFormsAfterFormSubmit', (event) => {
 		// Do you logic here.
@@ -41,10 +45,12 @@ domReady(() => {
 
 ## Code example multiple forms:
 ```js
-import domReady from '@wordpress/dom-ready';
+window.addEventListener('load', function () {
+	const {
+		formSelector
+	} = window.esForms;
 
-domReady(() => {
-	const forms = document.querySelectorAll('.js-es-block-form');
+	const forms = document.querySelectorAll(formSelector);
 
 	if (!forms.length) {
 		return;
@@ -74,3 +80,20 @@ $data[] = [
 	]
 ];
 ```
+
+by default tracking js will search for the field value but in the case of select field you can provide additional data attributes that will force the tracking JS to submit label instead.
+
+```php
+$data[] = [
+	'component' => 'select',
+	'selectId' => 'selectId',
+	'selectName' => 'selectName',
+	'selectValue' => '<your-key-value>',
+	'selectAttrs' => [
+		'data-tracking' => '<your-key-name>',
+		'data-tracking-select-label' => 'true',
+	]
+];
+```
+
+To provide this custom attributes you can use hooks in the PHP to change the fields.
