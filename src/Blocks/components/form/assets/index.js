@@ -8,7 +8,7 @@ domReady(() => {
 	const elements = document.querySelectorAll(selector);
 
 	if (elements.length && typeof esFormsLocalization !== 'undefined') {
-		import('./form').then(({ Form, FORM_EVENTS }) => {
+		import('./form').then(({ Form, FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES }) => {
 			const form = new Form({
 				formSelector: selector,
 				formSubmitRestApiUrl: esFormsLocalization.formSubmitRestApiUrl,
@@ -25,10 +25,8 @@ domReady(() => {
 
 			window['esForms'] = {
 				events: FORM_EVENTS,
-				CLASS_ACTIVE: form.CLASS_ACTIVE,
-				CLASS_FILLED: form.CLASS_FILLED,
-				CLASS_LOADING: form.CLASS_LOADING,
-				CLASS_HAS_ERROR: form.CLASS_HAS_ERROR,
+				selectors: FORM_SELECTORS,
+				dataAttributes: FORM_DATA_ATTRIBUTES,
 				redirectionTimeout: form.redirectionTimeout,
 				hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 				formSelector: form.formSelector,
@@ -80,8 +78,8 @@ domReady(() => {
 				scrollToElement: (event) => {
 					form.scrollToElement(event);
 				},
-				dispatchFormEvent: (event) => {
-					form.dispatchFormEvent(event);
+				dispatchFormEvent: (event, name) => {
+					form.dispatchFormEvent(event, name);
 				},
 				setupInputField: (input) => {
 					form.setupInputField(input);
