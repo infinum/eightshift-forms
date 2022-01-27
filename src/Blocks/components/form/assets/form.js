@@ -29,6 +29,7 @@ export const FORM_DATA_ATTRIBUTES = {
 	DATA_ATTR_TRACKING_EVENT_NAME: 'data-tracking-event-name',
 	DATA_ATTR_TRACKING: 'data-tracking',
 	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
+	DATA_ATTR_SUCCESS_REDIRECT: 'data-success-redirect',
 };
 
 export class Form {
@@ -192,26 +193,25 @@ export class Form {
 					// Send GTM.
 					this.gtmSubmit(element);
 
-					// If success, redirect or output msg.
-					let isRedirect = element?.dataset?.successRedirect ?? '';
-
 					// Redirect on success.
-					if (isRedirect !== '' || singleSubmit) {
+					if (element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) || singleSubmit) {
 						// Dispatch event.
 						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
 
+						let redirectUrl = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT);
+
 						// Replace string templates used for passing data via url.
 						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
 							const { value, name } = JSON.parse(val);
-							isRedirect = isRedirect.replaceAll(`{${name}}`, encodeURIComponent(value));
+							redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
 						}
 
 						// Do the actual redirect after some time.
 						setTimeout(() => {
-							window.location.href = isRedirect;
+							window.location.href = redirectUrl;
 						}, parseInt(this.redirectionTimeout, 10));
 					} else {
 						// Do normal success without redirect.
@@ -496,6 +496,10 @@ export class Form {
 
 	// Set global message.
 	setGlobalMsg = (element, msg, status) => {
+		if(element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) && status === 'success') {
+			return;
+		}
+
 		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {

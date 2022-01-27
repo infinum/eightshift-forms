@@ -115,7 +115,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			'esFormsLocalization' => [
 				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
 				'hideGlobalMessageTimeout' => apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
-				'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 600),
+				'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 300),
 				'hideLoadingStateTimeout' => apply_filters($hideLoadingStateTimeoutFilterName, 600),
 				'fileCustomRemoveLabel' => apply_filters($previewRemoveLabelFilterName, esc_html__('Remove', 'eightshift-forms')),
 				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(

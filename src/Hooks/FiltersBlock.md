@@ -260,7 +260,7 @@ This filter will override our default wait time once the form returns success an
 
 **Default:**
 ```php
-600 // 0.6 seconds.
+300 // 0.3 seconds.
 ```
 
 **Filter example:**

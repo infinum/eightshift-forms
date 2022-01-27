@@ -118,7 +118,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 			'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 			'inputFieldLabel' => __('Success Redirection Url', 'eightshift-forms'),
 			// translators: %s will be replaced with forms field name.
-			'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), Helper::getFormNames($formId)),
+			'inputFieldHelp' => sprintf(__('Define URL to redirect to after the form is submitted with success. You can do basic templating with %s field names to replace parts of the URL. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input. If you fill this field global msg will not show on status success.', 'eightshift-forms'), Helper::getFormNames($formId)),
 			'inputType' => 'url',
 			'inputIsUrl' => true,
 			'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
