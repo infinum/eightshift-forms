@@ -15,6 +15,7 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -47,6 +48,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	{
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueStylesLocal'], 10);
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsLocal']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
 	}
 
 	/**
@@ -75,6 +77,36 @@ class EnqueueTheme extends AbstractEnqueueTheme
 		}
 
 		$this->enqueueStyles();
+	}
+
+	/**
+	 * Method that returns frontend script for captcha if settings are correct.
+	 *
+	 * @return mixed
+	 */
+	public function enqueueScriptsCaptcha()
+	{
+		// Check if Captcha data is set and valid.
+		$isSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsGlobalValid) {
+			return null;
+		}
+
+		$handle = "{$this->getAssetsPrefix()}-captcha";
+
+		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+
+		\wp_register_script(
+			$handle,
+			"https://www.google.com/recaptcha/api.js?render={$siteKey}",
+			$this->getFrontendScriptDependencies(),
+			$this->getAssetsVersion(),
+			false
+		);
+
+		\wp_enqueue_script($handle);
 	}
 
 	/**
@@ -111,23 +143,33 @@ class EnqueueTheme extends AbstractEnqueueTheme
 		$previewRemoveLabelFilterName = Filters::getBlockFilterName('file', 'previewRemoveLabel');
 		$hideLoadingStateTimeoutFilterName = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
 
+		$output = [
+			'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
+			'hideGlobalMessageTimeout' => apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
+			'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 300),
+			'hideLoadingStateTimeout' => apply_filters($hideLoadingStateTimeoutFilterName, 600),
+			'fileCustomRemoveLabel' => apply_filters($previewRemoveLabelFilterName, esc_html__('Remove', 'eightshift-forms')),
+			'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+			),
+			'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+			),
+			'formResetOnSuccess' => !Variables::isDevelopMode(),
+			'captcha' => '',
+		];
+
+		// Check if Captcha data is set and valid.
+		$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+
+		if ($isCaptchaSettingsGlobalValid) {
+			$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		}
+
 		return [
-			'esFormsLocalization' => [
-				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
-				'hideGlobalMessageTimeout' => apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
-				'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 300),
-				'hideLoadingStateTimeout' => apply_filters($hideLoadingStateTimeoutFilterName, 600),
-				'fileCustomRemoveLabel' => apply_filters($previewRemoveLabelFilterName, esc_html__('Remove', 'eightshift-forms')),
-				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-				),
-				'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-				),
-				'formResetOnSuccess' => !Variables::isDevelopMode(),
-			]
+			'esFormsLocalization' => $output,
 		];
 	}
 }

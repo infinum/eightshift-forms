@@ -102,13 +102,13 @@
 		position: relative;
 		z-index: 2;
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
 		font-size: 14px;
 	}
 
 	&__menu-link {
-		padding: 13px 5px;
+		padding: 13px 15px;
 		display: block;
 		border-bottom: 1px solid var(--global-colors-es-ebb);
 		position: relative;
@@ -142,7 +142,7 @@
 		}
 
 		svg {
-			margin-bottom: 12px;
+			margin-right: 10px;
 			transition: {
 				property: transform;
 				timing-function: ease-in-out;

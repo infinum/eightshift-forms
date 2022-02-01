@@ -26,6 +26,7 @@ use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsTest;
+use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\SettingsValidation;
 
 /**
@@ -54,6 +55,10 @@ class Filters
 			'global' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsValidation::FILTER_SETTINGS_SIDEBAR_NAME,
+		],
+		SettingsCaptcha::SETTINGS_TYPE_KEY => [
+			'global' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
+			'settingsSidebar' => SettingsCaptcha::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'global' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,

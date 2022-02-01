@@ -19,6 +19,7 @@ domReady(() => {
 				formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 				formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 				fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
+				captcha: esFormsLocalization.captcha,
 			});
 
 			form.init();
@@ -30,11 +31,15 @@ domReady(() => {
 				redirectionTimeout: form.redirectionTimeout,
 				hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 				formSelector: form.formSelector,
+				captchaSiteKey: esFormsLocalization.captcha,
 				init: () => {
 					form.init();
 				},
 				onFormSubmit: (event) => {
 					form.onFormSubmit(event);
+				},
+				formSubmitCaptcha: (element, token) => {
+					form.formSubmitCaptcha(element, token);
 				},
 				formSubmit: (element) => {
 					form.formSubmit(element);
@@ -56,9 +61,6 @@ domReady(() => {
 				},
 				hideLoader: (element) => {
 					form.hideLoader(element);
-				},
-				resetErrors: (element) => {
-					form.resetErrors(element);
 				},
 				setGlobalMsg: (element, msg, status) => {
 					form.setGlobalMsg(element, msg, status);

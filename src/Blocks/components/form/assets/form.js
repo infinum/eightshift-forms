@@ -1,3 +1,5 @@
+/* global grecaptcha */
+
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import Dropzone from "dropzone";
 import autosize from 'autosize';
@@ -64,6 +66,7 @@ export class Form {
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
 		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
+		this.captcha = options.captcha ?? '';
 
 		// If using custom file create global object to store files.
 		this.files = {};
@@ -128,7 +131,17 @@ export class Form {
 	onFormSubmit = (event) => {
 		event.preventDefault();
 
-		this.formSubmit(event.target);
+		const element = event.target;
+
+		if (this.captcha) {
+			grecaptcha.ready(() => {
+				grecaptcha.execute(this.captcha, {action: 'submit'}).then((token) => {
+					this.formSubmitCaptcha(element, token);
+				});
+			});
+		} else {
+			this.formSubmit(element);
+		}
 	}
 
 	// Handle form submit and all logic for only one field click.
@@ -139,6 +152,58 @@ export class Form {
 		this.formSubmit(target.closest(this.formSelector), target);
 	}
 
+	// Handle form submit and all logic in case we have captcha in place.
+	formSubmitCaptcha = (element, token) => {
+		// Loader show.
+		this.showLoader(element);
+
+		// Populate body data.
+		const body = {
+			method: element.getAttribute('method'),
+			mode: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+			},
+			body: JSON.stringify({
+				token,
+				formId: element.getAttribute(this.DATA_ATTR_FORM_POST_ID),
+			}),
+			credentials: 'same-origin',
+			redirect: 'follow',
+			referrer: 'no-referrer',
+		};
+
+		let url = `${this.formSubmitRestApiUrl}-captcha`;
+
+		fetch(url, body)
+		.then((response) => {
+			return response.json();
+		})
+		.then((response) => {
+			// On success state.
+			if (response.code === 200) {
+				this.formSubmit(element,);
+			}
+
+			// Normal errors.
+			if (response.status === 'error') {
+				// Clear all errors.
+				this.reset(element);
+
+				// Remove loader.
+				this.hideLoader(element);
+
+				// Set global msg.
+				this.setGlobalMsg(element, response.message, 'error');
+
+				// Hide global msg in any case after some time.
+				setTimeout(() => {
+					this.hideGlobalMsg(element);
+				}, parseInt(this.hideGlobalMessageTimeout, 10));
+			}
+		});
+	}
+
 	// Handle form submit and all logic.
 	formSubmit = (element, singleSubmit = false) => {
 
@@ -146,10 +211,9 @@ export class Form {
 		this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
-		this.showLoader(element);
-
-		// Clear all errors before resubmit.
-		this.reset(element);
+		if (!this.captcha) {
+			this.showLoader(element);
+		}
 
 		const formData = this.getFormData(element, singleSubmit);
 
@@ -182,8 +246,8 @@ export class Form {
 				// Dispatch event.
 				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT);
 
-				// Clear all form errors.
-				this.resetErrors(element);
+				// Clear all errors.
+				this.reset(element);
 
 				// Remove loader.
 				this.hideLoader(element);
@@ -201,7 +265,7 @@ export class Form {
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
 
-						let redirectUrl = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT);
+						let redirectUrl = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) ?? '';
 
 						// Replace string templates used for passing data via url.
 						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -457,6 +521,9 @@ export class Form {
 			item.innerHTML = '';
 		});
 
+		// Reset all error classes on fields.
+		element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
+
 		this.unsetGlobalMsg(element);
 	}
 
@@ -486,12 +553,6 @@ export class Form {
 
 			loader.classList.remove(this.CLASS_ACTIVE);
 		}, parseInt(this.hideLoadingStateTimeout, 10));
-	}
-
-	// Reset all error classes.
-	resetErrors = (element) => {
-		// Reset all error classes on fields.
-		element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
 	}
 
 	// Set global message.

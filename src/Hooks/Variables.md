@@ -82,3 +82,15 @@ string:
 ```php
 define('ES_API_KEY_GOODBITS', "{'Android':'<api-key>','Frontend':'<api-key>'}");
 ```
+
+## Set Google reCaptcha
+
+This variables will set Google reCaptcha site and secret keys and you will not be able to change it from the admin.
+
+This two keys must be used together!!!
+
+string:
+```php
+define('ES_GOOGLE_RECAPTCHA_SITE_KEY', '<site-key>');
+define('ES_GOOGLE_RECAPTCHA_SECRET_KEY', '<secret-key>');
+```

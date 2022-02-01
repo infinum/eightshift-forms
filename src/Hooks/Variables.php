@@ -104,4 +104,24 @@ class Variables
 	{
 		return defined('ES_API_KEY_GOODBITS') ? ES_API_KEY_GOODBITS : '';
 	}
+
+	/**
+	 * Get Google reCaptcha site key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaSiteKey()
+	{
+		return defined('ES_GOOGLE_RECAPTCHA_SITE_KEY') ? ES_GOOGLE_RECAPTCHA_SITE_KEY : '';
+	}
+
+	/**
+	 * Get Google reCaptcha secret key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaSecretKey()
+	{
+		return defined('ES_GOOGLE_RECAPTCHA_SECRET_KEY') ? ES_GOOGLE_RECAPTCHA_SECRET_KEY : '';
+	}
 }

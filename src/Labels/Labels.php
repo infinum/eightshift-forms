@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\SettingsCaptcha;
 
 /**
  * Labels class.
@@ -51,6 +52,11 @@ class Labels implements LabelsInterface
 			$this->getValidationLabels(),
 			$this->getMailerLabels()
 		);
+
+		// Google reCaptcha.
+		if ((bool) $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
+			$output = array_merge($output, $this->getCaptchaLabels());
+		}
 
 		// Greenhouse.
 		if ((bool) $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
@@ -118,7 +124,7 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Return labels - Maler
+	 * Return labels - Mailer
 	 *
 	 * @return array<string, string>
 	 */
@@ -225,6 +231,25 @@ class Labels implements LabelsInterface
 			'goodbitsInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
 			'goodbitsUnauthorizedError' => __('It looks like your api key is not valid.', 'eightshift-forms'),
 			'goodbitsSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Google reCaptcha
+	 *
+	 * @return array<string, string>
+	 */
+	private function getCaptchaLabels(): array
+	{
+		return [
+			'missingInputSecret' => __('Captcha secret parameter is missing.', 'eightshift-forms'),
+			'invalidInputSecret' => __('Captcha secret parameter is invalid or malformed.', 'eightshift-forms'),
+			'missingInputResponse' => __('Captcha response parameter is missing.', 'eightshift-forms'),
+			'invalidInputResponse' => __('Captcha response parameter is invalid or malformed.', 'eightshift-forms'),
+			'badRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
+			'timeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
+			'captchaWrongAction' => __('Captcha response action is not valid.', 'eightshift-forms'),
+			'captchaScoreSpam' => __('Captcha thinks thay your request is a spam, please try again.', 'eightshift-forms'),
 		];
 	}
 
