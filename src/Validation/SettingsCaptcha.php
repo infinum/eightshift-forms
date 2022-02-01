@@ -210,7 +210,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
 						'inputFieldLabel' => __('Score number', 'eightshift-forms'),
-						'inputFieldHelp' => __('Set the score number for what you consider not spam. The scale goes from 0.0 to 1.0. Defaut is score is 0.5.', 'eightshift-forms'),
+						'inputFieldHelp' => __('Set the score number for what you consider not spam. The scale goes from 0.0 to 1.0. Default is score is 0.5.', 'eightshift-forms'),
 						'inputType' => 'number',
 						'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
 						'inputMin' => 0,

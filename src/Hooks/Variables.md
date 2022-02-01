@@ -85,9 +85,9 @@ define('ES_API_KEY_GOODBITS', "{'Android':'<api-key>','Frontend':'<api-key>'}");
 
 ## Set Google reCaptcha
 
-This variables will set Google reCaptcha site and secret keys and you will not be able to change it from the admin.
+These variables will set Google reCaptcha site and secret keys and you will not be able to change it from the admin.
 
-This two keys must be used together!!!
+These two keys must be used together!!!
 
 string:
 ```php
