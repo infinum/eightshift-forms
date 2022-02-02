@@ -134,7 +134,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// Check the actions.
+		// Check the action.
 		$action = $responseBody['action'] ?? '';
 
 		// Bailout if action is not correct.
