@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\SettingsCaptcha;
 
 /**
  * Labels class.
@@ -52,28 +53,33 @@ class Labels implements LabelsInterface
 			$this->getMailerLabels()
 		);
 
+		// Google reCaptcha.
+		if ($this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
+			$output = array_merge($output, $this->getCaptchaLabels());
+		}
+
 		// Greenhouse.
-		if ((bool) $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
 			$output = array_merge($output, $this->getGreenhouseLabels());
 		}
 
 		// Mailchimp.
-		if ((bool) $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
 			$output = array_merge($output, $this->getMailchimpLabels());
 		}
 
 		// Hubspot.
-		if ((bool) $this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
 			$output = array_merge($output, $this->getHubspotLabels());
 		}
 
 		// Mailerlite.
-		if ((bool) $this->isCheckboxOptionChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
 			$output = array_merge($output, $this->getMailerliteLabels());
 		}
 
 		// Goodbits.
-		if ((bool) $this->isCheckboxOptionChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
 			$output = array_merge($output, $this->getGoodbitsLabels());
 		}
 
@@ -118,7 +124,7 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Return labels - Maler
+	 * Return labels - Mailer
 	 *
 	 * @return array<string, string>
 	 */
@@ -225,6 +231,25 @@ class Labels implements LabelsInterface
 			'goodbitsInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
 			'goodbitsUnauthorizedError' => __('It looks like your api key is not valid.', 'eightshift-forms'),
 			'goodbitsSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Google reCaptcha
+	 *
+	 * @return array<string, string>
+	 */
+	private function getCaptchaLabels(): array
+	{
+		return [
+			'captchaMissingInputSecret' => __('Captcha secret parameter is missing.', 'eightshift-forms'),
+			'captchaInvalidInputSecret' => __('Captcha secret parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaMissingInputResponse' => __('Captcha response parameter is missing.', 'eightshift-forms'),
+			'captchaInvalidInputResponse' => __('Captcha response parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaBadRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
+			'captchaTimeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
+			'captchaWrongAction' => __('Captcha response action is not valid.', 'eightshift-forms'),
+			'captchaScoreSpam' => __('Captcha thinks that your request is spam, please try again.', 'eightshift-forms'),
 		];
 	}
 

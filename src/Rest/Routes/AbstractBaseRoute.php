@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
