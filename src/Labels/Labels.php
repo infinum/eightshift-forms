@@ -249,6 +249,7 @@ class Labels implements LabelsInterface
 			'captchaBadRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
 			'captchaTimeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
 			'captchaWrongAction' => __('Captcha response action is not valid.', 'eightshift-forms'),
+			'captchaIncorrectCaptchaSol' => __('Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
 			'captchaScoreSpam' => __('Captcha thinks that your request is spam, please try again.', 'eightshift-forms'),
 		];
 	}
