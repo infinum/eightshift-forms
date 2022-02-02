@@ -79,14 +79,13 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	public function routeCallback(\WP_REST_Request $request)
 	{
 		try {
-				$params = json_decode($request->get_body(), true, null, JSON_THROW_ON_ERROR);
-		}
-		catch (\Throwable $t) {
-						return \rest_ensure_response([
-								'status' => 'error',
-								'code' => 400,
-								'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
-							]);
+			$params = json_decode($request->get_body(), true, 512, JSON_THROW_ON_ERROR); // phpcs:ignore
+		} catch (\Throwable $t) {
+			return \rest_ensure_response([
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->labels->getLabel('captchaBadRequest'),
+			]);
 		}
 
 		$token = $params['token'] ?? '';
@@ -96,7 +95,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
+				'message' => $this->labels->getLabel('captchaBadRequest', $formId),
 			]);
 		}
 
@@ -122,7 +121,15 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		}
 
 		// Get body from the response.
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		try {
+			$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		} catch (\Throwable $t) {
+			return \rest_ensure_response([
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->labels->getLabel('captchaBadRequest'),
+			]);
+		}
 
 		// Check the status.
 		$success = $responseBody['success'] ?? false;
@@ -136,7 +143,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel(Components::kebabToCamelCase($errorCode), $formId),
+				'message' => $this->labels->getLabel("captcha" . ucfirst(Components::kebabToCamelCase($errorCode)), $formId),
 				'validation' => $responseBody,
 			]);
 		}
@@ -158,7 +165,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		$setScore = $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
-		if (floatval($score) <= floatval($setScore)) {
+		if (floatval($score) < floatval($setScore)) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,

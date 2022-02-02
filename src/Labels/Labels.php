@@ -242,12 +242,12 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
-			'missingInputSecret' => __('Captcha secret parameter is missing.', 'eightshift-forms'),
-			'invalidInputSecret' => __('Captcha secret parameter is invalid or malformed.', 'eightshift-forms'),
-			'missingInputResponse' => __('Captcha response parameter is missing.', 'eightshift-forms'),
-			'invalidInputResponse' => __('Captcha response parameter is invalid or malformed.', 'eightshift-forms'),
-			'badRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
-			'timeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
+			'captchaMissingInputSecret' => __('Captcha secret parameter is missing.', 'eightshift-forms'),
+			'captchaInvalidInputSecret' => __('Captcha secret parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaMissingInputResponse' => __('Captcha response parameter is missing.', 'eightshift-forms'),
+			'captchaInvalidInputResponse' => __('Captcha response parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaBadRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
+			'captchaTimeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
 			'captchaWrongAction' => __('Captcha response action is not valid.', 'eightshift-forms'),
 			'captchaScoreSpam' => __('Captcha thinks that your request is spam, please try again.', 'eightshift-forms'),
 		];
