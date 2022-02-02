@@ -87,7 +87,7 @@ define('ES_API_KEY_GOODBITS', "{'Android':'<api-key>','Frontend':'<api-key>'}");
 
 These constants will set Google reCaptcha site and secret keys. You cannot change the from the admin interface.
 
-These two keys must be used together!!!
+You **must** add both constants in order to use Google reCaptcha.
 
 string:
 ```php
