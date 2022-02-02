@@ -120,7 +120,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		// Check the status.
 		$success = $responseBody['success'] ?? false;
 
-		// If error status return error.
+		// If error status returns error.
 		if (!$success) {
 			// Find error codes to use in msg response.
 			$errorCode = $responseBody['error-codes'][0] ?? '';
