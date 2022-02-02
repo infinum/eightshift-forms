@@ -107,7 +107,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
+		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
 		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY);
 		$secretKey = !empty(Variables::getGoogleReCaptchaSecretKey()) ? Variables::getGoogleReCaptchaSecretKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY);
 
@@ -151,14 +151,13 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
+		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
 
 		$output = [
 			[
 				'component' => 'intro',
 				'introTitle' => __('Google reCaptcha', 'eightshift-forms'),
-				// translators: %s will be replaced with the google reCaptcha link.
-				'introSubtitle' => sprintf(__("Configure your Google reCaptcha in one place. To get Google reCaptcha site key please visit this <a href='%s' target='_blank' rel='noopener noreferrer'>link</a> use <strong>reCaptcha v3 version</strong>."), esc_url('https://www.google.com/recaptcha/admin/create')),
+				'introSubtitle' => __("Configure your Google reCaptcha in one place. To get Google reCaptcha site key please visit this <a href='https://www.google.com/recaptcha/admin/create' target='_blank' rel='noopener noreferrer'>link</a> use <strong>reCaptcha v3 version</strong>."),
 			],
 			[
 				'component' => 'checkboxes',

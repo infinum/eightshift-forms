@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
@@ -39,9 +38,8 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	 *
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 */
-	public function __construct(
-		LabelsInterface $labels
-	) {
+	public function __construct(LabelsInterface $labels)
+	{
 		$this->labels = $labels;
 	}
 
@@ -139,7 +137,6 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 
 		// Bailout if action is not correct.
 		if ($action !== 'submit') {
-			// Bailout on error.
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
@@ -151,8 +148,8 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		$score = $responseBody['score'] ?? 0.0;
 		$setScore = $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
+		// Bailout on spam.
 		if (floatval($score) <= floatval($setScore)) {
-			// Bailout on spam.
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
@@ -161,7 +158,6 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// If captcha success.
 		return \rest_ensure_response([
 			'status' => 'success',
 			'code' => 200,

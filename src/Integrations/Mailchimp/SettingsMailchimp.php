@@ -154,7 +154,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = (bool) $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
+		$isUsed = $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -361,7 +361,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = (bool) $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
+		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
 
 		$output = [
 			[

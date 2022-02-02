@@ -91,7 +91,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsGlobalValid) {
-			return null;
+			return;
 		}
 
 		$handle = "{$this->getAssetsPrefix()}-captcha";
