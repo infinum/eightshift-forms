@@ -78,7 +78,16 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-		$params = json_decode($request->get_body(), true);
+		try {
+				$params = json_decode($request->get_body(), true, null, JSON_THROW_ON_ERROR);
+		}
+		catch (\Throwable $t) {
+						return \rest_ensure_response([
+								'status' => 'error',
+								'code' => 400,
+								'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
+							]);
+		}
 
 		$token = $params['token'] ?? '';
 		$formId = $params['formId'] ?? '';
