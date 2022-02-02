@@ -114,7 +114,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			];
 		}
 
-		// Get body from response.
+		// Get body from the response.
 		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
 
 		// Check the status.
