@@ -165,7 +165,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
 					Disabling scripts will remove all scripts on the front end. Keep in mind this will make the frontend validation and submitting the form stop working. <br /><br />
-					Disabling scripts auto-init will load all JS but will not initialize it, you have to doit mainually. Please refer the documentation of the examples. <br /><br />
+					Disabling scripts auto-init will load all JS but will not initialize it, you have to do it mainually. Please refer the documentation of the examples. <br /><br />
 					Note: If you need a preset of stylesheet component use WP-CLI command.
 				', 'eightshift-forms'),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
