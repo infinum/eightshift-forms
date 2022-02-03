@@ -13,6 +13,23 @@ You can manually trigger and initialize all JavaScript functions needed for the 
 window.esForms.init();
 ```
 
+### Code example for manual init:
+This will manually re-init all JS for the forms, you can use this option in combination with the global setting to disable auto-init of JS on page load.
+
+```js
+window.addEventListener('load', function () {
+	if (!window?.esForms) {
+		return;
+	}
+
+	const {
+		formSelector
+	} = window?.esForms;
+
+	window?.esForms.init();
+});
+```
+
 # Events JavaScript
 
 Here are events that you can trigger using JavaScript to hook you custom logic in the process.
@@ -28,12 +45,16 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 * **esFormsAfterFormSubmitEnd** - Triggers after the form has done the ajax response and it is finished with the logic.
 * **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed.
 
-## Code example one form:
+### Code example one form:
 ```js
 window.addEventListener('load', function () {
+		if (!window?.esForms) {
+		return;
+	}
+
 	const {
 		formSelector
-	} = window.esForms;
+	} = window?.esForms;
 
 	const form = document.querySelector(formSelector);
 
@@ -43,12 +64,16 @@ window.addEventListener('load', function () {
 });
 ```
 
-## Code example multiple forms:
+### Code example multiple forms:
 ```js
 window.addEventListener('load', function () {
+	if (!window?.esForms) {
+		return;
+	}
+
 	const {
 		formSelector
-	} = window.esForms;
+	} = window?.esForms;
 
 	const forms = document.querySelectorAll(formSelector);
 

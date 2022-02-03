@@ -157,6 +157,10 @@ class EnqueueTheme extends AbstractEnqueueTheme
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
+			'formDisableAutoInit' => $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
+			),
 			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'captcha' => '',
 		];

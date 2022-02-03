@@ -84,6 +84,7 @@ export class Form {
 		const elements = document.querySelectorAll(this.formSelector);
 
 		[...elements].forEach((element) => {
+
 			// Regular submit.
 			element.addEventListener('submit', this.onFormSubmit);
 
@@ -649,7 +650,9 @@ export class Form {
 
 	// Dispatch custom event.
 	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(`esForms${name}`);
+		const event = new CustomEvent(`esForms${name}`, {
+			bubbles: true
+		});
 
 		element.dispatchEvent(event);
 	}
@@ -710,6 +713,7 @@ export class Form {
 					url: "/",
 					addRemoveLinks: true,
 					autoProcessQueue: false,
+					autoDiscover: false,
 					maxFiles: !file.multiple ? 1 : null,
 					dictRemoveFile: this.fileCustomRemoveLabel,
 				}
