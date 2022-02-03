@@ -2,13 +2,23 @@
 
 import domReady from '@wordpress/dom-ready';
 import { componentJsClass } from './../manifest.json';
+import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
+
+const selector = `.${componentJsClass}`;
+
+// Load window form no matter what the option is set.
+window['esForms'] = {
+	events: FORM_EVENTS,
+	selectors: FORM_SELECTORS,
+	dataAttributes: FORM_DATA_ATTRIBUTES,
+	formSelector: selector,
+};
 
 domReady(() => {
-	const selector = `.${componentJsClass}`;
 	const elements = document.querySelectorAll(selector);
 
 	if (elements.length && typeof esFormsLocalization !== 'undefined') {
-		import('./form').then(({ Form, FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES }) => {
+		import('./form').then(({ Form }) => {
 			const form = new Form({
 				formSelector: selector,
 				formSubmitRestApiUrl: esFormsLocalization.formSubmitRestApiUrl,
@@ -22,15 +32,18 @@ domReady(() => {
 				captcha: esFormsLocalization.captcha,
 			});
 
-			form.init();
+			// You can disable auto init from the admin.
+			const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit) ?? false;
 
+			if (!disableAutoInit) {
+				form.init();
+			}
+
+			// Populate window object with the rest of the functions.
 			window['esForms'] = {
-				events: FORM_EVENTS,
-				selectors: FORM_SELECTORS,
-				dataAttributes: FORM_DATA_ATTRIBUTES,
+				...window['esForms'],
 				redirectionTimeout: form.redirectionTimeout,
 				hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
-				formSelector: form.formSelector,
 				captchaSiteKey: esFormsLocalization.captcha,
 				init: () => {
 					form.init();

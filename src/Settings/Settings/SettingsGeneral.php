@@ -60,6 +60,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	 */
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY = 'general-disable-default-enqueue';
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY = 'scripts';
+	public const SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY = 'autoinit';
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY = 'styles';
 
 	/**
@@ -164,6 +165,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 					Keep in mind that you know what you are doing and that you will provide your own styles and scripts.<br /><br />
 					Disabling styles will remove all of plugin styles for frontend and block editor.<br /><br />
 					Disabling scripts will remove all scripts on the front end. Keep in mind this will make the frontend validation and submitting the form stop working. <br /><br />
+					Disabling scripts auto-init will load all JS but will not initialize it, you have to do it mainually. Please refer to the documentation of the examples. <br /><br />
 					Note: If you need a preset of stylesheet component use WP-CLI command.
 				', 'eightshift-forms'),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
@@ -180,6 +182,12 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 						'checkboxLabel' => __('Disable default scripts', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => __('Disable auto-init scripts', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 					]
 				]
 			],
