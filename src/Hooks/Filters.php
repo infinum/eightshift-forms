@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
@@ -101,6 +102,10 @@ class Filters
 		SettingsLocation::SETTINGS_TYPE_KEY => [
 			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME,
+		],
+		SettingsGeolocation::SETTINGS_TYPE_KEY => [
+			'global' => SettingsGeolocation::FILTER_SETTINGS_GLOBAL_NAME,
+			'settingsSidebar' => SettingsGeolocation::FILTER_SETTINGS_SIDEBAR_NAME,
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,
