@@ -42,7 +42,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
 	const [geoRepeater, setGeoRepeater] = useState(formsFormGeolocationAlternatives);
 	
 	let formsStyleOptions = [];

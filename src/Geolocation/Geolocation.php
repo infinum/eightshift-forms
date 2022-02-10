@@ -21,6 +21,11 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Geolocation implements ServiceInterface, GeolocationInterface
 {
+	/**
+	 * Internal countries list stored in a variable for caching.
+	 *
+	 * @var array<string>
+	 */
 	public $countries = [];
 
 	/**
@@ -60,6 +65,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return;
 		}
 
+		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
 			return;
@@ -82,14 +88,14 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 * Check if user location exists in the provided locations.
 	 *
 	 * @param string $formId Form Id.
-	 * @param array<string> $defaultLocations Default locations set to form..
-	 * @param array<string> $additionalLocations Additional location set to form.
+	 * @param array<string, mixed> $defaultLocations Default locations set to form..
+	 * @param array<string, mixed> $additionalLocations Additional location set to form.
 	 *
 	 * @return string
 	 */
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string
 	{
-		/// Filter used to skip any geolocation checks for the user.
+		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
 			Helper::logger([
@@ -104,27 +110,30 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Returns user location got from the API or Cookie.
 		$userLocation = $this->getLocationDetails();
 
-		$self = $this;
-
 		// Check if additional location exists on the form.
 		if ($additionalLocations) {
-			$matchAdditionalLocations = array_filter(
-				$additionalLocations,
-				static function($location) use ($userLocation, $self) {
-					return array_filter(
-						$location['geoLocation'],
-						function($geo) use ($userLocation, $self) {
-							$country = $self->getCountryGroup($geo['value']);
-							return isset($country[$userLocation]) ?? false;
-						}
-					);
+			$matchAdditionalLocations = [];
+
+			// Iterate all additional location to find the first that match.
+			foreach ($additionalLocations as $additionalLocation) {
+				// Find geolocation from array of options.
+				$geoLocation = array_filter(
+					$additionalLocation['geoLocation'] ?? [],
+					function ($geo) use ($userLocation) {
+						$country = $this->getCountryGroup($geo['value']);
+
+						return isset($country[$userLocation]) ?? false;
+					}
+				) ?? [];
+
+				// Exit after first sucesfull result.
+				if ($geoLocation) {
+					$matchAdditionalLocations = $additionalLocation;
+					break;
 				}
-			);
+			}
 
-			// Return first result.
-			$matchAdditionalLocations = reset($matchAdditionalLocations);
-
-			// If additional locations match output that new form. 
+			// If additional locations match output that new form.
 			if ($matchAdditionalLocations) {
 				Helper::logger([
 					'geolocation' => 'Locations exists, locations match. Outputing new form.',
@@ -140,20 +149,20 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		if ($defaultLocations) {
 			$matchDefaultLocations = array_filter(
 				$defaultLocations,
-				function($location) use ($userLocation, $self) {
-					$country = $self->getCountryGroup($location['value']);
+				function ($location) use ($userLocation) {
+					$country = $this->getCountryGroup($location['value']);
 
 					return isset($country[$userLocation]) ?? false;
 				}
 			);
-	
+
 			// Return first result.
 			$matchDefaultLocations = reset($matchDefaultLocations);
-	
-			// If default locations match output that new form. 
+
+			// If default locations match output that new form.
 			if ($matchDefaultLocations) {
 				Helper::logger([
-					'geolocation' => 'Locations doesn\'t exists, default location match. Outputing new form.',
+					'geolocation' => 'Locations doesn\'t match or exist, default location match. Outputing new form.',
 					'formIdOriginal' => $formId,
 					'formIdUsed' => $formId,
 					'userLocation' => $userLocation,
@@ -184,7 +193,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	/**
 	 * Get all countrie lists from the manifest.json.
 	 *
-	 * @return array<string>
+	 * @return array<mixed>
 	 */
 	public function getCountries(): array
 	{
@@ -218,6 +227,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			],
 		];
 
+		// Save to internal cache so we don't read manifest all the time.
 		if (!$this->countries) {
 			$this->countries = Components::getManifest(__DIR__);
 		}
@@ -234,6 +244,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			];
 		}
 
+		// Provide custom countries.
 		$filterName = Filters::getGeolocationFilterName('countries');
 		if (has_filter($filterName)) {
 			$output = apply_filters($filterName, $output ?? []);
@@ -257,7 +268,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 				$itemValue = $item['value'] ?? '';
 				return $itemValue === $value;
 			}
-		);
+		) ?? [];
 
 		if (!$country) {
 			return [];
@@ -265,11 +276,9 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 		$country = reset($country) ?? [];
 
-		if (!$country['group']) {
-			return [];
-		}
+		$group = $country['group'] ?? [];
 
-		return array_flip($country['group'] ?? []) ?? [];
+		return array_flip($group) ?? [];
 	}
 
 	/**
@@ -282,6 +291,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Set country code manually for develop.
 		if (Variables::getGeolocation()) {
 			return Variables::getGeolocation();
+		}
+
+		// Filter provides user location from external source.
+		$filterName = Filters::getGeolocationFilterName('userLocation');
+		if (has_filter($filterName)) {
+			return \apply_filters($filterName, '');
 		}
 
 		// Check cookie for country code.
@@ -299,7 +314,6 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Skip if empty for some reason or you are on local host.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
 			try {
-
 				// Get data from the local DB.
 				require_once __DIR__ . '/geoip2.phar';
 
