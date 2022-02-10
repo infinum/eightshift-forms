@@ -42,8 +42,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
 	const [geoRepeater, setGeoRepeater] = useState(formsFormGeolocationAlternatives);
-
+	
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
 
@@ -228,13 +229,26 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							<br />
 							<IconToggle
 								icon={icons.visible}
-								label={__('Show all geolocation forms', 'eightshift-forms')}
+								label={__('Preview all geolocation forms', 'eightshift-forms')}
 								help={__('This toggle is only used to preview all other forms set in the geolocation modal.', 'eightshift-forms')}
 								checked={isGeoPreview}
 								onChange={() => setIsGeoPreview(!isGeoPreview)}
 							/>
 						</>
 					}
+
+					<br />
+
+					<Button
+						icon={icons.visible}
+						onClick={() => {
+							window.open('/wp-json/eightshift-forms/v1/geolocation-countries');
+						}}
+						isTertiary
+						iconSize={24}
+					>
+						{__('Preview locations data', 'eightshift-form')}
+					</Button>
 
 					{isModalOpen && (
 						<Modal

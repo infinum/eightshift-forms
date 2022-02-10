@@ -11,8 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\Components;
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Geolocation\GeolocationInterface;
 
 /**
  * Class GeolocationCountriesRoute
@@ -22,18 +21,18 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	/**
 	 * Instance variable of ClientInterface data.
 	 *
-	 * @var ClientInterface
+	 * @var GeolocationInterface
 	 */
-	protected $greenhouseClient;
+	protected $geolocation;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
+	 * @param GeolocationInterface $geolocation Inject GeolocationInterface which holds Geolocation data.
 	 */
-	public function __construct(ClientInterface $greenhouseClient)
+	public function __construct(GeolocationInterface $geolocation)
 	{
-		$this->greenhouseClient = $greenhouseClient;
+		$this->geolocation = $geolocation;
 	}
 
 	/**
@@ -81,35 +80,14 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-		// Try catch request.
 		try {
-			$output = [
-				[
-					'label' => __('European Union', 'eightshift-forms'),
-					'value' => 'european-union',
-				],
-				[
-					'label' => __('Ex Yugoslavia', 'eightshift-forms'),
-					'value' => 'ex-yugoslavia',
-				],
-			];
-
-			$countries = Components::getManifest(dirname(__DIR__, 2) . '/geolocation');
-
-			foreach ($countries as $country) {
-				$output[] = [
-					'label' => $country['Name'],
-					'value' => $country['Code'],
-				];
-			}
-
-			return $output;
+			return $this->geolocation->getCountries();
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
 				[
 					'code' => 400,
-					'status' => 'error_validation',
+					'status' => 'error',
 					'message' => $e->getMessage(),
 					'validation' => $e->getData(),
 				]

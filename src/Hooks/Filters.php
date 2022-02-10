@@ -149,6 +149,11 @@ class Filters
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
+		'geolocation' => [
+			'disable' => 'disable',
+			'countries' => 'countries_list',
+			'userLocation' => 'user_location',
+		],
 		'blocks' => [
 			'additionalBlocks' => 'additional_blocks',
 			'breakpoints' => 'media_breakpoints',
@@ -247,5 +252,19 @@ class Filters
 		$internalType = Helper::camelToSnakeCase($type);
 
 		return self::FILTER_PREFIX . "_block_{$internalType}_" . self::ALL_PUBLIC['block'][$type][$name]; // @phpstan-ignore-line
+	}
+
+	/**
+	 * Get Geolocation filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_geolocation_disable
+	 */
+	public static function getGeolocationFilterName(string $name): string
+	{
+		return self::FILTER_PREFIX . '_geolocation_' . self::ALL_PUBLIC['geolocation'][$name];
 	}
 }

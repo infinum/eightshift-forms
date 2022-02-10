@@ -10,15 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
+use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Geolocation class.
  */
-class Geolocation implements ServiceInterface
+class Geolocation implements ServiceInterface, GeolocationInterface
 {
+	public $countries = [];
+
 	/**
 	 * Geolocation cookie name const.
 	 *
@@ -45,7 +49,7 @@ class Geolocation implements ServiceInterface
 	}
 
 	/**
-	 * Set geolocation cookie on init load.
+	 * Set geolocation cookie.
 	 *
 	 * @return void
 	 */
@@ -53,6 +57,11 @@ class Geolocation implements ServiceInterface
 	{
 		// Skip admin.
 		if (is_admin()) {
+			return;
+		}
+
+		$filterName = Filters::getGeolocationFilterName('disable');
+		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
 			return;
 		}
 
@@ -80,18 +89,33 @@ class Geolocation implements ServiceInterface
 	 */
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string
 	{
+		/// Filter used to skip any geolocation checks for the user.
+		$filterName = Filters::getGeolocationFilterName('disable');
+		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
+			Helper::logger([
+				'geolocation' => 'Filter disabled active, skip geolocation.',
+				'formIdOriginal' => $formId,
+				'formIdUsed' => $formId,
+				'userLocation' => '',
+			]);
+			return $formId;
+		}
+
 		// Returns user location got from the API or Cookie.
 		$userLocation = $this->getLocationDetails();
+
+		$self = $this;
 
 		// Check if additional location exists on the form.
 		if ($additionalLocations) {
 			$matchAdditionalLocations = array_filter(
 				$additionalLocations,
-				static function($location) use ($userLocation) {
+				static function($location) use ($userLocation, $self) {
 					return array_filter(
-						$location['geoLocation'], 
-						static function($geo) use ($userLocation) {
-							return strtoupper($geo['value']) === $userLocation;
+						$location['geoLocation'],
+						function($geo) use ($userLocation, $self) {
+							$country = $self->getCountryGroup($geo['value']);
+							return isset($country[$userLocation]) ?? false;
 						}
 					);
 				}
@@ -116,8 +140,10 @@ class Geolocation implements ServiceInterface
 		if ($defaultLocations) {
 			$matchDefaultLocations = array_filter(
 				$defaultLocations,
-				static function($location) use ($userLocation) {
-					return strtoupper($location['value']) === $userLocation;
+				function($location) use ($userLocation, $self) {
+					$country = $self->getCountryGroup($location['value']);
+
+					return isset($country[$userLocation]) ?? false;
 				}
 			);
 	
@@ -153,6 +179,97 @@ class Geolocation implements ServiceInterface
 			'userLocation' => $userLocation,
 		]);
 		return $formId;
+	}
+
+	/**
+	 * Get all countrie lists from the manifest.json.
+	 *
+	 * @return array<string>
+	 */
+	public function getCountries(): array
+	{
+		$output = [
+			[
+				'label' => __('Europe', 'eightshift-forms'),
+				'value' => 'europe',
+				'group' => [
+					'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR',
+					'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK',
+					'SI', 'ES', 'SE', 'AL', 'AD', 'AM', 'BY', 'BA', 'FO', 'GE', 'GI', 'IS',
+					'IM', 'XK', 'LI', 'MK', 'MD', 'MC', 'NO', 'RU', 'SM', 'RS', 'CH', 'TR',
+					'UA', 'GB', 'VA',
+				],
+			],
+			[
+				'label' => __('European Union', 'eightshift-forms'),
+				'value' => 'european-union',
+				'group' => [
+					'BE', 'EL', 'LT', 'PT', 'BG', 'ES', 'LU', 'RO', 'CZ',
+					'FR', 'HU', 'SI', 'DK', 'HR', 'MT', 'SK', 'DE', 'IT',
+					'NL', 'FI', 'EE', 'CY', 'AT', 'SE', 'IE', 'LV', 'PL',
+				],
+			],
+			[
+				'label' => __('Ex Yugoslavia', 'eightshift-forms'),
+				'value' => 'ex-yugoslavia',
+				'group' => [
+					'HR', 'RS', 'BA', 'ME', 'SI'
+				],
+			],
+		];
+
+		if (!$this->countries) {
+			$this->countries = Components::getManifest(__DIR__);
+		}
+
+		foreach ($this->countries as $country) {
+			$code = $country['Code'];
+
+			$output[] = [
+				'label' => $country['Name'],
+				'value' => $code,
+				'group' => [
+					strtoupper($code),
+				],
+			];
+		}
+
+		$filterName = Filters::getGeolocationFilterName('countries');
+		if (has_filter($filterName)) {
+			$output = apply_filters($filterName, $output ?? []);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get Country code group
+	 *
+	 * @param string $value Code name to check.
+	 *
+	 * @return array<string>
+	 */
+	private function getCountryGroup(string $value): array
+	{
+		$country = array_filter(
+			$this->getCountries(),
+			static function ($item) use ($value) {
+				$itemValue = $item['value'] ?? '';
+				return $itemValue === $value;
+			}
+		);
+
+		if (!$country) {
+			return [];
+		}
+
+		$country = reset($country) ?? [];
+
+		if (!$country['group']) {
+			return [];
+		}
+
+		return array_flip($country['group'] ?? []) ?? [];
 	}
 
 	/**
