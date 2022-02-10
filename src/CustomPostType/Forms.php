@@ -105,6 +105,7 @@ class Forms extends AbstractPostType
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
 			'template_lock' => 'all',
 			'template' => $template,
+			'taxonomies' => ['category'],
 		];
 	}
 }
