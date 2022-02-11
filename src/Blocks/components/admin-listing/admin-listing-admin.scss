@@ -49,11 +49,24 @@
 
 		color: var(--global-colors-es-boulder);
 
+		&:focus,
 		&:hover {
 			color: var(--global-colors-es-blumine);
 
 			#{$this}__label-icon {
 				color: var(--global-colors-es-blumine);
+			}
+		}
+
+		&:focus {
+			// stylelint-disable-next-line declaration-no-important
+			box-shadow: none !important;
+
+			span {
+				outline: 1px solid var(--global-colors-es-matisse);
+				border-radius: 3px;
+				outline-offset: 3px;
+				font-weight: 500;
 			}
 		}
 	}

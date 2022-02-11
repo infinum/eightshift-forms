@@ -43,15 +43,15 @@ $layoutClass = Components::classnames([
 					<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
 							<a href="<?php echo \esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
-								<?php echo \esc_html__('View Trash', 'eightshift-forms'); ?>
+								<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m5 4.75 1.712 12.14a1 1 0 0 0 .99.86h5.596a1 1 0 0 0 .99-.86L16 4.75m-12 0h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12.5 4.25a2 2 0 1 0-4 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 8v6m3-6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+								<?php echo \esc_html__('View trash', 'eightshift-forms'); ?>
 							</a>
 						<?php } ?>
 
 						<?php if ($adminListingNewFormLink) { ?>
-							<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-								<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-plus-alt"); ?> "></span>
-								<?php echo \esc_html__('Add new form', 'eightshift-forms'); ?>
+							<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?> <?php echo \esc_attr("{$sectionClass}__link--cta"); ?>">
+								<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0zM10 5.636a.75.75 0 0 1 .75.75v3h3a.75.75 0 0 1 0 1.5h-3v3a.75.75 0 1 1-1.5 0v-3h-3a.75.75 0 1 1 0-1.5h3v-3a.75.75 0 0 1 .75-.75z" fill="currentColor"/></svg>
+								<?php echo \esc_html__('New form', 'eightshift-forms'); ?>
 							</a>
 						<?php } ?>
 					</div>
@@ -87,8 +87,15 @@ $layoutClass = Components::classnames([
 						<li class="<?php echo \esc_attr("{$componentClass}__list-item"); ?>">
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($slug); ?>" class="<?php echo \esc_attr("{$componentClass}__label"); ?>">
-									<span class="dashicons dashicons-feedback <?php echo \esc_attr("{$componentClass}__label-icon"); ?>"></span>
-									<?php echo $title ? esc_html($title) : esc_html($id); ?>
+									<?php if ($postType === 'post') { ?>
+										<svg class="<?php echo \esc_attr("{$componentClass}__label-icon"); ?>" width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M3.5 4h2m-2 3h2m-2 3h2m-2 3h2m-2 3h2m0-14v16' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M15.5 18.5h-11A1.5 1.5 0 0 1 3 17V3a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 3v14a1.5 1.5 0 0 1-1.5 1.5z' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' fill='none'/><path d='M8.25 4.5h5m-5 2.5h3m-3 2.5h2' stroke='currentColor' stroke-opacity='.3' stroke-width='1.5' stroke-linecap='round' fill='none'/></svg>
+									<?php } elseif ($postType === 'page') { ?>
+										<svg class="<?php echo \esc_attr("{$componentClass}__label-icon"); ?>" width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='m16 7-5-5v5h5z' fill='currentColor' fill-opacity='.12'/><path d='M16 6.5h-5v-5' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M14.5 18.5h-9A1.5 1.5 0 0 1 4 17V3a1.5 1.5 0 0 1 1.5-1.5h5.85a1.5 1.5 0 0 1 1.095.474l3.15 3.363A1.5 1.5 0 0 1 16 6.362V17a1.5 1.5 0 0 1-1.5 1.5z' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' fill='none'/></svg>
+									<?php } else { ?>
+										<svg class="<?php echo \esc_attr("{$componentClass}__label-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 11.75h5m-5 3h5" stroke="currentColor" stroke-opacity=".12" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M4.5 8.75h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="5" cy="11.75" r="1" fill="currentColor"/><circle cx="5" cy="14.75" r="1" fill="currentColor"/><path d="M1 2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4H1V2z" fill="currentColor" fill-opacity=".12"/><rect x="1" y="1" width="18" height="18" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M4.5 3.75h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+									<?php } ?>
+
+									<span><?php echo $title ? esc_html($title) : esc_html($id); ?></span>
 								</a>
 
 								<?php if ($status !== 'publish') { ?>
@@ -106,14 +113,14 @@ $layoutClass = Components::classnames([
 							<div class="<?php echo \esc_attr("{$sectionClass}__actions"); ?>">
 								<?php if ($editLink) { ?>
 									<a href="<?php echo esc_url($editLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-edit"); ?> "></span>
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m15.5 7.5-3-3-8.665 8.184a1.5 1.5 0 0 0-.435.765l-.708 3.189a.5.5 0 0 0 .646.583l3.326-1.109a1.5 1.5 0 0 0 .586-.362L15.5 7.5z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="m12.5 4.5 1.44-1.44a1.5 1.5 0 0 1 2.12 0l.88.88a1.5 1.5 0 0 1 0 2.12L15.5 7.5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
 										<?php echo esc_html__('Edit', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
 
 								<?php if ($trashLink) { ?>
 									<a href="<?php echo esc_url($trashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-trash"); ?> "></span>
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m5 4.75 1.712 12.14a1 1 0 0 0 .99.86h5.596a1 1 0 0 0 .99-.86L16 4.75m-12 0h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12.5 4.25a2 2 0 1 0-4 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 8v6m3-6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
 										<?php
 										if ($adminListingType === 'trash') {
 											echo esc_html__('Delete permanently', 'eightshift-forms');
@@ -126,21 +133,21 @@ $layoutClass = Components::classnames([
 
 								<?php if ($adminListingType === 'trash') { ?>
 									<a href="<?php echo esc_url($trashRestoreLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-image-rotate"); ?> "></span>
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 11A5.5 5.5 0 1 0 10 5.5H8.5m0 0L10.75 8M8.5 5.5l2.5-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4.5 11c0-.706.133-1.38.375-2" stroke="currentColor" stroke-opacity=".12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
 										<?php echo esc_html__('Restore', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
 
 								<?php if ($settingsLink) { ?>
 									<a href="<?php echo esc_url($settingsLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-admin-settings"); ?> "></span>
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.196 1.66c-1.813-.743-3.59-.31-4.25 0 .118 1.619-.581 4.37-4.321 2.428-.661.62-2.012 2.186-2.125 3.5 1.653.761 3.995 2.885.142 5.285.236.976.963 3.042 1.983 3.499 1.417-1 4.264-1.9 4.32 2.5.922.285 3.06.685 4.25 0-.117-1.762.567-4.728 4.25-2.5.567-.476 1.772-1.843 2.055-3.5-1.511-.928-3.627-3.285 0-5.284-.212-.834-.935-2.7-2.125-3.5-3.287 1.943-4.156-.81-4.18-2.428z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="10.071" cy="10.16" rx="2.975" ry="3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
 										<?php echo esc_html__('Settings', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
 
 								<?php if ($viewLink) { ?>
 									<a href="<?php echo esc_url($viewLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
-										<span class="<?php echo \esc_attr("{$sectionClass}__link-icon dashicons dashicons-welcome-view-site"); ?> "></span>
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 15c-5 0-8-3-9-5 1-2 4-5 9-5s8 3 9 5c-1 2-4 5-9 5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
 										<?php echo esc_html__('View', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
