@@ -2,7 +2,7 @@
 This document will provide you with the code examples for forms filters used in geolocation.
 
 ## Change default countries list
-This filter provides you the ability to add/remove/edit countries list and countries groups.
+This filter provides you with the ability to add/remove/edit countries list and countries groups.
 
 **Filter name:**
 `es_forms_geolocation_countries_list`
@@ -37,7 +37,7 @@ public function getGeolocationCountriesList(array $countries): array
 ```
 
 ## Disable geolocation
-This filter provides you the ability to totally disable geolocation on the frontend usage.
+This filter provides you with the ability to totally disable geolocation on the frontend usage.
 Generally used for GDPR and other purposes.
 
 **Filter name:**
@@ -47,7 +47,6 @@ Generally used for GDPR and other purposes.
 ```php
 // Disable geolocation.
 add_filter('es_forms_geolocation_disable', [$this, 'getGeolocationDisable']);
-
 
 /**
  * Disable geolocation.
@@ -61,7 +60,7 @@ public function getGeolocationDisable(): bool
 ```
 
 ## Provide custom user location
-This filter provides you the ability to manually provide user location from your own database or API.
+This filter provides you with the ability to manually provide user location from your own database or an API.
 
 **Filter name:**
 `es_forms_geolocation_user_location`

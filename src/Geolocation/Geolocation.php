@@ -40,7 +40,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 *
 	 * @var string
 	 */
-	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_use_located';
+	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
 
 	/**
 	 * Register all the hooks.
@@ -65,7 +65,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return;
 		}
 
-		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
+		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
 			return;
@@ -107,14 +107,14 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return $formId;
 		}
 
-		// Returns user location got from the API or Cookie.
+		// Returns user location retrieved from the API or cookie.
 		$userLocation = $this->getLocationDetails();
 
 		// Check if additional location exists on the form.
 		if ($additionalLocations) {
 			$matchAdditionalLocations = [];
 
-			// Iterate all additional location to find the first that match.
+			// Iterate all additional locations to find the first that matches.
 			foreach ($additionalLocations as $additionalLocation) {
 				// Find geolocation from array of options.
 				$geoLocation = array_filter(
@@ -126,7 +126,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 					}
 				) ?? [];
 
-				// Exit after first sucesfull result.
+				// Exit after first succesfull result.
 				if ($geoLocation) {
 					$matchAdditionalLocations = $additionalLocation;
 					break;
@@ -145,7 +145,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			}
 		}
 
-		// If thare are not location but we have default locations set match that array with the user location.
+		// If there is no location but we have the default locations set match that array with the user location.
 		if ($defaultLocations) {
 			$matchDefaultLocations = array_filter(
 				$defaultLocations,
@@ -180,9 +180,9 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return '';
 		}
 
-		// Final fallback if the user has no locations, no default locations or thery don't match just return the current form.
+		// Final fallback if the user has no locations, no default locations or they didn't match. Just return the current form.
 		Helper::logger([
-			'geolocation' => 'Final fallback that returns current form. Outputing original form.',
+			'geolocation' => 'Final fallback that returns the current form. Outputing the original form.',
 			'formIdOriginal' => $formId,
 			'formIdUsed' => $formId,
 			'userLocation' => $userLocation,
@@ -191,7 +191,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	}
 
 	/**
-	 * Get all countrie lists from the manifest.json.
+	 * Get all country lists from the manifest.json.
 	 *
 	 * @return array<mixed>
 	 */
@@ -292,7 +292,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return getenv('TEST_GEOLOCATION');
 		}
 
-		// Set country code manually for develop.
+		// Set country code manually for development purposes.
 		if (Variables::getGeolocation()) {
 			return Variables::getGeolocation();
 		}
@@ -310,12 +310,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 		$ipAddr = '';
 
-		// Find users remote address.
+		// Find user's remote address.
 		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$ipAddr = $_SERVER['REMOTE_ADDR']; //phpcs:ignore
+			$ipAddr = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); 
 		}
 
-		// Skip if empty for some reason or you are on local host.
+		// Skip if empty for some reason or if you are on local host.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
 			try {
 				// Get data from the local DB.
