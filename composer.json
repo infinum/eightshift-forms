@@ -54,7 +54,11 @@
 	"config": {
 		"sort-packages": true,
 		"optimize-autoloader": true,
-		"process-timeout": 2000
+		"process-timeout": 2000,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"typisttech/imposter-plugin": true
+		}
 	},
 	"scripts": {
 		"analyze": "@php ./vendor/bin/phpstan analyze",
