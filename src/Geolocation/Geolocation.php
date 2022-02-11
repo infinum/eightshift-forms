@@ -67,7 +67,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
 		$filterName = Filters::getGeolocationFilterName('disable');
-		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
+		if (has_filter($filterName)) {
 			return;
 		}
 
@@ -97,7 +97,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	{
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
-		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
+		if (has_filter($filterName)) {
 			Helper::logger([
 				'geolocation' => 'Filter disabled active, skip geolocation.',
 				'formIdOriginal' => $formId,
@@ -251,7 +251,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Provide custom countries.
 		$filterName = Filters::getGeolocationFilterName('countries');
 		if (has_filter($filterName)) {
-			$output = apply_filters($filterName, $output ?? []);
+			return apply_filters($filterName, $output ?? []);
 		}
 
 		return $output;

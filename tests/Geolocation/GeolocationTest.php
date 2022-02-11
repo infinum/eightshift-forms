@@ -5,8 +5,8 @@ namespace Tests\Unit\Geolocation;
 use EightshiftForms\Geolocation\Geolocation;
 
 use Brain\Monkey;
+use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
-use Mockery;
 
 use function Tests\setupMocks;
 
@@ -108,17 +108,41 @@ test('Register method will call es_geolocation_is_use_located hook', function ()
 	$this->assertSame(10, has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
 });
 
+//---------------------------------------------------------------------------------//
+
 test('setLocationCookie will exit if is not frontend.', function () {
 	$action = 'is_admin';
-	Functions\when('is_admin')->justReturn(putenv("SIDEAFFECT_ADMIN={$action}"));
+	Functions\when('is_admin')->justReturn(putenv("SIDEAFFECT_GEOLOCATION_IS_ADMIN={$action}"));
 
 	$this->geolocation->setLocationCookie();
 
-	$this->assertSame(getenv('SIDEAFFECT_ADMIN'), $action);
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_IS_ADMIN'), $action);
 
 	// Cleanup.
-	putenv('SIDEAFFECT_ADMIN=');
+	putenv('SIDEAFFECT_GEOLOCATION_IS_ADMIN=');
 	Functions\when('is_admin')->justReturn(false);
+});
+
+test('setLocationCookie will exit if disable filter is provided.', function () {
+	$action = 'is_geo_disable_filter';
+	
+	add_filter('es_forms_geolocation_disable', function() {
+		return true;
+	});
+
+	if (has_filter('es_forms_geolocation_disable')) {
+		putenv("SIDEAFFECT_GEOLOCATION_DISABLED_FILTER={$action}");
+	}
+
+	$this->geolocation->setLocationCookie();
+
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER'), $action);
+
+	// Cleanup.
+	remove_filter('es_forms_geolocation_disable', function() {
+		return false;
+	});
+	putenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER=');
 });
 
 test('setLocationCookie will exit if cookie is set.', function () {
@@ -127,62 +151,55 @@ test('setLocationCookie will exit if cookie is set.', function () {
 	$_COOKIE[Geolocation::GEOLOCATION_COOKIE] = 'HR';
 
 	if (isset($_COOKIE[Geolocation::GEOLOCATION_COOKIE])) {
-		putenv("SIDEAFFECT_COOKIE={$action}");
+		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_EXIT={$action}");
 	}
 
 	$this->geolocation->setLocationCookie();
 
-	$this->assertSame(getenv('SIDEAFFECT_COOKIE'), $action);
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_EXIT'), $action);
 
 	// Cleanup.
 	unset($_COOKIE[Geolocation::GEOLOCATION_COOKIE]);
-	putenv('SIDEAFFECT_COOKIE=');
+	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_EXIT=');
 });
-
-// test('setLocationCookie will exit if custom filter is set.', function () {
-// 	$action = 'is_disable_filter';
-// 	$filterName = 'es_forms_geolocation_disable';
-
-// 	// add_filter($filterName, function($args) {
-// 	// 	putenv("AAAA=DA");
-// 	// 	var_dump($args);
-// 	// 	return $args;
-// 	// });
-
-// 	add_filter('es_forms_geolocation_disable', function() {
-// 		return 'aaaa';
-// 	}, 999);
-
-// 	Filters\expectApplied('es_forms_geolocation_disable')->once()->andReturn('ivan');
-
-// 	// $this->assertSame(true, $cosnt);
-
-// 	$this->geolocation->setLocationCookie();
-
-// 	remove_filter('es_forms_geolocation_disable', function() {
-// 		return 'ivan';
-// 	}, 999);
-
-
-// 	// $this->assertSame(getenv('AAAA'), 'DA');
-
-// 	// $this->assertSame(10, has_filter($filterName, 'function()'));
-
-// 	// // Cleanup.
-// 	// putenv('SIDEAFFECT_COOKIE_SET=');
-// });
 
 test('setLocationCookie will set cookie.', function () {
 	Functions\when('setcookie')->alias(function ($args) {
-		putenv("SIDEAFFECT_COOKIE_SET={$args}");
+		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_SET={$args}");
 	});
 
 	$this->geolocation->setLocationCookie();
 
-	$this->assertSame(getenv('SIDEAFFECT_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
 
 	// Cleanup.
-	putenv('SIDEAFFECT_COOKIE_SET=');
+	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET=');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('isUserGeolocated will return formId if disable filter is provided.', function () {
+	$action = 'is_geo_disable_filter';
+	
+	add_filter('es_forms_geolocation_disable', function() {
+		return true;
+	});
+
+	if (has_filter('es_forms_geolocation_disable')) {
+		putenv("SIDEAFFECT_GEOLOCATION_DISABLED_FILTER={$action}");
+	}
+
+	$geo = $this->geolocation->isUserGeolocated(1, [], []);
+
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER'), $action);
+	$this->assertIsString($geo);
+	$this->assertSame($geo, '1');
+
+	// Cleanup.
+	remove_filter('es_forms_geolocation_disable', function() {
+		return false;
+	});
+	putenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER=');
 });
 
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {
@@ -228,4 +245,42 @@ test('isUserGeolocated will return formId if both additional parameters are empt
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '1');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getCountries will return countries array.', function () {
+
+	$geo = $this->geolocation->getCountries();
+
+	$this->assertIsArray($geo, 'Countries data must be an array.');
+	$this->assertArrayHasKey(0, $geo, 'Countries data must have some keys.');
+	$this->assertIsArray($geo[0], 'Countries data item must be array.');
+	$this->assertArrayHasKey('label', $geo[0], 'Countries data item must contain label key.');
+	$this->assertArrayHasKey('value', $geo[0], 'Countries data item must contain value key.');
+	$this->assertArrayHasKey('group', $geo[0], 'Countries data item must contain group key.');
+	$this->assertIsArray($geo[0]['group'], 'Countries data item group key must be an array.');
+});
+
+test('getCountries will return filter if countries filter is provided.', function () {
+	$action = 'is_geo_countries_filter';
+	
+	add_filter('es_forms_geolocation_countries', function() {
+		return true;
+	});
+
+	if (has_filter('es_forms_geolocation_countries')) {
+		putenv("SIDEAFFECT_GEOLOCATION_COUNTRIESD_FILTER={$action}");
+	}
+
+	$geo = $this->geolocation->getCountries();
+
+	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COUNTRIESD_FILTER'), $action);
+	$this->assertIsArray($geo);
+
+	// Cleanup.
+	remove_filter('es_forms_geolocation_countries', function() {
+		return false;
+	});
+	putenv('SIDEAFFECT_GEOLOCATION_COUNTRIESD_FILTER=');
 });

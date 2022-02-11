@@ -21,7 +21,7 @@ afterAll(function() {
 	Monkey\tearDown();
 });
 
-test('Register method will call sidebar hook', function () {
+test('Register method will call custom hooks', function () {
 	$this->geolocationSettings->register();
 
 	$this->assertSame(10, has_filter(SettingsGeolocation::FILTER_SETTINGS_SIDEBAR_NAME, 'EightshiftForms\Geolocation\SettingsGeolocation->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
