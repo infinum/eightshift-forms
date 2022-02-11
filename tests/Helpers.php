@@ -21,6 +21,12 @@ function setupMocks() {
 	if (!defined('DAY_IN_SECONDS')) {
 		define('DAY_IN_SECONDS', 3600);
 	}
+
+	// Mock locale.
+	Functions\when('get_locale')->justReturn('HR');
+
+	// Mock options.
+	Functions\when('get_option')->returnArg();
 }
 
 

@@ -6,8 +6,9 @@ use EightshiftForms\Geolocation\Geolocation;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
-use function Tests\setupMocks;
+use Mockery;
 
+use function Tests\setupMocks;
 
 /**
  * Mock before tests.
@@ -15,8 +16,6 @@ use function Tests\setupMocks;
 beforeEach(function () {
 	Monkey\setUp();
 	setupMocks();
-
-	putenv('TEST=1');
 
 	$this->geolocation = new Geolocation();
 
@@ -30,6 +29,11 @@ beforeEach(function () {
 						'value' => 'HR',
 					],
 				],
+			],
+		],
+		'oneMissingGeo' => [
+			[
+				'formId' => '111',
 			],
 		],
 		'multipleLocations' => [
@@ -89,8 +93,6 @@ beforeEach(function () {
 
 afterAll(function() {
 	Monkey\tearDown();
-
-	putenv('TEST');
 });
 
 
@@ -137,6 +139,52 @@ test('setLocationCookie will exit if cookie is set.', function () {
 	putenv('SIDEAFFECT_COOKIE=');
 });
 
+// test('setLocationCookie will exit if custom filter is set.', function () {
+// 	$action = 'is_disable_filter';
+// 	$filterName = 'es_forms_geolocation_disable';
+
+// 	// add_filter($filterName, function($args) {
+// 	// 	putenv("AAAA=DA");
+// 	// 	var_dump($args);
+// 	// 	return $args;
+// 	// });
+
+// 	add_filter('es_forms_geolocation_disable', function() {
+// 		return 'aaaa';
+// 	}, 999);
+
+// 	Filters\expectApplied('es_forms_geolocation_disable')->once()->andReturn('ivan');
+
+// 	// $this->assertSame(true, $cosnt);
+
+// 	$this->geolocation->setLocationCookie();
+
+// 	remove_filter('es_forms_geolocation_disable', function() {
+// 		return 'ivan';
+// 	}, 999);
+
+
+// 	// $this->assertSame(getenv('AAAA'), 'DA');
+
+// 	// $this->assertSame(10, has_filter($filterName, 'function()'));
+
+// 	// // Cleanup.
+// 	// putenv('SIDEAFFECT_COOKIE_SET=');
+// });
+
+test('setLocationCookie will set cookie.', function () {
+	Functions\when('setcookie')->alias(function ($args) {
+		putenv("SIDEAFFECT_COOKIE_SET={$args}");
+	});
+
+	$this->geolocation->setLocationCookie();
+
+	$this->assertSame(getenv('SIDEAFFECT_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
+
+	// Cleanup.
+	putenv('SIDEAFFECT_COOKIE_SET=');
+});
+
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {
 	putenv('TEST_GEOLOCATION=HR');
 
@@ -145,6 +193,15 @@ test('isUserGeolocated will return new formId if additional locations finds matc
 	$this->assertIsString($geo);
 	$this->assertNotSame($geo, '1');
 	$this->assertSame($geo, '111');
+});
+
+test('isUserGeolocated will return formId if additional locations are missing geoLocation array key.', function () {
+	putenv('TEST_GEOLOCATION=HR');
+
+	$geo = $this->geolocation->isUserGeolocated('1', [], $this->additionalLocations['oneMissingGeo']);
+
+	$this->assertIsString($geo);
+	$this->assertSame($geo, '1');
 });
 
 test('isUserGeolocated will return formId if additional locations don\'t match but default locations match.', function () {
