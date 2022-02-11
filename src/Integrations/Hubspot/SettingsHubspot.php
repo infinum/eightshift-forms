@@ -164,7 +164,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('HubSpot', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg"><path d="M23.02 9.914V6.356A2.743 2.743 0 0024.6 3.883V3.8a2.748 2.748 0 00-2.74-2.741h-.084a2.748 2.748 0 00-2.74 2.74v.084a2.743 2.743 0 001.581 2.473V9.92a7.774 7.774 0 00-3.696 1.627l-9.784-7.62a3.122 3.122 0 10-1.462 1.901l9.62 7.49a7.796 7.796 0 00.12 8.79l-2.928 2.927a2.514 2.514 0 00-.726-.119 2.541 2.541 0 102.541 2.542 2.506 2.506 0 00-.118-.727l2.896-2.896a7.809 7.809 0 105.933-13.922m-1.2 11.721a4.007 4.007 0 114.016-4.005 4.007 4.007 0 01-4.007 4.007" fill="#FF7A59" fill-rule="nonzero"/></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="#29A3A3" r="1.75"/><circle cx="14.25" cy="2.75" fill="#29A3A3" r="1.75"/><circle cx="7.75" cy="17.75" fill="#29A3A3" r="1.75"/></svg>',
 		];
 	}
 
@@ -181,9 +181,10 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('in order to use HubSpot integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => sprintf(__('Before using HubSpot you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentIcon' => 'tools',
 				]
 			];
 		}
@@ -194,8 +195,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('we couldn\'t get the data from Hubspot. Please check if your API key is valid.', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('Data from HubSpot couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentIcon' => 'error',
 				],
 			];
 		}
@@ -229,16 +231,15 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your HubSpot settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('HubSpot', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
-				'selectFieldLabel' => __('Form ID', 'eightshift-forms'),
+				'selectFieldLabel' => __('Form', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
-				'selectFieldHelp' => sprintf(__('Select what HubSpot form you want to show on this form. If you don\'t see your lists correctly try clearing cache on this <a href="#" class="%1$s" data-type="%2$s">link</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
+				'selectFieldHelp' => sprintf(__('If a form isn\'t showing up, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,
@@ -256,9 +257,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitle' => __('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Mailchimp form frontend view in one place.', 'eightshift-forms'),
+						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -289,21 +290,27 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('HubSpot settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your HubSpot settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('HubSpot', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get an API key?', 'eightshift-forms'),
+				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('
-					1. Login to your HubSpot Account. <br />
-				', 'eightshift-forms'),
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => __('<ol>
+						<li>Log in to your HubSpot account</li>
+						<li>Click on the settings cog icon in the top right, next to your account</li>
+						<li>In the menu on the left, under <strong>Integrations</strong> click <strong>API Key</strong></li>
+						<li>On the page that loads in the <strong>Active API key</strong> panel, click on <strong>Show</strong>, verify the captcha if needed, then click <strong>Copy</strong></li>
+						<li>Copy the API key into the field below or use the global constant.</li>
+					</ol>', 'eightshift-forms'),
+			],
+			[
+				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_KEY),
 				'checkboxesIsRequired' => true,
@@ -317,6 +324,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					]
 				]
 			],
+			[
+				'component' => 'divider',
+			],
 		];
 
 		if ($isUsed) {
@@ -329,8 +339,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-						'inputFieldHelp' => __('Open your HubSpot account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputFieldLabel' => __('API key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),

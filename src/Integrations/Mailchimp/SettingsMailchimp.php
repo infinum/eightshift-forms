@@ -174,7 +174,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		return [
 			'label' => __('Mailchimp', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="a" d="M0 0h28.267v30H0z"/></defs><g fill="none" fill-rule="evenodd"><path d="M22.262 14.176a2.42 2.42 0 01.622 0c.112-.255.13-.697.03-1.177-.149-.714-.35-1.146-.768-1.079-.417.068-.432.585-.283 1.299.084.402.233.745.4.957M18.68 14.741c.3.131.483.218.555.142.046-.047.032-.137-.04-.254-.147-.24-.45-.484-.771-.621-.658-.283-1.442-.189-2.047.246-.2.146-.389.349-.362.472.01.04.039.07.109.08.165.018.74-.273 1.403-.313.468-.029.855.117 1.154.248M18.08 15.084c-.388.061-.603.19-.74.309-.118.103-.19.216-.19.296 0 .038.017.06.03.07a.093.093 0 00.064.025c.088 0 .284-.079.284-.079.541-.194.898-.17 1.252-.13.195.022.288.034.33-.033.013-.019.029-.06-.01-.124-.092-.148-.484-.398-1.02-.334M21.053 16.342c.264.13.555.079.65-.114.094-.192-.043-.454-.307-.583-.264-.13-.555-.08-.65.113-.094.193.043.454.307.584M22.75 14.859c-.214-.004-.392.232-.397.526-.005.294.165.535.38.539.214.003.391-.232.396-.526.005-.294-.164-.536-.379-.54" fill="#1A1919"/><g transform="translate(1)"><mask id="b" fill="#fff"><use xlink:href="#a"/></mask><path d="M7.346 20.162c-.054-.067-.141-.047-.226-.027a.797.797 0 01-.2.028.434.434 0 01-.366-.186c-.098-.15-.092-.373.015-.63l.05-.114c.173-.386.46-1.032.137-1.647-.243-.463-.64-.752-1.117-.813a1.436 1.436 0 00-1.23.444c-.474.523-.548 1.236-.457 1.487.034.092.087.118.125.123.08.011.2-.048.275-.249l.021-.065c.033-.107.095-.305.197-.463a.861.861 0 011.194-.249c.332.217.46.625.319 1.013-.074.201-.193.585-.167.901.053.64.447.896.8.923.343.013.583-.18.644-.32.035-.084.005-.135-.014-.156" fill="#1A1919" mask="url(#b)"/><path d="M10.61 8.425c1.12-1.294 2.498-2.42 3.733-3.05.043-.023.088.024.065.066-.098.177-.287.557-.347.846-.01.045.04.079.078.053.768-.524 2.105-1.085 3.277-1.157.05-.003.074.061.034.092a2.79 2.79 0 00-.515.517.05.05 0 00.039.08c.823.006 1.983.294 2.74.718.05.029.014.128-.043.115-1.144-.262-3.017-.461-4.963.013-1.737.424-3.063 1.078-4.03 1.782-.049.035-.108-.03-.068-.075zm10.195 13.083a.09.09 0 00.052-.09.084.084 0 00-.092-.075s-2.39.354-4.647-.473c.245-.8.9-.51 1.888-.43a13.806 13.806 0 004.558-.493c1.022-.294 2.365-.872 3.408-1.696.352.773.476 1.624.476 1.624s.272-.05.5.091c.215.132.373.408.265 1.119-.22 1.329-.784 2.407-1.734 3.4a7.143 7.143 0 01-2.082 1.555c-.426.224-.88.418-1.36.575-3.578 1.168-7.241-.117-8.422-2.876a4.433 4.433 0 01-.237-.652c-.503-1.818-.076-4 1.26-5.373.082-.088.166-.191.166-.32 0-.11-.069-.224-.129-.305-.467-.677-2.085-1.832-1.76-4.067.233-1.605 1.637-2.736 2.946-2.669l.332.02c.567.033 1.062.106 1.529.125.782.034 1.484-.08 2.317-.773.28-.234.506-.437.887-.502.04-.007.14-.042.338-.033.204.011.397.067.57.182.668.445.763 1.52.798 2.307.02.45.074 1.536.092 1.848.043.713.23.814.61.938.213.07.41.123.703.205.883.248 1.407.5 1.737.823.197.202.288.416.317.621.104.76-.59 1.699-2.428 2.552-2.009.932-4.445 1.168-6.13.98a433.8 433.8 0 01-.589-.066c-1.347-.182-2.115 1.559-1.307 2.751.521.769 1.94 1.27 3.36 1.27 3.255 0 5.757-1.39 6.687-2.59.028-.037.03-.04.075-.107.045-.069.008-.107-.05-.068-.76.52-4.137 2.586-7.75 1.965 0 0-.438-.073-.84-.229-.318-.123-.984-.43-1.065-1.114 2.915.902 4.751.05 4.751.05zM4.792 14.579c-1.014.197-1.907.772-2.454 1.566-.326-.273-.935-.8-1.042-1.006-.873-1.656.952-4.877 2.226-6.696 3.15-4.495 8.084-7.897 10.367-7.28.372.105 1.601 1.53 1.601 1.53s-2.283 1.268-4.4 3.033c-2.852 2.197-5.007 5.389-6.298 8.853zm1.704 7.602c-.154.026-.31.036-.468.033-1.526-.041-3.173-1.415-3.337-3.044-.181-1.8.739-3.185 2.367-3.514.195-.04.43-.062.684-.049.913.05 2.257.751 2.565 2.739.272 1.76-.16 3.553-1.811 3.835zm20.665-3.188c-.013-.046-.098-.357-.215-.733-.117-.375-.238-.639-.238-.639.47-.702.478-1.33.415-1.686-.066-.441-.25-.817-.62-1.205-.37-.389-1.127-.787-2.19-1.085-.122-.035-.524-.145-.559-.155-.003-.023-.03-1.316-.053-1.871-.018-.401-.052-1.027-.247-1.644-.231-.835-.635-1.566-1.139-2.033 1.39-1.441 2.258-3.028 2.256-4.39-.004-2.618-3.22-3.41-7.183-1.77l-.84.357c-.003-.004-1.517-1.49-1.54-1.51C10.49-3.31-3.637 12.391.879 16.204l.987.837c-.256.663-.356 1.423-.274 2.24.105 1.05.647 2.056 1.524 2.833.833.738 1.929 1.205 2.992 1.204 1.757 4.05 5.773 6.535 10.482 6.675 5.05.15 9.29-2.22 11.067-6.477.116-.299.61-1.645.61-2.834 0-1.194-.676-1.69-1.106-1.69z" fill="#1A1919" mask="url(#b)"/></g></g></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.927 11.43c-.615-.488-1.661-1.85-.923-3.408.923-1.947 3.23-5.354 5.076-6.328 2.662-1.404 2.768-.973 4.152 0" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4.772 9.969c0-1.947 1.043-5.94 8.306-9.005 2.307-.973 4.614 1.541 1.845 4.137" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14.924 5.101c-2.153-.649-6.736-1.752-9.69 2.92m9.69-2.92c.308.65.923 2.19.923 4.138.923.243 2.492 1.022 1.384 2.19.77.487 1.846 2.142 0 4.868-1.846 2.725-5.075 3.082-6.46 2.92-1.23-.162-3.968-1.265-5.075-4.38" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.616 7.535c-.154-.487-1.061-1.655-2.538-.487-1.697 1.343-3.23-1.46-3.691 1.947 0 .325.185 1.266.923 2.434-.77.974-1.486 2.761-.462 4.38.923 1.461 3.23 2.921 7.383.488" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M17.231 11.43c-.461.486-1.846 1.46-3.691 1.46-1.846 0-2.307.648-2.307.973.153 1.136 1.245 3.115 5.306 0m-5.063-4.031c.175-.2.65-.5 1.149-.1m1.376-1.223.23.73" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="14.117" cy="11.064" rx=".577" ry=".608" fill="#29A3A3"/><ellipse cx="14.809" cy="10.821" rx=".577" ry=".608" fill="#29A3A3"/><path d="M2.927 11.43c.566-1.088 1.385-1.461 1.846-1.461.462 0 1.846.487 1.846 2.92 0 2.613-3.158 1.835-3.62.861-.499-1-.499-1.5-.072-2.32z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5.695 14.35c-.307-.812-.825-2.49-1.195-2.1" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 		];
 	}
 
@@ -191,9 +191,10 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('in order to use Mailchimp integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => sprintf(__('Before using Mailchimp you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentIcon' => 'tools',
 				],
 			];
 		}
@@ -204,8 +205,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Mailchimp. Please check if you API key is valid.', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('Data from Mailchimp couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentIcon' => 'error',
 				],
 			];
 		}
@@ -238,16 +240,15 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your Mailchimp settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Mailchimp', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
-				'selectFieldLabel' => __('List', 'eightshift-forms'),
+				'selectFieldLabel' => __('Subscription list', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
-				'selectFieldHelp' => sprintf(__('Select list for subscription. If you don\'t see your lists correctly try clearing cache on this <a href="#" class="%1$s" data-type="%2$s">link</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
+				'selectFieldHelp' => sprintf(__('If a list isn\'t showing up, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,
@@ -268,14 +269,12 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Tags Details', 'eightshift-forms'),
+						'introTitle' => __('Audience tags', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Mailchimp tags.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
-						'checkboxesFieldHelp' => __('Select tags assigned to this mailing list subscriber.', 'eightshift-forms'),
 						'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
 						'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
 						'checkboxesContent' => array_map(
@@ -293,26 +292,26 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					[
 						'component' => 'select',
 						'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
-						'selectFieldLabel' => __('Show Tags', 'eightshift-forms'),
-						'selectFieldHelp' => __('Set if you want to show tags on the frontend as a field n user can select. Selected tags will be set as default on the frontend.', 'eightshift-forms'),
+						'selectFieldLabel' => __('Tag visibility', 'eightshift-forms'),
+						'selectFieldHelp' => $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId) ? '' : __('Tags you select above will be automatically selected in the live form.', 'eightshift-forms'),
 						'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 						'selectSingleSubmit' => true,
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
-								'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
+								'selectOptionLabel' => __('Don\'t show tags', 'eightshift-forms'),
 								'selectOptionValue' => 'hidden',
 								'selectOptionIsSelected' => $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 							],
 							[
 								'component' => 'select-option',
-								'selectOptionLabel' => __('Select', 'eightshift-forms'),
+								'selectOptionLabel' => __('Show as a select menu', 'eightshift-forms'),
 								'selectOptionValue' => 'select',
 								'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 							],
 							[
 								'component' => 'select-option',
-								'selectOptionLabel' => __('Checkbox', 'eightshift-forms'),
+								'selectOptionLabel' => __('Show as checkboxes', 'eightshift-forms'),
 								'selectOptionValue' => 'checkboxes',
 								'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 							],
@@ -330,9 +329,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitle' => __('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Mailchimp form frontend view.', 'eightshift-forms'),
+						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -366,26 +365,28 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Mailchimp settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your Mailchimp settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Mailchimp', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get an API key?', 'eightshift-forms'),
+				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('
-					1. Login to your Mailchimp Account.<br />
-					2. Navigate to your user profile image (bottom left corner).<br />
-					3. Click on <strong>Account</strong>.<br />
-					4. Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.<br />
-					5. Click on the <strong>Create A Key</strong> button.<br/>
-					6. Copy the API key to the provided field or use global constant.
-				', 'eightshift-forms'),
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => __('<ol>
+						<li>Log in to your Mailchimp Account.</li>
+						<li>Navigate to your user profile image (bottom left corner).</li>
+						<li>Click on <strong>Account</strong>.</li>
+						<li>Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.</li>
+						<li>Click on the <strong>Create a Key</strong> button.<br/></li>
+						<li>Copy the API key into the field below or use the global constant.</li>
+					</ol>', 'eightshift-forms'),
+			],
+			[
+				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
 				'checkboxesIsRequired' => true,
@@ -399,6 +400,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					]
 				]
 			],
+			[
+				'component' => 'divider',
+			],
 		];
 
 		if ($isUsed) {
@@ -411,8 +415,8 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-						'inputFieldHelp' => __('Open your Mailchimp account and provide API key. You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputFieldLabel' => __('API key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
