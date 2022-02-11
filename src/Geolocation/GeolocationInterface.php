@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The file that is an Geolocation Interface class.
+ * Geolocation interface.
  *
  * @package EightshiftForms\Geolocation;
  */
@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 /**
- * GeolocationInterface class.
+ * GeolocationInterface interface.
  */
 interface GeolocationInterface
 {
 	/**
-	 * Get all countrie lists from the manifest.json.
+	 * Get all country lists from the manifest.json.
 	 *
 	 * @return array<string>
 	 */
