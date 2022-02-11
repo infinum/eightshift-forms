@@ -81,7 +81,7 @@ $input = '
 		id="' . esc_attr($inputId) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($inputIsReadOnly, true, false) : readonly($inputIsReadOnly, true, false)) . '
+		' . ($isWpFiveNine ? wp_readonly($inputIsReadOnly, true, false) : readonly($inputIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
 		' . $inputAttrsOutput . '
 	/>
 	' . $additionalContent . '

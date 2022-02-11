@@ -69,7 +69,7 @@ $isWpFiveNine = \is_wp_version_compatible('5.9');
 			<?php echo $checkboxAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
-			<?php $isWpFiveNine ? wp_readonly($checkboxIsReadOnly) : readonly($checkboxIsReadOnly); ?>
+			<?php $isWpFiveNine ? wp_readonly($checkboxIsReadOnly) : readonly($checkboxIsReadOnly); // @phpstan-ignore-line ?>
 		/>
 		<label
 			for="<?php echo esc_attr($checkboxId); ?>"

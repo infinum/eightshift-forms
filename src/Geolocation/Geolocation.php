@@ -284,7 +284,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return [];
 		}
 
-		return array_flip($group['group']) ?? [];
+		return array_flip($country['group']) ?? [];
 	}
 
 	/**
@@ -295,7 +295,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	private function getLocationDetails(): string
 	{
 		if (getenv('TEST') && getenv('TEST_GEOLOCATION')) {
-			return getenv('TEST_GEOLOCATION');
+			return (string) getenv('TEST_GEOLOCATION');
 		}
 
 		// Set country code manually for development purposes.
@@ -318,7 +318,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 		// Find user's remote address.
 		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$ipAddr = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); 
+			$ipAddr = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); //phpcs:ignore
 		}
 
 		// Skip if empty for some reason or if you are on local host.
