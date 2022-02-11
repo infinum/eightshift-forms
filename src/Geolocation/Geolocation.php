@@ -286,7 +286,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 *
 	 * @return string
 	 */
-	public function getLocationDetails(): string
+	private function getLocationDetails(): string
 	{
 		if (getenv('TEST') && getenv('TEST_GEOLOCATION')) {
 			return getenv('TEST_GEOLOCATION');
