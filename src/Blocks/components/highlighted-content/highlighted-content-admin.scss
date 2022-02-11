@@ -2,21 +2,34 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 300px;
+	min-height: 18rem;
 	flex-direction: column;
 	text-align: center;
+	gap: 1rem;
 
 	&__title {
-		font-size: 30px;
-		font-weight: bold;
-		color: var(--global-colors-es-boulder);
+		font-size: 1.85rem;
+		font-weight: 600;
+		color: var(--global-colors-es-matisse);
 	}
 
 	&__subtitle {
-		padding-top: 10px;
-		font-size: 16px;
+		font-size: 0.95rem;
 		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
-		max-width: 70%;
+		max-width: 30rem;
+
+		a {
+			color: var(--global-colors-es-matisse);
+			text-decoration-style: dotted;
+			text-underline-offset: 0.2em;
+			text-decoration-thickness: 1px;
+		}
+	}
+
+	svg {
+		width: 4rem;
+		height: 4rem;
+		color: var(--global-colors-es-matisse);
 	}
 }

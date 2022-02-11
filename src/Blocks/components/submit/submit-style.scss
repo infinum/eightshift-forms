@@ -1,10 +1,13 @@
 .es-submit {
+	$this: &;
+
 	width: 100%;
 	background-color: var(--global-colors-es-matisse);
 	color: var(--global-colors-es-white);
-	padding: 10px 30px;
+	padding: 0.5rem 1rem;
 	border: var(--global-colors-es-matisse);
 	cursor: pointer;
+
 	transition: {
 		property: background-color;
 		timing-function: ease-in-out;
@@ -17,5 +20,13 @@
 
 	&__inner {
 		pointer-events: none;
+	}
+
+	&--with-icon {
+		#{$this}__inner {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
 	}
 }

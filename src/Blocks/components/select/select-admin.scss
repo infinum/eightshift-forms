@@ -2,22 +2,27 @@
 @import './select-style.scss';
 @import './select-editor.scss';
 
-.es-select-is-custom {
-	select {
-		display: initial;
-		border-color: var(--global-colors-es-chalice) !important;
+.es-select-is-custom,
+.es-select {
+	display: initial;
+	border-color: var(--global-colors-es-chalice) !important;
+	border-radius: 3px !important;
 
-		&:focus {
-			outline: none !important;
-			box-shadow: none !important;
-			border-color: var(--global-colors-es-matisse) !important;
-		}
+	&:hover {
+		color: var(--global-colors-es-matisse) !important;
+	}
 
-		&:disabled {
-			background-color: var(--global-colors-es-alto);
-			color: var(--global-colors-es-boulder);
-			opacity: 1;
-			cursor: default;
-		}
+	&:focus {
+		outline: none !important;
+		box-shadow: none !important;
+		border-color: var(--global-colors-es-matisse) !important;
+		color: var(--global-colors-es-matisse) !important;
+	}
+
+	&:disabled {
+		background-color: var(--global-colors-es-alto) !important;
+		color: var(--global-colors-es-boulder) !important;
+		opacity: 1;
+		cursor: default;
 	}
 }

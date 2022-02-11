@@ -1,5 +1,14 @@
 @import './submit-style.scss';
 
+.es-submit,
+.es-submit--global {
+	border-radius: 6px;
+}
+
 .es-submit--global {
 	width: auto;
+}
+
+.es-submit--cache-clear {
+	width: 16rem;
 }
