@@ -31,12 +31,27 @@
 			{
 				"name": "Matisse",
 				"slug": "es-matisse",
-				"color": "#2271B1"
+				"color": "#29A3A3"
+			},
+			{
+				"name": "Matisse 50%",
+				"slug": "es-matisse-50",
+				"color": "#29A3A380"
+			},
+			{
+				"name": "Matisse 10%",
+				"slug": "es-matisse-10",
+				"color": "#29A3A31A"
+			},
+			{
+				"name": "Matisse 5%",
+				"slug": "es-matisse-05",
+				"color": "#29A3A30D"
 			},
 			{
 				"name": "Blumine",
 				"slug": "es-blumine",
-				"color": "#1A5483"
+				"color": "#218282"
 			},
 			{
 				"name": "White",
@@ -61,17 +76,37 @@
 			{
 				"name": "Pome",
 				"slug": "es-pome",
-				"color": "#F0383F"
+				"color": "#E84E4E"
 			},
 			{
 				"name": "Reef",
 				"slug": "es-reef",
-				"color": "#85AD7F"
+				"color": "#44AEDE"
 			},
 			{
 				"name": "Chalice",
 				"slug": "es-chalice",
 				"color": "#AFAFAF"
+			},
+			{
+				"name": "Chalice 50%",
+				"slug": "es-chalice-50",
+				"color": "#AFAFAF80"
+			},
+			{
+				"name": "Chalice 25%",
+				"slug": "es-chalice-25",
+				"color": "#AFAFAF40"
+			},
+			{
+				"name": "Chalice 10%",
+				"slug": "es-chalice-10",
+				"color": "#AFAFAF1A"
+			},
+			{
+				"name": "Chalice 5%",
+				"slug": "es-chalice-05",
+				"color": "#AFAFAF0D"
 			}
 		]
 	}
