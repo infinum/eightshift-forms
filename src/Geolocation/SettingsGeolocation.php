@@ -68,13 +68,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY);
 	}
 
 	/**
@@ -110,7 +104,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$output = [
+		return [
 			[
 				'component' => 'intro',
 				'introTitle' => __('GeoLocation settings', 'eightshift-forms'),
@@ -134,7 +128,5 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 				]
 			],
 		];
-
-		return $output;
 	}
 }

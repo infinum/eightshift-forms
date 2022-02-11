@@ -23,7 +23,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 *
 	 * @var GeolocationInterface
 	 */
-	protected $geolocation;
+	private $geolocation;
 
 	/**
 	 * Create a new instance that injects classes

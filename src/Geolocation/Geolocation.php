@@ -26,7 +26,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 *
 	 * @var array<string>
 	 */
-	public $countries = [];
+	private $countries = [];
 
 	/**
 	 * Geolocation cookie name const.
@@ -65,7 +65,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return;
 		}
 
-		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
+		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (has_filter($filterName) && apply_filters($filterName, false) === true) {
 			return;
@@ -116,13 +116,17 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 			// Iterate all additional location to find the first that match.
 			foreach ($additionalLocations as $additionalLocation) {
+				if (!isset($additionalLocation['geoLocation'])) {
+					continue;
+				}
+
 				// Find geolocation from array of options.
 				$geoLocation = array_filter(
-					$additionalLocation['geoLocation'] ?? [],
+					$additionalLocation['geoLocation'],
 					function ($geo) use ($userLocation) {
 						$country = $this->getCountryGroup($geo['value']);
 
-						return isset($country[$userLocation]) ?? false;
+						return isset($country[$userLocation]);
 					}
 				) ?? [];
 
@@ -152,7 +156,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 				function ($location) use ($userLocation) {
 					$country = $this->getCountryGroup($location['value']);
 
-					return isset($country[$userLocation]) ?? false;
+					return isset($country[$userLocation]);
 				}
 			);
 
@@ -222,7 +226,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 				'label' => __('Ex Yugoslavia', 'eightshift-forms'),
 				'value' => 'ex-yugoslavia',
 				'group' => [
-					'HR', 'RS', 'BA', 'ME', 'SI'
+					'HR', 'RS', 'BA', 'ME', 'SI', 'MK'
 				],
 			],
 		];
@@ -274,11 +278,13 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return [];
 		}
 
-		$country = reset($country) ?? [];
+		$country = reset($country);
 
-		$group = $country['group'] ?? [];
+		if (!isset($country['group'])) {
+			return [];
+		}
 
-		return array_flip($group) ?? [];
+		return array_flip($group['group']) ?? [];
 	}
 
 	/**
