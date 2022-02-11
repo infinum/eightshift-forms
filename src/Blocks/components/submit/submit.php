@@ -25,12 +25,14 @@ $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
 $submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $manifest);
 $submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
 $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
+$submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
 
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
 ]);
 
 if ($submitTracking) {
@@ -55,12 +57,14 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
+$submitIconContent = !empty($submitIcon) && $manifest['icons'][$submitIcon] ? $manifest['icons'][$submitIcon] : '';
+
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
 		' . $submitAttrsOutput . '
-	><span class="' . $componentClass . '__inner">' . esc_html($submitValue) . '</span></button>
+	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
 
