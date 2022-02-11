@@ -49,7 +49,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('init', [$this, 'setLoactionCookie']);
+		\add_filter('init', [$this, 'setLocationCookie']);
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
 
@@ -58,7 +58,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 *
 	 * @return void
 	 */
-	public function setLoactionCookie(): void
+	public function setLocationCookie(): void
 	{
 		// Skip admin.
 		if (is_admin()) {

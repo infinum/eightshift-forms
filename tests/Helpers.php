@@ -16,6 +16,11 @@ function setupMocks() {
 	// Mock WP functions
 	Functions\stubTranslationFunctions();
 	Functions\stubEscapeFunctions();
+
+	// Mock days in sec constant.
+	if (!defined('DAY_IN_SECONDS')) {
+		define('DAY_IN_SECONDS', 3600);
+	}
 }
 
 

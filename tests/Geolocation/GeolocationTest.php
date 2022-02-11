@@ -1,24 +1,19 @@
 <?php
 
-namespace Tests\Unit\Block;
+namespace Tests\Unit\Geolocation;
 
 use EightshiftForms\Geolocation\Geolocation;
-use Mockery;
 
-use function Brain\Monkey\setUp;
+use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Brain\Monkey\Hook\HookExpectationExecutor;
-
-use function Brain\Monkey\tearDown;
 use function Tests\setupMocks;
-use function Tests\mock;
 
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setUp();
+	Monkey\setUp();
 	setupMocks();
 
 	putenv('TEST=1');
@@ -93,9 +88,53 @@ beforeEach(function () {
 });
 
 afterAll(function() {
-	tearDown();
+	Monkey\tearDown();
 
 	putenv('TEST');
+});
+
+
+test('Register method will call init hook', function () {
+	$this->geolocation->register();
+
+	$this->assertSame(10, has_filter('init', 'EightshiftForms\Geolocation\Geolocation->setLocationCookie()'), 'The callback setLocationCookie should be hooked to init hook with priority 10.');
+});
+
+test('Register method will call es_geolocation_is_use_located hook', function () {
+	$this->geolocation->register();
+
+	$this->assertSame(10, has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
+});
+
+test('setLocationCookie will exit if is not frontend.', function () {
+	$action = 'is_admin';
+	Functions\when('is_admin')->justReturn(putenv("SIDEAFFECT_ADMIN={$action}"));
+
+	$this->geolocation->setLocationCookie();
+
+	$this->assertSame(getenv('SIDEAFFECT_ADMIN'), $action);
+
+	// Cleanup.
+	putenv('SIDEAFFECT_ADMIN=');
+	Functions\when('is_admin')->justReturn(false);
+});
+
+test('setLocationCookie will exit if cookie is set.', function () {
+	$action = 'is_cookie';
+
+	$_COOKIE[Geolocation::GEOLOCATION_COOKIE] = 'HR';
+
+	if (isset($_COOKIE[Geolocation::GEOLOCATION_COOKIE])) {
+		putenv("SIDEAFFECT_COOKIE={$action}");
+	}
+
+	$this->geolocation->setLocationCookie();
+
+	$this->assertSame(getenv('SIDEAFFECT_COOKIE'), $action);
+
+	// Cleanup.
+	unset($_COOKIE[Geolocation::GEOLOCATION_COOKIE]);
+	putenv('SIDEAFFECT_COOKIE=');
 });
 
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {

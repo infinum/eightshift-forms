@@ -17,10 +17,10 @@
 			<directory suffix=".php">./src</directory>
 		</include>
 		<exclude>
-			<file>./assets/*</file>
-			<file>./bin/*</file>
-			<file>./vendor/*</file>
-			<file>./node_modules/*</file>
+			<directory>./src/Blocks/assets</directory>
+			<directory>./src/Blocks/components</directory>
+			<directory>./src/Blocks/custom</directory>
+			<directory>./src/Blocks/wrapper</directory>
 		</exclude>
 		<report>
 			<clover outputFile="tests/coverage/clover.xml"/>
