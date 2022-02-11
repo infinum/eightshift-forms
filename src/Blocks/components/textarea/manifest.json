@@ -41,6 +41,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaIsMonospace": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaTracking": {
 			"type": "string"
 		},
