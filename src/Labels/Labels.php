@@ -94,7 +94,7 @@ class Labels implements LabelsInterface
 	private function getGenericLabels(): array
 	{
 		return [
-			'submitWpError' => __('There was a problem with submitting your form. Please try again.', 'eightshift-forms'),
+			'submitWpError' => __('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 		];
 	}
 
@@ -108,18 +108,18 @@ class Labels implements LabelsInterface
 		return [
 			'validationRequired' => __('This field is required.', 'eightshift-forms'),
 			// translators: %s used for displaying required number.
-			'validationRequiredCount' => __('This field is required with minimum %s selected items.', 'eightshift-forms'),
-			'validationEmail' => __('This field is not a valid email.', 'eightshift-forms'),
-			'validationUrl' => __('This field is not a valid url.', 'eightshift-forms'),
-			'validationNumber' => __('This field is not a valid. Only numbers are accepted.', 'eightshift-forms'),
+			'validationRequiredCount' => __('This field is required, with at least %s items selected.', 'eightshift-forms'),
+			'validationEmail' => __('This e-mails is not valid.', 'eightshift-forms'),
+			'validationUrl' => __('This URL is not valid.', 'eightshift-forms'),
+			'validationNumber' => __('This field should only contain numbers.', 'eightshift-forms'),
 			// translators: %s used for displaying validation pattern to the user.
-			'validationPattern' => __('Your field doesn\'t satisfy this validation pattern %s.', 'eightshift-forms'),
+			'validationPattern' => __('This field doesn\'t satisfy the validation pattern: %s.', 'eightshift-forms'),
+			// translators: %s used for displaying file type value.
+			'validationAccept' => __('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
-			'validationAccept' => __('Your file type is not supported. Please use only %s file type.', 'eightshift-forms'),
+			'validationMinSize' => __('The file is smaller than allowed. Minimum file size is %s kB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
-			'validationMinSize' => __('Your file is smaller than allowed. Minimum file size is %s kb.', 'eightshift-forms'),
-			// translators: %s used for displaying number value.
-			'validationMaxSize' => __('Your file is larget than allowed. Maximum file size is %s kb.', 'eightshift-forms'),
+			'validationMaxSize' => __('The file is larger than allowed. Maximum file size is %s kB.', 'eightshift-forms'),
 		];
 	}
 
@@ -131,11 +131,11 @@ class Labels implements LabelsInterface
 	private function getMailerLabels(): array
 	{
 		return [
-			'mailerSuccessNoSend' => __('Email sent successfully.', 'eightshift-forms'),
-			'mailerErrorSettingsMissing' => __('Mailer settings are not configured correctly. Please try again.', 'eightshift-forms'),
-			'mailerErrorEmailSend' => __('Email not sent due to unknown issue. Please try again.', 'eightshift-forms'),
-			'mailerErrorEmailConfirmationSend' => __('Email user confirmation not sent due to unknown issue. Please try again.', 'eightshift-forms'),
-			'mailerSuccess' => __('Email sent successfully.', 'eightshift-forms'),
+			'mailerSuccessNoSend' => __('E-mail was sent successfully.', 'eightshift-forms'),
+			'mailerErrorSettingsMissing' => __('Form settings are not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerErrorEmailSend' => __('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
+			'mailerErrorEmailConfirmationSend' => __('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
+			'mailerSuccess' => __('E-mail was sent successfully.', 'eightshift-forms'),
 		];
 	}
 
@@ -147,24 +147,24 @@ class Labels implements LabelsInterface
 	private function getGreenhouseLabels(): array
 	{
 		return [
-			'greenhouseErrorSettingsMissing' => __('Greenhouse is not configured correctly. Please try again.', 'eightshift-forms'),
-			'greenhouseBadRequestError' => __('There is something wrong with your application. Please check all the fields and try again.', 'eightshift-forms'),
-			'greenhouseUnsupportedFileTypeError' => __('You have submitted an unsupported file type. Please try again.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameError' => __('Your application has some invalid fields: first name.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameError' => __('Your application has some invalid fields: last name.', 'eightshift-forms'),
-			'greenhouseInvalidEmailError' => __('Your application has some invalid fields: email.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailError' => __('Your application has some invalid fields: First name, last name and email.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameError' => __('Your application has some invalid fields: first name and last name.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailError' => __('Your application has some invalid fields: first name and email.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailError' => __('Your application has some invalid fields: last name and email.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNamePhoneError' => __('Your application has some invalid fields: first name and phone.', 'eightshift-forms'),
-			'greenhouseInvalidLastNamePhoneError' => __('Your application has some invalid fields: last name and phone.', 'eightshift-forms'),
-			'greenhouseInvalidEmailPhoneError' => __('Your application has some invalid fields: email and phone.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailPhoneError' => __('Your application has some invalid fields: first name, last name, email and phone.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNamePhoneError' => __('Your application has some invalid fields: first name, last name and phone.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailPhoneError' => __('Your application has some invalid fields: first name, email and phone.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailPhoneError' => __('Your application has some invalid fields: last name, email and phone.', 'eightshift-forms'),
-			'greenhouseSuccess' => __('Your application is saved successfully. Thank you.', 'eightshift-forms'),
+			'greenhouseErrorSettingsMissing' => __('Greenhouse integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'greenhouseBadRequestError' => __('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'greenhouseUnsupportedFileTypeError' => __('An unsupported file type was uploaded. Please try again.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameError' => __('"First name" is in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidLastNameError' => __('"Last name" is in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameLastNameEmailError' => __('"First name", "Last name", and "E-mail" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameLastNameError' => __('"First name" and "Last name" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameEmailError' => __('"First name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidLastNameEmailError' => __('"Last name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNamePhoneError' => __('"First name" and "Phone" are an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidLastNamePhoneError' => __('"First name" and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidEmailPhoneError' => __('"E-mail" and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameLastNameEmailPhoneError' => __('"First name", "Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameLastNamePhoneError' => __('"First name", "Last name", and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidFirstNameEmailPhoneError' => __('"First name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidLastNameEmailPhoneError' => __('"Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
+			'greenhouseSuccess' => __('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -176,12 +176,12 @@ class Labels implements LabelsInterface
 	private function getMailchimpLabels(): array
 	{
 		return [
-			'mailchimpErrorSettingsMissing' => __('Mailchimp is not configured correctly. Please try again.', 'eightshift-forms'),
-			'mailchimpBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidResourceError' => __('There is something wrong with your application. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
-			'mailchimpMissingFieldsError' => __('It looks like we are missing some required fields. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+			'mailchimpErrorSettingsMissing' => __('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailchimpBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'mailchimpInvalidResourceError' => __('Something is not right with the resource. Please check all the fields and try again.', 'eightshift-forms'),
+			'mailchimpInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'mailchimpMissingFieldsError' => __('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
+			'mailchimpSuccess' => __('Newsletter subscription successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -193,12 +193,12 @@ class Labels implements LabelsInterface
 	private function getHubspotLabels(): array
 	{
 		return [
-			'hubspotErrorSettingsMissing' => __('Hubspot is not configured correctly. Please try again.', 'eightshift-forms'),
-			'hubspotBadRequestError' => __('There is something wrong with your application. Please check all the fields and try again.', 'eightshift-forms'),
-			'hubspotInvalidRequestError' => __('There is something wrong with your application. Please check all the fields and try again.', 'eightshift-forms'),
-			'hubspotInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
-			'hubspotMissingFieldsError' => __('It looks like we are missing some required fields. Please check all the fields and try again.', 'eightshift-forms'),
-			'hubspotSuccess' => __('You have successfully submitted this form.  Thank you.', 'eightshift-forms'),
+			'hubspotErrorSettingsMissing' => __('Hubspot integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'hubspotBadRequestError' => __('Something is not with the application. Please check all the fields and try again.', 'eightshift-forms'),
+			'hubspotInvalidRequestError' => __('Something is not right with the application. Please check all the fields and try again.', 'eightshift-forms'),
+			'hubspotInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'hubspotMissingFieldsError' => __('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
+			'hubspotSuccess' => __('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -210,11 +210,11 @@ class Labels implements LabelsInterface
 	private function getMailerliteLabels(): array
 	{
 		return [
-			'mailerliteErrorSettingsMissing' => __('Mailerlite is not configured correctly. Please try again.', 'eightshift-forms'),
-			'mailerliteBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailerliteInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
-			'mailerliteEmailTemporarilyBlockedError' => __('It looks like your email is temporarily blocked by our email client. Please try again later or use a different email.', 'eightshift-forms'),
-			'mailerliteSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+			'mailerliteErrorSettingsMissing' => __('MailerLite integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerliteBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'mailerliteInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'mailerliteEmailTemporarilyBlockedError' => __('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
+			'mailerliteSuccess' => __('The newsletter was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -226,11 +226,11 @@ class Labels implements LabelsInterface
 	private function getGoodbitsLabels(): array
 	{
 		return [
-			'goodbitsErrorSettingsMissing' => __('Goodbits is not configured correctly. Please try again.', 'eightshift-forms'),
-			'goodbitsBadRequestError' => __('There is something wrong with your subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'goodbitsInvalidEmailError' => __('It looks like your email is not a valid format. Please try again.', 'eightshift-forms'),
-			'goodbitsUnauthorizedError' => __('It looks like your api key is not valid.', 'eightshift-forms'),
-			'goodbitsSuccess' => __('You have successfully subscribed to our newsletter. Thank you.', 'eightshift-forms'),
+			'goodbitsErrorSettingsMissing' => __('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'goodbitsBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'goodbitsInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'goodbitsUnauthorizedError' => __('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
+			'goodbitsSuccess' => __('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -242,15 +242,15 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
-			'captchaMissingInputSecret' => __('Captcha secret parameter is missing.', 'eightshift-forms'),
-			'captchaInvalidInputSecret' => __('Captcha secret parameter is invalid or malformed.', 'eightshift-forms'),
-			'captchaMissingInputResponse' => __('Captcha response parameter is missing.', 'eightshift-forms'),
-			'captchaInvalidInputResponse' => __('Captcha response parameter is invalid or malformed.', 'eightshift-forms'),
-			'captchaBadRequest' => __('Captcha request is invalid or malformed.', 'eightshift-forms'),
-			'captchaTimeoutOrDuplicate' => __('Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
-			'captchaWrongAction' => __('Captcha response action is not valid.', 'eightshift-forms'),
-			'captchaIncorrectCaptchaSol' => __('Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
-			'captchaScoreSpam' => __('Captcha thinks that your request is spam, please try again.', 'eightshift-forms'),
+			'captchaMissingInputSecret' => __('The Captcha "secret" parameter is missing.', 'eightshift-forms'),
+			'captchaInvalidInputSecret' => __('The Captcha "secret" parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaInvalidInputResponse' => __('The Captcha "response" parameter is invalid or malformed.', 'eightshift-forms'),
+			'captchaMissingInputResponse' => __('The Captcha "response" parameter is missing.', 'eightshift-forms'),
+			'captchaBadRequest' => __('The Captcha "request" is invalid or malformed.', 'eightshift-forms'),
+			'captchaTimeoutOrDuplicate' => __('The Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
+			'captchaWrongAction' => __('The Captcha response "action" is not valid.', 'eightshift-forms'),
+			'captchaIncorrectCaptchaSol' => __('The Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
+			'captchaScoreSpam' => __('The automated system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
 		];
 	}
 
