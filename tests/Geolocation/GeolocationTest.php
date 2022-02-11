@@ -5,7 +5,6 @@ namespace Tests\Unit\Geolocation;
 use EightshiftForms\Geolocation\Geolocation;
 
 use Brain\Monkey;
-use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 
 use function Tests\setupMocks;

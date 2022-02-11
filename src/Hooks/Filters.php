@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
@@ -212,6 +213,8 @@ class Filters
 	 * @param string $type Integration type.
 	 * @param string $name Filter name.
 	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
 	 * @return string
 	 *
 	 * @example filter_name es_forms_integration_mailchimp_fields_settings
@@ -220,13 +223,21 @@ class Filters
 	{
 		$internalType = Helper::camelToSnakeCase($type);
 
-		return self::FILTER_PREFIX . "_integration_{$internalType}_" . self::ALL_PUBLIC['integrations'][$type][$name];
+		$filter = self::ALL_PUBLIC['integrations'][$internalType][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('integrations', $type, $name);
+		}
+
+		return self::FILTER_PREFIX . "_integration_{$internalType}_{$filter}";
 	}
 
 	/**
 	 * Get Blocks filter by name.
 	 *
 	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
 	 *
 	 * @return string
 	 *
@@ -234,7 +245,13 @@ class Filters
 	 */
 	public static function getBlocksFilterName(string $name): string
 	{
-		return self::FILTER_PREFIX . '_blocks_' . self::ALL_PUBLIC['blocks'][$name];
+		$filter = self::ALL_PUBLIC['blocks'][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('blocks', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_blocks_{$filter}";
 	}
 
 	/**
@@ -242,6 +259,8 @@ class Filters
 	 *
 	 * @param string $type Block type.
 	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
 	 *
 	 * @return string
 	 *
@@ -251,7 +270,13 @@ class Filters
 	{
 		$internalType = Helper::camelToSnakeCase($type);
 
-		return self::FILTER_PREFIX . "_block_{$internalType}_" . self::ALL_PUBLIC['block'][$type][$name]; // @phpstan-ignore-line
+		$filter = self::ALL_PUBLIC['block'][$type][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('block', $type, $name);
+		}
+
+		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}"; // @phpstan-ignore-line
 	}
 
 	/**
@@ -259,12 +284,20 @@ class Filters
 	 *
 	 * @param string $name Filter name.
 	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
 	 * @return string
 	 *
 	 * @example filter_name es_forms_geolocation_disable
 	 */
 	public static function getGeolocationFilterName(string $name): string
 	{
-		return self::FILTER_PREFIX . '_geolocation_' . self::ALL_PUBLIC['geolocation'][$name];
+		$filter = self::ALL_PUBLIC['geolocation'][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('geolocation', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_geolocation_{$filter}";
 	}
 }

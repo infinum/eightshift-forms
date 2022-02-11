@@ -27,6 +27,17 @@ function setupMocks() {
 
 	// Mock options.
 	Functions\when('get_option')->returnArg();
+
+	// Mock the template dir location.
+	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
+
+	// Mock the template dir location.
+	Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
+
+	// Mock the get_edit_post_link.
+	Functions\when('get_edit_post_link')->alias(function($id) {
+		return "/wp-admin/post.php?post={$id}&action=edit";
+	});
 }
 
 
