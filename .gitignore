@@ -4,3 +4,7 @@
 /node_modules
 /storybook
 /.vscode
+
+# Tests
+tests/coverage/*
+.phpunit.result.cache

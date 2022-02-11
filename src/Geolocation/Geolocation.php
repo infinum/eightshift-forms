@@ -286,8 +286,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 *
 	 * @return string
 	 */
-	private function getLocationDetails(): string
+	public function getLocationDetails(): string
 	{
+		if (getenv('TEST') && getenv('TEST_GEOLOCATION')) {
+			return getenv('TEST_GEOLOCATION');
+		}
+
 		// Set country code manually for develop.
 		if (Variables::getGeolocation()) {
 			return Variables::getGeolocation();
