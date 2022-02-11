@@ -146,7 +146,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => esc_html__('Form successfully saved!', 'eightshift-form'),
+				'message' => esc_html__('Changes saved!', 'eightshift-form'),
 			]);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
