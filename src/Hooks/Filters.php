@@ -276,7 +276,7 @@ class Filters
 			throw MissingFilterInfoException::viewException('block', $type, $name);
 		}
 
-		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}"; // @phpstan-ignore-line
+		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}";
 	}
 
 	/**

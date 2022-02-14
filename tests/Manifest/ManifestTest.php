@@ -5,7 +5,6 @@ namespace Tests\Unit\Manifest;
 use Brain\Monkey;
 use EightshiftForms\Manifest\Manifest;
 
-use function Tests\mock;
 use function Tests\setupMocks;
 
 beforeEach(function() {

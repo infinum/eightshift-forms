@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a939c3d5324d7f2a10b93edcb80529f",
+    "content-hash": "a817803df1b401588e81ec5245ab3f44",
     "packages": [
         {
             "name": "infinum/eightshift-libs",
@@ -610,6 +610,76 @@
             "time": "2022-02-07T07:28:34+00:00"
         },
         {
+            "name": "brain/faker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Brain-WP/BrainFaker.git",
+                "reference": "c657e49f75c058c3081f0bb90fb53e06973a35e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Brain-WP/BrainFaker/zipball/c657e49f75c058c3081f0bb90fb53e06973a35e9",
+                "reference": "c657e49f75c058c3081f0bb90fb53e06973a35e9",
+                "shasum": ""
+            },
+            "require": {
+                "brain/monkey": "^2.3.1",
+                "fzaninotto/faker": "^1",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "inpsyde/php-coding-standards": "^0.13",
+                "phpunit/phpunit": "^8",
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "inc/functions.php"
+                ],
+                "psr-4": {
+                    "Brain\\Faker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Giuseppe Mazzapica",
+                    "email": "giuseppe.mazzapica@gmail.com",
+                    "homepage": "https://gmazzap.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Faker (fzaninotto/faker) for WordPress via Brain Monkey",
+            "keywords": [
+                "Fake data",
+                "Monkey Patching",
+                "faker",
+                "interception",
+                "mock",
+                "mock functions",
+                "mockery",
+                "patchwork",
+                "redefinition",
+                "runkit",
+                "test",
+                "test data",
+                "testing",
+                "unit tests data",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/Brain-WP/BrainFaker/issues",
+                "source": "https://github.com/Brain-WP/BrainFaker"
+            },
+            "time": "2020-02-07T16:48:40+00:00"
+        },
+        {
             "name": "brain/monkey",
             "version": "2.6.1",
             "source": {
@@ -946,6 +1016,61 @@
                 }
             ],
             "time": "2022-01-07T12:00:00+00:00"
+        },
+        {
+            "name": "fzaninotto/faker",
+            "version": "v1.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "squizlabs/php_codesniffer": "^2.9.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/fzaninotto/Faker/issues",
+                "source": "https://github.com/fzaninotto/Faker/tree/v1.9.2"
+            },
+            "abandoned": true,
+            "time": "2020-12-11T09:56:16+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -5156,7 +5281,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "infinum/eightshift-libs": 20
+        "infinum/eightshift-libs": 20,
+        "brain/faker": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

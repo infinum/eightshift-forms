@@ -17,24 +17,20 @@ function setupMocks() {
 	Functions\stubTranslationFunctions();
 	Functions\stubEscapeFunctions();
 
-	// Mock days in sec constant.
 	if (!defined('DAY_IN_SECONDS')) {
 		define('DAY_IN_SECONDS', 3600);
 	}
 
-	// Mock locale.
 	Functions\when('get_locale')->justReturn('HR');
 
-	// Mock options.
 	Functions\when('get_option')->returnArg();
 
-	// Mock the template dir location.
 	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
 
-	// Mock the template dir location.
+	Functions\when('get_permalink')->justReturn('');
+
 	Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
 
-	// Mock the get_edit_post_link.
 	Functions\when('get_edit_post_link')->alias(function($id) {
 		return "/wp-admin/post.php?post={$id}&action=edit";
 	});
