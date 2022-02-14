@@ -28,6 +28,14 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 		customDataDataOptions = esFormsBlocksLocalization.customDataBlockOptions;
 	}
 
+	if (customDataDataOptions?.length < 1) {
+		return (
+			<PanelBody title={__('Custom data', 'eightshift-forms')}>
+				{__('Configure a custom data source to display the block options.', 'eightshift-forms')}
+			</PanelBody>
+		);
+	}
+
 	return (
 		<>
 			<PanelBody title={__('Custom data', 'eightshift-forms')}>
