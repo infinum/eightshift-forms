@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -155,6 +156,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 			$output['mediaBreakpoints'] = apply_filters($breakpointsFilterName, []);
 			$output['postType'] = get_post_type() ?? '';
+
+			// Check if Geolocation data is set and valid.
+			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		}
 
 		return [

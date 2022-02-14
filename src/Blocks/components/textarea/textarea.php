@@ -79,7 +79,7 @@ $textarea = '<textarea
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($textareaIsReadOnly, true, false) : readonly($textareaIsReadOnly, true, false)) . '
+		' . ($isWpFiveNine ? wp_readonly($textareaIsReadOnly, true, false) : readonly($textareaIsReadOnly, true, false)) . /* @phpstan-ignore-line */ ' 
 		' . $textareaAttrsOutput . '
 	>' . \apply_filters('the_content', $textareaValue) . '</textarea>
 	' . $additionalContent . '

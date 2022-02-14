@@ -4,4 +4,7 @@
 /node_modules
 /storybook
 /.vscode
-composer.json
+
+# Tests
+tests/coverage/*
+.phpunit.result.cache

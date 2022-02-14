@@ -15,6 +15,16 @@
 		"formsFormPostId": {
 			"type": "string"
 		},
+		"formsFormGeolocation": {
+			"type": "array"
+		},
+		"formsFormGeolocationAlternatives": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
+		},
 		"formsStyle": {
 			"type": "string"
 		},
