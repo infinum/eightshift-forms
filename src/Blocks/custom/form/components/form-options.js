@@ -28,7 +28,6 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 				</span>
 			</Button>
 
-
 			<hr />
 
 			<FormOptionsComponent
