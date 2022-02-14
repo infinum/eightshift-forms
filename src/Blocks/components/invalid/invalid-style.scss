@@ -1,9 +1,12 @@
 .es-invalid {
-	background-color: var(--global-colors-es-pome);
-	color: var(--global-colors-es-white);
 	width: 100%;
-	padding: 30px;
-	line-height: 1.5;
-	font-size: 15px;
+	padding: 2rem;
+
+	color: var(--global-colors-es-pome);
+	border: 2px solid var(--global-colors-es-pome);
+	border-radius: 6px;
+
+	line-height: 1.35;
+	font-size: 0.95rem;
 	text-align: center;
 }
