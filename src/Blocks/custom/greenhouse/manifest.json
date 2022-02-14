@@ -1,7 +1,7 @@
 {
 	"blockName": "greenhouse",
 	"title": "Greenhouse Form",
-	"description" : "Block used to show Greenhouse application form.",
+	"description" : "A Greenhouse job application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-greenhouse"

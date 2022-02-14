@@ -1,7 +1,7 @@
 {
 	"blockName": "radio",
-	"title": "Radio",
-	"description" : "Block used for radio.",
+	"title": "Radio button",
+	"description" : "A simple radio button",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-radio"

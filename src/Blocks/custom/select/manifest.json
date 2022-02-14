@@ -1,7 +1,7 @@
 {
 	"blockName": "select",
 	"title": "Select",
-	"description" : "Block used for select/dropdown.",
+	"description" : "An item selection field",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-select"

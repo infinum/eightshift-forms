@@ -1,7 +1,7 @@
 {
 	"blockName": "form",
-	"title": "Custom Form",
-	"description" : "Block used for custom form builder.",
+	"title": "Custom form",
+	"description" : "A form with customizable fields",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form"

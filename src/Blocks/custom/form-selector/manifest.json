@@ -1,7 +1,7 @@
 {
 	"blockName": "form-selector",
 	"title": "Form selector",
-	"description" : "Select what form type you would like to use for this specific form.",
+	"description" : "Allows selecting the form that should be displayed",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-picker"
