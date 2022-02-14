@@ -1,4 +1,4 @@
-# Filters
+# Filters Block
 This document will provide you with the code examples for forms filters used in individual blocks.
 
 ## Add additional style options to forms block

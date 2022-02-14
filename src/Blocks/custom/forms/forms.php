@@ -8,6 +8,8 @@
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Geolocation\Geolocation;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
@@ -29,6 +31,13 @@ $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manife
 $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
 $formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
+$formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attributes, $manifest);
+$formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
+
+// Override form ID in case we use geo location but use this feature only on frontend.
+if (\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) && !$formsServerSideRender) {
+	$formsFormPostId = \apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
+}
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),

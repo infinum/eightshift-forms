@@ -16,7 +16,7 @@ namespace EightshiftForms\Hooks;
 class Variables
 {
 	/**
-	 * Set forms to develop mode.
+	 * Get forms mode.
 	 *
 	 * @return bool
 	 */
@@ -26,7 +26,7 @@ class Variables
 	}
 
 	/**
-	 * Set forms to skip validation used for development of integration.
+	 * Get forms to skip validation used for development of integration.
 	 *
 	 * @return bool
 	 */
@@ -36,7 +36,7 @@ class Variables
 	}
 
 	/**
-	 * Set forms to log out requests/responses.
+	 * Get forms to log out requests/responses.
 	 *
 	 * @return bool
 	 */
@@ -123,5 +123,15 @@ class Variables
 	public static function getGoogleReCaptchaSecretKey()
 	{
 		return defined('ES_GOOGLE_RECAPTCHA_SECRET_KEY') ? ES_GOOGLE_RECAPTCHA_SECRET_KEY : '';
+	}
+
+	/**
+	 * Get forms geolocation country code.
+	 *
+	 * @return string
+	 */
+	public static function getGeolocation(): string
+	{
+		return defined('ES_GEOLOCAITON') ? strtoupper(ES_GEOLOCAITON) : '';
 	}
 }

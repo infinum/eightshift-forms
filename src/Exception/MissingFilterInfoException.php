@@ -15,26 +15,27 @@ use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
 /**
  * Class MissingFilterInfoException.
  */
-final class MissingFilterInfoException extends \RuntimeException implements GeneralExceptionInterface
+final class MissingFilterInfoException extends \InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
-	 * Create a new instance of the exception if the view file itself created
-	 * an exception.
+	 * Throw error if there is something wrong with filters.
 	 *
-	 * @param string $filter Which filter doesn't have all info.
-	 * @param string $key    Which key is missing in info provided by filter.
+	 * @param string $filter Filter name.
+	 * @param string $type Filter internal type.
+	 * @param string $name Filter internal name.
 	 *
 	 * @return static
 	 */
-	public static function viewException($filter, $key)
+	public static function viewException($filter, $type, $name): MissingFilterInfoException
 	{
-		$message = sprintf(
-			/* translators: %1$d & %2$d is replaced with "int" */
-			\esc_html__('Missing a required key %1$s in %2$s filter, please provide that as part of return array on that filter', 'eightshift-forms'),
-			$key,
-			$filter
+		return new MissingFilterInfoException(
+			sprintf(
+				/* translators: %1$d is replaced with filter name, %2$d is replaced with filter type, , %3$d is replaced with name. */
+				\esc_html__('Filter for %1$s is missing or has a wrong type hint. Provided type: %2$s, provided name: %3$s. Please check your name and try again.', 'eightshift-forms'),
+				$filter,
+				$type,
+				$name
+			)
 		);
-
-		return new static($message, 400);
 	}
 }
