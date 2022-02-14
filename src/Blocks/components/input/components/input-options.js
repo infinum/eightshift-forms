@@ -4,16 +4,18 @@ import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { TextControl, SelectControl, RangeControl } from '@wordpress/components';
+import { TextControl, PanelBody, Button, Popover } from '@wordpress/components';
 import {
 	icons,
 	getOption,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	IconToggle,
 	props,
-	ComponentUseToggle
+	FancyDivider,
+	SimpleVerticalSingleSelect,
+	CustomSlider,
+	CustomSelect
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -43,6 +45,8 @@ export const InputOptions = (attributes) => {
 		showInputMin = true,
 		showInputMax = true,
 		showInputStep = true,
+
+		title = __('Input', 'eightshift-forms'),
 	} = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
@@ -60,7 +64,6 @@ export const InputOptions = (attributes) => {
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 
-	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [showValidation, setShowValidation] = useState(false);
 
 	let inputValidationPatternOptions = [];
@@ -71,178 +74,224 @@ export const InputOptions = (attributes) => {
 
 	return (
 		<>
-			<FieldOptions
-				{...props('field', attributes)}
-			/>
-
-			{showInputPlaceholder &&
-				<TextControl
-					label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-					help={__('Set text used as a placeholder before user starts typing.', 'eightshift-forms')}
-					value={inputPlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+			<PanelBody title={title}>
+				<FieldOptions
+					{...props('field', attributes)}
 				/>
-			}
 
-			{showInputType &&
-				<SelectControl
-					label={<IconLabel icon={icons.fieldType} label={__('Type', 'eightshift-forms')} />}
-					help={__('Set what type of input filed it is used.', 'eightshift-forms')}
-					value={inputType}
-					options={getOption('inputType', attributes, manifest)}
-					onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
-				/>
-			}
-
-			{showInputAdvancedOptions &&
-				<>
-					<ComponentUseToggle
-						label={__('Show advanced options', 'eightshift-forms')}
-						checked={showAdvanced}
-						onChange={() => setShowAdvanced(!showAdvanced)}
-						showUseToggle={true}
-						showLabel={true}
+				{showInputPlaceholder &&
+					<TextControl
+						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={inputPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
 					/>
+				}
 
-					{showAdvanced &&
-						<>
-							{showInputName &&
-								<TextControl
+				{showInputType &&
+					<CustomSelect
+						label={<IconLabel icon={icons.fieldType} label={__('Input value kind', 'eightshift-forms')} />}
+						value={inputType}
+						options={getOption('inputType', attributes, manifest)}
+						onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
+						simpleValue
+						isClearable={false}
+						isSearchable={false}
+					/>
+				}
+
+				{showInputAdvancedOptions &&
+					<>
+						<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+						{showInputName &&
+							<TextControl
 								label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-									help={__('Set unique field name. If not set field will have an generic name.', 'eightshift-forms')}
-									value={inputName}
-									onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-								/>
-							}
+								help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+								value={inputName}
+								onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+							/>
+						}
 
-							{showInputValue &&
-								<TextControl
-								label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-									help={__('Provide value that is going to be preset for the field.', 'eightshift-forms')}
-									value={inputValue}
-									onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
-								/>
-							}
+						{showInputValue &&
+							<TextControl
+								label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+								value={inputValue}
+								onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+							/>
+						}
 
-							{showInputTracking &&
-								<TextControl
-									label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
-									help={__('Provide GTM tracking code.', 'eightshift-forms')}
-									value={inputTracking}
-									onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
-								/>
+						<div className='es-h-spaced'>
+							{showInputIsReadOnly &&
+								<Button
+									icon={icons.fieldReadonly}
+									isPressed={inputIsReadOnly}
+									onClick={() => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: !inputIsReadOnly })}
+								>
+									{__('Read-only', 'eightshift-forms')}
+								</Button>
 							}
 
 							{showInputIsDisabled &&
-								<IconToggle
+
+								<Button
 									icon={icons.fieldDisabled}
-									label={__('Is Disabled', 'eightshift-forms')}
-									checked={inputIsDisabled}
-									onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
-								/>
+									isPressed={inputIsDisabled}
+									onClick={() => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: !inputIsDisabled })}
+								>
+									{__('Disabled', 'eightshift-forms')}
+								</Button>
 							}
+						</div>
+					</>
+				}
 
-							{showInputIsReadOnly &&
-								<IconToggle
-									icon={icons.fieldReadonly}
-									label={__('Is Read Only', 'eightshift-forms')}
-									checked={inputIsReadOnly}
-									onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
-								/>
-							}
-						</>
-					}
-				</>
-			}
+				{showInputValidationOptions &&
+					<>
+						<FancyDivider label={__('Validation', 'eightshift-forms')} />
 
-			{showInputValidationOptions &&
-				<>
-					<ComponentUseToggle
-						label={__('Show validation options', 'eightshift-forms')}
-						checked={showValidation}
-						onChange={() => setShowValidation(!showValidation)}
-						showUseToggle={true}
-						showLabel={true}
-					/>
-
-					{showValidation &&
-						<>
+						<div className='es-h-spaced-wrap'>
 							{showInputIsRequired &&
-								<IconToggle
+								<Button
 									icon={icons.fieldRequired}
-									label={__('Is Required', 'eightshift-forms')}
-									checked={inputIsRequired}
-									onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
-								/>
-							}
-
-							{(showInputIsEmail && !inputIsUrl && inputValidationPattern == '' && inputType !== 'number') &&
-								<IconToggle
-									icon={icons.email}
-									label={__('Is Email', 'eightshift-forms')}
-									checked={inputIsEmail}
-									onChange={(value) => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: value })}
-								/>
-							}
-
-							{(showInputIsUrl && !inputIsEmail && inputValidationPattern === '' && inputType !== 'number') &&
-								<IconToggle
-									icon={icons.link}
-									label={__('Is Url', 'eightshift-forms')}
-									checked={inputIsUrl}
-									onChange={(value) => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: value })}
-								/>
+									isPressed={inputIsRequired}
+									onClick={() => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: !inputIsRequired })}
+								>
+									{__('Required', 'eightshift-forms')}
+								</Button>
 							}
 
 							{(showInputValidationPattern && !inputIsUrl && !inputIsEmail) &&
-								<SelectControl
-									label={<IconLabel icon={icons.regex} label={__('Validation Pattern', 'eightshift-forms')} />}
-									help={__('Provide validation pattern in a form of regular expression for specific validation.', 'eightshift-forms')}
-									value={inputValidationPattern}
-									options={inputValidationPatternOptions}
-									onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
-								/>
+								<Button
+									icon={icons.regex}
+									isPressed={inputValidationPattern?.length > 0}
+									onClick={() => setShowValidation(true)}
+								>
+									{__('Pattern validation', 'eightshift-forms')}
+
+									{showValidation &&
+										<Popover noArrow={false} onClose={() => setShowValidation(false)}>
+											<div className='es-popover-content'>
+												<SimpleVerticalSingleSelect
+													label={__('Validation pattern', 'eightshift-forms')}
+													options={inputValidationPatternOptions.map(({ label, value }) => ({
+														onClick: () => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value }),
+														label: label,
+														isActive: inputValidationPattern === value,
+													}))}
+												/>
+											</div>
+										</Popover>
+									}
+								</Button>
 							}
 
-							{(inputType === 'number' && showInputMin) &&
-								<RangeControl
-								label={<IconLabel icon={icons.rangeMin} label={__('Validation Min Number', 'eightshift-forms')} />}
-									help={__('Set minimum number a user can enter', 'eightshift-forms')}
-									allowReset={true}
-									value={inputMin}
+							{(showInputIsEmail && !inputIsUrl && inputValidationPattern == '' && inputType !== 'number') &&
+								<Button
+									icon={icons.email}
+									isPressed={inputIsEmail}
+									onClick={() => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: !inputIsEmail })}
+								>
+									{__('Only e-mails', 'eightshift-forms')}
+								</Button>
+							}
+
+							{(showInputIsUrl && !inputIsEmail && inputValidationPattern === '' && inputType !== 'number') &&
+								<Button
+									icon={icons.link}
+									isPressed={inputIsUrl}
+									onClick={() => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: !inputIsUrl })}
+								>
+									{__('Only URLs', 'eightshift-forms')}
+								</Button>
+							}
+						</div>
+
+						{inputType === 'number' &&
+							<FancyDivider label={__('Number entry', 'eightshift-forms')} />
+						}
+
+						{(inputType === 'number' && showInputMin) &&
+							<>
+								<CustomSlider
+									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed number', 'eightshift-forms')} />}
+									value={inputMin ?? 0}
 									onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
 									min={options.inputMin.min}
 									step={options.inputMin.step}
+									hasValueDisplay
+									rightAddition={
+										<Button
+											label={__('Reset', 'eightshift-forms')}
+											icon={icons.rotateLeft}
+											onClick={() => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: undefined })}
+											isSmall
+											className='es-small-square-icon-button'
+										/>
+									}
+									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMin ? parseInt(inputMin) : '--'}</span>)}
 								/>
-							}
+							</>
+						}
 
-							{(inputType === 'number' && showInputMax) &&
-								<RangeControl
-								label={<IconLabel icon={icons.rangeMax} label={__('Validation Max Number', 'eightshift-forms')} />}
-									help={__('Set maximum number a user can enter', 'eightshift-forms')}
-									allowReset={true}
-									value={inputMax}
-									onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
-									min={options.inputMax.min}
-									step={options.inputMax.step}
-								/>
-							}
+						{(inputType === 'number' && showInputMax) &&
+							<CustomSlider
+								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed number', 'eightshift-forms')} />}
+								value={inputMax ?? 0}
+								onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
+								min={options.inputMax.min}
+								step={options.inputMax.step}
+								hasValueDisplay
+								rightAddition={
+									<Button
+										label={__('Reset', 'eightshift-forms')}
+										icon={icons.rotateLeft}
+										onClick={() => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: undefined })}
+										isSmall
+										className='es-small-square-icon-button'
+									/>
+								}
+								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMax ? parseInt(inputMax) : '--'}</span>)}
+							/>
+						}
 
-							{(inputType === 'number' && showInputStep) &&
-								<RangeControl
-								label={<IconLabel icon={icons.step} label={__('Validation Step Number', 'eightshift-forms')} />}
-									help={__('Set step number a user can change', 'eightshift-forms')}
-									allowReset={true}
-									value={inputStep}
-									onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
-									min={options.inputStep.min}
-									step={options.inputStep.step}
-								/>
-							}
-						</>
-					}
-				</>
-			}
+						{(inputType === 'number' && showInputStep) &&
+							<CustomSlider
+								label={<IconLabel icon={icons.step} label={__('Increment step', 'eightshift-forms')} />}
+								value={inputStep ?? 1}
+								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
+								min={options.inputStep.min}
+								step={options.inputStep.step}
+								hasValueDisplay
+								rightAddition={
+									<Button
+										label={__('Reset', 'eightshift-forms')}
+										icon={icons.rotateLeft}
+										onClick={() => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: undefined })}
+										isSmall
+										className='es-small-square-icon-button'
+									/>
+								}
+								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputStep ? parseInt(inputStep) : '--'}</span>)}
+							/>
+						}
+					</>
+				}
+
+				{showInputAdvancedOptions &&
+					<>
+						<FancyDivider label={__('Tracking', 'eightshift-forms')} />
+
+						{showInputTracking &&
+							<TextControl
+								label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
+								value={inputTracking}
+								onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
+							/>
+						}
+					</>
+				}
+			</PanelBody>
 
 			<FieldOptionsAdvanced
 				{...props('field', attributes)}

@@ -1,79 +1,58 @@
 import React from 'react';
-import _ from "lodash";
 import { __ } from '@wordpress/i18n';
-import { Fragment } from '@wordpress/element';
-import { TextareaControl, RangeControl } from '@wordpress/components';
+import { TextControl, Button, BaseControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	Responsive,
-	IconToggle
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const FieldOptions = (attributes) => {
-	const {
-		attributes: manifestAttributes,
-		responsiveAttributes: {
-			fieldWidth
-		},
-		options
-	} = manifest;
-
 	const {
 		setAttributes,
 
 		showFieldLabel = true,
 	} = attributes;
 
+	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 
 	return (
 		<>
 			{showFieldLabel &&
-				<>
-					<TextareaControl
-						label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
-						help={__('Set label for your field or field group.', 'eightshift-forms')}
-						value={fieldLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
-					/>
+				<BaseControl
+					label={(
+						<div className='es-flex-between'>
+							<IconLabel icon={icons.fieldLabel} label={__('Field label', 'eightshift-forms')} />
+							<Button
+								icon={icons.hide}
+								isPressed={fieldHideLabel}
+								onClick={() => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !fieldHideLabel })}
+								content={__('Hide', 'eightshift-forms')}
+							/>
 
-					<IconToggle
-						icon={icons.hide}
-						label={__('Hide Label', 'eightshift-forms')}
-						help={__('Hide label from view. Keep in mind this is not the recommended option because label helps your form be more accessible!', 'eightshift-forms')}
-						checked={fieldHideLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: value })}
-					/>
-				</>
+						</div>
+					)}
+					help={fieldHideLabel ? __('Hiding the label might impact accessibility!', 'eightshift-forms') : null}
+				>
+					{!fieldHideLabel &&
+						<TextControl
+							value={fieldLabel}
+							onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
+						/>
+					}
+
+				</BaseControl>
 			}
 
-			<Responsive
-				label={<IconLabel icon={icons.fieldWidth} label={__('Width', 'eightshift-forms')} />}
-			>
-				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
-					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
-
-					return (
-						<Fragment key={index}>
-							<RangeControl
-								label={_.capitalize(breakpoint)}
-								allowReset={true}
-								value={checkAttr(responsiveAttribute, attributes, manifest, true)}
-								onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
-								min={options.fieldWidth.min}
-								max={options.fieldWidth.max}
-								step={options.fieldWidth.step}
-								resetFallbackValue={defaultWidth}
-							/>
-						</Fragment>
-					);
-				})}
-			</Responsive>
+			<TextControl
+				label={<IconLabel icon={icons.fieldHelp} label={__('Help text', 'eightshift-forms')} />}
+				value={fieldHelp}
+				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
+			/>
 		</>
 	);
 };

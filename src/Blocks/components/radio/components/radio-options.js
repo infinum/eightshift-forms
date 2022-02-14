@@ -1,14 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl, TextareaControl } from '@wordpress/components';
+import { TextControl, Button } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
 	icons,
-	ComponentUseToggle,
-	IconToggle,
-	IconLabel
+	IconLabel,
+	FancyDivider
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -23,56 +21,46 @@ export const RadioOptions = (attributes) => {
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 	const radioTracking = checkAttr('radioTracking', attributes, manifest);
 
-	const [showAdvanced, setShowAdvanced] = useState(false);
-
 	return (
 		<>
-			<TextareaControl
-				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
-				help={__('Set label used next to the radio.', 'eightshift-forms')}
+			<TextControl
+				label={<IconLabel icon={icons.textSize} label={__('Radio button label', 'eightshift-forms')} />}
 				value={radioLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 			/>
 
-			<ComponentUseToggle
-				label={__('Show advanced options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
+			<Button
+				icon={icons.checkCircle}
+				isPressed={radioIsChecked}
+				onClick={() => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: !radioIsChecked })}
+			>
+				{__('Select by default', 'eightshift-forms')}
+			</Button>
+
+			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+			<TextControl
+				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
+				help={__('Internal value, sent if the radio button is selected.', 'eightshift-forms')}
+				value={radioValue}
+				onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
 			/>
 
-			{showAdvanced &&
-				<>
-					<TextControl
-						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
-						value={radioValue}
-						onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
-					/>
+			<Button
+				icon={icons.fieldDisabled}
+				isPressed={radioIsDisabled}
+				onClick={() => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: !radioIsDisabled })}
+			>
+				{__('Disabled', 'eightshift-forms')}
+			</Button>
 
-					<TextControl
-						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
-						help={__('Provide GTM tracking code.', 'eightshift-forms')}
-						value={radioTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
-					/>
+			<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 
-					<IconToggle
-						icon={icons.checkCircle}
-						label={__('Is Checked', 'eightshift-forms')}
-						checked={radioIsChecked}
-						onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.fieldDisabled}
-						label={__('Is Disabled', 'eightshift-forms')}
-						checked={radioIsDisabled}
-						onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
-					/>
-				</>
-			}
+			<TextControl
+				label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
+				value={radioTracking}
+				onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
+			/>
 		</>
 	);
 };

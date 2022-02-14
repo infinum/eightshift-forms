@@ -1,14 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl } from '@wordpress/components';
+import { TextControl, Button } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
 	icons,
-	ComponentUseToggle,
-	IconToggle,
-	IconLabel
+	IconLabel,
+	FancyDivider
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -22,49 +20,42 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
 
-	const [showAdvanced, setShowAdvanced] = useState(false);
-
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
-				help={__('Set label used for select option.', 'eightshift-forms')}
 			/>
 
-			<ComponentUseToggle
-				label={__('Show advanced options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
+			<div className='es-h-spaced'>
+				<Button
+					icon={icons.checkSquare}
+					isPressed={selectOptionIsSelected}
+					onClick={() => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: !selectOptionIsSelected })}
+				>
+					{__('Select by default', 'eightshift-forms')}
+				</Button>
+			</div>
+
+			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+			<TextControl
+				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
+				help={__('Internal value, sent if the option is selected', 'eightshift-forms')}
+				value={selectOptionValue}
+				onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
 			/>
 
-			{showAdvanced &&
-				<>
-					<TextControl
-						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
-						value={selectOptionValue}
-						onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.checkSquare}
-						label={__('Is Selected', 'eightshift-forms')}
-						checked={selectOptionIsSelected}
-						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.fieldDisabled}
-						label={__('Is Disabled', 'eightshift-forms')}
-						checked={selectOptionIsDisabled}
-						onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
-					/>
-				</>
-			}
+			<div className='es-h-spaced'>
+				<Button
+					icon={icons.fieldDisabled}
+					isPressed={selectOptionIsDisabled}
+					onClick={() => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: !selectOptionIsDisabled })}
+				>
+					{__('Disabled', 'eightshift-forms')}
+				</Button>
+			</div>
 		</>
 	);
 };
