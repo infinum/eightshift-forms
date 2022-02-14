@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: Eightshift forms
+ * Plugin Name: Eightshift Forms
  * Plugin URI: https://github.com/infinum/eightshift-forms
  * Description: Eightshift form builder plugin.
  * Author: Team Eightshift
  * Author URI: https://eightshift.com/
- * Version: 0.6.0-alpha
+ * Version: 0.7.0-alpha
  * Text Domain: eightshift-forms
  *
  * @package EightshiftForms
