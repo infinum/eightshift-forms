@@ -1,40 +1,42 @@
 // stylelint-disable declaration-no-important
-
 .es-block-form-selector {
-	&__title,
-	&__title-after {
-		text-align: center;
-		font-style: italic;
-		font-size: 14px;
-		margin-bottom: 20px;
-		color: var(--global-colors-es-boulder);
+	--wp-admin-theme-color: #29A3A3;
+
+	.esf-form-type-picker-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
 	}
 
-	&__items {
-		display: grid;
-		gap: var(--global-es-spacing-vertical);
-		grid-template-columns: repeat(4, 1fr);
-	}
-
-	&__button {
+	.components-button.esf-form-type-picker-button {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		flex-flow: column;
-		height: auto;
-		width: 100%;
-		padding: 15px !important;
+		justify-content: flex-start;
+		padding: 0 0.5rem !important;
+		margin: 0 !important;
+		width: 12rem !important;
+		height: 2.8rem !important;
+		line-height: 1;
+		border-radius: 3px !important;
+		text-align: left;
 
 		svg {
-			margin-bottom: 10px;
+			flex-shrink: 0;
+			width: 1.75rem;
+			height: 1.75rem;
 		}
 	}
 
-	&__button-label {
-		font-size: 15px;
+	& ~ .block-editor-inner-blocks {
+		display: none;
 	}
+}
 
-	&__title-after {
-		margin-top: 20px;
+.post-type-eightshift-forms {
+	h1 {
+		span[data-rich-text-placeholder]::after {
+			content: 'Form name';
+		}
 	}
 }
