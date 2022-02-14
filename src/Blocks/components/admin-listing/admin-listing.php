@@ -23,6 +23,7 @@ $adminListingNewFormLink = Components::checkAttr('adminListingNewFormLink', $att
 $adminListingTrashLink = Components::checkAttr('adminListingTrashLink', $attributes, $manifest);
 $adminListingForms = Components::checkAttr('adminListingForms', $attributes, $manifest);
 $adminListingType = Components::checkAttr('adminListingType', $attributes, $manifest);
+$adminListingListingLink = Components::checkAttr('adminListingListingLink', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -44,7 +45,14 @@ $layoutClass = Components::classnames([
 						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
 							<a href="<?php echo \esc_url($adminListingTrashLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 								<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m5 4.75 1.712 12.14a1 1 0 0 0 .99.86h5.596a1 1 0 0 0 .99-.86L16 4.75m-12 0h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12.5 4.25a2 2 0 1 0-4 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 8v6m3-6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
-								<?php echo \esc_html__('View trash', 'eightshift-forms'); ?>
+								<?php echo \esc_html__('Deleted forms', 'eightshift-forms'); ?>
+							</a>
+						<?php } ?>
+						
+						<?php if ($adminListingType === 'trash' && $adminListingListingLink) { ?>
+							<a href="<?php echo \esc_url($adminListingListingLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+								<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 10H4m4-5-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+								<?php echo \esc_html__('All forms', 'eightshift-forms'); ?>
 							</a>
 						<?php } ?>
 
@@ -65,6 +73,21 @@ $layoutClass = Components::classnames([
 			</div>
 		<?php } ?>
 		<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
+			<?php if (!$adminListingForms) {
+				$emptyStateSubtitle = __('No forms (yet).', 'eightshift-forms');
+
+				if ($adminListingType === 'trash') {
+					$emptyStateSubtitle = __('Trash is empty.', 'eightshift-forms');
+				}
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo Components::render('highlighted-content', [
+					'highlightedContentTitle' => __('Nothing to see here', 'eightshift-forms'),
+					// translators: %s will be replaced with the global settings url.
+					'highlightedContentSubtitle' => $emptyStateSubtitle,
+					'highlightedContentIcon' => 'empty',
+				]);
+			} ?>
 			<?php if ($adminListingForms) { ?>
 				<ul class="<?php echo \esc_attr("{$componentClass}__list"); ?>">
 					<?php foreach ($adminListingForms as $form) { ?>

@@ -184,10 +184,12 @@ class FormAdminMenu extends AbstractAdminMenu
 		$status = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$title = \esc_html__('All forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
+		$listingLink = '';
 
 		if ($status === 'trash') {
 			$title = \esc_html__('Deleted forms', 'eightshift-forms');
 			$trashLink = '';
+			$listingLink = Helper::getListingPageUrl();
 		}
 
 		return [
@@ -196,6 +198,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'adminListingTrashLink' => $trashLink,
 			'adminListingForms' => $this->formsListing->getFormsList($status),
 			'adminListingType' => $status,
+			'adminListingListingLink' => $listingLink,
 		];
 	}
 }
