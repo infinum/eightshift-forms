@@ -160,6 +160,9 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 				'introSubtitle' => __("To get the Google reCaptcha site key please visit this <a href='https://www.google.com/recaptcha/admin/create' target='_blank' rel='noopener noreferrer'>link</a>. <br /> <br /> <strong>Important:</strong> Make sure to select <strong>reCaptcha version 3</strong>!"),
 			],
 			[
+				'component' => 'divider',
+			],
+			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_USE_KEY),
@@ -184,6 +187,9 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'divider',
+					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),

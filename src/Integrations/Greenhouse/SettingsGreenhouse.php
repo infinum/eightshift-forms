@@ -351,9 +351,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					]
 				]
 			],
-			[
-				'component' => 'divider',
-			],
 		];
 
 		if ($isUsed) {
@@ -363,6 +360,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'divider',
+					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),

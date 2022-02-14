@@ -400,9 +400,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					]
 				]
 			],
-			[
-				'component' => 'divider',
-			],
 		];
 
 		if ($isUsed) {
@@ -411,6 +408,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'divider',
+					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),

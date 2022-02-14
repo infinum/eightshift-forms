@@ -324,9 +324,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					]
 				]
 			],
-			[
-				'component' => 'divider',
-			],
 		];
 
 		if ($isUsed) {
@@ -335,6 +332,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'divider',
+					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
