@@ -83,11 +83,11 @@
 	"options": {
 		"inputType": [
 			{
-				"label": "Text",
+				"label": "Plain text",
 				"value": "text"
 			},
 			{
-				"label": "Email",
+				"label": "E-mail",
 				"value": "email"
 			},
 			{
@@ -95,7 +95,7 @@
 				"value": "number"
 			},
 			{
-				"label": "Phone",
+				"label": "Phone number",
 				"value": "tel"
 			},
 			{
@@ -103,7 +103,11 @@
 				"value": "date"
 			},
 			{
-				"label": "Hidden",
+				"label": "Date & time",
+				"value": "datetime-local"
+			},
+			{
+				"label": "No user input (hidden field)",
 				"value": "hidden"
 			}
 		],

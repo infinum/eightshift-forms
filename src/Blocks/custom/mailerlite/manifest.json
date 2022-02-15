@@ -1,7 +1,7 @@
 {
 	"blockName": "mailerlite",
 	"title": "Mailerlite Form",
-	"description" : "Block used to show Mailerlite subscription form.",
+	"description" : "A MailerLite subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-mailerlite"

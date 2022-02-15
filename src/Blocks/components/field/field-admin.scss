@@ -1,25 +1,31 @@
+// stylelint-disable number-max-precision
+
 .es-field {
 	$this: &;
-	margin-bottom: 15px;
+	margin-bottom: 1rem;
+
+	&--submit {
+		margin-bottom: 1.75rem;
+	}
 
 	&__inner {
 		@include media(desktop up) {
 			display: grid;
-			column-gap: 20px;
+			column-gap: 1.25rem;
 			grid-template-columns: repeat(12, 1fr);
 		}
 	}
 
 	&__label {
-		font-size: 15px;
+		font-size: 0.85rem;
 		padding: 0;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		margin-bottom: 10px;
+		margin-bottom: 0.625rem;
 		display: block;
 
 		@include media(desktop up) {
-			padding-top: 12px;
+			padding-top: 0.75rem;
 			margin-bottom: 0;
 			grid-column-start: 1;
 			grid-column-end: 4;
@@ -39,7 +45,7 @@
 
 	&__help {
 		color: var(--global-colors-es-chalice);
-		margin-top: 5px;
+		margin-top: 0.5rem;
 
 		@include media(desktop up) {
 			grid-column-start: 4;
@@ -48,6 +54,23 @@
 
 		@include media(large up) {
 			grid-column-end: 11;
+		}
+
+		a {
+			color: var(--global-colors-es-matisse);
+			text-decoration-style: dotted;
+			text-underline-offset: 0.1em;
+			text-decoration-thickness: 1px;
+		}
+
+		code {
+			font-size: 0.95em;
+			padding: 0.15rem 0.25rem;
+			border-radius: 3px;
+			background: var(--global-colors-es-chalice-05);
+			color: var(--global-colors-es-chalice);
+			border: 1px solid var(--global-colors-es-chalice-10);
+			margin: 0;
 		}
 	}
 
@@ -63,7 +86,7 @@
 	}
 
 	&__submit {
-		margin-bottom: 30px;
+		margin-bottom: 2rem;
 
 		#{$this}__content-wrap {
 			text-align: right;
@@ -77,3 +100,5 @@ legend.es-field__label {
 		margin-bottom: -18px;
 	}
 }
+
+// stylelint-enable number-max-precision

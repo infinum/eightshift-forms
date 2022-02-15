@@ -58,9 +58,9 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Usage', 'eightshift-forms'),
+			'label' => __('Display locations', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient x1="11.104%" y1="70.178%" x2="88.905%" y2="29.822%" id="a"><stop stop-color="red" offset="2%"/><stop stop-color="#9E005D" offset="100%"/></linearGradient></defs><g fill-rule="nonzero" fill="none"><path d="M20.688 0H9.315C8.02 0 6.821.69 6.173 1.813l-5.686 9.85a3.62 3.62 0 0 0 0 3.625l5.686 9.852a3.629 3.629 0 0 0 3.142 1.813h11.373a3.626 3.626 0 0 0 3.14-1.813l5.685-9.852a3.62 3.62 0 0 0 0-3.626l-5.686-9.836A3.626 3.626 0 0 0 20.687 0Z" fill="url(#a)" transform="translate(0 2)"/><path d="M14.999 7.936a5.439 5.439 0 0 1 4.9 7.805c-.203.423-3.109 5.051-4.323 6.981a.62.62 0 0 1-.532.295.638.638 0 0 1-.532-.295c-1.25-1.938-4.219-6.577-4.423-7.005a5.442 5.442 0 0 1 4.91-7.78m0-1.101a6.54 6.54 0 0 0-5.905 9.357c.064.133.266.532 4.485 7.124.32.499.873.8 1.465.798a1.72 1.72 0 0 0 1.465-.798c4.136-6.584 4.314-6.956 4.383-7.097A6.542 6.542 0 0 0 15 6.836Z" fill="#FFF"/></g></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".3" d="M7.5 11.75H12m-4.5 3H11m-6.5-6h5" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle opacity=".3" cx="5" cy="11.75" r="1" fill="#29A3A3"/><circle opacity=".3" cx="5" cy="14.75" r="1" fill="#29A3A3"/><path d="M19 14.125c0 2.273-2.5 4.773-2.5 4.773s-2.5-2.5-2.5-4.773a2.5 2.5 0 0 1 5 0z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="16.5" cy="14.125" r=".682" fill="#29A3A3"/><path opacity=".2" fill="#29A3A3" d="M1 1h18v5H1z"/><path d="M19 10V2.5A1.5 1.5 0 0 0 17.5 1h-15A1.5 1.5 0 0 0 1 2.5v15A1.5 1.5 0 0 0 2.5 19H13M4.5 3.75h8" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 		];
 	}
 
@@ -76,8 +76,12 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Usage settings', 'eightshift-forms'),
-				'introSubtitle' => __('See all the locations where your block is assigned in one place. Keep in mind that this page can take a little while to open if you have a lot of content on your website.', 'eightshift-forms'),
+				'introTitle' => __('Display locations', 'eightshift-forms'),
+				'introSubtitle' => __('See where your form appears throughout the website.
+					<br /> <br />
+					<strong>Note</strong>
+					<br />
+					The list might take a while to populate if the form is used in a lot of places.', 'eightshift-forms'),
 			],
 		];
 
@@ -86,8 +90,9 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 		if (!$locations) {
 			$output[] = [
 				'component' => 'highlighted-content',
-				'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-				'highlightedContentSubtitle' => __('It looks like your form hasn\'t been added to any page.', 'eightshift-forms'),
+				'highlightedContentTitle' => __('Nothing to see here...', 'eightshift-forms'),
+				'highlightedContentSubtitle' => __('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
+				'highlightedContentIcon' => 'empty',
 			];
 		}
 

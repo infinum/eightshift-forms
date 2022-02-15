@@ -1,7 +1,7 @@
 {
 	"blockName": "form-selector",
-	"title": "Form Selector",
-	"description" : "Select what form type you would like to use for this specific form.",
+	"title": "Form selector",
+	"description" : "Allows selecting the form that should be displayed",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-picker"
@@ -31,21 +31,21 @@
 			"blockName": "eightshift-forms/form"
 		},
 		{
-			"label": "Simple Contact",
+			"label": "Simple contact",
 			"slug": "contact",
-			"icon": "esf-form-custom",
+			"icon": "esf-sender-email",
 			"blockName": "eightshift-forms/form",
 			"innerBlocks": [
 				[
 					"eightshift-forms/sender-email",
 					{
-						"senderEmailInputFieldLabel": "Your email"
+						"senderEmailInputFieldLabel": "E-mail"
 					}
 				],
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "Your name"
+						"inputInputFieldLabel": "Name"
 					}
 				],
 				[
@@ -84,7 +84,7 @@
 			"blockName": "eightshift-forms/hubspot"
 		},
 		{
-			"label": "Mailerlite",
+			"label": "MailerLite",
 			"slug": "mailerlite",
 			"icon": "esf-form-mailerlite",
 			"blockName": "eightshift-forms/mailerlite"

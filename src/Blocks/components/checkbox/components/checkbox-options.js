@@ -1,14 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl, TextareaControl } from '@wordpress/components';
+import { TextControl, Button } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
 	icons,
-	ComponentUseToggle,
-	IconToggle,
-	IconLabel
+	IconLabel,
+	FancyDivider
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -24,63 +22,58 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxIsReadOnly = checkAttr('checkboxIsReadOnly', attributes, manifest);
 	const checkboxTracking = checkAttr('checkboxTracking', attributes, manifest);
 
-	const [showAdvanced, setShowAdvanced] = useState(false);
-
 	return (
 		<>
-			<TextareaControl
-				label={<IconLabel icon={icons.fieldLabel} label={__('Label', 'eightshift-forms')} />}
-				help={__('Set label used next to the checkbox.', 'eightshift-forms')}
+			<TextControl
+				label={<IconLabel icon={icons.textUppercase} label={__('Checkbox label', 'eightshift-forms')} />}
 				value={checkboxLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 			/>
 
-			<ComponentUseToggle
-				label={__('Show advanced options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
+			<div className='es-h-spaced'>
+				<Button
+					icon={icons.checkSquare}
+					isPressed={checkboxIsChecked}
+					onClick={() => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: !checkboxIsChecked })}
+				>
+					{__('Check by default', 'eightshift-forms')}
+				</Button>
+			</div>
+
+			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+			<TextControl
+				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
+				help={__('Internal value, sent if checked.', 'eightshift-forms')}
+				value={checkboxValue}
+				onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
 			/>
 
-			{showAdvanced &&
-				<>
-					<TextControl
-						label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Provide value that is going to be used when user clicks on this field.', 'eightshift-forms')}
-						value={checkboxValue}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
-					/>
+			<div className='es-h-spaced'>
+				<Button
+					icon={icons.fieldReadonly}
+					isPressed={checkboxIsReadOnly}
+					onClick={() => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: !checkboxIsReadOnly })}
+				>
+					{__('Read-only', 'eightshift-forms')}
+				</Button>
 
-					<TextControl
-						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
-						help={__('Provide GTM tracking code.', 'eightshift-forms')}
-						value={checkboxTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
-					/>
+				<Button
+					icon={icons.fieldDisabled}
+					isPressed={checkboxIsDisabled}
+					onClick={() => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: !checkboxIsDisabled })}
+				>
+					{__('Disabled', 'eightshift-forms')}
+				</Button>
+			</div>
 
-					<IconToggle
-						icon={icons.checkSquare}
-						label={__('Is Checked', 'eightshift-forms')}
-						checked={checkboxIsChecked}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
-					/>
+			<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 
-					<IconToggle
-						icon={icons.fieldDisabled}
-						label={__('Is Disabled', 'eightshift-forms')}
-						checked={checkboxIsDisabled}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.fieldReadonly}
-						label={__('Is Read Only', 'eightshift-forms')}
-						checked={checkboxIsReadOnly}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
-					/>
-				</>
-			}
+			<TextControl
+				label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
+				value={checkboxTracking}
+				onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
+			/>
 		</>
 	);
 };

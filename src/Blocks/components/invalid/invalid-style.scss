@@ -1,9 +1,28 @@
 .es-invalid {
-	background-color: var(--global-colors-es-pome);
-	color: var(--global-colors-es-white);
 	width: 100%;
-	padding: 30px;
-	line-height: 1.5;
-	font-size: 15px;
+	padding: 2rem;
+
+	border-radius: 6px;
+	color: var(--global-colors-es-boulder);
+	border: 2px solid var(--global-colors-es-pome);
+
+	line-height: 1.35;
+	font-size: 0.8rem;
 	text-align: center;
+
+	b {
+		margin-bottom: 0.25rem;
+		display: inline-block;
+
+		font-weight: 600;
+		font-size: 0.95rem;
+		color: var(--global-colors-es-pome);
+	}
+
+	svg {
+		width: 1.5rem;
+		height: 1.5rem;
+		color: var(--global-colors-es-pome);
+		margin-bottom: 0.25rem;
+	}
 }

@@ -1,15 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl } from '@wordpress/components';
+import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	IconToggle,
-	ComponentUseToggle,
 	props,
+	FancyDivider,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -24,48 +22,36 @@ export const SubmitOptions = (attributes) => {
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
 	const submitTracking = checkAttr('submitTracking', attributes, manifest);
 
-	const [showAdvanced, setShowAdvanced] = useState(false);
-
 	return (
 		<>
-			<FieldOptions
-				{...props('field', attributes)}
-				showFieldLabel={false}
-			/>
+			<PanelBody title={__('Submit', 'eightshift-forms')}>
+				<FieldOptions
+					{...props('field', attributes)}
+					showFieldLabel={false}
+				/>
 
-			<TextControl
-				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-				help={__('Provide button text.', 'eightshift-forms')}
-				value={submitValue}
-				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
-			/>
+				<TextControl
+					label={<IconLabel icon={icons.buttonOutline} label={__('Button label', 'eightshift-forms')} />}
+					value={submitValue}
+					onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
+				/>
 
-			<ComponentUseToggle
-				label={__('Show advanced options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
-			/>
+				<Button
+					icon={icons.fieldDisabled}
+					isPressed={submitIsDisabled}
+					onClick={() => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: !submitIsDisabled })}
+				>
+					{__('Disabled', 'eightshift-forms')}
+				</Button>
 
-			{showAdvanced &&
-				<>
+				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 
-					<TextControl
-						label={<IconLabel icon={icons.code} label={__('Tracking Code', 'eightshift-forms')} />}
-						help={__('Provide GTM tracking code.', 'eightshift-forms')}
-						value={submitTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
-					/>
-
-					<IconToggle
-						icon={icons.fieldDisabled}
-						label={__('Is Disabled', 'eightshift-forms')}
-						checked={submitIsDisabled}
-						onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
-					/>
-				</>
-			}
+				<TextControl
+					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
+					value={submitTracking}
+					onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
+				/>
+			</PanelBody>
 
 			<FieldOptionsAdvanced
 				{...props('field', attributes)}

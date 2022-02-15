@@ -1,7 +1,7 @@
 {
 	"blockName": "radios",
-	"title": "Radios",
-	"description" : "Block used for grouping multiple radios.",
+	"title": "Radio buttons",
+	"description" : "A group of radio buttons",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-radios"

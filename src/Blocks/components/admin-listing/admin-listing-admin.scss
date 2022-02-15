@@ -19,7 +19,11 @@
 		}
 
 		&:hover {
-			background-color: var(--global-colors-es-alto);
+			background: linear-gradient(to right, var(--global-colors-es-matisse-10) 0%, transparent 85%);
+		}
+
+		&:first-child:last-child {
+			border-bottom: none;
 		}
 	}
 
@@ -42,27 +46,59 @@
 			timing-function: ease-in-out;
 			duration: 0.3s;
 		}
+
+		color: var(--global-colors-es-boulder);
+
+		&:focus,
+		&:hover {
+			color: var(--global-colors-es-blumine);
+
+			#{$this}__label-icon {
+				color: var(--global-colors-es-blumine);
+			}
+		}
+
+		&:focus {
+			// stylelint-disable-next-line declaration-no-important
+			box-shadow: none !important;
+
+			span {
+				outline: 1px solid var(--global-colors-es-matisse);
+				border-radius: 3px;
+				outline-offset: 3px;
+				font-weight: 500;
+			}
+		}
 	}
 
 	&__label-icon {
-		margin-right: 10px;
+		color: var(--global-colors-es-matisse);
+		margin-right: 0.75rem;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 
 	&__item-status {
-		background-color: var(--global-colors-es-alto);
-		padding: 2px 5px;
-		margin-left: 20px;
-		font-weight: bold;
-		font-size: 10px;
-		letter-spacing: 1px;
+		font-size: 0.65rem;
+		text-transform: uppercase;
+		letter-spacing: 0.075em; // stylelint-disable-line number-max-precision
+
+		border-radius: 3px;
+		padding: 0.125rem 0.25rem;  // stylelint-disable-line number-max-precision
+
+		color: var(--global-colors-es-chalice);
+		background: var(--global-colors-es-chalice-05);
 	}
 
 	&__item-post-type {
-		background-color: var(--global-colors-es-matisse);
-		color: var(--global-colors-es-white);
-		padding: 2px 5px;
-		margin-left: 20px;
-		font-size: 10px;
-		letter-spacing: 1px;
+		font-size: 0.65rem;
+		text-transform: uppercase;
+		letter-spacing: 0.075em; // stylelint-disable-line number-max-precision
+
+		border-radius: 3px;
+		padding: 0.125rem 0.25rem;  // stylelint-disable-line number-max-precision
+
+		color: var(--global-colors-es-matisse);
+		background: var(--global-colors-es-matisse-05);
 	}
 }

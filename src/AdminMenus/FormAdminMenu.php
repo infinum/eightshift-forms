@@ -56,7 +56,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_ICON = 'dashicons-forms';
+	public const ADMIN_MENU_ICON = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".6" fill-rule="evenodd" clip-rule="evenodd" d="M6.75 11.75A.75.75 0 0 1 7.5 11h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75zm0 3A.75.75 0 0 1 7.5 14h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 8.75A.75.75 0 0 1 4.5 8h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75z" fill="black"/><path d="M6 11.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm0 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" fill="black"/><path opacity=".3" d="M1 2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4H1V2z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M.25 2.5A2.25 2.25 0 0 1 2.5.25h15a2.25 2.25 0 0 1 2.25 2.25v15a2.25 2.25 0 0 1-2.25 2.25h-15A2.25 2.25 0 0 1 .25 17.5v-15zm2.25-.75a.75.75 0 0 0-.75.75v15c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75v-15a.75.75 0 0 0-.75-.75h-15z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 3.75A.75.75 0 0 1 4.5 3h8a.75.75 0 0 1 0 1.5h-8a.75.75 0 0 1-.75-.75z" fill="black"/></svg>';
 
 	/**
 	 * Menu position for this admin menu.
@@ -119,7 +119,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
-		return self::ADMIN_MENU_ICON;
+		return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 
 	/**
@@ -140,7 +140,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getPosition(): int
 	{
-		return self::ADMIN_MENU_POSITION;
+		return (int) self::ADMIN_MENU_POSITION;
 	}
 
 	/**
@@ -182,21 +182,23 @@ class FormAdminMenu extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		$status = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$title = \esc_html__('All your forms', 'eightshift-forms');
+		$title = \esc_html__('All forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
+		$listingLink = '';
 
 		if ($status === 'trash') {
-			$title = \esc_html__('All your trashed forms', 'eightshift-forms');
+			$title = \esc_html__('Deleted forms', 'eightshift-forms');
 			$trashLink = '';
+			$listingLink = Helper::getListingPageUrl();
 		}
 
 		return [
 			'adminListingPageTitle' => $title,
-			'adminListingSubTitle' => \esc_html__('On listing page you can preview all your forms in one place.', 'eightshift-forms'),
 			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
 			'adminListingTrashLink' => $trashLink,
 			'adminListingForms' => $this->formsListing->getFormsList($status),
 			'adminListingType' => $status,
+			'adminListingListingLink' => $listingLink,
 		];
 	}
 }

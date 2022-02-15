@@ -1,7 +1,7 @@
 {
 	"blockName": "sender-email",
 	"title": "Sender Email",
-	"description" : "Block used for sender email field used for user confirmation email.",
+	"description" : "A field for inputting e-mail addresses that will be the target for sending confirmation e-mails",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-sender-email"

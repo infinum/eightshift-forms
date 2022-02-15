@@ -1,7 +1,7 @@
 {
 	"blockName": "file",
 	"title": "File",
-	"description" : "Block used for file upload.",
+	"description" : "A file upload field",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-file"

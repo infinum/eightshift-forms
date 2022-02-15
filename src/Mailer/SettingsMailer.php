@@ -133,7 +133,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Mailer', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg"><g fill-rule="nonzero" fill="none"><path d="M29.374 2.344l-10.97 7.93-1.8 1.304a2.7 2.7 0 01-3.208 0l-1.8-1.304L.613 2.357A3.243 3.243 0 013.261 1h23.478c1.043 0 2.022.5 2.635 1.344z" fill="#FFD54F"/><g fill="#FFC107"><path d="M.613 2.357l10.983 7.917L.952 20.917A3.261 3.261 0 010 18.61V4.26a3.222 3.222 0 01.613-1.904zM30 4.26V18.61a3.26 3.26 0 01-.952 2.308L18.404 10.274l10.97-7.93C29.78 2.9 30 3.57 30 4.26z"/></g><path d="M19.565 24.478c-.866 0-1.304-.652-1.304-1.956a3.3 3.3 0 10-.794 2.109 2.326 2.326 0 002.098 1.152c2.609 0 2.609-2.455 2.609-3.261a7.174 7.174 0 10-2.186 5.156.654.654 0 00-.913-.938 5.87 5.87 0 111.795-4.218c0 1.462-.33 1.956-1.305 1.956zm-4.565 0a1.957 1.957 0 110-3.913 1.957 1.957 0 010 3.913z" fill="#455A64"/><path d="M18.404 10.274l-1.8 1.304a2.7 2.7 0 01-3.208 0l-1.8-1.304L.952 20.917a3.26 3.26 0 002.309.953h3.293a8.47 8.47 0 0116.89 0h3.295a3.26 3.26 0 002.309-.953L18.404 10.274z" fill="#FFA000"/></g></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="4" width="18" height="12" rx="1.5" stroke="#29A3A3" stroke-width="1.5" fill="none"/><path d="m2 5 8 6 8-6M2 15.5l5.5-6m11 6-5.5-6" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 		];
 	}
 
@@ -151,13 +151,15 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Mailing setting', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your mailing settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Mailer', 'eightshift-forms'),
+				'introSubtitle' => __('Sends simple e-mails.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => __('Select if you want to use send email on form success.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 				'checkboxesContent' => [
@@ -183,16 +185,15 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Configure admin email options', 'eightshift-forms'),
+						'introTitle' => __('E-mail settings', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure options that are going to be used for email send to the sender email addres, generally this is the website owner.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
-						'inputFieldLabel' => __('Sender Name', 'eightshift-forms'),
-						'inputFieldHelp' => __('Define sender name showed in the email client.', 'eightshift-forms'),
+						'inputFieldLabel' => __('Sender name', 'eightshift-forms'),
+						'inputFieldHelp' => __('Most e-mail clients show this instead of the e-mail address in the list of e-mails.', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsRequired' => true,
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
@@ -201,8 +202,8 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
-						'inputFieldLabel' => __('Sender Email', 'eightshift-forms'),
-						'inputFieldHelp' => __('Define sender email showed in the email client.', 'eightshift-forms'),
+						'inputFieldLabel' => __('Sender e-mail', 'eightshift-forms'),
+						'inputFieldHelp' => __('Shows in the e-mail client as <i>From:</i>', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsEmail' => true,
 						'inputIsRequired' => true,
@@ -212,8 +213,8 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
-						'inputFieldLabel' => __('Email to', 'eightshift-forms'),
-						'inputFieldHelp' => __('Define to what address the email will be sent.', 'eightshift-forms'),
+						'inputFieldLabel' => __('E-mail destination', 'eightshift-forms'),
+						'inputFieldHelp' => __('The e-mail will be sent to this address.', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsEmail' => true,
 						'inputIsRequired' => true,
@@ -223,8 +224,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
-						'inputFieldLabel' => __('Email subject', 'eightshift-forms'),
-						'inputFieldHelp' => __('Define email subject.', 'eightshift-forms'),
+						'inputFieldLabel' => __('E-mail subject', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsRequired' => true,
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
@@ -233,9 +233,16 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'component' => 'textarea',
 						'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 						'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
-						'textareaFieldLabel' => __('Email template', 'eightshift-forms'),
+						'textareaFieldLabel' => __('E-mail content', 'eightshift-forms'),
 						// translators: %s will be replaced with forms field name.
-						'textareaFieldHelp' => \sprintf(__('Define email template. You can use these email template variables: %s. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), $formNames),
+						'textareaFieldHelp' => \sprintf(__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).
+							<br /> <br />
+							These tags are detected from the form:
+							<br />
+							%s
+							<br /> <br />
+							If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.
+						', 'eightshift-forms'), $formNames),
 						'textareaIsRequired' => true,
 						'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 					],
@@ -244,16 +251,17 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Configure sender confirmation email options', 'eightshift-forms'),
+						'introTitle' => __('Confirmation mail', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure options that are going to be used for sender confirmation email send to the person that filled the form of the frontend.', 'eightshift-forms'),
+						'introSubtitle' => __('The confirmation mail is sent to the user that filled in the form, usually a "thank you" e-mail or similar.
+							<br /> <br />
+							Leave blank to disable the confirmation e-mail.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
-						'inputFieldLabel' => __('Sender email subject', 'eightshift-forms'),
-						'inputFieldHelp' => __('Define sender email subject.', 'eightshift-forms'),
+						'inputFieldLabel' => __('E-mail subject', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsRequired' => false,
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
@@ -262,9 +270,16 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'component' => 'textarea',
 						'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 						'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
-						'textareaFieldLabel' => __('Sender email template', 'eightshift-forms'),
+						'textareaFieldLabel' => __('E-mail content', 'eightshift-forms'),
 						// translators: %s will be replaced with forms field name.
-						'textareaFieldHelp' => \sprintf(__('Define sender email template. You can use these email template variables: %s. If you don\'t see your field here please check your form blocks and populate <strong>name</strong> input.', 'eightshift-forms'), $formNames),
+						'textareaFieldHelp' => \sprintf(__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).
+							<br /> <br />
+							These tags are detected from the form:
+							<br />
+							%s
+							<br /> <br />
+							If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.
+						', 'eightshift-forms'), $formNames),
 						'textareaIsRequired' => false,
 						'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 					],

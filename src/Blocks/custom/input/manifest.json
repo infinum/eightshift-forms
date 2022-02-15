@@ -1,13 +1,22 @@
 {
 	"blockName": "input",
 	"title": "Input",
-	"description" : "Block used for generic input like text, email, url, hidden and etc.",
+	"description" : "A simple data input field (text, e-mail, numbers, URLs, etc.)",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-input"
 	},
 	"keywords": [
-		"input"
+		"input",
+		"text",
+		"email",
+		"e-mail",
+		"number",
+		"numbers",
+		"url",
+		"urls",
+		"link",
+		"links"
 	],
 	"components": {
 		"input": "input"

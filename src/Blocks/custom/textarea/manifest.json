@@ -1,7 +1,7 @@
 {
 	"blockName": "textarea",
-	"title": "Textarea",
-	"description" : "Block used for large text input.",
+	"title": "Multiline text",
+	"description" : "A multiline text input field",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-textarea"

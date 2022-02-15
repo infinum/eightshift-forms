@@ -171,7 +171,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Greenhouse', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg"><path d="M20.507 8.914c0 1.448-.613 2.73-1.616 3.732-1.114 1.114-2.73 1.393-2.73 2.34 0 1.281 2.062.891 4.04 2.87 1.309 1.308 2.117 3.035 2.117 5.04 0 3.956-3.176 7.104-7.16 7.104C11.176 30 8 26.852 8 22.9c0-2.009.808-3.736 2.117-5.045 1.978-1.978 4.039-1.588 4.039-2.869 0-.947-1.616-1.226-2.73-2.34-1.003-1.003-1.615-2.284-1.615-3.788 0-2.897 2.367-5.237 5.264-5.237.557 0 1.059.084 1.477.084.752 0 1.142-.335 1.142-.864 0-.306-.14-.696-.14-1.114C17.554.78 18.362 0 19.337 0c.975 0 1.755.808 1.755 1.783 0 1.03-.808 1.504-1.42 1.727-.502.167-.892.39-.892.891 0 .947 1.727 1.866 1.727 4.513zM19.95 22.9c0-2.758-2.034-4.986-4.791-4.986-2.758 0-4.791 2.228-4.791 4.986 0 2.73 2.033 4.986 4.79 4.986 2.758 0 4.792-2.26 4.792-4.986zM18.306 8.858c0-1.755-1.42-3.203-3.147-3.203-1.727 0-3.148 1.448-3.148 3.203s1.42 3.203 3.148 3.203c1.727 0 3.147-1.448 3.147-3.203z" fill="#23A47F" fill-rule="nonzero"/></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="#29A3A3"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 		];
 	}
 
@@ -188,9 +188,10 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('in order to use Greenhouse integration please navigate to <a href="%s">global settings</a> and provide the missing configuration data.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => sprintf(__('Before using Greenhouse you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentIcon' => 'tools',
 				]
 			];
 		}
@@ -201,8 +202,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('We are sorry but', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('we couldn\'t get the data from the Greenhouse. Please check if you API key is valid and you provided the correct Board name.', 'eightshift-forms'),
+					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('Data from Greenhouse couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentIcon' => 'error',
 				],
 			];
 		}
@@ -235,16 +237,15 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
-				'introSubtitle' => __('Configure your Greenhouse settings in one place.', 'eightshift-forms'),
+				'introTitle' => __('Greenhouse', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-				'selectFieldLabel' => __('Job ID', 'eightshift-forms'),
+				'selectFieldLabel' => __('Job post', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
-				'selectFieldHelp' => sprintf(__('Select what Greenhouse job you want to show on this form. If you don\'t see your lists correctly try clearing cache on this <a href="#" class="%1$s" data-type="%2$s">link</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
+				'selectFieldHelp' => sprintf(__('If a job post isn\'t showing up, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,
@@ -269,9 +270,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Form View Details', 'eightshift-forms'),
+						'introTitle' => __('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Configure your Greenhouse form frontend view.', 'eightshift-forms'),
+						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -303,40 +304,40 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Greenhouse settings', 'eightshift-forms'),
-				'introSubtitle' => __('
-					Configure your Greenhouse settings in one place. <br />
-					To get a Greenhouse API key you must login to your Greenhouse Account and go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.<br />
-					Then click on the <strong>Create New API Key</strong> and select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
+				'introTitle' => __('Greenhouse', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get an API key?', 'eightshift-forms'),
+				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('
-					1. Login to your Greenhouse Account. <br />
-					2. Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>. <br />
-					3. Click on the <strong>Create New API Key</strong> button. <br/>
-					4. Select <strong>Job Board</strong> as your API Type. <br/>
-					5. Copy the API key to the provided field or use global constant.
-				', 'eightshift-forms'),
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => __('<ol>
+						<li>Log in to your Greenhouse Account.</li>
+						<li>Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.</li>
+						<li>Click on <strong>Create New API Key</strong>.</li>
+						<li>Select <strong>Job Board</strong> as your API Type.</li>
+						<li>Copy the API key into the field below or use the global constant.</li>
+					</ol>', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get an Job Board Name?', 'eightshift-forms'),
+				'introTitle' => __('How to get the Job Board name?', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('
-					1. Login to your Greenhouse Account. <br />
-					2. Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>. <br />
-					3. Copy the Board Name you want to use. <br/>
-					4. Convert the name to all lowercaps. <br/>
-					5. Copy the Board Name to the provided field or use global constant.
-				', 'eightshift-forms'),
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => __('<ol>
+						<li>Log in to your Greenhouse Account.</li>
+						<li>Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>.</li>
+						<li>Copy the <strong>Board Name</strong> you want to use.</li>
+						<li>Make the name all lowercase.</li>
+						<li>Copy the Board Name into the field below or use the global constant.</li>
+					</ol>', 'eightshift-forms'),
+			],
+			[
+				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => __('Check options to use', 'eightshift-forms'),
-				'checkboxesFieldHelp' => __('Select integrations you want to use in your form.', 'eightshift-forms'),
+				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
 				'checkboxesIsRequired' => true,
@@ -360,11 +361,14 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				$output,
 				[
 					[
+						'component' => 'divider',
+					],
+					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-						'inputFieldLabel' => __('API Key', 'eightshift-forms'),
-						'inputFieldHelp' => __('You can provide API key using global variable also.', 'eightshift-forms'),
+						'inputFieldLabel' => __('API key', 'eightshift-forms'),
+						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
@@ -374,8 +378,8 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-						'inputFieldLabel' => __('Job Board Name', 'eightshift-forms'),
-						'inputFieldHelp' => __('You can provide Board name using global variable also.', 'eightshift-forms'),
+						'inputFieldLabel' => __('Job Board name', 'eightshift-forms'),
+						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'text',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),

@@ -1,7 +1,7 @@
 {
 	"blockName": "custom-data",
 	"title": "Custom data",
-	"description" : "Block used to show custom data using WordPress filters.",
+	"description" : "A field that displays custom data from a data source",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-custom-data"

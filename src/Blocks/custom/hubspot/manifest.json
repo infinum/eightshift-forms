@@ -1,7 +1,7 @@
 {
 	"blockName": "hubspot",
 	"title": "HubSpot Form",
-	"description" : "Block used to show HubSpot application form.",
+	"description" : "A HubSpot form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-hubspot"

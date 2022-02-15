@@ -20,6 +20,9 @@
 		},
 		"adminListingType": {
 			"type": "string"
+		},
+		"adminListingListingLink": {
+			"type": "string"
 		}
 	}
 }

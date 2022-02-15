@@ -1,7 +1,7 @@
 {
 	"blockName": "submit",
 	"title": "Submit",
-	"description" : "Block used for form submit button.",
+	"description" : "A form submission button",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-submit"

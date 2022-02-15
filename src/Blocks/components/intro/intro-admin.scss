@@ -2,8 +2,8 @@
 	margin-bottom: 40px;
 
 	&__title {
-		font-size: 17px;
-		font-weight: bold;
+		font-size: 1rem;
+		font-weight: 600;
 
 		&--medium {
 			font-size: 14px;
@@ -11,9 +11,26 @@
 	}
 
 	&__subtitle {
-		padding-top: 10px;
-		font-size: 13px;
+		margin-top: 0.5rem;
+		font-size: 0.8rem;
 		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
+	}
+
+	a {
+		color: var(--global-colors-es-matisse);
+		text-decoration-style: dotted;
+		text-underline-offset: 0.1em;
+		text-decoration-thickness: 1px;
+	}
+
+	ul,
+	ol {
+		margin: 0;
+		list-style-position: inside;
+	}
+
+	li {
+		margin: 0;
 	}
 }

@@ -1,18 +1,18 @@
 /* global esFormsBlocksLocalization */
 
 import React from 'react';
-import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl, SelectControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	ComponentUseToggle
+	Responsive,
+	CustomSlider,
 } from '@eightshift/frontend-libs/scripts';
+import { TextControl, SelectControl, PanelBody, Button, BaseControl } from '@wordpress/components';
 import manifest from '../manifest.json';
+import _, { isObject } from 'lodash';
 
 export const FieldOptionsAdvanced = (attributes) => {
 	const {
@@ -20,12 +20,17 @@ export const FieldOptionsAdvanced = (attributes) => {
 		setAttributes,
 	} = attributes;
 
-	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
+	const {
+		attributes: manifestAttributes,
+		responsiveAttributes: {
+			fieldWidth
+		},
+		options
+	} = manifest;
+
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
-
-	const [showAdvanced, setShowAdvanced] = useState(false);
 
 	let fieldStyleOptions = [];
 
@@ -33,50 +38,74 @@ export const FieldOptionsAdvanced = (attributes) => {
 		fieldStyleOptions = esFormsBlocksLocalization.fieldBlockStyleOptions[blockName];
 	}
 
+	const mainFieldWidth = checkAttr(fieldWidth['large'], attributes, manifest, true);
+
 	return (
-		<>
-			<ComponentUseToggle
-				label={__('Show field options', 'eightshift-forms')}
-				checked={showAdvanced}
-				onChange={() => setShowAdvanced(!showAdvanced)}
-				showUseToggle={true}
-				showLabel={true}
-			/>
+		<PanelBody title={(
+			<span>
+				{__('Form field', 'eightshift-forms')}
 
-			{showAdvanced &&
-				<>
-					{fieldStyleOptions &&
-						<SelectControl
-							label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
-							help={__('Set what style type is your form.', 'eightshift-forms')}
-							value={fieldStyle}
-							options={fieldStyleOptions}
-							onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
-						/>
-					}
+				{mainFieldWidth !== undefined && mainFieldWidth < 12 &&
+					<span className='es-panel-body-muted'> - {__('width', 'eightshift-forms')} {mainFieldWidth}</span>
+				}
+			</span>
+		)} initialOpen={false}>
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldHelp} label={__('Help', 'eightshift-forms')} />}
-						help={__('Set field help info text.', 'eightshift-forms')}
-						value={fieldHelp}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
-					/>
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldBeforeText} label={__('Before Content', 'eightshift-forms')} />}
-						help={__('Set some additional text before main field content.', 'eightshift-forms')}
-						value={fieldBeforeContent}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
-					/>
-
-					<TextControl
-						label={<IconLabel icon={icons.fieldAfterText} label={__('After Content', 'eightshift-forms')} />}
-						help={__('Set some additional text after main field content.', 'eightshift-forms')}
-						value={fieldAfterContent}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
-					/>
-				</>
+			{fieldStyleOptions &&
+				<SelectControl
+					label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
+					help={__('Set what style type is your form.', 'eightshift-forms')}
+					value={fieldStyle}
+					options={fieldStyleOptions}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
+				/>
 			}
-		</>
+
+			<Responsive label={<IconLabel icon={icons.fieldWidth} label={__('Width', 'eightshift-forms')} />}>
+				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
+					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
+
+					return (
+						<CustomSlider
+							key={index}
+							label={<IconLabel icon={icons[`screen${_.capitalize(breakpoint)}`]} label={_.capitalize(breakpoint)} />}
+							value={checkAttr(responsiveAttribute, attributes, manifest, true) ?? 12}
+							onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
+							min={options.fieldWidth.min}
+							max={options.fieldWidth.max}
+							step={options.fieldWidth.step}
+							marks={{ 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 }}
+							hasCompactMarks
+							rightAddition={
+								<Button
+									label={__('Reset', 'eightshift-forms')}
+									icon={icons.rotateLeft}
+									onClick={() => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: defaultWidth })}
+									isSmall
+									className='es-small-square-icon-button'
+								/>
+							}
+						/>
+					);
+				})}
+			</Responsive>
+
+			<hr />
+
+			<BaseControl label={__('Additional content ', 'eightshift-forms')}>
+				<TextControl
+					label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
+					value={fieldBeforeContent}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
+					value={fieldAfterContent}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
+				/>
+			</BaseControl>
+		</PanelBody>
 	);
 };

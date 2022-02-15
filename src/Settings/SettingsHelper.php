@@ -224,13 +224,15 @@ trait SettingsHelper
 				$item = [
 					'component' => 'input',
 					'inputId' => "{$id}---{$breakpoint}",
-					'inputFieldLabel' => ucfirst($breakpoint),
+					// translators: %s is replaced with the breakpoint name.
+					'inputFieldLabel' => sprintf(\esc_html__('Field width (%s)', 'eightshift-forms'), $breakpoint),
 					'inputType' => 'number',
 					'inputValue' => $fieldsValues["{$id}---{$breakpoint}"] ?? '',
 					'inputMin' => 0,
 					'inputMax' => 12,
 					'inputStep' => 1,
 					'inputIsDisabled' => $disabledEdit,
+					'inputPlaceholder' => __('auto', 'eightshift-forms'),
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
@@ -249,6 +251,7 @@ trait SettingsHelper
 				'inputMax' => $totalFields,
 				'inputStep' => 1,
 				'inputIsDisabled' => $disabledEdit,
+				'inputPlaceholder' => __('auto', 'eightshift-forms'),
 			];
 
 			// Use.
@@ -263,19 +266,19 @@ trait SettingsHelper
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'select',
 				'selectId' => "{$id}---use",
-				'selectFieldLabel' => __('Show/Hide', 'eightshift-forms'),
+				'selectFieldLabel' => __('Visibility', 'eightshift-forms'),
 				'selectValue' => $toggleValue,
 				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
-						'selectOptionLabel' => __('Show', 'eightshift-forms'),
+						'selectOptionLabel' => __('Visible', 'eightshift-forms'),
 						'selectOptionValue' => 'true',
 						'selectOptionIsSelected' => $toggleValue === 'true',
 					],
 					[
 						'component' => 'select-option',
-						'selectOptionLabel' => __('Hide', 'eightshift-forms'),
+						'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
 						'selectOptionValue' => 'false',
 						'selectOptionIsSelected' => $toggleValue === 'false',
 					]
@@ -289,19 +292,19 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
 					'selectId' => "{$id}---file-info-label",
-					'selectFieldLabel' => __('Label as infobox text', 'eightshift-forms'),
+					'selectFieldLabel' => __('Field label', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
 					'selectIsDisabled' => $disabledEdit,
 					'selectOptions' => [
 						[
 							'component' => 'select-option',
-							'selectOptionLabel' => __('Not use', 'eightshift-forms'),
+							'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
 							'selectOptionValue' => 'false',
 							'selectOptionIsSelected' => $fileInfoLabelValue === 'false',
 						],
 						[
 							'component' => 'select-option',
-							'selectOptionLabel' => __('Use', 'eightshift-forms'),
+							'selectOptionLabel' => __('Visible', 'eightshift-forms'),
 							'selectOptionValue' => 'true',
 							'selectOptionIsSelected' => $fileInfoLabelValue === 'true',
 						]
@@ -316,7 +319,7 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
 					'selectId' => "{$id}---field-style",
-					'selectFieldLabel' => __('Field Style', 'eightshift-forms'),
+					'selectFieldLabel' => __('Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
 					'selectIsDisabled' => $disabledEdit,
 					'selectOptions' => array_map(

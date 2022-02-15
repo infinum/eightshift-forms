@@ -28,6 +28,7 @@ $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaUseCustom = Components::checkAttr('textareaUseCustom', $attributes, $manifest);
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
+$textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
 
 $isCustomTextarea = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -42,6 +43,7 @@ $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($isCustomTextarea && $textareaUseCustom, $componentClass, '', 'custom'),
+	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 ]);
 
 if ($isCustomTextarea && $textareaUseCustom) {

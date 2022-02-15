@@ -3,7 +3,39 @@
 @import './checkbox-style.scss';
 
 .es-checkbox {
+	$this: &;
+
 	&__input {
 		display: none !important;
+	}
+
+	&__input:checked + &__label::after {
+		opacity: 1;
+		transform: rotate(45deg) scale(0.95);
+	}
+
+	&__label::before {
+		border-radius: 3px;
+	}
+
+	&__label::after {
+		content: '';
+		position: absolute;
+		top: 0.05rem;
+		left: 0.4rem;
+		width: 0.4rem;
+		height: 0.8rem;
+		border-bottom: 2px solid var(--global-colors-es-white);
+		border-right: 2px solid var(--global-colors-es-white);
+		transform-origin: center center;
+		transform: rotate(5deg) scale(0.75);
+		border-radius: 0;
+		opacity: 0;
+
+		transition: {
+			property: transform, opacity;
+			timing-function: ease-out;
+			duration: 0.3s;
+		}
 	}
 }

@@ -8,6 +8,17 @@
 		},
 		"highlightedContentSubtitle": {
 			"type": "string"
+		},
+		"highlightedContentIcon": {
+			"type": "string"
 		}
+	},
+	"icons": {
+		"tools": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.72 1.61A4.501 4.501 0 0 0 5 9.988V17a1.5 1.5 0 0 0 3 0V9.988A4.502 4.502 0 0 0 8 1.5v4.244a1.5 1.5 0 1 1-3 0V1.5a4.47 4.47 0 0 0-.28.11z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round' fill='none'></path><path d='M13 13v3a2.5 2.5 0 0 0 2.5 2.5v0A2.5 2.5 0 0 0 18 16v-3m-5 0v-2.5h1M13 13h5m0 0v-2.5h-1m-3 0v-5l-.5-2 .5-2h3l.5 2-.5 2v5m-3 0h3' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'></path></svg>",
+		"wrench": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M14.091 9.933C16.25 9.933 18 8.157 18 5.967a4 4 0 0 0-.372-1.692L15 6.902l-2-2 2.799-2.5C15.5 2 14.625 2 14.09 2c-2.159 0-3.909 1.776-3.909 3.967 0 .274.028.542.08.8l-7.886 8.004a1.989 1.989 0 1 0 2.833 2.791l7.7-7.813c.373.12.77.184 1.182.184z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round' fill='none'/></svg>",
+		"warning": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M2.166 15.548 8.674 3.254c.564-1.064 2.088-1.064 2.652 0l6.508 12.294a1.5 1.5 0 0 1-1.325 2.202H3.49a1.5 1.5 0 0 1-1.325-2.202z' stroke='currentColor' stroke-width='1.5' fill='none'/><path stroke='currentColor' stroke-width='1.5' stroke-linecap='round' d='M10 7.75v4.5' fill='none'/><circle cx='10' cy='15' r='.75' fill='currentColor'/></svg>",
+		"error": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='10' cy='10' r='7.5' stroke='currentColor' stroke-width='1.5' fill='none'/><path stroke='currentColor' stroke-width='1.5' stroke-linecap='round' d='m7.348 7.484 5.304 5.304m-5.304 0 5.304-5.304' fill='none'/></svg>",
+		"success": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='m6.25 11 2.5 2.5 5-6' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='10' cy='10' r='7.5' stroke='currentColor' stroke-width='1.5' fill='none'/></svg>",
+		"empty": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M8.5 2h-5A1.5 1.5 0 0 0 2 3.5v5A1.5 1.5 0 0 0 3.5 10h5A1.5 1.5 0 0 0 10 8.5v-5A1.5 1.5 0 0 0 8.5 2z' stroke='currentColor' stroke-opacity='.12' stroke-width='1.5' fill='none'/><path d='M11 6h1.5A1.5 1.5 0 0 1 14 7.5v5a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 6 12.5V11' stroke='currentColor' stroke-opacity='.12' stroke-width='1.5' fill='none'/><path d='M15 10h1.5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5V15' stroke='currentColor' stroke-opacity='.12' stroke-width='1.5' fill='none'/></svg>"
 	}
 }

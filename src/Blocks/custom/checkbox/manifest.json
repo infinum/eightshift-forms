@@ -1,7 +1,7 @@
 {
 	"blockName": "checkbox",
 	"title": "Checkbox",
-	"description" : "Block used for checkbox.",
+	"description" : "A simple true/false toggle",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-checkbox"

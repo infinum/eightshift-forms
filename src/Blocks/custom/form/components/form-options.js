@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from "@wordpress/data";
-import { PanelBody, BaseControl, Button } from '@wordpress/components';
-import { IconLabel, icons, props } from '@eightshift/frontend-libs/scripts';
+import { PanelBody, Button } from '@wordpress/components';
+import { icons, props } from '@eightshift/frontend-libs/scripts';
 import { FormOptions as FormOptionsComponent } from '../../../components/form/components/form-options';
 import globalManifest from '../../../manifest.json';
 
@@ -15,22 +15,26 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 
 	return (
 		<PanelBody title={__('Form', 'eightshift-forms')}>
+			<Button
+				isPrimary
+				icon={icons.options}
+				href={`${settingsPageUrl}&formId=${formId}&type=mailer`}
+				style={{ height: '3rem', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
+			>
+				<span>
+					<span>{__('Form settings', 'eightshift-forms')}</span>
+					<br />
+					<small>{__('Configure the form and integrations', 'eightshift-forms')}</small>
+				</span>
+			</Button>
+
+			<hr />
+
 			<FormOptionsComponent
 				{...props('form', attributes, {
 					setAttributes,
 				})}
 			/>
-			<BaseControl
-				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On Mailer settings page you can setup all details regarding you integration.', 'eightshift-forms')}
-			>
-				<Button
-					href={`${settingsPageUrl}&formId=${formId}&type=mailer`}
-					isSecondary
-				>
-					{__('Open Mailer Form Settings', 'eightshift-forms')}
-				</Button>
-			</BaseControl>
 		</PanelBody>
 	);
 };

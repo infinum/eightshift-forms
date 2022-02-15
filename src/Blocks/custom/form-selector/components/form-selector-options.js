@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from "@wordpress/data";
-import { PanelBody, BaseControl, Button } from '@wordpress/components';
-import { IconLabel, icons } from '@eightshift/frontend-libs/scripts';
+import { PanelBody, Button } from '@wordpress/components';
+import { icons } from '@eightshift/frontend-libs/scripts';
 import globalManifest from '../../../manifest.json';
 
 export const FormSelectorOptions = () => {
@@ -13,18 +13,19 @@ export const FormSelectorOptions = () => {
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
-		<PanelBody title={__('Form', 'eightshift-forms')}>
-			<BaseControl
-				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On settings page you can setup email settings, integrations and much more.', 'eightshift-forms')}
+		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
+			<Button
+				isPrimary
+				icon={icons.options}
+				href={`${settingsPageUrl}&formId=${formId}&type=general`}
+				style={{ height: '3rem', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
 			>
-				<Button
-					href={`${settingsPageUrl}&formId=${formId}&type=general`}
-					isSecondary
-				>
-					{__('Open Form Settings', 'eightshift-forms')}
-				</Button>
-			</BaseControl>
+				<span>
+					<span>{__('Form settings', 'eightshift-forms')}</span>
+					<br />
+					<small>{__('Configure the form and integrations', 'eightshift-forms')}</small>
+				</span>
+			</Button>
 		</PanelBody>
 	);
 };
