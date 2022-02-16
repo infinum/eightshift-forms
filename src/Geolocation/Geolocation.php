@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -21,6 +22,8 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Geolocation implements ServiceInterface, GeolocationInterface
 {
+	use SettingsHelper;
+
 	/**
 	 * Internal countries list stored in a variable for caching.
 	 *
@@ -49,6 +52,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 */
 	public function register(): void
 	{
+		// If Geolocation is disabled, bailout.
+		$geolocationEnabled = $this->getOptionValue(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
+		if ($geolocationEnabled === 'false' || $geolocationEnabled === '0') {
+			return;
+		}
+
 		\add_filter('init', [$this, 'setLocationCookie']);
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
