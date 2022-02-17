@@ -150,6 +150,9 @@ class Filters
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
+		'general' => [
+			'tempUploadDir' => 'temp_upload_dir',
+		],
 		'geolocation' => [
 			'disable' => 'disable',
 			'countries' => 'countries_list',
@@ -299,5 +302,27 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_geolocation_{$filter}";
+	}
+
+	/**
+	 * Get General filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_general_temp_upload_dir
+	 */
+	public static function getGeneralFilterName(string $name): string
+	{
+		$filter = self::ALL_PUBLIC['general'][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('general', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_general_{$filter}";
 	}
 }

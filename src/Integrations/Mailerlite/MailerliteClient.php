@@ -95,7 +95,7 @@ class MailerliteClient implements ClientInterface
 	 *
 	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, mixed> $files Files array.
+	 * @param array<string, array<string, bool|string>> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */

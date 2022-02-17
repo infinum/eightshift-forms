@@ -54,6 +54,8 @@ class Mailer implements MailerInterface
 			$template
 		);
 
+		$files = $this->prepareFiles($files);
+
 		// Send email.
 		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
 	}
@@ -142,6 +144,31 @@ class Mailer implements MailerInterface
 				'name' => $field['name'] ?? '',
 				'value' => $field['value'] ?? '',
 			];
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepare files.
+	 *
+	 * @param array<string, mixed> $files Files to prepare.
+	 *
+	 * @return array<string>
+	 */
+	protected function prepareFiles(array $files): array
+	{
+		$output = [];
+
+		foreach ($files as $file) {
+			$success = $file['success'] ?? false;
+			$path = $file['path'] ?? '';
+
+			if (!$success || !$path) {
+				continue;
+			}
+
+			$output[] = $path;
 		}
 
 		return $output;

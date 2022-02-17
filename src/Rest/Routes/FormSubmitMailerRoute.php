@@ -85,7 +85,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, mixed> $files Files array.
+	 * @param array<string, array<string, bool|string>> $files Files array.
 	 *
 	 * @return mixed
 	 */
@@ -126,6 +126,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 
 		// If email fails.
 		if (!$mailer) {
+			// Always delete the files from the disk.
+			if ($files) {
+				$this->deleteFiles($files);
+			}
+
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
@@ -135,26 +140,38 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 
 		// Find Sender Details.
 		$senderDetails = $this->getSenderDetails($params);
+		$confirmationSubject = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
+		$confirmationTemplate = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
 
-		if (isset($senderDetails['sender-email'])) {
+		if (isset($senderDetails['sender-email']) && $confirmationSubject && $confirmationTemplate) {
 			// Send email.
 			$mailerConfirmation = $this->mailer->sendFormEmail(
 				$formId,
 				$senderDetails['sender-email'],
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+				$confirmationSubject,
+				$confirmationTemplate,
 				$files,
 				$params
 			);
 
 			// If email fails.
 			if (!$mailerConfirmation) {
+				// Always delete the files from the disk.
+				if ($files) {
+					$this->deleteFiles($files);
+				}
+
 				return \rest_ensure_response([
 					'status' => 'error',
 					'code' => 400,
 					'message' => $this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
 				]);
 			}
+		}
+
+		// Always delete the files from the disk.
+		if ($files) {
+			$this->deleteFiles($files);
 		}
 
 		// If email success.

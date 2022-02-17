@@ -70,6 +70,8 @@ export class Form {
 
 		// If using custom file create global object to store files.
 		this.files = {};
+		this.customSelects = [];
+		this.customFiles = [];
 
 		this.DATA_ATTR_FORM_TYPE = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE;
 		this.DATA_ATTR_FIELD_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID;
@@ -101,6 +103,8 @@ export class Form {
 				});
 			}
 
+			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);
 			const selects = element.querySelectorAll(this.selectSelector);
@@ -112,8 +116,9 @@ export class Form {
 			});
 	
 			// Setup select inputs.
+			this.customSelects[formId] = [];
 			[...selects].forEach((select) => {
-				this.setupSelectField(select);
+				this.setupSelectField(select, formId);
 			});
 	
 			// Setup textarea inputs.
@@ -122,8 +127,9 @@ export class Form {
 			});
 
 			// Setup file single inputs.
+			this.customFiles[formId] = [];
 			[...files].forEach((file) => {
-				this.setupFileField(file);
+				this.setupFileField(file, formId);
 			});
 		});
 	}
@@ -505,11 +511,28 @@ export class Form {
 	resetForm = (element) => {
 		if (this.formResetOnSuccess) {
 			element.reset();
+
+			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+
+			// Unset the choices in the submitted form.
+			if (this.customSelects[formId]) {
+				this.customSelects[formId].forEach((item) => {
+					item.setChoiceByValue('');
+				});
+			}
+
+			// Unset the choices in the submitted form.
+			if (this.customFiles[formId]) {
+				this.customFiles[formId].forEach((item) => {
+					item.removeAllFiles();
+				});
+			}
 		}
 
 		const fields = element.querySelectorAll(this.fieldSelector);
 
 		[...fields].forEach((item) => {
+			item.classList.remove(this.CLASS_FILLED);
 			item.classList.remove(this.CLASS_ACTIVE);
 			item.classList.remove(this.CLASS_HAS_ERROR);
 		});
@@ -666,16 +689,18 @@ export class Form {
 	}
 
 	// Setup Select field.
-	setupSelectField = (select) => {
+	setupSelectField = (select, formId) => {
 		const option = select.querySelector('option');
 
 		this.preFillOnInit(option);
 
 		if (this.isCustom(select)) {
-			new Choices(select, {
+			const choices = new Choices(select, {
 				searchEnabled: false,
 				shouldSort: false,
 			});
+
+			this.customSelects[formId].push(choices);
 
 			select.closest('.choices').addEventListener('focus', this.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.onBlurEvent);
@@ -701,11 +726,8 @@ export class Form {
 	}
 
 	// Setup file single field.
-	setupFileField = (file) => {
+	setupFileField = (file, formId) => {
 		if (this.isCustom(file)) {
-			// Create an empty array for each file.
-			this.files[file.id] = [];
-
 			// Init dropzone.
 			const myDropzone = new Dropzone(
 				file.closest(this.fieldSelector),
@@ -718,6 +740,8 @@ export class Form {
 					dictRemoveFile: this.fileCustomRemoveLabel,
 				}
 			);
+
+			this.customFiles[formId].push(myDropzone);
 
 			// On add files.
 			myDropzone.on("addedfiles", () => {

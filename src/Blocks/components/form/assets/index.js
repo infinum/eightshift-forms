@@ -99,14 +99,14 @@ domReady(() => {
 				setupInputField: (input) => {
 					form.setupInputField(input);
 				},
-				setupSelectField: (select) => {
-					form.setupSelectField(select);
+				setupSelectField: (select, formId) => {
+					form.setupSelectField(select, formId);
 				},
 				setupTextareaField: (textarea) => {
 					form.setupTextareaField(textarea);
 				},
-				setupFileField: (file) => {
-					form.setupFileField(file);
+				setupFileField: (file, formId) => {
+					form.setupFileField(file, formId);
 				},
 				preFillOnInit: (input) => {
 					form.preFillOnInit(input);
