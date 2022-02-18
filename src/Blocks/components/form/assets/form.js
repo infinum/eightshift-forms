@@ -439,6 +439,8 @@ export class Form {
 					for (const [key, file] of Object.entries(fileList)) {
 						formData.append(`${id}[${key}]`, file);
 					}
+				} else {
+					formData.append(`${id}[0]`, JSON.stringify({}));
 				}
 			} else {
 				// Output/append all fields.
