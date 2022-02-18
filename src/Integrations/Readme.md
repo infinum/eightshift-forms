@@ -46,6 +46,7 @@ Version Items: **v2**
 
 Supported fields:
 * Text
+* Number
 * Textarea
 * File
 * Select

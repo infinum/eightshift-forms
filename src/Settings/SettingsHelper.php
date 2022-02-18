@@ -350,6 +350,8 @@ trait SettingsHelper
 			$fields = array_merge($fields, $fieldsOutput);
 		}
 
+		usort($fields, [$this, 'sortFields']);
+
 		return $fields;
 	}
 
@@ -505,5 +507,18 @@ trait SettingsHelper
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Sort fields by order value
+	 *
+	 * @param array <mixed> $a First key to find.
+	 * @param array <mixed> $b First key to find.
+	 *
+	 * @return bool
+	 */
+	private function sortFields($a, $b): bool
+	{
+		return $a['groupContent'][4]['inputValue'] > $b['groupContent'][4]['inputValue'];
 	}
 }
