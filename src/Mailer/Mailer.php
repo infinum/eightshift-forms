@@ -160,15 +160,24 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		foreach ($files as $file) {
-			$success = $file['success'] ?? false;
-			$path = $file['path'] ?? '';
+		if (!$files) {
+			return $output;
+		}
 
-			if (!$success || !$path) {
+		foreach ($files as $items) {
+			if (!$items) {
 				continue;
 			}
 
-			$output[] = $path;
+			foreach ($items as $file) {
+				$path = $file['path'] ?? '';
+
+				if (!$path) {
+					continue;
+				}
+
+				$output[] = $path;
+			}
 		}
 
 		return $output;

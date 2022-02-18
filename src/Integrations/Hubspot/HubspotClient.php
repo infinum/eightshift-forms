@@ -101,7 +101,7 @@ class HubspotClient implements ClientInterface
 	 *
 	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<string, bool|string>> $files Files array.
+	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -157,7 +157,10 @@ class HubspotClient implements ClientInterface
 			}
 		}
 
-		$body['fields'] = $this->prepareParams($params);
+		$body['fields'] = array_merge(
+			$this->prepareParams($params),
+			$this->prepareFiles($files)
+		);
 
 		$response = \wp_remote_post(
 			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}"),
@@ -204,6 +207,59 @@ class HubspotClient implements ClientInterface
 		]);
 
 		return $output;
+	}
+
+	/**
+	 * Get post file media sent to HubSpot file manager.
+	 *
+	 * @param array<string> $file File to send.
+	 *
+	 * @return string
+	 */
+	private function postFileMedia(array $file): string
+	{
+		if (!$file) {
+			return '';
+		}
+
+		$path = $file['path'] ?? '';
+
+		if (!$path) {
+			return '';
+		}
+
+		$postData = [
+			'file' => new \CURLFile($path, 'application/octet-stream'),
+			'folderPath' => '/esforms',
+			'options' => wp_json_encode([
+				"access" => "PUBLIC_NOT_INDEXABLE",
+				"overwrite" => false,
+			]),
+		];
+
+		$curl = curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+		curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
+			$curl,
+			[
+				CURLOPT_URL => $this->getBaseUrl("filemanager/api/v3/files/upload", true),
+				CURLOPT_FAILONERROR => true,
+				CURLOPT_POST => true,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_POSTFIELDS => $postData
+			]
+		);
+
+		$response = curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
+		$statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+		curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+
+		if ($statusCode === 200) {
+			$response = json_decode((string) $response, true);
+
+			return $response['objects'][0]['url'] ?? '';
+		}
+
+		return '';
 	}
 
 
@@ -280,11 +336,9 @@ class HubspotClient implements ClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -401,6 +455,45 @@ class HubspotClient implements ClientInterface
 				'name' => $value['name'] ?? '',
 				'value' => $value['value'] ?? '',
 			];
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepare files.
+	 *
+	 * @param array<string, mixed> $files Files.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function prepareFiles(array $files): array
+	{
+		$output = [];
+
+		if (!$files) {
+			return [];
+		}
+
+		foreach ($files as $items) {
+			if (!$items) {
+				continue;
+			}
+
+			foreach ($items as $file) {
+				$id = $file['id'] ?? '';
+
+				$fileUrl = $this->postFileMedia($file);
+
+				if (!$fileUrl) {
+					continue;
+				}
+
+				$output[] = [
+					'name' => $id,
+					'value' => $fileUrl,
+				];
+			}
 		}
 
 		return $output;

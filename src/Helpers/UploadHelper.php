@@ -20,7 +20,7 @@ trait UploadHelper
 	 *
 	 * @param array<string, mixed> $files Files to prepare.
 	 *
-	 * @return array<string, array<string, bool|string>>
+	 * @return array<string, array<int, array<string, mixed>>>
 	 */
 	protected function uploadFiles(array $files): array
 	{
@@ -34,7 +34,7 @@ trait UploadHelper
 			return $output;
 		}
 
-		$folderPath = WP_CONTENT_DIR . '/esforms-tmp';
+		$folderPath = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'esforms-tmp' . DIRECTORY_SEPARATOR;
 
 		if (!is_dir($folderPath)) {
 			mkdir($folderPath);
@@ -42,43 +42,31 @@ trait UploadHelper
 
 		foreach ($files as $fileKey => $fileValue) {
 			foreach ($fileValue['name'] as $key => $value) {
-				$name = $fileValue['name'][$key] ?? '';
-				$data = $fileValue['tmp_name'][$key] ?? '';
+				$error = $fileValue['error'][$key] ?? '';
 
-				if (!$name || !$data) {
+				// If file is faulty return error.
+				if ($error !== UPLOAD_ERR_OK) {
 					continue;
 				}
 
-				$file = esc_url($folderPath . '/' . md5((string) time()) . '-' . $name);
+				// Create hashed file name so there is no collision.
+				$originalName = $fileValue['name'][$key];
+				$name = md5((string) time()) . '-' . basename($originalName);
+				$tmpName = $fileValue['tmp_name'][$key];
 
-				if (file_exists($file)) {
-					unlink($file);
-				}
+				// Create final folder location path.
+				$finalFilePath = $folderPath . DIRECTORY_SEPARATOR . $name;
 
-				$fileData = file_get_contents($data); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				// Move the file to new location.
+				move_uploaded_file($tmpName, $finalFilePath);
 
-				if (!$fileData) {
-					continue;
-				}
-
-				$upload = file_put_contents( // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
-					$file,
-					$fileData
-				);
-
-				if (!$upload) {
-					$output["{$fileKey}---{$key}"] = [
-						'success' => false,
-						'path' => '',
-					];
-				} else {
-					$output["{$fileKey}---{$key}"] = [
-						'success' => true,
-						'path' => $file,
-					];
-				}
-
-				unlink($data);
+				$output[$fileKey][] = [
+					'id' => $fileKey,
+					'index' => $key,
+					'fileName' => $originalName,
+					'name' => $name,
+					'path' => $finalFilePath
+				];
 			}
 		}
 
@@ -94,14 +82,21 @@ trait UploadHelper
 	 */
 	protected function deleteFiles(array $files): void
 	{
-		array_map(
-			static function ($file) {
+		if (!$files) {
+			return;
+		}
+
+		foreach ($files as $items) {
+			if (!$items) {
+				continue;
+			}
+
+			foreach ($items as $file) {
 				if (file_exists($file['path'])) {
 					unlink($file['path']);
 				}
-			},
-			$files
-		);
+			}
+		}
 	}
 
 	/**

@@ -103,7 +103,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, mixed> $files Files array.
+	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -306,19 +306,23 @@ class GreenhouseClient implements ClientInterface
 	{
 		$output = [];
 
-		foreach ($files as $key => $value) {
-			$success = $value['success'] ?? false;
-			$path = $value['path'] ?? '';
-
-			if (!$success || !$path) {
+		foreach ($files as $items) {
+			if (!$items) {
 				continue;
 			}
 
-			$fileName = explode('/', $path);
-			$id = explode('---', $key)[0];
+			foreach ($items as $file) {
+				$fileName = $file['fileName'] ?? '';
+				$path = $file['path'] ?? '';
+				$id = $file['id'] ?? '';
 
-			$output["{$id}_content"] = base64_encode((string) file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			$output["{$id}_content_filename"] = end($fileName);
+				if (!$path || !$fileName || !$id) {
+					continue;
+				}
+
+				$output["{$id}_content"] = base64_encode((string) file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$output["{$id}_content_filename"] = $fileName;
+			}
 		}
 
 		return $output;

@@ -84,7 +84,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<string, bool|string>> $files Files array.
+	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 *
 	 * @return mixed
 	 */
