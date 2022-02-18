@@ -150,9 +150,7 @@ class Filters
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
-		'general' => [
-			'tempUploadDir' => 'temp_upload_dir',
-		],
+		'general' => [],
 		'geolocation' => [
 			'disable' => 'disable',
 			'countries' => 'countries_list',
