@@ -6,6 +6,8 @@ use EightshiftForms\Geolocation\Geolocation;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use Brain\Monkey\Filters;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 
 use function Tests\setupMocks;
 
@@ -113,9 +115,10 @@ test('setLocationCookie will exit if is not frontend.', function () {
 	$action = 'is_admin';
 	Functions\when('is_admin')->justReturn(putenv("SIDEAFFECT_GEOLOCATION_IS_ADMIN={$action}"));
 
-	$this->geolocation->setLocationCookie();
+	$geo = $this->geolocation->setLocationCookie();
 
 	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_IS_ADMIN'), $action);
+	$this->assertNull($geo);
 
 	// Cleanup.
 	putenv('SIDEAFFECT_GEOLOCATION_IS_ADMIN=');
@@ -123,25 +126,11 @@ test('setLocationCookie will exit if is not frontend.', function () {
 });
 
 test('setLocationCookie will exit if disable filter is provided.', function () {
-	$action = 'is_geo_disable_filter';
-	
-	add_filter('es_forms_geolocation_disable', function() {
-		return true;
-	});
+	$geo = $this->geolocation->setLocationCookie();
 
-	if (has_filter('es_forms_geolocation_disable')) {
-		putenv("SIDEAFFECT_GEOLOCATION_DISABLED_FILTER={$action}");
-	}
+	Filters\expectApplied('es_forms_geolocation_disable')->with(true)->andReturn(true);
 
-	$this->geolocation->setLocationCookie();
-
-	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER'), $action);
-
-	// Cleanup.
-	remove_filter('es_forms_geolocation_disable', function() {
-		return false;
-	});
-	putenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER=');
+	$this->assertNull($geo);
 });
 
 test('setLocationCookie will exit if cookie is set.', function () {
@@ -153,9 +142,12 @@ test('setLocationCookie will exit if cookie is set.', function () {
 		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_EXIT={$action}");
 	}
 
-	$this->geolocation->setLocationCookie();
+	$geo = $this->geolocation->setLocationCookie();
+
+	Filters\expectApplied('es_forms_geolocation_disable')->with(false)->andReturn(false);
 
 	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_EXIT'), $action);
+	$this->assertNull($geo);
 
 	// Cleanup.
 	unset($_COOKIE[Geolocation::GEOLOCATION_COOKIE]);
@@ -167,9 +159,13 @@ test('setLocationCookie will set cookie.', function () {
 		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_SET={$args}");
 	});
 
-	$this->geolocation->setLocationCookie();
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)
+		->once()->with(false)->andReturn(true);
+
+	$geo = $this->geolocation->setLocationCookie();
 
 	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
+	$this->assertNull($geo);
 
 	// Cleanup.
 	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET=');
@@ -178,27 +174,12 @@ test('setLocationCookie will set cookie.', function () {
 //---------------------------------------------------------------------------------//
 
 test('isUserGeolocated will return formId if disable filter is provided.', function () {
-	$action = 'is_geo_disable_filter';
-	
-	add_filter('es_forms_geolocation_disable', function() {
-		return true;
-	});
-
-	if (has_filter('es_forms_geolocation_disable')) {
-		putenv("SIDEAFFECT_GEOLOCATION_DISABLED_FILTER={$action}");
-	}
-
 	$geo = $this->geolocation->isUserGeolocated(1, [], []);
 
-	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER'), $action);
+	Filters\expectApplied('es_forms_geolocation_disable')->with(true)->andReturn(true);
+
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '1');
-
-	// Cleanup.
-	remove_filter('es_forms_geolocation_disable', function() {
-		return false;
-	});
-	putenv('SIDEAFFECT_GEOLOCATION_DISABLED_FILTER=');
 });
 
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {
