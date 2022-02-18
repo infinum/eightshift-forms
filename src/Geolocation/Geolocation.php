@@ -52,12 +52,6 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 */
 	public function register(): void
 	{
-		// If Geolocation is disabled, bailout.
-		$geolocationEnabled = $this->getOptionValue(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
-		if ($geolocationEnabled === 'false' || $geolocationEnabled === '0') {
-			return;
-		}
-
 		\add_filter('init', [$this, 'setLocationCookie']);
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
@@ -71,6 +65,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	{
 		// Skip admin.
 		if (is_admin()) {
+			return;
+		}
+
+		// Bailout if not in use.
+		$isGeolocationSettingsGlobalValid = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		if (!$isGeolocationSettingsGlobalValid) {
 			return;
 		}
 
@@ -104,6 +104,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	 */
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string
 	{
+		// Bailout if not in use.
+		$isGeolocationSettingsGlobalValid = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		if (!$isGeolocationSettingsGlobalValid) {
+			return $formId;
+		}
+
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (has_filter($filterName)) {

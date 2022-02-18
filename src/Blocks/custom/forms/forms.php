@@ -35,7 +35,7 @@ $formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attribute
 $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
-if (\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) && !$formsServerSideRender) {
+if (!$formsServerSideRender) {
 	$formsFormPostId = \apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
 }
 
