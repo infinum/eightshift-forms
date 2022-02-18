@@ -431,7 +431,7 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.isCustom(item)) {
-					fileList = this.files[id];
+					fileList = this.files[id] ?? [];
 				}
 
 				// Loop files and append.

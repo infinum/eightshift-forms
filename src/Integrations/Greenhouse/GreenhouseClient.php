@@ -307,14 +307,17 @@ class GreenhouseClient implements ClientInterface
 		$output = [];
 
 		foreach ($files as $key => $value) {
-			if ($value === 'error') {
+			$success = $value['success'] ?? false;
+			$path = $value['path'] ?? '';
+
+			if (!$success || !$path) {
 				continue;
 			}
 
-			$fileName = explode('/', $value);
+			$fileName = explode('/', $path);
 			$id = explode('---', $key)[0];
 
-			$output["{$id}_content"] = base64_encode((string) file_get_contents($value)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$output["{$id}_content"] = base64_encode((string) file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			$output["{$id}_content_filename"] = end($fileName);
 		}
 
