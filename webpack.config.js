@@ -1,5 +1,7 @@
 /* eslint-disable import/no-dynamic-require, global-require */
 
+const path = require('path');
+
 /**
  * This is a main entrypoint for Webpack config.
  * All the settings are pulled from node_modules/@eightshift/frontend-libs/webpack.
@@ -29,8 +31,12 @@ module.exports = (env, argv) => {
 		output: {
 			// Load all output config from eightshift-frontend-libs.
 			...project.output,
-
 			library: 'EightshiftForms',
+		},
+
+		entry: {
+			...project.entry,
+			applicationEditor: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-editor.js'),
 		},
 	};
 };

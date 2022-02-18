@@ -60,6 +60,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Editor only style.
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyleLocal'], 50);
+		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorOptionsStyles'], 51);
 
 		// Editor and frontend style.
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
@@ -94,6 +95,26 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		$this->enqueueBlockStyle();
+	}
+
+	/**
+	 * Enqueue blocks style for editor only - used for libs component styles.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockEditorOptionsStyles(): void
+	{
+		$handler = "{$this->getAssetsPrefix()}-editor-style";
+
+		\wp_register_style(
+			$handler,
+			$this->manifest->getAssetsManifestItem('applicationEditor.css'),
+			[],
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handler);
 	}
 
 	/**

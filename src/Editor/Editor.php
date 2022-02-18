@@ -3,7 +3,7 @@
 /**
  * Class that holds all filter used the Block Editor page.
  *
- * @package EightshiftLibs\Editor
+ * @package EightshiftForms\Editor
  */
 
 declare(strict_types=1);

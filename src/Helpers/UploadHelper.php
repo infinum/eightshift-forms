@@ -20,72 +20,69 @@ trait UploadHelper
 	 *
 	 * @param array<string, mixed> $files Files to prepare.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, array<string, bool|string>>
 	 */
 	protected function uploadFiles(array $files): array
 	{
 		$output = [];
 
-		if (empty($files)) {
+		if (!$files) {
 			return $output;
 		}
 
-		if (!function_exists('wp_handle_upload')) {
-			// @codeCoverageIgnoreStart
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			// @codeCoverageIgnoreEnd
+		if (!defined('WP_CONTENT_DIR')) {
+			return $output;
 		}
 
-		add_filter('upload_dir', [$this, 'changeUploadDir'], 1, 10);
+		$folderPath = WP_CONTENT_DIR . '/esforms-tmp';
+
+		if (!is_dir($folderPath)) {
+			mkdir($folderPath);
+		}
 
 		foreach ($files as $fileKey => $fileValue) {
 			foreach ($fileValue['name'] as $key => $value) {
-				if ($fileValue['name'][$key]) {
-					$fileDetails = [
-						'name' => $fileValue['name'][$key],
-						'type' => $fileValue['type'][$key],
-						'tmp_name' => $fileValue['tmp_name'][$key],
-						'error' => $fileValue['error'][$key],
-						'size' => $fileValue['size'][$key],
-					];
+				$name = $fileValue['name'][$key] ?? '';
+				$data = $fileValue['tmp_name'][$key] ?? '';
 
-					$upload = wp_handle_upload(
-						$fileDetails,
-						[
-							'test_form' => false,
-						]
-					);
-
-					if (isset($upload['error'])) {
-						$output["{$fileKey}---{$key}"] = 'error';
-					} else {
-						$output["{$fileKey}---{$key}"] = $upload['file'];
-					}
+				if (!$name || !$data) {
+					continue;
 				}
+
+				$file = esc_url($folderPath . '/' . md5((string) time()) . '-' . $name);
+
+				if (file_exists($file)) {
+					unlink($file);
+				}
+
+				$fileData = file_get_contents($data); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+				if (!$fileData) {
+					continue;
+				}
+
+				$upload = file_put_contents( // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+					$file,
+					$fileData
+				);
+
+				if (!$upload) {
+					$output["{$fileKey}---{$key}"] = [
+						'success' => false,
+						'path' => '',
+					];
+				} else {
+					$output["{$fileKey}---{$key}"] = [
+						'success' => true,
+						'path' => $file,
+					];
+				}
+
+				unlink($data);
 			}
 		}
 
-		// Set everything back to normal.
-		remove_filter('upload_dir', [$this, 'changeUploadDir'], 2);
-
 		return $output;
-	}
-
-	/**
-	 * Override the default upload path.
-	 *
-	 * @param array<string, mixed> $param Dir path.
-	 * @param string $myDir My directory override.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function changeUploadDir(array $param, string $myDir = 'tmp'): array
-	{
-		$param['path'] = "{$param['basedir']}/{$myDir}";
-		$param['url'] = "{$param['baseurl']}/{$myDir}";
-		$param['subdir'] = '';
-
-		return $param;
 	}
 
 	/**
@@ -99,8 +96,8 @@ trait UploadHelper
 	{
 		array_map(
 			static function ($file) {
-				if (!empty($file)) {
-					\wp_delete_file($file);
+				if (file_exists($file['path'])) {
+					unlink($file['path']);
 				}
 			},
 			$files

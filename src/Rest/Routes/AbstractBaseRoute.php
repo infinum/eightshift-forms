@@ -103,7 +103,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Verifies everything is ok with request.
 	 *
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, mixed> $files Files array.
+	 * @param array<string, array<string, bool|string>> $files Files array.
 	 * @param string $formId Form Id.
 	 * @param array<string, mixed> $formData Form data to validate.
 	 *
