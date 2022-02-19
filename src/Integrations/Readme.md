@@ -15,7 +15,7 @@ Adding new integration steps:
 
 # Goodbits
 
-[Documentation](https://gist.github.com/kalv/84c37780d277da5b7a3cdf5c28359c6b)
+[API](https://gist.github.com/kalv/84c37780d277da5b7a3cdf5c28359c6b)
 
 Version: **v1**
 
@@ -26,7 +26,7 @@ Supported fields:
 
 # Greenhouse
 
-[Documentation](https://developers.greenhouse.io/job-board.html)
+[API](https://developers.greenhouse.io/job-board.html)
 
 Version: **v1**
 
@@ -39,7 +39,8 @@ Supported fields:
 
 # HubSpot
 
-[Documentation](https://legacydocs.hubspot.com/docs/methods/forms/submit_form)
+[API Submit](https://legacydocs.hubspot.com/docs/methods/forms/submit_form)
+[API Files](https://legacydocs.hubspot.com/docs/methods/files/v3/upload_new_file)
 
 Version Submit: **v3**
 Version Items: **v2**
@@ -57,7 +58,7 @@ Supported fields:
 
 # Mailchimp
 
-[Documentation](https://mailchimp.com/developer/marketing/api/)
+[API](https://mailchimp.com/developer/marketing/api/)
 
 Version: **v3**
 
@@ -71,7 +72,7 @@ Supported fields:
 
 # Mailerlite
 
-[Documentation](https://developers.mailerlite.com/docs)
+[API](https://developers.mailerlite.com/docs)
 
 Version: **v2**
 
