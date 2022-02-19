@@ -136,6 +136,7 @@ class Filters
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
+				'filesOptions' => 'files_options',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',

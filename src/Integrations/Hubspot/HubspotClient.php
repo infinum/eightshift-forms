@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -228,14 +229,25 @@ class HubspotClient implements ClientInterface
 			return '';
 		}
 
-		$postData = [
-			'file' => new \CURLFile($path, 'application/octet-stream'),
+		$options = [
 			'folderPath' => '/esforms',
 			'options' => wp_json_encode([
 				"access" => "PUBLIC_NOT_INDEXABLE",
 				"overwrite" => false,
 			]),
 		];
+
+		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions');
+		if (has_filter($filterName)) {
+			$options = \apply_filters($filterName, []);
+		}
+
+		$postData = array_merge(
+			[
+				'file' => new \CURLFile($path, 'application/octet-stream'),
+			],
+			$options
+		);
 
 		$curl = curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
 		curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array

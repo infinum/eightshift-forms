@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -242,6 +243,13 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 
 		// If the user has selected the list.
 		if ($selectedItem) {
+			$beforeContent = '';
+
+			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
+			if (has_filter($filterName)) {
+				$beforeContent = \apply_filters($filterName, '') ?? '';
+			}
+
 			$output = array_merge(
 				$output,
 				[
@@ -257,6 +265,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY),
+						'groupBeforeContent' => $beforeContent,
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,

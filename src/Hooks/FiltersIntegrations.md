@@ -107,3 +107,55 @@ public function disableEditIntegrationGreenhouseFieldsSettings(): bool
 	return false;
 }
 ```
+
+## Add custom text un admin settings before field settings.
+This filter is used to add custom text in the before content field element in the admin settings fields settings section.
+
+**Filter name:**
+`es_forms_integration_<integration_name>_admin_field_settings_additional_content`
+
+**Filter example for Greenhouse:**
+```php
+// Set Greenhouse integration additional content for fields settings in admin.
+add_filter('es_forms_integration_greenhouse_admin_field_settings_additional_content', [$this, 'getAdminFieldSettingsAdditionalContentGreenhouse']);
+
+/**
+ * Set Greenhouse integration additional content for fields settings in admin.
+ *
+ * @return string
+ */
+public function getAdminFieldSettingsAdditionalContentGreenhouse(): string
+{
+	return "
+		<p>Insert custom string here.</p>
+	";
+}
+```
+
+## Change Hubspot file upload options.
+This filter is used to change default file upload options set by forms and Hubspot. We use this [api](https://legacydocs.hubspot.com/docs/methods/files/v3/upload_new_file), and you can change any of these options.
+
+**Filter name:**
+`es_forms_integration_hubspot_files_options`
+
+**Filter example:**
+```php
+// Set Hubspot file upload custom options.
+add_filter('es_forms_integration_hubspot_files_options', [$this, 'getHubspotFileUploadCustomOptions']);
+
+/**
+ * Set Hubspot file upload custom options.
+ *
+ * @return array<mixed>
+ */
+public function getHubspotFileUploadCustomOptions(): string
+{
+	return [
+			'folderPath' => '/esforms',
+			'options' => wp_json_encode([
+				"access" => "PUBLIC_NOT_INDEXABLE",
+				"overwrite" => false,
+			]),
+		];
+}
+```
