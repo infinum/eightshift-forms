@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
@@ -142,6 +143,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		foreach ($data as $item) {
 			if (empty($item)) {
 				continue;
+			}
+
+			$richText = $item['richText']['content'] ?? '';
+
+			if ($richText) {
+				$output[] = [
+					'component' => 'rich-text',
+					'richTextFieldHideLabel' => true,
+					'richTextContent' => $richText,
+				];
 			}
 
 			$fields = $item['fields'] ?? [];

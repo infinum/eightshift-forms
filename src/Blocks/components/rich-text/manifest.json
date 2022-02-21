@@ -1,0 +1,18 @@
+{
+	"componentName": "rich-text",
+	"title": "rich-text",
+	"componentClass": "es-rich-text",
+	"example": {
+		"attributes": {
+			"richTextContent": "richText"
+		}
+	},
+	"attributes": {
+		"richTextContent": {
+			"type": "string"
+		}
+	},
+	"components": {
+		"field": "fields"
+	}
+}

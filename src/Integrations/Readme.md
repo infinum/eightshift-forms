@@ -55,6 +55,8 @@ Supported fields:
 * Checkbox
 * Radio
 * Consent
+* Heading
+* Paragraph
 
 # Mailchimp
 
