@@ -76,6 +76,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY = 'hubspot-integration-fields';
 
 	/**
+	 * Filemanager folder Key.
+	 */
+	public const SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY = 'hubspot-filemanager-folder';
+
+	/**
 	 * Instance variable for Hubspot data.
 	 *
 	 * @var ClientInterface
@@ -260,6 +265,24 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('File manager', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+						'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
+						'inputFieldLabel' => __('Folder', 'eightshift-forms'),
+						'inputFieldHelp' => __('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
+						'inputType' => 'text',
+						'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+					],
 					[
 						'component' => 'divider',
 					],

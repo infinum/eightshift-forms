@@ -94,12 +94,12 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 				'highlightedContentSubtitle' => __('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
 				'highlightedContentIcon' => 'empty',
 			];
+		} else {
+			$output[] = [
+				'component' => 'admin-listing',
+				'adminListingForms' => $this->getBlockLocations($formId),
+			];
 		}
-
-		$output[] = [
-			'component' => 'admin-listing',
-			'adminListingForms' => $this->getBlockLocations($formId),
-		];
 
 		return $output;
 	}

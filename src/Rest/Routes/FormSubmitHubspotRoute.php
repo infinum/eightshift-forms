@@ -106,7 +106,8 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$response = $this->hubspotClient->postApplication(
 			$this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
 			$params,
-			$files
+			$files,
+			$formId
 		);
 
 		// Always delete the files from the disk.

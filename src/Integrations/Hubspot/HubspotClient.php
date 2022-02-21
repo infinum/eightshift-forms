@@ -32,6 +32,11 @@ class HubspotClient implements ClientInterface
 	public const CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME = 'es_hubspot_items_cache';
 
 	/**
+	 * Filemanager default folder.
+	 */
+	public const HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY = 'esforms';
+
+	/**
 	 * Return items.
 	 *
 	 * @return array<string, mixed>
@@ -103,10 +108,11 @@ class HubspotClient implements ClientInterface
 	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
 	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files): array
+	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$itemId = explode('---', $itemId);
 
@@ -160,7 +166,7 @@ class HubspotClient implements ClientInterface
 
 		$body['fields'] = array_merge(
 			$this->prepareParams($params),
-			$this->prepareFiles($files)
+			$this->prepareFiles($files, $formId)
 		);
 
 		$response = \wp_remote_post(
@@ -214,10 +220,11 @@ class HubspotClient implements ClientInterface
 	 * Get post file media sent to HubSpot file manager.
 	 *
 	 * @param array<string> $file File to send.
+	 * @param string $formId FormId value.
 	 *
 	 * @return string
 	 */
-	private function postFileMedia(array $file): string
+	private function postFileMedia(array $file, string $formId): string
 	{
 		if (!$file) {
 			return '';
@@ -229,8 +236,15 @@ class HubspotClient implements ClientInterface
 			return '';
 		}
 
+
+		$folder = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
+
+		if (!$folder) {
+			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;
+		}
+
 		$options = [
-			'folderPath' => '/esforms',
+			'folderPath' => '/' . $folder,
 			'options' => wp_json_encode([
 				"access" => "PUBLIC_NOT_INDEXABLE",
 				"overwrite" => false,
@@ -476,10 +490,11 @@ class HubspotClient implements ClientInterface
 	 * Prepare files.
 	 *
 	 * @param array<string, mixed> $files Files.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareFiles(array $files): array
+	private function prepareFiles(array $files, string $formId): array
 	{
 		$output = [];
 
@@ -495,7 +510,7 @@ class HubspotClient implements ClientInterface
 			foreach ($items as $file) {
 				$id = $file['id'] ?? '';
 
-				$fileUrl = $this->postFileMedia($file);
+				$fileUrl = $this->postFileMedia($file, $formId);
 
 				if (!$fileUrl) {
 					continue;

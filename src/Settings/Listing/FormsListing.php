@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Settings\Settings\SettingsLocation;
 
 /**
  * FormsListing class.
@@ -52,6 +53,7 @@ class FormsListing implements FormListingInterface
 					'title' => get_the_title($id),
 					'status' => \get_post_status($id),
 					'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
+					'settingsLocationLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsLocation::SETTINGS_TYPE_KEY) : '',
 					'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
 					'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 					'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),

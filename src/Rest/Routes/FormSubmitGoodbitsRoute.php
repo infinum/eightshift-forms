@@ -108,7 +108,8 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 		$response = $this->goodbitsClient->postApplication(
 			$this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId),
 			$params,
-			[]
+			[],
+			$formId
 		);
 
 		// Finish.

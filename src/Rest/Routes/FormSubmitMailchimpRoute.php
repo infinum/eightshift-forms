@@ -95,7 +95,8 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 		$response = $this->mailchimpClient->postApplication(
 			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
 			$params,
-			[]
+			[],
+			$formId
 		);
 
 		// Finish.

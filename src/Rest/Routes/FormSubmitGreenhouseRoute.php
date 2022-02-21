@@ -108,7 +108,8 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 		$response = $this->greenhouseClient->postApplication(
 			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
 			$params,
-			$files
+			$files,
+			$formId
 		);
 
 		// Always delete the files from the disk.

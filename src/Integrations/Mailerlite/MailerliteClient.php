@@ -96,10 +96,11 @@ class MailerliteClient implements ClientInterface
 	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
 	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files): array
+	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$email = $params['email']['value'];
 

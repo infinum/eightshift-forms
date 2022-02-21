@@ -99,6 +99,7 @@ $layoutClass = Components::classnames([
 						$trashLink = $form['trashLink'] ?? '';
 						$trashRestoreLink = $form['trashRestoreLink'] ?? '';
 						$settingsLink = $form['settingsLink'] ?? '';
+						$settingsLocationLink = $form['settingsLocationLink'] ?? '';
 						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
@@ -165,6 +166,13 @@ $layoutClass = Components::classnames([
 									<a href="<?php echo esc_url($settingsLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
 										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.196 1.66c-1.813-.743-3.59-.31-4.25 0 .118 1.619-.581 4.37-4.321 2.428-.661.62-2.012 2.186-2.125 3.5 1.653.761 3.995 2.885.142 5.285.236.976.963 3.042 1.983 3.499 1.417-1 4.264-1.9 4.32 2.5.922.285 3.06.685 4.25 0-.117-1.762.567-4.728 4.25-2.5.567-.476 1.772-1.843 2.055-3.5-1.511-.928-3.627-3.285 0-5.284-.212-.834-.935-2.7-2.125-3.5-3.287 1.943-4.156-.81-4.18-2.428z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="10.071" cy="10.16" rx="2.975" ry="3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
 										<?php echo esc_html__('Settings', 'eightshift-forms'); ?>
+									</a>
+								<?php } ?>
+
+								<?php if ($settingsLocationLink) { ?>
+									<a href="<?php echo esc_url($settingsLocationLink); ?>" class="<?php echo \esc_attr("{$sectionClass}__link"); ?>">
+										<svg class="<?php echo \esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".3" d="M7.5 11.75H12m-4.5 3H11m-6.5-6h5" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle opacity=".3" cx="5" cy="11.75" r="1" fill="#29A3A3"/><circle opacity=".3" cx="5" cy="14.75" r="1" fill="#29A3A3"/><path d="M19 14.125c0 2.273-2.5 4.773-2.5 4.773s-2.5-2.5-2.5-4.773a2.5 2.5 0 0 1 5 0z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="16.5" cy="14.125" r=".682" fill="#29A3A3"/><path opacity=".2" fill="#29A3A3" d="M1 1h18v5H1z"/><path d="M19 10V2.5A1.5 1.5 0 0 0 17.5 1h-15A1.5 1.5 0 0 0 1 2.5v15A1.5 1.5 0 0 0 2.5 19H13M4.5 3.75h8" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+										<?php echo esc_html__('Locations', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>
 

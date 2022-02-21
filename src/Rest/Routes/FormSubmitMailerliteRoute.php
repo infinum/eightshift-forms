@@ -108,7 +108,8 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		$response = $this->mailerliteClient->postApplication(
 			$this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
 			$params,
-			[]
+			[],
+			$formId
 		);
 
 		// Finish.

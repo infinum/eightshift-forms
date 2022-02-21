@@ -10,6 +10,7 @@ export const FORM_EVENTS = {
 	AFTER_FORM_SUBMIT: 'AfterFormSubmit',
 	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: 'AfterFormSubmitSuccessRedirect',
 	AFTER_FORM_SUBMIT_SUCCESS: 'AfterFormSubmitSuccess',
+	AFTER_FORM_SUBMIT_RESET: 'AfterFormSubmitReset',
 	AFTER_FORM_SUBMIT_ERROR: 'AfterFormSubmitError',
 	AFTER_FORM_SUBMIT_ERROR_FATAL: 'AfterFormSubmitErrorFatal',
 	AFTER_FORM_SUBMIT_ERROR_VALIDATION: 'AfterFormSubmitErrorValidation',
@@ -529,15 +530,18 @@ export class Form {
 					item.removeAllFiles();
 				});
 			}
+
+			const fields = element.querySelectorAll(this.fieldSelector);
+
+			[...fields].forEach((item) => {
+				item.classList.remove(this.CLASS_FILLED);
+				item.classList.remove(this.CLASS_ACTIVE);
+				item.classList.remove(this.CLASS_HAS_ERROR);
+			});
+
+			// Dispatch event.
+			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_RESET);
 		}
-
-		const fields = element.querySelectorAll(this.fieldSelector);
-
-		[...fields].forEach((item) => {
-			item.classList.remove(this.CLASS_FILLED);
-			item.classList.remove(this.CLASS_ACTIVE);
-			item.classList.remove(this.CLASS_HAS_ERROR);
-		});
 	}
 
 	// Reset for in general.
