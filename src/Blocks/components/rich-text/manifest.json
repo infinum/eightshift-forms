@@ -8,6 +8,12 @@
 		}
 	},
 	"attributes": {
+		"richTextId": {
+			"type": "string"
+		},
+		"richTextName": {
+			"type": "string"
+		},
 		"richTextContent": {
 			"type": "string"
 		}

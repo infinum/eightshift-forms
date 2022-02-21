@@ -193,7 +193,7 @@ trait SettingsHelper
 				continue;
 			}
 
-			$component = $field['component'] ?? '';
+			$component = $field['component'] ? Components::kebabToCamelCase($field['component']) : '';
 
 			$inputType = $field["{$component}Type"] ?? '';
 			if ($inputType === 'hidden') {
@@ -404,7 +404,7 @@ trait SettingsHelper
 			}
 
 			// Find field component name.
-			$component = $value['component'] ?? '';
+			$component = $value['component'] ? Components::kebabToCamelCase($value['component']) : '';
 
 			// Find field id.
 			$id = $value["{$component}Id"] ?? '';
