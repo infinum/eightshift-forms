@@ -704,6 +704,8 @@ export class Form {
 			const choices = new Choices(select, {
 				searchEnabled: false,
 				shouldSort: false,
+				position: 'bottom',
+				allowHTML: false,
 			});
 
 			this.customSelects[formId].push(choices);
