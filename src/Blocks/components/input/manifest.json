@@ -64,6 +64,12 @@
 		"inputValidationPattern": {
 			"type": "string"
 		},
+		"inputMinLength": {
+			"type": "integer"
+		},
+		"inputMaxLength": {
+			"type": "integer"
+		},
 		"inputMin": {
 			"type": "integer"
 		},
@@ -111,6 +117,14 @@
 				"value": "hidden"
 			}
 		],
+		"inputMinLength": {
+			"min":  0,
+			"step": 1
+		},
+		"inputMaxLength": {
+			"min":  1,
+			"step": 1
+		},
 		"inputMin": {
 			"min":  0,
 			"step": 1

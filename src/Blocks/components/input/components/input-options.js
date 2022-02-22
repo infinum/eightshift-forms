@@ -42,6 +42,8 @@ export const InputOptions = (attributes) => {
 		showInputIsEmail = true,
 		showInputIsUrl = true,
 		showInputValidationPattern = true,
+		showInputMinLength = true,
+		showInputMaxLength = true,
 		showInputMin = true,
 		showInputMax = true,
 		showInputStep = true,
@@ -60,6 +62,8 @@ export const InputOptions = (attributes) => {
 	const inputIsEmail = checkAttr('inputIsEmail', attributes, manifest);
 	const inputIsUrl = checkAttr('inputIsUrl', attributes, manifest);
 	const inputValidationPattern = checkAttr('inputValidationPattern', attributes, manifest);
+	const inputMinLength = checkAttr('inputMinLength', attributes, manifest);
+	const inputMaxLength = checkAttr('inputMaxLength', attributes, manifest);
 	const inputMin = checkAttr('inputMin', attributes, manifest);
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
@@ -206,6 +210,54 @@ export const InputOptions = (attributes) => {
 								</Button>
 							}
 						</div>
+
+						{(showInputMinLength || showInputMaxLength) &&
+							<FancyDivider label={__('Entry length', 'eightshift-forms')} />
+						}
+
+						{showInputMinLength &&
+							<>
+								<CustomSlider
+									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed length', 'eightshift-forms')} />}
+									value={inputMinLength ?? 0}
+									onChange={(value) => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: value })}
+									min={options.inputMinLength.min}
+									step={options.inputMinLength.step}
+									hasValueDisplay
+									rightAddition={
+										<Button
+											label={__('Reset', 'eightshift-forms')}
+											icon={icons.rotateLeft}
+											onClick={() => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: undefined })}
+											isSmall
+											className='es-small-square-icon-button'
+										/>
+									}
+									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMinLength ? parseInt(inputMinLength) : '--'}</span>)}
+								/>
+							</>
+						}
+
+						{showInputMaxLength &&
+							<CustomSlider
+								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed length', 'eightshift-forms')} />}
+								value={inputMaxLength ?? 0}
+								onChange={(value) => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: value })}
+								min={options.inputMaxLength.min}
+								step={options.inputMaxLength.step}
+								hasValueDisplay
+								rightAddition={
+									<Button
+										label={__('Reset', 'eightshift-forms')}
+										icon={icons.rotateLeft}
+										onClick={() => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: undefined })}
+										isSmall
+										className='es-small-square-icon-button'
+									/>
+								}
+								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMaxLength ? parseInt(inputMaxLength) : '--'}</span>)}
+							/>
+						}
 
 						{inputType === 'number' &&
 							<FancyDivider label={__('Number entry', 'eightshift-forms')} />

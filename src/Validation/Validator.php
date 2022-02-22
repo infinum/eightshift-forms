@@ -53,6 +53,8 @@ class Validator extends AbstractValidation
 		'MinSize',
 		'MaxSize',
 		'ValidationPattern',
+		'MinLength',
+		'MaxLength'
 	];
 
 	/**
@@ -238,6 +240,18 @@ class Validator extends AbstractValidation
 					case 'isUrl':
 						if ($dataValue && !$this->isUrl($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
+						}
+						break;
+					// Check validation for min characters length.
+					case 'minLength':
+						if ($dataValue && $dataValue > strlen($inputValue)) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationMinLength', $formId), $dataValue);
+						}
+						break;
+					// Check validation for max characters length.
+					case 'maxLength':
+						if ($dataValue && $dataValue < strlen($inputValue)) {
+							$output[$paramKey] = sprintf($this->labels->getLabel('validationMaxLength', $formId), $dataValue);
 						}
 						break;
 					case 'validationPattern':

@@ -171,7 +171,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$value = $field['default_value'] ?? '';
 				$placeholder = $field['placeholder'] ?? '';
 				$options = $field['options'] ?? '';
+				$validation = $field['validation']['data'] ?? '';
 				$id = $name;
+
+				$validation = explode(':', $validation);
+				$min = $validation[0] ?? '';
+				$max = $validation[1] ?? '';
 
 				if ($property !== 'CONTACT') {
 					$name = "{$property}.{$name}";
@@ -179,7 +184,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 				switch ($type) {
 					case 'text':
-						$output[] = [
+						$item = [
 							'component' => 'input',
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
@@ -188,10 +193,20 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputPlaceholder' => $placeholder,
 							'inputIsRequired' => $required,
 							'inputValue' => $value,
-							];
+						];
+
+						if ($min) {
+							$item['inputMinLength'] = (int) $min;
+						}
+
+						if ($max) {
+							$item['inputMaxLength'] = (int) $max;
+						}
+
+						$output[] = $item;
 						break;
 					case 'number':
-						$output[] = [
+						$item = [
 							'component' => 'input',
 							'inputName' => $name,
 							'inputFieldLabel' => $label,
@@ -200,6 +215,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputIsRequired' => $required,
 							'inputValue' => $value,
 						];
+
+						if ($min) {
+							$item['inputMinLength'] = $min;
+						}
+
+						if ($max) {
+							$item['inputMaxLength'] = $max;
+						}
+
+						$output[] = $item;
 						break;
 					case 'textarea':
 						$output[] = [
