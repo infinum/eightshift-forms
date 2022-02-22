@@ -35,9 +35,7 @@ $submitClass = Components::classnames([
 	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
 ]);
 
-if ($submitTracking) {
-	$submitAttrs['data-tracking'] = esc_attr($submitTracking);
-}
+$submitAttrs['data-tracking'] = $submitTracking ? esc_attr($submitTracking) : esc_attr($submitId);
 
 if ($submitId) {
 	$submitAttrs['id'] = esc_attr($submitId);

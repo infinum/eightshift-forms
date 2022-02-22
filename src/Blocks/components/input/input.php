@@ -47,9 +47,7 @@ if ($inputType === 'number') {
 	}
 }
 
-if ($inputTracking) {
-	$inputAttrs['data-tracking'] = esc_attr($inputTracking);
-}
+$inputAttrs['data-tracking'] = $inputTracking ? esc_attr($inputTracking) : esc_attr($inputName);
 
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);

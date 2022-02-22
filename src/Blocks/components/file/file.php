@@ -70,9 +70,7 @@ if ($isCustomFile && $fileUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-if ($fileTracking) {
-	$fileAttrs['data-tracking'] = esc_attr($fileTracking);
-}
+$fileAttrs['data-tracking'] = $fileTracking ? esc_attr($fileTracking) : esc_attr($fileName);
 
 $fileAttrsOutput = '';
 if ($fileAttrs) {
