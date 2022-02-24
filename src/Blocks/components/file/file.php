@@ -29,7 +29,7 @@ $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $a
 $fileUseCustom = Components::checkAttr('fileUseCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
 
-$isCustomFile = apply_filters(
+$isCustomFile = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY

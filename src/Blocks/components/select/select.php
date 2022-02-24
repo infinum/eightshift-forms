@@ -30,7 +30,7 @@ $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $
 $selectUseCustom = Components::checkAttr('selectUseCustom', $attributes, $manifest);
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 
-$isCustomSelect = apply_filters(
+$isCustomSelect = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY

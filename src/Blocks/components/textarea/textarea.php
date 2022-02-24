@@ -30,7 +30,7 @@ $textareaUseCustom = Components::checkAttr('textareaUseCustom', $attributes, $ma
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
 
-$isCustomTextarea = apply_filters(
+$isCustomTextarea = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
 	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY

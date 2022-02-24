@@ -202,28 +202,31 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				]
 			],
 			[
+				'component' => 'divider',
+			],
+			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => __('Custom fields', 'eightshift-forms'),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-				'checkboxesFieldHelp' => __('If unchecked, fields will use the default browser implementation.', 'eightshift-forms'),
+				'checkboxesFieldHelp' => __('If checked, fields will use the default browser implementation.', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use custom selection dropdown', 'eightshift-forms'),
-						'checkboxIsChecked' => !$this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxLabel' => __('Disable custom selection dropdown', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use custom textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => !$this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxLabel' => __('Disable custom textarea', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use custom file picker', 'eightshift-forms'),
-						'checkboxIsChecked' => !$this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+						'checkboxLabel' => __('Disable custom file picker', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
 					],
 				]
@@ -236,17 +239,18 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 				'checkboxesFieldLabel' => __('After submitting the form', 'eightshift-forms'),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+				'checkboxesFieldHelp' => __('If checked, forms will not use these features.', 'eightshift-forms'),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Scroll to first field with an error', 'eightshift-forms'),
-						'checkboxIsChecked' => !$this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+						'checkboxLabel' => __('Disable scroll to first field with an error', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 					],
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Scroll to top of the form to see the success message', 'eightshift-forms'),
-						'checkboxIsChecked' => !$this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+						'checkboxLabel' => __('Disable scroll to top of the form to see the success message', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 					]
 				]

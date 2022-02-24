@@ -1,9 +1,6 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import Dropzone from "dropzone";
-import autosize from 'autosize';
-import Choices from 'choices.js';
 
 export const FORM_EVENTS = {
 	BEFORE_FORM_SUBMIT: 'BeforeFormSubmit',
@@ -701,17 +698,19 @@ export class Form {
 		this.preFillOnInit(option);
 
 		if (this.isCustom(select)) {
-			const choices = new Choices(select, {
-				searchEnabled: false,
-				shouldSort: false,
-				position: 'bottom',
-				allowHTML: false,
+			import('choices.js').then((Choices) => {
+				const choices = new Choices.default(select, {
+					searchEnabled: false,
+					shouldSort: false,
+					position: 'bottom',
+					allowHTML: false,
+				});
+
+				this.customSelects[formId].push(choices);
+
+				select.closest('.choices').addEventListener('focus', this.onFocusEvent);
+				select.closest('.choices').addEventListener('blur', this.onBlurEvent);
 			});
-
-			this.customSelects[formId].push(choices);
-
-			select.closest('.choices').addEventListener('focus', this.onFocusEvent);
-			select.closest('.choices').addEventListener('blur', this.onBlurEvent);
 		} else {
 			select.addEventListener('focus', this.onFocusEvent);
 			select.addEventListener('blur', this.onBlurEvent);
@@ -726,63 +725,68 @@ export class Form {
 		textarea.addEventListener('blur', this.onBlurEvent);
 
 		if (this.isCustom(textarea)) {
-			textarea.setAttribute('rows', '1');
-			textarea.setAttribute('cols', '');
+			import('autosize').then((autosize) => {
+				textarea.setAttribute('rows', '1');
+				textarea.setAttribute('cols', '');
 
-			autosize(textarea);
+				autosize.default(textarea);
+			});
 		}
 	}
 
 	// Setup file single field.
 	setupFileField = (file, formId) => {
 		if (this.isCustom(file)) {
-			// Init dropzone.
-			const myDropzone = new Dropzone(
-				file.closest(this.fieldSelector),
-				{
-					url: "/",
-					addRemoveLinks: true,
-					autoProcessQueue: false,
-					autoDiscover: false,
-					maxFiles: !file.multiple ? 1 : null,
-					dictRemoveFile: this.fileCustomRemoveLabel,
-				}
-			);
 
-			this.customFiles[formId].push(myDropzone);
+			import('dropzone').then((Dropzone) => {
+				// Init dropzone.
+				const myDropzone = new Dropzone.default(
+					file.closest(this.fieldSelector),
+					{
+						url: "/",
+						addRemoveLinks: true,
+						autoProcessQueue: false,
+						autoDiscover: false,
+						maxFiles: !file.multiple ? 1 : null,
+						dictRemoveFile: this.fileCustomRemoveLabel,
+					}
+				);
 
-			// On add files.
-			myDropzone.on("addedfiles", () => {
-				this.files[file.id] = myDropzone.files;
+				this.customFiles[formId].push(myDropzone);
+
+				// On add files.
+				myDropzone.on("addedfiles", () => {
+					this.files[file.id] = myDropzone.files;
+				});
+
+				// On add one file.
+				myDropzone.on("addedfile", (file) => {
+					setTimeout(() => {
+						file.previewTemplate.classList.add(this.CLASS_ACTIVE);
+					}, 200);
+
+					setTimeout(() => {
+						file.previewTemplate.classList.add(this.CLASS_FILLED);
+					}, 1200);
+				});
+
+				// On remove files.
+				myDropzone.on("removedfile", () => {
+					this.files[file.id] = myDropzone.files;
+				});
+
+				// Trigger on wrap click.
+				file.nextElementSibling.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					myDropzone.hiddenFileInput.click();
+				});
+
+				const button = file.parentNode.querySelector('a');
+
+				button.addEventListener('focus', this.onFocusEvent);
+				button.addEventListener('blur', this.onBlurEvent);
 			});
-
-			// On add one file.
-			myDropzone.on("addedfile", (file) => {
-				setTimeout(() => {
-					file.previewTemplate.classList.add(this.CLASS_ACTIVE);
-				}, 200);
-
-				setTimeout(() => {
-					file.previewTemplate.classList.add(this.CLASS_FILLED);
-				}, 1200);
-			});
-
-			// On remove files.
-			myDropzone.on("removedfile", () => {
-				this.files[file.id] = myDropzone.files;
-			});
-
-			// Trigger on wrap click.
-			file.nextElementSibling.addEventListener('click', (event) => {
-				event.preventDefault();
-				event.stopPropagation();
-				myDropzone.hiddenFileInput.click();
-			});
-
-			const button = file.parentNode.querySelector('a');
-
-			button.addEventListener('focus', this.onFocusEvent);
-			button.addEventListener('blur', this.onBlurEvent);
 		}
 	}
 
