@@ -703,7 +703,7 @@ export class Form {
 					searchEnabled: false,
 					shouldSort: false,
 					position: 'bottom',
-					allowHTML: false,
+					allowHTML: true,
 				});
 
 				this.customSelects[formId].push(choices);
