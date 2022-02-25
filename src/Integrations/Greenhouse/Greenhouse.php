@@ -160,6 +160,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						$output[] = [
 							'component' => 'input',
 							'inputName' => $name,
+							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
 							'inputId' => $name,
 							'inputMeta' => $description,
@@ -173,6 +174,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						$output[] = [
 							'component' => 'file',
 							'fileName' => $name,
+							'fileTracking' => $name,
 							'fileFieldLabel' => $label,
 							'fileId' => $name,
 							'fileMeta' => $description,
@@ -185,6 +187,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						$output[] = [
 							'component' => 'textarea',
 							'textareaName' => $name,
+							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaId' => $name,
 							'textareaMeta' => $description,
@@ -204,6 +207,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										'component' => 'checkbox',
 										'checkboxLabel' => $label,
 										'checkboxValue' => 1,
+										'checkboxTracking' => $name,
 									],
 								]
 							];
@@ -211,6 +215,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							$output[] = [
 								'component' => 'select',
 								'selectName' => $name,
+								'selectTracking' => $name,
 								'selectId' => $name,
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,

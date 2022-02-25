@@ -141,6 +141,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			[
 				'component' => 'input',
 				'inputName' => 'email',
+				'inputTracking' => 'email',
 				'inputFieldLabel' => __('Email', 'eightshift-forms'),
 				'inputId' => 'email',
 				'inputType' => 'text',
@@ -150,6 +151,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			[
 				'component' => 'input',
 				'inputName' => 'first_name',
+				'inputTracking' => 'first_name',
 				'inputFieldLabel' => __('First Name', 'eightshift-forms'),
 				'inputId' => 'first_name',
 				'inputType' => 'text',
@@ -157,6 +159,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			[
 				'component' => 'input',
 				'inputName' => 'last_name',
+				'inputTracking' => 'last_name',
 				'inputFieldLabel' => __('Last Name', 'eightshift-forms'),
 				'inputId' => 'last_name',
 				'inputType' => 'text',

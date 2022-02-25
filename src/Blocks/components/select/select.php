@@ -51,7 +51,9 @@ if ($isCustomSelect && $selectUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-$selectAttrs['data-tracking'] = $selectTracking ? esc_attr($selectTracking) : esc_attr($selectName);
+if ($selectTracking) {
+	$selectAttrs['data-tracking'] = esc_attr($selectTracking);
+}
 
 $selectAttrsOutput = '';
 if ($selectAttrs) {

@@ -39,7 +39,9 @@ if (empty($radioLabel)) {
 	return;
 }
 
-$radioAttrs['data-tracking'] = $radioTracking ? esc_attr($radioTracking) : esc_attr($radioName);
+if ($radioTracking) {
+	$radioAttrs['data-tracking'] = esc_attr($radioTracking);
+}
 
 if ($radioValue) {
 	$radioAttrs['value'] = esc_attr($radioValue);

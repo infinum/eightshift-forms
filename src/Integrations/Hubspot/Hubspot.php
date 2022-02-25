@@ -189,6 +189,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputName' => $name,
+							'inputTracking' => $name,
 							'inputType' => 'text',
 							'inputPlaceholder' => $placeholder,
 							'inputIsRequired' => $required,
@@ -209,6 +210,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						$item = [
 							'component' => 'input',
 							'inputName' => $name,
+							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputType' => 'number',
@@ -232,6 +234,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaFieldLabel' => $label,
 							'textareaId' => $id,
 							'textareaName' => $name,
+							'textareaTracking' => $name,
 							'textareaType' => 'textarea',
 							'textareaPlaceholder' => $placeholder,
 							'textareaIsRequired' => $required,
@@ -244,6 +247,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileFieldLabel' => $label,
 							'fileId' => $id,
 							'fileName' => $name,
+							'fileTracking' => $name,
 							'fileType' => 'text',
 							'filePlaceholder' => $placeholder,
 							'fileIsRequired' => $required,
@@ -256,6 +260,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectFieldLabel' => $label,
 							'selectId' => $id,
 							'selectName' => $name,
+							'selectTracking' => $name,
 							'selectType' => 'select',
 							'selectPlaceholder' => $placeholder,
 							'selectIsRequired' => $required,
@@ -295,6 +300,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								[
 									'component' => 'checkbox',
 									'checkboxLabel' => $label,
+									'checkboxTracking' => $name,
 								]
 							],
 						];
@@ -307,11 +313,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => array_map(
-								static function ($checkbox) {
+								static function ($checkbox) use ($name) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
 										'checkboxValue' => $checkbox['value'],
+										'checkboxTracking' => $name,
 									];
 								},
 								$options
@@ -326,11 +333,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $required,
 							'radiosContent' => array_map(
-								static function ($radio) {
+								static function ($radio) use ($name) {
 									return [
 										'component' => 'radio',
 										'radioLabel' => $radio['label'],
 										'radioValue' => $radio['value'],
+										'radioTracking' => $name,
 									];
 								},
 								$options
@@ -347,11 +355,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => array_map(
-								static function ($checkbox) {
+								static function ($checkbox) use ($name) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
 										'checkboxValue' => $checkbox['label'],
+										'checkboxTracking' => $name,
 									];
 								},
 								$options

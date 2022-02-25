@@ -41,7 +41,9 @@ if (empty($checkboxLabel)) {
 	return;
 }
 
-$checkboxAttrs['data-tracking'] = $checkboxTracking ? esc_attr($checkboxTracking) : esc_attr($checkboxName);
+if ($checkboxTracking) {
+	$checkboxAttrs['data-tracking'] = esc_attr($checkboxTracking);
+}
 
 if ($checkboxValue) {
 	$checkboxAttrs['value'] = esc_attr($checkboxValue);

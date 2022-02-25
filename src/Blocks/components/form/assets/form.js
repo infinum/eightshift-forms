@@ -655,11 +655,25 @@ export class Form {
 			const tracking = item.getAttribute(this.DATA_ATTR_TRACKING);
 
 			if (tracking) {
+				const {type, checked} = item;
+
+				if ((type === 'checkbox' || type === 'radio') && !checked) {
+					return;
+				}
+
 				// Check if you have this data attr and if so use select label.
 				if (item.hasAttribute(this.DATA_ATTR_TRACKING_SELECT_LABEL)) {
 					data[tracking] = item.selectedOptions[0].label;
 				} else {
-					data[tracking] = item.value;
+					if (type === 'checkbox') {
+						if (typeof data[tracking] === 'undefined') {
+							data[tracking] = [];
+						}
+
+						data[tracking].push(item.value);
+					} else {
+						data[tracking] = item.value;
+					}
 				}
 			}
 		});

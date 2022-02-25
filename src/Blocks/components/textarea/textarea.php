@@ -51,7 +51,9 @@ if ($isCustomTextarea && $textareaUseCustom) {
 	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
 }
 
-$textareaAttrs['data-tracking'] = $textareaTracking ? esc_attr($textareaTracking) : esc_attr($textareaName);
+if ($textareaTracking) {
+	$textareaAttrs['data-tracking'] = esc_attr($textareaTracking);
+}
 
 if ($textareaPlaceholder) {
 	$textareaAttrs['placeholder'] = esc_attr($textareaPlaceholder);

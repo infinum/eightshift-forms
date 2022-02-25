@@ -173,6 +173,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
+						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'text',
@@ -184,6 +185,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
+						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'number',
