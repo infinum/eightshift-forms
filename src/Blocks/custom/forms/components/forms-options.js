@@ -1,6 +1,5 @@
 /* global esFormsBlocksLocalization */
 
-
 import React, { useState } from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
@@ -46,6 +45,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
+	let geolocationApi = '';
 
 	// Custom block forms style options.
 	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.formsBlockStyleOptions)) {
@@ -55,6 +55,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	// Is geolocation active.
 	if (typeof esFormsBlocksLocalization !== 'undefined' && esFormsBlocksLocalization?.useGeolocation) {
 		formsUseGeolocation = true;
+
+		if (esFormsBlocksLocalization?.geolocationApi) {
+			geolocationApi = esFormsBlocksLocalization.geolocationApi;
+		}
 	}
 
 	const formSelectOptions = getFetchWpApi(
@@ -185,9 +189,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								: (
 									<>
 										<p>{__('If you can\'t find a country, start typing its name while the dropdown is open.', 'eightshift-forms')}</p>
-										<ExternalLink href='/wp-json/eightshift-forms/v1/geolocation-countries'>
-											{__('Country list', 'eightshift-form')}
-										</ExternalLink>
 									</>
 								)
 						}
@@ -232,6 +233,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						>
 							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
 							<p>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
+							{geolocationApi && 
+								<p>{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-form')}</ExternalLink>.</p>
+							}
 
 							<br />
 

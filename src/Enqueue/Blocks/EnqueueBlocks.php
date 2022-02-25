@@ -13,6 +13,7 @@ namespace EightshiftForms\Enqueue\Blocks;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -178,8 +179,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['mediaBreakpoints'] = apply_filters($breakpointsFilterName, []);
 			$output['postType'] = get_post_type() ?? '';
 
+			$restApiUrl = get_rest_url(get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
+
 			// Check if Geolocation data is set and valid.
 			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+			$output['geolocationApi'] = $restApiUrl . GeolocationCountriesRoute::ROUTE_NAME;
 		}
 
 		return [

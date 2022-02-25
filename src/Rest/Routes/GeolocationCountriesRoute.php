@@ -19,6 +19,13 @@ use EightshiftForms\Geolocation\GeolocationInterface;
 class GeolocationCountriesRoute extends AbstractBaseRoute
 {
 	/**
+	 * Route name
+	 *
+	 * @var string
+	 */
+	public const ROUTE_NAME = 'geolocation-countries';
+
+	/**
 	 * Instance variable of ClientInterface data.
 	 *
 	 * @var GeolocationInterface
@@ -42,7 +49,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/geolocation-countries';
+		return '/' . self::ROUTE_NAME;
 	}
 
 	/**
