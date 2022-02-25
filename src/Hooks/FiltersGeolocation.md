@@ -15,9 +15,9 @@ add_filter('es_forms_geolocation_countries_list', [$this, 'getGeolocationCountri
 /**
  * Change the default geolocation countries list.
  *
- * @param array<string> $countries Countries list from internal db.
+ * @param array<mixed> $countries Countries list from internal db.
  *
- * @return array<string>
+ * @return array<mixed>
  */
 public function getGeolocationCountriesList(array $countries): array
 {
