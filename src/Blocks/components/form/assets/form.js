@@ -645,7 +645,7 @@ export class Form {
 	// Build GTM data for the data layer.
 	getGtmData(element, eventName) {
 		const items = element.querySelectorAll(`[${this.DATA_ATTR_TRACKING}]`);
-		const data = {};
+		const dataTemp = {};
 
 		if (!items.length) {
 			return {};
@@ -657,26 +657,54 @@ export class Form {
 			if (tracking) {
 				const {type, checked} = item;
 
+				if (typeof dataTemp[tracking] === 'undefined') {
+					if (type === 'checkbox') {
+						dataTemp[tracking] = [];
+					} else {
+						dataTemp[tracking] = '';
+					}
+				}
+
 				if ((type === 'checkbox' || type === 'radio') && !checked) {
 					return;
 				}
 
 				// Check if you have this data attr and if so use select label.
 				if (item.hasAttribute(this.DATA_ATTR_TRACKING_SELECT_LABEL)) {
-					data[tracking] = item.selectedOptions[0].label;
-				} else {
-					if (type === 'checkbox') {
-						if (typeof data[tracking] === 'undefined') {
-							data[tracking] = [];
-						}
-
-						data[tracking].push(item.value);
-					} else {
-						data[tracking] = item.value;
-					}
+					dataTemp[tracking] = item.selectedOptions[0].label;
+					return;
 				}
+
+				if (type === 'checkbox') {
+					dataTemp[tracking].push(item.value);
+					return;
+				}
+
+				dataTemp[tracking] = item.value;
 			}
 		});
+
+		const data = {};
+
+		for (const [key, value] of Object.entries(dataTemp)) {
+			if (Array.isArray(value)) {
+				switch (value.length) {
+					case 0:
+						data[key] = false;
+						break;
+					case 1:
+						if (value[0] === 'on') {
+							data[key] = true;
+						}
+						break;
+					default:
+						data[key] = value;
+						break;
+				}
+			} else {
+				data[key] = value;
+			}
+		}
 
 		return Object.assign({}, { event: eventName, ...data });
 	}
