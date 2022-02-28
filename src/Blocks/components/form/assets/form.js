@@ -274,8 +274,10 @@ export class Form {
 
 						// Replace string templates used for passing data via url.
 						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
-							const { value, name } = JSON.parse(val);
-							redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
+							if (typeof val === 'string') {
+								const { value, name } = JSON.parse(val);
+								redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
+							}
 						}
 
 						// Do the actual redirect after some time.
