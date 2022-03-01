@@ -321,6 +321,17 @@ class HubspotClient implements ClientInterface
 			if ($requiredField) {
 				$msg = 'REQUIRED_FIELD';
 			}
+
+			$hasRecaptchaEnabled = array_filter(
+				$errors,
+				static function ($error) {
+					return $error['errorType'] === 'FORM_HAS_RECAPTCHA_ENABLED';
+				}
+			);
+
+			if ($hasRecaptchaEnabled) {
+				$msg = 'FORM_HAS_RECAPTCHA_ENABLED';
+			}
 		}
 
 		switch ($msg) {
@@ -332,6 +343,8 @@ class HubspotClient implements ClientInterface
 				return 'hubspotInvalidEmailError';
 			case 'REQUIRED_FIELD':
 				return 'hubspotMissingFieldsError';
+			case 'FORM_HAS_RECAPTCHA_ENABLED':
+				return 'hubspotHasRecaptchaEnabledError';
 			default:
 				return 'submitWpError';
 		}

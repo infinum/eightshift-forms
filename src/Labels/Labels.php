@@ -202,6 +202,7 @@ class Labels implements LabelsInterface
 			'hubspotInvalidRequestError' => __('Something is not right with the application. Please check all the fields and try again.', 'eightshift-forms'),
 			'hubspotInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
 			'hubspotMissingFieldsError' => __('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
+			'hubspotHasRecaptchaEnabledError' => __('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again.', 'eightshift-forms'),
 			'hubspotSuccess' => __('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
