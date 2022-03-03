@@ -156,7 +156,7 @@ class Labels implements LabelsInterface
 			'greenhouseUnsupportedFileTypeError' => __('An unsupported file type was uploaded. Please try again.', 'eightshift-forms'),
 			'greenhouseInvalidFirstNameError' => __('"First name" is in an incorrect format.', 'eightshift-forms'),
 			'greenhouseInvalidLastNameError' => __('"Last name" is in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'greenhouseInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
 			'greenhouseInvalidFirstNameLastNameEmailError' => __('"First name", "Last name", and "E-mail" are in an incorrect format.', 'eightshift-forms'),
 			'greenhouseInvalidFirstNameLastNameError' => __('"First name" and "Last name" are in an incorrect format.', 'eightshift-forms'),
 			'greenhouseInvalidFirstNameEmailError' => __('"First name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
@@ -183,7 +183,7 @@ class Labels implements LabelsInterface
 			'mailchimpErrorSettingsMissing' => __('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailchimpBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpInvalidResourceError' => __('Something is not right with the resource. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'mailchimpInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
 			'mailchimpMissingFieldsError' => __('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpSuccess' => __('Newsletter subscription successful. Thank you!', 'eightshift-forms'),
 		];
@@ -200,7 +200,7 @@ class Labels implements LabelsInterface
 			'hubspotErrorSettingsMissing' => __('Hubspot integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'hubspotBadRequestError' => __('Something is not with the application. Please check all the fields and try again.', 'eightshift-forms'),
 			'hubspotInvalidRequestError' => __('Something is not right with the application. Please check all the fields and try again.', 'eightshift-forms'),
-			'hubspotInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'hubspotInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
 			'hubspotMissingFieldsError' => __('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
 			'hubspotHasRecaptchaEnabledError' => __('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again.', 'eightshift-forms'),
 			'hubspotSuccess' => __('The form was submitted successfully. Thank you!', 'eightshift-forms'),
@@ -217,7 +217,7 @@ class Labels implements LabelsInterface
 		return [
 			'mailerliteErrorSettingsMissing' => __('MailerLite integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailerliteInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'mailerliteInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
 			'mailerliteEmailTemporarilyBlockedError' => __('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
 			'mailerliteSuccess' => __('The newsletter was successful. Thank you!', 'eightshift-forms'),
 		];
@@ -233,7 +233,7 @@ class Labels implements LabelsInterface
 		return [
 			'goodbitsErrorSettingsMissing' => __('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => __('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'goodbitsInvalidEmailError' => __('"E-mail" is in an incorrect format.', 'eightshift-forms'),
+			'goodbitsInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
 			'goodbitsUnauthorizedError' => __('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
 			'goodbitsSuccess' => __('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
