@@ -21,6 +21,7 @@ $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $mani
 $inputType = Components::checkAttr('inputType', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
+$inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
 $inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
 $inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
 $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
@@ -94,6 +95,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldContent' => $input,
 			'fieldId' => $inputId,
 			'fieldName' => $inputName,
+			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',

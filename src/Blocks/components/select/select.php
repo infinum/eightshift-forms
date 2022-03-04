@@ -24,6 +24,7 @@ $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
+$selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
 $selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
@@ -90,6 +91,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldContent' => $select,
 			'fieldId' => $selectId,
 			'fieldName' => $selectName,
+			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
 		]),
 		[

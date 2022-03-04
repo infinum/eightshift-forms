@@ -21,6 +21,7 @@ $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
 $fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
+$fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
@@ -108,6 +109,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 			'fieldContent' => $file,
 			'fieldId' => $fileId,
 			'fieldName' => $fileName,
+			'fieldIsRequired' => $fileIsRequired,
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,

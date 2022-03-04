@@ -299,52 +299,63 @@ class HubspotClient implements ClientInterface
 	 */
 	private function getErrorMsg(string $msg, array $errors = []): string
 	{
-		if ($errors) {
-			$invalidEmail = array_filter(
-				$errors,
-				static function ($error) {
-					return $error['errorType'] === 'INVALID_EMAIL';
-				}
-			);
-
-			if ($invalidEmail) {
-				$msg = 'INVALID_EMAIL';
-			}
-
-			$requiredField = array_filter(
-				$errors,
-				static function ($error) {
-					return $error['errorType'] === 'REQUIRED_FIELD';
-				}
-			);
-
-			if ($requiredField) {
-				$msg = 'REQUIRED_FIELD';
-			}
-
-			$hasRecaptchaEnabled = array_filter(
-				$errors,
-				static function ($error) {
-					return $error['errorType'] === 'FORM_HAS_RECAPTCHA_ENABLED';
-				}
-			);
-
-			if ($hasRecaptchaEnabled) {
-				$msg = 'FORM_HAS_RECAPTCHA_ENABLED';
-			}
+		if ($errors && isset($errors[0])) {
+			$msg = $errors[0]['errorType'];
 		}
 
 		switch ($msg) {
+			// Internal.
 			case 'Bad Request':
 				return 'hubspotBadRequestError';
 			case 'The request is not valid':
 				return 'hubspotInvalidRequestError';
+
+			// Hubspot.
+			case 'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED':
+				return 'hubspotMaxNumberOfSubmittedValuesExceededError';
 			case 'INVALID_EMAIL':
 				return 'hubspotInvalidEmailError';
+			case 'BLOCKED_EMAIL':
+				return 'hubspotBlockedEmailError';
 			case 'REQUIRED_FIELD':
-				return 'hubspotMissingFieldsError';
+				return 'hubspotRequiredFieldError';
+			case 'INVALID_NUMBER':
+				return 'hubspotInvalidNumberError';
+			case 'INPUT_TOO_LARGE':
+				return 'hubspotInputTooLargeError';
+			case 'FIELD_NOT_IN_FORM_DEFINITION':
+				return 'hubspotFieldNotInFormDefinitionError';
+			case 'NUMBER_OUT_OF_RANGE':
+				return 'hubspotNumberOutOfRangeError';
+			case 'VALUE_NOT_IN_FIELD_DEFINITION':
+				return 'hubspotValueNotInFieldDefinitionError';
+			case 'INVALID_METADATA':
+				return 'hubspotInvalidMetadataError';
+			case 'INVALID_GOTOWEBINAR_WEBINAR_KEY':
+				return 'hubspotInvalidGotowebinarWebinarKeyError';
+			case 'INVALID_HUTK':
+				return 'hubspotInvalidHutkError';
+			case 'INVALID_IP_ADDRESS':
+				return 'hubspotInvalidIpAddressError';
+			case 'INVALID_PAGE_URI':
+				return 'hubspotInvalidPageUriError';
+			case 'INVALID_LEGAL_OPTION_FORMAT':
+				return 'hubspotInvalidLegalOptionFormatError';
+			case 'MISSING_PROCESSING_CONSENT':
+				return 'hubspotMissingProcessingConsentError';
+			case 'MISSING_PROCESSING_CONSENT_TEXT':
+				return 'hubspotMissingProcessingConsentTextError';
+			case 'MISSING_COMMUNICATION_CONSENT_TEXT':
+				return 'hubspotMissingCommunicationConsentTextError';
+			case 'MISSING_LEGITIMATE_INTEREST_TEXT':
+				return 'hubspotMissingLegitimateInterestTextError';
+			case 'DUPLICATE_SUBSCRIPTION_TYPE_ID':
+				return 'hubspotDuplicateSubscriptionTypeIdError';
 			case 'FORM_HAS_RECAPTCHA_ENABLED':
 				return 'hubspotHasRecaptchaEnabledError';
+			case 'ERROR 429	':
+				return 'hubspotError429Error';
+
 			default:
 				return 'submitWpError';
 		}

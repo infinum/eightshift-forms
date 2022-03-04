@@ -14,6 +14,7 @@ $manifest = Components::getManifest(__DIR__);
 $checkboxesId = Components::checkAttr('checkboxesId', $attributes, $manifest);
 $checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesName = Components::checkAttr('checkboxesName', $attributes, $manifest);
+$checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
 
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
@@ -51,6 +52,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		Components::props('field', $attributes, [
 			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesId,
+			'fieldIsRequired' => $checkboxesIsRequired,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

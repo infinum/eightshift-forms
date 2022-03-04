@@ -52,6 +52,7 @@ $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
+$fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -61,6 +62,11 @@ $fieldClass = Components::classnames([
 	Components::selector($blockJsClass, $blockJsClass),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
+]);
+
+$labelClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'label'),
+	Components::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
 $fieldTag = 'div';
@@ -103,7 +109,7 @@ if (has_filter($filterName)) {
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
-				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+				class="<?php echo esc_attr($labelClass); ?>"
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
 				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">

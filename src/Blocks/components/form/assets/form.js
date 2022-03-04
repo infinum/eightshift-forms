@@ -538,6 +538,9 @@ export class Form {
 				item.classList.remove(this.CLASS_HAS_ERROR);
 			});
 
+			// Remove focus from last input.
+			document.activeElement.blur();
+
 			// Dispatch event.
 			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_RESET);
 		}
@@ -731,6 +734,7 @@ export class Form {
 	setupInputField = (input) => {
 		this.preFillOnInit(input);
 
+		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
 	}
@@ -765,6 +769,7 @@ export class Form {
 	setupTextareaField = (textarea) => {
 		this.preFillOnInit(textarea);
 
+		textarea.addEventListener('keydown', this.onFocusEvent);
 		textarea.addEventListener('focus', this.onFocusEvent);
 		textarea.addEventListener('blur', this.onBlurEvent);
 

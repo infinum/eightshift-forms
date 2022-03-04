@@ -72,6 +72,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"fieldIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
 		"fieldOrder": {
 			"type": "integer"
 		},

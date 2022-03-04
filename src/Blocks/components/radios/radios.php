@@ -14,6 +14,7 @@ $manifest = Components::getManifest(__DIR__);
 $radiosId = Components::checkAttr('radiosId', $attributes, $manifest);
 $radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
+$radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
 
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
@@ -51,6 +52,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $radios,
 			'fieldName' => $radiosName,
+			'fieldIsRequired' => $radiosIsRequired,
 			'fieldId' => $radiosId,
 		]),
 		[

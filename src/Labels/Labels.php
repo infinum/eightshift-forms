@@ -197,13 +197,35 @@ class Labels implements LabelsInterface
 	private function getHubspotLabels(): array
 	{
 		return [
+			// Internal.
 			'hubspotErrorSettingsMissing' => __('Hubspot integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'hubspotBadRequestError' => __('Something is not with the application. Please check all the fields and try again.', 'eightshift-forms'),
 			'hubspotInvalidRequestError' => __('Something is not right with the application. Please check all the fields and try again.', 'eightshift-forms'),
-			'hubspotInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
-			'hubspotMissingFieldsError' => __('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
-			'hubspotHasRecaptchaEnabledError' => __('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again.', 'eightshift-forms'),
 			'hubspotSuccess' => __('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+
+			// Hubspot.
+			'hubspotMaxNumberOfSubmittedValuesExceededError' => __('More than 1000 fields were included in the response. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidEmailError' => __('Enter a valid email address.', 'eightshift-forms'),
+			'hubspotBlockedEmailError' => __('We are sorry but you email was blocked in our blacklist.', 'eightshift-forms'),
+			'hubspotRequiredFieldError' => __('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
+			'hubspotInvalidNumberError' => __('Some of number fields are not a valid number value.', 'eightshift-forms'),
+			'hubspotInputTooLargeError' => __('The value in the field is too large for the type of field.', 'eightshift-forms'),
+			'hubspotFieldNotInFormDefinitionError' => __('The field was included in the form submission but is not in the form definition.', 'eightshift-forms'),
+			'hubspotNumberOutOfRangeError' => __('The value of a number field outside the range specified in the field settings.', 'eightshift-forms'),
+			'hubspotValueNotInFieldDefinitionError' => __('The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options.', 'eightshift-forms'),
+			'hubspotInvalidMetadataError' => __('The context object contains an unexpected attribute. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidGotowebinarWebinarKeyError' => __('The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidHutkError' => __('The hutk field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidIpAddressError' => __('The ipAddress field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidPageUriError' => __('The pageUri field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidLegalOptionFormatError' => __('LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotMissingProcessingConsentError' => __('The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotMissingProcessingConsentTextError' => __('The text field for processing consent was missing. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotMissingCommunicationConsentTextError' => __('The communication consent text was missing for a subscription. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotMissingLegitimateInterestTextError' => __('The legitimate interest consent text was missing. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotDuplicateSubscriptionTypeIdError' => __('The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotHasRecaptchaEnabledError' => __('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotError429Error' => __('The HubSpot account has reached the rate limit. Please contact website administrator.', 'eightshift-forms'),
 		];
 	}
 
