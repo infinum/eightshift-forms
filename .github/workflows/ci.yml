@@ -13,74 +13,103 @@ on:
     paths-ignore:
       - '**.md'
 
-# Cancels all previous workflow runs for the same branch that have not yet completed.
-concurrency:
-  # The concurrency group contains the workflow name and the branch name.
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-    phpcs:
-      name: PHPCS check on PHP ${{ matrix.php }}
-      runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        matrix:
-          php: ['7.3', '7.4']
+  lint:
+    name: File linting on Node v${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 15.x ]
 
-      steps:
-        # Checkout repository
-        - name: Checkout
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        # Setup PHP versions, run checks
-        - name: PHP setup
-          uses: shivammathur/setup-php@v2
-          with:
-            php-version: ${{ matrix.php }}
-            coverage: none
-            tools: cs2pr
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
 
-        # Install dependencies and handle caching in one go.
-        # @link https://github.com/marketplace/actions/install-composer-dependencies
-        - name: Install Composer dependencies
-          uses: ramsey/composer-install@v2
-          with:
-            dependency-versions: highest
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
 
-        - name: Check coding standards using PHPCS
-          continue-on-error: true
-          run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
+      - name: Install node packages
+        run: npm install
 
-        - name: Show PHPCS results in PR
-          run: cs2pr ./phpcs-report.xml
+      - name: Run linters
+        run: npm run lint
 
-    phpstan:
-      name: PHPStan check
-      runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        matrix:
-          php: ['7.4']
+  phpcs:
+    name: PHPCS check on PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.3', '7.4' ]
 
-      steps:
-        # Checkout repository
-        - name: Checkout
-          uses: actions/checkout@v2
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        # Setup PHP versions, run checks
-        - name: PHP setup
-          uses: shivammathur/setup-php@v2
-          with:
-            php-version: ${{ matrix.php }}
-            coverage: none
+      # Setup PHP versions, run checks
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: cs2pr
 
-        # Install dependencies and handle caching in one go.
-        # @link https://github.com/marketplace/actions/install-composer-dependencies
-        - name: Install Composer dependencies
-          uses: ramsey/composer-install@v1
-          with:
-            dependency-versions: highest
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: highest
 
-        - name: Check code consistency using PHPStan
-          run: composer analyze
+      - name: Check coding standards using PHPCS
+        continue-on-error: true
+        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
+
+      - name: Show PHPCS results in PR
+        run: cs2pr ./phpcs-report.xml
+
+  phpstan:
+    name: PHPStan check
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.allowed_failure }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4' ]
+        allowed_failure: [ true ]
+
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Setup PHP versions, run checks
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: highest
+
+      - name: Check code consistency using PHPStan
+        run: composer analyze
