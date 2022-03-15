@@ -73,6 +73,7 @@ class HubspotClient implements ClientInterface
 						'id' => $value,
 						'title' => $item['name'] ?? '',
 						'fields' => $fields,
+						'submitButtonText' => $item['submitText'] ?? '',
 					];
 				}
 
