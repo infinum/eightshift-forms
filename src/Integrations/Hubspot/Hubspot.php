@@ -119,13 +119,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return [];
 		}
 
-		return $this->getFields($item['fields'], $formId, $ssr);
+		return $this->getFields($item, $formId, $ssr);
 	}
 
 	/**
 	 * Map Hubspot fields to our components.
 	 *
-	 * @param array<string, mixed> $data Fields.
+	 * @param array<string, mixed> $data Item object.
 	 * @param string $formId Form ID.
 	 * @param bool $ssr Does form load using ssr.
 	 *
@@ -139,7 +139,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		foreach ($data as $key => $item) {
+		if (!$data['fields']) {
+			return $output;
+		}
+
+		foreach ($data['fields'] as $key => $item) {
 			if (empty($item)) {
 				continue;
 			}
@@ -374,6 +378,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
+			'submitValue' => $data['submitButtonText'] ?? '',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
