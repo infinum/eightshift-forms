@@ -13,6 +13,12 @@ on:
     paths-ignore:
       - '**.md'
 
+# Prevent multiple unnecessary CI runs on the same branch.
+# Link: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: File linting on Node v${{ matrix.node }}
@@ -20,26 +26,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 14, 15.x ]
+        node: [ 14, 16.x ]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Set Node.js version
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
+          cache: 'npm'
 
       - name: Install node packages
         run: npm install
@@ -71,9 +68,10 @@ jobs:
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
           dependency-versions: highest
+          ignore-cache: "yes"
 
       - name: Check coding standards using PHPCS
         continue-on-error: true
@@ -107,9 +105,10 @@ jobs:
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
           dependency-versions: highest
+          ignore-cache: "yes"
 
       - name: Check code consistency using PHPStan
         run: composer analyze
