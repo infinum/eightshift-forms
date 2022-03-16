@@ -64,6 +64,8 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
           tools: cs2pr
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
@@ -101,6 +103,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
