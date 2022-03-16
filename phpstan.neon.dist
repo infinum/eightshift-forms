@@ -1,21 +1,23 @@
 includes:
-    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
-    level: max
-    inferPrivatePropertyTypeFromConstructor: true
-    treatPhpDocTypesAsCertain: false
-    scanFiles:
-        - vendor/wp-cli/wp-cli/php/class-wp-cli.php
-    paths:
-        - src/
-    excludes_analyse:
-        - src/**/*Example.php
-    ignoreErrors:
-        # Block templates
-        - '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
-        - '#^Variable \$attributes might not be defined\.#'
-        - '#^Variable \$innerBlockContent might not be defined\.#'
-        - '#^Variable \$this might not be defined\.#'
-        - '#^Variable \$templatePath might not be defined\.#'
-        # WP-CLI accepts a class as callable
-        - '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'
+	level: 6
+	inferPrivatePropertyTypeFromConstructor: true
+	treatPhpDocTypesAsCertain: false
+	scanFiles:
+		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
+	bootstrapFiles:
+		- %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+	paths:
+		- src/
+	excludePaths:
+		- src/**/*Example.php
+	ignoreErrors:
+		# Block templates
+		- '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
+		- '#^Variable \$attributes might not be defined\.#'
+		- '#^Variable \$innerBlockContent might not be defined\.#'
+		- '#^Variable \$this might not be defined\.#'
+		- '#^Variable \$templatePath might not be defined\.#'
+		# WP-CLI accepts a class as callable
+		- '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'
