@@ -42,7 +42,7 @@ jobs:
         run: npm install
 
       - name: Run linters
-        run: npm run lint
+        run: npm run lintJs && npm run lintStyle
 
   phpcs:
     name: PHPCS check on PHP ${{ matrix.php }}
