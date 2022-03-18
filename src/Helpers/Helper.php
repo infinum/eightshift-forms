@@ -142,7 +142,7 @@ class Helper
 	 */
 	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
 	{
-		return get_delete_post_link((int) $formId, '', $permanent); // @phpstan-ignore-line
+		return get_delete_post_link((int) $formId, '', $permanent);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Helper
 	{
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		return !empty($plugin_page) ?? false; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+		return !empty($plugin_page); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 	}
 
 	/**

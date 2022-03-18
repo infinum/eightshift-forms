@@ -80,7 +80,7 @@ class MailchimpClient implements MailchimpClientInterface
 			$fields = $this->getMailchimpListFields($itemId);
 
 			if ($itemId && $fields) {
-				$output[$itemId] = $fields ?? [];
+				$output[$itemId] = $fields;
 
 				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
 			}

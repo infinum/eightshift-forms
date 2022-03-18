@@ -107,7 +107,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
+		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),

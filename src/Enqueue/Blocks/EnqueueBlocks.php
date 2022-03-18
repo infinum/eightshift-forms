@@ -177,7 +177,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['customDataBlockOptions'] = apply_filters($customDataOptionsFilterName, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
 			$output['mediaBreakpoints'] = apply_filters($breakpointsFilterName, []);
-			$output['postType'] = get_post_type() ?? '';
+			$output['postType'] = get_post_type() ? get_post_type() : '';
 
 			$restApiUrl = get_rest_url(get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
 

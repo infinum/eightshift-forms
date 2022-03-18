@@ -106,7 +106,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
+		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
@@ -295,7 +295,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 			switch ($tagsShow) {
 				case 'select':
-					$selectedOption = explode(', ', $tagsSelected) ?? [];
+					$selectedOption = explode(', ', $tagsSelected);
 
 					$output[] = [
 						'component' => 'select',
@@ -326,7 +326,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					];
 					break;
 				case 'checkboxes':
-					$selectedOption = explode(', ', $tagsSelected) ?? [];
+					$selectedOption = explode(', ', $tagsSelected);
 
 					$checkboxesFieldName = self::FIELD_MAILCHIMP_TAGS_KEY;
 

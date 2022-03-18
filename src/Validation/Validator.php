@@ -115,7 +115,7 @@ class Validator extends AbstractValidation
 			foreach ($userPatterns as $pattern) {
 				$pattern = explode(' : ', $pattern);
 
-				if (empty($pattern) || !isset($pattern[0]) || !isset($pattern[1])) {
+				if (!isset($pattern[0]) || !isset($pattern[1])) {
 						continue;
 				};
 

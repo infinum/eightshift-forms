@@ -88,7 +88,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$formAdditionalProps['formType'] = $type;
 
 		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) $formAdditionalProps['ssr'] ?? false;
+		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
 
 		// Return form to the frontend.
 		return $this->buildForm(

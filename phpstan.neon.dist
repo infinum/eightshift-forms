@@ -19,5 +19,3 @@ parameters:
 		- '#^Variable \$innerBlockContent might not be defined\.#'
 		- '#^Variable \$this might not be defined\.#'
 		- '#^Variable \$templatePath might not be defined\.#'
-		# WP-CLI accepts a class as callable
-		- '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'

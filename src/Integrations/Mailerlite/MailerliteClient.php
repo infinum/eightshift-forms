@@ -81,13 +81,13 @@ class MailerliteClient implements ClientInterface
 			$fields = $this->getMailerliteListFields();
 
 			if ($itemId && $fields) {
-				$output = $fields ?? [];
+				$output = $fields;
 
 				set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output ?? [];
+		return $output;
 	}
 
 	/**

@@ -50,28 +50,26 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 		<div class="<?php echo \esc_attr("{$sectionClass}__section"); ?>">
 			<div class="<?php echo \esc_attr("{$sectionClass}__content"); ?>">
-				<?php if (!empty($adminSettingsSidebar)) { ?>
-					<ul class="<?php echo \esc_attr("{$sectionClass}__menu"); ?>">
-						<?php foreach ($adminSettingsSidebar as $item) { ?>
-							<?php
-							$label = $item['label'] ?? '';
-							$value = $item['value'] ?? '';
-							$icon = $item['icon'] ?? '';
-							?>
-							<li class="<?php echo \esc_attr("{$sectionClass}__menu-item"); ?>">
-								<a
-									href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
-									class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
-								>
-									<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-										<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-										<?php echo esc_html($label); ?>
-									</span>
-								</a>
-							</li>
-						<?php } ?>
-					</ul>
-				<?php } ?>
+				<ul class="<?php echo \esc_attr("{$sectionClass}__menu"); ?>">
+					<?php foreach ($adminSettingsSidebar as $item) { ?>
+						<?php
+						$label = $item['label'] ?? '';
+						$value = $item['value'] ?? '';
+						$icon = $item['icon'] ?? '';
+						?>
+						<li class="<?php echo \esc_attr("{$sectionClass}__menu-item"); ?>">
+							<a
+								href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
+								class="<?php echo \esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+							>
+								<span class="<?php echo \esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
+									<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<?php echo esc_html($label); ?>
+								</span>
+							</a>
+						</li>
+					<?php } ?>
+				</ul>
 			</div>
 		</div>
 	</div>

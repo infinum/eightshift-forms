@@ -39,26 +39,24 @@ class FormsListing implements FormListingInterface
 
 		$output = [];
 
-		$permanent = $status === 'trash' ?? false;
+		$permanent = $status === 'trash';
 
-		if ($theQuery->have_posts()) {
-			while ($theQuery->have_posts()) {
-				$theQuery->the_post();
+		while ($theQuery->have_posts()) {
+			$theQuery->the_post();
 
-				$id = (int) get_the_ID();
+			$id = (int) get_the_ID();
 
-				// Output predefined array of data.
-				$output[] = [
-					'id' => $id,
-					'title' => get_the_title($id),
-					'status' => \get_post_status($id),
-					'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
-					'settingsLocationLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsLocation::SETTINGS_TYPE_KEY) : '',
-					'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
-					'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
-					'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
-				];
-			}
+			// Output predefined array of data.
+			$output[] = [
+				'id' => $id,
+				'title' => get_the_title($id),
+				'status' => \get_post_status($id),
+				'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
+				'settingsLocationLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsLocation::SETTINGS_TYPE_KEY) : '',
+				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
+				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
+				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
+			];
 		}
 
 		return $output;

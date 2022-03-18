@@ -103,10 +103,10 @@ class Blocks extends AbstractBlocks
 	 *
 	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
 	 *
-	 * @param array[] $categories Array of categories for block types.
+	 * @param array<mixed[]> $categories Array of categories for block types.
 	 * @param \WP_Post $post Post being loaded.
 	 *
-	 * @return array[] Array of categories for block types.
+	 * @return array<mixed[]> Array of categories for block types.
 	 */
 	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{
@@ -129,10 +129,10 @@ class Blocks extends AbstractBlocks
 	 *
 	 * @hook block_categories_all Available from WP 5.8.
 	 *
-	 * @param array[] $categories Array of categories for block types.
+	 * @param array<mixed[]> $categories Array of categories for block types.
 	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
-	 * @return array[] Array of categories for block types.
+	 * @return array<mixed[]> Array of categories for block types.
 	 */
 	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
 	{
