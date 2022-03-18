@@ -32,13 +32,16 @@ jobs:
         with:
           php-version: '7.4'
           coverage: pcov
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: "ramsey/composer-install@v1"
+        uses: ramsey/composer-install@v2
         with:
           dependency-versions: highest
+          ignore-cache: "yes"
 
       - name: Run unit tests
         run: composer test:unit

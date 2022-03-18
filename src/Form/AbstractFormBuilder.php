@@ -290,6 +290,6 @@ abstract class AbstractFormBuilder
 			}
 		}
 
-		return $output ?? '';
+		return $output ? $output : '';
 	}
 }

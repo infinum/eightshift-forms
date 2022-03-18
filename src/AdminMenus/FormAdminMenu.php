@@ -61,7 +61,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	/**
 	 * Menu position for this admin menu.
 	 *
-	 * @var string
+	 * @var int
 	 */
 	public const ADMIN_MENU_POSITION = 4;
 

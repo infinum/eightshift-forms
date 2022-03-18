@@ -24,7 +24,7 @@
 		"__stylelintTheme": "stylelint src/**/*.scss",
 		"lintStyle": "npm run __stylelintTheme",
 		"lintJs": "npm run __eslintTheme",
-		"lint": "npm run lintJs && npm run lintStyle && composer standards:check -- --filter=gitstaged",
+		"lint": "npm run lintJs && npm run lintStyle && composer standards:check",
 		"start": "webpack --progress --watch --mode development",
 		"build": "webpack --progress --mode production",
 		"test": "wp boilerplate"

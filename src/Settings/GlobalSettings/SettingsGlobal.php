@@ -52,7 +52,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 			$value = $data['value'] ?? '';
 
 			// Populate sidebar data.
-			$output[$value] = $data ?? [];
+			$output[$value] = $data;
 		}
 
 		// Return all settings data.
@@ -111,7 +111,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 				continue;
 			}
 
-			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
+			$allSettings[$key] = $filter['settingsSidebar'] ?? ''; // @phpstan-ignore-line
 		}
 
 		return $allSettings;

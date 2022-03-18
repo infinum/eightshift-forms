@@ -266,7 +266,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Provide custom countries.
 		$filterName = Filters::getGeolocationFilterName('countries');
 		if (has_filter($filterName)) {
-			return apply_filters($filterName, $output ?? []);
+			return apply_filters($filterName, $output ? $output : []);
 		}
 
 		return $output;
@@ -284,10 +284,10 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		$country = array_filter(
 			$this->getCountries(),
 			static function ($item) use ($value) {
-				$itemValue = $item['value'] ?? '';
+				$itemValue = $item['value'] ? $item['value'] : '';
 				return $itemValue === $value;
 			}
-		) ?? [];
+		);
 
 		if (!$country) {
 			return [];
@@ -299,7 +299,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return [];
 		}
 
-		return array_flip($country['group']) ?? [];
+		return array_flip($country['group']);
 	}
 
 	/**

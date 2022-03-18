@@ -98,7 +98,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			}
 
 			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : []; // @phpstan-ignore-line
+			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
 			if (!Variables::skipFormValidation()) {

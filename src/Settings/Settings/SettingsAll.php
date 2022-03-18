@@ -37,7 +37,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 
 		// Loop all settings.
 		foreach ($this->getAllSettingsSidebars() as $filter) {
-			// Determin if there is a filter for settings page.
+			// Determine if there is a filter for settings page.
 			if (!has_filter($filter)) {
 				continue;
 			}
@@ -54,7 +54,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			$value = $data['value'] ?? '';
 
 			// Populate sidebar data.
-			$output[$value] = $data ?? [];
+			$output[$value] = $data;
 		}
 
 		// Return all settings data.
@@ -118,7 +118,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			if (!$filter) {
 				continue;
 			}
-			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
+			$allSettings[$key] = $filter['settingsSidebar'] ?? ''; // @phpstan-ignore-line
 		}
 
 		return $allSettings;

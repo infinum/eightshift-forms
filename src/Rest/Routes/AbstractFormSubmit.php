@@ -85,7 +85,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$params = $this->removeUneceseryParams($params);
 
 			// Upload files to temp folder.
-			$files = $this->uploadFiles($request->get_file_params() ?? []);
+			$files = $this->uploadFiles($request->get_file_params());
 
 			// Do Action.
 			return $this->submitAction($formId, $params, $files);
