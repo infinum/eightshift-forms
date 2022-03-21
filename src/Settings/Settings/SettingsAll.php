@@ -118,7 +118,7 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			if (!$filter) {
 				continue;
 			}
-			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
+			$allSettings[$key] = $filter['settingsSidebar'];
 		}
 
 		return $allSettings;

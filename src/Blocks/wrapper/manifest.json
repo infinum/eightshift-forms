@@ -1,5 +1,7 @@
 {
 	"attributes": {
-		
+		"test": {
+			"default": "string"
+		}
 	}
 }

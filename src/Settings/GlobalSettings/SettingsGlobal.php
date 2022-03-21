@@ -111,7 +111,7 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 				continue;
 			}
 
-			$allSettings[$key] = $filter['settingsSidebar'] ?? '';
+			$allSettings[$key] = $filter['settingsSidebar'];
 		}
 
 		return $allSettings;
