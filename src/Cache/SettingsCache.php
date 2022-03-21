@@ -51,6 +51,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		'mailchimp' => [
 			MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
 			MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
+			MailchimpClient::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME,
 		],
 		'greenhouse' => [
 			GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,

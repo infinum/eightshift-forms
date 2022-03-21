@@ -186,28 +186,30 @@ abstract class AbstractFormBuilder
 					break;
 			}
 
-			// Loop children and do the same ad on top level.
-			foreach ($attributes[$key] as $innerKey => $item) {
-				// Determine the component's name.
-				$innerComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+			if (isset($attributes[$key])) {
+				// Loop children and do the same ad on top level.
+				foreach ($attributes[$key] as $innerKey => $item) {
+					// Determine the component's name.
+					$innerComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
-				// Add new nesting iteration if component is group.
-				if ($key === 'groupContent' && is_array($item["groupContent"])) {
-					$groupOutput = '';
-					foreach ($item["groupContent"] as $group) {
-						$groupOutput .= $this->buildComponent($group);
+					// Add new nesting iteration if component is group.
+					if ($key === 'groupContent' && is_array($item["groupContent"])) {
+						$groupOutput = '';
+						foreach ($item["groupContent"] as $group) {
+							$groupOutput .= $this->buildComponent($group);
+						}
+
+						$item["groupContent"] = $groupOutput;
 					}
 
-					$item["groupContent"] = $groupOutput;
+					// Build child component.
+					$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$item['component'],
+						Components::props($innerComponent, $item),
+						'',
+						true
+					);
 				}
-
-				// Build child component.
-				$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					$item['component'],
-					Components::props($innerComponent, $item),
-					'',
-					true
-				);
 			}
 
 			// Output child to the parent array.

@@ -47,6 +47,7 @@ $fieldBeforeContent = Components::checkAttr('fieldBeforeContent', $attributes, $
 $fieldAfterContent = Components::checkAttr('fieldAfterContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
+$fieldUseTooltip = Components::checkAttr('fieldUseTooltip', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
@@ -116,6 +117,16 @@ if (has_filter($filterName)) {
 					<?php echo esc_html($fieldLabel); ?>
 				</span>
 			</<?php echo esc_attr($labelTag); ?>>
+			<?php
+			if ($fieldUseTooltip) {
+				echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'tooltip',
+					Components::props('tooltip', $attributes, [
+						'selectorClass' => $componentClass
+					])
+				);
+			}
+			?>
 		<?php } ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php if ($fieldBeforeContent) { ?>

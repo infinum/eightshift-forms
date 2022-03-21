@@ -12,7 +12,8 @@
 		}
 	},
 	"components": {
-		"error": "error"
+		"error": "error",
+		"tooltip": "tooltip"
 	},
 	"attributes": {
 		"fieldType": {
@@ -55,6 +56,10 @@
 		"fieldUseError": {
 			"type": "boolean",
 			"default": true
+		},
+		"fieldUseTooltip": {
+			"type": "boolean",
+			"default": false
 		},
 		"fieldWidthLarge": {
 			"type": "integer"

@@ -55,13 +55,6 @@ trait SettingsHelper
 	private $integrationFieldLabel = 'label';
 
 	/**
-	 * Integration field select view type.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldSelectViewType = 'select-view-type';
-
-	/**
 	 * Get settings value.
 	 *
 	 * @param string $key Providing string to append to.
@@ -200,10 +193,9 @@ trait SettingsHelper
 	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId, array $additionalLabel = []): array
 	{
 		$additionalLabel = array_flip($additionalLabel);
-		$globalManifest = Components::getManifest(dirname(__DIR__, 1) . '/Blocks');
 
 		// Find project breakpoints.
-		$breakpoints = array_flip($globalManifest['globalVariables']['breakpoints']);
+		$breakpoints = array_flip(Components::getSettings('settings', 'globalVariables')['breakpoints']);
 
 		// Loop form fields.
 		$fields = [];
@@ -275,6 +267,9 @@ trait SettingsHelper
 					'inputStep' => 1,
 					'inputIsDisabled' => $disabledEdit,
 					'inputPlaceholder' => __('auto', 'eightshift-forms'),
+					'inputFieldUseTooltip' => true,
+					// translators: %s is replaced with the breakpoint name.
+					'inputFieldTooltipContent' => sprintf(\esc_html__('Define field width for %s breakpoint.', 'eightshift-forms'), $breakpoint),
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
@@ -294,6 +289,8 @@ trait SettingsHelper
 				'inputStep' => 1,
 				'inputIsDisabled' => $disabledEdit,
 				'inputPlaceholder' => __('auto', 'eightshift-forms'),
+				'inputFieldUseTooltip' => true,
+				'inputFieldTooltipContent' => __('Define field order that is going to be used.', 'eightshift-forms'),
 			];
 
 			// Use.
@@ -311,6 +308,8 @@ trait SettingsHelper
 				'selectFieldLabel' => __('Visibility', 'eightshift-forms'),
 				'selectValue' => $toggleValue,
 				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
+				'selectFieldUseTooltip' => true,
+				'selectFieldTooltipContent' => __('Define if field is going to be default visible or hidden.', 'eightshift-forms'),
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
@@ -337,6 +336,8 @@ trait SettingsHelper
 					'selectFieldLabel' => __('Field label', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
 					'selectIsDisabled' => $disabledEdit,
+					'selectFieldUseTooltip' => true,
+					'selectFieldTooltipContent' => __('Define if field file label is going to be default visible or hidden.', 'eightshift-forms'),
 					'selectOptions' => [
 						[
 							'component' => 'select-option',
@@ -354,33 +355,6 @@ trait SettingsHelper
 				];
 			}
 
-			// Changes for select type.
-			if ($component === 'select') {
-				$selectViewTypeValue = $fieldsValues["{$id}---{$this->integrationFieldSelectViewType}"] ?? '';
-
-				$fieldsOutput[0]['groupContent'][] = [
-					'component' => 'select',
-					'selectId' => "{$id}---{$this->integrationFieldSelectViewType}",
-					'selectFieldLabel' => __('View type', 'eightshift-forms'),
-					'selectValue' => $selectViewTypeValue,
-					'selectIsDisabled' => $disabledEdit,
-					'selectOptions' => [
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => __('Select', 'eightshift-forms'),
-							'selectOptionValue' => 'select',
-							'selectOptionIsSelected' => $selectViewTypeValue === 'select',
-						],
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => __('Checkbox', 'eightshift-forms'),
-							'selectOptionValue' => 'checkbox',
-							'selectOptionIsSelected' => $selectViewTypeValue === 'checkbox',
-						]
-					]
-				];
-			}
-
 			// Field style.
 			if ($fieldStyle && isset($fieldStyle[$component])) {
 				$fieldStyleValue = $fieldsValues["{$id}---{$this->integrationFieldStyle}"] ?? '';
@@ -391,6 +365,8 @@ trait SettingsHelper
 					'selectFieldLabel' => __('Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
 					'selectIsDisabled' => $disabledEdit,
+					'selectFieldUseTooltip' => true,
+					'selectFieldTooltipContent' => __('Define different style for this field.', 'eightshift-forms'),
 					'selectOptions' => array_map(
 						static function ($item) use ($fieldStyleValue) {
 							return [
@@ -413,6 +389,8 @@ trait SettingsHelper
 					'inputFieldLabel' => __('Label', 'eightshift-forms'),
 					'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldLabel}"] ?? '',
 					'inputIsDisabled' => $disabledEdit,
+					'selectFieldUseTooltip' => true,
+					'selectFieldTooltipContent' => __('Define field label value.', 'eightshift-forms'),
 				];
 			}
 

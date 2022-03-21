@@ -45,6 +45,7 @@
 			.es-field {
 				&__inner { // stylelint-disable-line max-nesting-depth
 					display: block;
+					position: relative;
 				}
 
 				&__label { // stylelint-disable-line max-nesting-depth
@@ -52,6 +53,13 @@
 					display: block;
 					padding-top: 0;
 					font-size: 12px;
+					padding-right: 25px;
+				}
+
+				&__es-tooltip { // stylelint-disable-line max-nesting-depth
+					position: absolute;
+					right: 0;
+					top: 0;
 				}
 			}
 		}

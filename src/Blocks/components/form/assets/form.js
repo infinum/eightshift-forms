@@ -407,8 +407,6 @@ export class Form {
 				}
 			} = item;
 
-			console.log(formType);
-
 			if (disabled) {
 				continue;
 			}

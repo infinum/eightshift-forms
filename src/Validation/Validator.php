@@ -221,7 +221,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if ($dataValue && count(explode("; ", $inputValue)) < $dataValue && !empty($inputValue)) {
+						if ($dataValue && count(explode(", ", $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;

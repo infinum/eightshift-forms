@@ -251,6 +251,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'component' => 'radios',
 						'radiosId' => $id,
 						'radiosName' => $name,
+						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
 						'radiosContent' => array_map(
 							static function ($radio) use ($name) {
@@ -270,6 +271,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'component' => 'select',
 						'selectId' => $id,
 						'selectName' => $name,
+						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
 						'selectIsRequired' => $required,
 						'selectOptions' => array_map(
@@ -295,7 +297,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 			switch ($tagsShow) {
 				case 'select':
-					$selectedOption = explode(', ', $tagsSelected);
+					$selectedOption = $tagsItems;
+
+					if (!empty($tagsSelected)) {
+						$selectedOption = explode(', ', $tagsSelected);
+					}
 
 					$output[] = [
 						'component' => 'select',
@@ -312,21 +318,24 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								],
 							],
 							array_map(
-								static function ($option) use ($selectedOption) {
+								static function ($option) {
 									return [
 										'component' => 'select-option',
-										'selectOptionLabel' => $option['name'],
-										'selectOptionValue' => $option['name'],
-										'selectOptionIsSelected' => $selectedOption[0] === $option['name'],
+										'selectOptionLabel' => $option,
+										'selectOptionValue' => $option,
 									];
 								},
-								$tagsItems
+								$selectedOption
 							)
 						),
 					];
 					break;
 				case 'checkboxes':
-					$selectedOption = explode(', ', $tagsSelected);
+					$selectedOption = $tagsItems;
+
+					if (!empty($tagsSelected)) {
+						$selectedOption = explode(', ', $tagsSelected);
+					}
 
 					$checkboxesFieldName = self::FIELD_MAILCHIMP_TAGS_KEY;
 
@@ -336,28 +345,29 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'checkboxesId' => $checkboxesFieldName,
 						'checkboxesName' => $checkboxesFieldName,
 						'checkboxesContent' => array_map(
-							static function ($option) use ($selectedOption, $checkboxesFieldName) {
+							static function ($option) use ($checkboxesFieldName) {
 								return [
 									'component' => 'checkbox',
-									'checkboxLabel' => $option['name'],
-									'checkboxValue' => $option['name'],
-									'checkboxIsChecked' => $selectedOption[0] === $option['name'],
+									'checkboxLabel' => $option,
+									'checkboxValue' => $option,
 									'checkboxTracking' => $checkboxesFieldName,
 								];
 							},
-							$tagsItems
+							$selectedOption
 						),
 					];
 					break;
 				default:
-					$output[] = [
-						'component' => 'input',
-						'inputType' => 'hidden',
-						'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'inputValue' => $tagsSelected,
-					];
+					if (!empty($tagsSelected)) {
+						$output[] = [
+							'component' => 'input',
+							'inputType' => 'hidden',
+							'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'inputValue' => $tagsSelected,
+						];
+					};
 					break;
 			}
 		}

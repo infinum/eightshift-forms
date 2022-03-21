@@ -1,0 +1,20 @@
+{
+	"componentName": "tooltip",
+	"title": "Tooltip",
+	"componentClass": "es-tooltip",
+	"example": {
+		"attributes": {
+			"tooltipContent": "Value",
+			"tooltipPosition": "top"
+		}
+	},
+	"attributes": {
+		"tooltipContent": {
+			"type": "string"
+		},
+		"tooltipPosition": {
+			"type": "string",
+			"default": "right"
+		}
+	}
+}

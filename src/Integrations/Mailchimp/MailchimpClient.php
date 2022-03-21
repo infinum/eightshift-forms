@@ -36,6 +36,11 @@ class MailchimpClient implements MailchimpClientInterface
 	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
 
 	/**
+	 * Transient cache name for item tags.
+	 */
+	public const CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME = 'es_mailchimp_item_tags_cache';
+
+	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -95,6 +100,36 @@ class MailchimpClient implements MailchimpClientInterface
 				$output[$itemId] = $fields;
 
 				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
+			}
+		}
+
+		return $output[$itemId] ?? [];
+	}
+
+	/**
+	 * Return tags with cache option for faster loading.
+	 *
+	 * @param string $itemId Item id to search.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public function getTags(string $itemId): array
+	{
+		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Check if form exists in cache.
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+			$tags = $this->getMailchimpTags($itemId);
+
+			if ($tags) {
+				$output[$itemId] = array_map(
+					static function ($item) {
+						return $item['name'];
+					},
+					$tags
+				);
+
+				set_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -217,7 +252,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 *
 	 * @return array<int, mixed>
 	 */
-	public function getTags(string $itemId): array
+	private function getMailchimpTags(string $itemId): array
 	{
 		$response = \wp_remote_get(
 			"{$this->getBaseUrl()}lists/{$itemId}/tag-search",
@@ -313,13 +348,16 @@ class MailchimpClient implements MailchimpClientInterface
 		$output = [];
 
 		unset($params['email_address']);
+		unset($params[Mailchimp::FIELD_MAILCHIMP_TAGS_KEY]);
 
-		foreach ($params as $key => $value) {
-			switch ($value['name']) {
+		foreach ($params as $key => $param) {
+			$value = $param['value'] ?? '';
+
+			switch ($param['name']) {
 				case 'address':
-					if ($value['value']) {
+					if ($value) {
 						$output[$key] = [
-							'addr1' => $value['value'],
+							'addr1' => $value,
 							'addr2' => '',
 							'city' => '&sbsp;',
 							'state' => '',
@@ -329,7 +367,7 @@ class MailchimpClient implements MailchimpClientInterface
 					}
 					break;
 				default:
-					$output[$key] = $value['value'] ?? '';
+					$output[$key] = $value;
 					break;
 			}
 		}
