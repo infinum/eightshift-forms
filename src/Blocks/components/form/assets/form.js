@@ -402,7 +402,12 @@ export class Form {
 				files,
 				disabled,
 				checked,
+				dataset: {
+					objectTypeId, // Used for HubSpot only
+				}
 			} = item;
+
+			console.log(formType);
 
 			if (disabled) {
 				continue;
@@ -418,6 +423,10 @@ export class Form {
 				value,
 				type,
 			};
+
+			if (formType === 'hubspot') {
+				data.objectTypeId = objectTypeId ?? '';
+			}
 
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {

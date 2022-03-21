@@ -512,13 +512,24 @@ class HubspotClient implements ClientInterface
 		unset($params['es-form-hubspot-page-name']);
 		unset($params['es-form-hubspot-page-url']);
 
-		foreach ($params as $value) {
-			$name = $value['name'] ?? '';
-			$value = $value['value'] ?? '';
+		foreach ($params as $param) {
+			$type = $param['type'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if ($type === 'checkbox') {
+				if ($value === 'on') {
+					$value = 'true';
+				}
+
+				if (empty($value)) {
+					$value = 'false';
+				}
+			}
 
 			$output[] = [
-				'name' => $name,
+				'name' => $param['name'] ?? '',
 				'value' => $value,
+				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];
 		}
 

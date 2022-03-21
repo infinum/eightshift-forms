@@ -20,6 +20,48 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 trait SettingsHelper
 {
 	/**
+	 * Integration field style.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldStyle = 'field-style';
+
+	/**
+	 * Integration field order.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldOrder = 'order';
+
+	/**
+	 * Integration field use.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldUse = 'use';
+
+	/**
+	 * Integration field file info label.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldFileInfoLabel = 'file-info-label';
+
+	/**
+	 * Integration field label.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldLabel = 'label';
+
+	/**
+	 * Integration field select view type.
+	 *
+	 * @var string
+	 */
+	private $integrationFieldSelectViewType = 'select-view-type';
+
+	/**
 	 * Get settings value.
 	 *
 	 * @param string $key Providing string to append to.
@@ -243,10 +285,10 @@ trait SettingsHelper
 			// Order.
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'input',
-				'inputId' => "{$id}---order",
+				'inputId' => "{$id}---{$this->integrationFieldOrder}",
 				'inputFieldLabel' => __('Order', 'eightshift-forms'),
 				'inputType' => 'number',
-				'inputValue' => $fieldsValues["{$id}---order"] ?? $fieldKey + 1,
+				'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldOrder}"] ?? $fieldKey + 1,
 				'inputMin' => 1,
 				'inputMax' => $totalFields,
 				'inputStep' => 1,
@@ -255,7 +297,7 @@ trait SettingsHelper
 			];
 
 			// Use.
-			$toggleValue = $fieldsValues["{$id}---use"] ?? '';
+			$toggleValue = $fieldsValues["{$id}---{$this->integrationFieldUse}"] ?? '';
 			$toggleDisabled = $required;
 
 			// Changes for resume and cover specific to Greenhouse.
@@ -265,7 +307,7 @@ trait SettingsHelper
 
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'select',
-				'selectId' => "{$id}---use",
+				'selectId' => "{$id}---{$this->integrationFieldUse}",
 				'selectFieldLabel' => __('Visibility', 'eightshift-forms'),
 				'selectValue' => $toggleValue,
 				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
@@ -285,13 +327,13 @@ trait SettingsHelper
 				]
 			];
 
-			// Label for file type.
+			// Changes for file type.
 			if ($component === 'file') {
-				$fileInfoLabelValue = $fieldsValues["{$id}---file-info-label"] ?? '';
+				$fileInfoLabelValue = $fieldsValues["{$id}---{$this->integrationFieldFileInfoLabel}"] ?? '';
 
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
-					'selectId' => "{$id}---file-info-label",
+					'selectId' => "{$id}---{$this->integrationFieldFileInfoLabel}",
 					'selectFieldLabel' => __('Field label', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
 					'selectIsDisabled' => $disabledEdit,
@@ -312,13 +354,40 @@ trait SettingsHelper
 				];
 			}
 
-			// Field style.
-			if ($fieldStyle && isset($fieldStyle[$component])) {
-				$fieldStyleValue = $fieldsValues["{$id}---field-style"] ?? '';
+			// Changes for select type.
+			if ($component === 'select') {
+				$selectViewTypeValue = $fieldsValues["{$id}---{$this->integrationFieldSelectViewType}"] ?? '';
 
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
-					'selectId' => "{$id}---field-style",
+					'selectId' => "{$id}---{$this->integrationFieldSelectViewType}",
+					'selectFieldLabel' => __('View type', 'eightshift-forms'),
+					'selectValue' => $selectViewTypeValue,
+					'selectIsDisabled' => $disabledEdit,
+					'selectOptions' => [
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Select', 'eightshift-forms'),
+							'selectOptionValue' => 'select',
+							'selectOptionIsSelected' => $selectViewTypeValue === 'select',
+						],
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => __('Checkbox', 'eightshift-forms'),
+							'selectOptionValue' => 'checkbox',
+							'selectOptionIsSelected' => $selectViewTypeValue === 'checkbox',
+						]
+					]
+				];
+			}
+
+			// Field style.
+			if ($fieldStyle && isset($fieldStyle[$component])) {
+				$fieldStyleValue = $fieldsValues["{$id}---{$this->integrationFieldStyle}"] ?? '';
+
+				$fieldsOutput[0]['groupContent'][] = [
+					'component' => 'select',
+					'selectId' => "{$id}---{$this->integrationFieldStyle}",
 					'selectFieldLabel' => __('Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
 					'selectIsDisabled' => $disabledEdit,
@@ -340,9 +409,9 @@ trait SettingsHelper
 			if (isset($additionalLabel[$id]) || $component === 'submit') {
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'input',
-					'inputId' => "{$id}---label",
+					'inputId' => "{$id}---{$this->integrationFieldLabel}",
 					'inputFieldLabel' => __('Label', 'eightshift-forms'),
-					'inputValue' => $fieldsValues["{$id}---label"] ?? '',
+					'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldLabel}"] ?? '',
 					'inputIsDisabled' => $disabledEdit,
 				];
 			}
@@ -421,7 +490,7 @@ trait SettingsHelper
 			// Iterate saved values and populate new fields.
 			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
 				switch ($itemKey) {
-					case 'field-style':
+					case $this->integrationFieldStyle:
 						$filterName = Filters::getBlockFilterName('field', 'styleOptions');
 						$fieldStyle = apply_filters($filterName, []);
 
@@ -443,19 +512,19 @@ trait SettingsHelper
 
 						$formFields[$key]["{$component}FieldStyle"] = $itemValue;
 						break;
-					case 'order':
+					case $this->integrationFieldOrder:
 						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
 						break;
-					case 'use':
+					case $this->integrationFieldUse:
 						$formFields[$key]["{$component}FieldUse"] = filter_var($itemValue, FILTER_VALIDATE_BOOLEAN);
 						break;
-					case 'file-info-label':
+					case $this->integrationFieldFileInfoLabel:
 						if ($itemValue === 'true') {
 							$formFields[$key]["{$component}FieldHideLabel"] = true;
 							$formFields[$key]["{$component}CustomInfoText"] = $label;
 						}
 						break;
-					case 'label':
+					case $this->integrationFieldLabel:
 						if (!empty($itemValue)) {
 							if ($component === 'submit') {
 								$formFields[$key]["{$component}Value"] = $itemValue;
