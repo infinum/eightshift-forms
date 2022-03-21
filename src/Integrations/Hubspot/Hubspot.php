@@ -177,6 +177,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$options = $field['options'] ?? '';
 				$validation = $field['validation']['data'] ?? '';
 				$id = $name;
+				$metaData = $field['metaData'] ?? [];
 
 				$validation = explode(':', $validation);
 				$min = $validation[0] ?? '';
@@ -246,6 +247,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 						break;
 					case 'file':
+						$isMultiple = array_filter(
+							$metaData,
+							static function ($item) {
+								$name = $item['name'] ?? '';
+								$value = $item['value'] ?? '';
+								return $name === 'isMultipleFileUpload' && $value === 'true';
+							}
+						);
+
 						$output[] = [
 							'component' => 'file',
 							'fileFieldLabel' => $label,
@@ -256,6 +266,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'filePlaceholder' => $placeholder,
 							'fileIsRequired' => $required,
 							'fileValue' => $value,
+							'fileIsMultiple' => !empty($isMultiple),
 						];
 						break;
 					case 'select':

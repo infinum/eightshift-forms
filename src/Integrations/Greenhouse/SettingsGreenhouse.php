@@ -196,7 +196,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$items = $this->greenhouseClient->getItems();
+		$items = $this->greenhouseClient->getItems(false);
+		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
 
 		if (!$items) {
 			return [
@@ -244,8 +246,8 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
 				'selectFieldLabel' => __('Job post', 'eightshift-forms'),
-				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type.
-				'selectFieldHelp' => sprintf(__('If a job post isn\'t showing up, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
+				'selectFieldHelp' => sprintf(__('If a job post isn\'t showing up or is missing some jobs, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,

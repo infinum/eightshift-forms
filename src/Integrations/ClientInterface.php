@@ -14,11 +14,18 @@ namespace EightshiftForms\Integrations;
 interface ClientInterface
 {
 	/**
+	 * Stored time constant name.
+	 */
+	public const TRANSIENT_STORED_TIME = 'transientStoredTime';
+
+	/**
 	 * Return items.
+	 *
+	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getItems(): array;
+	public function getItems(bool $hideUpdateTime = true): array;
 
 	/**
 	 * Return item with cache option for faster loading.

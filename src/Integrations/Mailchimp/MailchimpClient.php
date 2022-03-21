@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
@@ -37,9 +38,11 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * Return items.
 	 *
+	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 *
 	 * @return array<string, mixed>
 	 */
-	public function getItems(): array
+	public function getItems(bool $hideUpdateTime = true): array
 	{
 		$output = get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
@@ -57,8 +60,17 @@ class MailchimpClient implements MailchimpClientInterface
 					];
 				}
 
+				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
+					'id' => ClientInterface::TRANSIENT_STORED_TIME,
+					'title' => current_time('mysql'),
+				];
+
 				set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
+		}
+
+		if ($hideUpdateTime) {
+			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
 		}
 
 		return $output;

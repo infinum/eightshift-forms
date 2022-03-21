@@ -188,7 +188,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 						);
 
 						// Append values to the first value.
-						$innerNotEmpty[0]['value'] = implode(", ", $multiple);
+						$innerNotEmpty[0]['value'] = implode("; ", $multiple);
 
 						return $innerNotEmpty[0];
 					}
