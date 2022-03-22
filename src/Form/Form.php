@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftForms\Mailer\SettingsMailer;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

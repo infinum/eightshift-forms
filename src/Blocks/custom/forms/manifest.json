@@ -9,8 +9,6 @@
 	"keywords": [
 		"forms"
 	],
-	"example": {
-	},
 	"attributes": {
 		"formsFormPostId": {
 			"type": "string"

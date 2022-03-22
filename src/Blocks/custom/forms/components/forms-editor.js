@@ -16,6 +16,9 @@ export const FormsEditor = ({ attributes, preview }) => {
 
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 
+	// Tem fix.
+	delete attributes.blockTopLevelId;
+
 	return (
 		<>
 			<ServerSideRender
