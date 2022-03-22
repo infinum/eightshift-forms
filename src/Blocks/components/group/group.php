@@ -18,15 +18,17 @@ $componentJsClassInner = $manifest['componentJsClassInner'] ?? '';
 $groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
 $groupContent = Components::checkAttr('groupContent', $attributes, $manifest);
 $groupId = Components::checkAttr('groupId', $attributes, $manifest);
-$groupIsInner = Components::checkAttr('groupIsInner', $attributes, $manifest);
+$groupSaveOneField = Components::checkAttr('groupSaveOneField', $attributes, $manifest);
+$groupStyle = Components::checkAttr('groupStyle', $attributes, $manifest);
 $groupBeforeContent = Components::checkAttr('groupBeforeContent', $attributes, $manifest);
+$groupHelp = Components::checkAttr('groupHelp', $attributes, $manifest);
 
 $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalGroupClass, $additionalGroupClass),
-	Components::selector($groupIsInner, $componentClass, '', 'is-inner'),
-	Components::selector(!$groupIsInner && $componentJsClass, $componentJsClass),
-	Components::selector($groupIsInner && $componentJsClassInner, $componentJsClassInner),
+	Components::selector($groupStyle, $componentClass, '', $groupStyle),
+	Components::selector(!$groupSaveOneField && $componentJsClass, $componentJsClass),
+	Components::selector($groupSaveOneField && $componentJsClassInner, $componentJsClassInner),
 ]);
 
 ?>
@@ -51,6 +53,12 @@ $groupClass = Components::classnames([
 	<?php if ($groupContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php echo $groupContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+	<?php } ?>
+
+	<?php if ($groupHelp) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<?php echo $groupHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

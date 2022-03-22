@@ -516,6 +516,10 @@ class HubspotClient implements ClientInterface
 			$type = $param['type'] ?? '';
 			$value = $param['value'] ?? '';
 
+			if (!$param) {
+				continue;
+			}
+
 			if ($type === 'checkbox') {
 				if ($value === 'on') {
 					$value = 'true';
@@ -524,6 +528,8 @@ class HubspotClient implements ClientInterface
 				if (empty($value)) {
 					$value = 'false';
 				}
+
+				$value = str_replace(', ', ';', $value);
 			}
 
 			$output[] = [

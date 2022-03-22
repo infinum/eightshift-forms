@@ -5,11 +5,17 @@
 	"componentJsClass": "js-es-block-form-group",
 	"componentJsClassInner": "js-es-block-form-group-inner",
 	"attributes": {
-		"groupIsInner": {
+		"groupSaveOneField": {
 			"type": "boolean",
 			"default": false
 		},
+		"groupStyle": {
+			"type": "string"
+		},
 		"groupLabel": {
+			"type": "string"
+		},
+		"groupHelp": {
 			"type": "string"
 		},
 		"groupContent": {

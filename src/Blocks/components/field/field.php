@@ -106,6 +106,7 @@ if (has_filter($filterName)) {
 	} else {
 		echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
+
 	?>
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
@@ -115,18 +116,19 @@ if (has_filter($filterName)) {
 			>
 				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
 					<?php echo esc_html($fieldLabel); ?>
+
+					<?php
+					if ($fieldUseTooltip) {
+						echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							'tooltip',
+							Components::props('tooltip', $attributes, [
+								'selectorClass' => $componentClass
+							])
+						);
+					}
+					?>
 				</span>
 			</<?php echo esc_attr($labelTag); ?>>
-			<?php
-			if ($fieldUseTooltip) {
-				echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'tooltip',
-					Components::props('tooltip', $attributes, [
-						'selectorClass' => $componentClass
-					])
-				);
-			}
-			?>
 		<?php } ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php if ($fieldBeforeContent) { ?>

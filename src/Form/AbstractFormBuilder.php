@@ -190,10 +190,10 @@ abstract class AbstractFormBuilder
 				// Loop children and do the same ad on top level.
 				foreach ($attributes[$key] as $innerKey => $item) {
 					// Determine the component's name.
-					$innerComponent = $item['component'] ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+					$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
 					// Add new nesting iteration if component is group.
-					if ($key === 'groupContent' && is_array($item["groupContent"])) {
+					if ($key === 'groupContent' && isset($item["groupContent"]) && is_array($item["groupContent"])) {
 						$groupOutput = '';
 						foreach ($item["groupContent"] as $group) {
 							$groupOutput .= $this->buildComponent($group);
@@ -203,12 +203,14 @@ abstract class AbstractFormBuilder
 					}
 
 					// Build child component.
-					$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						$item['component'],
-						Components::props($innerComponent, $item),
-						'',
-						true
-					);
+					if ($item) {
+						$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$item['component'],
+							Components::props($innerComponent, $item),
+							'',
+							true
+						);
+					}
 				}
 			}
 

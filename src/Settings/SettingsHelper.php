@@ -246,8 +246,8 @@ trait SettingsHelper
 				[
 					'component' => 'group',
 					'groupLabel' => ucfirst($label),
-					'groupName' => $fieldsKey,
-					'groupIsInner' => true,
+					'groupSaveOneField' => true,
+					'groupStyle' => 'integration',
 					'groupContent' => [],
 				]
 			];

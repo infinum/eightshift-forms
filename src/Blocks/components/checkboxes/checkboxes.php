@@ -45,7 +45,6 @@ $checkboxes = '
 	' . $additionalContent . '
 ';
 
-
 echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	'field',
 	array_merge(

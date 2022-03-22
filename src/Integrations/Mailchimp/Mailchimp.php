@@ -293,82 +293,114 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		if ($tagsItems) {
 			$tagsSelected = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
+			$tagsLabels = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
 			$tagsShow = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
 
-			switch ($tagsShow) {
-				case 'select':
-					$selectedOption = $tagsItems;
+			// Detect if some tags are selected to display on the frontend.
+			if (!empty($tagsSelected)) {
+				// Tags are stored like string so explode is necesery.
+				$selectedIds = array_flip(explode(', ', $tagsSelected));
 
-					if (!empty($tagsSelected)) {
-						$selectedOption = explode(', ', $tagsSelected);
+				// Map selected items with provided ones.
+				$tagsItems = array_filter(
+					$tagsItems,
+					static function ($item) use ($selectedIds) {
+						return isset($selectedIds[$item['id']]);
 					}
+				);
+			}
 
-					$output[] = [
-						'component' => 'select',
-						'selectFieldLabel' => __('Tags', 'eightshift-forms'),
-						'selectId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'selectName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'selectTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
-						'selectOptions' => array_merge(
-							[
+			if ($tagsItems) {
+				switch ($tagsShow) {
+					case 'select':
+						$output[] = [
+							'component' => 'select',
+							'selectFieldLabel' => __('Tags', 'eightshift-forms'),
+							'selectId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'selectName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'selectTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'selectOptions' => array_merge(
 								[
-									'component' => 'select-option',
-									'selectOptionLabel' => '',
-									'selectOptionValue' => '',
-								],
-							],
-							array_map(
-								static function ($option) {
-									return [
+									[
 										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
+										'selectOptionLabel' => '',
+										'selectOptionValue' => '',
+									],
+								],
+								array_map(
+									static function ($option) use ($tagsLabels) {
+										$name = $option['name'] ?? '';
+										$id = $option['id'] ?? '';
+										$nameOverride = $name;
+
+										// Find tag label override.
+										if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
+											$nameOverride = $tagsLabels[$id];
+										}
+
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $nameOverride,
+											'selectOptionValue' => $name,
+										];
+									},
+									$tagsItems
+								)
+							),
+						];
+						break;
+					case 'checkboxes':
+						$checkboxesFieldName = self::FIELD_MAILCHIMP_TAGS_KEY;
+
+						$output[] = [
+							'component' => 'checkboxes',
+							'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
+							'checkboxesId' => $checkboxesFieldName,
+							'checkboxesName' => $checkboxesFieldName,
+							'checkboxesContent' => array_map(
+								static function ($option) use ($checkboxesFieldName, $tagsLabels) {
+									$name = $option['name'] ?? '';
+									$id = $option['id'] ?? '';
+									$nameOverride = $name;
+
+									// Find tag label override.
+									if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
+										$nameOverride = $tagsLabels[$id];
+									}
+
+									return [
+										'component' => 'checkbox',
+										'checkboxLabel' => $nameOverride,
+										'checkboxValue' => $name,
+										'checkboxTracking' => $checkboxesFieldName,
 									];
 								},
-								$selectedOption
-							)
-						),
-					];
-					break;
-				case 'checkboxes':
-					$selectedOption = $tagsItems;
-
-					if (!empty($tagsSelected)) {
-						$selectedOption = explode(', ', $tagsSelected);
-					}
-
-					$checkboxesFieldName = self::FIELD_MAILCHIMP_TAGS_KEY;
-
-					$output[] = [
-						'component' => 'checkboxes',
-						'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
-						'checkboxesId' => $checkboxesFieldName,
-						'checkboxesName' => $checkboxesFieldName,
-						'checkboxesContent' => array_map(
-							static function ($option) use ($checkboxesFieldName) {
-								return [
-									'component' => 'checkbox',
-									'checkboxLabel' => $option,
-									'checkboxValue' => $option,
-									'checkboxTracking' => $checkboxesFieldName,
-								];
-							},
-							$selectedOption
-						),
-					];
-					break;
-				default:
-					if (!empty($tagsSelected)) {
-						$output[] = [
-							'component' => 'input',
-							'inputType' => 'hidden',
-							'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'inputValue' => $tagsSelected,
+								$tagsItems
+							),
 						];
-					};
-					break;
+						break;
+					default:
+						if (!empty($tagsSelected)) {
+							$tagsItems = array_map(
+								static function ($item) {
+									return $item['name'];
+								},
+								$tagsItems
+							);
+
+							$tagsItems = implode(', ', $tagsItems);
+
+							$output[] = [
+								'component' => 'input',
+								'inputType' => 'hidden',
+								'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
+								'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
+								'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
+								'inputValue' => $tagsItems,
+							];
+						};
+						break;
+				}
 			}
 		}
 

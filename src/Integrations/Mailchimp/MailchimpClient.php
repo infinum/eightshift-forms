@@ -124,7 +124,10 @@ class MailchimpClient implements MailchimpClientInterface
 			if ($tags) {
 				$output[$itemId] = array_map(
 					static function ($item) {
-						return $item['name'];
+						return [
+							'id' => (string) $item['id'],
+							'name' => (string) $item['name'],
+						];
 					},
 					$tags
 				);
