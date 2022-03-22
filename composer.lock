@@ -4,44 +4,46 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0731313aae1e99738ed091c145d30fc7",
+    "content-hash": "a611004574f3557242d1821e7b2b07ad",
     "packages": [
         {
             "name": "infinum/eightshift-libs",
-            "version": "4.1.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "9b363461cf9747d5c2f33a64ed7643c1203a18d2"
+                "reference": "ff6da0decfe2ef4af5bead0b2dbaa56fcf5faa73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/9b363461cf9747d5c2f33a64ed7643c1203a18d2",
-                "reference": "9b363461cf9747d5c2f33a64ed7643c1203a18d2",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/ff6da0decfe2ef4af5bead0b2dbaa56fcf5faa73",
+                "reference": "ff6da0decfe2ef4af5bead0b2dbaa56fcf5faa73",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
-                "php": "^7.3 || <8.0",
+                "php": "^7.4 || <8.0",
                 "php-di/invoker": "^2.3",
                 "php-di/php-di": "^6.3"
             },
             "require-dev": {
                 "brain/monkey": "^2.6",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-                "infinum/eightshift-coding-standards": "^1.3",
+                "infinum/eightshift-coding-standards": "^1.5",
                 "pestphp/pest": "^1.2",
+                "php-stubs/wordpress-stubs": "^5.9",
                 "phpunit/phpunit": "^9.5",
                 "roave/security-advisories": "dev-master",
-                "szepeviktor/phpstan-wordpress": "^0.7",
+                "szepeviktor/phpstan-wordpress": "^1.0.3",
                 "wp-cli/wp-cli": "^2.4"
             },
             "suggest": {
                 "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
                 "ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -59,10 +61,10 @@
                     "@php ./vendor/bin/phpstan analyze"
                 ],
                 "standards:check": [
-                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.3-"
+                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-"
                 ],
                 "standards:fix": [
-                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.3-"
+                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-"
                 ],
                 "test:unit": [
                     "@php ./vendor/bin/pest"
@@ -96,7 +98,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2022-02-03T07:57:16+00:00"
+            "time": "2022-03-22T22:53:12+00:00"
         },
         {
             "name": "opis/closure",
@@ -5278,6 +5280,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "infinum/eightshift-libs": 20,
         "brain/faker": 20
     },
     "prefer-stable": true,

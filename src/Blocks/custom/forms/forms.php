@@ -9,7 +9,6 @@
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
-use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
