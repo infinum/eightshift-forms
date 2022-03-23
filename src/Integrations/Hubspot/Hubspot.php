@@ -44,16 +44,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var ClientInterface
+	 * @var HubspotClientInterface
 	 */
 	protected $hubspotClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(ClientInterface $hubspotClient)
+	public function __construct(HubspotClientInterface $hubspotClient)
 	{
 		$this->hubspotClient = $hubspotClient;
 	}

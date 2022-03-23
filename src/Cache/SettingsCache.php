@@ -59,6 +59,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		],
 		'hubspot' => [
 			HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
+			HubspotClient::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME,
 		],
 		'mailerlite' => [
 			MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,

@@ -14,6 +14,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Greenhouse\Greenhouse;
@@ -99,6 +100,17 @@ class Filters
 			'settings' => SettingsGoodbits::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsGoodbits::FILTER_SETTINGS_SIDEBAR_NAME,
 			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
+		],
+		SettingsClearbit::SETTINGS_TYPE_KEY => [
+			'global' => SettingsClearbit::FILTER_SETTINGS_GLOBAL_NAME,
+			'settingsSidebar' => SettingsClearbit::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
+			'integration' => [
+				SettingsHubspot::SETTINGS_TYPE_KEY => [
+					'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
+					'email' => SettingsHubspot::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
+				],
+			]
 		],
 		SettingsLocation::SETTINGS_TYPE_KEY => [
 			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,

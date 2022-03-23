@@ -19,7 +19,7 @@ use EightshiftForms\Integrations\ClientInterface;
 /**
  * HubspotClient integration class.
  */
-class HubspotClient implements ClientInterface
+class HubspotClient implements HubspotClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -30,6 +30,11 @@ class HubspotClient implements ClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME = 'es_hubspot_items_cache';
+
+	/**
+	 * Transient cache name for contact properties.
+	 */
+	public const CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME = 'es_hubspot_contact_properties_cache';
 
 	/**
 	 * Filemanager default folder.
@@ -112,6 +117,54 @@ class HubspotClient implements ClientInterface
 		}
 
 		return $output[$itemId] ?? [];
+	}
+
+	/**
+	 * Return contact properties with cache option for faster loading.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getContactProperties(): array
+	{
+		$output = get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if (empty($output)) {
+			$items = $this->getHubspotContactProperties();
+
+			$output = [];
+
+			$allowedTypes = array_flip([
+				'text',
+				'textarea',
+			]);
+
+			foreach ($items as $item) {
+				$name = $item['name'] ?? '';
+				$hidden = $item['hidden'] ?? false;
+				$readOnlyValue = $item['readOnlyValue'] ?? false;
+				$formField = $item['formField'] ?? false;
+				$readOnlyDefinition = $item['readOnlyDefinition'] ?? false;
+				$fieldType = $item['fieldType'] ?? '';
+
+				if (!$name) {
+					continue;
+				}
+
+				if ($hidden || $readOnlyValue || !$formField || $readOnlyDefinition) {
+					continue;
+				}
+
+				if (!isset($allowedTypes[$fieldType])) {
+					continue;
+				}
+
+				$output[] = $name;
+			}
+
+			set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, 3600);
+		}
+
+		return $output;
 	}
 
 	/**
@@ -371,6 +424,24 @@ class HubspotClient implements ClientInterface
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * API request to get contact properties from Hubspot.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getHubspotContactProperties()
+	{
+		$response = \wp_remote_get(
+			$this->getBaseUrl('properties/v1/contacts/properties', true),
+			[
+				'headers' => $this->getHeaders(),
+				'timeout' => 60,
+			]
+		);
+
+		return json_decode(\wp_remote_retrieve_body($response), true);
 	}
 
 	/**

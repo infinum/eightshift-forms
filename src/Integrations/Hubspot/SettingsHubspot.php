@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -81,9 +82,26 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY = 'hubspot-filemanager-folder';
 
 	/**
-	 * Instance variable for Hubspot data.
+	 * Use Clearbit Key.
+	 */
+	public const SETTINGS_HUBSPOT_USE_CLEARBIT_KEY = 'hubspot-use-clearbit';
+
+	/**
+	 * Use Clearbit email field Key.
+	 */
+	public const SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY = 'hubspot-clearbit-email-field';
+
+	/**
+	 * Instance variable for Clearbit data.
 	 *
 	 * @var ClientInterface
+	 */
+	protected $clearbitClient;
+
+	/**
+	 * Instance variable for Hubspot data.
+	 *
+	 * @var HubspotClientInterface
 	 */
 	protected $hubspotClient;
 
@@ -97,13 +115,16 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param ClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
 	 */
 	public function __construct(
-		ClientInterface $hubspotClient,
+		ClientInterface $clearbitClient,
+		HubspotClientInterface $hubspotClient,
 		MapperInterface $hubspot
 	) {
+		$this->clearbitClient = $clearbitClient;
 		$this->hubspotClient = $hubspotClient;
 		$this->hubspot = $hubspot;
 	}
@@ -264,6 +285,151 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				$beforeContent = \apply_filters($filterName, '') ?? '';
 			}
 
+			$formFields = $this->hubspot->getFormFields($formId);
+
+			$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $formId);
+
+			$clearbitOutput = [];
+
+			if ($useClearbit) {
+				$isClearbitUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY, self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY, $formId);
+
+				$clearbitOutput = [
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => __('Clearbit', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+					],
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => '',
+						'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY),
+						'checkboxesId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY),
+						'checkboxesIsRequired' => true,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => __('Use Clearbit integration', 'eightshift-forms'),
+								'checkboxIsChecked' => $isClearbitUsed,
+								'checkboxValue' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
+								'checkboxSingleSubmit' => true,
+							]
+						]
+					],
+				];
+
+				$clearbitOptionsOutput = [];
+
+				if ($isClearbitUsed) {
+					// error_log( print_r( ( $this->clearbitClient->getItems() ), true ) );
+					// error_log( print_r( ( $this->hubspotClient->getContactProperties() ), true ) );
+
+					$clearbitMapOutput = [];
+
+					$hubspotContactProperties = array_merge(
+						[
+							[
+								'component' => 'select-option',
+								'selectOptionLabel' => '',
+								'selectOptionValue' => '',
+							],
+						],
+						array_map(
+							static function ($option) {
+								return [
+									'component' => 'select-option',
+									'selectOptionLabel' => $option,
+									'selectOptionValue' => $option,
+									// 'selectOptionIsSelected' => $this->isCheckedSettings($option['inputId'], self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY, $formId),
+								];
+							},
+							$this->hubspotClient->getContactProperties()
+						)
+					);
+
+					foreach ($this->clearbitClient->getItems() as $item) {
+						$clearbitMapOutput[] = [
+							'component' => 'select',
+							'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY),
+							'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY),
+							'selectFieldLabel' => $item,
+							'selectFieldHelp' => __('Map Clearbit fields with HubSpot fields.', 'eightshift-forms'),
+							'selectOptions' => $hubspotContactProperties,
+							'selectIsRequired' => true,
+							// 'selectValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY, $formId),
+						];
+					}
+
+					// error_log( print_r( ( $clearbitMapOutput ), true ) );
+					
+
+					$clearbitOptionsOutput = array_merge(
+						[
+							[
+								'component' => 'select',
+								'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY),
+								'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY),
+								'selectFieldLabel' => __('Email field', 'eightshift-forms'),
+								'selectFieldHelp' => __('Select what field in HubSpot is email filed.', 'eightshift-forms'),
+								'selectOptions' => array_merge(
+									[
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => '',
+											'selectOptionValue' => '',
+										],
+									],
+									array_map(
+										function ($option) use ($formId) {
+											if ($option['component'] === 'input') {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $option['inputFieldLabel'] ?? '',
+													'selectOptionValue' => $option['inputId'] ?? '',
+													'selectOptionIsSelected' => $this->isCheckedSettings($option['inputId'], self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY, $formId),
+												];
+											}
+										},
+										$formFields
+									),
+								),
+								'selectIsRequired' => true,
+								'selectValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY, $formId),
+							],
+						],
+						$clearbitMapOutput
+					);
+				}
+
+				$clearbitOutput = array_merge($clearbitOutput, $clearbitOptionsOutput);
+			}
+
+			$fieldsOutput = [
+				[
+					'component' => 'divider',
+				],
+				[
+					'component' => 'intro',
+					'introTitle' => __('Form fields', 'eightshift-forms'),
+					'introTitleSize' => 'medium',
+					'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
+					'groupBeforeContent' => $beforeContent,
+					'groupContent' => $this->getIntegrationFieldsDetails(
+						self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
+						self::SETTINGS_TYPE_KEY,
+						$formFields,
+						$formId
+					),
+				]
+			];
+
 			$output = array_merge(
 				$output,
 				[
@@ -285,27 +451,10 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'inputType' => 'text',
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
 					],
-					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => __('Form fields', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
-					],
-					[
-						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
-						'groupBeforeContent' => $beforeContent,
-						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
-							self::SETTINGS_TYPE_KEY,
-							$this->hubspot->getFormFields($formId),
-							$formId
-						),
-					]
-				]
+					
+				],
+				$clearbitOutput,
+				$fieldsOutput
 			);
 		}
 
