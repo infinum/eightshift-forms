@@ -707,6 +707,8 @@ export class Form {
 					case 1:
 						if (value[0] === 'on') {
 							data[key] = true;
+						} else {
+							data[key] = value;
 						}
 						break;
 					default:
