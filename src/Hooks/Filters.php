@@ -109,6 +109,7 @@ class Filters
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
 					'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
 					'email' => SettingsHubspot::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
+					'map' => SettingsHubspot::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
 				],
 			]
 		],
@@ -161,6 +162,9 @@ class Filters
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
+			],
+			SettingsClearbit::SETTINGS_TYPE_KEY => [
+
 			],
 		],
 		'geolocation' => [

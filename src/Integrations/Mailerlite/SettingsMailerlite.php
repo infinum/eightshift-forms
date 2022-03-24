@@ -273,6 +273,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY),
 						'groupBeforeContent' => $beforeContent,
+						'groupStyle' => 'integration',
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,

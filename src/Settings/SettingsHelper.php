@@ -98,6 +98,24 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get option checkbox multiple value.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return array<int, string>
+	 */
+	public function getOptionCheckboxValues(string $key): array
+	{
+		$value = $this->getOptionValue($key);
+
+		if (!$value) {
+			return [];
+		};
+
+		return explode(', ', $value);
+	}
+
+	/**
 	 * Determine if settings is checked (used for radio, and select box).
 	 *
 	 * @param string $key Key to find.
@@ -247,7 +265,7 @@ trait SettingsHelper
 					'component' => 'group',
 					'groupLabel' => ucfirst($label),
 					'groupSaveOneField' => true,
-					'groupStyle' => 'integration',
+					'groupStyle' => 'integration-inner',
 					'groupContent' => [],
 				]
 			];

@@ -85,11 +85,6 @@ class Labels implements LabelsInterface
 			$output = array_merge($output, $this->getGoodbitsLabels());
 		}
 
-		// Clearbit.
-		if ($this->isCheckboxOptionChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY)) {
-			$output = array_merge($output, $this->getClearbitLabels());
-		}
-
 		return $output;
 	}
 
@@ -285,18 +280,6 @@ class Labels implements LabelsInterface
 			'captchaWrongAction' => __('The Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaIncorrectCaptchaSol' => __('The Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
 			'captchaScoreSpam' => __('The automated system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
-		];
-	}
-
-	/**
-	 * Return labels - clearbit
-	 *
-	 * @return array<string, string>
-	 */
-	private function getClearbitLabels(): array
-	{
-		return [
-			'clearbitAuthRequired' => __('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
 		];
 	}
 

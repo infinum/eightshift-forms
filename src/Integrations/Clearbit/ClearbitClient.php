@@ -12,14 +12,13 @@ namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * ClearbitClient integration class.
  */
-class ClearbitClient implements ClientInterface
+class ClearbitClient implements ClearbitClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -32,54 +31,56 @@ class ClearbitClient implements ClientInterface
 	use ObjectHelperTrait;
 
 	/**
-	 * Return items.
-	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getItems(bool $hideUpdateTime = true): array
-	{
-		$output = [];
-
-		foreach ($this->prepareParams() as $key => $value) {
-			$output[] = $key;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Return item with cache option for faster loading.
-	 *
-	 * @param string $itemId Item ID to search by.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getItem(string $itemId): array
-	{
-		return [];
-	}
-
-	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
+	 * @param string $emailKey Email key to map in params.
 	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, string> $mapData Map data from settings.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array
+	public function getApplication(string $emailKey, array $params, array $mapData): array
 	{
+		$email = isset($params[$emailKey]['value']) ? $params[$emailKey]['value'] : '';
 
-		$email = isset($params[$itemId]) ? $params[$itemId]['value'] : '';
+		if (!$email) {
+			$output = [
+				'status' => 'error',
+				'code' => 400,
+				'message' => 'clearbitMissingEmail',
+			];
+
+			Helper::logger([
+				'integration' => 'clearbit',
+				'email' => $email,
+				'mapKeys' => $mapData,
+				'output' => $output,
+			]);
+
+			return $output;
+		}
+
+		if (!$mapData) {
+			$output = [
+				'status' => 'error',
+				'code' => 400,
+				'message' => 'clearbitMissingMapKeys',
+			];
+
+			Helper::logger([
+				'integration' => 'clearbit',
+				'email' => $email,
+				'mapKeys' => $mapData,
+				'output' => $output,
+			]);
+
+			return $output;
+		}
 
 		$response = \wp_remote_get(
 			"{$this->getBaseUrl()}combined/find?email={$email}",
 			[
-				'headers' => $this->getHeaders(true),
+				'headers' => $this->getHeaders(),
 			]
 		);
 
@@ -96,11 +97,20 @@ class ClearbitClient implements ClientInterface
 		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
 
 		if ($code === 200) {
+			$dataOutput = [];
+
+			foreach ($this->prepareParams($responseBody) as $key => $value) {
+				if (array_key_exists($key, $mapData) && !empty($value)) {
+					$dataOutput[$mapData[$key]] = $value;
+				}
+			}
+
 			return [
 				'status' => 'success',
 				'code' => $code,
 				'message' => 'clearbitSuccess',
-				'data' => $this->prepareParams($responseBody),
+				'email' => $email,
+				'data' => $dataOutput,
 			];
 		}
 
@@ -109,12 +119,15 @@ class ClearbitClient implements ClientInterface
 		$output = [
 			'status' => 'error',
 			'code' => $code,
+			'email' => $email,
+			'mapKeys' => $mapData,
 			'message' => $this->getErrorMsg($responseMessage),
 		];
 
 		Helper::logger([
 			'integration' => 'clearbit',
 			'email' => $email,
+			'mapKeys' => $mapData,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,
 			'output' => $output,
@@ -124,16 +137,32 @@ class ClearbitClient implements ClientInterface
 	}
 
 	/**
+	 * Get mapped params.
+	 *
+	 * @return array<int, string>
+	 */
+	public function getParams(): array
+	{
+		$output = [];
+
+		foreach ($this->prepareParams() as $key => $value) {
+			$output[] = $key;
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
 	 *
-	 * @return array<string, array<string, mixed>>
+	 * @return array<string, string>
 	 */
-	private function prepareParams(array $fields = []): array
+	private function prepareParams(array $params = []): array
 	{
-		$person = $fields['person'] ?? [];
-		$company = $fields['company'] ?? [];
+		$person = $params['person'] ?? [];
+		$company = $params['company'] ?? [];
 
 		return [
 			// person.
@@ -181,7 +210,7 @@ class ClearbitClient implements ClientInterface
 			'person-linkedin' => $person['linkedin']['handle'] ?? '',
 			'person-googleplus' => $person['googleplus']['handle'] ?? '',
 
-			// company
+			// company.
 			'company-name' => $company['name'] ?? '',
 			'company-legal-name' => $company['legalName'] ?? '',
 			'company-domain' => $company['domain'] ?? '',
@@ -238,7 +267,6 @@ class ClearbitClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param string $msg Message got from the API.
-	 * @param array<string, mixed> $errors Additional errors got from the API.
 	 *
 	 * @return string
 	 */

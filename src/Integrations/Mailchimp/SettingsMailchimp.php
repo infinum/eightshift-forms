@@ -291,7 +291,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'component' => 'group',
 						'groupHelp' => __('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
 						'groupSaveOneField' => true,
-						'groupContent' =>  array_map(
+						'groupContent' => array_map(
 							function ($tag, $index) use ($formId) {
 								$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
 								$id = $tag['id'] ?? '';
@@ -402,6 +402,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY),
 						'groupBeforeContent' => $beforeContent,
+						'groupStyle' => 'integration',
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,

@@ -143,14 +143,10 @@ class HubspotClient implements HubspotClientInterface
 				$hidden = $item['hidden'] ?? false;
 				$readOnlyValue = $item['readOnlyValue'] ?? false;
 				$formField = $item['formField'] ?? false;
-				$readOnlyDefinition = $item['readOnlyDefinition'] ?? false;
+				$deleted = $item['deleted'] ?: false; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				$fieldType = $item['fieldType'] ?? '';
 
-				if (!$name) {
-					continue;
-				}
-
-				if ($hidden || $readOnlyValue || !$formField || $readOnlyDefinition) {
+				if (!$name || $hidden || $readOnlyValue || !$formField || $deleted) {
 					continue;
 				}
 
@@ -160,6 +156,8 @@ class HubspotClient implements HubspotClientInterface
 
 				$output[] = $name;
 			}
+
+			sort($output);
 
 			set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, 3600);
 		}
@@ -257,6 +255,111 @@ class HubspotClient implements HubspotClientInterface
 				'status' => 'success',
 				'code' => $code,
 				'message' => 'hubspotSuccess',
+			];
+		}
+
+		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseMessage = $responseBody['message'] ?? '';
+		$responseErrors = $responseBody['errors'] ?? [];
+
+		$output = [
+			'status' => 'error',
+			'code' => $code,
+			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
+		];
+
+		Helper::logger([
+			'integration' => 'hubspot',
+			'body' => $body,
+			'response' => $response['response'],
+			'responseBody' => $responseBody,
+			'output' => $output,
+		]);
+
+		return $output;
+	}
+
+	/**
+	 * Post contact property to HubSpot.
+	 *
+	 * @param string $email Email to connect data to.
+	 * @param array<string, mixed> $params Params array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postContactProperty(string $email, array $params): array
+	{
+		if (!$email) {
+			$output = [
+				'status' => 'error',
+				'code' => 400,
+				'message' => 'hubspotContactPropertyMissingEmail',
+			];
+
+			Helper::logger([
+				'integration' => 'hubspot',
+				'email' => $email,
+				'mapKeys' => $params,
+				'output' => $output,
+			]);
+
+			return $output;
+		}
+
+		if (!$params) {
+			$output = [
+				'status' => 'error',
+				'code' => 400,
+				'message' => 'hubspotContactPropertyMissingMapKeys',
+			];
+
+			Helper::logger([
+				'integration' => 'hubspot',
+				'email' => $email,
+				'mapKeys' => $params,
+				'output' => $output,
+			]);
+
+			return $output;
+		}
+
+		$properties = [];
+
+
+		foreach ($params as $key => $value) {
+			$properties[] = [
+				'property' => $key,
+				'value' => $value,
+			];
+		}
+
+		$body = [
+			'properties' => $properties,
+		];
+
+		$response = \wp_remote_post(
+			$this->getBaseUrl("contacts/v1/contact/createOrUpdate/email/{$email}", true),
+			[
+				'headers' => $this->getHeaders(),
+				'body' => wp_json_encode($body),
+			]
+		);
+
+		if (is_wp_error($response)) {
+			return [
+				'status' => 'error',
+				'code' => 400,
+				'message' => $this->getErrorMsg('submitWpError'),
+			];
+		}
+
+		$code = $response['response']['code'] ?? 200;
+
+		if ($code === 200) {
+			return [
+				'status' => 'success',
+				'code' => $code,
+				'message' => 'hubspotContactPropertySuccess',
 			];
 		}
 
@@ -420,7 +523,6 @@ class HubspotClient implements HubspotClientInterface
 				return 'hubspotHasRecaptchaEnabledError';
 			case 'ERROR 429	':
 				return 'hubspotError429Error';
-
 			default:
 				return 'submitWpError';
 		}
@@ -597,7 +699,7 @@ class HubspotClient implements HubspotClientInterface
 				}
 
 				if (empty($value)) {
-					$value = 'false';
+					continue;
 				}
 
 				$value = str_replace(', ', ';', $value);

@@ -4,7 +4,7 @@
 
 .es-select-is-custom,
 .es-select {
-	display: initial;
+	display: inherit;
 	border-color: var(--global-colors-es-chalice) !important;
 	border-radius: 3px !important;
 
