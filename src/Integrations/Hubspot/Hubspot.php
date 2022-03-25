@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Hubspot;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

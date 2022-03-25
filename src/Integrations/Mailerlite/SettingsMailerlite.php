@@ -164,7 +164,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('MailerLite', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25 11.25v-5m2.5 5v-3" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="m11.25 11.2-.304.06a1 1 0 0 1-1.196-.98V6.25l-1 1h2" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="6.75" cy="6.5" r=".75" fill="#29A3A3"/><path d="M13 9h3.25v-.725c0-.897-.727-1.625-1.625-1.625v0c-.898 0-1.625.728-1.625 1.625V9zm0 0v.4c0 2 1.5 2.1 3.25 1.668" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M3.676 14.703 1 17.5V4a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 19 4v9.203a1.5 1.5 0 0 1-1.5 1.5H3.676z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -305,7 +305,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				'introSubtitle' => __('
 					<ol>
 						<li>Log in to your MailerLite Account.</li>
@@ -341,9 +341,6 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),

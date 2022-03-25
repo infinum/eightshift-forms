@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
@@ -128,7 +129,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Captcha', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 13v-1.5m4 1.5v-1.5m-2-8c.828 0 1.25-.422 1.25-1.25C6.75 1.422 6.328 1 5.5 1c-.828 0-1.25.422-1.25 1.25 0 .828.422 1.25 1.25 1.25zm0 0V5M1 7.3a1.8 1.8 0 0 1 1.8-1.8h5.4A1.8 1.8 0 0 1 10 7.3v2.4a1.8 1.8 0 0 1-1.8 1.8H2.8A1.8 1.8 0 0 1 1 9.7V7.3z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="3.75" cy="8.25" r=".75" fill="#29A3A3"/><circle cx="7.25" cy="8.25" r=".75" fill="#29A3A3"/><path d="M12.264 17.918a4 4 0 0 0 5.654-5.654m-5.654 5.654a4 4 0 1 1 5.654-5.654m-5.654 5.654 5.654-5.654" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -187,9 +188,6 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),

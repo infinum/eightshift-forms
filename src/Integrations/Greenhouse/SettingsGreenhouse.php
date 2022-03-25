@@ -171,7 +171,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Greenhouse', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="#29A3A3"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -312,7 +312,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your Greenhouse Account.</li>
@@ -325,7 +325,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the Job Board name?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your Greenhouse Account.</li>
@@ -363,9 +363,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),

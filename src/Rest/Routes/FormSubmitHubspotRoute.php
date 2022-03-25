@@ -15,7 +15,6 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
@@ -132,7 +131,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			$clearbitResponse = $this->clearbitClient->getApplication(
 				$this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formId),
 				$params,
-				$this->getSettingsValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'], $formId)
+				$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'])
 			);
 
 			// If Clearbit data is ok send data to Hubspot.

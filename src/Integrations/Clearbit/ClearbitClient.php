@@ -100,7 +100,7 @@ class ClearbitClient implements ClearbitClientInterface
 			$dataOutput = [];
 
 			foreach ($this->prepareParams($responseBody) as $key => $value) {
-				if (array_key_exists($key, $mapData) && !empty($value)) {
+				if (array_key_exists($key, $mapData) && !empty($value) && !empty($mapData[$key])) {
 					$dataOutput[$mapData[$key]] = $value;
 				}
 			}

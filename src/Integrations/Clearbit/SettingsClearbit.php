@@ -127,6 +127,12 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
+		$mapSet = $this->getOptionValueGroup($typeItems[$type]['map']);
+
+		if (empty($mapSet)) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -157,7 +163,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		return [
 			'label' => __('Clearbit', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><g fill-rule="nonzero" fill="none"><path d="M10 0h7.324C18.8 0 20 1.2 20 2.676V10H10V0Z" fill="#31C2C2"/><path d="M0 10h10v10H3.19A3.191 3.191 0 0 1 0 16.81V10Z" fill="#29A3A3"/><path d="M10 10h10v7.431c0 1.42-1.15 2.57-2.57 2.57H10V10Z" fill="#E7F2FC"/><path d="M3.273 0H10v10H0V3.273A3.275 3.275 0 0 1 3.273 0Z" fill="#2CB7B7"/></g></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -190,7 +196,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your Clearbit Account.</li>
@@ -225,9 +231,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			$apiKey = Variables::getApiKeyClearbit();
 
 			$outputApi = [
-				[
-					'component' => 'divider',
-				],
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
@@ -284,29 +287,24 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
-	 * @param array<string, string> $properties Array of properties from integration.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
 	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
 	 */
-	public function getOutputClearbit(string $formId, array $formFields, array $properties, array $keys): array
+	public function getOutputClearbit(string $formId, array $formFields, array $keys): array
 	{
 		$useKey = isset($keys['use']) ? $keys['use'] : '';
 		$emailFieldKey = isset($keys['email']) ? $keys['email'] : '';
-		$mapKey = isset($keys['map']) ? $keys['map'] : '';
 
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $formId);
-
-		$outputClearbit = [];
-		$outputClearbitMap = [];
 
 		if (!$useClearbit) {
 			return [];
 		}
 
-		$isClearbitUsed = $this->isCheckboxSettingsChecked($useKey, $useKey, $formId);
+		$isUsed = $this->isCheckboxSettingsChecked($useKey, $useKey, $formId);
 
-		$outputClearbit = [
+		$output = [
 			[
 				'component' => 'divider',
 			],
@@ -325,7 +323,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					[
 						'component' => 'checkbox',
 						'checkboxLabel' => __('Use Clearbit integration', 'eightshift-forms'),
-						'checkboxIsChecked' => $isClearbitUsed,
+						'checkboxIsChecked' => $isUsed,
 						'checkboxValue' => $useKey,
 						'checkboxSingleSubmit' => true,
 					]
@@ -333,12 +331,10 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			],
 		];
 
-		if ($isClearbitUsed) {
-			$clearbitAvailableKeys = $this->getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
+		$outputEmail = [];
 
-			$clearbitMapValue = $this->getSettingsValueGroup($mapKey, $formId);
-
-			$outputClearbitMap = [
+		if ($isUsed) {
+			$outputEmail = [
 				[
 					'component' => 'select',
 					'selectName' => $this->getSettingsName($emailFieldKey),
@@ -370,58 +366,91 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					'selectIsRequired' => true,
 					'selectValue' => $this->getSettingsValue($emailFieldKey, $formId),
 				],
-				$clearbitAvailableKeys ? [
-					'component' => 'group',
-					'groupId' => $this->getSettingsName($mapKey),
-					'groupStyle' => 'indent',
-					'groupContent' => [
-						[
-							'component' => 'group',
-							'groupLabel' => __('Map keys:', 'eightshift-forms'),
-							'groupHelp' => __('Map HubSpot keys with Clearbit keys.', 'eightshift-forms'),
-							'groupSaveOneField' => true,
-							'groupContent' =>  array_map(
-								function ($item) use ($clearbitMapValue, $properties) {
-									$selectedValue = $clearbitMapValue[$item] ?? '';
-
-									return [
-										'component' => 'select',
-										'selectName' => $item,
-										'selectId' => $item,
-										'selectFieldLabel' => $item,
-										'selectOptions' => array_merge(
-											[
-												[
-													'component' => 'select-option',
-													'selectOptionLabel' => '',
-													'selectOptionValue' => '',
-												],
-											],
-											array_map(
-												function ($option) use ($selectedValue) {
-													return [
-														'component' => 'select-option',
-														'selectOptionLabel' => $option,
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $selectedValue === $option,
-													];
-												},
-												$properties
-											)
-										),
-									];
-								},
-								$clearbitAvailableKeys
-							),
-						],
-					],
-				] : [],
 			];
 		}
 
 		return array_merge(
-			$outputClearbit,
-			$outputClearbitMap
+			$output,
+			$outputEmail
 		);
+	}
+
+	/**
+	 * Output array settings for form.
+	 *
+	 * @param array<string, string> $properties Array of properties from integration.
+	 * @param array<string, string> $keys Array of keys to get data from.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	public function getOutputGlobalClearbit(array $properties, array $keys): array
+	{
+		$mapKey = isset($keys['map']) ? $keys['map'] : '';
+
+		$isValid = $this->isSettingsGlobalValid();
+
+		if (!$isValid) {
+			return [];
+		}
+
+		$clearbitAvailableKeys = $this->getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
+
+		$clearbitMapValue = $this->getOptionValueGroup($mapKey);
+
+		return [
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => __('Clearbit', 'eightshift-forms'),
+				'introSubtitle' => __('Control which fields from Clearbit are connected to the HubSpot properties. <br/>First column is Clearbit field, and the secound column is HubSpot field.', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+			],
+			$clearbitAvailableKeys ? [
+				'component' => 'group',
+				'groupId' => $this->getSettingsName($mapKey),
+				'groupStyle' => 'default',
+				'groupContent' => [
+					[
+						'component' => 'group',
+						'groupSaveOneField' => true,
+						'groupContent' =>  array_map(
+							function ($item) use ($clearbitMapValue, $properties) {
+								$selectedValue = $clearbitMapValue[$item] ?? '';
+
+								return [
+									'component' => 'select',
+									'selectName' => $item,
+									'selectId' => $item,
+									'selectFieldLabel' => $item,
+									'selectOptions' => array_merge(
+										[
+											[
+												'component' => 'select-option',
+												'selectOptionLabel' => '',
+												'selectOptionValue' => '',
+											],
+										],
+										array_map(
+											function ($option) use ($selectedValue) {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $option,
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $selectedValue === $option,
+												];
+											},
+											$properties
+										)
+									),
+								];
+							},
+							$clearbitAvailableKeys
+						),
+					],
+				],
+			] : [],
+		];
 	}
 }

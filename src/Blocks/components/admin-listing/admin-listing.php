@@ -102,6 +102,7 @@ $layoutClass = Components::classnames([
 						$settingsLocationLink = $form['settingsLocationLink'] ?? '';
 						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+						$activeIntegrations = $form['activeIntegrations'] ?? [];
 
 						$slug = $editLink;
 						if (!$editLink) {
@@ -120,6 +121,24 @@ $layoutClass = Components::classnames([
 									<?php } ?>
 
 									<span><?php echo $title ? esc_html($title) : esc_html($id); ?></span>
+
+									<?php if ($activeIntegrations) { ?>
+										<div class="<?php echo \esc_attr("{$componentClass}__integration"); ?>">
+											<?php foreach ($activeIntegrations as $integration) { ?>
+												<?php
+												$label = $integration['label'] ?? '';
+												$icon = $integration['icon'] ?? '';
+
+												if (!$label || !$icon) {
+													continue;
+												}
+												?>
+												<span title="<?php echo esc_attr($label); ?>">
+													<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+												</span>
+											<?php } ?>
+										</div>
+									<?php } ?>
 								</a>
 
 								<?php if ($status !== 'publish') { ?>

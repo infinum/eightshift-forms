@@ -163,7 +163,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Goodbits', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6.5 13.5 2.358-7.074m.249 7.074 2.358-7.074m.25 7.074 2.358-7.074" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="10" cy="10" r="9" stroke="#29A3A3" stroke-width="1.5" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -298,7 +298,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your Goodbits Account.</li>
@@ -333,9 +333,6 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			$output = array_merge(
 				$output,
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GOODBITS_API_KEY_KEY),

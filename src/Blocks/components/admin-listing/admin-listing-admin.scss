@@ -101,4 +101,22 @@
 		color: var(--global-colors-es-matisse);
 		background: var(--global-colors-es-matisse-05);
 	}
+
+	&__integration {
+		display: flex;
+		align-items: center;
+		padding-left: 20px;
+
+		> * {
+			padding-right: 10px;
+
+			&:last-child {
+				padding-right: 0;
+			}
+		}
+
+		svg {
+			vertical-align: middle;
+		}
+	}
 }

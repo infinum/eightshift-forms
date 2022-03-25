@@ -207,7 +207,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('HubSpot', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="#29A3A3" r="1.75"/><circle cx="14.25" cy="2.75" fill="#29A3A3" r="1.75"/><circle cx="7.75" cy="17.75" fill="#29A3A3" r="1.75"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -259,11 +259,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				$this->settingsClearbit->getOutputClearbit(
 					$formId,
 					$formFields,
-					$this->hubspotClient->getContactProperties(),
 					[
 						'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
 						'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
-						'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
 					]
 				),
 				$this->getOutputFields($formId, $formFields)
@@ -293,7 +291,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your HubSpot account</li>
@@ -324,15 +322,13 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			],
 		];
 
+		$outputValid = [];
+
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyHubspot();
 
-			$output = array_merge(
-				$output,
+			$outputValid = array_merge(
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
@@ -343,12 +339,21 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
+					],
+				],
+				$this->settingsClearbit->getOutputGlobalClearbit(
+					$this->hubspotClient->getContactProperties(),
+					[
+						'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
 					]
-				]
+				)
 			);
 		}
 
-		return $output;
+		return array_merge(
+			$output,
+			$outputValid
+		);
 	}
 
 	/**
