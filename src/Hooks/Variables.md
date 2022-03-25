@@ -103,3 +103,10 @@ string:
 ```php
 define('ES_GEOLOCAITON', '<country-code>');
 ```
+
+## Set Clearbit api key
+
+This variable will set forms Clearbit api key and you will not be able to change it from the admin.
+
+```php
+define('ES_API_KEY_CLEARBIT', '<api-key>');
