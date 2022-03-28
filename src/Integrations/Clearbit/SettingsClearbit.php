@@ -385,7 +385,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function getOutputGlobalClearbit(array $properties, array $keys): array
 	{
-		$mapKey = isset($keys['map']) ? $keys['map'] : '';
+		$mapKey = $keys['map'] ?? '';
 
 		$isValid = $this->isSettingsGlobalValid();
 
