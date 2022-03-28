@@ -433,7 +433,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 											],
 										],
 										array_map(
-											function ($option) use ($selectedValue) {
+											static function ($option) use ($selectedValue) {
 												return [
 													'component' => 'select-option',
 													'selectOptionLabel' => $option,
