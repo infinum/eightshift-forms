@@ -133,10 +133,10 @@ class HubspotClient implements HubspotClientInterface
 
 			$output = [];
 
-			$allowedTypes = array_flip([
-				'text',
-				'textarea',
-			]);
+			$allowedTypes = [
+				'text' => 0,
+				'textarea' => 1,
+			];
 
 			foreach ($items as $item) {
 				$name = $item['name'] ?? '';
