@@ -416,7 +416,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'component' => 'group',
 						'groupSaveOneField' => true,
 						'groupContent' =>  array_map(
-							function ($item) use ($clearbitMapValue, $properties) {
+							static function ($item) use ($clearbitMapValue, $properties) {
 								$selectedValue = $clearbitMapValue[$item] ?? '';
 
 								return [
