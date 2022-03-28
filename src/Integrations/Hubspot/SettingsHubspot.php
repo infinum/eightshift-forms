@@ -469,7 +469,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'component' => 'intro',
 				'introTitle' => __('Form fields', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+				'introSubtitle' => __('Controls which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'group',
