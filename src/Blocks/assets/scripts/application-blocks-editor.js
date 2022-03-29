@@ -11,7 +11,11 @@
  */
 
 import { unregisterBlockType } from '@wordpress/blocks';
-import { registerBlocks, outputCssVariablesGlobal } from '@eightshift/frontend-libs/scripts/editor';
+import {
+	registerBlocks,
+	outputCssVariablesGlobal,
+	outputCssVariablesCombined
+} from '@eightshift/frontend-libs/scripts/editor';
 import { Wrapper } from '../../wrapper/wrapper';
 import WrapperManifest from '../../wrapper/manifest.json';
 import globalSettings from '../../manifest.json';
@@ -29,6 +33,9 @@ registerBlocks(
 
 // Output global css variables.
 outputCssVariablesGlobal(globalSettings);
+
+// Output content css variables in one style tag.
+outputCssVariablesCombined();
 
 // Remove form-selector block from anywhere else other than form CPT.
 if (esFormsBlocksLocalization?.postType !== 'eightshift-forms') {
