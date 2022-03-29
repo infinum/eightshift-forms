@@ -385,7 +385,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function getOutputGlobalClearbit(array $properties, array $keys): array
 	{
-		$mapKey = isset($keys['map']) ? $keys['map'] : '';
+		$mapKey = $keys['map'] ?? '';
 
 		$isValid = $this->isSettingsGlobalValid();
 
@@ -416,7 +416,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'component' => 'group',
 						'groupSaveOneField' => true,
 						'groupContent' =>  array_map(
-							function ($item) use ($clearbitMapValue, $properties) {
+							static function ($item) use ($clearbitMapValue, $properties) {
 								$selectedValue = $clearbitMapValue[$item] ?? '';
 
 								return [
@@ -433,7 +433,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 											],
 										],
 										array_map(
-											function ($option) use ($selectedValue) {
+											static function ($option) use ($selectedValue) {
 												return [
 													'component' => 'select-option',
 													'selectOptionLabel' => $option,

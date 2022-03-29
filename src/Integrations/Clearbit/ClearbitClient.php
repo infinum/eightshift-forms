@@ -301,7 +301,7 @@ class ClearbitClient implements ClearbitClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */
