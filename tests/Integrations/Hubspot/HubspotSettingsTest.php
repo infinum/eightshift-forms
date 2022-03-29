@@ -3,9 +3,9 @@
 namespace Tests\Unit\Integrations\Hubspot;
 
 use Brain\Monkey;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
+use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Labels\Labels;
@@ -16,7 +16,7 @@ use function Tests\setupMocks;
 class SettingsHubspotMock extends SettingsHubspot {
 
 	public function __construct(
-		ClientInterface $hubspotClient,
+		HubspotClientInterface $hubspotClient,
 		MapperInterface $hubspot
 	) {
 		parent::__construct($hubspotClient, $hubspot);

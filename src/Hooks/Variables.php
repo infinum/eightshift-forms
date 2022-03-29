@@ -134,4 +134,14 @@ class Variables
 	{
 		return defined('ES_GEOLOCAITON') ? strtoupper(ES_GEOLOCAITON) : '';
 	}
+
+	/**
+	 * Get API Key for Clearbit.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getApiKeyClearbit()
+	{
+		return defined('ES_API_KEY_CLEARBIT') ? ES_API_KEY_CLEARBIT : '';
+	}
 }

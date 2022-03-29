@@ -98,6 +98,41 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get option value array.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getOptionValueGroup(string $key): array
+	{
+		$value = \get_option($this->getSettingsName($key), false);
+		if (!$value) {
+			return [];
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get option checkbox multiple value.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return array<int, string>
+	 */
+	public function getOptionCheckboxValues(string $key): array
+	{
+		$value = $this->getOptionValue($key);
+
+		if (!$value) {
+			return [];
+		};
+
+		return explode(', ', $value);
+	}
+
+	/**
 	 * Determine if settings is checked (used for radio, and select box).
 	 *
 	 * @param string $key Key to find.
@@ -247,7 +282,7 @@ trait SettingsHelper
 					'component' => 'group',
 					'groupLabel' => ucfirst($label),
 					'groupSaveOneField' => true,
-					'groupStyle' => 'integration',
+					'groupStyle' => 'integration-inner',
 					'groupContent' => [],
 				]
 			];
@@ -259,7 +294,7 @@ trait SettingsHelper
 					'component' => 'input',
 					'inputId' => "{$id}---{$breakpoint}",
 					// translators: %s is replaced with the breakpoint name.
-					'inputFieldLabel' => sprintf(\esc_html__('Field width (%s)', 'eightshift-forms'), $breakpoint),
+					'inputFieldLabel' => sprintf(\esc_html__('Width (%s)', 'eightshift-forms'), $breakpoint),
 					'inputType' => 'number',
 					'inputValue' => $fieldsValues["{$id}---{$breakpoint}"] ?? '',
 					'inputMin' => 0,

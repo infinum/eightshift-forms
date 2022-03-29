@@ -17,12 +17,13 @@
 	}
 
 	&__label {
-		font-size: 0.85rem;
+		font-size: 15px;
 		padding: 0;
 		margin-bottom: 0.625rem;
 		display: block;
 
 		@include media(desktop up) {
+			font-size: inherit;
 			padding-top: 0.75rem;
 			margin-bottom: 0;
 			grid-column-start: 1;

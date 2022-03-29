@@ -41,6 +41,9 @@ Supported fields:
 
 [API Submit](https://legacydocs.hubspot.com/docs/methods/forms/submit_form)
 [API Files](https://legacydocs.hubspot.com/docs/methods/files/v3/upload_new_file)
+[API Update Contact](https://legacydocs.hubspot.com/docs/methods/contacts/create_or_update)
+[API Properties](https://legacydocs.hubspot.com/docs/methods/contacts/v2/get_contacts_properties)
+[API Forms](https://legacydocs.hubspot.com/docs/methods/forms/v2/get_forms)
 
 Version Submit: **v3**
 Version Items: **v2**
@@ -82,3 +85,12 @@ Supported fields:
 * Text
 * Date
 * Number
+
+# Clearbit
+
+[API](https://dashboard.clearbit.com/docs)
+
+Version: **v2**
+
+Supported fields:
+* All

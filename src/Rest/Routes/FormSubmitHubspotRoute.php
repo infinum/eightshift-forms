@@ -12,7 +12,10 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
+use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -49,25 +52,35 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var ClientInterface
+	 * @var HubspotClientInterface
 	 */
 	protected $hubspotClient;
+
+	/**
+	 * Instance variable for Clearbit data.
+	 *
+	 * @var ClearbitClientInterface
+	 */
+	protected $clearbitClient;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
+	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $hubspotClient
+		HubspotClientInterface $hubspotClient,
+		ClearbitClientInterface $clearbitClient
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->hubspotClient = $hubspotClient;
+		$this->clearbitClient = $clearbitClient;
 	}
 
 	/**
@@ -109,6 +122,26 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			$files,
 			$formId
 		);
+
+		// Check if Hubspot is using Clearbit.
+		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
+
+		if ($useClearbit) {
+			// Get Clearbit data.
+			$clearbitResponse = $this->clearbitClient->getApplication(
+				$this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formId),
+				$params,
+				$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'])
+			);
+
+			// If Clearbit data is ok send data to Hubspot.
+			if ($clearbitResponse['code'] === 200) {
+				$this->hubspotClient->postContactProperty(
+					$clearbitResponse['email'] ?? '',
+					$clearbitResponse['data'] ?? []
+				);
+			}
+		}
 
 		// Always delete the files from the disk.
 		if ($files) {

@@ -15,6 +15,8 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -81,9 +83,38 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY = 'hubspot-filemanager-folder';
 
 	/**
+	 * Use Clearbit Key.
+	 */
+	public const SETTINGS_HUBSPOT_USE_CLEARBIT_KEY = 'hubspot-use-clearbit';
+
+	/**
+	 * Use Clearbit email field Key.
+	 */
+	public const SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY = 'hubspot-clearbit-email-field';
+
+	/**
+	 * Use Clearbit map keys Key.
+	 */
+	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
+
+	/**
+	 * Instance variable for Clearbit data.
+	 *
+	 * @var ClearbitClientInterface
+	 */
+	protected $clearbitClient;
+
+	/**
+	 * Instance variable for Clearbit settings.
+	 *
+	 * @var SettingsClearbitDataInterface
+	 */
+	protected $settingsClearbit;
+
+	/**
 	 * Instance variable for Hubspot data.
 	 *
-	 * @var ClientInterface
+	 * @var HubspotClientInterface
 	 */
 	protected $hubspotClient;
 
@@ -97,13 +128,19 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
+	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
+	 * @param SettingsClearbitDataInterface $settingsClearbit Inject Clearbit which holds Clearbit settings data.
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
 	 */
 	public function __construct(
-		ClientInterface $hubspotClient,
+		ClearbitClientInterface $clearbitClient,
+		SettingsClearbitDataInterface $settingsClearbit,
+		HubspotClientInterface $hubspotClient,
 		MapperInterface $hubspot
 	) {
+		$this->clearbitClient = $clearbitClient;
+		$this->settingsClearbit = $settingsClearbit;
 		$this->hubspotClient = $hubspotClient;
 		$this->hubspot = $hubspot;
 	}
@@ -170,7 +207,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('HubSpot', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="#29A3A3" r="1.75"/><circle cx="14.25" cy="2.75" fill="#29A3A3" r="1.75"/><circle cx="7.75" cy="17.75" fill="#29A3A3" r="1.75"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -183,6 +220,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
 			return [
 				[
@@ -196,9 +234,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		}
 
 		$items = $this->hubspotClient->getItems(false);
-		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
-		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
 
+		// Bailout if items are missing.
 		if (!$items) {
 			return [
 				[
@@ -210,106 +247,31 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$itemOptions = array_map(
-			function ($option) use ($formId) {
-				$id = $option['id'] ?? '';
-
-				return [
-					'component' => 'select-option',
-					'selectOptionLabel' => $option['title'] ?? '',
-					'selectOptionValue' => $id,
-					'selectOptionIsSelected' => $this->isCheckedSettings($id, self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
-				];
-			},
-			$items
-		);
-
-		array_unshift(
-			$itemOptions,
-			[
-				'component' => 'select-option',
-				'selectOptionLabel' => '',
-				'selectOptionValue' => '',
-			]
-		);
-
+		// Find selected item.
 		$selectedItem = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/Blocks/components/form');
 
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => __('HubSpot', 'eightshift-forms'),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
-				'selectFieldLabel' => __('Form', 'eightshift-forms'),
-				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => sprintf(__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
-				'selectOptions' => $itemOptions,
-				'selectIsRequired' => true,
-				'selectValue' => $selectedItem,
-				'selectSingleSubmit' => true,
-			],
-		];
-
-		// If the user has selected the list.
+		// If the user has selected the list item add additional settings.
 		if ($selectedItem) {
-			$beforeContent = '';
-
-			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-			if (has_filter($filterName)) {
-				$beforeContent = \apply_filters($filterName, '') ?? '';
-			}
+			$formFields = $this->hubspot->getFormFields($formId);
 
 			$output = array_merge(
-				$output,
-				[
+				$this->getOutputFilemanager($formId),
+				$this->settingsClearbit->getOutputClearbit(
+					$formId,
+					$formFields,
 					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => __('File manager', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-					],
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-						'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
-						'inputFieldLabel' => __('Folder', 'eightshift-forms'),
-						'inputFieldHelp' => __('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
-						'inputType' => 'text',
-						'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
-					],
-					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => __('Form fields', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
-					],
-					[
-						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
-						'groupBeforeContent' => $beforeContent,
-						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
-							self::SETTINGS_TYPE_KEY,
-							$this->hubspot->getFormFields($formId),
-							$formId
-						),
+						'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
+						'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
 					]
-				]
+				),
+				$this->getOutputFields($formId, $formFields)
 			);
 		}
 
-		return $output;
+		return array_merge(
+			$this->getOutputFormSelection($formId, $items, $selectedItem),
+			$output ?? []
+		);
 	}
 
 	/**
@@ -329,7 +291,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your HubSpot account</li>
@@ -360,15 +322,13 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			],
 		];
 
+		$outputValid = [];
+
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyHubspot();
 
-			$output = array_merge(
-				$output,
+			$outputValid = array_merge(
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
@@ -379,11 +339,150 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
+					],
+				],
+				$this->settingsClearbit->getOutputGlobalClearbit(
+					$this->hubspotClient->getContactProperties(),
+					[
+						'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
 					]
-				]
+				)
 			);
 		}
 
-		return $output;
+		return array_merge(
+			$output,
+			$outputValid
+		);
+	}
+
+	/**
+	 * Output array - form selection.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedItem Selected form item.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelection(string $formId, array $items, string $selectedItem): array
+	{
+		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/Blocks/components/form');
+
+		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
+
+		return [
+			[
+				'component' => 'intro',
+				'introTitle' => __('HubSpot', 'eightshift-forms'),
+			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
+				'selectFieldLabel' => __('Form', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
+				'selectFieldHelp' => sprintf(__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
+				'selectOptions' => array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					array_map(
+						function ($option) use ($formId) {
+							$id = $option['id'] ?? '';
+
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $id,
+								'selectOptionIsSelected' => $this->isCheckedSettings($id, self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedItem,
+				'selectSingleSubmit' => true,
+			],
+		];
+	}
+
+	/**
+	 * Output array - file manager.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	private function getOutputFilemanager(string $formId): array
+	{
+		return [
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => __('File manager', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+			],
+			[
+				'component' => 'input',
+				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+				'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
+				'inputFieldLabel' => __('Folder', 'eightshift-forms'),
+				'inputFieldHelp' => __('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
+				'inputType' => 'text',
+				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+			],
+		];
+	}
+
+	/**
+	 * Output array - integration fields.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputFields(string $formId, array $formFields): array
+	{
+		$beforeContent = '';
+
+		$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
+		if (has_filter($filterName)) {
+			$beforeContent = \apply_filters($filterName, '') ?? '';
+		}
+
+		return [
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => __('Form fields', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+				'introSubtitle' => __('Controls which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'group',
+				'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
+				'groupBeforeContent' => $beforeContent,
+				'groupStyle' => 'integration',
+				'groupContent' => $this->getIntegrationFieldsDetails(
+					self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
+					self::SETTINGS_TYPE_KEY,
+					$formFields,
+					$formId
+				),
+			]
+		];
 	}
 }

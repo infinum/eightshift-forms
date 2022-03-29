@@ -181,7 +181,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		return [
 			'label' => __('Mailchimp', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.927 11.43c-.615-.488-1.661-1.85-.923-3.408.923-1.947 3.23-5.354 5.076-6.328 2.662-1.404 2.768-.973 4.152 0" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4.772 9.969c0-1.947 1.043-5.94 8.306-9.005 2.307-.973 4.614 1.541 1.845 4.137" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14.924 5.101c-2.153-.649-6.736-1.752-9.69 2.92m9.69-2.92c.308.65.923 2.19.923 4.138.923.243 2.492 1.022 1.384 2.19.77.487 1.846 2.142 0 4.868-1.846 2.725-5.075 3.082-6.46 2.92-1.23-.162-3.968-1.265-5.075-4.38" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.616 7.535c-.154-.487-1.061-1.655-2.538-.487-1.697 1.343-3.23-1.46-3.691 1.947 0 .325.185 1.266.923 2.434-.77.974-1.486 2.761-.462 4.38.923 1.461 3.23 2.921 7.383.488" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M17.231 11.43c-.461.486-1.846 1.46-3.691 1.46-1.846 0-2.307.648-2.307.973.153 1.136 1.245 3.115 5.306 0m-5.063-4.031c.175-.2.65-.5 1.149-.1m1.376-1.223.23.73" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="14.117" cy="11.064" rx=".577" ry=".608" fill="#29A3A3"/><ellipse cx="14.809" cy="10.821" rx=".577" ry=".608" fill="#29A3A3"/><path d="M2.927 11.43c.566-1.088 1.385-1.461 1.846-1.461.462 0 1.846.487 1.846 2.92 0 2.613-3.158 1.835-3.62.861-.499-1-.499-1.5-.072-2.32z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5.695 14.35c-.307-.812-.825-2.49-1.195-2.1" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 
@@ -291,14 +291,14 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'component' => 'group',
 						'groupHelp' => __('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
 						'groupSaveOneField' => true,
-						'groupContent' =>  array_map(
+						'groupContent' => array_map(
 							function ($tag, $index) use ($formId) {
 								$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
 								$id = $tag['id'] ?? '';
 
 								return [
 									'component' => 'input',
-									'inputFieldLabel' => $index === 0 ? __('Tags label overrides', 'eightshift-forms') : '',
+									'inputFieldLabel' => '',
 									'inputName' => $id,
 									'inputId' => $id,
 									'inputPlaceholder' => $tag['name'],
@@ -345,6 +345,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						[
 							'component' => 'group',
 							'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY),
+							'groupLabel' => __('Tags list', 'eightshift-forms'),
 							'groupStyle' => 'tags',
 							'groupContent' => [
 								[
@@ -354,7 +355,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 									'groupContent' => [
 										[
 											'component' => 'checkboxes',
-											'checkboxesFieldLabel' => __('Tags list', 'eightshift-forms'),
+											'checkboxesFieldLabel' => '',
 											'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
 											'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
 											'checkboxesContent' => array_map(
@@ -402,6 +403,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY),
 						'groupBeforeContent' => $beforeContent,
+						'groupStyle' => 'integration',
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
 							self::SETTINGS_TYPE_KEY,
@@ -436,7 +438,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			[
 				'component' => 'intro',
 				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
+				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => __('<ol>
 						<li>Log in to your Mailchimp Account.</li>
@@ -474,9 +476,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			$output = array_merge(
 				$output,
 				[
-					[
-						'component' => 'divider',
-					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),

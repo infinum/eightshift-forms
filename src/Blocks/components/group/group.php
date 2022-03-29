@@ -16,6 +16,7 @@ $componentJsClass = $manifest['componentJsClass'] ?? '';
 $componentJsClassInner = $manifest['componentJsClassInner'] ?? '';
 
 $groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
+$groupSublabel = Components::checkAttr('groupSublabel', $attributes, $manifest);
 $groupContent = Components::checkAttr('groupContent', $attributes, $manifest);
 $groupId = Components::checkAttr('groupId', $attributes, $manifest);
 $groupSaveOneField = Components::checkAttr('groupSaveOneField', $attributes, $manifest);
@@ -40,7 +41,15 @@ $groupClass = Components::classnames([
 
 	<?php if ($groupLabel) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__label"); ?>">
-			<?php echo esc_html($groupLabel); ?>
+			<div class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+				<?php echo esc_html($groupLabel); ?>
+			</div>
+
+			<?php if ($groupSublabel) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__sub-label"); ?>">
+					<?php echo esc_html($groupSublabel); ?>
+				</div>
+			<?php } ?>
 		</div>
 	<?php } ?>
 

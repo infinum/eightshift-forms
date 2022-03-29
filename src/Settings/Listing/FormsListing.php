@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 
 /**
@@ -24,7 +25,7 @@ class FormsListing implements FormListingInterface
 	 *
 	 * @param string $status Status for listing to output.
 	 *
-	 * @return array<int, array<string, int|string|bool>>
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function getFormsList(string $status): array
 	{
@@ -56,7 +57,39 @@ class FormsListing implements FormListingInterface
 				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
+				'activeIntegrations' => $this->getActiveIntegrationsIcons((string) $id),
 			];
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get all active integrations on specific form.
+	 *
+	 * @param string $id Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getActiveIntegrationsIcons(string $id): array
+	{
+		$output = [];
+
+		foreach (Filters::ALL as $key => $integration) {
+			$validFilterName = $integration['valid'] ?? '';
+
+			if (!$validFilterName) {
+				continue;
+			}
+
+			$valid = apply_filters($validFilterName, $id);
+
+			if ($valid) {
+				$output[] = [
+					'label' => ucfirst($key),
+					'icon' => Filters::ALL[$key]['icon'],
+				];
+			}
 		}
 
 		return $output;

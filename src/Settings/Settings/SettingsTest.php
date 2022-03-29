@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -59,7 +60,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 		return [
 			'label' => __('Test', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.988 7.75v-5c0-1-.315-1.5-1.037-1.5-.72 0-1.217.5-1.217 1.5v8L5.372 7.9c-.58-.767-1.111-.925-1.664-.41-.553.513-.643 1.25-.063 2.016l.934 1.244c.45.5.587 1.104 1.352 4.5.45 2 2.664 3.432 4.959 3.5 3.113.092 5.86-2.545 5.86-6v-4c0-1-.316-1.5-1.037-1.5-.721 0-1.217.5-1.217 1.5m-4.508-1c0-1 .496-1.5 1.217-1.5.722 0 1.037 1 1.037 2m-2.254-.5v1.5m2.254-1c0-1 .496-1.5 1.217-1.5.722 0 1.037 1 1.037 2m-2.254-.5v1.5m2.254-1v2" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
 	}
 

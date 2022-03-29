@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
@@ -38,6 +39,7 @@ class Labels implements LabelsInterface
 		'hubspotSuccess',
 		'mailerliteSuccess',
 		'goodbitsSuccess',
+		'clearbitSuccess',
 	];
 
 	/**

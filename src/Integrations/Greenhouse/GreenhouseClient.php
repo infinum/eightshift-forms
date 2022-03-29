@@ -26,6 +26,13 @@ class GreenhouseClient implements ClientInterface
 	use SettingsHelper;
 
 	/**
+	 * Return Greenhouse base url.
+	 *
+	 * @var string
+	 */
+	private const BASE_URL = 'https://boards-api.greenhouse.io/v1/';
+
+	/**
 	 * Transient cache name for items.
 	 */
 	public const CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME = 'es_greenhouse_items_cache';
@@ -127,7 +134,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		$response = \wp_remote_post(
-			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs/{$itemId}",
+			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
 				'body' => wp_json_encode($body),
@@ -227,7 +234,7 @@ class GreenhouseClient implements ClientInterface
 	private function getGreenhouseJobs()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs",
+			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -253,7 +260,7 @@ class GreenhouseClient implements ClientInterface
 	private function getGreenhouseJob(string $jobId)
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
+			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -362,15 +369,5 @@ class GreenhouseClient implements ClientInterface
 		$apiKey = Variables::getApiKeyGreenhouse();
 
 		return base64_encode($apiKey ? $apiKey : $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-	}
-
-	/**
-	 * Return Greenhouse base url.
-	 *
-	 * @return string
-	 */
-	private function getBaseUrl(): string
-	{
-		return 'https://boards-api.greenhouse.io/v1/';
 	}
 }
