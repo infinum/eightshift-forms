@@ -18,7 +18,9 @@ $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
-if (!$this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+$checkEnqueue = $this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+
+if (!$checkEnqueue) {
 	echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
@@ -148,3 +150,9 @@ if ($formsServerSideRender) {
 	}
 	?>
 </div>
+
+<?php
+
+if (!$checkEnqueue) {
+	echo Components::outputCssVariablesCombined(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
