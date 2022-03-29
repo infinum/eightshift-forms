@@ -17,8 +17,8 @@ use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Enqueue_Blocks class.

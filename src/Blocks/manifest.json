@@ -5,6 +5,11 @@
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "/wp-admin/admin.php?page=es-settings",
 	"editFormUrl": "/wp-admin/post.php?action=edit",
+	"config": {
+		"outputCssVariablesGlobally": false,
+		"outputCssVariablesGloballyOptimize": false,
+		"outputCssVariablesSelectorName": "esFormsCssVariables"
+	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"esMaxCols": 12,
