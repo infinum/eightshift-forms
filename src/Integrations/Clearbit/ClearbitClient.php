@@ -31,6 +31,13 @@ class ClearbitClient implements ClearbitClientInterface
 	use ObjectHelperTrait;
 
 	/**
+	 * Return Clearbit base url.
+	 *
+	 * @var string
+	 */
+	private const BASE_URL = 'https://person-stream.clearbit.com/v2/';
+
+	/**
 	 * API request to post application.
 	 *
 	 * @param string $emailKey Email key to map in params.
@@ -78,7 +85,7 @@ class ClearbitClient implements ClearbitClientInterface
 		}
 
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}combined/find?email={$email}",
+			self::BASE_URL . "combined/find?email={$email}",
 			[
 				'headers' => $this->getHeaders(),
 			]
@@ -302,16 +309,6 @@ class ClearbitClient implements ClearbitClientInterface
 	{
 		$apiKey = Variables::getApiKeyClearbit();
 
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-	}
-
-	/**
-	 * Return Clearbit base url.
-	 *
-	 * @return string
-	 */
-	private function getBaseUrl(): string
-	{
-		return 'https://person-stream.clearbit.com/v2/';
+		return $apiKey ? $apiKey : $this->getOptionValue(SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY);
 	}
 }

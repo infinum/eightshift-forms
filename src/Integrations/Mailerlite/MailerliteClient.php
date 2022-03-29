@@ -26,6 +26,13 @@ class MailerliteClient implements ClientInterface
 	use SettingsHelper;
 
 	/**
+	 * Return Mailerlite base url.
+	 *
+	 * @var string
+	 */
+	private const BASE_URL = 'https://api.mailerlite.com/api/v2/';
+
+	/**
 	 * Transient cache name for items.
 	 */
 	public const CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME = 'es_mailerlite_items_cache';
@@ -124,7 +131,7 @@ class MailerliteClient implements ClientInterface
 		];
 
 		$response = \wp_remote_request(
-			"{$this->getBaseUrl()}groups/{$itemId}/subscribers",
+			self::BASE_URL . "groups/{$itemId}/subscribers",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'POST',
@@ -214,7 +221,7 @@ class MailerliteClient implements ClientInterface
 	private function getMailerliteListFields()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}fields",
+			self::BASE_URL . "fields",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -234,7 +241,7 @@ class MailerliteClient implements ClientInterface
 	private function getMailerliteLists()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}groups",
+			self::BASE_URL . "groups",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -262,16 +269,6 @@ class MailerliteClient implements ClientInterface
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Return Mailerlite base url.
-	 *
-	 * @return string
-	 */
-	private function getBaseUrl(): string
-	{
-		return "https://api.mailerlite.com/api/v2/";
 	}
 
 	/**

@@ -32,6 +32,13 @@ class GoodbitsClient implements ClientInterface
 	use ObjectHelperTrait;
 
 	/**
+	 * Return Goodbits base url.
+	 *
+	 * @var string
+	 */
+	private const BASE_URL = 'https://app.goodbits.io/api/v1/';
+
+	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -96,7 +103,7 @@ class GoodbitsClient implements ClientInterface
 		];
 
 		$response = \wp_remote_request(
-			"{$this->getBaseUrl()}subscribers",
+			self::BASE_URL . "subscribers",
 			[
 				'headers' => $this->getHeaders($itemId),
 				'method' => 'POST',
@@ -211,15 +218,5 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Return Goodbits base url.
-	 *
-	 * @return string
-	 */
-	private function getBaseUrl(): string
-	{
-		return "https://app.goodbits.io/api/v1/";
 	}
 }
