@@ -6,8 +6,8 @@
 	"settingsPageUrl": "/wp-admin/admin.php?page=es-settings",
 	"editFormUrl": "/wp-admin/post.php?action=edit",
 	"config": {
-		"outputCssVariablesGlobally": true,
-		"outputCssVariablesGloballyOptimize": true,
+		"outputCssVariablesGlobally": false,
+		"outputCssVariablesGloballyOptimize": false,
 		"outputCssVariablesSelectorName": "esFormsCssVariables"
 	},
 	"globalVariables": {
