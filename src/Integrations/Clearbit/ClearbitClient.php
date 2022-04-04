@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
@@ -171,7 +172,7 @@ class ClearbitClient implements ClearbitClientInterface
 		$person = $params['person'] ?? [];
 		$company = $params['company'] ?? [];
 
-		return [
+		$output = [
 			// person.
 			'person-full-name' => $person['name']['fullName'] ?? '',
 			'person-first-name' => $person['name']['givenName'] ?? '',
@@ -197,7 +198,9 @@ class ClearbitClient implements ClearbitClientInterface
 			'person-employment-sub-role' => $person['employment']['subRole'] ?? '',
 			'person-employment-seniority' => $person['employment']['seniority'] ?? '',
 			'person-facebook' => $person['facebook']['handle'] ?? '',
+			'person-facebook-profile' => isset($person['facebook']['handle']) ? "https://facebook.com/" . $person['facebook']['handle']  : '',
 			'person-github' => $person['github']['handle'] ?? '',
+			'person-github-profile' => isset($person['github']['handle']) ? "https://github.com/" . $person['github']['handle']  : '',
 			'person-github-id' => $person['github']['id'] ?? '',
 			'person-github-avatar' => $person['github']['avatar'] ?? '',
 			'person-github-company' => $person['github']['company'] ?? '',
@@ -205,6 +208,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'person-github-followers' => $person['github']['followers'] ?? '',
 			'person-github-following' => $person['github']['following'] ?? '',
 			'person-twitter' => $person['twitter']['handle'] ?? '',
+			'person-twitter-profile' => isset($person['twitter']['handle']) ? "https://twitter.com/" . $person['twitter']['handle']  : '',
 			'person-twitter-id' => $person['twitter']['id'] ?? '',
 			'person-twitter-bio' => $person['twitter']['bio'] ?? '',
 			'person-twitter-followers' => $person['twitter']['followers'] ?? '',
@@ -215,16 +219,21 @@ class ClearbitClient implements ClearbitClientInterface
 			'person-twitter-site' => $person['twitter']['site'] ?? '',
 			'person-twitter-avatar' => $person['twitter']['avatar'] ?? '',
 			'person-linkedin' => $person['linkedin']['handle'] ?? '',
-			'person-googleplus' => $person['googleplus']['handle'] ?? '',
+			'person-linkedin-profile' => isset($person['linkedin']['handle']) ? "https://linkedin.com/in/" . $person['linkedin']['handle']  : '',
+			'person-email-provider' => $person['emailProvider'] ?? '',
 
 			// company.
 			'company-name' => $company['name'] ?? '',
 			'company-legal-name' => $company['legalName'] ?? '',
 			'company-domain' => $company['domain'] ?? '',
+			'company-domain-aliases' => isset($company['domainAliases']) ? implode(', ', $company['domainAliases']) : '',
+			'company-site-phone-numbers' => isset($company['site']['phoneNumbers']) ? implode(', ', $company['site']['phoneNumbers']) : '',
+			'company-site-email-addresses' => isset($company['site']['emailAddresses']) ? implode(', ', $company['site']['emailAddresses']) : '',
 			'company-sector' => $company['category']['sector'] ?? '',
 			'company-industry-group' => $company['category']['industryGroup'] ?? '',
 			'company-industry' => $company['category']['industry'] ?? '',
 			'company-sub-industry' => $company['category']['subIndustry'] ?? '',
+			'company-tags' => isset($company['tags']) ? implode(', ', $company['tags']) : '',
 			'company-description' => $company['description'] ?? '',
 			'company-founded-year' => $company['foundedYear'] ?? '',
 			'company-location' => $company['location'] ?? '',
@@ -244,9 +253,12 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-lng' => $company['geo']['lng'] ?? '',
 			'company-logo' => $company['logo'] ?? '',
 			'company-facebook' => $company['facebook']['handle'] ?? '',
+			'company-facebook-profile' => isset($company['facebook']['handle']) ? "https://facebook.com/" . $company['facebook']['handle']  : '',
 			'company-facebook-likes' => $company['facebook']['likes'] ?? '',
 			'company-linkedin' => $company['linkedin']['handle'] ?? '',
+			'company-linkedin-profile' => isset($company['linkedin']['handle']) ? "https://linkedin.com/in/" . $company['linkedin']['handle']  : '',
 			'company-twitter' => $company['twitter']['handle'] ?? '',
+			'company-twitter-profile' => isset($company['twitter']['handle']) ? "https://twitter.com/" . $company['twitter']['handle']  : '',
 			'company-twitter-id' => $company['twitter']['id'] ?? '',
 			'company-twitter-bio' => $company['twitter']['bio'] ?? '',
 			'company-twitter-followers' => $company['twitter']['followers'] ?? '',
@@ -255,6 +267,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-twitter-site' => $company['twitter']['site'] ?? '',
 			'company-twitter-avatar' => $company['twitter']['avatar'] ?? '',
 			'company-crunchbase' => $company['crunchbase']['handle'] ?? '',
+			'company-email-provider' => $company['emailProvider'] ?? '',
 			'company-type' => $company['type'] ?? '',
 			'company-ticker' => $company['ticker'] ?? '',
 			'company-phone' => $company['phone'] ?? '',
@@ -267,7 +280,18 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-annual-revenue' => $company['metrics']['annualRevenue'] ?? '',
 			'company-estimated-annual-revenue' => $company['metrics']['estimatedAnnualRevenue'] ?? '',
 			'company-fiscal-year-end' => $company['metrics']['fiscalYearEnd'] ?? '',
+			'company-tech' => isset($company['tech']) ? implode(', ', $company['tech']) : '',
+			'company-tech-categories' => isset($company['techCategories']) ? implode(', ', $company['techCategories']) : '',
+			'company-parent-domain' => $company['parent']['domain'] ?? '',
+			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
+
+		$filterName = Filters::getIntegrationFilterName(SettingsClearbit::SETTINGS_TYPE_KEY, 'map');
+		if (has_filter($filterName)) {
+			return \apply_filters($filterName, $output) ?? [];
+		}
+
+		return $output;
 	}
 
 	/**

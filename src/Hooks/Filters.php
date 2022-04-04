@@ -183,6 +183,9 @@ class Filters
 				'data' => 'data',
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
+			SettingsClearbit::SETTINGS_TYPE_KEY => [
+				'map' => 'map',
+			],
 		],
 		'geolocation' => [
 			'disable' => 'disable',

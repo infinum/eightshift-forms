@@ -108,7 +108,7 @@ public function disableEditIntegrationGreenhouseFieldsSettings(): bool
 }
 ```
 
-## Add custom text un admin settings before field settings.
+## Add custom text in admin settings before field settings.
 This filter is used to add custom text in the before content field element in the admin settings fields settings section.
 
 **Filter name:**
@@ -157,5 +157,35 @@ public function getHubspotFileUploadCustomOptions(): string
 				"overwrite" => false,
 			]),
 		];
+}
+```
+
+## Change Clearbit integration fields map.
+This filter provides you the ability to change how we map Clearbit fields so you can combine multiple fields in one add some new one.
+
+**Filter name:**
+`es_forms_integration_clearbit_map`
+
+**Filter example:**
+```php
+// Change Clearbit fields map.
+add_filter('es_forms_integration_clearbit_map', [$this, 'getClearbitFieldsMap']);
+
+/**
+ * Change Clearbit fields map.
+ *
+ * @param array $params Default params provided by the forms.
+ *
+ * @return array<mixed>
+ */
+public function getClearbitFieldsMap(array $params): array
+{
+	$street = $params['company-street-number'] ?? '';
+	$city = $params['company-city'] ?? '';
+	$postalCode = $params['company-postal-code'] ?? '';
+
+	$params['company-location-combined'] = "{$street} {$city} {$postalCode}";
+
+	return $params;
 }
 ```
