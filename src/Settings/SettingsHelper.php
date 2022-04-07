@@ -230,7 +230,7 @@ trait SettingsHelper
 		$additionalLabel = array_flip($additionalLabel);
 
 		// Find project breakpoints.
-		$breakpoints = array_flip(Components::getSettings('settings', 'globalVariables')['breakpoints']);
+		$breakpoints = array_flip(Components::getSettingsGlobalVariablesBreakpoints());
 
 		// Loop form fields.
 		$fields = [];
@@ -251,7 +251,6 @@ trait SettingsHelper
 			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields, $formId) ?? []);
 		}
 
-		$fieldsKey = $this->getSettingsName($key);
 		$totalFields = count($formFields);
 
 		$filterName = Filters::getBlockFilterName('field', 'styleOptions');

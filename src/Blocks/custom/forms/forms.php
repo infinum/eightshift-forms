@@ -153,6 +153,4 @@ if ($formsServerSideRender) {
 
 <?php
 
-if (!$checkEnqueue) {
-	echo Components::outputCssVariablesCombined(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}
+echo Components::outputCssVariablesInline(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -85,18 +85,6 @@ class Blocks extends AbstractBlocks
 	}
 
 	/**
-	 * Get blocks absolute path.
-	 *
-	 * Prefix path is defined by project config.
-	 *
-	 * @return string
-	 */
-	protected function getBlocksPath(): string
-	{
-		return Config::getProjectPath() . '/src/Blocks';
-	}
-
-	/**
 	 * Create custom category to assign all custom blocks
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.

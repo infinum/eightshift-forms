@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a611004574f3557242d1821e7b2b07ad",
+    "content-hash": "31ddb58e8ca7fe2b3d64c7e1102e51fd",
     "packages": [
         {
             "name": "infinum/eightshift-libs",
-            "version": "dev-develop",
+            "version": "dev-feature/variables",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "37f2e88a82346f37860d8c23b081fa7069f9c322"
+                "reference": "8b42adfa88468e94ca7b3308f302729225ae333a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/37f2e88a82346f37860d8c23b081fa7069f9c322",
-                "reference": "37f2e88a82346f37860d8c23b081fa7069f9c322",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/8b42adfa88468e94ca7b3308f302729225ae333a",
+                "reference": "8b42adfa88468e94ca7b3308f302729225ae333a",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,6 @@
                 "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
                 "ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -68,6 +67,9 @@
                 ],
                 "test:unit": [
                     "@php ./vendor/bin/pest"
+                ],
+                "test:unit-report": [
+                    "@php ./vendor/bin/pest --log-junit tests/coverage/report.xml"
                 ],
                 "test:coverage": [
                     "@php ./vendor/bin/pest --coverage"
@@ -98,7 +100,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2022-03-29T11:20:05+00:00"
+            "time": "2022-04-07T12:58:00+00:00"
         },
         {
             "name": "opis/closure",
