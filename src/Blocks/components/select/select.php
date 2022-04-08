@@ -67,7 +67,7 @@ if ($selectAttrs) {
 $additionalContent = '';
 $filterName = Filters::getBlockFilterName('select', 'additionalContent');
 if (has_filter($filterName)) {
-	$attributes['selectOptions'] = Helper::convetInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
+	$attributes['selectOptions'] = Helper::convertInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 

@@ -242,7 +242,7 @@ class Helper
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function convetInnerBlocksToArray(string $string, string $type): array
+	public static function convertInnerBlocksToArray(string $string, string $type): array
 	{
 		$output = [];
 
