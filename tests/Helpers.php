@@ -43,6 +43,13 @@ function setupMocks() {
 		$force_delete = $force_delete ? 'true' : 'false';
 		return "id: {$id}, force: {$force_delete}";
 	});
+
+	Functions\when('get_the_content')->alias(
+		function ($more_link_text = null, bool $strip_teaser = false, $post = null) use ($posts)
+		{
+			return $posts[$post]['post_content'];
+		}
+	);
 }
 
 
