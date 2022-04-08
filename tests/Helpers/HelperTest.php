@@ -161,3 +161,23 @@ test('convertInnerBlocksToArray returns a properly sorted array of options for s
 	];
 	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
 });
+
+//---------------------------------------------------------------------------------//
+test('encryptor helper uses openssl_encrypt properly', function () {
+	expect(Helper::encryptor('encrypt', 'my ultimate secret'))
+		->toEqual(
+			base64_encode(openssl_encrypt(
+				'my ultimate secret',
+				'AES-256-CBC',
+				hash('sha256', wp_salt()),
+				0,
+				substr(hash('sha256', wp_salt('SECURE_AUTH_KEY')), 0, 16)
+			))
+		);
+});
+
+//---------------------------------------------------------------------------------//
+test('encryptor helper uses openssl_decrypt properly', function () {
+	expect(Helper::encryptor('decrypt', 'NTFhQXZwZmhVVFMvQUUvaURUbUU0WUk5Rzd6b1I1ZG1oSkc5SzMxTzUxdz0='))
+		->toEqual('very confidential secret');
+});
