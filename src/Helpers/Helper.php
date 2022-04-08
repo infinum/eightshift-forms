@@ -191,11 +191,11 @@ class Helper
 	/**
 	 * Provide error log output to a custom log file.
 	 *
-	 * @param mixed $message Any type of message.
+	 * @param array $message Any type of message.
 	 *
 	 * @return void
 	 */
-	public static function logger($message): void
+	public static function logger(array $message): void
 	{
 		if (Variables::isLogMode()) {
 			$wpContentDir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : '';
