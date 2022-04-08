@@ -34,6 +34,15 @@ function setupMocks() {
 	Functions\when('get_edit_post_link')->alias(function($id) {
 		return "/wp-admin/post.php?post={$id}&action=edit";
 	});
+
+	Functions\when('get_delete_post_link')->alias(function ($id = 0, $deprecated = '', $force_delete = false) {
+		if (!empty($deprecated)) {
+			throw new Exception('Deprecated argument used in get_delete_post_link call');
+		}
+
+		$force_delete = $force_delete ? 'true' : 'false';
+		return "id: {$id}, force: {$force_delete}";
+	});
 }
 
 
