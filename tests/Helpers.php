@@ -46,9 +46,18 @@ function setupMocks() {
 	});
 
 	Functions\when('get_the_content')->alias(
-		function ($more_link_text = null, bool $strip_teaser = false, $post = null) use ($posts)
+		function ($more_link_text = null, bool $strip_teaser = false, $post = null)
 		{
-			return $posts[$post]['post_content'];
+			$posts = [
+				[
+					'post_content' => 'aa',
+				],
+				[
+					'post_content' => '{"eightshiftFormsInputFieldName":"myFirstField"}, {"anotherFieldName":"someField"}',
+				]
+			];
+
+			return $posts[$post]['post_content'] ?? '';
 		}
 	);
 }

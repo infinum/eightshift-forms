@@ -3,6 +3,7 @@
 namespace Tests\Unit\Helper;
 
 use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftForms\Helpers\Helper;
 
 use function Tests\setupMocks;
