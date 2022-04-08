@@ -248,7 +248,7 @@ class Helper
 
 		switch ($type) {
 			case 'select':
-				$re = '/<option value="(.*?)".> (.*?)<\/option>/m';
+				$re = '/<option[^>]*value="(.*?)"[^>]*>([^<]*)<\s*\/\s*option\s*>/m';
 				break;
 			default:
 				$re = '';
