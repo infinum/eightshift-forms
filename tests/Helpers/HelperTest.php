@@ -106,3 +106,58 @@ test('minifyString returns expected values', function() {
 	expect(Helper::minifyString("A string that uses \r\n\r\n multiple Windows line breaks"))->toEqual("A string that uses \n \n multiple Windows line breaks");
 	expect(Helper::minifyString("A string that\tuses\t\ttabs"))->toEqual("A string that uses tabs");
 });
+
+//---------------------------------------------------------------------------------//
+
+test('convertInnerBlocksToArray returns an empty array for unsupported types', function() {
+	expect(Helper::convertInnerBlocksToArray('<option value="1">First</option>', 'unsupported'))->toEqual([]);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('convertInnerBlocksToArray returns a properly sorted array of options for select', function() {
+	$markup = '<select><option value="1" > First</option><option value="2" > Second</option></select>';
+	$expected = [
+		[
+			'label' => ' First',
+			'value' => '1',
+			'original' => '<option value="1" > First</option>'
+		],
+		[
+			'label' => ' Second',
+			'value' => '2',
+			'original' => '<option value="2" > Second</option>'
+		]
+	];
+	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
+
+	$markup = '';
+	$expected = [];
+	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
+
+	$markup = '
+	<select>
+		<option value="1">First</option>
+		<option value="2">Second</option>
+		<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>
+	</select>';
+
+	$expected = [
+		[
+			'label' => 'First',
+			'value' => '1',
+			'original' => '<option value="1">First</option>'
+		],
+		[
+			'label' => 'Second',
+			'value' => '2',
+			'original' => '<option value="2">Second</option>'
+		],
+		[
+			'label' => ' Third option ',
+			'value' => '3',
+			'original' => '<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>'
+		]
+	];
+	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
+});
