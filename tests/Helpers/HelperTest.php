@@ -77,3 +77,10 @@ test('getFormTrashActionUrl calls get_delete_post_link with correct arguments.',
 test('getFormTrashRestoreActionUrl returnes a properly nonced URL.', function () {
 	$this->assertSame('/wp-admin/post.php?post=7&action=untrash&_wpnonce=untrash-post_7', Helper::getFormTrashRestoreActionUrl('7'));
 });
+
+//---------------------------------------------------------------------------------//
+
+test('getFormNames returns field names properly.', function () {
+	$this->assertSame('', Helper::getFormNames(0));
+	$this->assertSame('<code>{myFirstField}</code>, <code>{someField}</code>', Helper::getFormNames(1));
+});
