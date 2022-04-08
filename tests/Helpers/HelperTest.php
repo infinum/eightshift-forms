@@ -84,3 +84,17 @@ test('getFormNames returns field names properly.', function () {
 	$this->assertSame('', Helper::getFormNames(0));
 	$this->assertSame('<code>{myFirstField}</code>, <code>{someField}</code>', Helper::getFormNames(1));
 });
+
+//---------------------------------------------------------------------------------//
+
+test('logger does not log if log mode is turned off', function () {
+	// Unfortunately, because Pest doesn't support running tests in isolation,
+	// there isn't test coverage for correct logging when log mode is turned on.
+	Functions\when('EightshiftForms\\Hooks\\Variables\\isLogMode', function() {
+		return false;
+	});
+
+	Functions\expect('error_log')->never();
+
+	expect(Helper::logger(['data' => 'Really dangerous error']))->toBeNull();
+});
