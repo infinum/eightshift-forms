@@ -60,3 +60,19 @@ test('getFormsTrashPageUrl returns the correct url.', function () {
 test('getFormEditPageUrl returns the correct url.', function () {
 	$this->assertSame('/wp-admin/post.php?post=1&action=edit', Helper::getFormEditPageUrl('1'));
 });
+
+//---------------------------------------------------------------------------------//
+
+test('getFormTrashActionUrl calls get_delete_post_link with correct arguments.', function () {
+	$this->assertSame('id: 0, force: false', Helper::getFormTrashActionUrl('0'));
+	$this->assertSame('id: 0, force: false', Helper::getFormTrashActionUrl('0', 0));
+	$this->assertSame('id: 0, force: true', Helper::getFormTrashActionUrl('0', true));
+	$this->assertSame('id: 0, force: true', Helper::getFormTrashActionUrl('0', 1));
+	$this->assertSame('id: 75, force: true', Helper::getFormTrashActionUrl('75', 1));
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getFormTrashRestoreActionUrl returnes a properly nonced URL.', function () {
+	$this->assertSame('/wp-admin/post.php?post=7&action=untrash&_wpnonce=untrash-post_7', Helper::getFormTrashRestoreActionUrl('7'));
+});
