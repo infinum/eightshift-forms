@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Brain\Monkey\Functions;
+use Exception;
 use Mockery;
 use Mockery\MockInterface;
 
