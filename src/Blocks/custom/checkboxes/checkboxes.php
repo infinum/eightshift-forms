@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $checkboxesName = $attributes['checkboxesCheckboxesName'] ?? '';
 $checkboxesId = $attributes['checkboxesCheckboxesId'] ?? '';

@@ -6,13 +6,12 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
 $manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/admin-settings-section');
 
-echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::outputCssVariablesGlobal(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';

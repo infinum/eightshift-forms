@@ -164,6 +164,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'inputType' => 'text',
 			'inputIsEmail' => true,
 			'inputIsRequired' => true,
+			'blockSsr' => $ssr,
 		];
 
 		foreach ($data as $field) {
@@ -192,6 +193,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'address':
@@ -205,6 +207,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'number':
@@ -218,6 +221,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'phone':
@@ -231,6 +235,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'birthday':
@@ -244,6 +249,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'radio':
@@ -264,6 +270,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							},
 							$options
 						),
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'dropdown':
@@ -284,6 +291,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							},
 							$options
 						),
+						'blockSsr' => $ssr,
 					];
 					break;
 			}
@@ -347,6 +355,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 									$tagsItems
 								)
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'checkboxes':
@@ -377,6 +386,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								},
 								$tagsItems
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					default:
@@ -397,6 +407,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
 								'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
 								'inputValue' => $tagsItems,
+								'blockSsr' => $ssr,
 							];
 						};
 						break;
@@ -411,6 +422,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.

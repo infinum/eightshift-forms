@@ -9,19 +9,18 @@
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
 $checkEnqueue = $this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 if (!$checkEnqueue) {
-	echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo Components::outputCssVariablesGlobal(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 $blockClass = $attributes['blockClass'] ?? '';
@@ -119,7 +118,7 @@ if ($formsServerSideRender) {
 
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
-		if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
+		if ($block['blockName'] === Components::getSettingsNamespace() . '/form-selector') {
 			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
 			if (isset($block['innerBlocks'])) {
@@ -128,6 +127,7 @@ if ($formsServerSideRender) {
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
 
 					if (isset($innerBlock['innerBlocks'])) {
 						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
@@ -135,6 +135,7 @@ if ($formsServerSideRender) {
 
 							if ($name === 'submit') {
 								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
 							}
 						}
 					}

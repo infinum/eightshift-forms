@@ -1,14 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from "@wordpress/data";
+import { useSelect, select } from "@wordpress/data";
 import { PanelBody, Button } from '@wordpress/components';
-import { icons } from '@eightshift/frontend-libs/scripts';
-import globalManifest from '../../../manifest.json';
+import { icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const FormSelectorOptions = () => {
 	const {
 		settingsPageUrl,
-	} = globalManifest;
+	} = select(STORE_NAME).getSettings();
 
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
 

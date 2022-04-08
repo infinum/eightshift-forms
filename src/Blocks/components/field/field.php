@@ -6,10 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
@@ -33,7 +32,7 @@ if (
 	isset($customMediaBreakpoints['desktop']) &&
 	isset($customMediaBreakpoints['large'])
 ) {
-	$globalManifest['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+	Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
 }
 
 $unique = Components::getUnique();
@@ -102,9 +101,9 @@ if (has_filter($filterName)) {
 
 	<?php
 	if ($fieldUniqueId) {
-		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, $globalManifest, 'wp-block'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, [], 'wp-block'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	} else {
-		echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Components::outputCssVariables($attributes, $manifest, $unique); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	?>

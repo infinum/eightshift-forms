@@ -9,9 +9,7 @@
 		"outputCssGlobally": true,
 		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
-		"outputCssGloballyAdditionalStyles": [
-			":root {--es-forms-loaded-opacity: 1;}"
-		]
+		"outputCssGloballyAdditionalStyles": []
 	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",

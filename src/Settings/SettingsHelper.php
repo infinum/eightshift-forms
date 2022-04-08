@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 

@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 

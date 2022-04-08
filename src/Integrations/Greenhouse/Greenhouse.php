@@ -167,7 +167,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
 							'inputIsEmail' => $name === 'email' ? 'true' : '',
-							'inputIsNumber' => $name === 'phone' ? 'true' : ''
+							'inputIsNumber' => $name === 'phone' ? 'true' : '',
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'input_file':
@@ -180,7 +181,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileMeta' => $description,
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1
+							'fileMinSize' => 1,
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'textarea':
@@ -192,6 +194,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaId' => $name,
 							'textareaMeta' => $description,
 							'textareaIsRequired' => $required,
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'multi_value_single_select':
@@ -209,7 +212,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										'checkboxValue' => 1,
 										'checkboxTracking' => $name,
 									],
-								]
+								],
+								'blockSsr' => $ssr,
 							];
 						} else {
 							$output[] = [
@@ -230,6 +234,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									},
 									$values
 								),
+								'blockSsr' => $ssr,
 							];
 						}
 						break;
@@ -259,6 +264,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.

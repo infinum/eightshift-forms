@@ -318,7 +318,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName($useKey),
 				'checkboxesId' => $this->getSettingsName($useKey),
-				'checkboxesIsRequired' => true,
+				'checkboxesIsRequired' => false,
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',

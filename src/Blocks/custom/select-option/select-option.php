@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Blocks\Blocks;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $unique = Components::getUnique();
 

@@ -1,16 +1,15 @@
 /* global esFormsBlocksLocalization */
 
 import { addFilter } from '@wordpress/hooks';
+import { select } from '@wordpress/data';
+import { STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
 import { isArray } from 'lodash';
 import manifest from './manifest.json';
-import globalManifest from '../../manifest.json';
 
 // Provide additional blocks to the forms.
 export const hooks = () => {
 
-	const {
-		namespace,
-	} = globalManifest;
+	const namespace = select(STORE_NAME).getSettingsNamespace();
 
 	const {
 		blockName,

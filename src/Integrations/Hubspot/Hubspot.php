@@ -197,6 +197,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 
 						if ($min) {
@@ -222,6 +223,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 
 						if ($min) {
@@ -248,6 +250,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'file':
@@ -274,6 +277,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'select':
@@ -313,6 +317,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									)
 								)
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'booleancheckbox':
@@ -331,6 +336,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									],
 								]
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'checkbox':
@@ -354,6 +360,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'radio':
@@ -377,6 +384,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'consent':
@@ -402,6 +410,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 				}
@@ -416,6 +425,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.

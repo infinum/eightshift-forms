@@ -67,7 +67,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
 
 		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScript']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
+
+		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 	}
 
 	/**

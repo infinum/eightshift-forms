@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { isArray } from 'lodash';
+import { select } from "@wordpress/data";
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import {
@@ -14,15 +15,15 @@ import {
 	unescapeHTML,
 	BlockIcon,
 	FancyDivider,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
-import globalManifest from '../../../manifest.json';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const {
 		editFormUrl,
 		settingsPageUrl
-	} = globalManifest;
+	} = select(STORE_NAME).getSettings();
 
 	const {
 		postType,

@@ -179,6 +179,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputType' => 'text',
 						'inputIsRequired' => $name === 'email',
 						'inputIsEmail' => $name === 'email',
+						'blockSsr' => $ssr,
 					];
 					break;
 				case 'number':
@@ -189,6 +190,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'number',
+						'blockSsr' => $ssr,
 					];
 					break;
 			}
@@ -201,6 +203,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			'submitFieldUseError' => false,
 			'submitFieldOrder' => count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
