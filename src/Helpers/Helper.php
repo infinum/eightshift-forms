@@ -259,8 +259,6 @@ class Helper
 			return $output;
 		}
 
-		$string = Helper::minifyString($string);
-
 		preg_match_all($re, $string, $matches, PREG_SET_ORDER, 0);
 
 		if (!$matches) {
@@ -269,8 +267,8 @@ class Helper
 
 		foreach ($matches as $match) {
 			$output[] = [
-				'label' => $match[2] ?? '',
-				'value' => $match[1] ?? '',
+				'label' => Helper::minifyString($match[2]) ?? '',
+				'value' => Helper::minifyString($match[1]) ?? '',
 				'original' => $match[0] ?? '',
 			];
 		}
