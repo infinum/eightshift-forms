@@ -60,6 +60,10 @@ function setupMocks() {
 			return $posts[$post]['post_content'] ?? '';
 		}
 	);
+
+	Functions\when('wp_nonce_url')->alias(function ($actionurl, $action = -1, $name = '_wpnonce') {
+		return "{$actionurl}&{$name}={$action}";
+	});
 }
 
 
