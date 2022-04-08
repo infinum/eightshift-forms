@@ -98,3 +98,11 @@ test('logger does not log if log mode is turned off', function () {
 
 	expect(Helper::logger(['data' => 'Really dangerous error']))->toBeNull();
 });
+
+//---------------------------------------------------------------------------------//
+
+test('minifyString returns expected values', function() {
+	expect(Helper::minifyString('A string that uses'.PHP_EOL.'PHP_EOL'))->toEqual('A string that uses PHP_EOL');
+	expect(Helper::minifyString("A string that uses \r\n\r\n multiple Windows line breaks"))->toEqual("A string that uses \n \n multiple Windows line breaks");
+	expect(Helper::minifyString("A string that\tuses\t\ttabs"))->toEqual("A string that uses tabs");
+});
