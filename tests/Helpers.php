@@ -64,6 +64,10 @@ function setupMocks() {
 	Functions\when('wp_nonce_url')->alias(function ($actionurl, $action = -1, $name = '_wpnonce') {
 		return "{$actionurl}&{$name}={$action}";
 	});
+
+	Functions\when('wp_salt')->alias(function (string $scheme = 'auth') {
+		return $scheme;
+	});
 }
 
 
