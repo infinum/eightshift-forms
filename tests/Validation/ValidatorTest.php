@@ -544,4 +544,57 @@ test('validate yields correct values for email validation', function ($expected,
 		],  
 	],
 ]);
+
+test('validate yields correct values for custom pattern', function ($expected, $params, $files, $formId, $formData) {
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'pattern-is-invalid' => 'This field doesn\'t satisfy the validation pattern: Test\\s[0-9]{1,3}.',
+			'pattern-is-invalid2' => 'This field doesn\'t satisfy the validation pattern: \\s[0-9]{1,3}.',
+		], // expected
+		[
+			'pattern-is-valid' => [
+				'name' => 'email-is-valid',
+				'value' => 'Test 123',
+				'type' => 'text'
+			],
+			'pattern-is-invalid' => [
+				'name' => 'Test',
+				'value' => 'Test 1234',
+				'type' => 'text'
+			],
+			'pattern-is-invalid2' => [
+				'name' => 'Test',
+				'value' => 'Test 1234',
+				'type' => 'text'
+			],
+		], // params
+		[], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'input',
+				'inputName' => 'pattern-is-valid',
+				'inputId' => 'pattern-is-valid',
+				'inputIsRequired' => true,
+				'inputValidationPattern' => 'Test\\s[0-9]{1,3}',
+			],
+			[
+				'component' => 'input',
+				'inputName' => 'pattern-is-invalid',
+				'inputId' => 'pattern-is-invalid',
+				'inputIsRequired' => true,
+				'inputValidationPattern' => 'Test\\s[0-9]{1,3}',
+			],
+			[
+				'component' => 'input',
+				'inputName' => 'pattern-is-invalid2',
+				'inputId' => 'pattern-is-invalid2',
+				'inputIsRequired' => true,
+				'inputValidationPattern' => '\\s[0-9]{1,3}',
+			],
+		],  
+	],
+]);
 ]);
