@@ -456,6 +456,13 @@ test('validate yields no false negatives for basic validation', function ($expec
 				'textareaName' => 'textarea',
 				'textareaIsRequired' => true,
 			],
+			[],
+			[
+				'component' => '',
+				'textareaId' => 'noComponentName',
+			]
 		]
 	]
+]);
+
 ]);
