@@ -465,4 +465,43 @@ test('validate yields no false negatives for basic validation', function ($expec
 	]
 ]);
 
+test('validate yields correct values for URL validation', function ($expected, $params, $files, $formId, $formData) {
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'url-is-invalid' => 'This URL is not valid.',
+		], // expected
+		[
+			'url-is-valid' => [
+				'name' => 'url-is-valid',
+				'value' => 'https://infinum.com',
+				'type' => 'text'
+			],
+			'url-is-invalid' => [
+				'name' => 'url-is-invalid',
+				'value' => 'https,,,infinum.com',
+				'type' => 'text'
+			],
+		], // params
+		[], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'input',
+				'inputName' => 'url-is-valid',
+				'inputId' => 'url-is-valid',
+				'inputIsRequired' => true,
+				'inputIsUrl' => true,
+			],
+			[
+				'component' => 'input',
+				'inputName' => 'url-is-invalid',
+				'inputId' => 'url-is-invalid',
+				'inputIsRequired' => true,
+				'inputIsUrl' => true,
+			],
+		],  
+	],
+]);
 ]);
