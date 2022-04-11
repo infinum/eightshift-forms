@@ -24,7 +24,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isUrl(string $string): bool
 	{
-		return (bool) preg_match('/(http|ftp|mailto)/', $string);
+		return (bool) preg_match('/(http:\/\/|https:\/\/|ftp:\/\/|mailto:)/', $string);
 	}
 
 	/**
