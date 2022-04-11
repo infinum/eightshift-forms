@@ -64,13 +64,15 @@ test('getFormEditPageUrl returns the correct url.', function () {
 
 //---------------------------------------------------------------------------------//
 
-test('getFormTrashActionUrl calls get_delete_post_link with correct arguments.', function () {
-	$this->assertSame('id: 0, force: false', Helper::getFormTrashActionUrl('0'));
-	$this->assertSame('id: 0, force: false', Helper::getFormTrashActionUrl('0', 0));
-	$this->assertSame('id: 0, force: true', Helper::getFormTrashActionUrl('0', true));
-	$this->assertSame('id: 0, force: true', Helper::getFormTrashActionUrl('0', 1));
-	$this->assertSame('id: 75, force: true', Helper::getFormTrashActionUrl('75', 1));
-});
+test('getFormTrashActionUrl calls get_delete_post_link with correct arguments.', function ($expected, $formId, $permanent = null) {
+	!is_null($permanent) ? expect(Helper::getFormTrashActionUrl($formId, $permanent))->toBe($expected) : expect(Helper::getFormTrashActionUrl($formId))->toBe($expected);
+})->with([
+	['id: 0, force: false', '0'],
+	['id: 0, force: false', '0', 0],
+	['id: 0, force: true', '0', true],
+	['id: 0, force: true', '0', 1],
+	['id: 75, force: true', '75', 1],
+]);
 
 //---------------------------------------------------------------------------------//
 
@@ -101,11 +103,13 @@ test('logger does not log if log mode is turned off', function () {
 
 //---------------------------------------------------------------------------------//
 
-test('minifyString returns expected values', function() {
-	expect(Helper::minifyString('A string that uses'.PHP_EOL.'PHP_EOL'))->toEqual('A string that uses PHP_EOL');
-	expect(Helper::minifyString("A string that uses \r\n\r\n multiple Windows line breaks"))->toEqual("A string that uses \n \n multiple Windows line breaks");
-	expect(Helper::minifyString("A string that\tuses\t\ttabs"))->toEqual("A string that uses tabs");
-});
+test('minifyString returns expected values', function($expected, $input) {
+	expect(Helper::minifyString($input))->toEqual($expected);
+})->with([
+	['A string that uses PHP_EOL', 'A string that uses'.PHP_EOL.'PHP_EOL'],
+	["A string that uses \n \n multiple Windows line breaks", "A string that uses \r\n\r\n multiple Windows line breaks"],
+	["A string that uses tabs", "A string that\tuses\t\ttabs"],
+]);
 
 //---------------------------------------------------------------------------------//
 
@@ -115,52 +119,54 @@ test('convertInnerBlocksToArray returns an empty array for unsupported types', f
 
 //---------------------------------------------------------------------------------//
 
-test('convertInnerBlocksToArray returns a properly sorted array of options for select', function() {
-	$markup = '<select><option value="1" > First</option><option value="2" > Second</option></select>';
-	$expected = [
-		[
-			'label' => ' First',
-			'value' => '1',
-			'original' => '<option value="1" > First</option>'
-		],
-		[
-			'label' => ' Second',
-			'value' => '2',
-			'original' => '<option value="2" > Second</option>'
-		]
-	];
+test('convertInnerBlocksToArray returns a properly sorted array of options for select', function($expected, $markup) {
 	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
-
-	$markup = '';
-	$expected = [];
-	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
-
-	$markup = '
-	<select>
-		<option value="1">First</option>
-		<option value="2">Second</option>
-		<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>
-	</select>';
-
-	$expected = [
+})->with([
+	[
 		[
-			'label' => 'First',
-			'value' => '1',
-			'original' => '<option value="1">First</option>'
+			[
+				'label' => ' First',
+				'value' => '1',
+				'original' => '<option value="1" > First</option>'
+			],
+			[
+				'label' => ' Second',
+				'value' => '2',
+				'original' => '<option value="2" > Second</option>'
+			]
 		],
+		'<select><option value="1" > First</option><option value="2" > Second</option></select>'
+	],
+	[
+		[], ''
+	],
+	[
 		[
-			'label' => 'Second',
-			'value' => '2',
-			'original' => '<option value="2">Second</option>'
+			[
+				'label' => 'First',
+				'value' => '1',
+				'original' => '<option value="1">First</option>'
+			],
+			[
+				'label' => 'Second',
+				'value' => '2',
+				'original' => '<option value="2">Second</option>'
+			],
+			[
+				'label' => ' Third option ',
+				'value' => '3',
+				'original' => '<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>'
+			]
 		],
-		[
-			'label' => ' Third option ',
-			'value' => '3',
-			'original' => '<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>'
-		]
-	];
-	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
-});
+		'
+			<select>
+				<option value="1">First</option>
+				<option value="2">Second</option>
+				<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>
+			</select>
+		',
+	],
+]);
 
 //---------------------------------------------------------------------------------//
 test('encryptor helper uses openssl_encrypt properly', function () {
