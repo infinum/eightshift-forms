@@ -73,3 +73,18 @@ test('getValidationPatterns returns local and user patterns', function() {
 			$preparedValidationPatterns,
 		));
 });
+
+test('getValidationPatternName returns correct name for user pattern', function() {
+	expect($this->validator->getValidationPatternName('[0-9]+'))->toBe('Numbers');
+});
+
+test('getValidationPatternName returns pattern for non-existent pattern', function() {
+	expect($this->validator->getValidationPatternName('IAmNotARegex'))->toBe('IAmNotARegex');
+});
+
+test('getValidationPatternName returns correct name for local patterns', function() {
+	foreach (SettingsValidation::VALIDATION_PATTERNS as $key => $value) {
+		expect($this->validator->getValidationPatternName($value))->toBe($key);
+		break;
+	}
+});
