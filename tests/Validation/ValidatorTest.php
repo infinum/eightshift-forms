@@ -42,3 +42,7 @@ beforeEach(function () {
 afterAll(function() {
 	Monkey\tearDown();
 });
+
+test('Validator skips validation on single submit', function() {
+	expect($this->validator->validate(['es-form-single-submit' => true]))->toBe([]);
+});
