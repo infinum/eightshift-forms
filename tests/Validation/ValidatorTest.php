@@ -46,3 +46,30 @@ afterAll(function() {
 test('Validator skips validation on single submit', function() {
 	expect($this->validator->validate(['es-form-single-submit' => true]))->toBe([]);
 });
+
+test('getValidationPatterns returns local and user patterns', function() {
+	$preparedValidationPatterns = [];
+
+	foreach(SettingsValidation::VALIDATION_PATTERNS as $key => $value) {
+		$preparedValidationPatterns[] = [
+			'value' => $value,
+			'label' => $key,
+		];
+	}
+
+	$preparedValidationPatterns[] = [
+		'value' => '[0-9]+',
+		'label' => 'Numbers'
+	];
+
+	$preparedValidationPatterns[] = [
+		'value' => '[a-zA-Z]+',
+		'label' => 'Letters'
+	];
+
+	expect($this->validator->getValidationPatterns())->toBe(
+		array_merge(
+			[['value' => '', 'label' => '---']],
+			$preparedValidationPatterns,
+		));
+});
