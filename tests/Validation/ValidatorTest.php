@@ -88,3 +88,21 @@ test('getValidationPatternName returns correct name for local patterns', functio
 		break;
 	}
 });
+
+test('getValidationPattern returns correct pattern for user patterns', function($name, $pattern) {
+	expect($this->validator->getValidationPattern($name))->toBe($pattern);
+})->with([
+	['Numbers', '[0-9]+'],
+	['Letters', '[a-zA-Z]+'],
+]);
+
+test('getValidationPattern returns correct pattern for local patterns', function() {
+	foreach (SettingsValidation::VALIDATION_PATTERNS as $key => $value) {
+		expect($this->validator->getValidationPattern($key))->toBe($value);
+		break;
+	}
+});
+
+test('getValidationPattern returns name for non-existent pattern', function() {
+	expect($this->validator->getValidationPattern('I do not exist'))->toBe('I do not exist');
+});
