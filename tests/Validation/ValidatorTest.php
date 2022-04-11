@@ -504,4 +504,44 @@ test('validate yields correct values for URL validation', function ($expected, $
 		],  
 	],
 ]);
+
+test('validate yields correct values for email validation', function ($expected, $params, $files, $formId, $formData) {
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'email-is-invalid' => 'This e-mail is not valid.',
+		], // expected
+		[
+			'email-is-valid' => [
+				'name' => 'email-is-valid',
+				'value' => 'i.am.valid@example.com',
+				'type' => 'text'
+			],
+			'email-is-invalid' => [
+				'name' => 'email-is-invalid',
+				'value' => 'this-is-not-really-an-email-i-mean-technically-it-could-be-but-irl-its-not',
+				'type' => 'text'
+			],
+		], // params
+		[], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'input',
+				'inputName' => 'email-is-valid',
+				'inputId' => 'email-is-valid',
+				'inputIsRequired' => true,
+				'inputIsEmail' => true,
+			],
+			[
+				'component' => 'input',
+				'inputName' => 'email-is-invalid',
+				'inputId' => 'email-is-invalid',
+				'inputIsRequired' => true,
+				'inputIsEmail' => true,
+			],
+		],  
+	],
+]);
 ]);
