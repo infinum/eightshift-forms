@@ -661,3 +661,99 @@ test('validate yields valid params for checkboxes', function ($expected, $params
 		],  
 	],
 ]);
+
+test('validate yields valid results for files', function ($expected, $params, $files, $formId, $formData) {
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'file-wrong-type' => 'The file type is not supported. Only .pdf are allowed.',
+			'file-too-small' => 'The file is smaller than allowed. Minimum file size is 100 kB.',
+			'file-too-large' => 'The file is larger than allowed. Maximum file size is 400 kB.',
+			'file-wrong-mimetype' => 'The file type is not supported. Only .pdf are allowed.',
+		], // expected
+		[], // params
+		[
+			'file-wrong-type' => [
+				'name' => ['wrong.jpg'],
+				'type' => ['image/jpeg'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [34798]
+			],
+			'file-too-small' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['application/pdf'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [1]
+			],
+			'file-too-large' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['application/pdf'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [500000]
+			],
+			'file-wrong-mimetype' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['image/jpeg'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			],
+			'file-valid' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['application/pdf'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			]
+		], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'file',
+				'fileName' => 'file-wrong-type',
+				'fileId' => 'file-wrong-type',
+				'fileAccept' => '.pdf',
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-too-small',
+				'fileId' => 'file-too-small',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-too-large',
+				'fileId' => 'file-too-large',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-wrong-mimetype',
+				'fileId' => 'file-wrong-mimetype',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-valid',
+				'fileId' => 'file-valid',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+		],  
+	],
+]);
