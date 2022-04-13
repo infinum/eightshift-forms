@@ -597,3 +597,67 @@ test('validate yields correct values for custom pattern', function ($expected, $
 		],  
 	],
 ]);
+
+test('validate yields valid params for checkboxes', function ($expected, $params, $files, $formId, $formData) {
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'checkboxes-have-the-wrong-count' => 'This field is required, with at least 2 items selected.',
+		], // expected
+		[
+			'checkboxes-are-valid' => [
+				'name' => 'checkboxes-are-valid',
+				'value' => 'c1, c2',
+				'type' => 'text'
+			],
+			'checkboxes-have-the-wrong-count' => [
+				'name' => 'checkboxes-have-the-wrong-count',
+				'value' => 'c1',
+				'type' => 'text'
+			],
+		], // params
+		[], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'checkboxes',
+				'checkboxesName' => 'checkboxes-are-valid',
+				'checkboxesId' => 'checkboxes-are-valid',
+				'checkboxesIsRequired' => true,
+				'checkboxesIsRequiredCount' => 2,
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => 'c1',
+						'checkboxValue' => 'c1'
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => 'c2',
+						'checkboxValue' => 'c2'
+					]
+				]
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesName' => 'checkboxes-have-the-wrong-count',
+				'checkboxesId' => 'checkboxes-have-the-wrong-count',
+				'checkboxesIsRequired' => true,
+				'checkboxesIsRequiredCount' => 2,
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => 'c1',
+						'checkboxValue' => 'c1'
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => 'c2',
+						'checkboxValue' => 'c2'
+					]
+				]
+			],
+		],  
+	],
+]);
