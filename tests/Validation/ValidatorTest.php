@@ -597,4 +597,3 @@ test('validate yields correct values for custom pattern', function ($expected, $
 		],  
 	],
 ]);
-]);
