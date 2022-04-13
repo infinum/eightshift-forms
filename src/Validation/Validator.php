@@ -259,7 +259,7 @@ class Validator extends AbstractValidation
 
 						$key = $matches[0] ?? '';
 
-						if ($dataValue && empty($key) && !empty($inputValue)) {
+						if ($dataValue && (empty($key) || $key[0] !== $inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;
