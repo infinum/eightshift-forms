@@ -65,7 +65,9 @@ test('getFormEditPageUrl returns the correct url.', function () {
 //---------------------------------------------------------------------------------//
 
 test('getFormTrashActionUrl calls get_delete_post_link with correct arguments.', function ($expected, $formId, $permanent = null) {
-	!is_null($permanent) ? expect(Helper::getFormTrashActionUrl($formId, $permanent))->toBe($expected) : expect(Helper::getFormTrashActionUrl($formId))->toBe($expected);
+	!is_null($permanent)
+	? expect(Helper::getFormTrashActionUrl($formId, $permanent))->toBe($expected) 
+	: expect(Helper::getFormTrashActionUrl($formId))->toBe($expected);
 })->with([
 	['id: 0, force: false', '0'],
 	['id: 0, force: false', '0', 0],
