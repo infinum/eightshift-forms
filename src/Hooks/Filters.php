@@ -241,6 +241,9 @@ class Filters
 				'component' => 'component',
 				'additionalContent' => 'additional_content',
 			],
+		],
+		'validation' => [
+			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
 		]
 	];
 
@@ -336,5 +339,25 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_geolocation_{$filter}";
+	}
+
+	/**
+	 * Get Validation filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_validation_force_mimetype_from_fs
+	 */
+	public static function getValidationSettingsFilterName(string $name): string {
+		$filter = self::ALL_PUBLIC['validation'][$name] ?? '';
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('geolocation', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_validation_{$filter}";
 	}
 }

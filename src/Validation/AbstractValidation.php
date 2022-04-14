@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Hooks\Filters;
+
 /**
  * Class Validation
  */
@@ -75,9 +77,62 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isFileTypeValid(string $fileName, string $fileTypes): bool
 	{
-		$fileExtension = explode('.', $fileName);
-		$validTypes = explode(',', str_replace(' ', '', str_replace('.', '', $fileTypes)));
+		$validTypes = $this->parseFiletypesString($fileTypes);
 
-		return in_array(end($fileExtension), $validTypes, true);
+		return in_array($this->getFileExtensionFromFilename($fileName), $validTypes, true);
+	}
+
+	/**
+	 * Checks whether the mimetype for the file is valid,
+	 * i.e. that it matches the extension. If the file is written
+	 * to disk, it'll check its mime_content_type from the filesystem.
+	 * Use the validation filter failMimetypeValidationWhenFileNotOnFS
+	 * to override this behaviour.
+	 * 
+	 * @param array $file File array.
+	 * @return boolean True if mimetype matches extension, false otherwise.
+	 */
+	public function isMimeTypeValid(array $file): bool {
+		$denyIfFileIsNotUploaded = apply_filters(Filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS'), false); 
+		$mimeTypes = \array_flip(\wp_get_mime_types());
+
+		$fileMimetype = $file['type'];
+		if ($file['tmp_name'] ?? false) {
+			$fileMimetype = \mime_content_type($file['tmp_name']);
+		}
+		elseif ($denyIfFileIsNotUploaded) {
+			return false;
+		}
+
+		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
+
+		if (in_array($fileExtension, explode('|', $mimeTypes[$fileMimetype] ?? []))) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Parses a comma-separated list of file extensions to return
+	 * a normalized array of allowed extenstions.
+	 * 
+	 * @param string $fileTypes String of file extensions, e.g. ".pdf, jpg,.gif"
+	 * @return array Array of extensions, e.g. ["pdf", "jpg", "gif"]
+	 */
+	private function parseFiletypesString(string $fileTypes): array {
+		$validTypes = explode(',', str_replace(' ', '', str_replace('.', '', $fileTypes)));
+		return $validTypes;
+	}
+
+	/**
+	 * Given a filename, returns its extension.
+	 *
+	 * @param string $fileName File name.
+	 * @return string Extension or filename if no extension.
+	 */
+	private function getFileExtensionFromFilename(string $fileName): string {
+		$explodedFilename = explode('.', $fileName);
+		return end($explodedFilename);
 	}
 }
