@@ -89,6 +89,10 @@ function setupMocks() {
 
 		return (bool)filter_var($to, FILTER_VALIDATE_EMAIL);
 	});
+
+	Functions\when('get_post_meta')->alias(function ($post, $key = '', $single = false) {
+		return $key;
+	});
 }
 
 
