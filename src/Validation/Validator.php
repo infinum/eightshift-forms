@@ -295,7 +295,7 @@ class Validator extends AbstractValidation
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
-				// Check validation for accept file types.
+				// Check validation for accepted file types.
 				if ($dataKey === 'accept') {
 					$individualFiles = [];
 					for ($i = 0; $i < count($fileValue['name']); $i++) {
