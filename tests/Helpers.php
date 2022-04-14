@@ -75,6 +75,20 @@ function setupMocks() {
 			'pdf' => 'application/pdf',
 		];
 	});
+
+	Functions\when('wp_mail')->alias(function ($to, $subject, $message, $headers = '', $attachments = []) {
+		$mail = json_encode([
+			'to' => $to,
+			'subject' => $subject,
+			'message' => $message,
+			'headers' => $headers,
+			'attachments' => $attachments,
+		]);
+
+		putenv("test_wp_mail_last_call={$mail}");
+
+		return (bool)filter_var($to, FILTER_VALIDATE_EMAIL);
+	});
 }
 
 
