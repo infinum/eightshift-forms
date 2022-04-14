@@ -671,6 +671,7 @@ test('validate yields valid results for files', function ($expected, $params, $f
 			'file-too-small' => 'The file is smaller than allowed. Minimum file size is 100 kB.',
 			'file-too-large' => 'The file is larger than allowed. Maximum file size is 400 kB.',
 			'file-wrong-mimetype' => 'The file type is not supported. Only .pdf are allowed.',
+			'file-wrong-mimetype2' => 'The file type is not supported. Only .jpg are allowed.',
 		], // expected
 		[], // params
 		[
@@ -698,6 +699,13 @@ test('validate yields valid results for files', function ($expected, $params, $f
 			'file-wrong-mimetype' => [
 				'name' => ['wrong.pdf'],
 				'type' => ['image/jpeg'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			],
+			'file-wrong-mimetype2' => [
+				'name' => ['wrong.jpg'],
+				'type' => ['application/pdf'],
 				'tmp_name' => [''],
 				'error' => [0],
 				'size' => [300000]
@@ -741,6 +749,15 @@ test('validate yields valid results for files', function ($expected, $params, $f
 				'fileName' => 'file-wrong-mimetype',
 				'fileId' => 'file-wrong-mimetype',
 				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-wrong-mimetype2',
+				'fileId' => 'file-wrong-mimetype2',
+				'fileAccept' => '.jpg',
 				'fileMinSize' => 100,
 				'fileMaxSize' => 400,
 				'fileIsRequired' => true,
