@@ -68,6 +68,13 @@ function setupMocks() {
 	Functions\when('wp_salt')->alias(function (string $scheme = 'auth') {
 		return $scheme;
 	});
+
+	Functions\when('wp_get_mime_types')->alias(function () {
+		return [
+			'jpg|jpeg|jpe' => 'image/jpeg',
+			'pdf' => 'application/pdf',
+		];
+	});
 }
 
 
