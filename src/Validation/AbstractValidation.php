@@ -88,25 +88,25 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * to disk, it'll check its mime_content_type from the filesystem.
 	 * Use the validation filter failMimetypeValidationWhenFileNotOnFS
 	 * to override this behaviour.
-	 * 
-	 * @param array $file File array.
+	 *
+	 * @param array<string|int> $file File array.
 	 * @return boolean True if mimetype matches extension, false otherwise.
 	 */
-	public function isMimeTypeValid(array $file): bool {
-		$denyIfFileIsNotUploaded = apply_filters(Filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS'), false); 
+	public function isMimeTypeValid(array $file): bool
+	{
+		$denyIfFileIsNotUploaded = \apply_filters(Filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS'), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 		$mimeTypes = \array_flip(\wp_get_mime_types());
 
 		$fileMimetype = $file['type'];
 		if ($file['tmp_name'] ?? false) {
 			$fileMimetype = \mime_content_type($file['tmp_name']);
-		}
-		elseif ($denyIfFileIsNotUploaded) {
+		} elseif ($denyIfFileIsNotUploaded) {
 			return false;
 		}
 
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
 
-		if (in_array($fileExtension, explode('|', $mimeTypes[$fileMimetype] ?? []))) {
+		if (\in_array($fileExtension, \explode('|', $mimeTypes[$fileMimetype] ?? []), true)) {
 			return true;
 		}
 
@@ -115,13 +115,14 @@ abstract class AbstractValidation implements ValidatorInterface
 
 	/**
 	 * Parses a comma-separated list of file extensions to return
-	 * a normalized array of allowed extenstions.
-	 * 
-	 * @param string $fileTypes String of file extensions, e.g. ".pdf, jpg,.gif"
-	 * @return array Array of extensions, e.g. ["pdf", "jpg", "gif"]
+	 * a normalized array of allowed extensions.
+	 *
+	 * @param string $fileTypes String of file extensions, e.g. ".pdf, jpg,.gif".
+	 * @return array<string> Array of extensions, e.g. ["pdf", "jpg", "gif"]
 	 */
-	private function parseFiletypesString(string $fileTypes): array {
-		$validTypes = explode(',', str_replace(' ', '', str_replace('.', '', $fileTypes)));
+	private function parseFiletypesString(string $fileTypes): array
+	{
+		$validTypes = \explode(',', \str_replace(' ', '', \str_replace('.', '', $fileTypes)));
 		return $validTypes;
 	}
 
@@ -131,8 +132,9 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * @param string $fileName File name.
 	 * @return string Extension or filename if no extension.
 	 */
-	private function getFileExtensionFromFilename(string $fileName): string {
-		$explodedFilename = explode('.', $fileName);
-		return end($explodedFilename);
+	private function getFileExtensionFromFilename(string $fileName): string
+	{
+		$explodedFilename = \explode('.', $fileName);
+		return \end($explodedFilename);
 	}
 }

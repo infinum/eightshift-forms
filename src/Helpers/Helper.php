@@ -191,7 +191,7 @@ class Helper
 	/**
 	 * Provide error log output to a custom log file.
 	 *
-	 * @param array $message Any type of message.
+	 * @param array<mixed> $message Any type of message.
 	 *
 	 * @return void
 	 */
@@ -267,8 +267,8 @@ class Helper
 
 		foreach ($matches as $match) {
 			$output[] = [
-				'label' => Helper::minifyString($match[2]) ?? '',
-				'value' => Helper::minifyString($match[1]) ?? '',
+				'label' => Helper::minifyString($match[2] ?? ''),
+				'value' => Helper::minifyString($match[1] ?? ''),
 				'original' => $match[0] ?? '',
 			];
 		}

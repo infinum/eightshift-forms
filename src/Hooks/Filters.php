@@ -352,7 +352,8 @@ class Filters
 	 *
 	 * @example filter_name es_forms_validation_force_mimetype_from_fs
 	 */
-	public static function getValidationSettingsFilterName(string $name): string {
+	public static function getValidationSettingsFilterName(string $name): string
+	{
 		$filter = self::ALL_PUBLIC['validation'][$name] ?? '';
 		if (!$filter) {
 			throw MissingFilterInfoException::viewException('geolocation', '', $name);

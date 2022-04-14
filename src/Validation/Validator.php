@@ -306,7 +306,7 @@ class Validator extends AbstractValidation
 						];
 						$individualFiles[] = $file;
 					}
-					
+
 					foreach ($individualFiles as $file) {
 						if (!$this->isMimeTypeValid($file)) {
 							$output[$fileKey] = sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
