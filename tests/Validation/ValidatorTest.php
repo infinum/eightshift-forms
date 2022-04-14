@@ -711,8 +711,15 @@ test('validate yields valid results for files', function ($expected, $params, $f
 				'size' => [300000]
 			],
 			'file-valid' => [
-				'name' => ['wrong.pdf'],
+				'name' => ['right.pdf'],
 				'type' => ['application/pdf'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			],
+			'file-no-validation' => [
+				'name' => ['whocares.pdf'],
+				'type' => ['image/jpeg'],
 				'tmp_name' => [''],
 				'error' => [0],
 				'size' => [300000]
@@ -770,6 +777,11 @@ test('validate yields valid results for files', function ($expected, $params, $f
 				'fileMinSize' => 100,
 				'fileMaxSize' => 400,
 				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-no-validation',
+				'fileId' => 'file-no-validation',
 			],
 		],  
 	],
