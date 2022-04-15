@@ -99,7 +99,14 @@ abstract class AbstractValidation implements ValidatorInterface
 
 		$fileMimetype = $file['type'];
 		if ($file['tmp_name'] ?? false) {
-			$fileMimetype = \mime_content_type($file['tmp_name']);
+			try {
+				$fileMimetype = \mime_content_type($file['tmp_name']);
+			}
+			catch (\Throwable $t) {
+				if ($denyIfFileIsNotUploaded) {
+					return false;
+				}
+			}
 		} elseif ($denyIfFileIsNotUploaded) {
 			return false;
 		}
