@@ -122,6 +122,8 @@ class Labels implements LabelsInterface
 			'validationPattern' => __('This field doesn\'t satisfy the validation pattern: %s.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAccept' => __('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
+			// translators: %s used for displaying file type value.
+			'validationAcceptMime' => __('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => __('The file is smaller than allowed. Minimum file size is %s kB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
