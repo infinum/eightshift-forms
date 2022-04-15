@@ -356,7 +356,7 @@ class Filters
 	{
 		$filter = self::ALL_PUBLIC['validation'][$name] ?? '';
 		if (!$filter) {
-			throw MissingFilterInfoException::viewException('geolocation', '', $name);
+			throw MissingFilterInfoException::viewException('validation', '', $name);
 		}
 
 		return self::FILTER_PREFIX . "_validation_{$filter}";
