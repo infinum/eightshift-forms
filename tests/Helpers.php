@@ -24,7 +24,19 @@ function setupMocks() {
 
 	Functions\when('get_locale')->justReturn('HR');
 
-	Functions\when('get_option')->returnArg();
+	Functions\when('get_option')->alias(function (string $option, $default = false) {
+		$envValue = getenv("test_force_option_{$option}");
+
+		if ($envValue === false) {
+			return $option;
+		}
+
+		if ($envValue === 'unset') {
+			return $default;
+		}
+
+		return $envValue;
+	});
 
 	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
 
