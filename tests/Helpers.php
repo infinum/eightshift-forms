@@ -91,7 +91,16 @@ function setupMocks() {
 	});
 
 	Functions\when('get_post_meta')->alias(function ($post, $key = '', $single = false) {
-		return $key;
+		$envValue = getenv("test_force_post_meta_{$key}");
+		if ($envValue === false) {
+			return $key;
+		}
+
+		if ($envValue === 'unset') {
+			return '';
+		}
+
+		return $envValue;
 	});
 }
 
