@@ -67,3 +67,16 @@ test('getGeolocationFilterName will return correct filter name', function () {
 test('getGeolocationFilterName will throw error if wrong filter name or name is provided.', function () {
 	$this->filters::getGeolocationFilterName('wrong');
 })->throws(MissingFilterInfoException::class);
+
+
+//---------------------------------------------------------------------------------//
+
+test('getValidationSettingsFilterName will return correct filter name', function () {
+	$filter = $this->filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS');
+
+	$this->assertSame('es_forms_validation_force_mimetype_from_fs', $filter);
+});
+
+test('getValidationSettingsFilterName will throw error if wrong filter name or name is provided.', function () {
+	$this->filters::getGeolocationFilterName('wrong');
+})->throws(MissingFilterInfoException::class);
