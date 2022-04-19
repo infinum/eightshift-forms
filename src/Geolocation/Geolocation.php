@@ -266,7 +266,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		// Provide custom countries.
 		$filterName = Filters::getGeolocationFilterName('countries');
 		if (has_filter($filterName)) {
-			return apply_filters($filterName, $output ? $output : []);
+			return apply_filters($filterName, $output);
 		}
 
 		return $output;
