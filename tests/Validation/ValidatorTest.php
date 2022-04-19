@@ -34,13 +34,18 @@ class ValidatorMock extends Validator {
 beforeEach(function () {
 	Monkey\setUp();
 	setupMocks();
-
+	putenv('TEST=true');
 	$labels = new Labels();
 	$this->validator = new ValidatorMock($labels);
 });
 
 afterAll(function() {
 	Monkey\tearDown();
+});
+
+afterEach(function() {
+	putenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
+	putenv('TEST');
 });
 
 test('Validator skips validation on single submit', function() {
@@ -773,6 +778,69 @@ test('validate yields valid results for files', function ($expected, $params, $f
 				'component' => 'file',
 				'fileName' => 'file-valid',
 				'fileId' => 'file-valid',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-no-validation',
+				'fileId' => 'file-no-validation',
+			],
+		],  
+	],
+]);
+
+
+test('validate denies unuploaded files when a particular option is set', function ($expected, $params, $files, $formId, $formData) {
+	putenv('test_force_option_eightshift_forms_force_mimetype_from_fs=true');
+	expect($this->validator->validate($params, $files, $formId, $formData))->toBe($expected);
+})->with([
+	[
+		[
+			'file-not-uploaded' => 'The file seems to be corrupted. Only .pdf are allowed.',
+			'file-missing' => 'The file seems to be corrupted. Only .pdf are allowed.',
+		], // expected
+		[], // params
+		[
+			'file-not-uploaded' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['application/pdf'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			],
+			'file-missing' => [
+				'name' => ['wrong.pdf'],
+				'type' => ['application/executable'],
+				'tmp_name' => ['/tmp/i_hopefully_dont_exist'],
+				'error' => [0],
+				'size' => [300000]
+			],
+			'file-no-validation' => [
+				'name' => ['whocares.pdf'],
+				'type' => ['image/jpeg'],
+				'tmp_name' => [''],
+				'error' => [0],
+				'size' => [300000]
+			]
+		], // files
+		'', // form ID
+		[ // form data
+			[
+				'component' => 'file',
+				'fileName' => 'file-not-uploaded',
+				'fileId' => 'file-not-uploaded',
+				'fileAccept' => '.pdf',
+				'fileMinSize' => 100,
+				'fileMaxSize' => 400,
+				'fileIsRequired' => true,
+			],
+			[
+				'component' => 'file',
+				'fileName' => 'file-missing',
+				'fileId' => 'file-missing',
 				'fileAccept' => '.pdf',
 				'fileMinSize' => 100,
 				'fileMaxSize' => 400,
