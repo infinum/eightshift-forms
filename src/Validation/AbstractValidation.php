@@ -96,7 +96,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	{
 		$denyIfFileIsNotUploaded = \apply_filters(Filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS'), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 		if (getenv('TEST')) {
-			$denyIfFileIsNotUploaded = getenv('test_force_option_eightshift_forms_force_mimetype_from_fs') ?? false;
+			$denyIfFileIsNotUploaded = getenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
 		}
 
 		$mimeTypes = \array_flip(\wp_get_mime_types());
@@ -115,8 +115,8 @@ abstract class AbstractValidation implements ValidatorInterface
 		}
 
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
-
-		if (\in_array($fileExtension, \explode('|', $mimeTypes[$fileMimetype] ?? []), true)) {
+		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? []);
+		if (\in_array($fileExtension, $allowedExtensionsForMimetype, true)) {
 			return true;
 		}
 
@@ -132,8 +132,8 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	private function parseFiletypesString(string $fileTypes): array
 	{
-		$validTypes = \explode(',', \str_replace(' ', '', \str_replace('.', '', $fileTypes)));
-		return $validTypes;
+		$fileTypes = \str_replace(['.', ' '], '', $fileTypes);
+		return \explode(',', $fileTypes);
 	}
 
 	/**
