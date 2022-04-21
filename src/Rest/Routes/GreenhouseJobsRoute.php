@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\ClientInterface;
+use WP_REST_Request;
 
 /**
  * Class GreenhouseJobsRoute
@@ -72,13 +73,13 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param \WP_REST_Request $request Data got from endpoint url.
+	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
-	 * @return \WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-	public function routeCallback(\WP_REST_Request $request)
+	public function routeCallback(WP_REST_Request $request)
 	{
 		// Try catch request.
 		try {

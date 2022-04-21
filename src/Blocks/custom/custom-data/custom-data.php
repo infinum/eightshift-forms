@@ -48,4 +48,4 @@ if (!$block) {
 <?php }
 
 // Output form.
-echo $block; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo $block; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

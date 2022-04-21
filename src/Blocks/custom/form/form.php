@@ -25,13 +25,13 @@ $formClass = Components::classnames([
 <div class="<?php echo esc_attr($formClass); ?>">
 	<?php
 	// There is no bailout here in case of missing settings because custom form can be used only to redirecto to another page with form data.
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo Components::render(
 		'form',
 		Components::props('form', $attributes, array_merge(
 			[
 				'formContent' => $innerBlockContent,
 			],
-			\apply_filters(
+			apply_filters(
 				Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
 				$formFormPostId
 			)

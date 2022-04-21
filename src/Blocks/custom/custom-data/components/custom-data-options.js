@@ -30,17 +30,17 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 
 	if (customDataDataOptions?.length < 1) {
 		return (
-			<PanelBody title={__('Custom data', 'eightshift-forms')}>
-				{__('Configure a custom data source to display the block options.', 'eightshift-forms')}
+			<PanelBody title={\__('Custom data', 'eightshift-forms')}>
+				{\__('Configure a custom data source to display the block options.', 'eightshift-forms')}
 			</PanelBody>
 		);
 	}
 
 	return (
 		<>
-			<PanelBody title={__('Custom data', 'eightshift-forms')}>
+			<PanelBody title={\__('Custom data', 'eightshift-forms')}>
 				<CustomSelect
-					label={<IconLabel icon={icons.fieldType} label={__('Field type', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.fieldType} label={\__('Field type', 'eightshift-forms')} />}
 					value={customDataFieldType}
 					options={getOption('customDataFieldType', attributes, manifest)}
 					onChange={(value) => setAttributes({ [getAttrKey('customDataFieldType', attributes, manifest)]: value })}
@@ -50,7 +50,7 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 				/>
 
 				<CustomSelect
-					label={<IconLabel icon={icons.data} label={__('Dataset', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.data} label={\__('Dataset', 'eightshift-forms')} />}
 					value={customDataData}
 					options={customDataDataOptions}
 					onChange={(value) => setAttributes({ [getAttrKey('customDataData', attributes, manifest)]: value })}

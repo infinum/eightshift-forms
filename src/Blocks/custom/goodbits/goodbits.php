@@ -21,7 +21,7 @@ $goodbitsFormPostId = Components::checkAttr('goodbitsFormPostId', $attributes, $
 $goodbitsFormDataTypeSelector = Components::checkAttr('goodbitsFormDataTypeSelector', $attributes, $manifest);
 
 // Check if goodbits data is set and valid.
-$isSettingsValid = \apply_filters(
+$isSettingsValid = apply_filters(
 	SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME,
 	$goodbitsFormPostId
 );
@@ -50,7 +50,7 @@ if (!$isSettingsValid && $goodbitsFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	Goodbits::FILTER_MAPPER_NAME,
 	$goodbitsFormPostId,
 	[

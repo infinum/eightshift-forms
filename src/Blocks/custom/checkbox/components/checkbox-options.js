@@ -6,7 +6,7 @@ import { CheckboxOptions as CheckboxOptionsComponent } from '../../../components
 
 export const CheckboxOptions = ({ attributes, setAttributes }) => {
 	return (
-		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
+		<PanelBody title={\__('Checkbox', 'eightshift-forms')}>
 			<CheckboxOptionsComponent
 				{...props('checkbox', attributes, {
 					setAttributes,

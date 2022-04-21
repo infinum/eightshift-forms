@@ -97,7 +97,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Validation', 'eightshift-forms'),
+			'label' => \__('Validation', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -115,11 +115,11 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Validation messages', 'eightshift-forms'),
+				'introTitle' => \__('Validation messages', 'eightshift-forms'),
 			]
 		];
 
-		$local = array_flip(Labels::ALL_LOCAL_LABELS);
+		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
 
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
@@ -131,7 +131,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
 				'inputId' => $this->getSettingsName($key),
-				'inputFieldLabel' => ucfirst($key),
+				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getSettingsValue($key, $formId),
 			];
@@ -155,15 +155,15 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Form validation', 'eightshift-forms'),
+				'introTitle' => \__('Form validation', 'eightshift-forms'),
 			],
 			[
 				'component' => 'textarea',
 				'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 				'textareaIsMonospace' => true,
-				'textareaFieldLabel' => __('Validation patterns', 'eightshift-forms'),
+				'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 				// translators: %s will be replaced with local validation patterns.
-				'textareaFieldHelp' => sprintf(__("
+				'textareaFieldHelp' => \sprintf(\__("
 					These patterns can be selected inside the Form editor.
 					<br /> <br />
 					Each pattern should be in its own line and in the following format:
@@ -183,11 +183,11 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('Validation messages', 'eightshift-forms'),
+				'introTitle' => \__('Validation messages', 'eightshift-forms'),
 			],
 		];
 
-		$local = array_flip(Labels::ALL_LOCAL_LABELS);
+		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
 
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
@@ -199,7 +199,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
 				'inputId' => $this->getSettingsName($key),
-				'inputFieldLabel' => ucfirst($key),
+				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getOptionValue($key),
 			];

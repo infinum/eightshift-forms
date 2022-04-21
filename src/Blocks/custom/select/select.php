@@ -20,7 +20,7 @@ if (empty($selectName)) {
 
 $props['selectOptions'] = $innerBlockContent;
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'select',
 	Components::props('select', $attributes, $props)
 );

@@ -52,7 +52,7 @@ abstract class AbstractFormBuilder
 		$formContent = '';
 
 		// Add divider on the bottom of every form.
-		$formContent .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$formContent .= Components::render(
 			'divider',
 			Components::props('divider', []),
 			'',
@@ -60,11 +60,11 @@ abstract class AbstractFormBuilder
 		);
 
 		// Add submit on the bottom of every form.
-		$formContent .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$formContent .= Components::render(
 			'submit',
 			Components::props('submit', [
 				'additionalClass' => 'es-submit--global',
-				'submitValue' => __('Save settings', 'eightshift-forms'),
+				'submitValue' => \__('Save settings', 'eightshift-forms'),
 				'submitIcon' => 'save',
 			]),
 			'',
@@ -90,9 +90,9 @@ abstract class AbstractFormBuilder
 	 */
 	protected function getAdminRefreshUrl(): string
 	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		return admin_url(sprintf(basename($request)));
+		return \admin_url(\sprintf(\basename($request)));
 	}
 
 	/**
@@ -132,11 +132,11 @@ abstract class AbstractFormBuilder
 
 		// Add additional form props.
 		if ($formAdditionalProps) {
-			$formProps = array_merge($formProps, $formAdditionalProps);
+			$formProps = \array_merge($formProps, $formAdditionalProps);
 		}
 
 		// Build form component.
-		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return Components::render(
 			'form',
 			Components::props('form', [], $formProps),
 			'',
@@ -193,7 +193,7 @@ abstract class AbstractFormBuilder
 					$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
 					// Add new nesting iteration if component is group.
-					if ($key === 'groupContent' && isset($item["groupContent"]) && is_array($item["groupContent"])) {
+					if ($key === 'groupContent' && isset($item["groupContent"]) && \is_array($item["groupContent"])) {
 						$groupOutput = '';
 						foreach ($item["groupContent"] as $group) {
 							$groupOutput .= $this->buildComponent($group);
@@ -204,7 +204,7 @@ abstract class AbstractFormBuilder
 
 					// Build child component.
 					if ($item) {
-						$output .= Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$output .= Components::render(
 							$item['component'],
 							Components::props($innerComponent, $item),
 							'',
@@ -225,9 +225,9 @@ abstract class AbstractFormBuilder
 		}
 
 		// Build the component.
-		return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return Components::render(
 			$attributes['component'],
-			array_merge(
+			\array_merge(
 				Components::props($component, $attributes),
 				$additionalAttributes
 			),
@@ -285,7 +285,7 @@ abstract class AbstractFormBuilder
 		);
 
 		$filterName = Filters::getBlockFilterName('form', $filter);
-		if (has_filter($filterName)) {
+		if (\has_filter($filterName)) {
 			$value = \apply_filters($filterName, $type, $formId) ?? '';
 
 			// Ignore filter if empty.

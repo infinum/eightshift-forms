@@ -18,7 +18,7 @@ if (empty($fileName)) {
 	$props['fileName'] = $fileId;
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'file',
 	Components::props('file', $attributes, $props)
 );

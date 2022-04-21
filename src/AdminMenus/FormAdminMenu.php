@@ -119,7 +119,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
-		return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return 'data:image/svg+xml;base64,' . \base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 
 	/**
@@ -160,7 +160,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
-	 * @throws \Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
@@ -181,7 +180,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$status = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$status = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$title = \esc_html__('All forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
 		$listingLink = '';

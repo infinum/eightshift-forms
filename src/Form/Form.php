@@ -57,6 +57,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$type = SettingsMailer::SETTINGS_TYPE_KEY;
 		$output['formType'] = $type;
 
-		return array_merge($output, $this->getFormAdditionalProps($formId, $type));
+		return \array_merge($output, $this->getFormAdditionalProps($formId, $type));
 	}
 }

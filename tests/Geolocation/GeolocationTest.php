@@ -100,13 +100,13 @@ afterAll(function() {
 test('Register method will call init hook', function () {
 	$this->geolocation->register();
 
-	$this->assertSame(10, has_filter('init', 'EightshiftForms\Geolocation\Geolocation->setLocationCookie()'), 'The callback setLocationCookie should be hooked to init hook with priority 10.');
+	$this->assertSame(10, \has_filter('init', 'EightshiftForms\Geolocation\Geolocation->setLocationCookie()'), 'The callback setLocationCookie should be hooked to init hook with priority 10.');
 });
 
 test('Register method will call es_geolocation_is_use_located hook', function () {
 	$this->geolocation->register();
 
-	$this->assertSame(10, has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
+	$this->assertSame(10, \has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
 });
 
 //---------------------------------------------------------------------------------//
@@ -249,7 +249,7 @@ test('getCountries will return filter if countries filter is provided.', functio
 		return true;
 	});
 
-	if (has_filter('es_forms_geolocation_countries')) {
+	if (\has_filter('es_forms_geolocation_countries')) {
 		putenv("SIDEAFFECT_GEOLOCATION_COUNTRIESD_FILTER={$action}");
 	}
 

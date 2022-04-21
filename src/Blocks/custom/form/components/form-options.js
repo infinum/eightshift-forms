@@ -13,7 +13,7 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
 
 	return (
-		<PanelBody title={__('Form', 'eightshift-forms')}>
+		<PanelBody title={\__('Form', 'eightshift-forms')}>
 			<Button
 				isPrimary
 				icon={icons.options}
@@ -21,9 +21,9 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 				style={{ height: '3rem', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
 			>
 				<span>
-					<span>{__('Form settings', 'eightshift-forms')}</span>
+					<span>{\__('Form settings', 'eightshift-forms')}</span>
 					<br />
-					<small>{__('Configure the form and integrations', 'eightshift-forms')}</small>
+					<small>{\__('Configure the form and integrations', 'eightshift-forms')}</small>
 				</span>
 			</Button>
 

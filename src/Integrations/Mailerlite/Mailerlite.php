@@ -111,7 +111,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
+			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
@@ -162,7 +162,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 				continue;
 			}
 
-			$type = $field['type'] ? strtolower($field['type']) : '';
+			$type = $field['type'] ? \strtolower($field['type']) : '';
 			$name = $field['key'] ?? '';
 			$label = $field['title'] ?? '';
 			$id = $name;
@@ -201,14 +201,14 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => count($output) + 1,
+			'submitFieldOrder' => \count($output) + 1,
 			'submitServerSideRender' => $ssr,
 			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsMailerlite::SETTINGS_TYPE_KEY, 'data');
-		if (has_filter($dataFilterName) && !is_admin()) {
+		if (\has_filter($dataFilterName) && !\is_admin()) {
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 

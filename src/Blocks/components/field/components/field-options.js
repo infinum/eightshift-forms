@@ -26,17 +26,17 @@ export const FieldOptions = (attributes) => {
 				<BaseControl
 					label={(
 						<div className='es-flex-between'>
-							<IconLabel icon={icons.fieldLabel} label={__('Field label', 'eightshift-forms')} />
+							<IconLabel icon={icons.fieldLabel} label={\__('Field label', 'eightshift-forms')} />
 							<Button
 								icon={icons.hide}
 								isPressed={fieldHideLabel}
 								onClick={() => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !fieldHideLabel })}
-								content={__('Hide', 'eightshift-forms')}
+								content={\__('Hide', 'eightshift-forms')}
 							/>
 
 						</div>
 					)}
-					help={fieldHideLabel ? __('Hiding the label might impact accessibility!', 'eightshift-forms') : null}
+					help={fieldHideLabel ? \__('Hiding the label might impact accessibility!', 'eightshift-forms') : null}
 				>
 					{!fieldHideLabel &&
 						<TextControl
@@ -49,7 +49,7 @@ export const FieldOptions = (attributes) => {
 			}
 
 			<TextControl
-				label={<IconLabel icon={icons.fieldHelp} label={__('Help text', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.fieldHelp} label={\__('Help text', 'eightshift-forms')} />}
 				value={fieldHelp}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 			/>

@@ -21,7 +21,7 @@ $greenhouseFormPostId = Components::checkAttr('greenhouseFormPostId', $attribute
 $greenhouseFormDataTypeSelector = Components::checkAttr('greenhouseFormDataTypeSelector', $attributes, $manifest);
 
 // Check if Greenhouse data is set and valid.
-$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $greenhouseFormPostId);
+$isSettingsValid = apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $greenhouseFormPostId);
 
 $greenhouseClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -47,7 +47,7 @@ if (!$isSettingsValid && $greenhouseFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	Greenhouse::FILTER_MAPPER_NAME,
 	$greenhouseFormPostId,
 	[

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
+use CURLFile;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
@@ -50,7 +51,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -70,7 +71,7 @@ class HubspotClient implements HubspotClientInterface
 					$consentData = $this->getConsentData($item);
 
 					if ($consentData) {
-						$fields = array_merge($fields, $consentData);
+						$fields = \array_merge($fields, $consentData);
 					}
 
 					$portalId = $item['portalId'] ?? '';
@@ -86,10 +87,10 @@ class HubspotClient implements HubspotClientInterface
 
 				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ClientInterface::TRANSIENT_STORED_TIME,
-					'title' => current_time('mysql'),
+					'title' => \current_time('mysql'),
 				];
 
-				set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -109,7 +110,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
@@ -126,7 +127,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getContactProperties(): array
 	{
-		$output = get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if (empty($output)) {
 			$items = $this->getHubspotContactProperties();
@@ -157,9 +158,9 @@ class HubspotClient implements HubspotClientInterface
 				$output[] = $name;
 			}
 
-			sort($output);
+			\sort($output);
 
-			set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, 3600);
+			\set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, 3600);
 		}
 
 		return $output;
@@ -177,13 +178,13 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemId = explode('---', $itemId);
+		$itemId = \explode('---', $itemId);
 
-		$consent = array_filter(
+		$consent = \array_filter(
 			$params,
 			static function ($item) {
 				$name = $item['name'] ?? '';
-				return strpos($name, 'CONSENT_') === 0;
+				return \strpos($name, 'CONSENT_') === 0;
 			}
 		);
 
@@ -191,7 +192,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$body = [
 			'context' => [
-				'ipAddress' => isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'ipAddress' => isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'hutk' => $params['es-form-hubspot-cookie']['value'],
 				'pageUri' => $params['es-form-hubspot-page-url']['value'],
 				'pageName' => $params['es-form-hubspot-page-name']['value'],
@@ -202,7 +203,7 @@ class HubspotClient implements HubspotClientInterface
 			$outputConsent = [];
 
 			foreach ($consent as $key => $value) {
-				$name = explode('.', $value['name']);
+				$name = \explode('.', $value['name']);
 				$type = $name[0];
 				$id = $name[1] ?? '';
 
@@ -227,7 +228,7 @@ class HubspotClient implements HubspotClientInterface
 			}
 		}
 
-		$body['fields'] = array_merge(
+		$body['fields'] = \array_merge(
 			$this->prepareParams($params),
 			$this->prepareFiles($files, $formId)
 		);
@@ -236,11 +237,11 @@ class HubspotClient implements HubspotClientInterface
 			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}"),
 			[
 				'headers' => $this->getHeaders(),
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -258,7 +259,7 @@ class HubspotClient implements HubspotClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['message'] ?? '';
 		$responseErrors = $responseBody['errors'] ?? [];
 
@@ -341,11 +342,11 @@ class HubspotClient implements HubspotClientInterface
 			$this->getBaseUrl("contacts/v1/contact/createOrUpdate/email/{$email}", true),
 			[
 				'headers' => $this->getHeaders(),
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -363,7 +364,7 @@ class HubspotClient implements HubspotClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['message'] ?? '';
 		$responseErrors = $responseBody['errors'] ?? [];
 
@@ -413,42 +414,42 @@ class HubspotClient implements HubspotClientInterface
 
 		$options = [
 			'folderPath' => '/' . $folder,
-			'options' => wp_json_encode([
+			'options' => \wp_json_encode([
 				"access" => "PUBLIC_NOT_INDEXABLE",
 				"overwrite" => false,
 			]),
 		];
 
 		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions');
-		if (has_filter($filterName)) {
+		if (\has_filter($filterName)) {
 			$options = \apply_filters($filterName, []);
 		}
 
-		$postData = array_merge(
+		$postData = \array_merge(
 			[
-				'file' => new \CURLFile($path, 'application/octet-stream'),
+				'file' => new CURLFile($path, 'application/octet-stream'),
 			],
 			$options
 		);
 
-		$curl = curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
-		curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
+		$curl = \curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-				CURLOPT_URL => $this->getBaseUrl("filemanager/api/v3/files/upload", true),
-				CURLOPT_FAILONERROR => true,
-				CURLOPT_POST => true,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_POSTFIELDS => $postData
+				\CURLOPT_URL => $this->getBaseUrl("filemanager/api/v3/files/upload", true),
+				\CURLOPT_FAILONERROR => true,
+				\CURLOPT_POST => true,
+				\CURLOPT_RETURNTRANSFER => true,
+				\CURLOPT_POSTFIELDS => $postData
 			]
 		);
 
-		$response = curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
-		$statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
-		curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
+		$statusCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
 		if ($statusCode === 200) {
-			$response = json_decode((string) $response, true);
+			$response = \json_decode((string) $response, true);
 
 			return $response['objects'][0]['url'] ?? '';
 		}
@@ -543,7 +544,7 @@ class HubspotClient implements HubspotClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true);
+		return \json_decode(\wp_remote_retrieve_body($response), true);
 	}
 
 	/**
@@ -561,7 +562,7 @@ class HubspotClient implements HubspotClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true);
+		return \json_decode(\wp_remote_retrieve_body($response), true);
 	}
 
 	/**
@@ -588,7 +589,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = [];
 
 		// Find consent data from meta.
-		$consentData = array_filter(
+		$consentData = \array_filter(
 			$item['metaData'],
 			static function ($item) {
 				return $item['name'] === 'legalConsentOptions';
@@ -597,10 +598,10 @@ class HubspotClient implements HubspotClientInterface
 
 		// Check for consent data.
 		if ($consentData) {
-			$consentData = array_values($consentData);
+			$consentData = \array_values($consentData);
 
 			// Decode consent data.
-			$consentOptions = json_decode($consentData[0]['value'], true);
+			$consentOptions = \json_decode($consentData[0]['value'], true);
 
 			$isLegitimateInterest = $consentOptions['isLegitimateInterest'] ?? false;
 			$privacyPolicyText = $consentOptions['privacyPolicyText'] ?? '';
@@ -638,7 +639,7 @@ class HubspotClient implements HubspotClientInterface
 					if ($processingConsentType === 'REQUIRED_CHECKBOX') {
 						$consentProcessingOptions = [
 							[
-								'label' => wp_strip_all_tags($processingConsentCheckboxLabel),
+								'label' => \wp_strip_all_tags($processingConsentCheckboxLabel),
 								'required' => true,
 								'communicationTypeId' => '', // Empty on purpose.
 							]
@@ -702,7 +703,7 @@ class HubspotClient implements HubspotClientInterface
 					continue;
 				}
 
-				$value = str_replace(', ', ';', $value);
+				$value = \str_replace(', ', ';', $value);
 			}
 
 			$output[] = [

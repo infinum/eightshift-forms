@@ -72,8 +72,8 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 			{!hasInnerBlocks &&
 				<Placeholder
 					icon={<BlockIcon iconName='esf-form' />}
-					label={__('Eightshift Forms', 'productive')}
-					instructions={__('Select a form type below to start.', 'productive')}
+					label={\__('Eightshift Forms', 'productive')}
+					instructions={\__('Select a form type below to start.', 'productive')}
 					className={attributes.blockClass}
 				>
 					<div className='esf-form-type-picker-group'>
@@ -92,7 +92,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 									isTertiary
 									onClick={() => createFormType(slug)}
 								>
-									{sprintf(__('%s form', 'eightshift-forms'), label)}
+									{\sprintf(\__('%s form', 'eightshift-forms'), label)}
 								</Button>
 							);
 						})}

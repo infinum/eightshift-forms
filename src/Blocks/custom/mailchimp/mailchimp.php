@@ -21,7 +21,7 @@ $mailchimpFormPostId = Components::checkAttr('mailchimpFormPostId', $attributes,
 $mailchimpFormDataTypeSelector = Components::checkAttr('mailchimpFormDataTypeSelector', $attributes, $manifest);
 
 // Check if mailchimp data is set and valid.
-$isSettingsValid = \apply_filters(
+$isSettingsValid = apply_filters(
 	SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME,
 	$mailchimpFormPostId
 );
@@ -50,7 +50,7 @@ if (!$isSettingsValid && $mailchimpFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	Mailchimp::FILTER_MAPPER_NAME,
 	$mailchimpFormPostId,
 	[

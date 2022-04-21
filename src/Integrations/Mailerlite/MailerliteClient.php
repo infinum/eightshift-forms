@@ -51,7 +51,7 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -69,10 +69,10 @@ class MailerliteClient implements ClientInterface
 
 				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ClientInterface::TRANSIENT_STORED_TIME,
-					'title' => current_time('mysql'),
+					'title' => \current_time('mysql'),
 				];
 
-				set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -92,7 +92,7 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -101,7 +101,7 @@ class MailerliteClient implements ClientInterface
 			if ($itemId && $fields) {
 				$output = $fields;
 
-				set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -135,11 +135,11 @@ class MailerliteClient implements ClientInterface
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'POST',
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -157,7 +157,7 @@ class MailerliteClient implements ClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['error']['message'] ?? '';
 
 		$output = [
@@ -228,7 +228,7 @@ class MailerliteClient implements ClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		return $body ?? [];
 	}
@@ -248,7 +248,7 @@ class MailerliteClient implements ClientInterface
 			]
 		);
 
-		return json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		return \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 	}
 
 	/**

@@ -20,7 +20,7 @@ if (empty($radiosName)) {
 
 $props['radiosContent'] = $innerBlockContent;
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'radios',
 	Components::props('radios', $attributes, $props)
 );

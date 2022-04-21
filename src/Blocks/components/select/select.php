@@ -59,7 +59,7 @@ if ($selectTracking) {
 $selectAttrsOutput = '';
 if ($selectAttrs) {
 	foreach ($selectAttrs as $key => $value) {
-		$selectAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$selectAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -84,7 +84,7 @@ $select = '
 	' . $additionalContent . '
 ';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

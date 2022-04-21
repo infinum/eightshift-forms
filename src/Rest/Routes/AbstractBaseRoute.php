@@ -18,7 +18,7 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 /**
  * Class FormSubmitRoute
  *
- * @property \EightshiftForms\Validation\Validator $validator
+ * @property Validator $validator
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
@@ -75,7 +75,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		foreach ($params as $key => $param) {
 			$type = $param['type'] ?? '';
 
-			if (array_values($param) === $param) {
+			if (\array_values($param) === $param) {
 				$params[$key] = $this->sanitizeFields($param);
 			} else {
 				if ($type === 'textarea') {
@@ -121,7 +121,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			if (
 				! isset($params['nonce']) ||
 				! isset($params['form-unique-id']) ||
-				! wp_verify_nonce($params['nonce'], $params['form-unique-id'])
+				! \wp_verify_nonce($params['nonce'], $params['form-unique-id'])
 			) {
 				throw new UnverifiedRequestException(
 					\esc_html__('Invalid nonce.', 'eightshift-forms')
@@ -149,21 +149,21 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function prepareParams(array $params): array
 	{
-		return array_map(
+		return \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.
-				if (is_array($item)) {
+				if (\is_array($item)) {
 					// Loop all items and decode.
-					$inner = array_map(
+					$inner = \array_map(
 						static function ($item) {
-							return json_decode($item, true);
+							return \json_decode($item, true);
 						},
 						$item
 					);
 
 					// Find all items where value is not empty.
-					$innerNotEmpty = array_values(
-						array_filter(
+					$innerNotEmpty = \array_values(
+						\array_filter(
 							$inner,
 							static function ($innerItem) {
 								return !empty($innerItem['value']);
@@ -177,9 +177,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					}
 
 					// If multiple values this is checkbox or select multiple.
-					if (count($innerNotEmpty) > 1) {
-						$multiple = array_values(
-							array_map(
+					if (\count($innerNotEmpty) > 1) {
+						$multiple = \array_values(
+							\array_map(
 								static function ($item) {
 									return $item['value'];
 								},
@@ -188,7 +188,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 						);
 
 						// Append values to the first value.
-						$innerNotEmpty[0]['value'] = implode(", ", $multiple);
+						$innerNotEmpty[0]['value'] = \implode(", ", $multiple);
 
 						return $innerNotEmpty[0];
 					}
@@ -198,7 +198,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				// Just decode value.
-				return json_decode($item, true);
+				return \json_decode($item, true);
 			},
 			$params
 		);

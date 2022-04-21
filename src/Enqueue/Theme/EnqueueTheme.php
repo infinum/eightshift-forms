@@ -145,10 +145,10 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		$output = [
 			'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
-			'hideGlobalMessageTimeout' => apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
-			'redirectionTimeout' => apply_filters($redirectionTimeoutFilterName, 300),
-			'hideLoadingStateTimeout' => apply_filters($hideLoadingStateTimeoutFilterName, 600),
-			'fileCustomRemoveLabel' => apply_filters($previewRemoveLabelFilterName, esc_html__('Remove', 'eightshift-forms')),
+			'hideGlobalMessageTimeout' => \apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
+			'redirectionTimeout' => \apply_filters($redirectionTimeoutFilterName, 300),
+			'hideLoadingStateTimeout' => \apply_filters($hideLoadingStateTimeoutFilterName, 600),
+			'fileCustomRemoveLabel' => \apply_filters($previewRemoveLabelFilterName, \esc_html__('Remove', 'eightshift-forms')),
 			'formDisableScrollToFieldOnError' => !$this->isCheckboxOptionChecked(
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY

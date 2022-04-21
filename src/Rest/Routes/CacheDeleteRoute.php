@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Validation\ValidatorInterface;
+use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
@@ -69,19 +70,19 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param \WP_REST_Request $request Data got from endpoint url.
+	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
-	 * @return \WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-	public function routeCallback(\WP_REST_Request $request)
+	public function routeCallback(WP_REST_Request $request)
 	{
-		if (! current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
+		if (! \current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => esc_html__('Error, you don\'t have enough permissions to perform this action!', 'eightshift-form'),
+				'message' => \esc_html__('Error, you don\'t have enough permissions to perform this action!', 'eightshift-form'),
 			]);
 		}
 
@@ -91,7 +92,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => esc_html__('Error, no cache type key was provided.', 'eightshift-form'),
+				'message' => \esc_html__('Error, no cache type key was provided.', 'eightshift-form'),
 			]);
 		}
 
@@ -101,19 +102,19 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => esc_html__('Error, provided cache type doesn\'t exist.', 'eightshift-form'),
+				'message' => \esc_html__('Error, provided cache type doesn\'t exist.', 'eightshift-form'),
 			]);
 		}
 
 		foreach (SettingsCache::ALL_CACHE[$type] as $item) {
-			delete_transient($item);
+			\delete_transient($item);
 		}
 
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
 			// translators: %s will be replaced with the cache type.
-			'message' => sprintf(esc_html__('%s cache successfully deleted!', 'eightshift-form'), ucfirst($type)),
+			'message' => \sprintf(\esc_html__('%s cache successfully deleted!', 'eightshift-form'), \ucfirst($type)),
 		]);
 	}
 }

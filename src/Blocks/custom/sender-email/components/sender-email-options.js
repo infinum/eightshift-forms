@@ -12,7 +12,7 @@ export const SenderEmailOptions = ({ attributes, setAttributes }) => {
 			showInputName={false}
 			showInputType={false}
 			showInputValidationOptions={false}
-			title={__('E-mail (sender)', 'eightshift-forms')}
+			title={\__('E-mail (sender)', 'eightshift-forms')}
 		/>
 	);
 };

@@ -45,7 +45,6 @@ $radios = '
 	' . $additionalContent . '
 ';
 
-// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 echo Components::render(
 	'field',
 	array_merge(

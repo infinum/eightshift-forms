@@ -161,7 +161,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Goodbits', 'eightshift-forms'),
+			'label' => \__('Goodbits', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -180,9 +180,9 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('Before using Goodbits you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => \sprintf(\__('Before using Goodbits you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 					'highlightedContentIcon' => 'tools',
 				],
 			];
@@ -194,14 +194,14 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Data from Goodbits couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('Data from Goodbits couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
 					'highlightedContentIcon' => 'error',
 				],
 			];
 		}
 
-		$itemOptions = array_map(
+		$itemOptions = \array_map(
 			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
@@ -213,7 +213,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			$items
 		);
 
-		array_unshift(
+		\array_unshift(
 			$itemOptions,
 			[
 				'component' => 'select-option',
@@ -227,13 +227,13 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Goodbits', 'eightshift-forms'),
+				'introTitle' => \__('Goodbits', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_GOODBITS_LIST_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_GOODBITS_LIST_KEY),
-				'selectFieldLabel' => __('List', 'eightshift-forms'),
+				'selectFieldLabel' => \__('List', 'eightshift-forms'),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,
@@ -246,11 +246,11 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			$beforeContent = '';
 
 			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-			if (has_filter($filterName)) {
+			if (\has_filter($filterName)) {
 				$beforeContent = \apply_filters($filterName, '') ?? '';
 			}
 
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				[
 					[
@@ -258,9 +258,9 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Form fields', 'eightshift-forms'),
+						'introTitle' => \__('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+						'introSubtitle' => \__('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -293,14 +293,14 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Goodbits', 'eightshift-forms'),
+				'introTitle' => \__('Goodbits', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
+				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => __('<ol>
+				'introSubtitle' => \__('<ol>
 						<li>Log in to your Goodbits Account.</li>
 						<li>Go to <strong>Settings</strong>, then click <strong><a target="_blank" href="https://app.Goodbits.com/integrations/api/">API</a></strong>.</li>
 						<li>Copy the API key into the field below or use the global constant</li>
@@ -318,7 +318,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use Goodbits', 'eightshift-forms'),
+						'checkboxLabel' => \__('Use Goodbits', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY),
 						'checkboxValue' => self::SETTINGS_GOODBITS_USE_KEY,
 						'checkboxSingleSubmit' => true,
@@ -330,15 +330,15 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyGoodbits();
 
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				[
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_GOODBITS_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_GOODBITS_API_KEY_KEY),
-						'inputFieldLabel' => __('API key', 'eightshift-forms'),
-						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
+						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GOODBITS_API_KEY_KEY),

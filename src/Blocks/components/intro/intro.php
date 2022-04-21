@@ -37,7 +37,7 @@ $titleClass = Components::classnames([
 
 	<?php if ($introSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
-			<?php echo $introSubtitle; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $introSubtitle; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

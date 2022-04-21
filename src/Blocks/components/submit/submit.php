@@ -46,7 +46,7 @@ if ($submitId) {
 $submitAttrsOutput = '';
 if ($submitAttrs) {
 	foreach ($submitAttrs as $key => $value) {
-		$submitAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$submitAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -86,7 +86,7 @@ if ($submitServerSideRender) {
 	$button = str_replace('</button>', '</div>', $button);
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

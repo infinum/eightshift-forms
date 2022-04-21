@@ -78,7 +78,7 @@ if ($fileTracking) {
 $fileAttrsOutput = '';
 if ($fileAttrs) {
 	foreach ($fileAttrs as $key => $value) {
-		$fileAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$fileAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -102,7 +102,7 @@ $file = '
 	' . $additionalContent . '
 ';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

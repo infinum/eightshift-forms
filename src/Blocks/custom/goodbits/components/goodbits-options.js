@@ -10,16 +10,16 @@ export const GoodbitsOptions = ({ postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	return (
-		<PanelBody title={__('Goodbits', 'eightshift-forms')}>
+		<PanelBody title={\__('Goodbits', 'eightshift-forms')}>
 			<BaseControl
-				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On Goodbits settings page you can setup all details regarding you integration.', 'eightshift-forms')}
+				label={<IconLabel icon={icons.options} label={\__('Settings', 'eightshift-forms')} />}
+				help={\__('On Goodbits settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
 					href={`${settingsPageUrl}&formId=${postId}&type=goodbits`}
 					isSecondary
 				>
-					{__('Open Goodbits Form Settings', 'eightshift-forms')}
+					{\__('Open Goodbits Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>

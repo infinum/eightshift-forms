@@ -45,8 +45,8 @@ afterAll(function() {
 test('Register method will call sidebar hook', function () {
 	$this->hubspotSettings->register();
 
-	$this->assertSame(10, has_filter(SettingsHubspotMock::FILTER_SETTINGS_SIDEBAR_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsHubspotMock::FILTER_SETTINGS_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsData()'), 'The callback getSettingsData should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsHubspotMock::FILTER_SETTINGS_GLOBAL_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsGlobalData()'), 'The callback getSettingsGlobalData should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsHubspotMock::FILTER_SETTINGS_IS_VALID_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->isSettingsValid()'), 'The callback isSettingsValid should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsHubspotMock::FILTER_SETTINGS_SIDEBAR_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsHubspotMock::FILTER_SETTINGS_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsData()'), 'The callback getSettingsData should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsHubspotMock::FILTER_SETTINGS_GLOBAL_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->getSettingsGlobalData()'), 'The callback getSettingsGlobalData should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsHubspotMock::FILTER_SETTINGS_IS_VALID_NAME, 'Tests\Unit\Integrations\Hubspot\SettingsHubspotMock->isSettingsValid()'), 'The callback isSettingsValid should be hooked to custom filter hook with priority 10.');
 });

@@ -36,12 +36,12 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		// Loop all settings.
 		foreach ($this->getAllSettingsSidebars() as $filter) {
 			// Determin if there is a filter for settings page.
-			if (!has_filter($filter)) {
+			if (!\has_filter($filter)) {
 				continue;
 			}
 
 			// Get filter data.
-			$data = apply_filters($filter, '');
+			$data = \apply_filters($filter, '');
 
 			// If empty array skip.
 			if (!$data) {
@@ -78,12 +78,12 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
-		if (!has_filter($filter)) {
+		if (!\has_filter($filter)) {
 			return '';
 		}
 
 		// Get filter data.
-		$data = apply_filters($filter, '');
+		$data = \apply_filters($filter, '');
 
 		// Add additional props to form component.
 		$formAdditionalProps['formType'] = $type;

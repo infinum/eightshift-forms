@@ -45,8 +45,8 @@ afterAll(function() {
 test('Register method will call sidebar hook', function () {
 	$this->mailchimpSettings->register();
 
-	$this->assertSame(10, has_filter(SettingsMailchimpMock::FILTER_SETTINGS_SIDEBAR_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsMailchimpMock::FILTER_SETTINGS_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsData()'), 'The callback getSettingsData should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsMailchimpMock::FILTER_SETTINGS_GLOBAL_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsGlobalData()'), 'The callback getSettingsGlobalData should be hooked to custom filter hook with priority 10.');
-	$this->assertSame(10, has_filter(SettingsMailchimpMock::FILTER_SETTINGS_IS_VALID_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->isSettingsValid()'), 'The callback isSettingsValid should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsMailchimpMock::FILTER_SETTINGS_SIDEBAR_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsMailchimpMock::FILTER_SETTINGS_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsData()'), 'The callback getSettingsData should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsMailchimpMock::FILTER_SETTINGS_GLOBAL_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->getSettingsGlobalData()'), 'The callback getSettingsGlobalData should be hooked to custom filter hook with priority 10.');
+	$this->assertSame(10, \has_filter(SettingsMailchimpMock::FILTER_SETTINGS_IS_VALID_NAME, 'Tests\Unit\Integrations\Mailchimp\SettingsMailchimpMock->isSettingsValid()'), 'The callback isSettingsValid should be hooked to custom filter hook with priority 10.');
 });

@@ -11,11 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Exception;
 
 use EightshiftFormsVendor\EightshiftLibs\Exception\GeneralExceptionInterface;
+use InvalidArgumentException;
 
 /**
  * UnverifiedRequestException class.
  */
-final class UnverifiedRequestException extends \InvalidArgumentException implements GeneralExceptionInterface
+final class UnverifiedRequestException extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
 	 * Iternal data.

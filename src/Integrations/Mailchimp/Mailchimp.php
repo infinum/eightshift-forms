@@ -110,7 +110,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
+			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
@@ -159,7 +159,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$output[] = [
 			'component' => 'input',
 			'inputName' => 'email_address',
-			'inputFieldLabel' => __('Email address', 'eightshift-forms'),
+			'inputFieldLabel' => \__('Email address', 'eightshift-forms'),
 			'inputId' => 'email_address',
 			'inputType' => 'text',
 			'inputIsEmail' => true,
@@ -259,7 +259,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
-						'radiosContent' => array_map(
+						'radiosContent' => \array_map(
 							static function ($radio) use ($name) {
 								return [
 									'component' => 'radio',
@@ -281,7 +281,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
 						'selectIsRequired' => $required,
-						'selectOptions' => array_map(
+						'selectOptions' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'select-option',
@@ -307,10 +307,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			// Detect if some tags are selected to display on the frontend.
 			if (!empty($tagsSelected)) {
 				// Tags are stored like string so explode is necesery.
-				$selectedIds = array_flip(explode(', ', $tagsSelected));
+				$selectedIds = \array_flip(\explode(', ', $tagsSelected));
 
 				// Map selected items with provided ones.
-				$tagsItems = array_filter(
+				$tagsItems = \array_filter(
 					$tagsItems,
 					static function ($item) use ($selectedIds) {
 						return isset($selectedIds[$item['id']]);
@@ -323,11 +323,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					case 'select':
 						$output[] = [
 							'component' => 'select',
-							'selectFieldLabel' => __('Tags', 'eightshift-forms'),
+							'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
 							'selectId' => self::FIELD_MAILCHIMP_TAGS_KEY,
 							'selectName' => self::FIELD_MAILCHIMP_TAGS_KEY,
 							'selectTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'selectOptions' => array_merge(
+							'selectOptions' => \array_merge(
 								[
 									[
 										'component' => 'select-option',
@@ -335,7 +335,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 										'selectOptionValue' => '',
 									],
 								],
-								array_map(
+								\array_map(
 									static function ($option) use ($tagsLabels) {
 										$name = $option['name'] ?? '';
 										$id = $option['id'] ?? '';
@@ -363,10 +363,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 						$output[] = [
 							'component' => 'checkboxes',
-							'checkboxesFieldLabel' => __('Tags', 'eightshift-forms'),
+							'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
 							'checkboxesId' => $checkboxesFieldName,
 							'checkboxesName' => $checkboxesFieldName,
-							'checkboxesContent' => array_map(
+							'checkboxesContent' => \array_map(
 								static function ($option) use ($checkboxesFieldName, $tagsLabels) {
 									$name = $option['name'] ?? '';
 									$id = $option['id'] ?? '';
@@ -391,14 +391,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						break;
 					default:
 						if (!empty($tagsSelected)) {
-							$tagsItems = array_map(
+							$tagsItems = \array_map(
 								static function ($item) {
 									return $item['name'];
 								},
 								$tagsItems
 							);
 
-							$tagsItems = implode(', ', $tagsItems);
+							$tagsItems = \implode(', ', $tagsItems);
 
 							$output[] = [
 								'component' => 'input',
@@ -420,14 +420,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => count($output) + 1,
+			'submitFieldOrder' => \count($output) + 1,
 			'submitServerSideRender' => $ssr,
 			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsMailchimp::SETTINGS_TYPE_KEY, 'data');
-		if (has_filter($dataFilterName) && !is_admin()) {
+		if (\has_filter($dataFilterName) && !\is_admin()) {
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 

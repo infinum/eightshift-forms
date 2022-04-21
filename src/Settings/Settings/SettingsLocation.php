@@ -59,7 +59,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Display locations', 'eightshift-forms'),
+			'label' => \__('Display locations', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -77,8 +77,8 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Display locations', 'eightshift-forms'),
-				'introSubtitle' => __('See where your form appears throughout the website.', 'eightshift-forms'),
+				'introTitle' => \__('Display locations', 'eightshift-forms'),
+				'introSubtitle' => \__('See where your form appears throughout the website.', 'eightshift-forms'),
 			],
 		];
 
@@ -87,8 +87,8 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 		if (!$locations) {
 			$output[] = [
 				'component' => 'highlighted-content',
-				'highlightedContentTitle' => __('Nothing to see here...', 'eightshift-forms'),
-				'highlightedContentSubtitle' => __('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
+				'highlightedContentTitle' => \__('Nothing to see here...', 'eightshift-forms'),
+				'highlightedContentSubtitle' => \__('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
 				'highlightedContentIcon' => 'empty',
 			];
 		} else {
@@ -138,7 +138,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 			return [];
 		}
 
-		return array_map(
+		return \array_map(
 			static function ($item) {
 				return [
 					'id' => $item->ID,
@@ -146,7 +146,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 					'title' => $item->post_title, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 					'editLink' => Helper::getFormEditPageUrl((string) $item->ID),
-					'viewLink' => get_permalink($item->ID),
+					'viewLink' => \get_permalink($item->ID),
 				];
 			},
 			$items

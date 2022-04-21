@@ -104,7 +104,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
+			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
@@ -142,7 +142,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'component' => 'input',
 				'inputName' => 'email',
 				'inputTracking' => 'email',
-				'inputFieldLabel' => __('Email', 'eightshift-forms'),
+				'inputFieldLabel' => \__('Email', 'eightshift-forms'),
 				'inputId' => 'email',
 				'inputType' => 'text',
 				'inputIsRequired' => true,
@@ -153,7 +153,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'component' => 'input',
 				'inputName' => 'first_name',
 				'inputTracking' => 'first_name',
-				'inputFieldLabel' => __('First Name', 'eightshift-forms'),
+				'inputFieldLabel' => \__('First Name', 'eightshift-forms'),
 				'inputId' => 'first_name',
 				'inputType' => 'text',
 				'blockSsr' => $ssr,
@@ -162,7 +162,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'component' => 'input',
 				'inputName' => 'last_name',
 				'inputTracking' => 'last_name',
-				'inputFieldLabel' => __('Last Name', 'eightshift-forms'),
+				'inputFieldLabel' => \__('Last Name', 'eightshift-forms'),
 				'inputId' => 'last_name',
 				'inputType' => 'text',
 				'blockSsr' => $ssr,
@@ -180,7 +180,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsGoodbits::SETTINGS_TYPE_KEY, 'data');
-		if (has_filter($dataFilterName) && !is_admin()) {
+		if (\has_filter($dataFilterName) && !\is_admin()) {
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 

@@ -47,13 +47,13 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 	public function getCustomDataComponent(array $attributes): string
 	{
 		$filterName = Filters::getBlockFilterName('customData', 'data');
-		if (!has_filter($filterName)) {
+		if (!\has_filter($filterName)) {
 			return '';
 		}
 
 		$customDataData = $attributes['customDataData'] ?? '';
 
-		$data = apply_filters($filterName, $customDataData);
+		$data = \apply_filters($filterName, $customDataData);
 
 		if (!$data) {
 			return '';
@@ -65,13 +65,13 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 
 		switch ($customDataFieldType) {
 			case 'checkboxes':
-				$output = array_merge(
+				$output = \array_merge(
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
 						'checkboxesId' => $attributes['customDataId'] ?? '',
 						'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
-						'checkboxesContent' => array_map(
+						'checkboxesContent' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'checkbox',
@@ -91,13 +91,13 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 				}
 				break;
 			case 'radios':
-				$output = array_merge(
+				$output = \array_merge(
 					[
 						'component' => 'radios',
 						'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
 						'radiosId' => $attributes['customDataId'] ?? '',
 						'radiosName' => $attributes['customDataRadiosName'] ?? '',
-						'radiosContent' => array_map(
+						'radiosContent' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'radio',
@@ -117,12 +117,12 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 				}
 				break;
 			default:
-				$output = array_merge(
+				$output = \array_merge(
 					[
 						'component' => 'select',
 						'selectId' => $attributes['customDataId'] ?? '',
 						'selectName' => $attributes['customDataSelectName'] ?? '',
-						'selectOptions' => array_map(
+						'selectOptions' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'select-option',
@@ -156,14 +156,14 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 	 */
 	private function getFieldAttributes(string $key, array $attributes): array
 	{
-		$fields = array_filter(
+		$fields = \array_filter(
 			$attributes,
 			static function ($item) use ($key) {
-				if (strpos($item, $key) === 0) {
+				if (\strpos($item, $key) === 0) {
 					return true;
 				}
 			},
-			ARRAY_FILTER_USE_KEY
+			\ARRAY_FILTER_USE_KEY
 		);
 
 		if (!$fields) {
@@ -173,7 +173,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 		$output = [];
 
 		foreach ($fields as $fieldKey => $fieldValue) {
-			$fieldKey = lcfirst(str_replace('customData', '', $fieldKey));
+			$fieldKey = \lcfirst(\str_replace('customData', '', $fieldKey));
 
 			$output[$fieldKey] = $fieldValue;
 		}

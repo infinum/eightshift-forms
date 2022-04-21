@@ -34,7 +34,7 @@ export const CheckboxEditor = (attributes) => {
 	const Label = () => {
 		return (
 			<label className={checkboxLabelClass} htmlFor="id">
-				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
+				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : \__('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
 			</label>
 		);
 	};

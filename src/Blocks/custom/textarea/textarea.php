@@ -18,7 +18,7 @@ if (empty($textareaName)) {
 	$props['textareaName'] = $textareaId;
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'textarea',
 	Components::props('textarea', $attributes, $props)
 );

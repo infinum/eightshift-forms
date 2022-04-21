@@ -20,7 +20,7 @@ if (empty($radioValue)) {
 	$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'radio',
 	Components::props('radio', $attributes, $props)
 );

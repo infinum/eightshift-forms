@@ -50,7 +50,7 @@ if ($radioValue) {
 $radioAttrsOutput = '';
 if ($radioAttrs) {
 	foreach ($radioAttrs as $key => $value) {
-		$radioAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$radioAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -65,14 +65,14 @@ if ($radioAttrs) {
 			id="<?php echo esc_attr($radioId); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo $radioAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		/>
 		<label
 			for="<?php echo esc_attr($radioId); ?>"
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
 			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-				<?php echo wp_kses_post(\apply_filters('the_content', $radioLabel)); ?>
+				<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
 			</span>
 		</label>
 	</div>

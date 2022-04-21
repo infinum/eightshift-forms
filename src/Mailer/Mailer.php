@@ -122,10 +122,10 @@ class Mailer implements MailerInterface
 			$name = $item['name'] ?? '';
 			$value = $item['value'] ?? '';
 
-			$template = str_replace("{" . $name . "}", $value, $template);
+			$template = \str_replace("{" . $name . "}", $value, $template);
 		}
 
-		return str_replace("\n", '<br />', $template);
+		return \str_replace("\n", '<br />', $template);
 	}
 
 	/**

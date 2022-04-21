@@ -24,7 +24,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isUrl(string $string): bool
 	{
-		return (bool) preg_match('/(http|ftp|mailto)/', $string);
+		return (bool) \preg_match('/(http|ftp|mailto)/', $string);
 	}
 
 	/**
@@ -36,7 +36,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isEmail(string $string): bool
 	{
-		return (bool) filter_var($string, FILTER_VALIDATE_EMAIL);
+		return (bool) \filter_var($string, \FILTER_VALIDATE_EMAIL);
 	}
 
 	/**
@@ -75,9 +75,9 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isFileTypeValid(string $fileName, string $fileTypes): bool
 	{
-		$fileExtension = explode('.', $fileName);
-		$validTypes = explode(',', str_replace(' ', '', str_replace('.', '', $fileTypes)));
+		$fileExtension = \explode('.', $fileName);
+		$validTypes = \explode(',', \str_replace(' ', '', \str_replace('.', '', $fileTypes)));
 
-		return in_array(end($fileExtension), $validTypes, true);
+		return \in_array(\end($fileExtension), $validTypes, true);
 	}
 }

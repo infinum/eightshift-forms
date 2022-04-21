@@ -110,7 +110,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						isLarge
 						icon={icons.trash}
 						onClick={removeItem}
-						label={__('Remove', 'eightshift-form')}
+						label={\__('Remove', 'eightshift-form')}
 						style={{ marginTop: '0.2rem' }}
 					/>
 				</div>
@@ -126,10 +126,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	};
 
 	return (
-		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
+		<PanelBody title={\__('Eightshift Forms', 'eightshift-forms')}>
 			<CustomSelect
-				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
-				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={\__('Form to display', 'eightshift-forms')} />}
+				help={\__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
 				value={parseInt(formsFormPostId)}
 				loadOptions={formSelectOptions}
 				onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
@@ -145,30 +145,30 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						icon={icons.edit}
 						href={`${editFormUrl}&post=${formsFormPostId}`}
 					>
-						{__('Edit fields', 'eightshift-forms')}
+						{\__('Edit fields', 'eightshift-forms')}
 					</Button>
 
 					<Button
 						icon={icons.options}
 						href={`${settingsPageUrl}&formId=${formsFormPostId}`}
 					>
-						{__('Form settings', 'eightshift-forms')}
+						{\__('Form settings', 'eightshift-forms')}
 					</Button>
 				</div>
 			}
 
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+			<FancyDivider label={\__('Advanced', 'eightshift-forms')} />
 
 			<TextControl
-				label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
-				help={__('Additional data type selectors', 'eightshift-forms')}
+				label={<IconLabel icon={icons.code} label={\__('Type selector', 'eightshift-forms')} />}
+				help={\__('Additional data type selectors', 'eightshift-forms')}
 				value={formsFormDataTypeSelector}
 				onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 			/>
 
 			{formsStyleOptions?.length > 0 &&
 				<CustomSelect
-					label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.paletteColor} label={\__('Form style preset', 'eightshift-forms')} />}
 					value={formsStyle}
 					options={formsStyleOptions}
 					onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
@@ -180,16 +180,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 			{formsUseGeolocation &&
 				<>
-					<FancyDivider label={__('Geolocation', 'eightshift-forms')} />
+					<FancyDivider label={\__('Geolocation', 'eightshift-forms')} />
 
 					<CustomSelect
-						label={<IconLabel icon={icons.locationAllow} label={__('Show form only if in countries', 'eightshift-forms')} />}
+						label={<IconLabel icon={icons.locationAllow} label={\__('Show form only if in countries', 'eightshift-forms')} />}
 						help={
 							geoRepeater?.length > 0
-								? __('Overriden by geolocation rules.', 'eightshift-forms')
+								? \__('Overriden by geolocation rules.', 'eightshift-forms')
 								: (
 									<>
-										<p>{__('If you can\'t find a country, start typing its name while the dropdown is open.', 'eightshift-forms')}</p>
+										<p>{\__('If you can\'t find a country, start typing its name while the dropdown is open.', 'eightshift-forms')}</p>
 									</>
 								)
 						}
@@ -208,7 +208,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							setIsModalOpen(true);
 						}}
 					>
-						{__('Geolocation rules', 'eightshift-form')}
+						{\__('Geolocation rules', 'eightshift-form')}
 					</Button>
 
 					{geoRepeater?.length > 0 &&
@@ -218,7 +218,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								isPressed={isGeoPreview}
 								onClick={() => setIsGeoPreview(!isGeoPreview)}
 							>
-								{__('Preview geolocation rules', 'eightshift-forms')}
+								{\__('Preview geolocation rules', 'eightshift-forms')}
 							</Button>
 						</div>
 					}
@@ -226,16 +226,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					{isModalOpen && (
 						<Modal
 							className='es-modal-max-width-l'
-							title={__('Geolocation rules', 'eightshift-form')}
+							title={\__('Geolocation rules', 'eightshift-form')}
 							shouldCloseOnClickOutside={false}
 							shouldCloseOnEsc={false}
 							isDismissible={false}
 							onRequestClose={() => setIsModalOpen(false)}
 						>
-							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
-							<p>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
+							<p>{\__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
+							<p>{\__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
 							{geolocationApi && 
-								<p>{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-form')}</ExternalLink>.</p>
+								<p>{\__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{\__('link', 'eightshift-form')}</ExternalLink>.</p>
 							}
 
 							<br />
@@ -245,13 +245,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								icon={icons.add}
 								onClick={addItem}
 							>
-								{__('Add rule', 'eightshift-form')}
+								{\__('Add rule', 'eightshift-form')}
 							</Button>
 
 							{geoRepeater?.length > 0 &&
 								<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
-									<IconLabel icon={<BlockIcon iconName='esf-form' />} label={__('Form to display', 'eightshift-forms')} standalone />
-									<IconLabel icon={icons.locationAllow} label={__('Countries to show the form in', 'eightshift-forms')} standalone />
+									<IconLabel icon={<BlockIcon iconName='esf-form' />} label={\__('Form to display', 'eightshift-forms')} standalone />
+									<IconLabel icon={icons.locationAllow} label={\__('Countries to show the form in', 'eightshift-forms')} standalone />
 									<div style={{ width: '2.25rem' }}>&nbsp;</div>
 								</div>
 							}
@@ -281,7 +281,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 										setAttributes({ formsFormGeolocationAlternatives: prevGeoRepeater });
 										setIsModalOpen(false);
 									}}>
-										{__('Cancel', 'eightshift-form')}
+										{\__('Cancel', 'eightshift-form')}
 									</Button>
 
 									<Button
@@ -291,7 +291,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											setAttributes({ formsFormGeolocationAlternatives: geoRepeater });
 										}}
 									>
-										{__('Save', 'eightshift-form')}
+										{\__('Save', 'eightshift-form')}
 									</Button>
 								</div>
 							}

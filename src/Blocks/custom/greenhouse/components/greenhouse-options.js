@@ -10,16 +10,16 @@ export const GreenhouseOptions = ({ postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	return (
-		<PanelBody title={__('Greenhouse', 'eightshift-forms')}>
+		<PanelBody title={\__('Greenhouse', 'eightshift-forms')}>
 			<BaseControl
-				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On Greenhouse settings page you can setup all details regarding you integration.', 'eightshift-forms')}
+				label={<IconLabel icon={icons.options} label={\__('Settings', 'eightshift-forms')} />}
+				help={\__('On Greenhouse settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
 					href={`${settingsPageUrl}&formId=${postId}&type=greenhouse`}
 					isSecondary
 				>
-					{__('Open Greenhouse Form Settings', 'eightshift-forms')}
+					{\__('Open Greenhouse Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>

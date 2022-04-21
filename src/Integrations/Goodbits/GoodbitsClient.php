@@ -51,8 +51,8 @@ class GoodbitsClient implements ClientInterface
 
 		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
 
-		if (is_string($key) && $this->isJson($key)) {
-			$key = json_decode($key);
+		if (\is_string($key) && $this->isJson($key)) {
+			$key = \json_decode($key);
 
 			$output = [];
 
@@ -68,7 +68,7 @@ class GoodbitsClient implements ClientInterface
 
 		return [
 			'Goodbits' => [
-				'title' => __('Goodbits', 'eightshift-forms'),
+				'title' => \__('Goodbits', 'eightshift-forms'),
 				'id' => $key,
 			],
 		];
@@ -107,11 +107,11 @@ class GoodbitsClient implements ClientInterface
 			[
 				'headers' => $this->getHeaders($itemId),
 				'method' => 'POST',
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -129,9 +129,9 @@ class GoodbitsClient implements ClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = !is_array($responseBody['errors']) ? $responseBody['errors'] : '';
-		$responseErrors = is_array($responseBody['errors']) ? $responseBody['errors']['message'] : [];
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		$responseMessage = !\is_array($responseBody['errors']) ? $responseBody['errors'] : '';
+		$responseErrors = \is_array($responseBody['errors']) ? $responseBody['errors']['message'] : [];
 
 		$output = [
 			'status' => 'error',
@@ -161,7 +161,7 @@ class GoodbitsClient implements ClientInterface
 	private function getErrorMsg(string $msg, array $errors = []): string
 	{
 		if ($errors) {
-			$invalidEmail = array_filter(
+			$invalidEmail = \array_filter(
 				$errors,
 				static function ($error) {
 					return $error === 'Email is invalid';

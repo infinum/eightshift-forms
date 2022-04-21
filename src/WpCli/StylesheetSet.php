@@ -12,6 +12,7 @@ namespace EightshiftForms\WpCli;
 
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use WP_CLI;
 
 /**
  * StylesheetSet class.
@@ -35,9 +36,9 @@ class StylesheetSet implements ServiceInterface
 	 */
 	public function registerCommand(): void
 	{
-		\WP_CLI::add_command(
+		WP_CLI::add_command(
 			Config::getProjectName() . ' ' . $this->getCommandName(),
-			get_class($this),
+			\get_class($this),
 			$this->getDocs()
 		);
 	}
@@ -77,22 +78,22 @@ class StylesheetSet implements ServiceInterface
 	{
 		$path = $argsAsoc['additional-path'] ?? '';
 
-		$targetPath = __DIR__ . DIRECTORY_SEPARATOR . Config::getProjectName();
-		$destinationPath = get_template_directory() . DIRECTORY_SEPARATOR . $path;
-		$destinationPathWithFolder = $destinationPath . DIRECTORY_SEPARATOR . Config::getProjectName();
+		$targetPath = __DIR__ . \DIRECTORY_SEPARATOR . Config::getProjectName();
+		$destinationPath = \get_template_directory() . \DIRECTORY_SEPARATOR . $path;
+		$destinationPathWithFolder = $destinationPath . \DIRECTORY_SEPARATOR . Config::getProjectName();
 
-		if (file_exists($destinationPathWithFolder)) {
-			\WP_CLI::error(
+		if (\file_exists($destinationPathWithFolder)) {
+			WP_CLI::error(
 				"You have tried to move stylesheet set to this path '{$destinationPathWithFolder}'. The folder all-ready exists please choose another one and run the command again."
 			);
 		}
 
 		// Create folder in project if missing.
-		system("mkdir -p {$destinationPath}" . DIRECTORY_SEPARATOR); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_system
+		\system("mkdir -p {$destinationPath}" . \DIRECTORY_SEPARATOR); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_system
 
 		// Move block/component to project folder.
-		system("cp -R {$targetPath} {$destinationPath}" . DIRECTORY_SEPARATOR); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_system
+		\system("cp -R {$targetPath} {$destinationPath}" . \DIRECTORY_SEPARATOR); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_system
 
-		\WP_CLI::success("We have moved stylesheet set to this folder '{$destinationPathWithFolder}', have fun styling your forms.");
+		WP_CLI::success("We have moved stylesheet set to this folder '{$destinationPathWithFolder}', have fun styling your forms.");
 	}
 }

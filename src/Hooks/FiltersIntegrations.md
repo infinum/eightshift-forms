@@ -152,7 +152,7 @@ public function getHubspotFileUploadCustomOptions(): string
 {
 	return [
 			'folderPath' => '/esforms',
-			'options' => wp_json_encode([
+			'options' => \wp_json_encode([
 				"access" => "PUBLIC_NOT_INDEXABLE",
 				"overwrite" => false,
 			]),

@@ -23,7 +23,7 @@ export const SelectOptionOptions = (attributes) => {
 	return (
 		<>
 			<TextControl
-				label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.textSize} label={\__('Option label', 'eightshift-forms')} />}
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
 			/>
@@ -34,15 +34,15 @@ export const SelectOptionOptions = (attributes) => {
 					isPressed={selectOptionIsSelected}
 					onClick={() => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: !selectOptionIsSelected })}
 				>
-					{__('Select by default', 'eightshift-forms')}
+					{\__('Select by default', 'eightshift-forms')}
 				</Button>
 			</div>
 
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+			<FancyDivider label={\__('Advanced', 'eightshift-forms')} />
 
 			<TextControl
-				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-				help={__('Internal value, sent if the option is selected', 'eightshift-forms')}
+				label={<IconLabel icon={icons.fieldValue} label={\__('Value', 'eightshift-forms')} />}
+				help={\__('Internal value, sent if the option is selected', 'eightshift-forms')}
 				value={selectOptionValue}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
 			/>
@@ -53,7 +53,7 @@ export const SelectOptionOptions = (attributes) => {
 					isPressed={selectOptionIsDisabled}
 					onClick={() => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: !selectOptionIsDisabled })}
 				>
-					{__('Disabled', 'eightshift-forms')}
+					{\__('Disabled', 'eightshift-forms')}
 				</Button>
 			</div>
 		</>

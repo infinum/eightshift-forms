@@ -205,7 +205,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('HubSpot', 'eightshift-forms'),
+			'label' => \__('HubSpot', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -225,9 +225,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('Before using HubSpot you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => \sprintf(\__('Before using HubSpot you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 					'highlightedContentIcon' => 'tools',
 				]
 			];
@@ -240,8 +240,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Data from HubSpot couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('Data from HubSpot couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
 					'highlightedContentIcon' => 'error',
 				],
 			];
@@ -254,7 +254,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		if ($selectedItem) {
 			$formFields = $this->hubspot->getFormFields($formId);
 
-			$output = array_merge(
+			$output = \array_merge(
 				$this->getOutputFilemanager($formId),
 				$this->settingsClearbit->getOutputClearbit(
 					$formId,
@@ -268,7 +268,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return array_merge(
+		return \array_merge(
 			$this->getOutputFormSelection($formId, $items, $selectedItem),
 			$output ?? []
 		);
@@ -286,14 +286,14 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('HubSpot', 'eightshift-forms'),
+				'introTitle' => \__('HubSpot', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
+				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => __('<ol>
+				'introSubtitle' => \__('<ol>
 						<li>Log in to your HubSpot account</li>
 						<li>Click on the settings cog icon in the top right, next to your account</li>
 						<li>In the menu on the left, under <strong>Integrations</strong> click <strong>API Key</strong></li>
@@ -313,7 +313,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use HubSpot', 'eightshift-forms'),
+						'checkboxLabel' => \__('Use HubSpot', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY),
 						'checkboxValue' => self::SETTINGS_HUBSPOT_USE_KEY,
 						'checkboxSingleSubmit' => true,
@@ -327,14 +327,14 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyHubspot();
 
-			$outputValid = array_merge(
+			$outputValid = \array_merge(
 				[
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-						'inputFieldLabel' => __('API key', 'eightshift-forms'),
-						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
+						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
@@ -350,7 +350,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return array_merge(
+		return \array_merge(
 			$output,
 			$outputValid
 		);
@@ -367,7 +367,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	private function getOutputFormSelection(string $formId, array $items, string $selectedItem): array
 	{
-		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/Blocks/components/form');
+		$manifestForm = Components::getManifest(\dirname(__DIR__, 2) . '/Blocks/components/form');
 
 		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
 		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
@@ -375,16 +375,16 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => __('HubSpot', 'eightshift-forms'),
+				'introTitle' => \__('HubSpot', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_ITEM_ID_KEY),
-				'selectFieldLabel' => __('Form', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Form', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => sprintf(__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
-				'selectOptions' => array_merge(
+				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
+				'selectOptions' => \array_merge(
 					[
 						[
 							'component' => 'select-option',
@@ -392,7 +392,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 							'selectOptionValue' => '',
 						]
 					],
-					array_map(
+					\array_map(
 						function ($option) use ($formId) {
 							$id = $option['id'] ?? '';
 
@@ -428,7 +428,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('File manager', 'eightshift-forms'),
+				'introTitle' => \__('File manager', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
 			],
 			[
@@ -436,8 +436,8 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 				'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
-				'inputFieldLabel' => __('Folder', 'eightshift-forms'),
-				'inputFieldHelp' => __('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
+				'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
+				'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
 			],
@@ -457,7 +457,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		$beforeContent = '';
 
 		$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-		if (has_filter($filterName)) {
+		if (\has_filter($filterName)) {
 			$beforeContent = \apply_filters($filterName, '') ?? '';
 		}
 
@@ -467,9 +467,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('Form fields', 'eightshift-forms'),
+				'introTitle' => \__('Form fields', 'eightshift-forms'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => __('Controls which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+				'introSubtitle' => \__('Controls which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'group',
