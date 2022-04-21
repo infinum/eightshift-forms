@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 
@@ -24,13 +23,6 @@ class Blocks extends AbstractBlocks
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Blocks dependency filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'es_blocks_dependency';
 
 	/**
 	 * Blocks unique string filter name constant.
@@ -73,9 +65,6 @@ class Blocks extends AbstractBlocks
 		} else {
 			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
 		}
-
-		// Register blocks internal filter for props helper.
-		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 
 		// Blocks string to value filter name constant.
 		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);

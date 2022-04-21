@@ -9,7 +9,8 @@
 		"outputCssGlobally": true,
 		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
-		"outputCssGloballyAdditionalStyles": []
+		"outputCssGloballyAdditionalStyles": [],
+		"useWrapper": false
 	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",

@@ -31,4 +31,4 @@ Eightshift WordPress Boilerplate Plugin is maintained and sponsored by
 
 ## :scroll: License
 
-WordPress Boilerplate Plugin is Copyright ©2020 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+WordPress Boilerplate Plugin is Copyright ©2022 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.

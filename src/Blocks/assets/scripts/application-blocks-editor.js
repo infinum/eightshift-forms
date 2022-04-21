@@ -17,14 +17,12 @@ import {
 	outputCssVariablesGlobal,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts/editor';
-import { Wrapper } from '../../wrapper/wrapper';
-import WrapperManifest from '../../wrapper/manifest.json';
 import globalSettings from '../../manifest.json';
 
 registerBlocks(
 	globalSettings,
-	Wrapper,
-	WrapperManifest,
+	null,
+	{},
 	require.context('./../../components', true, /manifest.json$/),
 	require.context('./../../custom', true, /manifest.json$/),
 	require.context('./../../custom', true, /-block.js$/),
