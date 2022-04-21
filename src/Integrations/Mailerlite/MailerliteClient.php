@@ -147,7 +147,7 @@ class MailerliteClient implements ClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?? 200;
+		$code = $response['response']['code'] ?: 200; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if ($code === 200) {
 			return [

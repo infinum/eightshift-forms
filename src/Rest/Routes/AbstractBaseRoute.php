@@ -14,6 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
+use EightshiftForms\Validation\Validator; // phpcs:ignore
 
 /**
  * Class FormSubmitRoute
