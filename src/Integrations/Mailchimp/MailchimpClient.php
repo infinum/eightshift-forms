@@ -179,7 +179,7 @@ class MailchimpClient implements MailchimpClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?: 200; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		if ($code === 200) {
 			return [

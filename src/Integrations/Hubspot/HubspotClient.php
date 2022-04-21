@@ -249,7 +249,7 @@ class HubspotClient implements HubspotClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?: 200; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		if ($code === 200) {
 			return [
@@ -354,7 +354,7 @@ class HubspotClient implements HubspotClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?: 200; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		if ($code === 200) {
 			return [

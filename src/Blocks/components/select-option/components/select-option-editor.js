@@ -26,7 +26,7 @@ export const SelectOptionEditor = (attributes) => {
 
 	return (
 		<div className={selectOptionClass}>
-			{selectOptionLabel ? selectOptionLabel : \__('Enter option label in sidebar.', 'eightshift-forms')}
+			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
 		</div>
 	);
 };

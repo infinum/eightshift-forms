@@ -259,7 +259,7 @@ class Validator extends AbstractValidation
 
 						$key = $matches[0] ?? '';
 
-						if ($dataValue && empty($key) && !empty($inputValue)) {
+						if ($dataValue && (empty($key) || $key[0] !== $inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
 						}
 						break;
@@ -295,8 +295,24 @@ class Validator extends AbstractValidation
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
-				// Check validation for accept file types.
+				// Check validation for accepted file types.
 				if ($dataKey === 'accept') {
+					$individualFiles = [];
+					for ($i = 0; $i < \count($fileValue['name']); $i++) {
+						$file = [
+							'name' => $fileValue['name'][$i],
+							'type' => $fileValue['type'][$i],
+							'tmp_name' => $fileValue['tmp_name'][$i],
+						];
+						$individualFiles[] = $file;
+					}
+
+					foreach ($individualFiles as $file) {
+						if (!$this->isMimeTypeValid($file)) {
+							$output[$fileKey] = \sprintf($this->labels->getLabel('validationAcceptMime', $formId), $dataValue);
+						}
+					}
+
 					foreach ($fileValue['name'] as $file) {
 						if (!empty($dataValue) && !$this->isFileTypeValid($file, $dataValue)) {
 							$output[$fileKey] = \sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);

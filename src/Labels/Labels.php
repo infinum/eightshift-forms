@@ -110,7 +110,7 @@ class Labels implements LabelsInterface
 			'validationRequired' => \__('This field is required.', 'eightshift-forms'),
 			// translators: %s used for displaying required number.
 			'validationRequiredCount' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
-			'validationEmail' => \__('This e-mails is not valid.', 'eightshift-forms'),
+			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
 			// translators: %s used for displaying length min number to the user.
 			'validationMinLength' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
@@ -121,6 +121,8 @@ class Labels implements LabelsInterface
 			'validationPattern' => \__('This field doesn\'t satisfy the validation pattern: %s.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAccept' => \__('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
+			// translators: %s used for displaying file type value.
+			'validationAcceptMime' => \__('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s kB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.

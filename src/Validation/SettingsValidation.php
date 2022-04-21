@@ -14,6 +14,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Labels\Labels;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -163,7 +164,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 				'textareaIsMonospace' => true,
 				'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 				// translators: %s will be replaced with local validation patterns.
-				'textareaFieldHelp' => \sprintf(\__("
+				'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
 					These patterns can be selected inside the Form editor.
 					<br /> <br />
 					Each pattern should be in its own line and in the following format:
@@ -175,7 +176,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 					Use these patterns as an example:
 					<ul>
 					%2\$s
-					</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns),
+					</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
 				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 			],
 			[

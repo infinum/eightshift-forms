@@ -31,7 +31,7 @@ export const FileOptions = (attributes) => {
 
 	return (
 		<>
-			<PanelBody title={\__('File', 'eightshift-forms')}>
+			<PanelBody title={__('File', 'eightshift-forms')}>
 				<FieldOptions
 					{...props('field', attributes)}
 				/>
@@ -41,10 +41,10 @@ export const FileOptions = (attributes) => {
 					isPressed={fileIsMultiple}
 					onClick={() => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: !fileIsMultiple })}
 				>
-					{\__('Allow uploading multiple files', 'eightshift-forms')}
+					{__('Allow uploading multiple files', 'eightshift-forms')}
 				</Button>
 
-				<FancyDivider label={\__('Validation', 'eightshift-forms')} />
+				<FancyDivider label={__('Validation', 'eightshift-forms')} />
 
 				<div className='es-h-spaced es-has-wp-field-b-space'>
 					<Button
@@ -52,22 +52,22 @@ export const FileOptions = (attributes) => {
 						isPressed={fileIsRequired}
 						onClick={() => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: !fileIsRequired })}
 					>
-						{\__('Required', 'eightshift-forms')}
+						{__('Required', 'eightshift-forms')}
 					</Button>
 				</div>
 
 				<TextControl
-					label={<IconLabel icon={icons.fileType} label={\__('Accepted file types', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.fileType} label={__('Accepted file types', 'eightshift-forms')} />}
 					value={fileAccept}
-					help={\__('Separate items with a comma.', 'eightshift-forms')}
+					help={__('Separate items with a comma.', 'eightshift-forms')}
 					placeholder='e.g. .jpg,.png,.pdf'
 					onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
 				/>
 
-				<BaseControl label={<IconLabel icon={icons.fileSizeMin} label={\__('Allowed file size', 'eightshift-forms')} />}>
+				<BaseControl label={<IconLabel icon={icons.fileSizeMin} label={__('Allowed file size', 'eightshift-forms')} />}>
 					<div className='es-fifty-fifty-h'>
 						<TextControl
-							label={\__('Minimum (kB)', 'eightshift-forms')}
+							label={__('Minimum (kB)', 'eightshift-forms')}
 							value={fileMinSize}
 							type={'number'}
 							onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
@@ -75,7 +75,7 @@ export const FileOptions = (attributes) => {
 						/>
 
 						<TextControl
-							label={\__('Maximum (kB)', 'eightshift-forms')}
+							label={__('Maximum (kB)', 'eightshift-forms')}
 							value={fileMaxSize}
 							type={'number'}
 							onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
@@ -84,13 +84,13 @@ export const FileOptions = (attributes) => {
 					</div>
 				</BaseControl>
 
-				<FancyDivider label={\__('Custom uploader', 'eightshift-forms')} />
+				<FancyDivider label={__('Custom uploader', 'eightshift-forms')} />
 
 				<BaseControl
 					className={fileCustomInfoTextUse ? '' : 'es-no-field-spacing'}
 					label={
 						<div className='es-flex-between'>
-							<IconLabel icon={icons.textSize} label={\__('Prompt text', 'eightshift-forms')} />
+							<IconLabel icon={icons.textSize} label={__('Prompt text', 'eightshift-forms')} />
 
 							<Button
 								icon={icons.visible}
@@ -103,32 +103,32 @@ export const FileOptions = (attributes) => {
 					{fileCustomInfoTextUse &&
 						<TextControl
 							value={fileCustomInfoText}
-							placeholder={\__('Drag and drop files here', 'eightshift-forms')}
+							placeholder={__('Drag and drop files here', 'eightshift-forms')}
 							onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoText', attributes, manifest)]: value })}
 						/>
 					}
 				</BaseControl>
 
 				<TextControl
-					label={<IconLabel icon={icons.buttonOutline} label={\__('Upload button text', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.buttonOutline} label={__('Upload button text', 'eightshift-forms')} />}
 					value={fileCustomInfoButtonText}
-					placeholder={\__('Add files', 'eightshift-forms')}
+					placeholder={__('Add files', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
 				/>
 
-				<FancyDivider label={\__('Advanced', 'eightshift-forms')} />
+				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
 
 				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={\__('Name', 'eightshift-forms')} />}
-					help={\__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
+					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={fileName}
 					onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
 				/>
 
-				<FancyDivider label={\__('Tracking', 'eightshift-forms')} />
+				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 
 				<TextControl
-					label={<IconLabel icon={icons.code} label={\__('GTM tracking code', 'eightshift-forms')} />}
+					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
 					value={fileTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
 				/>

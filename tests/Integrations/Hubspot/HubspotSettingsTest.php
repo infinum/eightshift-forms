@@ -3,6 +3,10 @@
 namespace Tests\Unit\Integrations\Hubspot;
 
 use Brain\Monkey;
+use EightshiftForms\Integrations\Clearbit\ClearbitClient;
+use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
@@ -16,10 +20,12 @@ use function Tests\setupMocks;
 class SettingsHubspotMock extends SettingsHubspot {
 
 	public function __construct(
+		ClearbitClientInterface $clearbitClient,
+		SettingsClearbitDataInterface $clearbitSettings,
 		HubspotClientInterface $hubspotClient,
 		MapperInterface $hubspot
 	) {
-		parent::__construct($hubspotClient, $hubspot);
+		parent::__construct($clearbitClient, $clearbitSettings, $hubspotClient, $hubspot);
 	}
 };
 
@@ -33,9 +39,12 @@ beforeEach(function () {
 	$hubspotClient = new HubspotClient();
 	$labels = new Labels();
 	$validator = new Validator($labels);
+	$clearbitClient = new ClearbitClient();
+	$clearbitSettings = new SettingsClearbit($clearbitClient);
+
 	$hubspot = new Hubspot($hubspotClient, $validator);
 
-	$this->hubspotSettings = new SettingsHubspotMock($hubspotClient, $hubspot);
+	$this->hubspotSettings = new SettingsHubspotMock($clearbitClient, $clearbitSettings, $hubspotClient, $hubspot);
 });
 
 afterAll(function() {

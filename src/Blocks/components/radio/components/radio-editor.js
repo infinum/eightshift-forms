@@ -31,7 +31,7 @@ export const RadioEditor = (attributes) => {
 	const Label = () => {
 		return (
 			<label className={radioLabelClass} htmlFor="id">
-				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : \__('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
+				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
 			</label>
 		);
 	};

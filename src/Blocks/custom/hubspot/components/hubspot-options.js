@@ -10,16 +10,16 @@ export const HubspotOptions = ({ postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	return (
-		<PanelBody title={\__('HubSpot', 'eightshift-forms')}>
+		<PanelBody title={__('HubSpot', 'eightshift-forms')}>
 			<BaseControl
-				label={<IconLabel icon={icons.options} label={\__('Settings', 'eightshift-forms')} />}
-				help={\__('On HubSpot settings page you can setup all details regarding you integration.', 'eightshift-forms')}
+				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
+				help={__('On HubSpot settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
 					href={`${settingsPageUrl}&formId=${postId}&type=hubspot`}
 					isSecondary
 				>
-					{\__('Open HubSpot Form Settings', 'eightshift-forms')}
+					{__('Open HubSpot Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>

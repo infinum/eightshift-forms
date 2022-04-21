@@ -191,11 +191,11 @@ class Helper
 	/**
 	 * Provide error log output to a custom log file.
 	 *
-	 * @param mixed $message Any type of message.
+	 * @param array<mixed> $message Any type of message.
 	 *
 	 * @return void
 	 */
-	public static function logger($message): void
+	public static function logger(array $message): void
 	{
 		if (Variables::isLogMode()) {
 			$wpContentDir = \defined('WP_CONTENT_DIR') ? \WP_CONTENT_DIR : '';
@@ -242,13 +242,13 @@ class Helper
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function convetInnerBlocksToArray(string $string, string $type): array
+	public static function convertInnerBlocksToArray(string $string, string $type): array
 	{
 		$output = [];
 
 		switch ($type) {
 			case 'select':
-				$re = '/<option value="(.*?)".> (.*?)<\/option>/m';
+				$re = '/<option[^>]*value="(.*?)"[^>]*>([^<]*)<\s*\/\s*option\s*>/m';
 				break;
 			default:
 				$re = '';
@@ -259,8 +259,6 @@ class Helper
 			return $output;
 		}
 
-		$string = Helper::minifyString($string);
-
 		\preg_match_all($re, $string, $matches, \PREG_SET_ORDER, 0);
 
 		if (!$matches) {
@@ -269,8 +267,8 @@ class Helper
 
 		foreach ($matches as $match) {
 			$output[] = [
-				'label' => $match[2] ?? '',
-				'value' => $match[1] ?? '',
+				'label' => Helper::minifyString($match[2] ?? ''),
+				'value' => Helper::minifyString($match[1] ?? ''),
 				'original' => $match[0] ?? '',
 			];
 		}

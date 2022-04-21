@@ -10,16 +10,16 @@ export const MailchimpOptions = ({ postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	return (
-		<PanelBody title={\__('Mailchimp', 'eightshift-forms')}>
+		<PanelBody title={__('Mailchimp', 'eightshift-forms')}>
 			<BaseControl
-				label={<IconLabel icon={icons.options} label={\__('Settings', 'eightshift-forms')} />}
-				help={\__('On Mailchimp settings page you can setup all details regarding you integration.', 'eightshift-forms')}
+				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
+				help={__('On Mailchimp settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
 					href={`${settingsPageUrl}&formId=${postId}&type=mailchimp`}
 					isSecondary
 				>
-					{\__('Open Mailchimp Form Settings', 'eightshift-forms')}
+					{__('Open Mailchimp Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>

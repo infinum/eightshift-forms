@@ -100,7 +100,7 @@ class ClearbitClient implements ClearbitClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?: 200; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 
