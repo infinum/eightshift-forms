@@ -190,6 +190,7 @@ test('isUserGeolocated will return new formId if additional locations finds matc
 	$this->assertIsString($geo);
 	$this->assertNotSame($geo, '1');
 	$this->assertSame($geo, '111');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if additional locations are missing geoLocation array key.', function () {
@@ -199,6 +200,7 @@ test('isUserGeolocated will return formId if additional locations are missing ge
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '1');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if additional locations don\'t match but default locations match.', function () {
@@ -208,6 +210,7 @@ test('isUserGeolocated will return formId if additional locations don\'t match b
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '1');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return empty string if additional locations don\'t match and default locations match but default locations exist.', function () {
@@ -217,6 +220,7 @@ test('isUserGeolocated will return empty string if additional locations don\'t m
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if both additional parameters are empty.', function () {
