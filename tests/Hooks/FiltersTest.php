@@ -68,7 +68,6 @@ test('getGeolocationFilterName will throw error if wrong filter name or name is 
 	$this->filters::getGeolocationFilterName('wrong');
 })->throws(MissingFilterInfoException::class);
 
-
 //---------------------------------------------------------------------------------//
 
 test('getValidationSettingsFilterName will return correct filter name', function () {
