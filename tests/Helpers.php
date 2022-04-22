@@ -116,9 +116,7 @@ function setupMocks() {
 	});
 }
 
-
 function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);
 }
-

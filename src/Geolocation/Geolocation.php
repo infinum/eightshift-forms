@@ -249,7 +249,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 		// Save to internal cache so we don't read manifest all the time.
 		if (!$this->countries) {
-			$this->countries = Components::getManifest(__DIR__);
+			$this->countries = Components::getManifestDirect(__DIR__);
 		}
 
 		foreach ($this->countries as $country) {
