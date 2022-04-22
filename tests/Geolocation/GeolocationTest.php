@@ -185,6 +185,10 @@ test('isUserGeolocated will return formId if disable filter is provided.', funct
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {
 	putenv('TEST_GEOLOCATION=HR');
 
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)
+	->once()->with(false)->andReturn(true);
+	Filters\expectApplied('es_forms_geolocation_disable')->with(false)->andReturn(false);
+	
 	$geo = $this->geolocation->isUserGeolocated('1', [], $this->additionalLocations['one']);
 
 	expect($geo)->not->toBe('1');
