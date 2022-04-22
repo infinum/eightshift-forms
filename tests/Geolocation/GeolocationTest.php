@@ -187,9 +187,8 @@ test('isUserGeolocated will return new formId if additional locations finds matc
 
 	$geo = $this->geolocation->isUserGeolocated('1', [], $this->additionalLocations['one']);
 
-	$this->assertIsString($geo);
-	$this->assertNotSame($geo, '1');
-	$this->assertSame($geo, '111');
+	expect($geo)->not->toBe('1');
+	expect($geo)->toBe('111');
 	putenv('TEST_GEOLOCATION');
 });
 
@@ -208,8 +207,7 @@ test('isUserGeolocated will return formId if additional locations don\'t match b
 
 	$geo = $this->geolocation->isUserGeolocated('1', $this->locations, []);
 
-	$this->assertIsString($geo);
-	$this->assertSame($geo, '1');
+	expect($geo)->toBe('1');
 	putenv('TEST_GEOLOCATION');
 });
 
