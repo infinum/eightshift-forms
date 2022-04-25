@@ -9,19 +9,18 @@
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
 $checkEnqueue = $this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 if (!$checkEnqueue) {
-	echo Components::outputCssVariablesGlobal($globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 }
 
 $blockClass = $attributes['blockClass'] ?? '';
@@ -37,7 +36,7 @@ $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationA
 
 // Override form ID in case we use geo location but use this feature only on frontend.
 if (!$formsServerSideRender) {
-	$formsFormPostId = \apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
+	$formsFormPostId = apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
 }
 
 $formsClass = Components::classnames([
@@ -58,7 +57,7 @@ if ($formsServerSideRender) {
 		$formsClassNotSet = Components::selector($blockClass, $blockClass, '', 'not-set');
 		?>
 			<div class="<?php echo esc_attr($formsClass); ?> <?php echo esc_attr($formsClassNotSet); ?>">
-				<img class="<?php echo esc_attr("{$blockClass}__image") ?>" src="<?php echo esc_url(\apply_filters(Manifest::MANIFEST_ITEM, 'cover.png')); ?>" />
+				<img class="<?php echo esc_attr("{$blockClass}__image") ?>" src="<?php echo esc_url(apply_filters(Manifest::MANIFEST_ITEM, 'cover.png')); ?>" />
 				<div class="<?php echo esc_attr("{$blockClass}__text") ?>"><?php esc_html_e('Please select form to show from the blocks sidebar.', 'eightshift-forms'); ?></div>
 			</div>
 		<?php
@@ -94,14 +93,14 @@ if ($formsServerSideRender) {
 		<div class="<?php echo esc_attr("{$blockClass}__edit-wrap") ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formsFormPostId)) ?>">
-					<span class="<?php echo \esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-edit"); ?> "></span>
+					<span class="<?php echo esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-edit"); ?> "></span>
 					<?php esc_html_e('Edit form', 'eightshift-forms'); ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
 				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formsFormPostId)) ?>">
-					<span class="<?php echo \esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-admin-settings"); ?> "></span>
+					<span class="<?php echo esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-admin-settings"); ?> "></span>
 					<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>
 				</a>
 			<?php } ?>
@@ -119,7 +118,7 @@ if ($formsServerSideRender) {
 
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
-		if ($block['blockName'] === $globalManifest['namespace'] . '/form-selector') {
+		if ($block['blockName'] === Components::getSettingsNamespace() . '/form-selector') {
 			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
 			if (isset($block['innerBlocks'])) {
@@ -128,6 +127,7 @@ if ($formsServerSideRender) {
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
 
 					if (isset($innerBlock['innerBlocks'])) {
 						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
@@ -135,6 +135,7 @@ if ($formsServerSideRender) {
 
 							if ($name === 'submit') {
 								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
 							}
 						}
 					}
@@ -145,14 +146,12 @@ if ($formsServerSideRender) {
 
 	// Render blocks.
 	foreach ($blocks as $block) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo \apply_filters('the_content', \render_block($block));
+		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		echo apply_filters('the_content', render_block($block));
 	}
 	?>
 </div>
 
 <?php
 
-if (!$checkEnqueue) {
-	echo Components::outputCssVariablesCombined(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}
+echo Components::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

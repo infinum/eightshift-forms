@@ -38,12 +38,12 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		// Loop all settings.
 		foreach ($this->getAllSettingsSidebars() as $filter) {
 			// Determine if there is a filter for settings page.
-			if (!has_filter($filter)) {
+			if (!\has_filter($filter)) {
 				continue;
 			}
 
 			// Get filter data.
-			$data = apply_filters($filter, $formId);
+			$data = \apply_filters($filter, $formId);
 
 			// If empty array skip.
 			if (!$data) {
@@ -85,12 +85,12 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 		$filter = $this->getAllSettings()[$type] ?? '';
 
 		// Determin if there is a filter for settings page.
-		if (!has_filter($filter)) {
+		if (!\has_filter($filter)) {
 			return '';
 		}
 
 		// Get filter data.
-		$data = apply_filters($filter, $formId);
+		$data = \apply_filters($filter, $formId);
 
 		// Add additional props to form component.
 		$formAdditionalProps['formPostId'] = $formId;

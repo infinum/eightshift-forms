@@ -33,18 +33,18 @@ class Helper
 	public static function encryptor(string $action, string $string)
 	{
 		$encryptMethod = "AES-256-CBC";
-		$secretKey = wp_salt(); // user define private key.
-		$secretIv = wp_salt('SECURE_AUTH_KEY'); // user define secret key.
-		$key = hash('sha256', $secretKey);
-		$iv = substr(hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
+		$secretKey = \wp_salt(); // user define private key.
+		$secretIv = \wp_salt('SECURE_AUTH_KEY'); // user define secret key.
+		$key = \hash('sha256', $secretKey);
+		$iv = \substr(\hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
 
 		if ($action === 'encrypt') {
-			$output = openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
+			$output = \openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
 
-			return base64_encode((string) $output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			return \base64_encode((string) $output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
-		return openssl_decrypt(base64_decode($string), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		return \openssl_decrypt(\base64_decode($string), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Helper
 	 */
 	public static function getFormEditPageUrl(string $formId): string
 	{
-		return get_edit_post_link((int) $formId) ?? '';
+		return \get_edit_post_link((int) $formId) ?? '';
 	}
 
 	/**
@@ -142,7 +142,7 @@ class Helper
 	 */
 	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
 	{
-		return get_delete_post_link((int) $formId, '', $permanent);
+		return \get_delete_post_link((int) $formId, '', $permanent);
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Helper
 	 */
 	public static function getFormTrashRestoreActionUrl(string $formId): string
 	{
-		return wp_nonce_url("/wp-admin/post.php?post={$formId}&action=untrash", 'untrash-post_' . $formId);
+		return \wp_nonce_url("/wp-admin/post.php?post={$formId}&action=untrash", 'untrash-post_' . $formId);
 	}
 
 	/**
@@ -166,15 +166,15 @@ class Helper
 	 */
 	public static function getFormNames(string $formId): string
 	{
-		$content = get_the_content(null, false, (int) $formId);
+		$content = \get_the_content(null, false, (int) $formId);
 
 		// Find all name values.
-		preg_match_all('/Name":"(.*?)"/m', $content, $matches, PREG_SET_ORDER);
+		\preg_match_all('/Name":"(.*?)"/m', $content, $matches, \PREG_SET_ORDER);
 
 		// Find custom predefined names.
-		preg_match_all('/\/(sender-email) {(.*?)} \/-->/m', $content, $matchesCustom, PREG_SET_ORDER);
+		\preg_match_all('/\/(sender-email) {(.*?)} \/-->/m', $content, $matchesCustom, \PREG_SET_ORDER);
 
-		$items = array_merge($matches, $matchesCustom);
+		$items = \array_merge($matches, $matchesCustom);
 
 		$output = [];
 
@@ -185,24 +185,24 @@ class Helper
 			}
 		}
 
-		return implode(', ', $output);
+		return \implode(', ', $output);
 	}
 
 	/**
 	 * Provide error log output to a custom log file.
 	 *
-	 * @param mixed $message Any type of message.
+	 * @param array<mixed> $message Any type of message.
 	 *
 	 * @return void
 	 */
-	public static function logger($message): void
+	public static function logger(array $message): void
 	{
 		if (Variables::isLogMode()) {
-			$wpContentDir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : '';
+			$wpContentDir = \defined('WP_CONTENT_DIR') ? \WP_CONTENT_DIR : '';
 
 			if (!empty($wpContentDir)) {
-				$message['time'] = gmdate("Y-m-d H:i:s");
-				error_log((string) wp_json_encode($message) . "\n -------------------------------------", 3, WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				$message['time'] = \gmdate("Y-m-d H:i:s");
+				\error_log((string) \wp_json_encode($message) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 	}
@@ -228,9 +228,9 @@ class Helper
 	 */
 	public static function minifyString(string $string): string
 	{
-		$string = str_replace(PHP_EOL, ' ', $string);
-		$string = preg_replace('/[\r\n]+/', "\n", $string);
-		return (string) preg_replace('/[ \t]+/', ' ', (string) $string);
+		$string = \str_replace(\PHP_EOL, ' ', $string);
+		$string = \preg_replace('/[\r\n]+/', "\n", $string);
+		return (string) \preg_replace('/[ \t]+/', ' ', (string) $string);
 	}
 
 
@@ -242,13 +242,13 @@ class Helper
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function convetInnerBlocksToArray(string $string, string $type): array
+	public static function convertInnerBlocksToArray(string $string, string $type): array
 	{
 		$output = [];
 
 		switch ($type) {
 			case 'select':
-				$re = '/<option value="(.*?)".> (.*?)<\/option>/m';
+				$re = '/<option[^>]*value="(.*?)"[^>]*>([^<]*)<\s*\/\s*option\s*>/m';
 				break;
 			default:
 				$re = '';
@@ -259,9 +259,7 @@ class Helper
 			return $output;
 		}
 
-		$string = Helper::minifyString($string);
-
-		preg_match_all($re, $string, $matches, PREG_SET_ORDER, 0);
+		\preg_match_all($re, $string, $matches, \PREG_SET_ORDER, 0);
 
 		if (!$matches) {
 			return $output;
@@ -269,8 +267,8 @@ class Helper
 
 		foreach ($matches as $match) {
 			$output[] = [
-				'label' => $match[2] ?? '',
-				'value' => $match[1] ?? '',
+				'label' => Helper::minifyString($match[2] ?? ''),
+				'value' => Helper::minifyString($match[1] ?? ''),
 				'original' => $match[0] ?? '',
 			];
 		}
@@ -287,6 +285,6 @@ class Helper
 	 */
 	public static function camelToSnakeCase($input): string
 	{
-		return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 	}
 }

@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -55,19 +55,19 @@ $groupClass = Components::classnames([
 
 	<?php if ($groupBeforeContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
-			<?php echo $groupBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $groupBeforeContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($groupContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo $groupContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($groupHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-			<?php echo $groupHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $groupHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

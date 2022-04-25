@@ -93,7 +93,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Return form to the frontend.
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
+			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
@@ -167,7 +167,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
 							'inputIsEmail' => $name === 'email' ? 'true' : '',
-							'inputIsNumber' => $name === 'phone' ? 'true' : ''
+							'inputIsNumber' => $name === 'phone' ? 'true' : '',
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'input_file':
@@ -180,7 +181,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileMeta' => $description,
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1
+							'fileMinSize' => 1,
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'textarea':
@@ -192,6 +194,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaId' => $name,
 							'textareaMeta' => $description,
 							'textareaIsRequired' => $required,
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'multi_value_single_select':
@@ -209,7 +212,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										'checkboxValue' => 1,
 										'checkboxTracking' => $name,
 									],
-								]
+								],
+								'blockSsr' => $ssr,
 							];
 						} else {
 							$output[] = [
@@ -220,7 +224,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $required,
-								'selectOptions' => array_map(
+								'selectOptions' => \array_map(
 									static function ($selectOption) {
 										return [
 											'component' => 'select-option',
@@ -230,6 +234,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									},
 									$values
 								),
+								'blockSsr' => $ssr,
 							];
 						}
 						break;
@@ -237,7 +242,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			}
 		}
 
-		if (!is_admin()) {
+		if (!\is_admin()) {
 			$output[] = [
 				'component' => 'input',
 				'inputType' => 'hidden',
@@ -257,13 +262,14 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => count($output) + 1,
+			'submitFieldOrder' => \count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data');
-		if (has_filter($dataFilterName) && !is_admin()) {
+		if (\has_filter($dataFilterName) && !\is_admin()) {
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 

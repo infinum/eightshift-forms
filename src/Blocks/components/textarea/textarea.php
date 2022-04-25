@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Blocks\Blocks;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -63,7 +63,7 @@ if ($textareaPlaceholder) {
 $textareaAttrsOutput = '';
 if ($textareaAttrs) {
 	foreach ($textareaAttrs as $key => $value) {
-		$textareaAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$textareaAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -74,7 +74,7 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$isWpFiveNine = \is_wp_version_compatible('5.9');
+$isWpFiveNine = is_wp_version_compatible('5.9');
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
@@ -82,11 +82,11 @@ $textarea = '<textarea
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . ($isWpFiveNine ? wp_readonly($textareaIsReadOnly, true, false) : readonly($textareaIsReadOnly, true, false)) . /* @phpstan-ignore-line */ ' 
 		' . $textareaAttrsOutput . '
-	>' . \apply_filters('the_content', $textareaValue) . '</textarea>
+	>' . apply_filters('the_content', $textareaValue) . '</textarea>
 	' . $additionalContent . '
 ';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

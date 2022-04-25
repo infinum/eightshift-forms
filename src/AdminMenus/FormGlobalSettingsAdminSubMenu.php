@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
@@ -151,7 +151,6 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
-	 * @throws \Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
@@ -172,7 +171,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
 			// translators: %s replaces form title name.

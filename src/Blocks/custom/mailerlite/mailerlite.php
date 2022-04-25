@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 
@@ -21,7 +21,7 @@ $mailerliteFormPostId = Components::checkAttr('mailerliteFormPostId', $attribute
 $mailerliteFormDataTypeSelector = Components::checkAttr('mailerliteFormDataTypeSelector', $attributes, $manifest);
 
 // Check if mailerlite data is set and valid.
-$isSettingsValid = \apply_filters(
+$isSettingsValid = apply_filters(
 	SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME,
 	$mailerliteFormPostId
 );
@@ -50,7 +50,7 @@ if (!$isSettingsValid && $mailerliteFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	Mailerlite::FILTER_MAPPER_NAME,
 	$mailerliteFormPostId,
 	[

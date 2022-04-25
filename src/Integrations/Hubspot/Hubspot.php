@@ -92,7 +92,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Return form to the frontend.
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
-			array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
+			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
 		);
 	}
 
@@ -154,8 +154,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					'component' => 'rich-text',
 					'richTextId' => "rich-text-{$key}",
 					'richTextName' => "rich-text-{$key}",
-					'richTextFieldLabel' => __('Rich text', 'eightshift-form') . '-' . $key,
+					'richTextFieldLabel' => \__('Rich text', 'eightshift-form') . '-' . $key,
 					'richTextContent' => $richText,
+					'blockSsr' => $ssr,
 				];
 			}
 
@@ -178,7 +179,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$id = $name;
 				$metaData = $field['metaData'] ?? [];
 
-				$validation = explode(':', $validation);
+				$validation = \explode(':', $validation);
 				$min = $validation[0] ?? '';
 				$max = $validation[1] ?? '';
 
@@ -197,6 +198,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 
 						if ($min) {
@@ -222,6 +224,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 
 						if ($min) {
@@ -248,10 +251,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'file':
-						$isMultiple = array_filter(
+						$isMultiple = \array_filter(
 							$metaData,
 							static function ($item) {
 								$name = $item['name'] ?? '';
@@ -274,6 +278,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'select':
@@ -290,18 +295,18 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'selectOptions' => array_values(
-								array_merge(
+							'selectOptions' => \array_values(
+								\array_merge(
 									[
 										[
 											'component' => 'select-option',
-											'selectOptionLabel' => __('Select option', 'eightshift-forms'),
+											'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
 											'selectOptionValue' => ' ',
 											'selectOptionIsSelected' => true,
 											'selectOptionIsDisabled' => true,
 										],
 									],
-									array_map(
+									\array_map(
 										static function ($selectOption) {
 											return [
 												'component' => 'select-option',
@@ -313,6 +318,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									)
 								)
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'booleancheckbox':
@@ -331,6 +337,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									],
 								]
 							],
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'checkbox':
@@ -340,7 +347,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesName' => $name,
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $required,
-							'checkboxesContent' => array_map(
+							'checkboxesContent' => \array_map(
 								static function ($checkbox) use ($name, $objectTypeId) {
 									return [
 										'component' => 'checkbox',
@@ -354,6 +361,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'radio':
@@ -363,7 +371,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosName' => $name,
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $required,
-							'radiosContent' => array_map(
+							'radiosContent' => \array_map(
 								static function ($radio) use ($name, $objectTypeId) {
 									return [
 										'component' => 'radio',
@@ -377,6 +385,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 					case 'consent':
@@ -388,7 +397,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesFieldHideLabel' => true,
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $required,
-							'checkboxesContent' => array_map(
+							'checkboxesContent' => \array_map(
 								static function ($checkbox) use ($name, $objectTypeId) {
 									return [
 										'component' => 'checkbox',
@@ -402,6 +411,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								},
 								$options
 							),
+							'blockSsr' => $ssr,
 						];
 						break;
 				}
@@ -414,13 +424,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitValue' => $data['submitButtonText'] ?? '',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => count($output) + 1,
+			'submitFieldOrder' => \count($output) + 1,
 			'submitServerSideRender' => $ssr,
+			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'data');
-		if (has_filter($dataFilterName) && !is_admin()) {
+		if (\has_filter($dataFilterName) && !\is_admin()) {
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 

@@ -3,13 +3,14 @@
 import React from 'react';
 import classnames from 'classnames';
 import { isObject } from 'lodash';
+import { dispatch } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
-	outputCssVariables
+	outputCssVariables,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
-import globalManifest from './../../../manifest.json';
 
 export const FieldEditor = (attributes) => {
 	const {
@@ -31,7 +32,7 @@ export const FieldEditor = (attributes) => {
 		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "desktop") &&
 		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "large")
 	) {
-		Object.assign(globalManifest.globalVariables.breakpoints, esFormsBlocksLocalization.mediaBreakpoints);
+		dispatch(STORE_NAME).setSettingsGlobalVariablesBreakpoints(esFormsBlocksLocalization.mediaBreakpoints);
 	}
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
@@ -97,7 +98,7 @@ export const FieldEditor = (attributes) => {
 	const DivContent = () => {
 		return(
 			<div className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
+				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
 				<div className={`${componentClass}__inner`}>
 					{fieldLabel &&
@@ -113,7 +114,7 @@ export const FieldEditor = (attributes) => {
 	const FieldsetContent = () => {
 		return(
 			<fieldset className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, globalManifest, 'wp-block')}
+				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
 				<div className={`${componentClass}__inner`}>
 					{fieldLabel &&

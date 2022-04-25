@@ -51,7 +51,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -68,17 +68,17 @@ class GreenhouseClient implements ClientInterface
 					$output[$jobId] = [
 						'id' => (string) $jobId,
 						'title' => $job['title'] ?? '',
-						'locations' => explode(', ', $job['location']['name']),
+						'locations' => \explode(', ', $job['location']['name']),
 						'updatedAt' => $job['updated_at'],
 					];
 				}
 
 				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ClientInterface::TRANSIENT_STORED_TIME,
-					'title' => current_time('mysql'),
+					'title' => \current_time('mysql'),
 				];
 
-				set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -98,7 +98,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
@@ -109,7 +109,7 @@ class GreenhouseClient implements ClientInterface
 			if ($itemId && $questions) {
 				$output[$itemId] = $job['questions'] ?? [];
 
-				set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -128,7 +128,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$body = array_merge(
+		$body = \array_merge(
 			$this->prepareParams($params),
 			$this->prepareFiles($files)
 		);
@@ -137,11 +137,11 @@ class GreenhouseClient implements ClientInterface
 			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -149,7 +149,7 @@ class GreenhouseClient implements ClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?? 200;
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		if ($code === 200) {
 			return [
@@ -159,7 +159,7 @@ class GreenhouseClient implements ClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['error'] ?? '';
 
 		$output = [
@@ -241,7 +241,7 @@ class GreenhouseClient implements ClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if (!isset($body['jobs'])) {
 			return [];
@@ -267,7 +267,7 @@ class GreenhouseClient implements ClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if (isset($body['error'])) {
 			return [];
@@ -339,7 +339,7 @@ class GreenhouseClient implements ClientInterface
 					continue;
 				}
 
-				$output["{$id}_content"] = base64_encode((string) file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$output["{$id}_content"] = \base64_encode((string) \file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 				$output["{$id}_content_filename"] = $fileName;
 			}
 		}
@@ -368,6 +368,6 @@ class GreenhouseClient implements ClientInterface
 	{
 		$apiKey = Variables::getApiKeyGreenhouse();
 
-		return base64_encode($apiKey ? $apiKey : $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return \base64_encode($apiKey ? $apiKey : $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 }

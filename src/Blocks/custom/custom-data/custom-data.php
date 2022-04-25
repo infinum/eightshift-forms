@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Blocks\BlockCustomData;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
@@ -48,4 +48,4 @@ if (!$block) {
 <?php }
 
 // Output form.
-echo $block; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo $block; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

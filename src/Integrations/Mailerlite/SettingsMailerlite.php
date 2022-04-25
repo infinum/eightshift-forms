@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
@@ -162,7 +162,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('MailerLite', 'eightshift-forms'),
+			'label' => \__('MailerLite', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -181,9 +181,9 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Some config required', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => sprintf(__('Before using MailerLite you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+					'highlightedContentSubtitle' => \sprintf(\__('Before using MailerLite you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 					'highlightedContentIcon' => 'tools',
 				],
 			];
@@ -197,14 +197,14 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			return [
 				[
 					'component' => 'highlighted-content',
-					'highlightedContentTitle' => __('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Data from MailerLite couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('Data from MailerLite couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
 					'highlightedContentIcon' => 'error',
 				],
 			];
 		}
 
-		$itemOptions = array_map(
+		$itemOptions = \array_map(
 			function ($option) use ($formId) {
 				return [
 					'component' => 'select-option',
@@ -216,7 +216,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			$items
 		);
 
-		array_unshift(
+		\array_unshift(
 			$itemOptions,
 			[
 				'component' => 'select-option',
@@ -227,20 +227,20 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 
 		$selectedItem = $this->getSettingsValue(self::SETTINGS_MAILERLITE_LIST_KEY, $formId);
 
-		$manifestForm = Components::getManifest(dirname(__DIR__, 2) . '/Blocks/components/form');
+		$manifestForm = Components::getManifest(\dirname(__DIR__, 2) . '/Blocks/components/form');
 
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('MailerLite', 'eightshift-forms'),
+				'introTitle' => \__('MailerLite', 'eightshift-forms'),
 			],
 			[
 				'component' => 'select',
 				'selectName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
 				'selectId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
-				'selectFieldLabel' => __('Mailing list', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Mailing list', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => sprintf(__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
+				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
 				'selectOptions' => $itemOptions,
 				'selectIsRequired' => true,
 				'selectValue' => $selectedItem,
@@ -253,11 +253,11 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			$beforeContent = '';
 
 			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-			if (has_filter($filterName)) {
+			if (\has_filter($filterName)) {
 				$beforeContent = \apply_filters($filterName, '') ?? '';
 			}
 
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				[
 					[
@@ -265,9 +265,9 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'component' => 'intro',
-						'introTitle' => __('Form fields', 'eightshift-forms'),
+						'introTitle' => \__('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => __('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+						'introSubtitle' => \__('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
 					],
 					[
 						'component' => 'group',
@@ -300,13 +300,13 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('MailerLite', 'eightshift-forms'),
+				'introTitle' => \__('MailerLite', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('How to get the API key?', 'eightshift-forms'),
+				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
-				'introSubtitle' => __('
+				'introSubtitle' => \__('
 					<ol>
 						<li>Log in to your MailerLite Account.</li>
 						<li>Go to <a target="_blank" href="https://app.mailerlite.com/integrations/api/">Developer API</a>.</li>
@@ -326,7 +326,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use MailerLite', 'eightshift-forms'),
+						'checkboxLabel' => \__('Use MailerLite', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY),
 						'checkboxValue' => self::SETTINGS_MAILERLITE_USE_KEY,
 						'checkboxSingleSubmit' => true,
@@ -338,15 +338,15 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyMailerlite();
 
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				[
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
-						'inputFieldLabel' => __('API key', 'eightshift-forms'),
-						'inputFieldHelp' => __('Can also be provided via a global variable.', 'eightshift-forms'),
+						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),

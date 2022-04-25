@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 
@@ -21,7 +21,7 @@ $hubspotFormPostId = Components::checkAttr('hubspotFormPostId', $attributes, $ma
 $hubspotFormDataTypeSelector = Components::checkAttr('hubspotFormDataTypeSelector', $attributes, $manifest);
 
 // Check if hubspot data is set and valid.
-$isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $hubspotFormPostId);
+$isSettingsValid = apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $hubspotFormPostId);
 
 $hubspotClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
@@ -47,7 +47,7 @@ if (!$isSettingsValid && $hubspotFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	Hubspot::FILTER_MAPPER_NAME,
 	$hubspotFormPostId,
 	[

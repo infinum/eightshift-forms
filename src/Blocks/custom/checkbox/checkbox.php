@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Blocks\Blocks;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $unique = Components::getUnique();
 
@@ -25,7 +25,7 @@ if (empty($checkboxValue)) {
 	$props['checkboxValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $checkboxLabel);
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'checkbox',
 	Components::props('checkbox', $attributes, $props)
 );

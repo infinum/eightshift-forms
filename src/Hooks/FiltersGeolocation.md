@@ -21,11 +21,11 @@ add_filter('es_forms_geolocation_countries_list', [$this, 'getGeolocationCountri
  */
 public function getGeolocationCountriesList(array $countries): array
 {
-	return array_merge(
+	return \array_merge(
 		$countries,
 		[
 			[
-				'label' => __('<country-name>', 'text-domain'),
+				'label' => \__('<country-name>', 'text-domain'),
 				'value' => '<country-value>',
 				'group' => [
 					'<country-value>',

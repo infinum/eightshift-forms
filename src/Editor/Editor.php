@@ -36,7 +36,7 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
@@ -50,8 +50,8 @@ class Editor implements ServiceInterface
 			"/wp-admin/edit.php?post_status=future&post_type={$postType}",
 		];
 
-		if (in_array($request, $links, true)) {
-			wp_safe_redirect("/wp-admin/admin.php?page={$page}");
+		if (\in_array($request, $links, true)) {
+			\wp_safe_redirect("/wp-admin/admin.php?page={$page}");
 			exit;
 		}
 	}

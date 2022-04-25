@@ -14,6 +14,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsLocation;
+use WP_Query;
 
 /**
  * FormsListing class.
@@ -36,7 +37,7 @@ class FormsListing implements FormListingInterface
 			'post_status' => $status
 		];
 
-		$theQuery = new \WP_Query($args);
+		$theQuery = new WP_Query($args);
 
 		$output = [];
 
@@ -45,12 +46,12 @@ class FormsListing implements FormListingInterface
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();
 
-			$id = (int) get_the_ID();
+			$id = (int) \get_the_ID();
 
 			// Output predefined array of data.
 			$output[] = [
 				'id' => $id,
-				'title' => get_the_title($id),
+				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
 				'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
 				'settingsLocationLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsLocation::SETTINGS_TYPE_KEY) : '',
@@ -82,11 +83,11 @@ class FormsListing implements FormListingInterface
 				continue;
 			}
 
-			$valid = apply_filters($validFilterName, $id);
+			$valid = \apply_filters($validFilterName, $id);
 
 			if ($valid) {
 				$output[] = [
-					'label' => ucfirst($key),
+					'label' => \ucfirst($key),
 					'icon' => Filters::ALL[$key]['icon'],
 				];
 			}

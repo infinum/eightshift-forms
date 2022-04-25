@@ -16,6 +16,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Validation\ValidatorInterface;
+use WP_REST_Request;
 
 /**
  * Class FormSettingsSubmitRoute
@@ -72,13 +73,13 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param \WP_REST_Request $request Data got from endpoint url.
+	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
-	 * @return \WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-	public function routeCallback(\WP_REST_Request $request)
+	public function routeCallback(WP_REST_Request $request)
 	{
 
 	// Try catch request.
@@ -98,7 +99,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			}
 
 			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
+			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
 			if (!Variables::skipFormValidation()) {
@@ -146,7 +147,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => esc_html__('Changes saved!', 'eightshift-form'),
+				'message' => \esc_html__('Changes saved!', 'eightshift-form'),
 			]);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -170,11 +171,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	 */
 	private function cache(array $params)
 	{
-		if (! current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
+		if (! \current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-form'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-form'),
 			]);
 		}
 
@@ -184,14 +185,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			}
 
 			foreach (SettingsCache::ALL_CACHE[$key] as $item) {
-				delete_transient($item);
+				\delete_transient($item);
 			}
 		}
 
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			'message' => esc_html__('Selected cache successfully deleted!', 'eightshift-form'),
+			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-form'),
 		]);
 	}
 }

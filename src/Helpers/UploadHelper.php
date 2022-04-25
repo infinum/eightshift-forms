@@ -30,14 +30,14 @@ trait UploadHelper
 			return $output;
 		}
 
-		if (!defined('WP_CONTENT_DIR')) {
+		if (!\defined('WP_CONTENT_DIR')) {
 			return $output;
 		}
 
-		$folderPath = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'esforms-tmp' . DIRECTORY_SEPARATOR;
+		$folderPath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR;
 
-		if (!is_dir($folderPath)) {
-			mkdir($folderPath);
+		if (!\is_dir($folderPath)) {
+			\mkdir($folderPath);
 		}
 
 		foreach ($files as $fileKey => $fileValue) {
@@ -45,20 +45,20 @@ trait UploadHelper
 				$error = $fileValue['error'][$key] ?? '';
 
 				// If file is faulty return error.
-				if ($error !== UPLOAD_ERR_OK) {
+				if ($error !== \UPLOAD_ERR_OK) {
 					continue;
 				}
 
 				// Create hashed file name so there is no collision.
 				$originalName = $fileValue['name'][$key];
-				$name = md5((string) time()) . '-' . basename($originalName);
+				$name = \md5((string) \time()) . '-' . \basename($originalName);
 				$tmpName = $fileValue['tmp_name'][$key];
 
 				// Create final folder location path.
-				$finalFilePath = $folderPath . DIRECTORY_SEPARATOR . $name;
+				$finalFilePath = $folderPath . \DIRECTORY_SEPARATOR . $name;
 
 				// Move the file to new location.
-				move_uploaded_file($tmpName, $finalFilePath);
+				\move_uploaded_file($tmpName, $finalFilePath);
 
 				$output[$fileKey][] = [
 					'id' => $fileKey,
@@ -92,8 +92,8 @@ trait UploadHelper
 			}
 
 			foreach ($items as $file) {
-				if (file_exists($file['path'])) {
-					unlink($file['path']);
+				if (\file_exists($file['path'])) {
+					\unlink($file['path']);
 				}
 			}
 		}

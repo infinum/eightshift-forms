@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $unique = Components::getUnique();
 
@@ -14,7 +14,7 @@ $submitName = $attributes['submitSubmitName'] ?? '';
 $submitId = $attributes['submitSubmitId'] ?? '';
 $props = [];
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'submit',
 	Components::props('submit', $attributes, $props)
 );

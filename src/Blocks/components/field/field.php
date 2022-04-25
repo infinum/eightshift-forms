@@ -6,10 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 $manifest = Components::getManifest(__DIR__);
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
@@ -33,7 +32,7 @@ if (
 	isset($customMediaBreakpoints['desktop']) &&
 	isset($customMediaBreakpoints['large'])
 ) {
-	$globalManifest['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+	Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
 }
 
 $unique = Components::getUnique();
@@ -81,7 +80,7 @@ if ($fieldType === 'fieldset') {
 $fieldAttrsOutput = '';
 if ($fieldAttrs) {
 	foreach ($fieldAttrs as $key => $value) {
-		$fieldAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$fieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -97,14 +96,14 @@ if (has_filter($filterName)) {
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo $fieldAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
 
 	<?php
 	if ($fieldUniqueId) {
-		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, $globalManifest, 'wp-block'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, [], 'wp-block');
 	} else {
-		echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Components::outputCssVariables($attributes, $manifest, $unique);
 	}
 
 	?>
@@ -119,7 +118,7 @@ if (has_filter($filterName)) {
 
 					<?php
 					if ($fieldUseTooltip) {
-						echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo Components::render(
 							'tooltip',
 							Components::props('tooltip', $attributes, [
 								'selectorClass' => $componentClass
@@ -133,26 +132,26 @@ if (has_filter($filterName)) {
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php if ($fieldBeforeContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
-					<?php echo $fieldBeforeContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 			<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
-				<?php echo $fieldContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
-					<?php echo $fieldAfterContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-				<?php echo $fieldHelp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 			</div>
 		<?php } ?>
 		<?php
 		if ($fieldUseError) {
-			echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Components::render(
 				'error',
 				Components::props('error', $attributes, [
 					'errorId' => $fieldId,
@@ -163,5 +162,5 @@ if (has_filter($filterName)) {
 		?>
 	</div>
 
-	<?php echo $additionalContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 </<?php echo esc_attr($fieldTag); ?>>

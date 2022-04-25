@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
@@ -87,7 +87,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Clear cache', 'eightshift-forms'),
+			'label' => \__('Clear cache', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -103,18 +103,18 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Clear cache', 'eightshift-forms'),
-				'introSubtitle' => __('Use the buttons below to clear the cache if the entry you\'re looking for isn\'t available or has changed.', 'eightshift-forms'),
+				'introTitle' => \__('Clear cache', 'eightshift-forms'),
+				'introSubtitle' => \__('Use the buttons below to clear the cache if the entry you\'re looking for isn\'t available or has changed.', 'eightshift-forms'),
 			]
 		];
 
-		$manifestForm = Components::getManifest(dirname(__DIR__, 1) . '/Blocks/components/form');
+		$manifestForm = Components::getManifest(\dirname(__DIR__, 1) . '/Blocks/components/form');
 
 		foreach (self::ALL_CACHE as $key => $value) {
 			$output[] = [
 				'component' => 'submit',
 				'submitFieldWidthLarge' => 2,
-				'submitValue' => "Clear " . ucfirst($key) . ' cache',
+				'submitValue' => "Clear " . \ucfirst($key) . ' cache',
 				'submitIcon' => $key,
 				'submitAttrs' => [
 					'data-type' => $key,

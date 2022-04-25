@@ -49,7 +49,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output)) {
@@ -67,10 +67,10 @@ class MailchimpClient implements MailchimpClientInterface
 
 				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ClientInterface::TRANSIENT_STORED_TIME,
-					'title' => current_time('mysql'),
+					'title' => \current_time('mysql'),
 				];
 
-				set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -90,7 +90,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
@@ -99,7 +99,7 @@ class MailchimpClient implements MailchimpClientInterface
 			if ($itemId && $fields) {
 				$output[$itemId] = $fields;
 
-				set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -115,14 +115,14 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getTags(string $itemId): array
 	{
-		$output = get_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$tags = $this->getMailchimpTags($itemId);
 
 			if ($tags) {
-				$output[$itemId] = array_map(
+				$output[$itemId] = \array_map(
 					static function ($item) {
 						return [
 							'id' => (string) $item['id'],
@@ -132,7 +132,7 @@ class MailchimpClient implements MailchimpClientInterface
 					$tags
 				);
 
-				set_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -152,7 +152,7 @@ class MailchimpClient implements MailchimpClientInterface
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$email = $params['email_address']['value'];
-		$emailHash = md5(strtolower($email));
+		$emailHash = \md5(\strtolower($email));
 
 		$body = [
 			'email_address' => $email,
@@ -167,11 +167,11 @@ class MailchimpClient implements MailchimpClientInterface
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'PUT',
-				'body' => wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -179,7 +179,7 @@ class MailchimpClient implements MailchimpClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?? 200;
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
 		if ($code === 200) {
 			return [
@@ -189,7 +189,7 @@ class MailchimpClient implements MailchimpClientInterface
 			];
 		}
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['detail'] ?? '';
 		$responseErrors = $responseBody['errors'] ?? [];
 
@@ -221,7 +221,7 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getErrorMsg(string $msg, array $errors = []): string
 	{
 		if ($errors) {
-			$invalidEmail = array_filter(
+			$invalidEmail = \array_filter(
 				$errors,
 				static function ($error) {
 					return $error['field'] === 'email_address';
@@ -265,7 +265,7 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if (!isset($body['tags'])) {
 			return [];
@@ -306,7 +306,7 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if (!isset($body['merge_fields'])) {
 			return [];
@@ -330,7 +330,7 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		$body = json_decode(\wp_remote_retrieve_body($response), true);
+		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if (!isset($body['lists'])) {
 			return [];
@@ -399,7 +399,7 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		return explode(', ', $params[$key]['value']);
+		return \explode(', ', $params[$key]['value']);
 	}
 
 	/**
@@ -409,8 +409,8 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getBaseUrl(): string
 	{
-		$key = explode('-', $this->getApiKey());
-		$server = end($key);
+		$key = \explode('-', $this->getApiKey());
+		$server = \end($key);
 
 		return "https://{$server}.api.mailchimp.com/3.0/";
 	}

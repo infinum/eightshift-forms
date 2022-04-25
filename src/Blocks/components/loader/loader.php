@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -23,5 +23,5 @@ $loaderClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($loaderClass); ?>">
-	<?php echo $manifest['resources']['loader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php echo $manifest['resources']['loader']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 </div>

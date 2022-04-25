@@ -127,7 +127,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Captcha', 'eightshift-forms'),
+			'label' => \__('Captcha', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -157,8 +157,8 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Google reCaptcha', 'eightshift-forms'),
-				'introSubtitle' => __("To get the Google reCaptcha site key please visit this <a href='https://www.google.com/recaptcha/admin/create' target='_blank' rel='noopener noreferrer'>link</a>. <br /> <br /> <strong>Important:</strong> Make sure to select <strong>reCaptcha version 3</strong>!"),
+				'introTitle' => \__('Google reCaptcha', 'eightshift-forms'),
+				'introSubtitle' => \__("To get the Google reCaptcha site key please visit this <a href='https://www.google.com/recaptcha/admin/create' target='_blank' rel='noopener noreferrer'>link</a>. <br /> <br /> <strong>Important:</strong> Make sure to select <strong>reCaptcha version 3</strong>!"),
 			],
 			[
 				'component' => 'divider',
@@ -172,7 +172,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use Google reCaptcha', 'eightshift-forms'),
+						'checkboxLabel' => \__('Use Google reCaptcha', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY),
 						'checkboxValue' => self::SETTINGS_CAPTCHA_USE_KEY,
 						'checkboxSingleSubmit' => true,
@@ -185,14 +185,14 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 			$siteKey = Variables::getGoogleReCaptchaSiteKey();
 			$secretKey = Variables::getGoogleReCaptchaSecretKey();
 
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				[
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
-						'inputFieldLabel' => __('Site key', 'eightshift-forms'),
+						'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
@@ -202,7 +202,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
-						'inputFieldLabel' => __('Secret key', 'eightshift-forms'),
+						'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
 						'inputType' => 'password',
 						'inputIsRequired' => true,
 						'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
@@ -211,8 +211,8 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'input',
 						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
-						'inputFieldLabel' => __('"Spam unlikely" threshold', 'eightshift-forms'),
-						'inputFieldHelp' => __('This number determines the level above which a submission is <strong>not</strong> considered spam. <br /> <br /> The value should be between 0.0 and 1.0 (default is 0.5).', 'eightshift-forms'),
+						'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
+						'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. <br /> <br /> The value should be between 0.0 and 1.0 (default is 0.5).', 'eightshift-forms'),
 						'inputType' => 'number',
 						'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
 						'inputMin' => 0,

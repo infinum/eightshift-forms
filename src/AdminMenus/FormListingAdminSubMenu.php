@@ -148,7 +148,6 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
-	 * @throws \Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{

@@ -6,13 +6,13 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $unique = Components::getUnique();
 
 $inputName = $attributes['senderEmailInputName'] ?? '';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'input',
 	Components::props('input', $attributes)
 );

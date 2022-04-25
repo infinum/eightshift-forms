@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -27,7 +27,7 @@ $highlightedContentClass = Components::classnames([
 <div class="<?php echo esc_attr($highlightedContentClass); ?>">
 	<?php
 	if (!empty($highlightedContentIcon) && $manifest['icons'][$highlightedContentIcon]) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo $manifest['icons'][$highlightedContentIcon];
 	}
 	?>
@@ -38,7 +38,7 @@ $highlightedContentClass = Components::classnames([
 
 	<?php if ($highlightedContentSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
-			<?php echo $highlightedContentSubtitle; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $highlightedContentSubtitle; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $checkboxesName = $attributes['checkboxesCheckboxesName'] ?? '';
 $checkboxesId = $attributes['checkboxesCheckboxesId'] ?? '';
@@ -17,7 +17,7 @@ if (empty($checkboxesName)) {
 
 $props['checkboxesContent'] = $innerBlockContent;
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'checkboxes',
 	Components::props('checkboxes', $attributes, $props)
 );

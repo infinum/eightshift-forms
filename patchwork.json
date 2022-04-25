@@ -1,5 +1,7 @@
 {
 	"redefinable-internals": [
-		"setcookie"
+		"setcookie",
+		"gmdate",
+		"error_log"
 	]
 }

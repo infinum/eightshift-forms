@@ -203,7 +203,7 @@ add_filter('es_forms_block_submit_component', [$this, 'getBlockSubmitComponent']
  */
 public function getBlockSubmitComponent(array $data): string
 {
-	return Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	return Components::render(
 		'button',
 		Components::props('button', [
 			'buttonTypographyContent' => $data['value'] ?? '',

@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -74,7 +74,7 @@ if ($formMethod) {
 $formAttrsOutput = '';
 if ($formAttrs) {
 	foreach ($formAttrs as $key => $value) {
-		$formAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$formAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -88,10 +88,10 @@ if ($formServerSideRender) {
 
 <<?php echo esc_attr($formTag); ?>
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo $formAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
 	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo Components::render(
 		'global-msg',
 		Components::props('globalMsg', $attributes)
 	);
@@ -99,12 +99,12 @@ if ($formServerSideRender) {
 
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 		<?php
-		echo $formContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+		echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		?>
 	</div>
 
 	<?php
-	echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo Components::render(
 		'loader',
 		Components::props('loader', $attributes)
 	);

@@ -100,13 +100,13 @@ afterAll(function() {
 test('Register method will call init hook', function () {
 	$this->geolocation->register();
 
-	$this->assertSame(10, has_filter('init', 'EightshiftForms\Geolocation\Geolocation->setLocationCookie()'), 'The callback setLocationCookie should be hooked to init hook with priority 10.');
+	$this->assertSame(10, \has_filter('init', 'EightshiftForms\Geolocation\Geolocation->setLocationCookie()'), 'The callback setLocationCookie should be hooked to init hook with priority 10.');
 });
 
 test('Register method will call es_geolocation_is_use_located hook', function () {
 	$this->geolocation->register();
 
-	$this->assertSame(10, has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
+	$this->assertSame(10, \has_filter(Geolocation::GEOLOCATION_IS_USER_LOCATED, 'EightshiftForms\Geolocation\Geolocation->isUserGeolocated()'), 'The callback isUserGeolocated should be hooked to custom hook with priority 10 and 3 parameters.');
 });
 
 //---------------------------------------------------------------------------------//
@@ -185,11 +185,15 @@ test('isUserGeolocated will return formId if disable filter is provided.', funct
 test('isUserGeolocated will return new formId if additional locations finds match.', function () {
 	putenv('TEST_GEOLOCATION=HR');
 
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)
+	->once()->with(false)->andReturn(true);
+	Filters\expectApplied('es_forms_geolocation_disable')->with(false)->andReturn(false);
+	
 	$geo = $this->geolocation->isUserGeolocated('1', [], $this->additionalLocations['one']);
 
-	$this->assertIsString($geo);
-	$this->assertNotSame($geo, '1');
-	$this->assertSame($geo, '111');
+	expect($geo)->not->toBe('1');
+	expect($geo)->toBe('111');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if additional locations are missing geoLocation array key.', function () {
@@ -199,6 +203,7 @@ test('isUserGeolocated will return formId if additional locations are missing ge
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '1');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if additional locations don\'t match but default locations match.', function () {
@@ -206,8 +211,8 @@ test('isUserGeolocated will return formId if additional locations don\'t match b
 
 	$geo = $this->geolocation->isUserGeolocated('1', $this->locations, []);
 
-	$this->assertIsString($geo);
-	$this->assertSame($geo, '1');
+	expect($geo)->toBe('1');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return empty string if additional locations don\'t match and default locations match but default locations exist.', function () {
@@ -217,6 +222,7 @@ test('isUserGeolocated will return empty string if additional locations don\'t m
 
 	$this->assertIsString($geo);
 	$this->assertSame($geo, '');
+	putenv('TEST_GEOLOCATION');
 });
 
 test('isUserGeolocated will return formId if both additional parameters are empty.', function () {
@@ -249,7 +255,7 @@ test('getCountries will return filter if countries filter is provided.', functio
 		return true;
 	});
 
-	if (has_filter('es_forms_geolocation_countries')) {
+	if (\has_filter('es_forms_geolocation_countries')) {
 		putenv("SIDEAFFECT_GEOLOCATION_COUNTRIESD_FILTER={$action}");
 	}
 

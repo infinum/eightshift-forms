@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -14,7 +14,7 @@ $richTextContent = Components::checkAttr('richTextContent', $attributes, $manife
 $richTextId = Components::checkAttr('richTextId', $attributes, $manifest);
 $richTextName = Components::checkAttr('richTextName', $attributes, $manifest);
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

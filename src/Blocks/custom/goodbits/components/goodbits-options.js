@@ -1,13 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from "@wordpress/data";
 import { PanelBody, BaseControl, Button } from '@wordpress/components';
-import { IconLabel, icons } from '@eightshift/frontend-libs/scripts';
-import globalManifest from '../../../manifest.json';
+import { IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const GoodbitsOptions = ({ postId }) => {
 	const {
 		settingsPageUrl,
-	} = globalManifest;
+	} = select(STORE_NAME).getSettings();
 
 	return (
 		<PanelBody title={__('Goodbits', 'eightshift-forms')}>

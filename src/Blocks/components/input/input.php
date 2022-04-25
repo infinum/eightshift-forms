@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
@@ -63,7 +63,7 @@ if ($inputPlaceholder) {
 $inputAttrsOutput = '';
 if ($inputAttrs) {
 	foreach ($inputAttrs as $key => $value) {
-		$inputAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$inputAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -74,7 +74,7 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$isWpFiveNine = \is_wp_version_compatible('5.9');
+$isWpFiveNine = is_wp_version_compatible('5.9');
 $input = '
 	<input
 		class="' . esc_attr($inputClass) . '"
@@ -88,7 +88,7 @@ $input = '
 	' . $additionalContent . '
 ';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

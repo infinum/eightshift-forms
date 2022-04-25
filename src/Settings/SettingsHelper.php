@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 
@@ -129,7 +129,7 @@ trait SettingsHelper
 			return [];
 		};
 
-		return explode(', ', $value);
+		return \explode(', ', $value);
 	}
 
 	/**
@@ -170,7 +170,7 @@ trait SettingsHelper
 	 */
 	public function isCheckboxSettingsChecked(string $key, string $id, string $formId): bool
 	{
-		return in_array($key, explode(', ', $this->getSettingsValue($id, $formId)), true);
+		return \in_array($key, \explode(', ', $this->getSettingsValue($id, $formId)), true);
 	}
 
 	/**
@@ -183,7 +183,7 @@ trait SettingsHelper
 	 */
 	public function isCheckboxOptionChecked(string $key, string $id): bool
 	{
-		return in_array($key, explode(', ', $this->getOptionValue($id)), true);
+		return \in_array($key, \explode(', ', $this->getOptionValue($id)), true);
 	}
 
 	/**
@@ -205,7 +205,7 @@ trait SettingsHelper
 	 */
 	public function getLocale(): string
 	{
-		$locale = get_locale();
+		$locale = \get_locale();
 
 		if (\has_filter('es_forms_set_locale')) {
 			$locale = \apply_filters('es_forms_set_locale', $locale);
@@ -227,10 +227,10 @@ trait SettingsHelper
 	 */
 	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId, array $additionalLabel = []): array
 	{
-		$additionalLabel = array_flip($additionalLabel);
+		$additionalLabel = \array_flip($additionalLabel);
 
 		// Find project breakpoints.
-		$breakpoints = array_flip(Components::getSettings('settings', 'globalVariables')['breakpoints']);
+		$breakpoints = \array_flip(Components::getSettingsGlobalVariablesBreakpoints());
 
 		// Loop form fields.
 		$fields = [];
@@ -251,11 +251,10 @@ trait SettingsHelper
 			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields, $formId) ?? []);
 		}
 
-		$fieldsKey = $this->getSettingsName($key);
-		$totalFields = count($formFields);
+		$totalFields = \count($formFields);
 
 		$filterName = Filters::getBlockFilterName('field', 'styleOptions');
-		$fieldStyle = apply_filters($filterName, []);
+		$fieldStyle = \apply_filters($filterName, []);
 
 		foreach ($formFields as $fieldKey => $field) {
 			if (!$field) {
@@ -280,7 +279,7 @@ trait SettingsHelper
 			$fieldsOutput = [
 				[
 					'component' => 'group',
-					'groupLabel' => ucfirst($label),
+					'groupLabel' => \ucfirst($label),
 					'groupSaveOneField' => true,
 					'groupStyle' => 'integration-inner',
 					'groupContent' => [],
@@ -294,17 +293,17 @@ trait SettingsHelper
 					'component' => 'input',
 					'inputId' => "{$id}---{$breakpoint}",
 					// translators: %s is replaced with the breakpoint name.
-					'inputFieldLabel' => sprintf(\esc_html__('Width (%s)', 'eightshift-forms'), $breakpoint),
+					'inputFieldLabel' => \sprintf(\esc_html__('Width (%s)', 'eightshift-forms'), $breakpoint),
 					'inputType' => 'number',
 					'inputValue' => $fieldsValues["{$id}---{$breakpoint}"] ?? '',
 					'inputMin' => 0,
 					'inputMax' => 12,
 					'inputStep' => 1,
 					'inputIsDisabled' => $disabledEdit,
-					'inputPlaceholder' => __('auto', 'eightshift-forms'),
+					'inputPlaceholder' => \__('auto', 'eightshift-forms'),
 					'inputFieldUseTooltip' => true,
 					// translators: %s is replaced with the breakpoint name.
-					'inputFieldTooltipContent' => sprintf(\esc_html__('Define field width for %s breakpoint.', 'eightshift-forms'), $breakpoint),
+					'inputFieldTooltipContent' => \sprintf(\esc_html__('Define field width for %s breakpoint.', 'eightshift-forms'), $breakpoint),
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
@@ -316,16 +315,16 @@ trait SettingsHelper
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'input',
 				'inputId' => "{$id}---{$this->integrationFieldOrder}",
-				'inputFieldLabel' => __('Order', 'eightshift-forms'),
+				'inputFieldLabel' => \__('Order', 'eightshift-forms'),
 				'inputType' => 'number',
 				'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldOrder}"] ?? $fieldKey + 1,
 				'inputMin' => 1,
 				'inputMax' => $totalFields,
 				'inputStep' => 1,
 				'inputIsDisabled' => $disabledEdit,
-				'inputPlaceholder' => __('auto', 'eightshift-forms'),
+				'inputPlaceholder' => \__('auto', 'eightshift-forms'),
 				'inputFieldUseTooltip' => true,
-				'inputFieldTooltipContent' => __('Define field order that is going to be used.', 'eightshift-forms'),
+				'inputFieldTooltipContent' => \__('Define field order that is going to be used.', 'eightshift-forms'),
 			];
 
 			// Use.
@@ -340,21 +339,21 @@ trait SettingsHelper
 			$fieldsOutput[0]['groupContent'][] = [
 				'component' => 'select',
 				'selectId' => "{$id}---{$this->integrationFieldUse}",
-				'selectFieldLabel' => __('Visibility', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Visibility', 'eightshift-forms'),
 				'selectValue' => $toggleValue,
 				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
 				'selectFieldUseTooltip' => true,
-				'selectFieldTooltipContent' => __('Define if field is going to be default visible or hidden.', 'eightshift-forms'),
+				'selectFieldTooltipContent' => \__('Define if field is going to be default visible or hidden.', 'eightshift-forms'),
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
-						'selectOptionLabel' => __('Visible', 'eightshift-forms'),
+						'selectOptionLabel' => \__('Visible', 'eightshift-forms'),
 						'selectOptionValue' => 'true',
 						'selectOptionIsSelected' => $toggleValue === 'true',
 					],
 					[
 						'component' => 'select-option',
-						'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
+						'selectOptionLabel' => \__('Hidden', 'eightshift-forms'),
 						'selectOptionValue' => 'false',
 						'selectOptionIsSelected' => $toggleValue === 'false',
 					]
@@ -368,21 +367,21 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
 					'selectId' => "{$id}---{$this->integrationFieldFileInfoLabel}",
-					'selectFieldLabel' => __('Field label', 'eightshift-forms'),
+					'selectFieldLabel' => \__('Field label', 'eightshift-forms'),
 					'selectValue' => $fileInfoLabelValue,
 					'selectIsDisabled' => $disabledEdit,
 					'selectFieldUseTooltip' => true,
-					'selectFieldTooltipContent' => __('Define if field file label is going to be default visible or hidden.', 'eightshift-forms'),
+					'selectFieldTooltipContent' => \__('Define if field file label is going to be default visible or hidden.', 'eightshift-forms'),
 					'selectOptions' => [
 						[
 							'component' => 'select-option',
-							'selectOptionLabel' => __('Hidden', 'eightshift-forms'),
+							'selectOptionLabel' => \__('Hidden', 'eightshift-forms'),
 							'selectOptionValue' => 'false',
 							'selectOptionIsSelected' => $fileInfoLabelValue === 'false',
 						],
 						[
 							'component' => 'select-option',
-							'selectOptionLabel' => __('Visible', 'eightshift-forms'),
+							'selectOptionLabel' => \__('Visible', 'eightshift-forms'),
 							'selectOptionValue' => 'true',
 							'selectOptionIsSelected' => $fileInfoLabelValue === 'true',
 						]
@@ -397,12 +396,12 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'select',
 					'selectId' => "{$id}---{$this->integrationFieldStyle}",
-					'selectFieldLabel' => __('Style', 'eightshift-forms'),
+					'selectFieldLabel' => \__('Style', 'eightshift-forms'),
 					'selectValue' => $fieldStyleValue,
 					'selectIsDisabled' => $disabledEdit,
 					'selectFieldUseTooltip' => true,
-					'selectFieldTooltipContent' => __('Define different style for this field.', 'eightshift-forms'),
-					'selectOptions' => array_map(
+					'selectFieldTooltipContent' => \__('Define different style for this field.', 'eightshift-forms'),
+					'selectOptions' => \array_map(
 						static function ($item) use ($fieldStyleValue) {
 							return [
 								'component' => 'select-option',
@@ -421,18 +420,18 @@ trait SettingsHelper
 				$fieldsOutput[0]['groupContent'][] = [
 					'component' => 'input',
 					'inputId' => "{$id}---{$this->integrationFieldLabel}",
-					'inputFieldLabel' => __('Label', 'eightshift-forms'),
+					'inputFieldLabel' => \__('Label', 'eightshift-forms'),
 					'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldLabel}"] ?? '',
 					'inputIsDisabled' => $disabledEdit,
 					'selectFieldUseTooltip' => true,
-					'selectFieldTooltipContent' => __('Define field label value.', 'eightshift-forms'),
+					'selectFieldTooltipContent' => \__('Define field label value.', 'eightshift-forms'),
 				];
 			}
 
-			$fields = array_merge($fields, $fieldsOutput);
+			$fields = \array_merge($fields, $fieldsOutput);
 		}
 
-		usort($fields, [$this, 'sortFields']);
+		\usort($fields, [$this, 'sortFields']);
 
 		return $fields;
 	}
@@ -467,7 +466,7 @@ trait SettingsHelper
 		// Get value saved in the db and loop all fields inside.
 		$dbSettingsValuePrepared = [];
 		foreach ($dbSettingsValue as $key => $value) {
-			$item = explode('---', $key);
+			$item = \explode('---', $key);
 
 			if (isset($item[0]) && isset($item[1])) {
 				$dbSettingsValuePrepared[$item[0]][$item[1]] = $value;
@@ -505,18 +504,18 @@ trait SettingsHelper
 				switch ($itemKey) {
 					case $this->integrationFieldStyle:
 						$filterName = Filters::getBlockFilterName('field', 'styleOptions');
-						$fieldStyle = apply_filters($filterName, []);
+						$fieldStyle = \apply_filters($filterName, []);
 
 						// If we want to provide.
 						if (isset($fieldStyle[$component])) {
-							$selectedItem = array_filter(
+							$selectedItem = \array_filter(
 								$fieldStyle[$component],
 								static function ($item) use ($itemValue) {
 									return $item['value'] === $itemValue;
 								}
 							);
 
-							$selectedItem = reset($selectedItem);
+							$selectedItem = \reset($selectedItem);
 
 							if ($selectedItem) {
 								$formFields[$key]["{$component}UseCustom"] = isset($selectedItem['useCustom']) ? (bool) $selectedItem['useCustom'] : true;
@@ -529,7 +528,7 @@ trait SettingsHelper
 						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
 						break;
 					case $this->integrationFieldUse:
-						$formFields[$key]["{$component}FieldUse"] = filter_var($itemValue, FILTER_VALIDATE_BOOLEAN);
+						$formFields[$key]["{$component}FieldUse"] = \filter_var($itemValue, \FILTER_VALIDATE_BOOLEAN);
 						break;
 					case $this->integrationFieldFileInfoLabel:
 						if ($itemValue === 'true') {
@@ -548,7 +547,7 @@ trait SettingsHelper
 						break;
 					default:
 						// Uppercase for output.
-						$breakpointLabel = ucfirst($itemKey);
+						$breakpointLabel = \ucfirst($itemKey);
 
 						$formFields[$key]["{$component}FieldWidth{$breakpointLabel}"] = $itemValue;
 						break;
@@ -580,8 +579,8 @@ trait SettingsHelper
 			}
 
 			foreach ($values as $itemKey => $itemValue) {
-				if (is_bool($itemValue)) {
-					$itemValue = wp_json_encode($itemValue);
+				if (\is_bool($itemValue)) {
+					$itemValue = \wp_json_encode($itemValue);
 				}
 
 				$output["{$key}---{$itemKey}"] = $itemValue;

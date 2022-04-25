@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 
@@ -46,7 +46,7 @@ if ($submitId) {
 $submitAttrsOutput = '';
 if ($submitAttrs) {
 	foreach ($submitAttrs as $key => $value) {
-		$submitAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$submitAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -86,7 +86,7 @@ if ($submitServerSideRender) {
 	$button = str_replace('</button>', '</div>', $button);
 }
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [
@@ -99,6 +99,7 @@ echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputN
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
+			'blockSsr' => $submitServerSideRender,
 		]
 	)
 );

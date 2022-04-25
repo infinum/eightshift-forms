@@ -67,7 +67,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
 
 		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScript']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
+
+		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 	}
 
 	/**
@@ -148,7 +151,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output = [];
 
 		// Only for block editor.
-		if (is_admin()) {
+		if (\is_admin()) {
 			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
 			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
 			$fieldStyleOptionsFilterName = Filters::getBlockFilterName('field', 'styleOptions');
@@ -163,23 +166,23 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$customDataOptionsFilterName = Filters::getBlockFilterName('customData', 'options');
 			$breakpointsFilterName = Filters::getBlocksFilterName('breakpoints');
 
-			$output['additionalBlocks'] = apply_filters($additionalBlocksFilterName, []);
-			$output['formsBlockStyleOptions'] = apply_filters($formsStyleOptionsFilterName, []);
-			$output['fieldBlockStyleOptions'] = apply_filters($fieldStyleOptionsFilterName, []);
-			$output['formSelectorBlockAdditionalContent'] = apply_filters($formSelectorAdditionalContentFilterName, []);
-			$output['inputBlockAdditionalContent'] = apply_filters($inputAdditionalContentFilterName, []);
-			$output['textareaBlockAdditionalContent'] = apply_filters($textareaAdditionalContentFilterName, []);
-			$output['selectBlockAdditionalContent'] = apply_filters($selectAdditionalContentFilterName, []);
-			$output['fileBlockAdditionalContent'] = apply_filters($fileAdditionalContentFilterName, []);
-			$output['checkboxesBlockAdditionalContent'] = apply_filters($checkboxesAdditionalContentFilterName, []);
-			$output['radiosBlockAdditionalContent'] = apply_filters($radiosAdditionalContentFilterName, []);
-			$output['submitBlockAdditionalContent'] = apply_filters($submitAdditionalContentFilterName, []);
-			$output['customDataBlockOptions'] = apply_filters($customDataOptionsFilterName, []);
+			$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
+			$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
+			$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
+			$output['formSelectorBlockAdditionalContent'] = \apply_filters($formSelectorAdditionalContentFilterName, []);
+			$output['inputBlockAdditionalContent'] = \apply_filters($inputAdditionalContentFilterName, []);
+			$output['textareaBlockAdditionalContent'] = \apply_filters($textareaAdditionalContentFilterName, []);
+			$output['selectBlockAdditionalContent'] = \apply_filters($selectAdditionalContentFilterName, []);
+			$output['fileBlockAdditionalContent'] = \apply_filters($fileAdditionalContentFilterName, []);
+			$output['checkboxesBlockAdditionalContent'] = \apply_filters($checkboxesAdditionalContentFilterName, []);
+			$output['radiosBlockAdditionalContent'] = \apply_filters($radiosAdditionalContentFilterName, []);
+			$output['submitBlockAdditionalContent'] = \apply_filters($submitAdditionalContentFilterName, []);
+			$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
 			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
-			$output['mediaBreakpoints'] = apply_filters($breakpointsFilterName, []);
-			$output['postType'] = get_post_type() ? get_post_type() : '';
+			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
+			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
-			$restApiUrl = get_rest_url(get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
+			$restApiUrl = \get_rest_url(\get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
 
 			// Check if Geolocation data is set and valid.
 			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);

@@ -92,7 +92,7 @@ class ClearbitClient implements ClearbitClientInterface
 			]
 		);
 
-		if (is_wp_error($response)) {
+		if (\is_wp_error($response)) {
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -100,15 +100,15 @@ class ClearbitClient implements ClearbitClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ?? 200;
+		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
-		$responseBody = json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if ($code === 200) {
 			$dataOutput = [];
 
 			foreach ($this->prepareParams($responseBody) as $key => $value) {
-				if (array_key_exists($key, $mapData) && !empty($value) && !empty($mapData[$key])) {
+				if (\array_key_exists($key, $mapData) && !empty($value) && !empty($mapData[$key])) {
 					$dataOutput[$mapData[$key]] = $value;
 				}
 			}
@@ -226,14 +226,14 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-name' => $company['name'] ?? '',
 			'company-legal-name' => $company['legalName'] ?? '',
 			'company-domain' => $company['domain'] ?? '',
-			'company-domain-aliases' => isset($company['domainAliases']) ? implode(', ', $company['domainAliases']) : '',
-			'company-site-phone-numbers' => isset($company['site']['phoneNumbers']) ? implode(', ', $company['site']['phoneNumbers']) : '',
-			'company-site-email-addresses' => isset($company['site']['emailAddresses']) ? implode(', ', $company['site']['emailAddresses']) : '',
+			'company-domain-aliases' => isset($company['domainAliases']) ? \implode(', ', $company['domainAliases']) : '',
+			'company-site-phone-numbers' => isset($company['site']['phoneNumbers']) ? \implode(', ', $company['site']['phoneNumbers']) : '',
+			'company-site-email-addresses' => isset($company['site']['emailAddresses']) ? \implode(', ', $company['site']['emailAddresses']) : '',
 			'company-sector' => $company['category']['sector'] ?? '',
 			'company-industry-group' => $company['category']['industryGroup'] ?? '',
 			'company-industry' => $company['category']['industry'] ?? '',
 			'company-sub-industry' => $company['category']['subIndustry'] ?? '',
-			'company-tags' => isset($company['tags']) ? implode(', ', $company['tags']) : '',
+			'company-tags' => isset($company['tags']) ? \implode(', ', $company['tags']) : '',
 			'company-description' => $company['description'] ?? '',
 			'company-founded-year' => $company['foundedYear'] ?? '',
 			'company-location' => $company['location'] ?? '',
@@ -280,14 +280,14 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-annual-revenue' => $company['metrics']['annualRevenue'] ?? '',
 			'company-estimated-annual-revenue' => $company['metrics']['estimatedAnnualRevenue'] ?? '',
 			'company-fiscal-year-end' => $company['metrics']['fiscalYearEnd'] ?? '',
-			'company-tech' => isset($company['tech']) ? implode(', ', $company['tech']) : '',
-			'company-tech-categories' => isset($company['techCategories']) ? implode(', ', $company['techCategories']) : '',
+			'company-tech' => isset($company['tech']) ? \implode(', ', $company['tech']) : '',
+			'company-tech-categories' => isset($company['techCategories']) ? \implode(', ', $company['techCategories']) : '',
 			'company-parent-domain' => $company['parent']['domain'] ?? '',
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
 		$filterName = Filters::getIntegrationFilterName(SettingsClearbit::SETTINGS_TYPE_KEY, 'map');
-		if (has_filter($filterName)) {
+		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}
 

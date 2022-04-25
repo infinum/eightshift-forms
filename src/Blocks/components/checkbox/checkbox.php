@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -52,11 +52,11 @@ if ($checkboxValue) {
 $checkboxAttrsOutput = '';
 if ($checkboxAttrs) {
 	foreach ($checkboxAttrs as $key => $value) {
-		$checkboxAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$checkboxAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
-$isWpFiveNine = \is_wp_version_compatible('5.9');
+$isWpFiveNine = is_wp_version_compatible('5.9');
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>">
@@ -66,7 +66,7 @@ $isWpFiveNine = \is_wp_version_compatible('5.9');
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxId); ?>"
-			<?php echo $checkboxAttrsOutput; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php $isWpFiveNine ? wp_readonly($checkboxIsReadOnly) : readonly($checkboxIsReadOnly); // @phpstan-ignore-line ?>
@@ -76,7 +76,7 @@ $isWpFiveNine = \is_wp_version_compatible('5.9');
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
 			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-				<?php echo wp_kses_post(\apply_filters('the_content', $checkboxLabel)); ?>
+				<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
 			</span>
 		</label>
 	</div>

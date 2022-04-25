@@ -23,5 +23,5 @@ test('Register method will call init hook', function () {
 	$this->manifest->register();
 
 	$this->assertSame(10, has_action('init', 'EightshiftForms\Manifest\Manifest->setAssetsManifestRaw()'));
-	$this->assertSame(10, has_filter(Manifest::MANIFEST_ITEM, 'EightshiftForms\Manifest\Manifest->getAssetsManifestItem()'));
+	$this->assertSame(10, \has_filter(Manifest::MANIFEST_ITEM, 'EightshiftForms\Manifest\Manifest->getAssetsManifestItem()'));
 });

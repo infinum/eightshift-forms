@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Blocks\Blocks;
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
@@ -59,7 +59,7 @@ if ($selectTracking) {
 $selectAttrsOutput = '';
 if ($selectAttrs) {
 	foreach ($selectAttrs as $key => $value) {
-		$selectAttrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		$selectAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
 
@@ -67,7 +67,7 @@ if ($selectAttrs) {
 $additionalContent = '';
 $filterName = Filters::getBlockFilterName('select', 'additionalContent');
 if (has_filter($filterName)) {
-	$attributes['selectOptions'] = Helper::convetInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
+	$attributes['selectOptions'] = Helper::convertInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
@@ -84,7 +84,7 @@ $select = '
 	' . $additionalContent . '
 ';
 
-echo Components::render( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo Components::render(
 	'field',
 	array_merge(
 		Components::props('field', $attributes, [

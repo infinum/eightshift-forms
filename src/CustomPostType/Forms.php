@@ -90,7 +90,7 @@ class Forms extends AbstractPostType
 		];
 
 		return [
-			'label' => esc_html__('Eightshift Forms', 'eightshift-forms'),
+			'label' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,

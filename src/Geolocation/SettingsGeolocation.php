@@ -80,7 +80,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	public function getSettingsSidebar(): array
 	{
 		return [
-			'label' => __('Geolocation', 'eightshift-forms'),
+			'label' => \__('Geolocation', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
 		];
@@ -108,8 +108,8 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				'introTitle' => __('Geolocation', 'eightshift-forms'),
-				'introSubtitle' => __('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info.', 'eightshift-forms'),
+				'introTitle' => \__('Geolocation', 'eightshift-forms'),
+				'introSubtitle' => \__('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'checkboxes',
@@ -120,7 +120,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => __('Use geolocation', 'eightshift-forms'),
+						'checkboxLabel' => \__('Use geolocation', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
 						'checkboxValue' => self::SETTINGS_GEOLOCATION_USE_KEY,
 						'checkboxSingleSubmit' => true,

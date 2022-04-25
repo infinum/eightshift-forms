@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsAllInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
@@ -60,7 +60,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			30
 		);
 
-		add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
+		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 	}
 
 	/**
@@ -153,7 +153,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
-	 * @throws \Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
@@ -174,22 +173,22 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$formId = isset($_GET['formId']) ? \sanitize_text_field(wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$type = isset($_GET['type']) ? \sanitize_text_field(wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$formId = isset($_GET['formId']) ? \sanitize_text_field(\wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if (empty($formId)) {
 			return [];
 		}
 
-		$formTitle = get_the_title((int) $formId);
+		$formTitle = \get_the_title((int) $formId);
 
 		if (!$formTitle) {
-			$formTitle = esc_html__('No form title', 'eightshift-forms');
+			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
 		return [
 			// translators: %s replaces the form name.
-			'adminSettingsPageTitle' => sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
+			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => Helper::getFormEditPageUrl($formId),
 			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),

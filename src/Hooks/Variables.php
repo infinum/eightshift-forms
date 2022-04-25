@@ -22,7 +22,7 @@ class Variables
 	 */
 	public static function isDevelopMode(): bool
 	{
-		return defined('ES_DEVELOP_MODE') ? true : false;
+		return \defined('ES_DEVELOP_MODE') ? true : false;
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Variables
 	 */
 	public static function skipFormValidation(): bool
 	{
-		return defined('ES_DEVELOP_MODE_SKIP_VALIDATION') ? true : false;
+		return \defined('ES_DEVELOP_MODE_SKIP_VALIDATION') ? true : false;
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Variables
 	 */
 	public static function isLogMode(): bool
 	{
-		return defined('ES_LOG_MODE') ? true : false;
+		return \defined('ES_LOG_MODE') ? true : false;
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Variables
 	 */
 	public static function getApiKeyHubspot(): string
 	{
-		return defined('ES_API_KEY_HUBSPOT') ? ES_API_KEY_HUBSPOT : '';
+		return \defined('ES_API_KEY_HUBSPOT') ? \ES_API_KEY_HUBSPOT : '';
 	}
 
 	/**
@@ -62,7 +62,7 @@ class Variables
 	 */
 	public static function getApiKeyGreenhouse(): string
 	{
-		return defined('ES_API_KEY_GREENHOUSE') ? ES_API_KEY_GREENHOUSE : '';
+		return \defined('ES_API_KEY_GREENHOUSE') ? \ES_API_KEY_GREENHOUSE : '';
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Variables
 	 */
 	public static function getBoardTokenGreenhouse(): string
 	{
-		return defined('ES_BOARD_TOKEN_GREENHOUSE') ? ES_BOARD_TOKEN_GREENHOUSE : '';
+		return \defined('ES_BOARD_TOKEN_GREENHOUSE') ? \ES_BOARD_TOKEN_GREENHOUSE : '';
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Variables
 	 */
 	public static function getApiKeyMailchimp(): string
 	{
-		return defined('ES_API_KEY_MAILCHIMP') ? ES_API_KEY_MAILCHIMP : '';
+		return \defined('ES_API_KEY_MAILCHIMP') ? \ES_API_KEY_MAILCHIMP : '';
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Variables
 	 */
 	public static function getApiKeyMailerlite(): string
 	{
-		return defined('ES_API_KEY_MAILERLITE') ? ES_API_KEY_MAILERLITE : '';
+		return \defined('ES_API_KEY_MAILERLITE') ? \ES_API_KEY_MAILERLITE : '';
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Variables
 	 */
 	public static function getApiKeyGoodbits()
 	{
-		return defined('ES_API_KEY_GOODBITS') ? ES_API_KEY_GOODBITS : '';
+		return \defined('ES_API_KEY_GOODBITS') ? \ES_API_KEY_GOODBITS : '';
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Variables
 	 */
 	public static function getGoogleReCaptchaSiteKey()
 	{
-		return defined('ES_GOOGLE_RECAPTCHA_SITE_KEY') ? ES_GOOGLE_RECAPTCHA_SITE_KEY : '';
+		return \defined('ES_GOOGLE_RECAPTCHA_SITE_KEY') ? \ES_GOOGLE_RECAPTCHA_SITE_KEY : '';
 	}
 
 	/**
@@ -122,7 +122,7 @@ class Variables
 	 */
 	public static function getGoogleReCaptchaSecretKey()
 	{
-		return defined('ES_GOOGLE_RECAPTCHA_SECRET_KEY') ? ES_GOOGLE_RECAPTCHA_SECRET_KEY : '';
+		return \defined('ES_GOOGLE_RECAPTCHA_SECRET_KEY') ? \ES_GOOGLE_RECAPTCHA_SECRET_KEY : '';
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Variables
 	 */
 	public static function getGeolocation(): string
 	{
-		return defined('ES_GEOLOCAITON') ? strtoupper(ES_GEOLOCAITON) : '';
+		return \defined('ES_GEOLOCAITON') ? \strtoupper(\ES_GEOLOCAITON) : '';
 	}
 
 	/**
@@ -142,6 +142,6 @@ class Variables
 	 */
 	public static function getApiKeyClearbit()
 	{
-		return defined('ES_API_KEY_CLEARBIT') ? ES_API_KEY_CLEARBIT : '';
+		return \defined('ES_API_KEY_CLEARBIT') ? \ES_API_KEY_CLEARBIT : '';
 	}
 }
