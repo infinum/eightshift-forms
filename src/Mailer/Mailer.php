@@ -134,7 +134,7 @@ class Mailer implements MailerInterface
 	 * Replace form field templates with values from form.
 	 *
 	 * @param array<string, mixed> $items All items to output.
-	 * @param string $field String template of the field which value will be extracted.
+	 * @param string $fieldValue String template of the field which value will be extracted.
 	 *
 	 * @return string
 	 */
