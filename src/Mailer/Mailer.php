@@ -55,11 +55,11 @@ class Mailer implements MailerInterface
 		);
 
 		$files = $this->prepareFiles($files);
-
-		$destinationEmail = $this->getFieldValue($fields, $to);
+		$to = $this->getFieldValue($fields, $to);
+		$subject = $this->getFieldValue($fields, $subject);
 
 		// Send email.
-		return \wp_mail($destinationEmail, $subject, $templateHtml, $headers, $files);
+		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
 	}
 
 	/**
