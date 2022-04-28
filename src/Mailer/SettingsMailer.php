@@ -211,13 +211,26 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 					],
 					[
+						'component' => 'divider',
+					],
+					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 						'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 						'inputFieldLabel' => \__('E-mail destination', 'eightshift-forms'),
-						'inputFieldHelp' => \__('The e-mail will be sent to this address.', 'eightshift-forms'),
+						// translators: %s will be replaced with forms field name.
+						'inputFieldHelp' => \sprintf(\__('The e-mail will be sent to this address.
+						<br /> <br />
+						Data from the form can be used in the form of template tags (<code>{field-name}</code>).
+							<br /> <br />
+							These tags are detected from the form:
+							<br />
+							%s
+							<br /> <br />
+							If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.
+							<br /> <br />
+							<b>Be careful when using template tags and make sure that tag you are using contains a valid email address value.</b>', 'eightshift-forms'), $formNames),
 						'inputType' => 'text',
-						'inputIsEmail' => true,
 						'inputIsRequired' => true,
 						'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
 					],
