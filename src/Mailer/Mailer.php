@@ -55,6 +55,8 @@ class Mailer implements MailerInterface
 		);
 
 		$files = $this->prepareFiles($files);
+		$to = $this->getFieldValue($fields, $to);
+		$subject = $this->getFieldValue($fields, $subject);
 
 		// Send email.
 		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
@@ -126,6 +128,26 @@ class Mailer implements MailerInterface
 		}
 
 		return \str_replace("\n", '<br />', $template);
+	}
+
+	/**
+	 * Replace form field templates with values from form.
+	 *
+	 * @param array<string, mixed> $items All items to output.
+	 * @param string $fieldValue String template of the field which value will be extracted.
+	 *
+	 * @return string
+	 */
+	protected function getFieldValue(array $items = [], string $fieldValue = ''): string
+	{
+		foreach ($this->prepareFields($items) as $item) {
+			$name = $item['name'] ?? '';
+			$value = $item['value'] ?? '';
+
+			$fieldValue = \str_replace("{" . $name . "}", $value, $fieldValue);
+		}
+
+		return $fieldValue;
 	}
 
 	/**
