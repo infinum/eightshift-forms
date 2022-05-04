@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55616fade65a09d26ae51ba755689b02",
+    "content-hash": "c2f2cf98d8c6f328325cae00b99c6add",
     "packages": [
         {
             "name": "infinum/eightshift-libs",
