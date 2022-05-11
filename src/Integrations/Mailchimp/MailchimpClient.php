@@ -299,7 +299,7 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getMailchimpListFields(string $listId)
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$listId}/merge-fields",
+			"{$this->getBaseUrl()}lists/{$listId}/merge-fields?count=1000",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -323,7 +323,7 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getMailchimpLists()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists",
+			"{$this->getBaseUrl()}lists?count=100",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,

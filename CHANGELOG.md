@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [1.1.1]
+
+### Fixed
+- option to show WP-CLI command.
+- Mailchimp integration total number of list items to show
+
 ## [1.1.0]
 
 ### Added

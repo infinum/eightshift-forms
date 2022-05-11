@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\WpCli;
 
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use WP_CLI;
 
 /**
  * StylesheetSet class.
  */
-class StylesheetSet implements ServiceInterface
+class StylesheetSet implements ServiceCliInterface
 {
 	/**
 	 * Register method for WPCLI command
