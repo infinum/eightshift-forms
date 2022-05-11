@@ -6,7 +6,6 @@ on:
     branches:
       - develop
       - main
-      - refactor
     paths-ignore:
       - '**.md'
   pull_request:
