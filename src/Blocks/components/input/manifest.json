@@ -97,6 +97,10 @@
 				"value": "email"
 			},
 			{
+				"label": "Url",
+				"value": "url"
+			},
+			{
 				"label": "Number",
 				"value": "number"
 			},
