@@ -31,7 +31,7 @@ export const InputEditor = (attributes) => {
 	let inputType = checkAttr('inputType', attributes, manifest);
 
 	// For some reason React won't allow input type email.
-	if (inputType === 'email') {
+	if (inputType === 'email' || inputType === 'url') {
 		inputType = 'text';
 	}
 

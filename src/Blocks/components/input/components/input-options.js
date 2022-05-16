@@ -39,8 +39,6 @@ export const InputOptions = (attributes) => {
 		showInputIsReadOnly = true,
 		showInputIsRequired = true,
 		showInputTracking = true,
-		showInputIsEmail = true,
-		showInputIsUrl = true,
 		showInputValidationPattern = true,
 		showInputMinLength = true,
 		showInputMaxLength = true,
@@ -97,7 +95,25 @@ export const InputOptions = (attributes) => {
 						label={<IconLabel icon={icons.fieldType} label={__('Input value kind', 'eightshift-forms')} />}
 						value={inputType}
 						options={getOption('inputType', attributes, manifest)}
-						onChange={(value) => setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value });
+
+							setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: false });
+							setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: false });
+							setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: false });
+
+							if (value === 'email') {
+								setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: true });
+							}
+
+							if (value === 'number') {
+								setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: true });
+							}
+
+							if (value === 'url') {
+								setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: true });
+							}
+						}}
 						simpleValue
 						isClearable={false}
 						isSearchable={false}
@@ -187,26 +203,6 @@ export const InputOptions = (attributes) => {
 											</div>
 										</Popover>
 									}
-								</Button>
-							}
-
-							{(showInputIsEmail && !inputIsUrl && inputValidationPattern == '' && inputType !== 'number') &&
-								<Button
-									icon={icons.email}
-									isPressed={inputIsEmail}
-									onClick={() => setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: !inputIsEmail })}
-								>
-									{__('Only e-mails', 'eightshift-forms')}
-								</Button>
-							}
-
-							{(showInputIsUrl && !inputIsEmail && inputValidationPattern === '' && inputType !== 'number') &&
-								<Button
-									icon={icons.link}
-									isPressed={inputIsUrl}
-									onClick={() => setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: !inputIsUrl })}
-								>
-									{__('Only URLs', 'eightshift-forms')}
 								</Button>
 							}
 						</div>
