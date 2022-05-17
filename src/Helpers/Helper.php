@@ -56,7 +56,7 @@ class Helper
 	{
 		$page = FormListingAdminSubMenu::ADMIN_MENU_SLUG;
 
-		return "/wp-admin/admin.php?page={$page}";
+		return \get_admin_url(null, "admin.php?page={$page}");
 	}
 
 	/**
@@ -76,7 +76,7 @@ class Helper
 			$typeKey = "&type={$type}";
 		}
 
-		return "/wp-admin/admin.php?page={$page}&formId={$formId}{$typeKey}";
+		return \get_admin_url(null, "admin.php?page={$page}&formId={$formId}{$typeKey}");
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Helper
 			$typeKey = "&type={$type}";
 		}
 
-		return "/wp-admin/admin.php?page={$page}{$typeKey}";
+		return \get_admin_url(null, "admin.php?page={$page}{$typeKey}");
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Helper
 	{
 		$postType = Forms::POST_TYPE_SLUG;
 
-		return "/wp-admin/post-new.php?post_type={$postType}";
+		return \get_admin_url(null, "post-new.php?post_type={$postType}");
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Helper
 	 */
 	public static function getFormTrashRestoreActionUrl(string $formId): string
 	{
-		return \wp_nonce_url("/wp-admin/post.php?post={$formId}&action=untrash", 'untrash-post_' . $formId);
+		return \get_admin_url(null, \wp_nonce_url("post.php?post={$formId}&action=untrash", 'untrash-post_' . $formId));
 	}
 
 	/**
