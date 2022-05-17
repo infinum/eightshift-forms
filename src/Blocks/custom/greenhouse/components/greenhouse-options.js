@@ -9,6 +9,8 @@ export const GreenhouseOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
 	return (
 		<PanelBody title={__('Greenhouse', 'eightshift-forms')}>
 			<BaseControl
@@ -16,7 +18,7 @@ export const GreenhouseOptions = ({ postId }) => {
 				help={__('On Greenhouse settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${postId}&type=greenhouse`}
+					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=greenhouse`}
 					isSecondary
 				>
 					{__('Open Greenhouse Form Settings', 'eightshift-forms')}

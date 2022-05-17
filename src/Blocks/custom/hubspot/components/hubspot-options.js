@@ -9,6 +9,8 @@ export const HubspotOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
 	return (
 		<PanelBody title={__('HubSpot', 'eightshift-forms')}>
 			<BaseControl
@@ -16,7 +18,7 @@ export const HubspotOptions = ({ postId }) => {
 				help={__('On HubSpot settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${postId}&type=hubspot`}
+					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=hubspot`}
 					isSecondary
 				>
 					{__('Open HubSpot Form Settings', 'eightshift-forms')}

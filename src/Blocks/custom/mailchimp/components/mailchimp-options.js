@@ -9,6 +9,8 @@ export const MailchimpOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
 	return (
 		<PanelBody title={__('Mailchimp', 'eightshift-forms')}>
 			<BaseControl
@@ -16,7 +18,7 @@ export const MailchimpOptions = ({ postId }) => {
 				help={__('On Mailchimp settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${postId}&type=mailchimp`}
+					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=mailchimp`}
 					isSecondary
 				>
 					{__('Open Mailchimp Form Settings', 'eightshift-forms')}

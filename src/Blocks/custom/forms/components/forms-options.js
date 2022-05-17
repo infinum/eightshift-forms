@@ -25,6 +25,8 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		settingsPageUrl
 	} = select(STORE_NAME).getSettings();
 
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
 	const {
 		postType,
 	} = manifest;
@@ -143,14 +145,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 				<div className='es-v-spaced es-has-wp-field-b-space'>
 					<Button
 						icon={icons.edit}
-						href={`${editFormUrl}&post=${formsFormPostId}`}
+						href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
 					>
 						{__('Edit fields', 'eightshift-forms')}
 					</Button>
 
 					<Button
 						icon={icons.options}
-						href={`${settingsPageUrl}&formId=${formsFormPostId}`}
+						href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
 					>
 						{__('Form settings', 'eightshift-forms')}
 					</Button>
