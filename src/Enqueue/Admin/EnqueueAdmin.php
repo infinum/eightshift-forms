@@ -78,7 +78,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			'esFormsLocalization' => [
 				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
 				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
-				'wpAdminUrl' => \get_admin_url(),
 			]
 		];
 	}

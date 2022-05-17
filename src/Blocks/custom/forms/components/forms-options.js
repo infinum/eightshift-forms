@@ -25,7 +25,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		settingsPageUrl
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
 
 	const {
 		postType,

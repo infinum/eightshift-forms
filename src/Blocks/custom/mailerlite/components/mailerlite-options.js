@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
@@ -9,7 +11,7 @@ export const MailerliteOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
 
 	return (
 		<PanelBody title={__('Mailerlite', 'eightshift-forms')}>
