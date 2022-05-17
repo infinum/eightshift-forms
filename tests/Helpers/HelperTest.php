@@ -24,10 +24,22 @@ test('getListingPageUrl returns the correct url', function () {
 	$this->assertSame('/wp-admin/admin.php?page=es-forms', Helper::getListingPageUrl());
 });
 
+test('getListingPageUrl returns the correct url on multisite', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/admin.php?page=es-forms', Helper::getListingPageUrl());
+	putenv('test_force_admin_url_prefix');
+});
+
 //---------------------------------------------------------------------------------//
 
 test('getSettingsPageUrl returns the correct url with type not provided.', function () {
 	$this->assertSame('/wp-admin/admin.php?page=es-settings&formId=1&type=general', Helper::getSettingsPageUrl('1'));
+});
+
+test('getSettingsPageUrl returns the correct url on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/admin.php?page=es-settings&formId=1&type=general', Helper::getSettingsPageUrl('1'));
+	putenv('test_force_admin_url_prefix');
 });
 
 test('getSettingsPageUrl returns the correct url with type provided.', function () {
@@ -40,6 +52,12 @@ test('getSettingsGlobalPageUrl returns the correct url with type not provided.',
 	$this->assertSame('/wp-admin/admin.php?page=es-settings-global&type=general', Helper::getSettingsGlobalPageUrl());
 });
 
+test('getSettingsGlobalPageUrl returns the correct url on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/admin.php?page=es-settings-global&type=general', Helper::getSettingsGlobalPageUrl());
+	putenv('test_force_admin_url_prefix');
+});
+
 test('getSettingsGlobalPageUrl returns the correct url with type provided.', function () {
 	$this->assertSame('/wp-admin/admin.php?page=es-settings-global&type=test', Helper::getSettingsGlobalPageUrl('test'));
 });
@@ -50,16 +68,36 @@ test('getNewFormPageUrl returns the correct url.', function () {
 	$this->assertSame('/wp-admin/post-new.php?post_type=eightshift-forms', Helper::getNewFormPageUrl());
 });
 
+test('getNewFormPageUrl returns the correct url on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/post-new.php?post_type=eightshift-forms', Helper::getNewFormPageUrl());
+	putenv('test_force_admin_url_prefix');
+});
+
+
 //---------------------------------------------------------------------------------//
 
 test('getFormsTrashPageUrl returns the correct url.', function () {
 	$this->assertSame('/wp-admin/admin.php?page=es-forms&type=trash', Helper::getFormsTrashPageUrl());
 });
 
+test('getFormsTrashPageUrl returns the correct url on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/admin.php?page=es-forms&type=trash', Helper::getFormsTrashPageUrl());
+	putenv('test_force_admin_url_prefix');
+});
+
 //---------------------------------------------------------------------------------//
 
 test('getFormEditPageUrl returns the correct url.', function () {
 	$this->assertSame('/wp-admin/post.php?post=1&action=edit', Helper::getFormEditPageUrl('1'));
+});
+
+test('getFormEditPageUrl returns the correct url on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/post.php?post=1&action=edit', Helper::getFormEditPageUrl('1'));
+	putenv('test_force_admin_url_prefix');
+
 });
 
 //---------------------------------------------------------------------------------//
@@ -82,6 +120,11 @@ test('getFormTrashRestoreActionUrl returnes a properly nonced URL.', function ()
 	$this->assertSame('/wp-admin/post.php?post=7&action=untrash&_wpnonce=untrash-post_7', Helper::getFormTrashRestoreActionUrl('7'));
 });
 
+test('getFormTrashRestoreActionUrl returnes a properly nonced URL on multisite.', function () {
+	putenv('test_force_admin_url_prefix=test');
+	$this->assertSame('/test/wp-admin/post.php?post=7&action=untrash&_wpnonce=untrash-post_7', Helper::getFormTrashRestoreActionUrl('7'));
+	putenv('test_force_admin_url_prefix');
+});
 //---------------------------------------------------------------------------------//
 
 test('getFormNames returns field names properly.', function () {

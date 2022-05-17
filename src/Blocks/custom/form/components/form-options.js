@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useSelect, select } from "@wordpress/data";
@@ -11,13 +13,14 @@ export const FormOptions = ({ attributes, setAttributes }) => {
 	} = select(STORE_NAME).getSettings();
 
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
+	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
 
 	return (
 		<PanelBody title={__('Form', 'eightshift-forms')}>
 			<Button
 				isPrimary
 				icon={icons.options}
-				href={`${settingsPageUrl}&formId=${formId}&type=mailer`}
+				href={`${wpAdminUrl}${settingsPageUrl}&formId=${formId}&type=mailer`}
 				style={{ height: '3rem', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
 			>
 				<span>

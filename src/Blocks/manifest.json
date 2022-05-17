@@ -3,8 +3,8 @@
 	"background": "#29A3A3",
 	"foreground": "#FBF9FF",
 	"blockClassPrefix": "es-block",
-	"settingsPageUrl": "/wp-admin/admin.php?page=es-settings",
-	"editFormUrl": "/wp-admin/post.php?action=edit",
+	"settingsPageUrl": "admin.php?page=es-settings",
+	"editFormUrl": "post.php?action=edit",
 	"config": {
 		"outputCssGlobally": true,
 		"outputCssOptimize": true,

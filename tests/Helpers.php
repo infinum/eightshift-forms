@@ -45,7 +45,13 @@ function setupMocks() {
 	Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
 
 	Functions\when('get_edit_post_link')->alias(function($id) {
-		return "/wp-admin/post.php?post={$id}&action=edit";
+		$url = "/wp-admin/post.php?post={$id}&action=edit";
+
+		$envValue = getenv("test_force_admin_url_prefix");
+		if ($envValue !== false) {
+			$url = "/{$envValue}{$url}";
+		}
+		return $url;
 	});
 
 	Functions\when('get_delete_post_link')->alias(function ($id = 0, $deprecated = '', $force_delete = false) {
@@ -113,6 +119,21 @@ function setupMocks() {
 		}
 
 		return $envValue;
+	});
+
+	Functions\when('get_admin_url')->alias(function ($blog_id = null, string $path = '', string $scheme = 'admin') {
+		$url = '/wp-admin/';
+		$envValue = getenv("test_force_admin_url_prefix");
+	
+		if ($envValue !== false) {
+			$url = "/{$envValue}{$url}";
+		}
+
+		if ($path && is_string($path)) {
+			$url .= ltrim($path, '/');
+		}
+
+		return $url;
 	});
 }
 

@@ -1,3 +1,5 @@
+/* global esFormsBlocksLocalization */
+
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
@@ -9,6 +11,8 @@ export const MailerliteOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
+	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
+
 	return (
 		<PanelBody title={__('Mailerlite', 'eightshift-forms')}>
 			<BaseControl
@@ -16,7 +20,7 @@ export const MailerliteOptions = ({ postId }) => {
 				help={__('On Mailerlite settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${settingsPageUrl}&formId=${postId}&type=mailerlite`}
+					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=mailerlite`}
 					isSecondary
 				>
 					{__('Open Mailerlite Form Settings', 'eightshift-forms')}

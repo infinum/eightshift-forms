@@ -187,6 +187,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			// Check if Geolocation data is set and valid.
 			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 			$output['geolocationApi'] = $restApiUrl . GeolocationCountriesRoute::ROUTE_NAME;
+
+			$output['wpAdminUrl'] = \get_admin_url();
 		}
 
 		return [

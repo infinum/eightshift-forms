@@ -42,16 +42,16 @@ class Editor implements ServiceInterface
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
 
 		$links = [
-			"/wp-admin/edit.php?post_type={$postType}",
-			"/wp-admin/edit.php?post_status=publish&post_type={$postType}",
-			"/wp-admin/edit.php?post_status=draft&post_type={$postType}",
-			"/wp-admin/edit.php?post_status=trash&post_type={$postType}",
-			"/wp-admin/edit.php?post_status=publish&post_type={$postType}",
-			"/wp-admin/edit.php?post_status=future&post_type={$postType}",
+			\get_admin_url(null, "edit.php?post_type={$postType}"),
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$postType}"),
+			\get_admin_url(null, "edit.php?post_status=draft&post_type={$postType}"),
+			\get_admin_url(null, "edit.php?post_status=trash&post_type={$postType}"),
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$postType}"),
+			\get_admin_url(null, "edit.php?post_status=future&post_type={$postType}"),
 		];
 
 		if (\in_array($request, $links, true)) {
-			\wp_safe_redirect("/wp-admin/admin.php?page={$page}");
+			\wp_safe_redirect(\get_admin_url(null, "admin.php?page={$page}"));
 			exit;
 		}
 	}
