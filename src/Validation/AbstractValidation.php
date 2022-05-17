@@ -117,7 +117,8 @@ abstract class AbstractValidation implements ValidatorInterface
 		}
 
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
-		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? []);
+
+		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? '');
 
 		if (\in_array($fileExtension, $allowedExtensionsForMimetype, true)) {
 			return true;

@@ -48,6 +48,11 @@ if ($inputType === 'number') {
 	}
 }
 
+// Override types.
+if ($inputType === 'email' || $inputType === 'url') {
+	$inputType = 'text';
+}
+
 if ($inputTracking) {
 	$inputAttrs['data-tracking'] = esc_attr($inputTracking);
 }

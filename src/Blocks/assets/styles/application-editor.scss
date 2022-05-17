@@ -6,15 +6,6 @@
  *
  */
 
-$base-sea-color: #29A3A3;
-$base-silver-color: #797878;
-$base-error-color: #CC1818;
-
-$override-map: (
-	highlighted-panel: $base-sea-color,
-	divider: $base-silver-color,
-);
-
 // Globals.
 @import './../../../../assets/styles/parts/shared';
 
