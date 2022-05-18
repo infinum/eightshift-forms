@@ -4,6 +4,7 @@
 /node_modules
 /storybook
 /.vscode
+/release.zip
 
 # Tests
 tests/coverage/*
