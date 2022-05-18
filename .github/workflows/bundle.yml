@@ -58,6 +58,9 @@ jobs:
           bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh" "$GITHUB_WORKSPACE"
         shell: bash
 
+      - name: Zip Folder
+        run: zip -r release.zip eightshift-forms
+
       - name: Upload zip to release
         uses: svenstaro/upload-release-action@v2
         with:
