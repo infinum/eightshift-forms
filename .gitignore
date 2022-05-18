@@ -5,6 +5,7 @@
 /storybook
 /.vscode
 /release.zip
+/eightshift-forms
 
 # Tests
 tests/coverage/*

@@ -17,9 +17,3 @@ for element in *; do
         cp -pR "$element" './eightshift-forms/'"$element";
     fi
 done
-
-# Create release zip.
-zip release.zip -r ./eightshift-forms
-
-# Remove built folder.
-rm -rf ./eightshift-forms
