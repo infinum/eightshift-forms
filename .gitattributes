@@ -29,6 +29,7 @@
 /codeception.yml export-ignore
 /travis.yml export-ignore
 /phpunit.xml export-ignore
+/patchwork.json export-ignore
 
 composer.lock -diff
 yarn.lock -diff

@@ -37,7 +37,7 @@ jobs:
           node-version: 14
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
@@ -52,23 +52,16 @@ jobs:
       - name: Bundle assets
         run: npm run build --no-dev --no-progress
 
-      - name: Move bundled files to a subfolder
+      - name: Move bundled files to a subfolder and zip
         run: |
           chmod +x "$GITHUB_WORKSPACE/bin/bundle-plugin.sh"
           bash "$GITHUB_WORKSPACE/bin/bundle-plugin.sh" "$GITHUB_WORKSPACE"
         shell: bash
 
-      - name: Archive assets
-        uses: thedoctor0/zip-release@master
-        with:
-          type: 'zip'
-          filename: 'release.zip'
-          exclusions: '*.git* *tests/ bin/ assets/ *.eslintignore *.eslintrc *.stylelintrc CODE_OF_CONDUCT.md *.config.js *.yml *.xml *.xml.dist *.neon.dist composer.json composer.lock package.json package-lock.json node_modules/*'
-          path: 'eightshift-forms/'
-          directory: '.'
-
       - name: Upload zip to release
-        uses: AButler/upload-release-assets@v2.0
+        uses: svenstaro/upload-release-action@v2
         with:
-          files: 'release.zip'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: 'release.zip'
+          tag: ${{ github.ref }}
+          overwrite: true
