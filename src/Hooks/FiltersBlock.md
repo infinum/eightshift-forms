@@ -409,3 +409,39 @@ public function getBlockFilePreviewRemoveLabel(): string
 	return 'Remove item'; // This can be string or svg.
 }
 ```
+
+## Changing the form type selector on render
+This filter will override the attribute-provided type selector for a Form component.
+Passes form component attributes to the callback function as well, so you can check all sorts of conditions when filtering.
+
+In other words, you can use this filter to change the value of the `formDataTypeSelector` attribute during a form render.
+The attribute is used to output a `data-type-selector` HTML attribute of the form element.
+
+**Filter name:**
+`es_forms_block_form_data_type_selector`
+
+**Default:**
+Attribute-provided value, editable in the Block Editor.
+
+**Filter example:**
+```php
+// Change data type selector.
+add_filter('es_forms_block_form_data_type_selector', [$this, 'setIntegrationGreenhouseTypeSelector'], 10, 2);
+
+/**
+ * Change data type selector.
+ * 
+ * @param string $selector The data type selector to filter.
+ * @param array<mixed> $attr Form component attributes.
+ *
+ * @return string Filtered value.
+ */
+public function getBlockFilePreviewRemoveLabel(string $selector, array $attr): string
+{
+	if (($attr['formType'] ?? '') === 'mailchimp') {
+		return;
+	}
+	
+	return 'my-new-selector';
+}
+```

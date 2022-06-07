@@ -7,6 +7,7 @@
  */
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -25,7 +26,14 @@ $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
-$formDataTypeSelector = Components::checkAttr('formDataTypeSelector', $attributes, $manifest);
+
+$formDataTypeSelectorFilterName = Filters::getBlockFilterName('form', 'dataTypeSelector');
+$formDataTypeSelector = apply_filters(
+	$formDataTypeSelectorFilterName,
+	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),
+	$attributes
+);
+
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 

@@ -206,6 +206,7 @@ class Filters
 				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
 				'trackingEventName' => 'tracking_event_name',
+				'dataTypeSelector' => 'data_type_selector',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',
