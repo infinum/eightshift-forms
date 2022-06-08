@@ -27,6 +27,9 @@
 		"checkboxValue": {
 			"type": "string"
 		},
+		"checkboxUncheckedValue": {
+			"type": "string"
+		},
 		"checkboxName": {
 			"type": "string"
 		},
