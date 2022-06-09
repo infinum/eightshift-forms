@@ -161,7 +161,7 @@ class MailchimpClient implements MailchimpClientInterface
 			'tags' => $this->prepareTags($params),
 		];
 
-		if(!empty($this->prepareParams($params))) {
+		if (!empty($this->prepareParams($params))) {
 			$body['merge_fields'] = $this->prepareParams($params);
 		}
 
