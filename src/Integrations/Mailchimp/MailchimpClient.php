@@ -153,6 +153,7 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$email = $params['email_address']['value'];
 		$emailHash = \md5(\strtolower($email));
+		$prepareParams = $this->prepareParams($params);
 
 		$body = [
 			'email_address' => $email,
@@ -161,8 +162,8 @@ class MailchimpClient implements MailchimpClientInterface
 			'tags' => $this->prepareTags($params),
 		];
 
-		if (!empty($this->prepareParams($params))) {
-			$body['merge_fields'] = $this->prepareParams($params);
+		if (!empty($prepareParams)) {
+			$body['merge_fields'] = $prepareParams;
 		}
 
 		$response = \wp_remote_request(
