@@ -428,7 +428,8 @@ export class Form {
 
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
-				data.value = '';
+				// If unchecked value attribute is added use that if not send an empty value.
+				data.value = item.getAttribute('data-unchecked-value') ?? '';
 			}
 
 			// Append files field.

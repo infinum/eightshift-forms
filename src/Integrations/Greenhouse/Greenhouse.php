@@ -210,6 +210,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										'component' => 'checkbox',
 										'checkboxLabel' => $label,
 										'checkboxValue' => 1,
+										'checkboxUncheckedValue' => 0,
 										'checkboxTracking' => $name,
 									],
 								],

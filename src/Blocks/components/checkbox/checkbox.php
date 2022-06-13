@@ -19,6 +19,7 @@ $checkboxLabel = Components::checkAttr('checkboxLabel', $attributes, $manifest);
 $checkboxId = Components::checkAttr('checkboxId', $attributes, $manifest);
 $checkboxName = Components::checkAttr('checkboxName', $attributes, $manifest);
 $checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
+$checkboxUncheckedValue = Components::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
 $checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $manifest);
 $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
 $checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
@@ -54,6 +55,11 @@ if ($checkboxAttrs) {
 	foreach ($checkboxAttrs as $key => $value) {
 		$checkboxAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
+}
+
+// strlen used because we can have 0 as string.
+if (strlen($checkboxUncheckedValue) !== 0) {
+	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
 }
 
 $isWpFiveNine = is_wp_version_compatible('5.9');
