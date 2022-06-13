@@ -86,14 +86,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return;
 		}
 
-		$a = \setcookie(
+		\setcookie(
 			self::GEOLOCATION_COOKIE,
 			$this->getLocationDetails(),
 			\time() + \DAY_IN_SECONDS,
 			'/'
 		);
-
-		var_dump($a);
 	}
 
 	/**
