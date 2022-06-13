@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [1.2.4]
+
+### Added
+- Option to provide checkbox unchecked value.
+- New filter to allow filtering of the formDataTypeSelector attribute during form component renders.
+
+### Fixed
+- Greenhouse integration checkbox true/false unchecked value.
+
 ## [1.2.3]
 
 ### Fixed
@@ -42,8 +51,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [1.0.0]
 
-Initial production release.
+- Initial production release.
 
+[1.2.4]: https://github.com/infinum/eightshift-forms/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/infinum/eightshift-forms/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/infinum/eightshift-forms/compare/1.2.1...1.2.2
 [1.2.1]: https://github.com/infinum/eightshift-forms/compare/1.2.0...1.2.1
