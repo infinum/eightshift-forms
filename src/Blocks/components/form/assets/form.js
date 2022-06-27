@@ -2,6 +2,7 @@
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
+// All custom events.
 export const FORM_EVENTS = {
 	BEFORE_FORM_SUBMIT: 'BeforeFormSubmit',
 	AFTER_FORM_SUBMIT: 'AfterFormSubmit',
@@ -12,9 +13,11 @@ export const FORM_EVENTS = {
 	AFTER_FORM_SUBMIT_ERROR_FATAL: 'AfterFormSubmitErrorFatal',
 	AFTER_FORM_SUBMIT_ERROR_VALIDATION: 'AfterFormSubmitErrorValidation',
 	AFTER_FORM_SUBMIT_END: 'AfterFormSubmitEnd',
+	AFTER_FORM_EVENTS_CLEAR: 'AfterFormEventsClear',
 	BEFORE_GTM_DATA_PUSH: 'BeforeGtmDataPush',
 };
 
+// All form custom state selectors.
 export const FORM_SELECTORS = {
 	CLASS_ACTIVE: 'is-active',
 	CLASS_FILLED: 'is-filled',
@@ -22,6 +25,7 @@ export const FORM_SELECTORS = {
 	CLASS_HAS_ERROR: 'has-error',
 };
 
+// All form data attributes.
 export const FORM_DATA_ATTRIBUTES = {
 	DATA_ATTR_FORM_TYPE: 'data-form-type',
 	DATA_ATTR_FIELD_ID: 'data-field-id',
@@ -34,9 +38,13 @@ export const FORM_DATA_ATTRIBUTES = {
 
 export class Form {
 	constructor(options) {
+		// Detect if form is used in admin for settings or on the frontend.
 		this.formIsAdmin = options.formIsAdmin || false;
+
+		// Form endpoint to send data.
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl;
 
+		// Selectors.
 		this.formSelector = options.formSelector;
 		this.submitSingleSelector = `${this.formSelector}-single-submit`;
 		this.errorSelector = `${this.formSelector}-error`;
@@ -45,18 +53,19 @@ export class Form {
 		this.groupSelector = `${this.formSelector}-group`;
 		this.groupInnerSelector = `${this.formSelector}-group-inner`;
 		this.customSelector = `${this.formSelector}-custom`;
-
 		this.fieldSelector = `${this.formSelector}-field`;
 		this.inputSelector = `${this.fieldSelector} input`;
 		this.textareaSelector = `${this.fieldSelector} textarea`;
 		this.selectSelector = `${this.fieldSelector} select`;
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
 
+		// State selectors.
 		this.CLASS_ACTIVE = FORM_SELECTORS.CLASS_ACTIVE;
 		this.CLASS_FILLED = FORM_SELECTORS.CLASS_FILLED;
 		this.CLASS_LOADING = FORM_SELECTORS.CLASS_LOADING;
 		this.CLASS_HAS_ERROR = FORM_SELECTORS.CLASS_HAS_ERROR;
 
+		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
 		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
 		this.formResetOnSuccess = Boolean(options.formResetOnSuccess);
@@ -66,11 +75,13 @@ export class Form {
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 		this.captcha = options.captcha ?? '';
 
-		// If using custom file create global object to store files.
+		// Internal state.
 		this.files = {};
+		this.customTextareas = [];
 		this.customSelects = [];
 		this.customFiles = [];
 
+		// Data attributes.
 		this.DATA_ATTR_FORM_TYPE = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE;
 		this.DATA_ATTR_FIELD_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID;
 		this.DATA_ATTR_FORM_POST_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID;
@@ -83,15 +94,17 @@ export class Form {
 	init = () => {
 		const elements = document.querySelectorAll(this.formSelector);
 
+		// Loop all forms on the page.
 		[...elements].forEach((element) => {
 
 			// Regular submit.
 			element.addEventListener('submit', this.onFormSubmit);
 
-			// Single submit.
+			// Single submit for admin settings.
 			if (this.formIsAdmin) {
 				const items = element.querySelectorAll(this.submitSingleSelector);
 
+				// Look all internal items for single submit option.
 				[...items].forEach((item) => {
 					if (item.type === 'submit') {
 						item.addEventListener('click', this.onFormSubmitSingle);
@@ -101,8 +114,10 @@ export class Form {
 				});
 			}
 
+			// Get form ID.
 			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
 
+			// All fields selectors.
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);
 			const selects = element.querySelectorAll(this.selectSelector);
@@ -120,14 +135,15 @@ export class Form {
 			});
 	
 			// Setup textarea inputs.
+			this.customTextareas[formId] = [];
 			[...textareas].forEach((textarea) => {
-				this.setupTextareaField(textarea);
+				this.setupTextareaField(textarea, formId);
 			});
 
 			// Setup file single inputs.
 			this.customFiles[formId] = [];
-			[...files].forEach((file) => {
-				this.setupFileField(file, formId);
+			[...files].forEach((file, index) => {
+				this.setupFileField(file, formId, index);
 			});
 		});
 	}
@@ -776,7 +792,7 @@ export class Form {
 	}
 
 	// Setup Textarea field.
-	setupTextareaField = (textarea) => {
+	setupTextareaField = (textarea, formId) => {
 		this.preFillOnInit(textarea);
 
 		textarea.addEventListener('keydown', this.onFocusEvent);
@@ -789,12 +805,14 @@ export class Form {
 				textarea.setAttribute('cols', '');
 
 				autosize.default(textarea);
+
+				this.customTextareas[formId].push(autosize.default);
 			});
 		}
 	}
 
 	// Setup file single field.
-	setupFileField = (file, formId) => {
+	setupFileField = (file, formId, index) => {
 		if (this.isCustom(file)) {
 
 			import('dropzone').then((Dropzone) => {
@@ -835,18 +853,30 @@ export class Form {
 				});
 
 				// Trigger on wrap click.
-				file.nextElementSibling.addEventListener('click', (event) => {
-					event.preventDefault();
-					event.stopPropagation();
-					myDropzone.hiddenFileInput.click();
-				});
+				file.nextElementSibling.setAttribute('dropzone-index', index);
+				file.nextElementSibling.setAttribute('dropzone-form-id', formId);
+				file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
 
+				// Button inside wrap element.
 				const button = file.parentNode.querySelector('a');
 
 				button.addEventListener('focus', this.onFocusEvent);
 				button.addEventListener('blur', this.onBlurEvent);
 			});
 		}
+	}
+
+	// On custom file wrapper click event callback.
+	onCustomFileWrapClickEvent = (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const index = event.currentTarget.getAttribute('dropzone-index');
+		const formId = event.currentTarget.getAttribute('dropzone-form-id');
+
+		console.log(formId);
+
+		this.customFiles[formId][index].hiddenFileInput.click();
 	}
 
 	// // Prefill inputs active/filled on init.
@@ -913,5 +943,70 @@ export class Form {
 	// Determine if field is custom type or normal.
 	isCustom(item) {
 		return item.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
+	}
+
+	removeEvents() {
+		const elements = document.querySelectorAll(this.formSelector);
+
+		[...elements].forEach((element) => {
+			// Regular submit.
+			element.removeEventListener('submit', this.onFormSubmit);
+
+			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+
+			const inputs = element.querySelectorAll(this.inputSelector);
+			const textareas = element.querySelectorAll(this.textareaSelector);
+			const selects = element.querySelectorAll(this.selectSelector);
+			const files = element.querySelectorAll(this.fileSelector);
+
+			[...inputs].forEach((input) => {
+				input.removeEventListener('keydown', this.onFocusEvent);
+				input.removeEventListener('focus', this.onFocusEvent);
+				input.removeEventListener('blur', this.onBlurEvent);
+			});
+
+			[...selects].forEach((select) => {
+				if (this.isCustom(select)) {
+					if (typeof this.customSelects?.[formId] !== 'undefined') {
+						this.customSelects[formId].destroy();
+						delete this.customSelects[formId];
+					}
+				} else {
+					select.removeEventListener('focus', this.onFocusEvent);
+					select.removeEventListener('blur', this.onBlurEvent);
+				}
+			});
+
+			// Setup textarea inputs.
+			[...textareas].forEach((textarea) => {
+				textarea.removeEventListener('keydown', this.onFocusEvent);
+				textarea.removeEventListener('focus', this.onFocusEvent);
+				textarea.removeEventListener('blur', this.onBlurEvent);
+
+				if (this.isCustom(textarea)) {
+					if (typeof this.customTextareas?.[formId] !== 'undefined') {
+						this.customTextareas[formId].destroy();
+						delete this.customTextareas[formId];
+					}
+				}
+			});
+
+			// Setup file single inputs.
+			[...files].forEach((file) => {
+				if (typeof this.customFiles?.[formId] !== 'undefined') {
+					this.customFiles[formId].destroy();
+					delete this.customFiles[formId];
+				}
+
+				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
+
+				const button = file.parentNode.querySelector('a');
+
+				button.removeEventListener('focus', this.onFocusEvent);
+				button.removeEventListener('blur', this.onBlurEvent);
+			});
+
+			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_EVENTS_CLEAR);
+		});
 	}
 }

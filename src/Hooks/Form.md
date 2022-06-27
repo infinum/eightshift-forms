@@ -39,10 +39,12 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 * **esFormsAfterFormSubmit** - Triggers after the form has done the ajax response but before any logic is triggered.
 * **esFormsAfterFormSubmitSuccessRedirect** - Triggers after the form has done the ajax response with redirect on success action.
 * **esFormsAfterFormSubmitSuccess** - Triggers after the form has done the ajax response with default on success action.
+* **esFormsAfterFormSubmitReset** - Triggers after the form has done and filed values are cleared.
 * **esFormsAfterFormSubmitError** - Triggers after the form has done the ajax response with general error.
 * **esFormsAfterFormSubmitErrorFatal** - Triggers after the form has done the ajax response with fatal error.
 * **esFormsAfterFormSubmitErrorValidation** - Triggers after the form has done the ajax response with validation error.
 * **esFormsAfterFormSubmitEnd** - Triggers after the form has done the ajax response and it is finished with the logic.
+* **esFormsAfterFormEventsClear** - Triggers after the form removes all event listeners.
 * **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed.
 
 ### Code example one form:

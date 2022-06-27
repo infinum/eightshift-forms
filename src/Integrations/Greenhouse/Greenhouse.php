@@ -261,7 +261,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 			$output[] = [
 				'component' => 'input',
-				'inputType' => 'text',
+				'inputType' => 'hidden',
 				'inputId' => 'es-form-url',
 				'inputName' => 'es-form-url',
 				'inputValue' => \esc_url(\site_url(\add_query_arg([$_GET], $wp->request))), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
