@@ -149,11 +149,11 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			'redirectionTimeout' => \apply_filters($redirectionTimeoutFilterName, 300),
 			'hideLoadingStateTimeout' => \apply_filters($hideLoadingStateTimeoutFilterName, 600),
 			'fileCustomRemoveLabel' => \apply_filters($previewRemoveLabelFilterName, \esc_html__('Remove', 'eightshift-forms')),
-			'formDisableScrollToFieldOnError' => !$this->isCheckboxOptionChecked(
+			'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
-			'formDisableScrollToGlobalMessageOnSuccess' => !$this->isCheckboxOptionChecked(
+			'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			),
