@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [1.2.5]
+
+### Fixed
+- logic for scroll to top and scroll to first error.
+- Mailchimp integration merge fields.
+
+### Changed
+- Logic behind the form Js initialization with the option to avoid domReady.
+
+### Added
+- Method to remove all event listeners on demand.
+- New event when all event listeners are removed.
+
 ## [1.2.4]
 
 ### Added
@@ -53,6 +66,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[1.2.5]: https://github.com/infinum/eightshift-forms/compare/1.2.4...1.2.5
 [1.2.4]: https://github.com/infinum/eightshift-forms/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/infinum/eightshift-forms/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/infinum/eightshift-forms/compare/1.2.1...1.2.2
