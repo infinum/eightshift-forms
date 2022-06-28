@@ -153,14 +153,18 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$email = $params['email_address']['value'];
 		$emailHash = \md5(\strtolower($email));
+		$prepareParams = $this->prepareParams($params);
 
 		$body = [
 			'email_address' => $email,
 			'status_if_new' => 'subscribed',
 			'status' => 'subscribed',
-			'merge_fields' => $this->prepareParams($params),
 			'tags' => $this->prepareTags($params),
 		];
+
+		if (!empty($prepareParams)) {
+			$body['merge_fields'] = $prepareParams;
+		}
 
 		$response = \wp_remote_request(
 			"{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}",
