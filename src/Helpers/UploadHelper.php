@@ -53,9 +53,10 @@ trait UploadHelper
 				$originalName = $fileValue['name'][$key];
 				$name = \md5((string) \time()) . '-' . \basename($originalName);
 				$tmpName = $fileValue['tmp_name'][$key];
+				$type = $fileValue['type'][$key];
 
 				// Create final folder location path.
-				$finalFilePath = $folderPath . \DIRECTORY_SEPARATOR . $name;
+				$finalFilePath = $folderPath . $name;
 
 				// Move the file to new location.
 				\move_uploaded_file($tmpName, $finalFilePath);
@@ -65,7 +66,8 @@ trait UploadHelper
 					'index' => $key,
 					'fileName' => $originalName,
 					'name' => $name,
-					'path' => $finalFilePath
+					'path' => $finalFilePath,
+					'type' => $type,
 				];
 			}
 		}

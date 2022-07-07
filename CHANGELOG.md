@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [1.2.5]
+## [1.3.0]
 
 ### Fixed
 - logic for scroll to top and scroll to first error.
@@ -16,6 +16,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 - Method to remove all event listeners on demand.
 - New event when all event listeners are removed.
+- Filter for updating http_request_args.
+- Better internal logging for integrations.
 
 ## [1.2.4]
 
@@ -66,7 +68,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[1.2.5]: https://github.com/infinum/eightshift-forms/compare/1.2.4...1.2.5
+[1.3.0]: https://github.com/infinum/eightshift-forms/compare/1.2.4...1.3.0
 [1.2.4]: https://github.com/infinum/eightshift-forms/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/infinum/eightshift-forms/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/infinum/eightshift-forms/compare/1.2.1...1.2.2

@@ -128,8 +128,10 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		$paramsPrepared = $this->prepareParams($params);
+
 		$body = \array_merge(
-			$this->prepareParams($params),
+			$paramsPrepared,
 			$this->prepareFiles($files)
 		);
 
@@ -142,6 +144,13 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'greenhouse',
+				'type' => 'wp',
+				'body' => $paramsPrepared,
+				'response' => $response,
+			]);
+
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -170,7 +179,8 @@ class GreenhouseClient implements ClientInterface
 
 		Helper::logger([
 			'integration' => 'greenhouse',
-			'body' => $body,
+			'type' => 'service',
+			'body' => $paramsPrepared,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,
 			'output' => $output,

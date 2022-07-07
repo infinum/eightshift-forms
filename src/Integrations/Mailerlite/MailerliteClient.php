@@ -140,6 +140,12 @@ class MailerliteClient implements ClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'mailerlite',
+				'type' => 'wp',
+				'body' => $body,
+				'response' => $response,
+			]);
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -168,6 +174,7 @@ class MailerliteClient implements ClientInterface
 
 		Helper::logger([
 			'integration' => 'mailerlite',
+			'type' => 'service',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

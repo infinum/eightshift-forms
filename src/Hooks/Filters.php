@@ -245,7 +245,10 @@ class Filters
 		],
 		'validation' => [
 			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
-		]
+		],
+		'general' => [
+			'httpRequestArgs' => 'http_request_args',
+		],
 	];
 
 	/**
@@ -361,5 +364,26 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_validation_{$filter}";
+	}
+
+	/**
+	 * Get General filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_general_http_request_args
+	 */
+	public static function getGeneralSettingsFilterName(string $name): string
+	{
+		$filter = self::ALL_PUBLIC['general'][$name] ?? '';
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('general', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_general_{$filter}";
 	}
 }

@@ -93,6 +93,13 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'clearbit',
+				'type' => 'wp',
+				'email' => $email,
+				'mapKeys' => $mapData,
+				'response' => $response,
+			]);
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -115,6 +122,7 @@ class ClearbitClient implements ClearbitClientInterface
 
 			return [
 				'status' => 'success',
+				'type' => 'service',
 				'code' => $code,
 				'message' => 'clearbitSuccess',
 				'email' => $email,

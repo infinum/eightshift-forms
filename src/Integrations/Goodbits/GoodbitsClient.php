@@ -112,6 +112,12 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'goodbits',
+				'type' => 'wp',
+				'body' => $body,
+				'response' => $response,
+			]);
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -141,6 +147,7 @@ class GoodbitsClient implements ClientInterface
 
 		Helper::logger([
 			'integration' => 'goodbits',
+			'type' => 'service',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

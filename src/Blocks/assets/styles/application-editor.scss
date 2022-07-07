@@ -11,3 +11,8 @@
 
 @import '@eightshift/frontend-libs/styles/es-utility-classes.scss';
 @import '@eightshift/frontend-libs/styles/es-component-styles.scss';
+
+// Hack for geo modal for select dropdown to work.
+.es-geolocation-modal {
+	z-index: 1;
+}

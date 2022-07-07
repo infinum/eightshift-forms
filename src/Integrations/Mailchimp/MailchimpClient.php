@@ -176,6 +176,13 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'mailchimp',
+				'type' => 'wp',
+				'body' => $body,
+				'response' => $response,
+			]);
+
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -205,6 +212,7 @@ class MailchimpClient implements MailchimpClientInterface
 
 		Helper::logger([
 			'integration' => 'mailchimp',
+			'type' => 'service',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

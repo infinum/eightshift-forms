@@ -242,6 +242,12 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		if (\is_wp_error($response)) {
+			Helper::logger([
+				'integration' => 'hubspot',
+				'type' => 'wp',
+				'body' => $body,
+				'response' => $response,
+			]);
 			return [
 				'status' => 'error',
 				'code' => 400,
@@ -271,6 +277,7 @@ class HubspotClient implements HubspotClientInterface
 
 		Helper::logger([
 			'integration' => 'hubspot',
+			'type' => 'service',
 			'body' => $body,
 			'response' => $response['response'],
 			'responseBody' => $responseBody,

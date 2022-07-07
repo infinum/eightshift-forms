@@ -227,6 +227,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 					{isModalOpen && (
 						<Modal
+							overlayClassName='es-geolocation-modal'
 							className='es-modal-max-width-l'
 							title={__('Geolocation rules', 'eightshift-form')}
 							shouldCloseOnClickOutside={false}

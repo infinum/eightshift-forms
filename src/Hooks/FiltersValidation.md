@@ -13,14 +13,14 @@ Using this filter, you can force Eightshift Forms to fail every file upload wher
 **Filter example:**
 ```php
 // Force mimetype validation from FS
-add_filter('es_forms_validation_force_mimetype_from_fs', [$this, 'forceMimetypeFs'], 10, 2);
+add_filter('es_forms_validation_force_mimetype_from_fs', [$this, 'forceMimetypeFs']);
 
 /**
  * Force mimetype validation from FS.
  *
  * @return bool
  */
-public function forceMimetypeFs): bool
+public function forceMimetypeFs(): bool
 {
 	return true;
 }
