@@ -35,7 +35,19 @@ function setupMocks() {
 			return $default;
 		}
 
-		return $envValue;
+		if ($envValue === 'bool_true') {
+			return true;
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		try {
+			return json_decode($envValue, false, 512, JSON_THROW_ON_ERROR);
+		} catch (Exception $e) {
+			return $envValue;
+		}
 	});
 
 	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
@@ -114,11 +126,23 @@ function setupMocks() {
 			return $key;
 		}
 
+		if ($envValue === 'bool_true') {
+			return true;
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
 		if ($envValue === 'unset') {
 			return '';
 		}
 
-		return $envValue;
+		try {
+			return json_decode($envValue, false, 512, JSON_THROW_ON_ERROR);
+		} catch (Exception $e) {
+			return $envValue;
+		}
 	});
 
 	Functions\when('get_admin_url')->alias(function ($blog_id = null, string $path = '', string $scheme = 'admin') {
