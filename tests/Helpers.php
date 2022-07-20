@@ -180,3 +180,71 @@ function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);
 }
+
+function mockFormField(string $component, array $props): array {
+	$field = [];
+	$field['component'] = $component;
+	
+	$component = \lcfirst(\str_replace('-', '', \ucwords($component, '-')));
+
+	$field["{$component}Id"] = $props["{$component}Id"] ?? "$component-id";
+	$field["{$component}FieldLabel"] = $props["{$component}FieldLabel"] ?? "$component-field-label";
+	$field["{$component}FieldHelp"] = $props["{$component}FieldHelp"] ?? "$component-field-help";
+	$field["{$component}Value"] = $props["{$component}Value"] ?? ($component === 'input' ? '' : null);
+	$field["{$component}IsRequired"] = $props["{$component}IsRequired"] ?? false;
+	$field["{$component}IsDisabled"] = $props["{$component}IsDisabled"] ?? false;
+
+	if ($props["{$component}Type"] ?? false) {
+		$field["{$component}Type"] = $props["{$component}Type"];
+	}
+	if ($component === 'select') {
+		$field["{$component}Options"] = $props["{$component}Options"] ?? [mockFormField('select-option', [])];
+		return $field;
+	}
+
+	if ($component === 'selectOption') {
+		$field["{$component}Value"] = $props["{$component}Value"] ?? 'select-option-val';
+		$field["{$component}Label"] = $props["{$component}Label"] ?? 'select-option-label';
+		return $field;
+	}
+
+	if ($component === 'checkboxes') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'checkboxes-name';
+		$field["{$component}Content"] = $props["{$component}Content"] ?? [mockFormField('checkbox', [])];
+		$field["{$component}IsRequiredCount"] = $props["{$component}IsRequiredCount"] ?? null;
+		return $field;
+	}
+
+	if ($component === 'checkbox' || $component === 'radio') {
+		$field["{$component}Value"] = $field["{$component}Value"] ?? 'checkbox-value';
+		$field["{$component}IsReadOnly"] = $props["{$component}IsReadOnly"] ?? false;
+		$field["{$component}IsChecked"] = $props["{$component}IsReadOnly"] ?? false;
+		$field["{$component}SingleSubmit"] = $props["{$component}SingleSubmit"] ?? false;
+		return $field;
+	}
+
+	if ($component === 'radios') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'radios-name';
+		$field["{$component}Content"] = $props["{$component}Content"] ?? [mockFormField('radio', [])];
+		return $field;
+	}
+
+	if ($component === 'file') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'file-name';
+		$field["{$component}Accept"] = $props["{$component}Accept"] ?? null;
+		$field["{$component}MinSize"] = $props["{$component}MinSize"] ?? null;
+		$field["{$component}MaxSize"] = $props["{$component}MaxSize"] ?? null;
+		$field["{$component}IsMultiple"] = $props["{$component}IsMultiple"] ?? false;
+		$field["{$component}IsRequired"] = $props["{$component}IsRequired"] ?? false;
+		$field["{$component}Tracking"] = $props["{$component}Tracking"] ?? null;
+		$field["{$component}CustomInfoText"] = $props["{$component}CustomInfoText"] ?? null;
+		$field["{$component}CustomInfoTextUse"] = $props["{$component}CustomInfoTextUse"] ?? true;
+		$field["{$component}CustomInfoButtonText"] = $props["{$component}CustomInfoButtonText"] ?? null;
+		$field["{$component}UseCustom"] = $props["{$component}UseCustom"] ?? false;
+		$field["{$component}Meta"] = $props["{$component}Meta"] ?? null;
+		$field["{$component}Attrs"] = $props["{$component}Attrs"] ?? null;
+		return $field;
+	}
+
+	return $field;
+}
