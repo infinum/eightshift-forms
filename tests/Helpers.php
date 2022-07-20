@@ -159,6 +159,21 @@ function setupMocks() {
 
 		return $url;
 	});
+
+	Functions\when('wp_safe_redirect')->alias(function (string $location, int $status = 302, string $x_redirect_by = 'WordPress') {
+		$call = json_encode([
+			'location' => $location,
+			'status' => $status,
+			'x_redirect_by' => $x_redirect_by,
+		]);
+		
+		putenv("test_wp_safe_redirect_last_call=$call");
+	});
+
+	Functions\when('is_wp_version_compatible')->alias(function ($version) {
+		$envValue = getenv("test_force_unit_test_wp_version") ? getenv("test_force_unit_test_wp_version") : '5.8';
+		return version_compare($envValue, $version, '>=');
+	});
 }
 
 function mock(string $class): MockInterface
