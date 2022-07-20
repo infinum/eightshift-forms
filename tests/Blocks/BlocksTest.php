@@ -42,3 +42,55 @@ test('Blocks service class registers hooks properly on WP >= 5.8', function () {
 	expect(has_filter('es_blocks_string_to_filter', [$this->blocks, 'getStringToValue']))->toBe(10);
 	expect(has_filter('es_blocks_options_checkbox_is_checked_filter', [$this->blocks, 'isCheckboxOptionChecked']))->toBe(10);
 });
+
+test('Block service class registers the old custom category hook on WP < 5.8', function() {
+	putenv('test_force_unit_test_wp_version=5.7');
+	Filters\expectAdded('block_categories', [$this->blocks, 'getCustomCategoryOld']);
+	
+	$this->blocks->register();
+
+	expect(has_filter('block_categories', [$this->blocks, 'getCustomCategoryOld']))->toBe(10);
+	putenv('test_force_unit_test_wp_version');
+});
+
+test('getCustomCategoryOld adds the custom category for Eightshift Forms', function() {
+	expect($this->blocks->getCustomCategoryOld([
+		[
+			'slug' => 'existing-block-category',
+			'title' => 'Existing block category',
+			'icon' => 'admin-settings',
+		],
+		], $this->wpFaker->post()))->toBe([
+			[
+				'slug' => 'existing-block-category',
+				'title' => 'Existing block category',
+				'icon' => 'admin-settings',
+			],
+			[
+				'slug' => 'eightshift-forms',
+				'title' => 'Eightshift Forms',
+				'icon' => 'admin-settings',
+			]
+		]);
+});
+
+test('getCustomCategory adds the custom category for Eightshift Forms', function() {
+	expect($this->blocks->getCustomCategory([
+		[
+			'slug' => 'existing-block-category',
+			'title' => 'Existing block category',
+			'icon' => 'admin-settings',
+		],
+		], Mockery::mock('WP_Block_Editor_Context')))->toBe([
+			[
+				'slug' => 'existing-block-category',
+				'title' => 'Existing block category',
+				'icon' => 'admin-settings',
+			],
+			[
+				'slug' => 'eightshift-forms',
+				'title' => 'Eightshift Forms',
+				'icon' => 'admin-settings',
+			]
+		]);
+});
