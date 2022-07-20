@@ -6,6 +6,7 @@ use Brain\Monkey\Functions;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
+use EightshiftForms\Blocks\Blocks;
 
 /**
  * Helper function that will setup some repeating mocks in every tests.
@@ -166,7 +167,7 @@ function setupMocks() {
 			'status' => $status,
 			'x_redirect_by' => $x_redirect_by,
 		]);
-		
+
 		putenv("test_wp_safe_redirect_last_call=$call");
 	});
 
@@ -247,4 +248,13 @@ function mockFormField(string $component, array $props): array {
 	}
 
 	return $field;
+}
+
+function buildTestBlocks() {
+	(new Blocks())->getBlocksDataFullRaw();
+}
+
+function destroyTestBlocks() {
+	global $esBlocks;
+	$esBlocks = null;
 }
