@@ -38,6 +38,10 @@ class Editor implements ServiceInterface
 	{
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
+		if (\getenv('test_force_request_uri')) {
+			$request = \getenv('test_force_request_uri');
+		}
+
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
 
