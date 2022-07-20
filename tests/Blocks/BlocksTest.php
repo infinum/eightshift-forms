@@ -94,3 +94,24 @@ test('getCustomCategory adds the custom category for Eightshift Forms', function
 			]
 		]);
 });
+
+test('getStringToValue works as expected', function ($string, $return) {
+	expect($this->blocks->getStringToValue($string))->toBe($return);
+})->with([
+	[
+		'ALLUPPERCASE',
+		'alluppercase'
+	],
+	[
+		'SomeAreUpper And There Are Spaces',
+		'someareupper-and-there-are-spaces'
+	],
+	[
+		'SomeAreUpper_And_There_Are_Underscores',
+		'someareupper-and-there-are-underscores'
+	],
+	[
+		'Everything apart from letters, numbers and underscores, such as !$%&)=?*žšć gets removed',
+		'everything-apart-from-letters-numbers-and-underscores-such-as--gets-removed'
+	],
+]);
