@@ -155,20 +155,20 @@ test('setLocationCookie will exit if cookie is set.', function () {
 });
 
 test('setLocationCookie will set cookie.', function () {
-	Functions\when('setcookie')->alias(function ($args) {
-		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_SET={$args}");
-	});
-
+	putenv('test_force_is_admin=bool_false');
 	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)
 		->once()->with(false)->andReturn(true);
 
 	$geo = $this->geolocation->setLocationCookie();
 
-	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
+	$lastSetCookieCall = json_decode(getenv('test_setcookie_last_call'), true);
+	$lastCookieName = $lastSetCookieCall['name'] ?? '';
+	$this->assertSame($lastCookieName, Geolocation::GEOLOCATION_COOKIE);
 	$this->assertNull($geo);
 
 	// Cleanup.
-	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET=');
+	putenv('test_setcookie_last_call');
+	putenv('test_force_is_admin');
 });
 
 //---------------------------------------------------------------------------------//
