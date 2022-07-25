@@ -600,6 +600,11 @@ trait SettingsHelper
 	 */
 	private function sortFields($a, $b): bool
 	{
-		return $a['groupContent'][4]['inputValue'] > $b['groupContent'][4]['inputValue'];
+		/**
+		 * The "Order" field immediately follows the breakpoint configuration, so we can use
+		 * the number of breakpoints to determine the offset. 
+		 */
+		$index = count(Components::getSettingsGlobalVariablesBreakpoints());
+		return $a['groupContent'][$index]['inputValue'] > $b['groupContent'][$index]['inputValue'];
 	}
 }
