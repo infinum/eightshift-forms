@@ -8,6 +8,8 @@ use Mockery;
 use Mockery\MockInterface;
 use EightshiftForms\Blocks\Blocks;
 
+use function Symfony\Component\String\b;
+
 /**
  * Helper function that will setup some repeating mocks in every tests.
  *
@@ -161,6 +163,17 @@ function setupMocks() {
 		return $url;
 	});
 
+	Functions\when('get_rest_url')->alias(function ($blog_id = null, string $path = '/', string $scheme = 'rest') {
+		$prefix = getenv("test_force_rest_url_prefix") ? getenv("test_force_rest_url_prefix") : 'wp-json';
+		$url = "{$prefix}/";
+
+		if ($path && is_string($path)) {
+			$url .= ltrim($path, '/');
+		}
+
+		return ltrim($url, '/');
+	});
+
 	Functions\when('wp_safe_redirect')->alias(function (string $location, int $status = 302, string $x_redirect_by = 'WordPress') {
 		$call = json_encode([
 			'location' => $location,
@@ -169,11 +182,69 @@ function setupMocks() {
 		]);
 
 		putenv("test_wp_safe_redirect_last_call=$call");
+		return;
 	});
 
 	Functions\when('is_wp_version_compatible')->alias(function ($version) {
 		$envValue = getenv("test_force_unit_test_wp_version") ? getenv("test_force_unit_test_wp_version") : '5.8';
 		return version_compare($envValue, $version, '>=');
+	});
+
+	Functions\when('is_admin')->alias(function () {
+		$envValue = getenv("test_force_is_admin");
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return true;
+	});
+
+	Functions\when('get_post_type')->alias(function ($post = '') {
+		$envValue = getenv("test_force_get_post_type");
+		if ($envValue === false) {
+			return 'post';
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return $envValue;
+	});
+
+	Functions\when('get_current_blog_id')->alias(function() {
+		return getenv('test_force_current_blog_id') ? getenv('test_force_current_blog_id') : 1;
+	});
+
+	Functions\when('setcookie')->alias(function(
+		string $name,
+		string $value = "",
+		int $expires_or_options = 0,
+		string $path = "",
+		string $domain = "",
+		bool $secure = false,
+		bool $httponly = false
+	) {
+		$args = json_encode([
+			'name' => $name,
+			'value' => $value,
+			'expires_or_options' => $expires_or_options,
+			'path' => $path,
+			'domain' => $domain,
+			'secure' => $secure,
+			'httponly' => $httponly,
+		]);
+
+		putenv("test_setcookie_last_call={$args}");
+
+		$envValue = getenv('test_force_setcookie_return');
+		
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return true;
 	});
 }
 
