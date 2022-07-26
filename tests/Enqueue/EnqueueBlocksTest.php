@@ -70,20 +70,26 @@ test('Frontend-only block styles can be enqueued', function () {
 
 test('Block editor local styles can be disabled', function () {
 	putenv('test_force_option_es-forms-general-disable-default-enqueue-HR=styles');
+
 	expect($this->enqueueBlocks->enqueueBlockEditorStyleLocal())->toBe(null);
+
 	putenv('test_force_option_es-general-disable-default-enqueue-HR');
 });
 
 test('Block styles can be disabled', function () {
 	putenv('test_force_option_es-forms-general-disable-default-enqueue-HR=styles');
+
 	expect($this->enqueueBlocks->enqueueBlockStyleLocal())->toBe(null);
+
 	putenv('test_force_option_es-general-disable-default-enqueue-HR');
 });
 
 test('Block editor styles are enqueued when not disabled', function () {
 	buildTestBlocks();
+
 	putenv('ES_TEST=true');
 	putenv('test_force_option_es-forms-general-disable-default-enqueue-HR=none');
+
 	Functions\expect('wp_register_style')->once();
 	Functions\expect('wp_enqueue_style')->once()->with('eightshift-forms-block-editor-style');
 	
@@ -91,36 +97,52 @@ test('Block editor styles are enqueued when not disabled', function () {
 	
 	putenv('ES_TEST');
 	putenv('test_force_option_es-forms-general-disable-default-enqueue-HR');
+
 	destroyTestBlocks();
 });
 
 test('Block styles are enqueued when not disabled', function () {
 	buildTestBlocks();
+
 	putenv('ES_TEST=true');
+
 	Functions\expect('wp_register_style')->once();
 	Functions\expect('wp_enqueue_style')->once()->with('eightshift-forms-block-style');
+
 	expect($this->enqueueBlocks->enqueueBlockStyleLocal());
+
 	putenv('ES_TEST');
+
 	destroyTestBlocks();
 });
 
 test('Block frontend scripts are enqueued when not disabled', function () {
 	buildTestBlocks();
+
 	putenv('ES_TEST=true');
+
 	Functions\expect('wp_register_script')->once();
 	Functions\expect('wp_enqueue_script')->once()->with('eightshift-forms-block-frontend-scripts');
 	Functions\expect('wp_localize_script')->atLeast()->once()->andReturn(true);
+
 	expect($this->enqueueBlocks->enqueueBlockFrontendScript());
+
 	putenv('ES_TEST');
+
 	destroyTestBlocks();
 });
 
 test('Block editor option styles are enqueued', function () {
 	buildTestBlocks();
+
 	putenv('ES_TEST=true');
+
 	Functions\expect('wp_register_style')->once();
 	Functions\expect('wp_enqueue_style')->once()->with('eightshift-forms-editor-style');
+
 	expect($this->enqueueBlocks->enqueueBlockEditorOptionsStyles());
+
 	putenv('ES_TEST');
+
 	destroyTestBlocks();
 });

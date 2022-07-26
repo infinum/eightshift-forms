@@ -29,6 +29,7 @@ afterEach(function() {
 test('SettingsCache service class registers hooks properly', function() {
 	Filters\expectAdded('es_forms_settings_sidebar_cache', [$this->settingsCache, 'getSettingsSidebar']);
 	Filters\expectAdded('es_forms_settings_global_cache', [$this->settingsCache, 'getSettingsGlobalData']);
+
 	$this->settingsCache->register();
 });
 

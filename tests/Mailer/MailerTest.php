@@ -34,6 +34,7 @@ test('Mailer calls wp_mail correctly', function ($expected, $formId, $to, $subje
 
 test('getFrom returns correctly when sender email is not configured', function ($expected, $formId, $to, $subject, $template = '', $files = [], $fields = []) {
 	putenv('test_force_post_meta_es-forms-mailer-sender-email-HR=unset');
+
 	expect($this->mailer->sendFormEmail($formId, $to, $subject, $template, $files, $fields))->toBe($expected['return']);
 	expect(getenv('test_wp_mail_last_call'))->toBe($expected['wp_mail_call']);
 })->with([
@@ -49,6 +50,7 @@ test('getFrom returns correctly when sender email is not configured', function (
 test('getFrom returns correctly when sender name is not configured', function ($expected, $formId, $to, $subject, $template = '', $files = [], $fields = []) {
 	putenv('test_force_post_meta_es-forms-mailer-sender-email-HR=sender@example.com');
 	putenv('test_force_post_meta_es-forms-mailer-sender-name-HR=unset');
+
 	expect($this->mailer->sendFormEmail($formId, $to, $subject, $template, $files, $fields))->toBe($expected['return']);
 	expect(getenv('test_wp_mail_last_call'))->toBe($expected['wp_mail_call']);
 })->with([

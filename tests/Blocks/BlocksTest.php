@@ -48,19 +48,23 @@ test('Block service class registers the old custom category hook on WP < 5.8', f
 	Filters\expectAdded('block_categories', [$this->blocks, 'getCustomCategoryOld']);
 	
 	$this->blocks->register();
-
 	expect(has_filter('block_categories', [$this->blocks, 'getCustomCategoryOld']))->toBe(10);
+
 	putenv('test_force_unit_test_wp_version');
 });
 
 test('getCustomCategoryOld adds the custom category for Eightshift Forms', function() {
-	expect($this->blocks->getCustomCategoryOld([
+	expect($this->blocks->getCustomCategoryOld(
 		[
-			'slug' => 'existing-block-category',
-			'title' => 'Existing block category',
-			'icon' => 'admin-settings',
+			[
+				'slug' => 'existing-block-category',
+				'title' => 'Existing block category',
+				'icon' => 'admin-settings',
+			],
 		],
-		], $this->wpFaker->post()))->toBe([
+		$this->wpFaker->post()
+	))->toBe(
+		[
 			[
 				'slug' => 'existing-block-category',
 				'title' => 'Existing block category',
@@ -71,47 +75,54 @@ test('getCustomCategoryOld adds the custom category for Eightshift Forms', funct
 				'title' => 'Eightshift Forms',
 				'icon' => 'admin-settings',
 			]
-		]);
+		]
+	);
 });
 
 test('getCustomCategory adds the custom category for Eightshift Forms', function() {
-	expect($this->blocks->getCustomCategory([
+	expect($this->blocks->getCustomCategory(
 		[
-			'slug' => 'existing-block-category',
-			'title' => 'Existing block category',
-			'icon' => 'admin-settings',
-		],
-		], Mockery::mock('WP_Block_Editor_Context')))->toBe([
 			[
 				'slug' => 'existing-block-category',
 				'title' => 'Existing block category',
 				'icon' => 'admin-settings',
 			],
+		],
+		Mockery::mock('WP_Block_Editor_Context')))->toBe(
 			[
-				'slug' => 'eightshift-forms',
-				'title' => 'Eightshift Forms',
-				'icon' => 'admin-settings',
+				[
+					'slug' => 'existing-block-category',
+					'title' => 'Existing block category',
+					'icon' => 'admin-settings',
+				],
+				[
+					'slug' => 'eightshift-forms',
+					'title' => 'Eightshift Forms',
+					'icon' => 'admin-settings',
+				]
 			]
-		]);
+		);
 });
 
 test('getStringToValue works as expected', function ($string, $return) {
 	expect($this->blocks->getStringToValue($string))->toBe($return);
-})->with([
+})->with(
 	[
-		'ALLUPPERCASE',
-		'alluppercase'
-	],
-	[
-		'SomeAreUpper And There Are Spaces',
-		'someareupper-and-there-are-spaces'
-	],
-	[
-		'SomeAreUpper_And_There_Are_Underscores',
-		'someareupper-and-there-are-underscores'
-	],
-	[
-		'Everything apart from letters, numbers and underscores, such as !$%&)=?*žšć gets removed',
-		'everything-apart-from-letters-numbers-and-underscores-such-as--gets-removed'
-	],
-]);
+		[
+			'ALLUPPERCASE',
+			'alluppercase'
+		],
+		[
+			'SomeAreUpper And There Are Spaces',
+			'someareupper-and-there-are-spaces'
+		],
+		[
+			'SomeAreUpper_And_There_Are_Underscores',
+			'someareupper-and-there-are-underscores'
+		],
+		[
+			'Everything apart from letters, numbers and underscores, such as !$%&)=?*žšć gets removed',
+			'everything-apart-from-letters-numbers-and-underscores-such-as--gets-removed'
+		],
+	]
+);
