@@ -8,8 +8,6 @@ use Mockery;
 use Mockery\MockInterface;
 use EightshiftForms\Blocks\Blocks;
 
-use function Symfony\Component\String\b;
-
 /**
  * Helper function that will setup some repeating mocks in every tests.
  *
