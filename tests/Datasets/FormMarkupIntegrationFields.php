@@ -742,7 +742,7 @@ dataset('form markup for submit fields', [
 	]
 ]);
 
-dataset('formMarkupIntegrationFieldsEditingDisabled', [
+dataset('form markup for integration fields with editing disabled', [
 	[
 		'formtest1', // key
 		'mailchimp', // type
@@ -1005,7 +1005,7 @@ dataset('formMarkupIntegrationFieldsEditingDisabled', [
 	]
 ]);
 
-dataset('formMarkupIntegrationFieldsFormViewDetailsFilter', [
+dataset('form markup for integration fields when formViewDetails is used to override settings', [
 	[
 		'formtest1', // key
 		'mailchimp', // type
@@ -1222,7 +1222,7 @@ dataset('formMarkupIntegrationFieldsFormViewDetailsFilter', [
 	]
 ]);
 
-dataset('formMarkupIntegrationFieldsGreenhouse', [
+dataset('form markup for Greenhouse-specific integration fields', [
 	[
 		'formtest1',
 		'greenhouse',

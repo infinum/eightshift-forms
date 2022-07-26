@@ -166,7 +166,7 @@ test('convertInnerBlocksToArray returns an empty array for unsupported types', f
 
 test('convertInnerBlocksToArray returns a properly sorted array of options for select', function($expected, $markup) {
 	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
-})->with('innerBlocksToArray');
+})->with('inner block markup and expected options');
 
 //---------------------------------------------------------------------------------//
 test('encryptor helper uses openssl_encrypt properly', function () {

@@ -226,7 +226,7 @@ test('getIntegrationFieldsDetails disables editing when a particular filter is u
 	remove_filter(FormsFilters::getBlockFilterName('field', 'styleOptions'), $styleOptionsClosure);
 	remove_filter(FormsFilters::getIntegrationFilterName('mailchimp', 'fieldsSettingsIsEditable'), $fieldSettingsIsEditableClosure);
 	destroyTestBlocks();
-})->with('formMarkupIntegrationFieldsEditingDisabled');
+})->with('form markup for integration fields with editing disabled');
 
 test('getIntegrationFieldsDetails uses the formViewDetails filter properly to override settings', function($key, $type, $formFields, $formId, $additionalLabel, $return) {
 	buildTestBlocks();
@@ -253,7 +253,7 @@ test('getIntegrationFieldsDetails uses the formViewDetails filter properly to ov
 	putenv("test_force_post_meta_es-forms-{$key}-HR");
 	remove_filter(FormsFilters::getIntegrationFilterName('mailchimp', 'fieldsSettings'), $fieldSettingsClosure);
 	destroyTestBlocks();
-})->with('formMarkupIntegrationFieldsFormViewDetailsFilter');
+})->with('form markup for integration fields when formViewDetails is used to override settings');
 
 test('getIntegrationFieldsDetails handles an empty form', function($key, $type, $formFields, $formId, $additionalLabel, $return) {
 	buildTestBlocks();
@@ -305,4 +305,4 @@ test('getIntegrationFieldsDetails handles Greenhouse-specific fields', function(
 	
 	putenv("test_force_post_meta_es-forms-{$key}-HR");
 	destroyTestBlocks();
-})->with('formMarkupIntegrationFieldsGreenhouse');
+})->with('form markup for Greenhouse-specific integration fields');
