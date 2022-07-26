@@ -602,9 +602,10 @@ trait SettingsHelper
 	{
 		/**
 		 * The "Order" field immediately follows the breakpoint configuration, so we can use
-		 * the number of breakpoints to determine the offset. 
+		 * the number of breakpoints to determine the offset.
 		 */
-		$index = count(Components::getSettingsGlobalVariablesBreakpoints());
+
+		$index = \count(Components::getSettingsGlobalVariablesBreakpoints());
 		return $a['groupContent'][$index]['inputValue'] > $b['groupContent'][$index]['inputValue'];
 	}
 }

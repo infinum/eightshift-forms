@@ -58,8 +58,7 @@ class Editor implements ServiceInterface
 
 		if (\in_array($request, $links, true)) {
 			\wp_safe_redirect(\get_admin_url(null, "admin.php?page={$page}"));
-		}
-		else {
+		} else {
 			return;
 		}
 
