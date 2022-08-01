@@ -50,6 +50,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"fieldHidden": {
+			"type": "boolean",
+			"default": false
+		},
 		"fieldHelp": {
 			"type": "string"
 		},

@@ -172,21 +172,28 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$label = $field['label'] ?? '';
 				$type = $field['fieldType'] ?? '';
 				$required = $field['required'] ?? false;
-				$value = $field['default_value'] ?? '';
+				$value = $field['defaultValue'] ?? '';
 				$placeholder = $field['placeholder'] ?? '';
 				$options = $field['options'] ?? '';
 				$validation = $field['validation']['data'] ?? '';
 				$id = $name;
 				$metaData = $field['metaData'] ?? [];
+				$enabled = $field['enabled'] ?? true;
+				$hidden = $field['hidden'] ?? false;
 
 				$validation = \explode(':', $validation);
 				$min = $validation[0] ?? '';
 				$max = $validation[1] ?? '';
 
+				if (!$enabled) {
+					continue;
+				}
+
 				switch ($type) {
 					case 'text':
 						$item = [
 							'component' => 'input',
+							'inputFieldHidden' => $hidden,
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
 							'inputName' => $name,
@@ -214,6 +221,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'number':
 						$item = [
 							'component' => 'input',
+							'inputFieldHidden' => $hidden,
 							'inputName' => $name,
 							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
@@ -240,6 +248,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'textarea':
 						$output[] = [
 							'component' => 'textarea',
+							'textareaFieldHidden' => $hidden,
 							'textareaFieldLabel' => $label,
 							'textareaId' => $id,
 							'textareaName' => $name,
@@ -266,6 +275,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$output[] = [
 							'component' => 'file',
+							'fileFieldHidden' => $hidden,
 							'fileFieldLabel' => $label,
 							'fileId' => $id,
 							'fileName' => $name,
@@ -282,8 +292,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 						break;
 					case 'select':
+						$selectedOption = $field['selectedOptions'][0] ?? '';
+
 						$output[] = [
 							'component' => 'select',
+							'selectFieldHidden' => $hidden,
 							'selectFieldLabel' => $label,
 							'selectId' => $id,
 							'selectName' => $name,
@@ -307,9 +320,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 										],
 									],
 									\array_map(
-										static function ($selectOption) {
+										static function ($selectOption) use ($selectedOption) {
 											return [
 												'component' => 'select-option',
+												'selectOptionIsSelected' => !empty($selectedOption) && $selectOption['value'] === $selectedOption,
 												'selectOptionLabel' => $selectOption['label'],
 												'selectOptionValue' => $selectOption['value'],
 											];
@@ -322,8 +336,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 						break;
 					case 'booleancheckbox':
+						$selectedOption = $field['selectedOptions'][0] ?? false;
+
 						$output[] = [
 							'component' => 'checkboxes',
+							'checkboxesFieldHidden' => $hidden,
 							'checkboxesId' => $id,
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $required,
@@ -332,6 +349,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									'component' => 'checkbox',
 									'checkboxLabel' => $label,
 									'checkboxTracking' => $name,
+									'checkboxIsChecked' => (bool) $selectedOption,
 									'checkboxAttrs' => [
 										'data-object-type-id' => $objectTypeId,
 									],
@@ -341,18 +359,22 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 						break;
 					case 'checkbox':
+						$selectedOption = $field['selectedOptions'] ?? [];
+
 						$output[] = [
 							'component' => 'checkboxes',
+							'checkboxesFieldHidden' => $hidden,
 							'checkboxesId' => $id,
 							'checkboxesName' => $name,
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => \array_map(
-								static function ($checkbox) use ($name, $objectTypeId) {
+								static function ($checkbox) use ($name, $objectTypeId, $selectedOption) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
 										'checkboxValue' => $checkbox['value'],
+										'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
 										'checkboxTracking' => $name,
 										'checkboxAttrs' => [
 											'data-object-type-id' => $objectTypeId,
@@ -367,6 +389,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'radio':
 						$output[] = [
 							'component' => 'radios',
+							'radiosFieldHidden' => $hidden,
 							'radiosId' => $id,
 							'radiosName' => $name,
 							'radiosFieldLabel' => $label,
@@ -391,6 +414,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'consent':
 						$output[] = [
 							'component' => 'checkboxes',
+							'checkboxesFieldHidden' => $hidden,
 							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
 							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
 							'checkboxesId' => $id,
