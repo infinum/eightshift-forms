@@ -81,12 +81,12 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]);
 		}
 
-		// Format body parameters to a key/value array
+		// Format body parameters to a key/value array.
 		foreach ($params as $param) {
 			$body[$param['name']] = $param['value'];
 		}
 
-		// Create a custom form action request
+		// Create a custom form action request.
 		$customResponse = \wp_remote_request(
 			$formAction,
 			[
