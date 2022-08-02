@@ -281,6 +281,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	{
 		foreach ($params as $key => $value) {
 			if ($key === 'es-form-type') {
+				// Allow action parameter for forms with custom actions.
+				if ($value['value'] !== 'custom') {
+					unset($params['action']);
+				}
+
 				unset($params['es-form-type']);
 			}
 
