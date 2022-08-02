@@ -3,6 +3,11 @@
 	order: var(--field-order);
 	border: none; // Because of fieldset.
 
+	&--hidden {
+		display: none;
+		user-select: none;
+	}
+
 	&__label {
 		margin-bottom: 10px;
 		display: block;

@@ -758,7 +758,7 @@ export class Form {
 
 	// Setup Regular field.
 	setupInputField = (input) => {
-		this.preFillOnInit(input);
+		this.preFillOnInit(input, input.type);
 
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
@@ -769,8 +769,6 @@ export class Form {
 	setupSelectField = (select, formId) => {
 		const option = select.querySelector('option');
 
-		this.preFillOnInit(option);
-
 		if (this.isCustom(select)) {
 			import('choices.js').then((Choices) => {
 				const choices = new Choices.default(select, {
@@ -780,12 +778,16 @@ export class Form {
 					allowHTML: true,
 				});
 
+				this.preFillOnInit(choices, 'select-custom');
+
 				this.customSelects[formId].push(choices);
 
 				select.closest('.choices').addEventListener('focus', this.onFocusEvent);
 				select.closest('.choices').addEventListener('blur', this.onBlurEvent);
 			});
 		} else {
+			this.preFillOnInit(option, 'select');
+
 			select.addEventListener('focus', this.onFocusEvent);
 			select.addEventListener('blur', this.onBlurEvent);
 		}
@@ -793,7 +795,7 @@ export class Form {
 
 	// Setup Textarea field.
 	setupTextareaField = (textarea, formId) => {
-		this.preFillOnInit(textarea);
+		this.preFillOnInit(textarea, 'textarea');
 
 		textarea.addEventListener('keydown', this.onFocusEvent);
 		textarea.addEventListener('focus', this.onFocusEvent);
@@ -879,16 +881,28 @@ export class Form {
 		this.customFiles[formId][index].hiddenFileInput.click();
 	}
 
-	// // Prefill inputs active/filled on init.
-	preFillOnInit = (input) => {
-		if (input.type === 'checkbox' || input.type === 'radio') {
-			if (input.checked) {
-				input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+	// Prefill inputs active/filled on init.
+	preFillOnInit = (input, type) => {
+		switch (type) {
+			case 'checkbox':
+			case 'radio':
+				if (input.checked) {
+					input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+				}
+				break;
+			case 'select-custom': {
+				const customSelect = input.config.choices;
+
+				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
+					input.passedElement.element.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+				}
+				break;
 			}
-		} else {
-			if (input.value && input.value.length) {
-				input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
-			}
+			default:
+				if (input.value && input.value.length) {
+					input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+				}
+				break;
 		}
 	}
 

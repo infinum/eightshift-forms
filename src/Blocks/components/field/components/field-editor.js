@@ -43,11 +43,13 @@ export const FieldEditor = (attributes) => {
 	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
+	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
 		selector(componentClass, componentClass, '', selectorClass),
 		selector(additionalFieldClass, additionalFieldClass),
+		selector(fieldHidden, componentClass, '', 'hidden'),
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
 	]);
 

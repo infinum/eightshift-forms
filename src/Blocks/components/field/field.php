@@ -49,6 +49,7 @@ $fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldUseTooltip = Components::checkAttr('fieldUseTooltip', $attributes, $manifest);
 $fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
+$fieldHidden = Components::checkAttr('fieldHidden', $attributes, $manifest);
 $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
@@ -59,6 +60,7 @@ $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
+	Components::selector($fieldHidden, $componentClass, '', 'hidden'),
 	Components::selector($blockJsClass, $blockJsClass),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
