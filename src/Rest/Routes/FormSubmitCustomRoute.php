@@ -94,11 +94,11 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 					'Content-Type' => 'application/x-www-form-urlencoded',
 				],
 				'method' => 'POST',
-				'body' => http_build_query($body),
+				'body' => \http_build_query($body),
 			]
 		);
 
-		$customResponseCode = wp_remote_retrieve_response_code($customResponse);
+		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
 		if ($customResponseCode > 400) {
@@ -115,6 +115,5 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			'code' => $customResponseCode,
 			'message' => $this->labels->getLabel('customSuccess', $formId),
 		]);
-
 	}
 }
