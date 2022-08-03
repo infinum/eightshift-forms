@@ -31,6 +31,13 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	use SettingsHelper;
 
 	/**
+	 * Instance variable of tracking data.
+	 *
+	 * @var TrackingInterface
+	 */
+	protected TrackingInterface $tracking;
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
@@ -180,7 +187,10 @@ class EnqueueTheme extends AbstractEnqueueTheme
 		$storage = $this->tracking->getTrackingToLocalStorage();
 
 		if ($storage) {
-			$output['storage'] = $storage;
+			$output['storage'] = \wp_json_encode([
+				'data' => $storage,
+				'expiration' => $this->tracking->getTrackingExpiration(),
+			]);
 		}
 
 		return [

@@ -1039,30 +1039,50 @@ export class Form {
 	}
 
 	setLocalStorage() {
+		// If storage is not set in the backend bailout.
+		// Backend provides the ability to limit what tags are allowed to store in local storage.
 		if (this.storage === '') {
 			return;
 		}
 
-		let newStorage = JSON.parse(this.storage);
+		const storage = JSON.parse(this.storage);
+
+		const storageData = storage?.data;
+		const storageExpiration = storage?.expiration ?? '30';
+
+		// Missing data from backend, bailout.
+		if (!storageData) {
+			return;
+		}
+
+		// Get storage from backend this is considered new by the page request.
+		let newStorage = JSON.parse(storageData);
 		newStorage = {
 			...newStorage,
 			timestamp: Date.now(),
 		};
+
+		// Store in a new variable for later usage.
 		const newStorageFinal = {...newStorage};
 		delete newStorageFinal.timestamp;
 
+		// current storage is got from local storage.
 		const currentStorage = JSON.parse(this.getLocalStorage());
+
+		// Store in a new variable for later usage.
 		const currentStorageFinal = {...currentStorage};
 		delete currentStorageFinal.timestamp;
 
-		// Update expiration date by number of days from the current
-		let expirationDate = new Date(currentStorage.timestamp);
-		expirationDate.setDate(expirationDate.getDate() + 1);
+		// If storage exists check if it is expired.
+		if (this.getLocalStorage() !== null) {
+			// Update expiration date by number of days from the current
+			let expirationDate = new Date(currentStorage.timestamp);
+			expirationDate.setDate(expirationDate.getDate() + parseInt(storageExpiration, 10));
 
-		// Remove expired storage if it exists.
-		if (this.getLocalStorage() !== null && (expirationDate.getTime() < currentStorage.timestamp)) {
-			console.log('remove, old');
-			localStorage.removeItem(this.STORAGE_NAME);
+			// Remove expired storage if it exists.
+			if (expirationDate.getTime() < currentStorage.timestamp) {
+				localStorage.removeItem(this.STORAGE_NAME);
+			}
 		}
 
 		// Create new storage if this is the first visit or it was expired.
@@ -1071,7 +1091,6 @@ export class Form {
 				this.STORAGE_NAME,
 				JSON.stringify(newStorage)
 			);
-			console.log('empty inital');
 			return;
 		}
 
@@ -1081,22 +1100,16 @@ export class Form {
 			...newStorageFinal,
 		};
 
-		console.log('output', output);
-
 		// If output is empty something was wrong here and just bailout.
 		if (Object.keys(output).length === 0) {
-			console.log('empty output');
 			return;
 		}
 
 		// If nothing has changed bailout.
 		if (JSON.stringify(currentStorageFinal) === JSON.stringify(output)) {
-			console.log('identical output');
 			return;
 		}
 
-		console.log(newStorage);
-		
 		// Add timestamp to the new output.
 		const finalOutput = {
 			...output,
@@ -1105,7 +1118,6 @@ export class Form {
 
 		// Update localStorage with the new item.
 		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-		console.log('output-final', finalOutput);
 	}
 
 	getLocalStorage() {

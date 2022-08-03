@@ -140,7 +140,13 @@ function initAll(manual) {
 			},
 			removeEvents: () => {
 				form.removeEvents();
-			}
+			},
+			setLocalStorage: () => {
+				form.setLocalStorage();
+			},
+			getLocalStorage: () => {
+				form.getLocalStorage();
+			},
 		};
 	});
 }

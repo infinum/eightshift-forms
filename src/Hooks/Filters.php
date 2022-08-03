@@ -190,6 +190,7 @@ class Filters
 		],
 		'tracking' => [
 			'allowedTags' => 'allowed_tags',
+			'expiration' => 'expiration',
 		],
 		'geolocation' => [
 			'disable' => 'disable',

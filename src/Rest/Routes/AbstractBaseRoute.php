@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftForms\Validation\Validator; // phpcs:ignore
@@ -312,7 +311,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return $params;
 		}
 
-		$storage = json_decode($storage, true);
+		$storage = \json_decode($storage, true);
 
 		$params['es-form-storage']['value'] = $storage;
 
