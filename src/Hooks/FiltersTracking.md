@@ -73,3 +73,25 @@ public function getIntegrationHubspotLocalStorageMap(array $params, array $stora
 	return $params;
 }
 ```
+
+## Change amount of days localStorage is storing the data.
+We store localStorage for 30 days by default, with this filter you can change this value.
+
+**Filter name:**
+`es_forms_tracking_expiration`
+
+**Filter example:**
+```php
+// Get tracking expiration days.
+\add_filter('es_forms_tracking_expiration', [$this, 'getTrackingExpiration']);
+
+/**
+ * Get tracking expiration days.
+ *
+ * @return string
+ */
+public function getTrackingExpiration(): string
+{
+	return '15';
+}
+```
