@@ -51,7 +51,8 @@ class Labels implements LabelsInterface
 		$output = \array_merge(
 			$this->getGenericLabels(),
 			$this->getValidationLabels(),
-			$this->getMailerLabels()
+			$this->getMailerLabels(),
+			$this->getCutomLabels()
 		);
 
 		// Google reCaptcha.
@@ -127,6 +128,20 @@ class Labels implements LabelsInterface
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s kB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s kB.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Custom action
+	 *
+	 * @return array<string, string>
+	 */
+	private function getCutomLabels(): array
+	{
+		return [
+			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
+			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
+			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
 		];
 	}
 

@@ -16,6 +16,7 @@ export const FormOptions = (attributes) => {
 	} = attributes;
 
 	const formName = checkAttr('formName', attributes, manifest);
+	const formAction = checkAttr('formAction', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 
 	return (
@@ -28,6 +29,13 @@ export const FormOptions = (attributes) => {
 			/>
 
 			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+			<TextControl
+				label={<IconLabel icon={icons.fieldName} label={__('Form Action', 'eightshift-forms')} />}
+				value={formAction}
+				help={__('Custom form action that will process form data. Setting this value will redirect user to the provided URL on succesfull form submit.' ,'eightshift-forms')}
+				onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
+			/>
 
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Unique identifier', 'eightshift-forms')} />}

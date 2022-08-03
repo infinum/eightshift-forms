@@ -14,11 +14,14 @@ $manifest = Components::getManifest(__DIR__);
 $blockClass = $attributes['blockClass'] ?? '';
 
 $formFormPostId = Components::checkAttr('formFormPostId', $attributes, $manifest);
+$formFormAction = Components::checkAttr('formFormAction', $attributes, $manifest);
 
 // Check if mailer data is set and valid.
 $formClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 ]);
+
+$customFormType = !empty($formFormAction) ? ['formType' => 'custom'] : [];
 
 ?>
 
@@ -28,13 +31,14 @@ $formClass = Components::classnames([
 	echo Components::render(
 		'form',
 		Components::props('form', $attributes, array_merge(
-			[
-				'formContent' => $innerBlockContent,
-			],
 			apply_filters(
 				Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
 				$formFormPostId
-			)
+			),
+			[
+				'formContent' => $innerBlockContent,
+			],
+			$customFormType
 		))
 	);
 	?>

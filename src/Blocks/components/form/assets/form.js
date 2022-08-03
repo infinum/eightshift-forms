@@ -127,13 +127,13 @@ export class Form {
 			[...inputs].forEach((input) => {
 				this.setupInputField(input);
 			});
-	
+
 			// Setup select inputs.
 			this.customSelects[formId] = [];
 			[...selects].forEach((select) => {
 				this.setupSelectField(select, formId);
 			});
-	
+
 			// Setup textarea inputs.
 			this.customTextareas[formId] = [];
 			[...textareas].forEach((textarea) => {
@@ -227,7 +227,6 @@ export class Form {
 
 	// Handle form submit and all logic.
 	formSubmit = (element, singleSubmit = false) => {
-
 		// Dispatch event.
 		this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_FORM_SUBMIT);
 
@@ -382,7 +381,7 @@ export class Form {
 						if (disabled) {
 							continue;
 						}
-		
+
 						groupInnerItems[id] = value;
 					}
 
@@ -401,6 +400,7 @@ export class Form {
 		`);
 
 		const formType = element.getAttribute(this.DATA_ATTR_FORM_TYPE);
+		const formAction = element.getAttribute('action');
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -481,6 +481,12 @@ export class Form {
 		// Add form type field.
 		formData.append('es-form-type', JSON.stringify({
 			value: formType,
+			type: 'hidden',
+		}));
+
+		// Add form action field.
+		formData.append('action', JSON.stringify({
+			value: formAction,
 			type: 'hidden',
 		}));
 

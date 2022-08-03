@@ -239,6 +239,30 @@ test('getSettingsGlobalData returns expected values', function() {
 			'inputFieldLabel' => 'MailerErrorEmailConfirmationSend',
 			'inputPlaceholder' => 'Confirmation e-mail was not sent due to unknown issue. Please try again.',
 			'inputValue' => 'es-forms-mailerErrorEmailConfirmationSend-HR',
+		],
+		[
+			'component' => 'input',
+			'inputName' => 'es-forms-customNoAction-HR',
+			'inputId' => 'es-forms-customNoAction-HR',
+			'inputFieldLabel' => 'CustomNoAction',
+			'inputPlaceholder' => 'There was an issue with form action. Check the form settings.',
+			'inputValue' => 'es-forms-customNoAction-HR',
+		],
+		[
+			'component' => 'input',
+			'inputName' => 'es-forms-customError-HR',
+			'inputId' => 'es-forms-customError-HR',
+			'inputFieldLabel' => 'CustomError',
+			'inputPlaceholder' => 'There was an error with your form submission.',
+			'inputValue' => 'es-forms-customError-HR',
+		],
+		[
+			'component' => 'input',
+			'inputName' => 'es-forms-customSuccess-HR',
+			'inputId' => 'es-forms-customSuccess-HR',
+			'inputFieldLabel' => 'CustomSuccess',
+			'inputPlaceholder' => 'Form was successfuly submitted.',
+			'inputValue' => 'es-forms-customSuccess-HR',
 		]
 	];
 	expect($this->validationSettings->getSettingsGlobalData())->toBe($expected);
