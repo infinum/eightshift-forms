@@ -15,6 +15,7 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Tracking\TrackingInterface;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
@@ -33,10 +34,12 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
+	 * @param TrackingInterface $tracking Inject tracking which holds data about for storing to localstorage.
 	 */
-	public function __construct(ManifestInterface $manifest)
+	public function __construct(ManifestInterface $manifest, TrackingInterface $tracking)
 	{
 		$this->manifest = $manifest;
+		$this->tracking = $tracking;
 	}
 
 	/**
@@ -163,6 +166,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			),
 			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'captcha' => '',
+			'storage' => '',
 		];
 
 		// Check if Captcha data is set and valid.
@@ -170,6 +174,13 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		if ($isCaptchaSettingsGlobalValid) {
 			$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		}
+
+		// Localstorage data encrypted.
+		$storage = $this->tracking->getTrackingToLocalStorage();
+
+		if ($storage) {
+			$output['storage'] = $storage;
 		}
 
 		return [

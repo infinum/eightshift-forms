@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftForms\Validation\Validator; // phpcs:ignore
@@ -288,6 +289,32 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				unset($params['es-form-post-id']);
 			}
 		}
+
+		return $params;
+	}
+
+	/**
+	 * Extract storage parameters from params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function extractStorageParams(array $params): array
+	{
+		if (!isset($params['es-form-storage'])) {
+			return $params;
+		}
+
+		$storage = $params['es-form-storage']['value'] ?? [];
+
+		if (!$storage) {
+			return $params;
+		}
+
+		$storage = json_decode($storage, true);
+
+		$params['es-form-storage']['value'] = $storage;
 
 		return $params;
 	}

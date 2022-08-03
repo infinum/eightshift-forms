@@ -65,6 +65,9 @@ export class Form {
 		this.CLASS_LOADING = FORM_SELECTORS.CLASS_LOADING;
 		this.CLASS_HAS_ERROR = FORM_SELECTORS.CLASS_HAS_ERROR;
 
+		// LocalStorage
+		this.STORAGE_NAME = 'es-storage';
+
 		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
 		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
@@ -74,6 +77,7 @@ export class Form {
 		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 		this.captcha = options.captcha ?? '';
+		this.storage = options.storage ?? '';
 
 		// Internal state.
 		this.files = {};
@@ -146,6 +150,9 @@ export class Form {
 				this.setupFileField(file, formId, index);
 			});
 		});
+
+		// Set localStorage data from global variable.
+		this.setLocalStorage();
 	}
 
 	// Handle form submit and all logic.
@@ -508,6 +515,15 @@ export class Form {
 				type: 'hidden',
 			}));
 		}
+
+		// Set localStorage to hidden field.
+	 const storage = this.getLocalStorage();
+	 if (storage) {
+		formData.append('es-form-storage', JSON.stringify({
+			value: storage,
+			type: 'hidden',
+		}));
+	 }
 
 		return formData;
 	}
@@ -876,8 +892,6 @@ export class Form {
 		const index = event.currentTarget.getAttribute('dropzone-index');
 		const formId = event.currentTarget.getAttribute('dropzone-form-id');
 
-		console.log(formId);
-
 		this.customFiles[formId][index].hiddenFileInput.click();
 	}
 
@@ -1022,5 +1036,79 @@ export class Form {
 
 			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_EVENTS_CLEAR);
 		});
+	}
+
+	setLocalStorage() {
+		if (this.storage === '') {
+			return;
+		}
+
+		let newStorage = JSON.parse(this.storage);
+		newStorage = {
+			...newStorage,
+			timestamp: Date.now(),
+		};
+		const newStorageFinal = {...newStorage};
+		delete newStorageFinal.timestamp;
+
+		const currentStorage = JSON.parse(this.getLocalStorage());
+		const currentStorageFinal = {...currentStorage};
+		delete currentStorageFinal.timestamp;
+
+		// Update expiration date by number of days from the current
+		let expirationDate = new Date(currentStorage.timestamp);
+		expirationDate.setDate(expirationDate.getDate() + 1);
+
+		// Remove expired storage if it exists.
+		if (this.getLocalStorage() !== null && (expirationDate.getTime() < currentStorage.timestamp)) {
+			console.log('remove, old');
+			localStorage.removeItem(this.STORAGE_NAME);
+		}
+
+		// Create new storage if this is the first visit or it was expired.
+		if (this.getLocalStorage() === null) {
+			localStorage.setItem(
+				this.STORAGE_NAME,
+				JSON.stringify(newStorage)
+			);
+			console.log('empty inital');
+			return;
+		}
+
+		// Prepare new output.
+		const output = {
+			...currentStorageFinal,
+			...newStorageFinal,
+		};
+
+		console.log('output', output);
+
+		// If output is empty something was wrong here and just bailout.
+		if (Object.keys(output).length === 0) {
+			console.log('empty output');
+			return;
+		}
+
+		// If nothing has changed bailout.
+		if (JSON.stringify(currentStorageFinal) === JSON.stringify(output)) {
+			console.log('identical output');
+			return;
+		}
+
+		console.log(newStorage);
+		
+		// Add timestamp to the new output.
+		const finalOutput = {
+			...output,
+			timestamp: newStorage.timestamp,
+		};
+
+		// Update localStorage with the new item.
+		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
+		console.log('output-final', finalOutput);
+	}
+
+	getLocalStorage() {
+		return localStorage.getItem(this.STORAGE_NAME);
 	}
 }
