@@ -38,7 +38,7 @@ function initAll(manual) {
 			formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 			fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
 			captcha: esFormsLocalization.captcha,
-			storage: esFormsLocalization.storage,
+			storageConfig: esFormsLocalization.storageConfig,
 		});
 
 		// Bailout if form is loaded but you want to init form again.
@@ -59,7 +59,7 @@ function initAll(manual) {
 			customSelects: form.customSelects,
 			customFiles: form.customFiles,
 			customTextareas: form.customTextareas,
-			storage: form.storage,
+			storageConfig: form.storageConfig,
 			init: () => {
 				form.init();
 			},

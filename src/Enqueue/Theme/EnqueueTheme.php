@@ -173,7 +173,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			),
 			'formResetOnSuccess' => !Variables::isDevelopMode(),
 			'captcha' => '',
-			'storage' => '',
+			'storageConfig' => '',
 		];
 
 		// Check if Captcha data is set and valid.
@@ -183,12 +183,12 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
 		}
 
-		// Localstorage data encrypted.
-		$storage = $this->tracking->getTrackingToLocalStorage();
+		// Localstorage allowed tags.
+		$allowedTrackingTags = $this->tracking->getAllowedTags();
 
-		if ($storage) {
-			$output['storage'] = \wp_json_encode([
-				'data' => $storage,
+		if ($allowedTrackingTags) {
+			$output['storageConfig'] = \wp_json_encode([
+				'allowed' => $allowedTrackingTags,
 				'expiration' => $this->tracking->getTrackingExpiration(),
 			]);
 		}

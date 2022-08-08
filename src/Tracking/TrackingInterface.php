@@ -23,9 +23,9 @@ interface TrackingInterface
 	public function getTrackingExpiration(): string;
 
 	/**
-	 * Return encripted data from get url param.
+	 * Return allowed tags to store in local storage.
 	 *
-	 * @return string
+	 * @return array<string>
 	 */
-	public function getTrackingToLocalStorage(): string;
+	public function getAllowedTags(): array;
 }
