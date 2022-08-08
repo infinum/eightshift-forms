@@ -693,7 +693,11 @@ class HubspotClient implements HubspotClientInterface
 		unset($params['es-form-hubspot-page-name']);
 		unset($params['es-form-hubspot-page-url']);
 
-		foreach ($params as $param) {
+		foreach ($params as $key => $param) {
+			if ($key === 'es-form-storage') {
+				continue;
+			}
+
 			$type = $param['type'] ?? '';
 			$value = $param['value'] ?? '';
 
@@ -718,6 +722,11 @@ class HubspotClient implements HubspotClientInterface
 				'value' => $value,
 				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];
+		}
+
+		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
+		if (isset($params['es-form-storage']['value']) && \has_filter($filterName)) {
+			return \apply_filters($filterName, $output, $params['es-form-storage']['value']) ?? [];
 		}
 
 		return $output;

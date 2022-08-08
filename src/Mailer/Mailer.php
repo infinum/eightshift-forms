@@ -168,6 +168,10 @@ class Mailer implements MailerInterface
 			];
 		}
 
+		if (isset($fields['es-form-storage'])) {
+			unset($fields['es-form-storage']);
+		}
+
 		return $output;
 	}
 

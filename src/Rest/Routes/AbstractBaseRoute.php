@@ -296,4 +296,30 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		return $params;
 	}
+
+	/**
+	 * Extract storage parameters from params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function extractStorageParams(array $params): array
+	{
+		if (!isset($params['es-form-storage'])) {
+			return $params;
+		}
+
+		$storage = $params['es-form-storage']['value'] ?? [];
+
+		if (!$storage) {
+			return $params;
+		}
+
+		$storage = \json_decode($storage, true);
+
+		$params['es-form-storage']['value'] = $storage;
+
+		return $params;
+	}
 }

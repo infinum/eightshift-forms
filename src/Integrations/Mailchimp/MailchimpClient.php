@@ -362,8 +362,13 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = [];
 
-		unset($params['email_address']);
-		unset($params[Mailchimp::FIELD_MAILCHIMP_TAGS_KEY]);
+		if (isset($params['email_address'])) {
+			unset($params['email_address']);
+		}
+
+		if (isset($params[Mailchimp::FIELD_MAILCHIMP_TAGS_KEY])) {
+			unset($params[Mailchimp::FIELD_MAILCHIMP_TAGS_KEY]);
+		}
 
 		foreach ($params as $key => $param) {
 			$value = $param['value'] ?? '';
@@ -386,6 +391,11 @@ class MailchimpClient implements MailchimpClientInterface
 					break;
 			}
 		}
+
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
+		}
+
 
 		return $output;
 	}
