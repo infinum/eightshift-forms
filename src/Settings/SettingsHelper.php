@@ -343,7 +343,7 @@ trait SettingsHelper
 				'selectValue' => $toggleValue,
 				'selectIsDisabled' => $toggleDisabled || $disabledEdit,
 				'selectFieldUseTooltip' => true,
-				'selectFieldTooltipContent' => \__('Define if field is going to be default visible or hidden.', 'eightshift-forms'),
+				'selectFieldTooltipContent' => \__('Define if field is going to be used or not by default.', 'eightshift-forms'),
 				'selectOptions' => [
 					[
 						'component' => 'select-option',
