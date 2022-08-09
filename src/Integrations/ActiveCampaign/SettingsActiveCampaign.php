@@ -15,7 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -84,7 +84,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ClientInterface
+	 * @var ActiveCampaignClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -98,11 +98,11 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param MapperInterface $activeCampaign Inject ActiveCampaign which holds ActiveCampaign form data.
 	 */
 	public function __construct(
-		ClientInterface $activeCampaignClient,
+		ActiveCampaignClientInterface $activeCampaignClient,
 		MapperInterface $activeCampaign
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
@@ -198,8 +198,8 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 		}
 
 		$items = $this->activeCampaignClient->getItems(false);
-		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
-		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
+		$lastUpdatedTime = $items[ActiveCampaignClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ActiveCampaignClientInterface::TRANSIENT_STORED_TIME]);
 
 		if (!$items) {
 			return [

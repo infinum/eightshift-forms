@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -37,7 +37,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ClientInterface
+	 * @var ActiveCampaignClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -46,12 +46,12 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $activeCampaignClient
+		ActiveCampaignClientInterface $activeCampaignClient
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
@@ -98,6 +98,21 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			[],
 			$formId
 		);
+
+		// If form has action to save tags.
+		$tags = $params['actionTag']['value'] ?? '';
+		if ($response['code'] === 200 && $tags || !empty($response['contactId'])) {
+			$tags = explode(', ', $tags);
+
+			foreach ($tags as $tag) {
+				$responseTag = $this->activeCampaignClient->postTag(
+					$tag,
+					$response['contactId']
+				);
+
+				error_log( print_r( ( $responseTag ), true ) );
+			}
+		}
 
 		// Finish.
 		return \rest_ensure_response([

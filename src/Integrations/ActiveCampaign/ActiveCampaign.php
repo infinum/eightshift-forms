@@ -11,13 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -60,7 +58,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ClientInterface
+	 * @var ActiveCampaignClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -74,11 +72,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		ClientInterface $activeCampaignClient,
+		ActiveCampaignClientInterface $activeCampaignClient,
 		ValidatorInterface $validator
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
@@ -165,10 +163,13 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			return $output;
 		}
 
-		error_log( print_r( ( $data ), true ) );
-		
+		$fields = $data['fields'] ?? [];
 
-		foreach ($data as $field) {
+		if (!$fields) {
+			return $output;
+		}
+
+		foreach ($fields as $field) {
 			if (empty($field)) {
 				continue;
 			}
@@ -178,7 +179,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			$label = $field['label'] ?? '';
 			$header = $field['header'] ?? '';
 			$required = $field['isRequired'] ?? false;
-			$placeholder = $field['default_text'] ?? '';
 			$options = $field['options'] ?? [];
 			$id = $field['id'] ?? '';
 
@@ -200,7 +200,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => 'firstName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -213,7 +212,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => 'lastName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -226,7 +224,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => 'fullName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -239,7 +236,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => true,
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -251,7 +247,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => $id,
 						'inputType' => 'text',
 						'inputFieldHidden' => 'hidden',
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -287,7 +282,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => $id,
 						'inputType' => 'tel',
 						'inputIsRequired' => $required,
-						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -375,6 +369,29 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			}
 		}
 
+
+		$actions = $data['actions'] ?? [];
+
+		foreach ($actions as $key => $value) {
+			$action = $value['action'] ? \ucfirst($value['action']) : '';
+			$actionValue = $value['value'] ?? '';
+
+			if (!$action || !$actionValue) {
+				continue;
+			}
+
+			$output[] = [
+				'component' => 'input',
+				'inputFieldLabel' => $action,
+				'inputName' => 'action',
+				'inputId' => "action{$action}[$key]",
+				'inputType' => 'text',
+				'inputValue' => $actionValue,
+				// 'inputFieldHidden' => 'hidden',
+				'blockSsr' => $ssr,
+			];
+		}
+
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
@@ -384,9 +401,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			'submitServerSideRender' => $ssr,
 			'blockSsr' => $ssr,
 		];
-
-		// error_log( print_r( ( $output ), true ) );
-		
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data');
