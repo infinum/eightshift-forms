@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
@@ -24,6 +24,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Transient cache name for items.
@@ -113,67 +118,75 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$body = [
+		// Map body.
+		$requestBody = [
 			'contact' => $this->prepareParams($params),
 		];
 
+		// Make an API request.
 		$response = \wp_remote_request(
 			"{$this->getBaseUrl()}contacts",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'POST',
-				'body' => \wp_json_encode($body),
+				'body' => \wp_json_encode($requestBody),
 			]
 		);
 
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// Bailout if wp error.
 		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'activeCampaign',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
-
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+			return $this->getApiWpErrorOutput(
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				$details,
+				$requestBody,
+				$response->get_error_message()
+			);
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-
-		if ($code === 200 || $code === 201) {
-			return [
-				'status' => 'success',
-				'code' => 200,
-				'contactId' => $responseBody['fieldValues'][0]['contact'],
-				'message' => 'activeCampaignSuccess',
-			];
+		switch ($code) {
+			case 200:
+			case 201:
+				return $this->getApiSuccessOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					[
+						'contactId' => $body['fieldValues'][0]['contact'],
+					]
+				);
+			case 403:
+				return $this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg([
+						[
+							'code' => 'activeCampaignForbiden',
+						]
+					]),
+				);
+			case 500:
+				return $this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg([
+						[
+							'code' => 'activeCampaign500',
+						]
+					]),
+				);
+			default:
+				return $this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg($body['errors'] ?? []),
+				);
 		}
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['detail'] ?? '';
-		$responseErrors = $responseBody['errors'] ?? [];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
-		];
-
-		Helper::logger([
-			'integration' => 'activeCampaign',
-			'type' => 'service',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
 	}
 
 	/**
@@ -186,52 +199,121 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	public function postTag(string $tag, string $contactId): array
 	{
-		$tagId = $this->getExistingTagId($tag) ?? '';
+		// Check if tag exist using api.
+		$tagId = $this->getExistingTagId($tag);
 
-		error_log( print_r( ( $tagId ), true ) );
+		// If tag is missing create new using api.
 		if (!$tagId) {
-			$tagId = $this->createNewTag($tag) ?? '';
-			
+			$tagId = $this->createNewTag($tag);
 		}
 
-		$body = [
+		// Prepare body.
+		$requestBody = [
 			'contactTag' => [
 				'contact' => $contactId,
 				'tag' => $tagId,
 			],
 		];
 
+		// Make request to map contact with tags.
 		$response = \wp_remote_request(
 			"{$this->getBaseUrl()}contactTags",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'POST',
-				'body' => \wp_json_encode($body),
+				'body' => \wp_json_encode($requestBody),
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'activeCampaign',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$code = $details['code'];
+		$body = $details['body'];
 
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+		// Bailout on wp error.
+		if (\is_wp_error($response)) {
+			return $this->getApiWpErrorOutput(
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				$details,
+				$requestBody,
+				$response->get_error_message()
+			);
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		switch ($code) {
+			case 200:
+			case 201:
+				return $this->getApiSuccessOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				);
+			default:
+				return $this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg($body['errors'] ?? []),
+				);
+		}
+	}
 
-		return [
-			'status' => 'success',
-			'code' => 200,
-			'message' => 'activeCampaignSuccess',
+	/**
+	 * API request to post list.
+	 *
+	 * @param string $list List to store.
+	 * @param string $contactId Contact ID to store.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postList(string $list, string $contactId): array
+	{
+		// Prepare body.
+		$requestBody = [
+			'contactList' => [
+				'contact' => $contactId,
+				'list' => $list,
+				'status' => "1",
+			],
 		];
+
+		// Make request to map contact with lists.
+		$response = \wp_remote_request(
+			"{$this->getBaseUrl()}contactLists",
+			[
+				'headers' => $this->getHeaders(),
+				'method' => 'POST',
+				'body' => \wp_json_encode($requestBody),
+			]
+		);
+
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// Bailout on wp error.
+		if (\is_wp_error($response)) {
+			return $this->getApiWpErrorOutput(
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				$details,
+				$requestBody,
+				$response->get_error_message()
+			);
+		}
+
+		switch ($code) {
+			case 200:
+			case 201:
+				return $this->getApiSuccessOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				);
+			default:
+				return $this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg($body['errors'] ?? []),
+				);
+		}
 	}
 
 	/**
@@ -243,6 +325,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getExistingTagId(string $tag): string
 	{
+		$requestBody = [];
+
+		// Make api request to check if tag exists.
 		$response =  \wp_remote_request(
 			"{$this->getBaseUrl()}tags",
 			[
@@ -251,47 +336,47 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			]
 		);
 
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// Bailout on wp error.
 		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'activeCampaign',
-				'type' => 'wp',
-				'response' => $response,
-			]);
+			$this->getApiWpErrorOutput(
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				$details,
+				$requestBody,
+				$response->get_error_message()
+			);
 
 			return '';
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
+		switch ($code) {
+			case 200:
+			case 201:
+				// Find tag id from array.
+				$tagId = \array_filter(
+					$body['tags'],
+					static function ($item) use ($tag) {
+						return $item['tag'] === $tag && $item['tagType'] === 'contact';
+					}
+				);
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+				$tagId = \array_values($tagId);
 
-		if ($code === 200 || $code === 201) {
-			$tagId = array_filter(
-				$responseBody['tags'],
-				static function ($item) use ($tag) {
-					return $item['tag'] === $tag && $item['tagType'] === 'contact';
-				}
-			);
+				return $tagId[0]['id'] ?? '';
+			default:
+				$this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg($body['errors'] ?? []),
+				);
 
-			$tagId = array_values($tagId);
-
-			return $tagId[0]['id'] ?? '';
+				return '';
 		}
-
-		Helper::logger([
-			'integration' => 'activeCampaign',
-			'type' => 'service',
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			],
-		]);
-
-		return '';
-
 	}
 
 	/**
@@ -302,7 +387,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function createNewTag(string $tag): string
 	{
-		$body = [
+		// Prepare body.
+		$requestBody = [
 			'tag' => [
 				'tag' => $tag,
 				'tagType' => 'contact',
@@ -310,55 +396,79 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			],
 		];
 
+		// Make api request to create a new tag.
 		$response = \wp_remote_request(
 			"{$this->getBaseUrl()}tags",
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'POST',
-				'body' => \wp_json_encode($body),
+				'body' => \wp_json_encode($requestBody),
 			]
 		);
 
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// Bailout on wp error.
 		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'activeCampaign',
-				'type' => 'wp',
-				'response' => $response,
-			]);
+			$this->getApiWpErrorOutput(
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				$details,
+				$requestBody,
+				$response->get_error_message()
+			);
 
 			return '';
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		switch ($code) {
+			case 200:
+			case 201:
+				return $body['id'] ?? '';
+			default:
+				$this->getApiErrorOutput(
+					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+					$details,
+					$requestBody,
+					$this->getErrorMsg($body['errors'] ?? []),
+				);
 
-		return $responseBody['id'] ?? '';
+				return '';
+		}
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
-	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 * @param array<int, array<string, string>> $errors Additional errors got from the API.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg, array $errors = []): string
+	private function getErrorMsg(array $errors): string
 	{
+		$msg = '';
+		$code = '';
+
 		if ($errors && isset($errors[0])) {
-			$msg = $errors[0]['code'];
+			$code = $errors[0]['code'] ?? '';
+			$msg = $errors[0]['error'] ?? '';
+		}
+
+		if (!$msg) {
+			$msg = $code;
 		}
 
 		switch ($msg) {
-			// case 'Bad Request':
-			// 	return 'activeCampaignBadRequestError';
-			// case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
-			// 	return 'activeCampaignInvalidResourceError';
 			case 'contact_email_was_not_provided':
 				return 'activeCampaignInvalidEmailError';
 			case 'duplicate':
 				return 'activeCampaignDuplicateError';
-			// case 'Your merge fields were invalid.':
-			// 	return 'activeCampaignMissingFieldsError';
+			case 'activeCampaign500':
+				return 'activeCampaign500Error';
+			case 'activeCampaignForbiden':
+				return 'activeCampaignForbidenError';
 			default:
 				return 'submitWpError';
 		}
@@ -388,6 +498,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getActiveCampaignListFields(string $listId)
 	{
+		// Make api request to get form details.
 		$response = \wp_remote_get(
 			"{$this->getBaseUrl()}forms/{$listId}",
 			[
@@ -396,15 +507,20 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$body = $details['body'];
 
+		// Bailout if fields are missing.
 		if (!isset($body['form']['cfields'])) {
 			return [];
 		}
 
+		// Prepeare custom actions.
 		$actions = [];
 
 		if (isset($body['form']['actiondata']['actions'])) {
+			// Map all actions.
 			foreach ($body['form']['actiondata']['actions'] as $item) {
 				$type = $item['type'] ?? '';
 
@@ -412,16 +528,17 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					continue;
 				}
 
+				// Map api qesponse with our naming.
 				switch ($type) {
 					case 'add-a-tag':
 						$actions[] = [
-							'action' => 'tag',
+							'action' => 'tags',
 							'value' => $item['tag'] ?? '',
 						];
 						break;
 					case 'subscribe-to-list':
 						$actions[] = [
-							'action' => 'subscribe',
+							'action' => 'lists',
 							'value' => $item['list'] ?? '',
 						];
 						break;
@@ -429,6 +546,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			}
 		}
 
+		// Bailout with correct data.
 		return [
 			'fields' => $body['form']['cfields'],
 			'actions' => $actions,
@@ -450,7 +568,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Output response details.
+		$details = $this->getApiReponseDetails($response);
+		$body = $details['body'];
 
 		if (!isset($body['forms'])) {
 			return [];
@@ -470,20 +590,24 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
-		$standardFields = array_flip(ActiveCampaign::STANDARD_FIELDS);
+		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 
+		// Remove unecesery storage field.
 		if (isset($params['es-form-storage'])) {
 			unset($params['es-form-storage']);
 		}
 
-		if (isset($params['actionTag'])) {
-			unset($params['actionTag']);
+		// Remove unecesery action tags field.
+		if (isset($params['actionTags'])) {
+			unset($params['actionTags']);
 		}
 
-		if (isset($params['actionSubscribe'])) {
-			unset($params['actionSubscribe']);
+		// Remove unecesery action lists field.
+		if (isset($params['actionLists'])) {
+			unset($params['actionLists']);
 		}
 
+		// Map params.
 		foreach ($params as $key => $param) {
 			$value = $param['value'] ?? '';
 
@@ -491,15 +615,18 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 				continue;
 			}
 
+			// If standard key use different logic.
 			if (isset($standardFields[$key])) {
+				// On full name explode first space and output it as first and last name.
 				if ($key === 'fullName') {
-					$value = explode(' ', $value, 2);
+					$value = \explode(' ', $value, 2);
 					$output['firstName'] = $value[0] ?? '';
 					$output['lastName'] = $value[1] ?? '';
 				} else {
-					$output[$key] = $value; 
+					$output[$key] = $value;
 				}
 			} else {
+				// Mape custom fields.
 				$output['fieldValues'][] = [
 					'field' => $key,
 					'value' => $value,
@@ -517,7 +644,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getBaseUrl(): string
 	{
-		$url = rtrim($this->getApiUrl(), '/');
+		$url = \rtrim($this->getApiUrl(), '/');
 
 		return "{$url}/api/3/";
 	}

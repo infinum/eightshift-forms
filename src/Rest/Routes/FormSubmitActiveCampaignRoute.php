@@ -99,18 +99,36 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		// If form has action to save tags.
-		$tags = $params['actionTag']['value'] ?? '';
-		if ($response['code'] === 200 && $tags || !empty($response['contactId'])) {
-			$tags = explode(', ', $tags);
+		// Make an additional requests to the API.
+		if ($response['code'] === 200 && !empty($response['contactId'])) {
+			// If form has action to save tags.
+			$actionTags = $params['actionTags']['value'] ?? '';
 
-			foreach ($tags as $tag) {
-				$responseTag = $this->activeCampaignClient->postTag(
-					$tag,
-					$response['contactId']
-				);
+			if ($actionTags) {
+				$actionTags = \explode(', ', $actionTags);
 
-				error_log( print_r( ( $responseTag ), true ) );
+				// Create API req for each tag.
+				foreach ($actionTags as $tag) {
+					$this->activeCampaignClient->postTag(
+						$tag,
+						$response['contactId']
+					);
+				}
+			}
+
+			// If form has action to save list.
+			$actionLists = $params['actionLists']['value'] ?? '';
+
+			if ($actionLists) {
+				$actionLists = \explode(', ', $actionLists);
+
+				// Create API req for each list.
+				foreach ($actionLists as $list) {
+					$this->activeCampaignClient->postList(
+						$list,
+						$response['contactId']
+					);
+				}
 			}
 		}
 

@@ -159,16 +159,20 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	{
 		$output = [];
 
+		// Bailout if data is empty.
 		if (!$data) {
 			return $output;
 		}
 
+		// Find fields.
 		$fields = $data['fields'] ?? [];
 
+		// Bailout if fields are empty.
 		if (!$fields) {
 			return $output;
 		}
 
+		// Loop fields and map.
 		foreach ($fields as $field) {
 			if (empty($field)) {
 				continue;
@@ -186,6 +190,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				$name = $id;
 			}
 
+			// Some fields will not have label so use header.
 			if (!$label) {
 				$label = $header;
 			}
@@ -227,18 +232,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'blockSsr' => $ssr,
 					];
 					break;
-				case 'customer_account':
-					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsRequired' => true,
-						'blockSsr' => $ssr,
-					];
-					break;
 				case 'hidden':
 					$output[] = [
 						'component' => 'input',
@@ -261,7 +254,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'blockSsr' => $ssr,
 					];
 					break;
-				case 'email': 
+				case 'email':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => 'email',
@@ -306,23 +299,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'blockSsr' => $ssr,
 					];
 					break;
-				case 'unsubscribe':
-					$output[] = [
-						'component' => 'checkboxes',
-						'checkboxesId' => $id,
-						'checkboxesName' => 'unsubscribe',
-						'checkboxesIsRequired' => $required,
-						'checkboxesContent' => [
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => $label,
-								'checkboxValue' => 1,
-								'checkboxTracking' => 'unsubscribe',
-							]
-						],
-						'blockSsr' => $ssr,
-					];
-					break;
 				case 'radio':
 					$output[] = [
 						'component' => 'radios',
@@ -345,7 +321,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 					];
 					break;
 				case 'dropdown':
-				case 'customer_account_field':
 					$output[] = [
 						'component' => 'select',
 						'selectId' => $id,
@@ -369,27 +344,29 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			}
 		}
 
-
+		// Find if we have actions in the data set.
 		$actions = $data['actions'] ?? [];
 
-		foreach ($actions as $key => $value) {
-			$action = $value['action'] ? \ucfirst($value['action']) : '';
-			$actionValue = $value['value'] ?? '';
+		if ($actions) {
+			foreach ($actions as $key => $value) {
+				$action = $value['action'] ? \ucfirst($value['action']) : '';
+				$actionValue = $value['value'] ?? '';
 
-			if (!$action || !$actionValue) {
-				continue;
+				if (!$action || !$actionValue) {
+					continue;
+				}
+
+				// Map actions to hidden input fields.
+				$output[] = [
+					'component' => 'input',
+					'inputFieldLabel' => $action,
+					'inputName' => 'action',
+					'inputId' => "action{$action}[$key]",
+					'inputType' => 'hidden',
+					'inputValue' => $actionValue,
+					'blockSsr' => $ssr,
+				];
 			}
-
-			$output[] = [
-				'component' => 'input',
-				'inputFieldLabel' => $action,
-				'inputName' => 'action',
-				'inputId' => "action{$action}[$key]",
-				'inputType' => 'text',
-				'inputValue' => $actionValue,
-				// 'inputFieldHidden' => 'hidden',
-				'blockSsr' => $ssr,
-			];
 		}
 
 		$output[] = [

@@ -118,7 +118,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		foreach (self::ALL_CACHE as $key => $value) {
 			$name = \str_replace('-', ' ', $key);
 			$name = \ucfirst($name);
-			
+
 			$output[] = [
 				'component' => 'submit',
 				'submitFieldWidthLarge' => 2,

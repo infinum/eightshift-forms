@@ -40,6 +40,7 @@ class Labels implements LabelsInterface
 		'mailerliteSuccess',
 		'goodbitsSuccess',
 		'clearbitSuccess',
+		'activeCampaignSuccess',
 	];
 
 	/**
@@ -293,11 +294,10 @@ class Labels implements LabelsInterface
 	private function getActiveCampaignLabels(): array
 	{
 		return [
-			// 'activeCampaignErrorSettingsMissing' => \__('Active Campaign integration is not configured correctly. Please try again.', 'eightshift-forms'),
-			// 'activeCampaignBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
-			// 'activeCampaignUnauthorizedError' => \__('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
+			'activeCampaign500Error' => \__('There was and internal server error. Please try again.', 'eightshift-forms'),
+			'activeCampaignForbidenError' => \__('It looks like this form is not authorized to make this request please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
