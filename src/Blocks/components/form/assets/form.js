@@ -77,7 +77,7 @@ export class Form {
 		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
 		this.captcha = options.captcha ?? '';
-		this.storage = options.storage ?? '';
+		this.storageConfig = options.storageConfig ?? '';
 
 		// Internal state.
 		this.files = {};
@@ -1047,26 +1047,40 @@ export class Form {
 	setLocalStorage() {
 		// If storage is not set in the backend bailout.
 		// Backend provides the ability to limit what tags are allowed to store in local storage.
-		if (this.storage === '') {
+		if (this.storageConfig === '') {
 			return;
 		}
 
-		const storage = JSON.parse(this.storage);
+		const storageConfig = JSON.parse(this.storageConfig);
 
-		const storageData = storage?.data;
-		const storageExpiration = storage?.expiration ?? '30';
+		const allowedTags = storageConfig?.allowed;
+		const expiration = storageConfig?.expiration ?? '30';
 
 		// Missing data from backend, bailout.
-		if (!storageData) {
+		if (!allowedTags) {
+			return;
+		}
+
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
 			return;
 		}
 
 		// Get storage from backend this is considered new by the page request.
-		let newStorage = JSON.parse(storageData);
-		newStorage = {
-			...newStorage,
-			timestamp: Date.now(),
-		};
+		const newStorage = {};
+
+		// Find url params.
+		const searchParams = new URLSearchParams(window.location.search);
+		const newStorage = searchParams.entries()
+			.filter(([key, value]) => allowedTags.includes(key) && value !== '')
+
+		// Bailout if nothing is set from allowed tags or everything is empty.
+		if (Object.keys(newStorage).length === 0) {
+			return;
+		}
+
+		// Add current timestamp to new storage.
+		newStorage.timestamp = Date.now();
 
 		// Store in a new variable for later usage.
 		const newStorageFinal = {...newStorage};
@@ -1083,7 +1097,7 @@ export class Form {
 		if (this.getLocalStorage() !== null) {
 			// Update expiration date by number of days from the current
 			let expirationDate = new Date(currentStorage.timestamp);
-			expirationDate.setDate(expirationDate.getDate() + parseInt(storageExpiration, 10));
+			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
 
 			// Remove expired storage if it exists.
 			if (expirationDate.getTime() < currentStorage.timestamp) {

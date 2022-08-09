@@ -83,6 +83,16 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY = 'hubspot-filemanager-folder';
 
 	/**
+	 * File upload allowed types key.
+	 */
+	public const SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY = 'hubspot-upload-allowed-types';
+
+	/**
+	 * Global File upload allowed types key.
+	 */
+	public const SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY = 'hubspot-global-upload-allowed-types';
+
+	/**
 	 * Use Clearbit Key.
 	 */
 	public const SETTINGS_HUBSPOT_USE_CLEARBIT_KEY = 'hubspot-use-clearbit';
@@ -340,6 +350,25 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 						'inputIsDisabled' => !empty($apiKey),
 					],
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => \__('File Upload', 'eightshift-forms'),
+						'introSubtitle' => \__('Define global settings for file upload fields.', 'eightshift-forms'),
+						'introTitleSize' => 'small',
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+						'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+						// translators: %s will be replaced with the link.
+						'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+						'inputType' => 'text',
+						'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					],
 				],
 				$this->settingsClearbit->getOutputGlobalClearbit(
 					$this->hubspotClient->getContactProperties(),
@@ -440,6 +469,17 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
 				'inputType' => 'text',
 				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+			],
+			[
+				'component' => 'input',
+				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+				'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+				// translators: %s will be replaced with the link.
+				'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+				'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+				'inputType' => 'text',
+				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
 			],
 		];
 	}

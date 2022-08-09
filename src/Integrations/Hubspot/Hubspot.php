@@ -142,6 +142,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
+		// Find local but fallback to global settings.
+		$allowedFileTypes = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: $this->getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if ($allowedFileTypes) {
+			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);
+			$allowedFileTypes = \str_replace(' ', '', $allowedFileTypes);
+		}
+
 		foreach ($data['fields'] as $key => $item) {
 			if (empty($item)) {
 				continue;
@@ -273,7 +281,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							}
 						);
 
-						$output[] = [
+						$fileOutput = [
 							'component' => 'file',
 							'fileFieldHidden' => $hidden,
 							'fileFieldLabel' => $label,
@@ -290,6 +298,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'blockSsr' => $ssr,
 						];
+
+						if ($allowedFileTypes) {
+							$fileOutput['fileAccept'] = $allowedFileTypes;
+						}
+
+						$output[] = $fileOutput;
 						break;
 					case 'select':
 						$selectedOption = $field['selectedOptions'][0] ?? '';

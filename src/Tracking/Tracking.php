@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Tracking;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Tracking class.
@@ -36,47 +35,11 @@ class Tracking implements TrackingInterface
 	}
 
 	/**
-	 * Return encripted data from get url param.
-	 *
-	 * @return string
-	 */
-	public function getTrackingToLocalStorage(): string
-	{
-		if (\is_admin()) {
-			return '';
-		}
-
-		$request = Components::sanitizeArray($_GET, 'sanitize_text_field'); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		if (!$request) {
-			return '';
-		}
-
-		$output = [];
-
-		$allowedTags = \array_flip($this->getAllowedTags());
-
-		foreach ($request as $key => $value) {
-			if (!isset($allowedTags[$key])) {
-				continue;
-			}
-
-			$output[$key] = $value;
-		}
-
-		if (!$output) {
-			return '';
-		}
-
-		return \wp_json_encode($output);
-	}
-
-	/**
 	 * Return allowed tags to store in local storage.
 	 *
 	 * @return array<string>
 	 */
-	private function getAllowedTags(): array
+	public function getAllowedTags(): array
 	{
 		$output = [
 			'gh_src',
