@@ -1066,13 +1066,11 @@ export class Form {
 			return;
 		}
 
-		// Get storage from backend this is considered new by the page request.
-		const newStorage = {};
-
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
-		const newStorage = searchParams.entries()
-			.filter(([key, value]) => allowedTags.includes(key) && value !== '')
+
+		// Get storage from backend this is considered new by the page request.
+		const newStorage = searchParams.entries().filter(([key, value]) => allowedTags.includes(key) && value !== '');
 
 		// Bailout if nothing is set from allowed tags or everything is empty.
 		if (Object.keys(newStorage).length === 0) {
