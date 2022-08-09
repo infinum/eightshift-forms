@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -37,7 +37,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ActiveCampaignClientInterface
+	 * @var ClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -46,12 +46,12 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ActiveCampaignClientInterface $activeCampaignClient
+		ClientInterface $activeCampaignClient
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;

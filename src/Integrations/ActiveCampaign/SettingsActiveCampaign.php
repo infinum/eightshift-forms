@@ -67,24 +67,14 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	public const SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY = 'active-campaign-api-key';
 
 	/**
+	 * API Url.
+	 */
+	public const SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY = 'active-campaign-api-url';
+
+	/**
 	 * List ID Key.
 	 */
 	public const SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY = 'active-campaign-list';
-
-	/**
-	 * List Tags Key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY = 'active-campaign-list-tags';
-
-	/**
-	 * List Tags Labels Key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_LABELS_KEY = 'active-campaign-list-tags-labels';
-
-	/**
-	 * List Tags Show Key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY = 'active-campaign-list-tags-show';
 
 	/**
 	 * Integration fields Key.
@@ -94,7 +84,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ActiveCampaignClientInterface
+	 * @var ClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -108,11 +98,11 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param MapperInterface $activeCampaign Inject ActiveCampaign which holds ActiveCampaign form data.
 	 */
 	public function __construct(
-		ActiveCampaignClientInterface $activeCampaignClient,
+		ClientInterface $activeCampaignClient,
 		MapperInterface $activeCampaign
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
@@ -163,8 +153,9 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	{
 		$isUsed = $this->isCheckboxOptionChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyActiveCampaign()) ? Variables::getApiKeyActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
+		$url = !empty(Variables::getApiUrlActiveCampaign()) ? Variables::getApiUrlActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 
-		if (!$isUsed || empty($apiKey)) {
+		if (!$isUsed || empty($apiKey) || empty($url)) {
 			return false;
 		}
 
@@ -267,118 +258,6 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 
 		// If the user has selected the list.
 		if ($selectedItem) {
-			$tags = $this->activeCampaignClient->getTags($selectedItem);
-
-			$tagsOutput = [
-				[
-					'component' => 'divider',
-				],
-				[
-					'component' => 'intro',
-					'introTitle' => \__('Audience tags', 'eightshift-forms'),
-					'introTitleSize' => 'medium',
-					'introSubtitle' => \__('Control which tags wil show up on the frontend and set up how will they look and work.', 'eightshift-forms'),
-				],
-			];
-
-			if ($tags) {
-				$isTagsShowHidden = $this->isCheckedSettings('hidden', self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY, $formId);
-
-				$tagsLabelsOverrides = [];
-
-				if (!$isTagsShowHidden) {
-					$tagsLabelsOverrides = [
-						'component' => 'group',
-						'groupHelp' => \__('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
-						'groupSaveOneField' => true,
-						'groupContent' => \array_map(
-							function ($tag, $index) use ($formId) {
-								$value = $this->getSettingsValueGroup(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_LABELS_KEY, $formId);
-								$id = $tag['id'] ?? '';
-
-								return [
-									'component' => 'input',
-									'inputFieldLabel' => '',
-									'inputName' => $id,
-									'inputId' => $id,
-									'inputPlaceholder' => $tag['name'],
-									'inputValue' => $value[$id] ?? '',
-								];
-							},
-							$tags,
-							\array_keys($tags)
-						),
-					];
-				}
-
-				$tagsOutput = \array_merge(
-					$tagsOutput,
-					[
-						[
-							'component' => 'select',
-							'selectId' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY),
-							'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
-							'selectFieldHelp' => $isTagsShowHidden ? \__('Tags you select bellow will be added to you form as a hidden field.', 'eightshift-forms') : \__('Tags you select bellow will be displayed in the form.', 'eightshift-forms'),
-							'selectValue' => $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY),
-							'selectSingleSubmit' => true,
-							'selectOptions' => [
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Don\'t show tags', 'eightshift-forms'),
-									'selectOptionValue' => 'hidden',
-									'selectOptionIsSelected' => $isTagsShowHidden,
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Show as a select menu', 'eightshift-forms'),
-									'selectOptionValue' => 'select',
-									'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY, $formId),
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Show as checkboxes', 'eightshift-forms'),
-									'selectOptionValue' => 'checkboxes',
-									'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY, $formId),
-								],
-							]
-						],
-						[
-							'component' => 'group',
-							'groupId' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_LABELS_KEY),
-							'groupLabel' => \__('Tags list', 'eightshift-forms'),
-							'groupStyle' => 'tags',
-							'groupContent' => [
-								[
-									'component' => 'group',
-									'groupName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY),
-									'groupHelp' => $isTagsShowHidden ? \__('Select tags that will be added to you form as a hidden field. If nothing is selected nothing will be sent.', 'eightshift-forms') : \__('Select tags that will be displayed in the form field. If nothing is selected everything will be displayed.', 'eightshift-forms'),
-									'groupContent' => [
-										[
-											'component' => 'checkboxes',
-											'checkboxesFieldLabel' => '',
-											'checkboxesName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY),
-											'checkboxesId' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY),
-											'checkboxesContent' => \array_map(
-												function ($tag) use ($formId) {
-													return [
-														'component' => 'checkbox',
-														'checkboxLabel' => $tag['name'],
-														'checkboxIsChecked' => $this->isCheckboxSettingsChecked($tag['id'], self::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY, $formId),
-														'checkboxValue' => $tag['id'],
-													];
-												},
-												$tags
-											),
-										],
-									],
-								],
-								$tagsLabelsOverrides,
-							],
-						],
-					]
-				);
-			}
-
 			$beforeContent = '';
 
 			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
@@ -388,7 +267,6 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 
 			$output = \array_merge(
 				$output,
-				$tagsOutput,
 				[
 					[
 						'component' => 'divider',
@@ -409,9 +287,6 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 							self::SETTINGS_TYPE_KEY,
 							$this->activeCampaign->getFormFields($formId),
 							$formId,
-							[
-								ActiveCampaign::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY
-							]
 						),
 					]
 				]
@@ -472,10 +347,22 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyActiveCampaign();
+			$apiUrl = Variables::getApiUrlActiveCampaign();
 
 			$output = \array_merge(
 				$output,
 				[
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
+						'inputFieldLabel' => \__('API url', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+						'inputType' => 'text',
+						'inputIsRequired' => true,
+						'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
+						'inputIsDisabled' => !empty($apiUrl),
+					],
 					[
 						'component' => 'input',
 						'inputName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),

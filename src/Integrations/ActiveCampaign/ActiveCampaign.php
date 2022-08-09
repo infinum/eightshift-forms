@@ -11,10 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -42,16 +45,22 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	public const FILTER_FORM_FIELDS_NAME = 'es_active_campaign_form_fields_filter';
 
 	/**
-	 * Field ActiveCampaign Tags.
+	 * List all standard fields that must be mapped differently than custom fields.
 	 *
-	 * @var string
+	 * @var array<int, string>
 	 */
-	public const FIELD_ACTIVE_CAMPAIGN_TAGS_KEY = 'es-form-active-campaign-tags';
+	public const STANDARD_FIELDS = [
+		'firstName',
+		'lastName',
+		'fullName',
+		'phone',
+		'email',
+	];
 
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
-	 * @var ActiveCampaignClientInterface
+	 * @var ClientInterface
 	 */
 	protected $activeCampaignClient;
 
@@ -65,11 +74,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		ActiveCampaignClientInterface $activeCampaignClient,
+		ClientInterface $activeCampaignClient,
 		ValidatorInterface $validator
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
@@ -156,16 +165,8 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			return $output;
 		}
 
-		$output[] = [
-			'component' => 'input',
-			'inputName' => 'email_address',
-			'inputFieldLabel' => \__('Email address', 'eightshift-forms'),
-			'inputId' => 'email_address',
-			'inputType' => 'text',
-			'inputIsEmail' => true,
-			'inputIsRequired' => true,
-			'blockSsr' => $ssr,
-		];
+		error_log( print_r( ( $data ), true ) );
+		
 
 		foreach ($data as $field) {
 			if (empty($field)) {
@@ -173,16 +174,63 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			}
 
 			$type = $field['type'] ?? '';
-			$name = $field['tag'] ?? '';
-			$label = $field['name'] ?? '';
-			$required = $field['required'] ?? false;
-			$value = $field['default_value'] ?? '';
-			$dateFormat = isset($field['options']['date_format']) ? $this->validator->getValidationPattern($field['options']['date_format']) : '';
-			$options = $field['options']['choices'] ?? [];
-			$id = $name;
+			$name = $field['name'] ?? '';
+			$label = $field['label'] ?? '';
+			$header = $field['header'] ?? '';
+			$required = $field['isRequired'] ?? false;
+			$placeholder = $field['default_text'] ?? '';
+			$options = $field['options'] ?? [];
+			$id = $field['id'] ?? '';
+
+			if (!$name) {
+				$name = $id;
+			}
+
+			if (!$label) {
+				$label = $header;
+			}
 
 			switch ($type) {
-				case 'text':
+				case 'firstname':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => 'firstName',
+						'inputTracking' => 'firstName',
+						'inputFieldLabel' => $label,
+						'inputId' => 'firstName',
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						// 'inputPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'lastname':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => 'lastName',
+						'inputTracking' => 'lastName',
+						'inputFieldLabel' => $label,
+						'inputId' => 'lastName',
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						// 'inputPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'fullname':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => 'fullName',
+						'inputTracking' => 'fullName',
+						'inputFieldLabel' => $label,
+						'inputId' => 'fullName',
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						// 'inputPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'customer_account':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -190,37 +238,43 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
+						'inputIsRequired' => true,
+						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
-				case 'address':
-					$output[] = [
-						'component' => 'input',
-						'inputName' => 'address',
-						'inputTracking' => 'address',
-						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
-					];
-					break;
-				case 'number':
+				case 'hidden':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'number',
-						'inputIsRequired' => $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
+						'inputType' => 'text',
+						'inputFieldHidden' => 'hidden',
+						// 'inputPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'textarea':
+					$output[] = [
+						'component' => 'textarea',
+						'textareaName' => $name,
+						'textareaTracking' => $name,
+						'textareaFieldLabel' => $label,
+						'textareaId' => $id,
+						'textareaIsRequired' => $required,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'email': 
+					$output[] = [
+						'component' => 'input',
+						'inputName' => 'email',
+						'inputFieldLabel' => $header,
+						'inputId' => 'email',
+						'inputType' => 'text',
+						'inputIsEmail' => true,
+						'inputIsRequired' => 1,
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -233,22 +287,45 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputId' => $id,
 						'inputType' => 'tel',
 						'inputIsRequired' => $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
+						// 'inputPlaceholder' => $placeholder,
 						'blockSsr' => $ssr,
 					];
 					break;
-				case 'birthday':
+				case 'checkbox':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
+						'component' => 'checkboxes',
+						'checkboxesId' => $id,
+						'checkboxesName' => $name,
+						'checkboxesFieldLabel' => $label,
+						'checkboxesIsRequired' => $required,
+						'checkboxesContent' => \array_map(
+							static function ($checkbox) use ($name) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $checkbox['value'],
+									'checkboxValue' => $checkbox['value'],
+									'checkboxTracking' => $name,
+								];
+							},
+							$options
+						),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'unsubscribe':
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesId' => $id,
+						'checkboxesName' => 'unsubscribe',
+						'checkboxesIsRequired' => $required,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => $label,
+								'checkboxValue' => 1,
+								'checkboxTracking' => 'unsubscribe',
+							]
+						],
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -263,8 +340,8 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 							static function ($radio) use ($name) {
 								return [
 									'component' => 'radio',
-									'radioLabel' => $radio,
-									'radioValue' => $radio,
+									'radioLabel' => $radio['value'],
+									'radioValue' => $radio['value'],
 									'radioTracking' => $name,
 								];
 							},
@@ -274,6 +351,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 					];
 					break;
 				case 'dropdown':
+				case 'customer_account_field':
 					$output[] = [
 						'component' => 'select',
 						'selectId' => $id,
@@ -285,8 +363,8 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 							static function ($option) {
 								return [
 									'component' => 'select-option',
-									'selectOptionLabel' => $option,
-									'selectOptionValue' => $option,
+									'selectOptionLabel' => $option['value'],
+									'selectOptionValue' => $option['value'],
 								];
 							},
 							$options
@@ -294,124 +372,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'blockSsr' => $ssr,
 					];
 					break;
-			}
-		}
-
-		$tagsItems = $this->activeCampaignClient->getTags($this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY, $formId));
-
-		if ($tagsItems) {
-			$tagsSelected = $this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_KEY, $formId);
-			$tagsLabels = $this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_LABELS_KEY, $formId);
-			$tagsShow = $this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_TAGS_SHOW_KEY, $formId);
-
-			// Detect if some tags are selected to display on the frontend.
-			if (!empty($tagsSelected)) {
-				// Tags are stored like string so explode is necesery.
-				$selectedIds = \array_flip(\explode(', ', $tagsSelected));
-
-				// Map selected items with provided ones.
-				$tagsItems = \array_filter(
-					$tagsItems,
-					static function ($item) use ($selectedIds) {
-						return isset($selectedIds[$item['id']]);
-					}
-				);
-			}
-
-			if ($tagsItems) {
-				switch ($tagsShow) {
-					case 'select':
-						$output[] = [
-							'component' => 'select',
-							'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'selectId' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-							'selectName' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-							'selectTracking' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-							'selectOptions' => \array_merge(
-								[
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => '',
-										'selectOptionValue' => '',
-									],
-								],
-								\array_map(
-									static function ($option) use ($tagsLabels) {
-										$name = $option['name'] ?? '';
-										$id = $option['id'] ?? '';
-										$nameOverride = $name;
-
-										// Find tag label override.
-										if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-											$nameOverride = $tagsLabels[$id];
-										}
-
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $nameOverride,
-											'selectOptionValue' => $name,
-										];
-									},
-									$tagsItems
-								)
-							),
-							'blockSsr' => $ssr,
-						];
-						break;
-					case 'checkboxes':
-						$checkboxesFieldName = self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY;
-
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'checkboxesId' => $checkboxesFieldName,
-							'checkboxesName' => $checkboxesFieldName,
-							'checkboxesContent' => \array_map(
-								static function ($option) use ($checkboxesFieldName, $tagsLabels) {
-									$name = $option['name'] ?? '';
-									$id = $option['id'] ?? '';
-									$nameOverride = $name;
-
-									// Find tag label override.
-									if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-										$nameOverride = $tagsLabels[$id];
-									}
-
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $nameOverride,
-										'checkboxValue' => $name,
-										'checkboxTracking' => $checkboxesFieldName,
-									];
-								},
-								$tagsItems
-							),
-							'blockSsr' => $ssr,
-						];
-						break;
-					default:
-						if (!empty($tagsSelected)) {
-							$tagsItems = \array_map(
-								static function ($item) {
-									return $item['name'];
-								},
-								$tagsItems
-							);
-
-							$tagsItems = \implode(', ', $tagsItems);
-
-							$output[] = [
-								'component' => 'input',
-								'inputType' => 'hidden',
-								'inputId' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-								'inputName' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-								'inputTracking' => self::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY,
-								'inputValue' => $tagsItems,
-								'blockSsr' => $ssr,
-							];
-						};
-						break;
-				}
 			}
 		}
 
@@ -424,6 +384,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			'submitServerSideRender' => $ssr,
 			'blockSsr' => $ssr,
 		];
+
+		// error_log( print_r( ( $output ), true ) );
+		
 
 		// Change the final output if necesery.
 		$dataFilterName = Filters::getIntegrationFilterName(SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data');

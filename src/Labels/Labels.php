@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
@@ -83,6 +84,11 @@ class Labels implements LabelsInterface
 		// Goodbits.
 		if ($this->isCheckboxOptionChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
 			$output = \array_merge($output, $this->getGoodbitsLabels());
+		}
+
+		// ActiveCampaign.
+		if ($this->isCheckboxOptionChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+			$output = \array_merge($output, $this->getActiveCampaignLabels());
 		}
 
 		return $output;
@@ -276,6 +282,23 @@ class Labels implements LabelsInterface
 			'goodbitsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'goodbitsUnauthorizedError' => \__('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
 			'goodbitsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Active Campaign
+	 *
+	 * @return array<string, string>
+	 */
+	private function getActiveCampaignLabels(): array
+	{
+		return [
+			// 'activeCampaignErrorSettingsMissing' => \__('Active Campaign integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			// 'activeCampaignBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
+			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
+			// 'activeCampaignUnauthorizedError' => \__('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
+			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

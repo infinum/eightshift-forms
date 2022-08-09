@@ -20,7 +20,7 @@ export const ActiveCampaignOptions = ({ postId }) => {
 				help={__('On ActiveCampaign settings page you can setup all details regarding you integration.', 'eightshift-forms')}
 			>
 				<Button
-					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=activeCampaign`}
+					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=active-campaign`}
 					isSecondary
 				>
 					{__('Open ActiveCampaign Form Settings', 'eightshift-forms')}

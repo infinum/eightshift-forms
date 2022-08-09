@@ -97,9 +97,9 @@ Supported fields:
 
 # ActiveCampaign
 
-[API](https://www.activecampaign.com/api/overview.php)
+[API](https://developers.activecampaign.com/reference/overview)
 
-Version: **v1**
+Version: **v3**
 
 Supported fields:
 * All

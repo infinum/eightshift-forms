@@ -118,3 +118,11 @@ This variable will set forms ActiveCampaign api key and you will not be able to 
 ```php
 define('ES_API_KEY_ACTIVE_CAMPAIGN', '<api-key>');
 ```
+
+## Set ActiveCampaign api url
+
+This variable will set forms ActiveCampaign api url and you will not be able to change it from the admin.
+
+```php
+define('ES_API_URL_ACTIVE_CAMPAIGN', '<api-url>');
+```

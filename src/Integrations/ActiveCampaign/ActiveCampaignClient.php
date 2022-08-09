@@ -18,7 +18,7 @@ use EightshiftForms\Settings\SettingsHelper;
 /**
  * ActiveCampaignClient integration class.
  */
-class ActiveCampaignClient implements ActiveCampaignClientInterface
+class ActiveCampaignClient implements ClientInterface
 {
 	/**
 	 * Use general helper trait.
@@ -34,11 +34,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Transient cache name for item.
 	 */
 	public const CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME = 'es_active_campaign_item_cache';
-
-	/**
-	 * Transient cache name for item tags.
-	 */
-	public const CACHE_ACTIVE_CAMPAIGN_ITEM_TAGS_TRANSIENT_NAME = 'es_active_campaign_item_tags_cache';
 
 	/**
 	 * Return items.
@@ -107,39 +102,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	}
 
 	/**
-	 * Return tags with cache option for faster loading.
-	 *
-	 * @param string $itemId Item id to search.
-	 *
-	 * @return array<int, mixed>
-	 */
-	public function getTags(string $itemId): array
-	{
-		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$tags = $this->getActiveCampaignTags($itemId);
-
-			if ($tags) {
-				$output[$itemId] = \array_map(
-					static function ($item) {
-						return [
-							'id' => (string) $item['id'],
-							'name' => (string) $item['name'],
-						];
-					},
-					$tags
-				);
-
-				\set_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
-			}
-		}
-
-		return $output[$itemId] ?? [];
-	}
-
-	/**
 	 * API request to post application.
 	 *
 	 * @param string $itemId Item id to search.
@@ -151,29 +113,21 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$email = $params['email_address']['value'];
-		$emailHash = \md5(\strtolower($email));
-		$prepareParams = $this->prepareParams($params);
-
 		$body = [
-			'email_address' => $email,
-			'status_if_new' => 'subscribed',
-			'status' => 'subscribed',
-			'tags' => $this->prepareTags($params),
+			'contact' => $this->prepareParams($params),
 		];
 
-		if (!empty($prepareParams)) {
-			$body['merge_fields'] = $prepareParams;
-		}
-
 		$response = \wp_remote_request(
-			"{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}",
+			"{$this->getBaseUrl()}contacts",
 			[
 				'headers' => $this->getHeaders(),
-				'method' => 'PUT',
+				'method' => 'POST',
 				'body' => \wp_json_encode($body),
 			]
 		);
+
+		error_log( print_r( ( $body ), true ) );
+		
 
 		if (\is_wp_error($response)) {
 			Helper::logger([
@@ -192,7 +146,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
-		if ($code === 200) {
+		if ($code === 200 || $code === 201) {
 			return [
 				'status' => 'success',
 				'code' => $code,
@@ -203,6 +157,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		$responseMessage = $responseBody['detail'] ?? '';
 		$responseErrors = $responseBody['errors'] ?? [];
+
+		error_log( print_r( ( $responseBody ), true ) );
+		
 
 		$output = [
 			'status' => 'error',
@@ -232,29 +189,21 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getErrorMsg(string $msg, array $errors = []): string
 	{
-		if ($errors) {
-			$invalidEmail = \array_filter(
-				$errors,
-				static function ($error) {
-					return $error['field'] === 'email_address';
-				}
-			);
-
-			if ($invalidEmail) {
-				$msg = 'INVALID_EMAIL';
-			}
+		if ($errors && isset($errors[0])) {
+			$msg = $errors[0]['code'];
 		}
 
 		switch ($msg) {
-			case 'Bad Request':
-				return 'activeCampaignBadRequestError';
-			case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
-				return 'activeCampaignInvalidResourceError';
-			case 'INVALID_EMAIL':
-			case 'Please provide a valid email address.':
+			// case 'Bad Request':
+			// 	return 'activeCampaignBadRequestError';
+			// case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
+			// 	return 'activeCampaignInvalidResourceError';
+			case 'contact_email_was_not_provided':
 				return 'activeCampaignInvalidEmailError';
-			case 'Your merge fields were invalid.':
-				return 'activeCampaignMissingFieldsError';
+			case 'duplicate':
+				return 'activeCampaignDuplicateError';
+			// case 'Your merge fields were invalid.':
+			// 	return 'activeCampaignMissingFieldsError';
 			default:
 				return 'submitWpError';
 		}
@@ -263,14 +212,12 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	/**
 	 * Return ActiveCampaign tags for a list.
 	 *
-	 * @param string $itemId Item id to search.
-	 *
 	 * @return array<int, mixed>
 	 */
-	private function getActiveCampaignTags(string $itemId): array
+	private function getActiveCampaignTags(): array
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$itemId}/tag-search",
+			"{$this->getBaseUrl()}tags",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -295,7 +242,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$headers = [
 			'Content-Type' => 'application/json; charset=utf-8',
-			'Authorization' => "Bearer {$this->getApiKey()}"
+			'Api-Token' => $this->getApiKey(),
 		];
 
 		return $headers;
@@ -311,7 +258,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	private function getActiveCampaignListFields(string $listId)
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$listId}/merge-fields?count=1000",
+			"{$this->getBaseUrl()}forms/{$listId}",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -320,11 +267,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
-		if (!isset($body['merge_fields'])) {
+		if (!isset($body['form']['cfields'])) {
 			return [];
 		}
 
-		return $body['merge_fields'];
+		return $body['form']['cfields'];
 	}
 
 	/**
@@ -335,7 +282,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	private function getActiveCampaignLists()
 	{
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists?count=100",
+			"{$this->getBaseUrl()}forms",
 			[
 				'headers' => $this->getHeaders(),
 				'timeout' => 60,
@@ -344,11 +291,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = \json_decode(\wp_remote_retrieve_body($response), true);
 
-		if (!isset($body['lists'])) {
+		if (!isset($body['forms'])) {
 			return [];
 		}
 
-		return $body['lists'];
+		return $body['forms'];
 	}
 
 	/**
@@ -362,56 +309,30 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
-		unset($params['email_address']);
-		unset($params[ActiveCampaign::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY]);
+		$standardFields = array_flip(ActiveCampaign::STANDARD_FIELDS);
+
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
+		}
 
 		foreach ($params as $key => $param) {
 			$value = $param['value'] ?? '';
 
-			switch ($param['name']) {
-				case 'address':
-					if ($value) {
-						$output[$key] = [
-							'addr1' => $value,
-							'addr2' => '',
-							'city' => '&sbsp;',
-							'state' => '',
-							'zip' => '&sbsp;',
-							'country' => '',
-						];
-					}
-					break;
-				default:
-					$output[$key] = $value;
-					break;
+			if (!$value) {
+				continue;
+			}
+
+			if (isset($standardFields[$key])) {
+				$output[$key] = $value; 
+			} else {
+				$output['fieldValues'][] = [
+					'field' => $key,
+					'value' => $value,
+				];
 			}
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Prepare tags
-	 *
-	 * @param array<string, mixed> $params Params.
-	 *
-	 * @return array<int, string>
-	 */
-	private function prepareTags(array $params): array
-	{
-		$key = ActiveCampaign::FIELD_ACTIVE_CAMPAIGN_TAGS_KEY;
-
-		if (!isset($params[$key])) {
-			return [];
-		}
-
-		$value = $params[$key]['value'];
-
-		if (empty($value)) {
-			return [];
-		}
-
-		return \explode(', ', $params[$key]['value']);
 	}
 
 	/**
@@ -421,10 +342,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getBaseUrl(): string
 	{
-		$key = \explode('-', $this->getApiKey());
-		$server = \end($key);
+		$url = rtrim($this->getApiUrl(), '/');
 
-		return "https://{$server}.api.ActiveCampaign.com/3.0/";
+		return "{$url}/api/3/";
 	}
 
 	/**
@@ -437,5 +357,17 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$apiKey = Variables::getApiKeyActiveCampaign();
 
 		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
+	}
+
+	/**
+	 * Return Api Url from settings or global vairaible.
+	 *
+	 * @return string
+	 */
+	private function getApiUrl(): string
+	{
+		$apiUrl = Variables::getApiUrlActiveCampaign();
+
+		return !empty($apiUrl) ? $apiUrl : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 	}
 }

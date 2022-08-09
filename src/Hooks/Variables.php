@@ -154,4 +154,14 @@ class Variables
 	{
 		return \defined('ES_API_KEY_ACTIVE_CAMPAIGN') ? \ES_API_KEY_ACTIVE_CAMPAIGN : '';
 	}
+
+	/**
+	 * Get API Url for ActiveCampaign.
+	 *
+	 * @return string
+	 */
+	public static function getApiUrlActiveCampaign(): string
+	{
+		return \defined('ES_API_URL_ACTIVE_CAMPAIGN') ? \ES_API_URL_ACTIVE_CAMPAIGN : '';
+	}
 }
