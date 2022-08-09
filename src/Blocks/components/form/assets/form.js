@@ -1071,15 +1071,8 @@ export class Form {
 
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
-		for (const [key, value] of searchParams.entries()) {
-			// Bailout if not allowed or empty
-			if (!allowedTags.includes(key) || value === '') {
-				continue;
-			}
-
-			// Add valid tag.
-			newStorage[key] = value;
-		}
+		const newStorage = searchParams.entries()
+			.filter(([key, value]) => allowedTags.includes(key) && value !== '')
 
 		// Bailout if nothing is set from allowed tags or everything is empty.
 		if (Object.keys(newStorage).length === 0) {
