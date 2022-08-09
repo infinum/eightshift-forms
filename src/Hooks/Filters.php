@@ -25,6 +25,8 @@ use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaign;
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
@@ -130,6 +132,14 @@ class Filters
 				],
 			]
 		],
+		SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+			'global' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsActiveCampaign::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsActiveCampaign::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
+			'valid' => SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="#29A3A3" r="1.75"/><circle cx="14.25" cy="2.75" fill="#29A3A3" r="1.75"/><circle cx="7.75" cy="17.75" fill="#29A3A3" r="1.75"/></svg>',
+		],
 		SettingsLocation::SETTINGS_TYPE_KEY => [
 			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME,
@@ -186,6 +196,12 @@ class Filters
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
+			],
+			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
 		'tracking' => [
