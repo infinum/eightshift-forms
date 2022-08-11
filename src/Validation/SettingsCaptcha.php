@@ -212,7 +212,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 						'component' => 'input',
 						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
 						'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
-						'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. <br /> <br /> The value should be between 0.0 and 1.0 (default is 0.5).', 'eightshift-forms'),
+						'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. In general, normal users will get a score of around 0.8-0.9. The value should be between 0.1 and 1.0 (default is 0.5).', 'eightshift-forms'),
 						'inputType' => 'number',
 						'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
 						'inputMin' => 0,

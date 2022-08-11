@@ -170,6 +170,7 @@ class Filters
 				'data' => 'data',
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 				'filesOptions' => 'files_options',
+				'localStorageMap' => 'local_storage_map',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
@@ -186,6 +187,10 @@ class Filters
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
 			],
+		],
+		'tracking' => [
+			'allowedTags' => 'allowed_tags',
+			'expiration' => 'expiration',
 		],
 		'geolocation' => [
 			'disable' => 'disable',
@@ -321,6 +326,28 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}";
+	}
+
+	/**
+	 * Get Tracking filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_tracking_allowed_tags
+	 */
+	public static function getTrackingFilterName(string $name): string
+	{
+		$filter = self::ALL_PUBLIC['tracking'][$name] ?? '';
+
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('tracking', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_tracking_{$filter}";
 	}
 
 	/**

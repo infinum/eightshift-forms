@@ -224,6 +224,10 @@ class GoodbitsClient implements ClientInterface
 			$output[$key] = $value['value'] ?? '';
 		}
 
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
+		}
+
 		return $output;
 	}
 }

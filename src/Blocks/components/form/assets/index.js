@@ -38,6 +38,7 @@ function initAll(manual) {
 			formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 			fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
 			captcha: esFormsLocalization.captcha,
+			storageConfig: esFormsLocalization.storageConfig,
 		});
 
 		// Bailout if form is loaded but you want to init form again.
@@ -58,6 +59,7 @@ function initAll(manual) {
 			customSelects: form.customSelects,
 			customFiles: form.customFiles,
 			customTextareas: form.customTextareas,
+			storageConfig: form.storageConfig,
 			init: () => {
 				form.init();
 			},
@@ -138,7 +140,13 @@ function initAll(manual) {
 			},
 			removeEvents: () => {
 				form.removeEvents();
-			}
+			},
+			setLocalStorage: () => {
+				form.setLocalStorage();
+			},
+			getLocalStorage: () => {
+				form.getLocalStorage();
+			},
 		};
 	});
 }

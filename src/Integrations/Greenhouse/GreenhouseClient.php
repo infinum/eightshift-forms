@@ -319,23 +319,15 @@ class GreenhouseClient implements ClientInterface
 
 		foreach ($params as $key => $value) {
 			// Get gh_src from url and map it.
-			if ($key === 'es-form-url' && isset($value['value'])) {
-				$url = \wp_parse_url($value['value']) ?? [];
-
-				if (!isset($url['query'])) {
-					continue;
-				}
-
-				\wp_parse_str($url['query'], $urlOut);
-
-				if (!isset($urlOut['gh_src'])) {
-					continue;
-				}
-
-				$output['mapped_url_token'] = $urlOut['gh_src'] ?? '';
+			if ($key === 'es-form-storage' && isset($value['value']['gh_src'])) {
+				$output['mapped_url_token'] = $value['value']['gh_src'];
 			} else {
 				$output[$key] = $value['value'] ?? '';
 			}
+		}
+
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
 		}
 
 		return $output;

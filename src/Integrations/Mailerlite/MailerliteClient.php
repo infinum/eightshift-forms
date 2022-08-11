@@ -269,10 +269,16 @@ class MailerliteClient implements ClientInterface
 	{
 		$output = [];
 
-		unset($params['email']);
+		if (isset($params['email'])) {
+			unset($params['email']);
+		}
 
 		foreach ($params as $key => $value) {
 			$output[$key] = $value['value'] ?? '';
+		}
+
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
 		}
 
 		return $output;

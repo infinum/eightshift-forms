@@ -84,7 +84,7 @@ class Validator extends AbstractValidation
 			return [];
 		}
 
-		// Find out forms original data nad check for valition options.
+		// Find out forms original data and check for valition options.
 		if ($formData) {
 			$validationReference = $this->getValidationReferenceManual($formData);
 		} else {
