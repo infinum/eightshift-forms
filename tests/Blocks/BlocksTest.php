@@ -35,7 +35,6 @@ test('Blocks service class registers hooks properly on WP >= 5.8', function () {
 	Filters\expectAdded('es_blocks_string_to_filter', [$this->blocks, 'getStringToValue']);
 	Filters\expectAdded('es_blocks_options_checkbox_is_checked_filter', [$this->blocks, 'isCheckboxOptionChecked']);
 
-
 	$this->blocks->register();
 	
 	expect(has_action('init', [$this->blocks, 'getBlocksDataFullRaw']))->toBe(10);
