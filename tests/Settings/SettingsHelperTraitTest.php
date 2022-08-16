@@ -159,7 +159,7 @@ test('getLocale calls apply_filters', function() {
 	destroyTestBlocks();
 })->with('form markup for integration fields');
 
-test('getIntegrationFieldsDetails returns correctly when custom styles are enabled ', function ($key, $type, $formFields, $formId, $additionalLabel = [], $return) {
+test('getIntegrationFieldsDetails returns correctly when custom styles are enabled ', function ($key, $type, $formFields, $formId, $additionalLabel, $return) {
 	buildTestBlocks();
 
 	putenv("test_force_post_meta_es-forms-{$key}-HR=bool_false");
@@ -203,7 +203,7 @@ test('getIntegrationFieldsDetails returns correctly when custom styles are enabl
 	destroyTestBlocks();
 })->with('form markup for integration fields with styles');
 
-test('getIntegrationFieldsDetails returns correctly for submit fields', function ($key, $type, $formFields, $formId, $additionalLabel = [], $return) {
+test('getIntegrationFieldsDetails returns correctly for submit fields', function ($key, $type, $formFields, $formId, $additionalLabel, $return) {
 	buildTestBlocks();
 
 	putenv("test_force_post_meta_es-forms-{$key}-HR=bool_false");
@@ -214,7 +214,7 @@ test('getIntegrationFieldsDetails returns correctly for submit fields', function
 	destroyTestBlocks();
 })->with('form markup for submit fields');
 
-test('getIntegrationFieldsDetails disables editing when a particular filter is used', function ($key, $type, $formFields, $formId, $additionalLabel = [], $return) {
+test('getIntegrationFieldsDetails disables editing when a particular filter is used', function ($key, $type, $formFields, $formId, $additionalLabel, $return) {
 	buildTestBlocks();
 
 	putenv("test_force_post_meta_es-forms-{$key}-HR=bool_false");
