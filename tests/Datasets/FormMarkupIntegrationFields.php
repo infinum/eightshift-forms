@@ -97,7 +97,7 @@ dataset('form markup for integration fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => true,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -198,7 +198,7 @@ dataset('form markup for integration fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -310,7 +310,7 @@ dataset('form markup for integration fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -449,7 +449,7 @@ dataset('form markup for integration fields with styles', [
 						'selectValue' => '',
 						'selectIsDisabled' => true,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -573,7 +573,7 @@ dataset('form markup for integration fields with styles', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -711,7 +711,7 @@ dataset('form markup for submit fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -836,7 +836,7 @@ dataset('form markup for integration fields with editing disabled', [
 						'selectValue' => '',
 						'selectIsDisabled' => true,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -960,7 +960,7 @@ dataset('form markup for integration fields with editing disabled', [
 						'selectValue' => '',
 						'selectIsDisabled' => true,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -1099,7 +1099,7 @@ dataset('form markup for integration fields when formViewDetails is used to over
 						'selectValue' => '',
 						'selectIsDisabled' => true,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -1200,7 +1200,7 @@ dataset('form markup for integration fields when formViewDetails is used to over
 						'selectValue' => 'false',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -1322,7 +1322,7 @@ dataset('form markup for Greenhouse-specific integration fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
@@ -1423,7 +1423,7 @@ dataset('form markup for Greenhouse-specific integration fields', [
 						'selectValue' => '',
 						'selectIsDisabled' => false,
 						'selectFieldUseTooltip' => true,
-						'selectFieldTooltipContent' => 'Define if field is going to be default visible or hidden.',
+						'selectFieldTooltipContent' => 'Define if field is going to be used or not by default.',
 						'selectOptions' => [
 							[
 								'component' => 'select-option',
