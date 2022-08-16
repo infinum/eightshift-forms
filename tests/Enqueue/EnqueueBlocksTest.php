@@ -28,6 +28,10 @@ beforeEach(function () {
 });
 
 afterEach(function () {
+	unset($this->enqueueBlocks);
+	unset($this->validator);
+	unset($this->labels);
+	unset($this->manifest);
 	Monkey\tearDown();
 });
 

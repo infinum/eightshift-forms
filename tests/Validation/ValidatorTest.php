@@ -39,13 +39,12 @@ beforeEach(function () {
 	$this->validator = new ValidatorMock($labels);
 });
 
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 afterEach(function() {
 	putenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
 	putenv('TEST');
+	unset($this->validator);
+	unset($this->labels);
+	Monkey\tearDown();
 });
 
 test('Validator skips validation on single submit', function() {

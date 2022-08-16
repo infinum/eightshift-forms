@@ -23,6 +23,7 @@ beforeEach(function () {
 });
 
 afterEach(function() {
+	unset($this->settingsCache);
 	Monkey\tearDown();
 });
 

@@ -13,7 +13,6 @@ use function Tests\setupMocks;
 beforeEach(function () {
 	Monkey\setUp();
 	setupMocks();
-
 });
 
 afterEach(function() {

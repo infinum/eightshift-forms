@@ -18,6 +18,7 @@ beforeEach(function () {
 });
 
 afterEach(function() {
+	unset($this->editor);
 	Monkey\tearDown();
 });
 

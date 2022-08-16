@@ -17,14 +17,12 @@ beforeEach(function () {
 	$this->mailer = new Mailer;
 });
 
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 afterEach(function() {
 	putenv('test_wp_mail_last_call');
 	putenv('test_force_post_meta_es-forms-mailer-sender-email');
 	putenv('test_force_post_meta_es-forms-mailer-sender-name');
+	unset($this->mailer);
+	Monkey\tearDown();
 });
 
 test('Mailer calls wp_mail correctly', function ($expected, $formId, $to, $subject, $template = '', $files = [], $fields = []) {

@@ -17,7 +17,8 @@ beforeEach(function () {
 	$this->variables = new Variables();
 });
 
-afterAll(function() {
+afterEach(function() {
+	unset($this->variables);
 	Monkey\tearDown();
 });
 

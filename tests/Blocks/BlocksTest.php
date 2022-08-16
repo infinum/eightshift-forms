@@ -22,6 +22,9 @@ beforeEach(function () {
 });
 
 afterEach(function() {
+	unset($this->wpFaker);
+	unset($this->faker);
+	unset($this->blocks);
 	Monkey\tearDown();
 });
 

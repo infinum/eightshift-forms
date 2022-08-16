@@ -28,6 +28,9 @@ beforeEach(function () {
 });
 
 afterEach(function () {
+	unset($this->enqueueTheme);
+	unset($this->tracking);
+	unset($this->manifest);
 	Monkey\tearDown();
 });
 

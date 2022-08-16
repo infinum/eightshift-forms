@@ -39,7 +39,13 @@ beforeEach(function () {
 	$this->goodbitsSettings = new SettingsGoodbitsMock($goodbitsClient, $goodbits);
 });
 
-afterAll(function() {
+afterEach(function() {
+	unset($this->goodbitsSettings);
+	unset($goodbits);
+	unset($validator);
+	unset($labels);
+	unset($goodbitsClient);
+
 	Monkey\tearDown();
 });
 

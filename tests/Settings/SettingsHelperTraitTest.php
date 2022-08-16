@@ -26,6 +26,7 @@ beforeEach(function () {
 });
 
 afterEach(function() {
+	unset($this->settingsHelper);
 	Monkey\tearDown();
 });
 

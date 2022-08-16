@@ -20,6 +20,8 @@ beforeEach(function () {
 });
 
 afterEach(function() {
+	unset($this->enqueueAdmin);
+	unset($this->manifest);
 	Monkey\tearDown();
 });
 

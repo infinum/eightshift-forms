@@ -18,7 +18,8 @@ beforeEach(function () {
 	$this->filters = new Filters();
 });
 
-afterAll(function() {
+afterEach(function() {
+	unset($this->filters);
 	Monkey\tearDown();
 });
 
