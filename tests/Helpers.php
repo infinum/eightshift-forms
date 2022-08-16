@@ -172,6 +172,10 @@ function setupMocks() {
 		return ltrim($url, '/');
 	});
 
+	Functions\when('rest_url')->alias(function (string $path = '', string $scheme = 'rest') {
+		return get_rest_url(null, $path, $scheme);
+	});
+
 	Functions\when('wp_safe_redirect')->alias(function (string $location, int $status = 302, string $x_redirect_by = 'WordPress') {
 		$call = json_encode([
 			'location' => $location,
@@ -244,6 +248,26 @@ function setupMocks() {
 
 		return true;
 	});
+
+	Functions\when('wp_kses_post')->alias(function (string $data) {
+		return $data;
+	});
+
+	Functions\when('disabled')->alias(function ($disabled, $current = true, $echo = true) {
+		if ($echo) {
+			echo ' disabled ';
+		}
+		return ($disabled == $current ? ' disabled ' : '');
+	});
+
+	Functions\when('readonly')->alias(function ($disabled, $current = true, $echo = true) {
+		if ($echo) {
+			echo ' readonly ';
+		}
+		return ($disabled == $current ? ' readonly ' : '');
+	});
+
+	Functions\when('wp_rand')->alias('rand');
 }
 
 function mock(string $class): MockInterface
