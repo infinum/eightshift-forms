@@ -92,10 +92,13 @@ beforeEach(function () {
 	];
 });
 
-afterAll(function() {
+afterEach(function() {
+	unset($this->locations);
+	unset($this->additionalLocations);
+	unset($this->geolocation);
+
 	Monkey\tearDown();
 });
-
 
 test('Register method will call init hook', function () {
 	$this->geolocation->register();
@@ -155,20 +158,20 @@ test('setLocationCookie will exit if cookie is set.', function () {
 });
 
 test('setLocationCookie will set cookie.', function () {
-	Functions\when('setcookie')->alias(function ($args) {
-		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_SET={$args}");
-	});
-
+	putenv('test_force_is_admin=bool_false');
 	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)
 		->once()->with(false)->andReturn(true);
 
 	$geo = $this->geolocation->setLocationCookie();
 
-	$this->assertSame(getenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET'), Geolocation::GEOLOCATION_COOKIE);
+	$lastSetCookieCall = json_decode(getenv('test_setcookie_last_call'), true);
+	$lastCookieName = $lastSetCookieCall['name'] ?? '';
+	$this->assertSame($lastCookieName, Geolocation::GEOLOCATION_COOKIE);
 	$this->assertNull($geo);
 
 	// Cleanup.
-	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_SET=');
+	putenv('test_setcookie_last_call');
+	putenv('test_force_is_admin');
 });
 
 //---------------------------------------------------------------------------------//
@@ -198,6 +201,7 @@ test('isUserGeolocated will return new formId if additional locations finds matc
 
 test('isUserGeolocated will return formId if additional locations are missing geoLocation array key.', function () {
 	putenv('TEST_GEOLOCATION=HR');
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)->once()->with(false)->andReturn(true);
 
 	$geo = $this->geolocation->isUserGeolocated('1', [], $this->additionalLocations['oneMissingGeo']);
 
@@ -208,6 +212,7 @@ test('isUserGeolocated will return formId if additional locations are missing ge
 
 test('isUserGeolocated will return formId if additional locations don\'t match but default locations match.', function () {
 	putenv('TEST_GEOLOCATION=HR');
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)->once()->with(false)->andReturn(true);
 
 	$geo = $this->geolocation->isUserGeolocated('1', $this->locations, []);
 
@@ -218,6 +223,8 @@ test('isUserGeolocated will return formId if additional locations don\'t match b
 test('isUserGeolocated will return empty string if additional locations don\'t match and default locations match but default locations exist.', function () {
 	putenv('TEST_GEOLOCATION=AT');
 
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)->once()->with(false)->andReturn(true);
+
 	$geo = $this->geolocation->isUserGeolocated('1', $this->locations, []);
 
 	$this->assertIsString($geo);
@@ -226,6 +233,7 @@ test('isUserGeolocated will return empty string if additional locations don\'t m
 });
 
 test('isUserGeolocated will return formId if both additional parameters are empty.', function () {
+	Filters\expectApplied(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME)->once()->with(false)->andReturn(true);
 
 	$geo = $this->geolocation->isUserGeolocated('1', [], []);
 

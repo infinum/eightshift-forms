@@ -37,6 +37,12 @@ class Editor implements ServiceInterface
 	public function getEditorBackLink(): void
 	{
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$isMockedRequestForTest = false;
+
+		if (\getenv('test_force_request_uri')) {
+			$request = \getenv('test_force_request_uri');
+			$isMockedRequestForTest = true;
+		}
 
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
@@ -52,6 +58,11 @@ class Editor implements ServiceInterface
 
 		if (\in_array($request, $links, true)) {
 			\wp_safe_redirect(\get_admin_url(null, "admin.php?page={$page}"));
+		} else {
+			return;
+		}
+
+		if (!$isMockedRequestForTest) {
 			exit;
 		}
 	}

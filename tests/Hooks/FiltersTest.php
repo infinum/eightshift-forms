@@ -18,7 +18,8 @@ beforeEach(function () {
 	$this->filters = new Filters();
 });
 
-afterAll(function() {
+afterEach(function() {
+	unset($this->filters);
 	Monkey\tearDown();
 });
 
@@ -77,5 +78,5 @@ test('getValidationSettingsFilterName will return correct filter name', function
 });
 
 test('getValidationSettingsFilterName will throw error if wrong filter name or name is provided.', function () {
-	$this->filters::getGeolocationFilterName('wrong');
+	$this->filters::getValidationSettingsFilterName('wrong');
 })->throws(MissingFilterInfoException::class);

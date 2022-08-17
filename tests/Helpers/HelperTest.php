@@ -166,52 +166,7 @@ test('convertInnerBlocksToArray returns an empty array for unsupported types', f
 
 test('convertInnerBlocksToArray returns a properly sorted array of options for select', function($expected, $markup) {
 	expect(Helper::convertInnerBlocksToArray($markup, 'select'))->toEqual($expected);
-})->with([
-	[
-		[
-			[
-				'label' => ' First',
-				'value' => '1',
-				'original' => '<option value="1" > First</option>'
-			],
-			[
-				'label' => ' Second',
-				'value' => '2',
-				'original' => '<option value="2" > Second</option>'
-			]
-		],
-		'<select><option value="1" > First</option><option value="2" > Second</option></select>'
-	],
-	[
-		[], ''
-	],
-	[
-		[
-			[
-				'label' => 'First',
-				'value' => '1',
-				'original' => '<option value="1">First</option>'
-			],
-			[
-				'label' => 'Second',
-				'value' => '2',
-				'original' => '<option value="2">Second</option>'
-			],
-			[
-				'label' => ' Third option ',
-				'value' => '3',
-				'original' => '<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>'
-			]
-		],
-		'
-			<select>
-				<option value="1">First</option>
-				<option value="2">Second</option>
-				<option id="third-option" value="3" aria-hidden="true">  Third  option  </ option>
-			</select>
-		',
-	],
-]);
+})->with('inner block markup and expected options');
 
 //---------------------------------------------------------------------------------//
 test('encryptor helper uses openssl_encrypt properly', function () {
