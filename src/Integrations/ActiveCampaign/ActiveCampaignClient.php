@@ -164,7 +164,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					$requestBody,
 					$this->getErrorMsg([
 						[
-							'code' => 'activeCampaignForbiden',
+							'code' => 'activeCampaignForbidden',
 						]
 					]),
 				);
@@ -467,8 +467,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 				return 'activeCampaignDuplicateError';
 			case 'activeCampaign500':
 				return 'activeCampaign500Error';
-			case 'activeCampaignForbiden':
-				return 'activeCampaignForbidenError';
+			case 'activeCampaignForbidden':
+				return 'activeCampaignForbiddenError';
 			default:
 				return 'submitWpError';
 		}
@@ -528,7 +528,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					continue;
 				}
 
-				// Map api qesponse with our naming.
+				// Map api response with our naming.
 				switch ($type) {
 					case 'add-a-tag':
 						$actions[] = [
