@@ -6,6 +6,7 @@ use Brain\Monkey\Functions;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
+use EightshiftForms\Blocks\Blocks;
 
 /**
  * Helper function that will setup some repeating mocks in every tests.
@@ -35,7 +36,19 @@ function setupMocks() {
 			return $default;
 		}
 
-		return $envValue;
+		if ($envValue === 'bool_true') {
+			return true;
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		try {
+			return json_decode($envValue, false, 512, JSON_THROW_ON_ERROR);
+		} catch (Exception $e) {
+			return $envValue;
+		}
 	});
 
 	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
@@ -114,11 +127,23 @@ function setupMocks() {
 			return $key;
 		}
 
+		if ($envValue === 'bool_true') {
+			return true;
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
 		if ($envValue === 'unset') {
 			return '';
 		}
 
-		return $envValue;
+		try {
+			return json_decode($envValue, false, 512, JSON_THROW_ON_ERROR);
+		} catch (Exception $e) {
+			return $envValue;
+		}
 	});
 
 	Functions\when('get_admin_url')->alias(function ($blog_id = null, string $path = '', string $scheme = 'admin') {
@@ -135,9 +160,194 @@ function setupMocks() {
 
 		return $url;
 	});
+
+	Functions\when('get_rest_url')->alias(function ($blog_id = null, string $path = '/', string $scheme = 'rest') {
+		$prefix = getenv("test_force_rest_url_prefix") ? getenv("test_force_rest_url_prefix") : 'wp-json';
+		$url = "{$prefix}/";
+
+		if ($path && is_string($path)) {
+			$url .= ltrim($path, '/');
+		}
+
+		return ltrim($url, '/');
+	});
+
+	Functions\when('rest_url')->alias(function (string $path = '', string $scheme = 'rest') {
+		return get_rest_url(null, $path, $scheme);
+	});
+
+	Functions\when('wp_safe_redirect')->alias(function (string $location, int $status = 302, string $x_redirect_by = 'WordPress') {
+		$call = json_encode([
+			'location' => $location,
+			'status' => $status,
+			'x_redirect_by' => $x_redirect_by,
+		]);
+
+		putenv("test_wp_safe_redirect_last_call=$call");
+		return;
+	});
+
+	Functions\when('is_wp_version_compatible')->alias(function ($version) {
+		$envValue = getenv("test_force_unit_test_wp_version") ? getenv("test_force_unit_test_wp_version") : '5.8';
+		return version_compare($envValue, $version, '>=');
+	});
+
+	Functions\when('is_admin')->alias(function () {
+		$envValue = getenv("test_force_is_admin");
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return true;
+	});
+
+	Functions\when('get_post_type')->alias(function ($post = '') {
+		$envValue = getenv("test_force_get_post_type");
+		if ($envValue === false) {
+			return 'post';
+		}
+
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return $envValue;
+	});
+
+	Functions\when('get_current_blog_id')->alias(function() {
+		return getenv('test_force_current_blog_id') ? getenv('test_force_current_blog_id') : 1;
+	});
+
+	Functions\when('setcookie')->alias(function(
+		string $name,
+		string $value = "",
+		int $expires_or_options = 0,
+		string $path = "",
+		string $domain = "",
+		bool $secure = false,
+		bool $httponly = false
+	) {
+		$args = json_encode([
+			'name' => $name,
+			'value' => $value,
+			'expires_or_options' => $expires_or_options,
+			'path' => $path,
+			'domain' => $domain,
+			'secure' => $secure,
+			'httponly' => $httponly,
+		]);
+
+		putenv("test_setcookie_last_call={$args}");
+
+		$envValue = getenv('test_force_setcookie_return');
+		
+		if ($envValue === 'bool_false') {
+			return false;
+		}
+
+		return true;
+	});
+
+	Functions\when('wp_kses_post')->alias(function (string $data) {
+		return $data;
+	});
+
+	Functions\when('disabled')->alias(function ($disabled, $current = true, $echo = true) {
+		if ($echo) {
+			echo ' disabled ';
+		}
+		return ($disabled == $current ? ' disabled ' : '');
+	});
+
+	Functions\when('readonly')->alias(function ($disabled, $current = true, $echo = true) {
+		if ($echo) {
+			echo ' readonly ';
+		}
+		return ($disabled == $current ? ' readonly ' : '');
+	});
+
+	Functions\when('wp_rand')->alias('rand');
 }
 
 function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);
+}
+
+function mockFormField(string $component, array $props): array {
+	$field = [];
+	$field['component'] = $component;
+	
+	$component = \lcfirst(\str_replace('-', '', \ucwords($component, '-')));
+
+	$field["{$component}Id"] = $props["{$component}Id"] ?? "$component-id";
+	$field["{$component}FieldLabel"] = $props["{$component}FieldLabel"] ?? "$component-field-label";
+	$field["{$component}FieldHelp"] = $props["{$component}FieldHelp"] ?? "$component-field-help";
+	$field["{$component}Value"] = $props["{$component}Value"] ?? ($component === 'input' ? '' : null);
+	$field["{$component}IsRequired"] = $props["{$component}IsRequired"] ?? false;
+	$field["{$component}IsDisabled"] = $props["{$component}IsDisabled"] ?? false;
+
+	if ($props["{$component}Type"] ?? false) {
+		$field["{$component}Type"] = $props["{$component}Type"];
+	}
+	if ($component === 'select') {
+		$field["{$component}Options"] = $props["{$component}Options"] ?? [mockFormField('select-option', [])];
+		return $field;
+	}
+
+	if ($component === 'selectOption') {
+		$field["{$component}Value"] = $props["{$component}Value"] ?? 'select-option-val';
+		$field["{$component}Label"] = $props["{$component}Label"] ?? 'select-option-label';
+		return $field;
+	}
+
+	if ($component === 'checkboxes') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'checkboxes-name';
+		$field["{$component}Content"] = $props["{$component}Content"] ?? [mockFormField('checkbox', [])];
+		$field["{$component}IsRequiredCount"] = $props["{$component}IsRequiredCount"] ?? null;
+		return $field;
+	}
+
+	if ($component === 'checkbox' || $component === 'radio') {
+		$field["{$component}Value"] = $field["{$component}Value"] ?? 'checkbox-value';
+		$field["{$component}IsReadOnly"] = $props["{$component}IsReadOnly"] ?? false;
+		$field["{$component}IsChecked"] = $props["{$component}IsReadOnly"] ?? false;
+		$field["{$component}SingleSubmit"] = $props["{$component}SingleSubmit"] ?? false;
+		return $field;
+	}
+
+	if ($component === 'radios') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'radios-name';
+		$field["{$component}Content"] = $props["{$component}Content"] ?? [mockFormField('radio', [])];
+		return $field;
+	}
+
+	if ($component === 'file') {
+		$field["{$component}Name"] = $props["{$component}Name"] ?? 'file-name';
+		$field["{$component}Accept"] = $props["{$component}Accept"] ?? null;
+		$field["{$component}MinSize"] = $props["{$component}MinSize"] ?? null;
+		$field["{$component}MaxSize"] = $props["{$component}MaxSize"] ?? null;
+		$field["{$component}IsMultiple"] = $props["{$component}IsMultiple"] ?? false;
+		$field["{$component}IsRequired"] = $props["{$component}IsRequired"] ?? false;
+		$field["{$component}Tracking"] = $props["{$component}Tracking"] ?? null;
+		$field["{$component}CustomInfoText"] = $props["{$component}CustomInfoText"] ?? null;
+		$field["{$component}CustomInfoTextUse"] = $props["{$component}CustomInfoTextUse"] ?? true;
+		$field["{$component}CustomInfoButtonText"] = $props["{$component}CustomInfoButtonText"] ?? null;
+		$field["{$component}UseCustom"] = $props["{$component}UseCustom"] ?? false;
+		$field["{$component}Meta"] = $props["{$component}Meta"] ?? null;
+		$field["{$component}Attrs"] = $props["{$component}Attrs"] ?? null;
+		return $field;
+	}
+
+	return $field;
+}
+
+function buildTestBlocks() {
+	(new Blocks())->getBlocksDataFullRaw();
+}
+
+function destroyTestBlocks() {
+	global $esBlocks;
+	$esBlocks = null;
 }
