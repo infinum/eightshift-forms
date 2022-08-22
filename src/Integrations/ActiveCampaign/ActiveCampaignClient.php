@@ -528,7 +528,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					continue;
 				}
 
-				// Map api qesponse with our naming.
+				// Map api response with our naming.
 				switch ($type) {
 					case 'add-a-tag':
 						$actions[] = [
