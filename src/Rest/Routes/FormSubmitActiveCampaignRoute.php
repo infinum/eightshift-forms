@@ -25,21 +25,21 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
 	 */
-	protected $labels;
+	private $labels;
 
 	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
 	 * @var ActiveCampaignClientInterface
 	 */
-	protected $activeCampaignClient;
+	private $activeCampaignClient;
 
 	/**
 	 * Create a new instance that injects classes

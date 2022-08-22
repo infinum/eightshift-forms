@@ -60,14 +60,14 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	 *
 	 * @var ActiveCampaignClientInterface
 	 */
-	protected $activeCampaignClient;
+	private $activeCampaignClient;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	private $validator;
 
 	/**
 	 * Create a new instance.

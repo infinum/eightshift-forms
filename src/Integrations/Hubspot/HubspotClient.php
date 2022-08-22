@@ -87,7 +87,7 @@ class HubspotClient implements HubspotClientInterface
 
 				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ClientInterface::TRANSIENT_STORED_TIME,
-					'title' => \current_time('mysql'),
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
 				\set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, 3600);

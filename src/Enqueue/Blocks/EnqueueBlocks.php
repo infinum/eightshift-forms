@@ -35,7 +35,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Create a new admin instance.

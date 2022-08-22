@@ -86,14 +86,14 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	 *
 	 * @var ActiveCampaignClientInterface
 	 */
-	protected $activeCampaignClient;
+	private $activeCampaignClient;
 
 	/**
 	 * Instance variable for ActiveCampaign form data.
 	 *
 	 * @var MapperInterface
 	 */
-	protected $activeCampaign;
+	private $activeCampaign;
 
 	/**
 	 * Create a new instance.

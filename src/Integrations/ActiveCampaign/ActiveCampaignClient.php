@@ -67,7 +67,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 				$output[ActiveCampaignClientInterface::TRANSIENT_STORED_TIME] = [
 					'id' => ActiveCampaignClientInterface::TRANSIENT_STORED_TIME,
-					'title' => \current_time('mysql'),
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
 				\set_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME, $output, 3600);
