@@ -111,17 +111,17 @@ This variable will set forms Clearbit api key and you will not be able to change
 ```php
 define('ES_API_KEY_CLEARBIT', '<api-key>');
 ```
-## Set ActiveCampaign api key
+## Set the ActiveCampaign API key
 
-This variable will set forms ActiveCampaign api key and you will not be able to change it from the admin.
+This variable will set form's ActiveCampaign API key. You will not be able to change it from the admin.
 
 ```php
 define('ES_API_KEY_ACTIVE_CAMPAIGN', '<api-key>');
 ```
 
-## Set ActiveCampaign api url
+## Set the ActiveCampaign API URL
 
-This variable will set forms ActiveCampaign api url and you will not be able to change it from the admin.
+This variable will set form's ActiveCampaign API URL. You will not be able to change it from the admin.
 
 ```php
 define('ES_API_URL_ACTIVE_CAMPAIGN', '<api-url>');

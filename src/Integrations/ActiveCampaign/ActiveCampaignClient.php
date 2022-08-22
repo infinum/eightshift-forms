@@ -271,7 +271,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			'contactList' => [
 				'contact' => $contactId,
 				'list' => $list,
-				'status' => "1",
+				'status' => '1',
 			],
 		];
 

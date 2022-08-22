@@ -146,7 +146,7 @@ class Variables
 	}
 
 	/**
-	 * Get API Key for ActiveCampaign.
+	 * Get API key for ActiveCampaign.
 	 *
 	 * @return string
 	 */
@@ -156,7 +156,7 @@ class Variables
 	}
 
 	/**
-	 * Get API Url for ActiveCampaign.
+	 * Get API URL for ActiveCampaign.
 	 *
 	 * @return string
 	 */

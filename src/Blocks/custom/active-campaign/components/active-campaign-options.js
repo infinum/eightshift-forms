@@ -23,7 +23,7 @@ export const ActiveCampaignOptions = ({ postId }) => {
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=active-campaign`}
 					isSecondary
 				>
-					{__('Open ActiveCampaign Form Settings', 'eightshift-forms')}
+					{__('Open ActiveCampaign Form settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
 		</PanelBody>
