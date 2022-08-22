@@ -1,7 +1,7 @@
 {
 	"blockName": "active-campaign",
 	"title": "ActiveCampaign Form",
-	"description" : "A ActiveCampaign subscription form",
+	"description" : "An ActiveCampaign subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-active-campaign"
