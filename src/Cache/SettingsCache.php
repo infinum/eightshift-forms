@@ -116,8 +116,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		$manifestForm = Components::getManifest(\dirname(__DIR__, 1) . '/Blocks/components/form');
 
 		foreach (self::ALL_CACHE as $key => $value) {
-			$name = \str_replace('-', ' ', $key);
-			$name = \ucfirst($name);
+			$name = \ucfirst(\str_replace('-', ' ', $key));
 
 			$output[] = [
 				'component' => 'submit',
