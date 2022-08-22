@@ -468,7 +468,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			case 'activeCampaign500':
 				return 'activeCampaign500Error';
 			case 'activeCampaignForbiden':
-				return 'activeCampaignForbidenError';
+				return 'activeCampaignForbiddenError';
 			default:
 				return 'submitWpError';
 		}
