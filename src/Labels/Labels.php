@@ -296,8 +296,8 @@ class Labels implements LabelsInterface
 		return [
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
-			'activeCampaign500Error' => \__('There was and internal server error. Please try again.', 'eightshift-forms'),
-			'activeCampaignForbidenError' => \__('It looks like this form is not authorized to make this request please check your API key and try again.', 'eightshift-forms'),
+			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
+			'activeCampaignForbidenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

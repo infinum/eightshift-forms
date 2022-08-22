@@ -72,7 +72,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connection data.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
@@ -151,7 +151,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param bool $ssr Does form load using SSR.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
