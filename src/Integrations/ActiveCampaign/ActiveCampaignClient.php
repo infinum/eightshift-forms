@@ -164,7 +164,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					$requestBody,
 					$this->getErrorMsg([
 						[
-							'code' => 'activeCampaignForbiden',
+							'code' => 'activeCampaignForbidden',
 						]
 					]),
 				);
