@@ -161,7 +161,7 @@ const interval = setInterval(() => {
 			initAll: () => {
 				// Bailout if form is loaded but you want to init form again.
 				if (!disableAutoInit) {
-					throw 'You are trying to re-init form class that all-ready exists. Please review your code or disable auto-initialize scripts in the forms global settings.';
+					throw 'You are trying to re-init form class that already exists. Please review your code or disable auto-initialize scripts in the forms global settings.';
 				}
 
 				initAll();
