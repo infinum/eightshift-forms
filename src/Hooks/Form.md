@@ -17,17 +17,33 @@ window.esForms.init();
 This will manually re-init all JS for the forms, you can use this option in combination with the global setting to disable auto-init of JS on page load.
 
 ```js
-window.addEventListener('load', function () {
+function initForms() {
 	if (!window?.esForms) {
 		return;
 	}
 
 	const {
-		formSelector
-	} = window?.esForms;
+		formSelector,
+		events,
+	} = window.esForms;
 
-	window?.esForms.init();
-});
+	window.addEventListener(
+		events.FORMS_JS_LOADED,
+		() => {
+			const forms = document.querySelectorAll(formSelector);
+
+			// Check if form selector exists and if init function is available.
+			if (('initAll' in window.esForms) && forms.length) {
+				window.esForms.initAll();
+			}
+		},
+		{
+			once: true
+		}
+	);
+}
+
+initForms();
 ```
 
 # Events JavaScript
@@ -46,49 +62,70 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 * **esFormsAfterFormSubmitEnd** - Triggers after the form has done the ajax response and it is finished with the logic.
 * **esFormsAfterFormEventsClear** - Triggers after the form removes all event listeners.
 * **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed.
+* **esFormsJsLoaded** - Triggers after all JS is loaded and ready to be used in the forms script. This event can be used when manually triggering forms javascript from your project.
 
 ### Code example one form:
 ```js
-window.addEventListener('load', function () {
-		if (!window?.esForms) {
-		return;
-	}
-
-	const {
-		formSelector
-	} = window?.esForms;
-
-	const form = document.querySelector(formSelector);
-
-	form?.addEventListener('esFormsAfterFormSubmit', (event) => {
-		// Do you logic here.
-	});
-});
-```
-
-### Code example multiple forms:
-```js
-window.addEventListener('load', function () {
+function initForms() {
 	if (!window?.esForms) {
 		return;
 	}
 
 	const {
-		formSelector
-	} = window?.esForms;
+		formSelector,
+		events,
+	} = window.esForms;
 
-	const forms = document.querySelectorAll(formSelector);
+	window.addEventListener(
+		events.FORMS_JS_LOADED,
+		() => {
+			const form = document.querySelector(formSelector);
 
-	if (!forms.length) {
+			form?.addEventListener('esFormsAfterFormSubmit', (event) => {
+				// Do you logic here.
+			});
+		},
+		{
+			once: true
+		}
+	);
+}
+
+initForms();
+```
+
+### Code example multiple forms:
+```js
+function initForms() {
+	if (!window?.esForms) {
 		return;
 	}
 
-	[...forms].forEach((form) => {
-		form.addEventListener('esFormsAfterFormSubmit', (event) => {
-			// Do you logic here.
-		});
-	});
-});
+	const {
+		formSelector,
+		events,
+	} = window.esForms;
+
+	window.addEventListener(
+		events.FORMS_JS_LOADED,
+		() => {
+			const forms = document.querySelectorAll(formSelector);
+
+			if (forms.length) {
+				[...forms].forEach((form) => {
+					form.addEventListener('esFormsAfterFormSubmit', (event) => {
+						// Do you logic here.
+					});
+				});
+			}
+		},
+		{
+			once: true
+		}
+	);
+}
+
+initForms();
 ```
 
 ## esFormsBeforeGtmDataPush

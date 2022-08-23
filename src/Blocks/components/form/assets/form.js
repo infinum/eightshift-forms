@@ -2,19 +2,22 @@
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
+const ePrefix = 'esForms';
+
 // All custom events.
 export const FORM_EVENTS = {
-	BEFORE_FORM_SUBMIT: 'BeforeFormSubmit',
-	AFTER_FORM_SUBMIT: 'AfterFormSubmit',
-	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: 'AfterFormSubmitSuccessRedirect',
-	AFTER_FORM_SUBMIT_SUCCESS: 'AfterFormSubmitSuccess',
-	AFTER_FORM_SUBMIT_RESET: 'AfterFormSubmitReset',
-	AFTER_FORM_SUBMIT_ERROR: 'AfterFormSubmitError',
-	AFTER_FORM_SUBMIT_ERROR_FATAL: 'AfterFormSubmitErrorFatal',
-	AFTER_FORM_SUBMIT_ERROR_VALIDATION: 'AfterFormSubmitErrorValidation',
-	AFTER_FORM_SUBMIT_END: 'AfterFormSubmitEnd',
-	AFTER_FORM_EVENTS_CLEAR: 'AfterFormEventsClear',
-	BEFORE_GTM_DATA_PUSH: 'BeforeGtmDataPush',
+	BEFORE_FORM_SUBMIT: `${ePrefix}BeforeFormSubmit`,
+	AFTER_FORM_SUBMIT: `${ePrefix}AfterFormSubmit`,
+	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${ePrefix}AfterFormSubmitSuccessRedirect`,
+	AFTER_FORM_SUBMIT_SUCCESS: `${ePrefix}AfterFormSubmitSuccess`,
+	AFTER_FORM_SUBMIT_RESET: `${ePrefix}AfterFormSubmitReset`,
+	AFTER_FORM_SUBMIT_ERROR: `${ePrefix}AfterFormSubmitError`,
+	AFTER_FORM_SUBMIT_ERROR_FATAL: `${ePrefix}AfterFormSubmitErrorFatal`,
+	AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${ePrefix}AfterFormSubmitErrorValidation`,
+	AFTER_FORM_SUBMIT_END: `${ePrefix}AfterFormSubmitEnd`,
+	AFTER_FORM_EVENTS_CLEAR: `${ePrefix}AfterFormEventsClear`,
+	BEFORE_GTM_DATA_PUSH: `${ePrefix}BeforeGtmDataPush`,
+	FORMS_JS_LOADED: `${ePrefix}JsLoaded`,
 };
 
 // All form custom state selectors.
@@ -771,7 +774,7 @@ export class Form {
 
 	// Dispatch custom event.
 	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(`esForms${name}`, {
+		const event = new CustomEvent(name, {
 			bubbles: true
 		});
 
