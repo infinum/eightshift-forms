@@ -1,8 +1,12 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { componentJsClass } from './../manifest.json';
+import manifest from './../manifest.json';
 import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
+
+const {
+	componentJsClass,
+} = manifest;
 
 const selector = `.${componentJsClass}`;
 
