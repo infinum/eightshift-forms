@@ -156,7 +156,7 @@ export class Form {
 
 		// Set localStorage data from global variable.
 		this.setLocalStorage();
-	}
+	};
 
 	// Handle form submit and all logic.
 	onFormSubmit = (event) => {
@@ -173,7 +173,7 @@ export class Form {
 		} else {
 			this.formSubmit(element);
 		}
-	}
+	};
 
 	// Handle form submit and all logic for only one field click.
 	onFormSubmitSingle = (event) => {
@@ -181,7 +181,7 @@ export class Form {
 		const {target} = event;
 
 		this.formSubmit(target.closest(this.formSelector), target);
-	}
+	};
 
 	// Handle form submit and all logic in case we have captcha in place.
 	formSubmitCaptcha = (element, token) => {
@@ -233,7 +233,7 @@ export class Form {
 				}, parseInt(this.hideGlobalMessageTimeout, 10));
 			}
 		});
-	}
+	};
 
 	// Handle form submit and all logic.
 	formSubmit = (element, singleSubmit = false) => {
@@ -360,7 +360,7 @@ export class Form {
 				// Dispatch event.
 				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_END);
 			});
-	}
+	};
 
 	// Build form data object.
 	getFormData = (element, singleSubmit = false) => {
@@ -535,7 +535,7 @@ export class Form {
 	 }
 
 		return formData;
-	}
+	};
 
 	// Output all error for fields.
 	outputErrors = (element, fields) => {
@@ -556,7 +556,7 @@ export class Form {
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
 		}
-	}
+	};
 
 	// Reset form values if the condition is right.
 	resetForm = (element) => {
@@ -593,7 +593,7 @@ export class Form {
 			// Dispatch event.
 			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_RESET);
 		}
-	}
+	};
 
 	// Reset for in general.
 	reset = (element) => {
@@ -606,7 +606,7 @@ export class Form {
 		element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
 
 		this.unsetGlobalMsg(element);
-	}
+	};
 
 	// Show loader.
 	showLoader = (element) => {
@@ -619,7 +619,7 @@ export class Form {
 		}
 
 		loader.classList.add(this.CLASS_ACTIVE);
-	}
+	};
 
 	// Hide loader.
 	hideLoader = (element) => {
@@ -634,7 +634,7 @@ export class Form {
 
 			loader.classList.remove(this.CLASS_ACTIVE);
 		}, parseInt(this.hideLoadingStateTimeout, 10));
-	}
+	};
 
 	// Set global message.
 	setGlobalMsg = (element, msg, status) => {
@@ -656,7 +656,7 @@ export class Form {
 		if (status === 'success' && this.formDisableScrollToGlobalMessageOnSuccess !== '1') {
 			this.scrollToElement(messageContainer);
 		}
-	}
+	};
 
 	// Unset global message.
 	unsetGlobalMsg(element) {
@@ -770,7 +770,7 @@ export class Form {
 		if (element !== null) {
 			element.scrollIntoView({block: 'start', behavior: 'smooth'});
 		}
-	}
+	};
 
 	// Dispatch custom event.
 	dispatchFormEvent(element, name) {
@@ -788,7 +788,7 @@ export class Form {
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
-	}
+	};
 
 	// Setup Select field.
 	setupSelectField = (select, formId) => {
@@ -816,7 +816,7 @@ export class Form {
 			select.addEventListener('focus', this.onFocusEvent);
 			select.addEventListener('blur', this.onBlurEvent);
 		}
-	}
+	};
 
 	// Setup Textarea field.
 	setupTextareaField = (textarea, formId) => {
@@ -836,7 +836,7 @@ export class Form {
 				this.customTextareas[formId].push(autosize.default);
 			});
 		}
-	}
+	};
 
 	// Setup file single field.
 	setupFileField = (file, formId, index) => {
@@ -891,7 +891,7 @@ export class Form {
 				button.addEventListener('blur', this.onBlurEvent);
 			});
 		}
-	}
+	};
 
 	// On custom file wrapper click event callback.
 	onCustomFileWrapClickEvent = (event) => {
@@ -902,7 +902,7 @@ export class Form {
 		const formId = event.currentTarget.getAttribute('dropzone-form-id');
 
 		this.customFiles[formId][index].hiddenFileInput.click();
-	}
+	};
 
 	// Prefill inputs active/filled on init.
 	preFillOnInit = (input, type) => {
@@ -927,12 +927,12 @@ export class Form {
 				}
 				break;
 		}
-	}
+	};
 
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
 		event.target.closest(this.fieldSelector).classList.add(this.CLASS_ACTIVE);
-	}
+	};
 
 	// On Blur generic method. Check for length of value.
 	onBlurEvent = (event) => {
@@ -975,7 +975,7 @@ export class Form {
 		} else {
 			field.classList.remove(this.CLASS_ACTIVE, this.CLASS_FILLED);
 		}
-	}
+	};
 
 	// Determine if field is custom type or normal.
 	isCustom(item) {
@@ -1073,7 +1073,18 @@ export class Form {
 		const searchParams = new URLSearchParams(window.location.search);
 
 		// Get storage from backend this is considered new by the page request.
-		const newStorage = searchParams.entries().filter(([key, value]) => allowedTags.includes(key) && value !== '');
+		const newStorage = {};
+
+		// Loop entries and get new storage values.
+		for (const [key, value] of searchParams.entries()) {
+			// Bailout if not allowed or empty
+			if (!allowedTags.includes(key) || value === '') {
+				continue;
+			}
+
+			// Add valid tag.
+			newStorage[key] = value;
+		}
 
 		// Bailout if nothing is set from allowed tags or everything is empty.
 		if (Object.keys(newStorage).length === 0) {

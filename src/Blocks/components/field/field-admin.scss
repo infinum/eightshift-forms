@@ -26,15 +26,13 @@
 			font-size: inherit;
 			padding-top: 0.75rem;
 			margin-bottom: 0;
-			grid-column-start: 1;
-			grid-column-end: 4;
+			grid-column: 1 / 4;
 		}
 	}
 
 	&__content {
 		@include media(desktop up) {
-			grid-column-start: 4;
-			grid-column-end: 13;
+			grid-column: 4 / 13;
 		}
 
 		@include media(large up) {
@@ -47,8 +45,7 @@
 		margin-top: 0.5rem;
 
 		@include media(desktop up) {
-			grid-column-start: 4;
-			grid-column-end: 13;
+			grid-column: 4 / 13;
 		}
 
 		@include media(large up) {
@@ -75,8 +72,7 @@
 
 	&__es-error {
 		@include media(desktop up) {
-			grid-column-start: 4;
-			grid-column-end: 13;
+			grid-column: 4 / 13;
 		}
 
 		@include media(large up) {

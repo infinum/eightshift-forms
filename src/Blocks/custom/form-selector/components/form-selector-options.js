@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
@@ -12,7 +12,7 @@ export const FormSelectorOptions = () => {
 	} = select(STORE_NAME).getSettings();
 
 	const formId = useSelect((select) => select('core/editor').getCurrentPostId());
-	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
 	return (
 		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>

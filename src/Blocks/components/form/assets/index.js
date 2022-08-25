@@ -4,6 +4,10 @@ import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
 import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
 
+if (typeof esFormsLocalization === 'undefined') {
+	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
+}
+
 const {
 	componentJsClass,
 } = manifest;
@@ -139,54 +143,24 @@ function initAll() {
 	});
 }
 
-let loadCounter = 0;
-const maxTry = 5;
-const intervalTime = 100;
+// You can disable auto init from the admin.
+const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit);
 
-// Load interval for checking if global variable has loaded in dom.
-const interval = setInterval(() => {
-	loadCounter++;
+// Load normal forms on dom ready event otherwise use manual trigger from the window object.
+if (!disableAutoInit) {
+	domReady(() => {
+		const elements = document.querySelectorAll(selector);
 
-	if (loadCounter >= maxTry) {
-		clearInterval(interval);
-
-		throw `We tried ${maxTry} times to find esFormsLocalization global variable and it looks like your project is missing it. The variable is called using the the enqueue script in the forms. Please check if you disabled loading forms scripts on the frontend.`;
-	}
-
-	if (typeof esFormsLocalization !== 'undefined') {
-		clearInterval(interval);
-
-		// You can disable auto init from the admin.
-		const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit) ?? false;
-
-		// Load window form no matter what the option is set.
-		window['esForms'] = {
-			...window['esForms'],
-			initAll: () => {
-				// Bailout if form is loaded but you want to init form again.
-				if (!disableAutoInit) {
-					throw 'You are trying to re-init form class that already exists. Please review your code or disable auto-initialize scripts in the forms global settings.';
-				}
-
-				initAll();
-			},
-		};
-
-		// Load normal forms on dom ready event otherwise use manual trigger from the window object.
-		if (!disableAutoInit) {
-			domReady(() => {
-				const elements = document.querySelectorAll(selector);
-
-				if (elements.length) {
-					initAll();
-				}
-			});
+		if (elements.length) {
+			initAll();
 		}
-
-		const event = new CustomEvent(FORM_EVENTS.FORMS_JS_LOADED, {
-			bubbles: true
-		});
-
-		window.dispatchEvent(event);
-	}
-}, intervalTime);
+	});
+} else {
+	// Load initAll method in window object for manual trigger.
+	window['esForms'] = {
+		...window['esForms'],
+		initAll: () => {
+			initAll();
+		},
+	};
+}

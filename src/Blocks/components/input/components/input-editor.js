@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
@@ -49,10 +49,10 @@ export const InputEditor = (attributes) => {
 	let additionalContent = '';
 
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.inputBlockAdditionalContent) !== ''
+		typeof esFormsLocalization !== 'undefined' &&
+		(esFormsLocalization?.inputBlockAdditionalContent) !== ''
 	) {
-		additionalContent = esFormsBlocksLocalization.inputBlockAdditionalContent;
+		additionalContent = esFormsLocalization.inputBlockAdditionalContent;
 	}
 
 	const input = (

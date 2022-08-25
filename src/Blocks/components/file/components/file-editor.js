@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
@@ -39,10 +39,10 @@ export const FileEditor = (attributes) => {
 		let additionalContent = '';
 
 		if (
-			typeof esFormsBlocksLocalization !== 'undefined' &&
-			(esFormsBlocksLocalization?.fileBlockAdditionalContent) !== ''
+			typeof esFormsLocalization !== 'undefined' &&
+			(esFormsLocalization?.fileBlockAdditionalContent) !== ''
 		) {
-			additionalContent = esFormsBlocksLocalization.fileBlockAdditionalContent;
+			additionalContent = esFormsLocalization.fileBlockAdditionalContent;
 		}
 
 	const file = (

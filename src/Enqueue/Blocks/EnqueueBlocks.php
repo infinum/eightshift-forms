@@ -13,9 +13,12 @@ namespace EightshiftForms\Enqueue\Blocks;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Tracking\TrackingInterface;
+use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -38,17 +41,27 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public $validator;
 
 	/**
+	 * Instance variable of tracking data.
+	 *
+	 * @var TrackingInterface
+	 */
+	protected TrackingInterface $tracking;
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param TrackingInterface $tracking Inject tracking which holds data about for storing to localstorage.
 	 */
 	public function __construct(
 		ManifestInterface $manifest,
-		ValidatorInterface $validator
+		ValidatorInterface $validator,
+		TrackingInterface $tracking
 	) {
 		$this->manifest = $manifest;
 		$this->validator = $validator;
+		$this->tracking = $tracking;
 	}
 
 	/**
@@ -68,9 +81,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
-
-		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 	}
 
 	/**
@@ -150,7 +160,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	{
 		$output = [];
 
-		// Only for block editor.
+		// Admin part.
 		if (\is_admin()) {
 			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
 			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
@@ -189,10 +199,58 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['geolocationApi'] = $restApiUrl . GeolocationCountriesRoute::ROUTE_NAME;
 
 			$output['wpAdminUrl'] = \get_admin_url();
+		} else {
+			// Frontend part.
+			$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+
+			$hideGlobalMsgTimeoutFilterName = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
+			$redirectionTimeoutFilterName = Filters::getBlockFilterName('form', 'redirectionTimeout');
+			$previewRemoveLabelFilterName = Filters::getBlockFilterName('file', 'previewRemoveLabel');
+			$hideLoadingStateTimeoutFilterName = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
+
+			$output = [
+				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
+				'hideGlobalMessageTimeout' => \apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
+				'redirectionTimeout' => \apply_filters($redirectionTimeoutFilterName, 300),
+				'hideLoadingStateTimeout' => \apply_filters($hideLoadingStateTimeoutFilterName, 600),
+				'fileCustomRemoveLabel' => \apply_filters($previewRemoveLabelFilterName, \esc_html__('Remove', 'eightshift-forms')),
+				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				),
+				'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				),
+				'formDisableAutoInit' => $this->isCheckboxOptionChecked(
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+					SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
+				),
+				'formResetOnSuccess' => !Variables::isDevelopMode(),
+				'captcha' => '',
+				'storageConfig' => '',
+			];
+
+			// Check if Captcha data is set and valid.
+			$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+
+			if ($isCaptchaSettingsGlobalValid) {
+				$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+			}
+
+			// Localstorage allowed tags.
+			$allowedTrackingTags = $this->tracking->getAllowedTags();
+
+			if ($allowedTrackingTags) {
+				$output['storageConfig'] = \wp_json_encode([
+					'allowed' => $allowedTrackingTags,
+					'expiration' => $this->tracking->getTrackingExpiration(),
+				]);
+			}
 		}
 
 		return [
-			'esFormsBlocksLocalization' => $output,
+			'esFormsLocalization' => $output,
 		];
 	}
 }

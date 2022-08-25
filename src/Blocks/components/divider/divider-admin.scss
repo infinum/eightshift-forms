@@ -1,7 +1,9 @@
 .es-divider {
 	border-bottom: 1px solid var(--global-colors-es-ebb);
-	margin-bottom: 30px;
-	margin-top: 30px;
-	margin-left: calc(var(--global-es-spacing-horizontal) * -1);
-	margin-right: calc(var(--global-es-spacing-horizontal) * -1);
+	margin: {
+		bottom: 30px;
+		top: 30px;
+		left: calc(var(--global-es-spacing-horizontal) * -1);
+		right: calc(var(--global-es-spacing-horizontal) * -1);
+	}
 }

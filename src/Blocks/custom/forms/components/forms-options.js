@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useState } from 'react';
 import { isArray } from 'lodash';
@@ -25,7 +25,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		settingsPageUrl
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
 	const {
 		postType,
@@ -51,16 +51,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	let geolocationApi = '';
 
 	// Custom block forms style options.
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.formsBlockStyleOptions)) {
-		formsStyleOptions = esFormsBlocksLocalization.formsBlockStyleOptions;
+	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.formsBlockStyleOptions)) {
+		formsStyleOptions = esFormsLocalization.formsBlockStyleOptions;
 	}
 
 	// Is geolocation active.
-	if (typeof esFormsBlocksLocalization !== 'undefined' && esFormsBlocksLocalization?.useGeolocation) {
+	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.useGeolocation) {
 		formsUseGeolocation = true;
 
-		if (esFormsBlocksLocalization?.geolocationApi) {
-			geolocationApi = esFormsBlocksLocalization.geolocationApi;
+		if (esFormsLocalization?.geolocationApi) {
+			geolocationApi = esFormsLocalization.geolocationApi;
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import {
@@ -34,10 +34,10 @@ export const CheckboxesEditor = (attributes) => {
 	let additionalContent = '';
 
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.checkboxesBlockAdditionalContent) !== ''
+		typeof esFormsLocalization !== 'undefined' &&
+		(esFormsLocalization?.checkboxesBlockAdditionalContent) !== ''
 	) {
-		additionalContent = esFormsBlocksLocalization.checkboxesBlockAdditionalContent;
+		additionalContent = esFormsLocalization.checkboxesBlockAdditionalContent;
 	}
 
 	const checkboxes = (

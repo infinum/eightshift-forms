@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
@@ -43,10 +43,10 @@ export const SelectEditor = (attributes) => {
 	let additionalContent = '';
 
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.selectBlockAdditionalContent) !== ''
+		typeof esFormsLocalization !== 'undefined' &&
+		(esFormsLocalization?.selectBlockAdditionalContent) !== ''
 	) {
-		additionalContent = esFormsBlocksLocalization.selectBlockAdditionalContent;
+		additionalContent = esFormsLocalization.selectBlockAdditionalContent;
 	}
 
 	const select = (

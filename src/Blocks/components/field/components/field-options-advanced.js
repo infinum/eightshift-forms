@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
@@ -34,8 +34,8 @@ export const FieldOptionsAdvanced = (attributes) => {
 
 	let fieldStyleOptions = [];
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isObject(esFormsBlocksLocalization?.fieldBlockStyleOptions)) {
-		fieldStyleOptions = esFormsBlocksLocalization.fieldBlockStyleOptions[blockName];
+	if (typeof esFormsLocalization !== 'undefined' && isObject(esFormsLocalization?.fieldBlockStyleOptions)) {
+		fieldStyleOptions = esFormsLocalization.fieldBlockStyleOptions[blockName];
 	}
 
 	const mainFieldWidth = checkAttr(fieldWidth['large'], attributes, manifest, true);
