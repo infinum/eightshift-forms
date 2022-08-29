@@ -7,9 +7,6 @@
  *
  * Usage: `WordPress frontend screen`.
  */
-if (!window?._babelPolyfill) { // eslint-disable-line no-underscore-dangle
-	require('@babel/polyfill');
-}
 
 import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 

@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import {
@@ -34,10 +34,10 @@ export const RadiosEditor = (attributes) => {
 	let additionalContent = '';
 
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.radiosBlockAdditionalContent) !== ''
+		typeof esFormsLocalization !== 'undefined' &&
+		(esFormsLocalization?.radiosBlockAdditionalContent) !== ''
 	) {
-		additionalContent = esFormsBlocksLocalization.radiosBlockAdditionalContent;
+		additionalContent = esFormsLocalization.radiosBlockAdditionalContent;
 	}
 
 	const radios = (

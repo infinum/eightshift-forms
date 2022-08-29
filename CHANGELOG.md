@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [1.4.0]
+
+### Fixed
+- preselected values for custom select.
+- added additional corrections for localStorage.
+- missing attribute from component to form block manifest.json.
+- updating libs and frontend libs.
+- fixing loading of js.
+- fixing way the settings are passed to the js.
+- fixing linting issues.
+
+### Removed
+- removing unnecessary style and scripts.
+
+### Added
+- new fieldhidden attributes for hiding fields from dom.
+- hidden field for hubspot integration.
+- preselected value field for hubspot integration.
+- enabled field for hubspot integration.
+- new custom form type used to provide custom form action location.
+- options in forms block to define action.
+- option to send form submit to external url if form action is set.
+- new tracking class for storing url tags and detecting tags from get param.
+- new option to store url tracking tags to local storage for later usage.
+- new filters for tracking.
+- local and global file upload allowed types.
+
 ## [1.3.0]
 
 ### Fixed
@@ -68,6 +95,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[1.4.0]: https://github.com/infinum/eightshift-forms/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/infinum/eightshift-forms/compare/1.2.4...1.3.0
 [1.2.4]: https://github.com/infinum/eightshift-forms/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/infinum/eightshift-forms/compare/1.2.2...1.2.3

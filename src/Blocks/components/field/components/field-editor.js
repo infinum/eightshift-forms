@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import classnames from 'classnames';
@@ -25,14 +25,14 @@ export const FieldEditor = (attributes) => {
 
 	// Update media breakpoints from the filter.
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		isObject(esFormsBlocksLocalization?.mediaBreakpoints) &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "mobile") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "tablet") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "desktop") &&
-		Object.prototype.hasOwnProperty.call(esFormsBlocksLocalization?.mediaBreakpoints, "large")
+		typeof esFormsLocalization !== 'undefined' &&
+		isObject(esFormsLocalization?.mediaBreakpoints) &&
+		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "mobile") &&
+		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "tablet") &&
+		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "desktop") &&
+		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "large")
 	) {
-		dispatch(STORE_NAME).setSettingsGlobalVariablesBreakpoints(esFormsBlocksLocalization.mediaBreakpoints);
+		dispatch(STORE_NAME).setSettingsGlobalVariablesBreakpoints(esFormsLocalization.mediaBreakpoints);
 	}
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);

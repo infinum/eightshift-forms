@@ -15,7 +15,7 @@ export class Cache {
 		[...elements].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
-	}
+	};
 
 	// Handle form submit and all logic.
 	onClick = (event) => {
@@ -52,7 +52,7 @@ export class Cache {
 					location.reload();
 				}, 1000);
 			});
-	}
+	};
 
 	// Set global message.
 	setGlobalMsg = (msg, status) => {
@@ -65,5 +65,5 @@ export class Cache {
 		messageContainer.classList.add(this.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
 		messageContainer.innerHTML = `<span>${msg}</span>`;
-	}
+	};
 }

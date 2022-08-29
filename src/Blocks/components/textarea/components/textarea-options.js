@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
@@ -33,8 +33,8 @@ export const TextareaOptions = (attributes) => {
 
 	let textareaValidationPatternOptions = [];
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.validationPatternsOptions)) {
-		textareaValidationPatternOptions = esFormsBlocksLocalization.validationPatternsOptions;
+	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+		textareaValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
 	const [showValidation, setShowValidation] = useState(false);

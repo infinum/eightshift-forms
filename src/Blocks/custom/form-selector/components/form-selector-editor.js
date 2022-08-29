@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
@@ -63,8 +63,8 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 	// Additional content filter.
 	let additionalContent = '';
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && (esFormsBlocksLocalization?.formSelectorBlockAdditionalContent) !== '') {
-		additionalContent = esFormsBlocksLocalization.formSelectorBlockAdditionalContent;
+	if (typeof esFormsLocalization !== 'undefined' && (esFormsLocalization?.formSelectorBlockAdditionalContent) !== '') {
+		additionalContent = esFormsLocalization.formSelectorBlockAdditionalContent;
 	}
 
 	return (

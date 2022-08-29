@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import { addFilter } from '@wordpress/hooks';
 import { select } from '@wordpress/data';
@@ -17,8 +17,8 @@ export const hooks = () => {
 
 	// All adding additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
-		if (name === `${namespace}/${blockName}` && typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.additionalBlocks)) {
-			esFormsBlocksLocalization.additionalBlocks.forEach((element) => {
+		if (name === `${namespace}/${blockName}` && typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
+			esFormsLocalization.additionalBlocks.forEach((element) => {
 				settings.attributes.formAllowedBlocks.default.push(element);
 			});
 		}

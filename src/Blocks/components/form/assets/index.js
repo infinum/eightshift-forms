@@ -1,31 +1,28 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { componentJsClass } from './../manifest.json';
+import manifest from './../manifest.json';
 import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
 
 if (typeof esFormsLocalization === 'undefined') {
 	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
 }
 
+const {
+	componentJsClass,
+} = manifest;
+
 const selector = `.${componentJsClass}`;
 
-// You can disable auto init from the admin.
-const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit) ?? false;
-
-// Load window form no matter what the option is set.
 window['esForms'] = {
 	events: FORM_EVENTS,
 	selectors: FORM_SELECTORS,
 	dataAttributes: FORM_DATA_ATTRIBUTES,
 	formSelector: selector,
-	initAll: () => {
-		initAll(true);
-	},
 };
 
 // Load add data required for the forms to work.
-function initAll(manual) {
+function initAll() {
 	import('./form').then(({ Form }) => {
 		const form = new Form({
 			formSelector: selector,
@@ -40,11 +37,6 @@ function initAll(manual) {
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
 		});
-
-		// Bailout if form is loaded but you want to init form again.
-		if (manual && !disableAutoInit) {
-			throw 'You are trying to re-init form class that all-ready exists. Please review your code or disable auto-initialize scripts in the forms global settings.';
-		}
 
 		// Run forms.
 		form.init();
@@ -151,14 +143,24 @@ function initAll(manual) {
 	});
 }
 
+// You can disable auto init from the admin.
+const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit);
+
 // Load normal forms on dom ready event otherwise use manual trigger from the window object.
 if (!disableAutoInit) {
 	domReady(() => {
 		const elements = document.querySelectorAll(selector);
 
 		if (elements.length) {
-			initAll(false);
+			initAll();
 		}
 	});
+} else {
+	// Load initAll method in window object for manual trigger.
+	window['esForms'] = {
+		...window['esForms'],
+		initAll: () => {
+			initAll();
+		},
+	};
 }
-

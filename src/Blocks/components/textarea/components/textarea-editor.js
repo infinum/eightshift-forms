@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React, { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
@@ -43,10 +43,10 @@ export const TextareaEditor = (attributes) => {
 	let additionalContent = '';
 
 	if (
-		typeof esFormsBlocksLocalization !== 'undefined' &&
-		(esFormsBlocksLocalization?.textareaBlockAdditionalContent) !== ''
+		typeof esFormsLocalization !== 'undefined' &&
+		(esFormsLocalization?.textareaBlockAdditionalContent) !== ''
 	) {
-		additionalContent = esFormsBlocksLocalization.textareaBlockAdditionalContent;
+		additionalContent = esFormsLocalization.textareaBlockAdditionalContent;
 	}
 
 	const textarea = (

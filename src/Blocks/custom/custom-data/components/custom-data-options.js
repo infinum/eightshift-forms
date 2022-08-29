@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import { isArray } from 'lodash';
@@ -24,8 +24,8 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 
 	let customDataDataOptions = [];
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.customDataBlockOptions)) {
-		customDataDataOptions = esFormsBlocksLocalization.customDataBlockOptions;
+	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.customDataBlockOptions)) {
+		customDataDataOptions = esFormsLocalization.customDataBlockOptions;
 	}
 
 	if (customDataDataOptions?.length < 1) {

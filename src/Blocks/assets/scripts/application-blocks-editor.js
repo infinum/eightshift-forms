@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 /**
  * This is the main entry point for Block Editor blocks scripts used for the `WordPress admin editor`.
  * This file registers blocks dynamically using `registerBlocks` helper method.
@@ -36,7 +36,7 @@ registerBlocks(
 outputCssVariablesGlobal();
 
 // Remove form-selector block from anywhere else other than form CPT.
-if (esFormsBlocksLocalization?.postType !== 'eightshift-forms') {
+if (esFormsLocalization?.postType !== 'eightshift-forms') {
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
 	unregisterBlockType(`${namespace}/form-selector`);

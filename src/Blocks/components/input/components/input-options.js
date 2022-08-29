@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import { isArray } from 'lodash';
@@ -70,8 +70,8 @@ export const InputOptions = (attributes) => {
 
 	let inputValidationPatternOptions = [];
 
-	if (typeof esFormsBlocksLocalization !== 'undefined' && isArray(esFormsBlocksLocalization?.validationPatternsOptions)) {
-		inputValidationPatternOptions = esFormsBlocksLocalization.validationPatternsOptions;
+	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+		inputValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
 	return (

@@ -1,9 +1,13 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { componentJsClass, componentCacheJsClass } from './../manifest.json';
+import manifest from './../manifest.json';
 
 domReady(() => {
+	const {
+		componentJsClass,
+		componentCacheJsClass,
+	} = manifest;
 	const selector = `.${componentJsClass}`;
 	const elements = document.querySelectorAll(selector);
 

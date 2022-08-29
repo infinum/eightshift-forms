@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalizations */
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
@@ -11,7 +11,7 @@ export const MailchimpOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsLocalizations.wpAdminUrl;
 
 	return (
 		<PanelBody title={__('Mailchimp', 'eightshift-forms')}>

@@ -78,7 +78,7 @@
 			padding-bottom: 20px;
 
 			.dz-error-message {
-				@extend .es-error;
+				@extend .es-error; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 				display: block;
 				position: absolute;
 				left: 0;
