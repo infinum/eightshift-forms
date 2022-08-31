@@ -144,4 +144,24 @@ class Variables
 	{
 		return \defined('ES_API_KEY_CLEARBIT') ? \ES_API_KEY_CLEARBIT : '';
 	}
+
+	/**
+	 * Get API key for ActiveCampaign.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyActiveCampaign(): string
+	{
+		return \defined('ES_API_KEY_ACTIVE_CAMPAIGN') ? \ES_API_KEY_ACTIVE_CAMPAIGN : '';
+	}
+
+	/**
+	 * Get API URL for ActiveCampaign.
+	 *
+	 * @return string
+	 */
+	public static function getApiUrlActiveCampaign(): string
+	{
+		return \defined('ES_API_URL_ACTIVE_CAMPAIGN') ? \ES_API_URL_ACTIVE_CAMPAIGN : '';
+	}
 }

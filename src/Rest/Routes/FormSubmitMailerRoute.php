@@ -37,7 +37,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Instance variable of MailerInterface data.

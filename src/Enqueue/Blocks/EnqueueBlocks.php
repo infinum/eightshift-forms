@@ -38,7 +38,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Instance variable of tracking data.

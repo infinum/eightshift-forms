@@ -25,7 +25,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Create a new instance that injects classes

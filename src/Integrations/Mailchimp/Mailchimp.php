@@ -60,7 +60,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Create a new instance.

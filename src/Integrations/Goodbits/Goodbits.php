@@ -54,7 +54,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Create a new instance.
