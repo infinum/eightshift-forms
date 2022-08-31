@@ -217,7 +217,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$formType = $params['es-form-type'] ?? '';
 
 		if (!$formType) {
-			return '';
+			throw new UnverifiedRequestException(
+				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
+			);
 		}
 
 		return $formType['value'] ?? '';
@@ -266,6 +268,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		$formId = $formId['value'] ?? '';
+
+		if (!$formId) {
+			throw new UnverifiedRequestException(
+				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
+			);
+		}
 
 		return $formId;
 	}

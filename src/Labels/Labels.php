@@ -38,7 +38,7 @@ class Labels implements LabelsInterface
 		'hubspotSuccess',
 		'mailerliteSuccess',
 		'goodbitsSuccess',
-		'clearbitSuccess',
+		'customSuccess',
 	];
 
 	/**

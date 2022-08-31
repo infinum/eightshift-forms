@@ -79,6 +79,7 @@ export class Form {
 		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
 		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
 		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
+		this.formServerErrorMsg = options.formServerErrorMsg ?? '';
 		this.captcha = options.captcha ?? '';
 		this.storageConfig = options.storageConfig ?? '';
 
@@ -232,6 +233,9 @@ export class Form {
 					this.hideGlobalMsg(element);
 				}, parseInt(this.hideGlobalMessageTimeout, 10));
 			}
+		})
+		.catch(function() {
+			this.setGlobalMsg(element, this.formServerErrorMsg, 'error');
 		});
 	};
 

@@ -162,7 +162,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					'component' => 'rich-text',
 					'richTextId' => "rich-text-{$key}",
 					'richTextName' => "rich-text-{$key}",
-					'richTextFieldLabel' => \__('Rich text', 'eightshift-form') . '-' . $key,
+					'richTextFieldLabel' => \__('Rich text', 'eightshift-forms') . '-' . $key,
 					'richTextContent' => $richText,
 					'blockSsr' => $ssr,
 				];

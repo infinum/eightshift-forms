@@ -147,7 +147,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => \esc_html__('Changes saved!', 'eightshift-form'),
+				'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
 			]);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -175,7 +175,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-form'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 			]);
 		}
 
@@ -192,7 +192,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-form'),
+			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-forms'),
 		]);
 	}
 }

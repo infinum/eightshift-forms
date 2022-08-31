@@ -47,6 +47,7 @@ function initAll() {
 			redirectionTimeout: form.redirectionTimeout,
 			hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 			captchaSiteKey: esFormsLocalization.captcha,
+			formServerErrorMsg: esFormsLocalization.formServerErrorMsg,
 			files: form.files,
 			customSelects: form.customSelects,
 			customFiles: form.customFiles,

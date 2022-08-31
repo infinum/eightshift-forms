@@ -135,13 +135,20 @@ class GreenhouseClient implements ClientInterface
 			$this->prepareFiles($files)
 		);
 
+		error_log( print_r( ( $body ), true ) );
+		error_log( print_r( ( $this->getHeaders(true) ), true ) );
+		
+		
+
 		$response = \wp_remote_post(
 			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
 				'headers' => $this->getHeaders(true),
-				'body' => \wp_json_encode($body),
+				'body' => $body,
 			]
 		);
+
+		error_log( print_r( ( $response ), true ) );
 
 		if (\is_wp_error($response)) {
 			Helper::logger([
@@ -289,18 +296,19 @@ class GreenhouseClient implements ClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
+	 * @param boolean $postHeaders If using post method we need to send Authorization header and type in the request.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHeaders(bool $useAuth = false): array
+	private function getHeaders(bool $postHeaders = false): array
 	{
 		$headers = [
-			'Content-Type' => 'application/json; charset=utf-8',
+			'Content-Type' => 'application/json',
 		];
 
-		if ($useAuth) {
+		if ($postHeaders) {
 			$headers['Authorization'] = "Basic {$this->getApiKey()}";
+			$headers['Content-Type'] = 'multipart/form-data';
 		}
 
 		return $headers;
@@ -317,6 +325,10 @@ class GreenhouseClient implements ClientInterface
 	{
 		$output = [];
 
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
+		}
+
 		foreach ($params as $key => $value) {
 			// Get gh_src from url and map it.
 			if ($key === 'es-form-storage' && isset($value['value']['gh_src'])) {
@@ -324,10 +336,6 @@ class GreenhouseClient implements ClientInterface
 			} else {
 				$output[$key] = $value['value'] ?? '';
 			}
-		}
-
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
 		}
 
 		return $output;
@@ -353,13 +361,13 @@ class GreenhouseClient implements ClientInterface
 				$fileName = $file['fileName'] ?? '';
 				$path = $file['path'] ?? '';
 				$id = $file['id'] ?? '';
+				$type = $file['type'] ?? '';
 
-				if (!$path || !$fileName || !$id) {
+				if (!$path || !$fileName || !$id || !$type) {
 					continue;
 				}
 
-				$output["{$id}_content"] = \base64_encode((string) \file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-				$output["{$id}_content_filename"] = $fileName;
+				$output[$id] = new \CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

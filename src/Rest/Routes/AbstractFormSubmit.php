@@ -66,6 +66,12 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Get form ID.
 			$formId = $this->getFormId($params);
 
+			if (!$formId) {
+				throw new UnverifiedRequestException(
+					\esc_html__('Invalid nonce.', 'eightshift-forms')
+				);
+			}
+
 			// Determine form type.
 			$formType = $this->getFormType($params);
 

@@ -227,6 +227,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 				),
 				'formResetOnSuccess' => !Variables::isDevelopMode(),
+				'formServerErrorMsg' => esc_html__('An server error occurred while submitting your form. Please try again.', 'eightshift-forms'),
 				'captcha' => '',
 				'storageConfig' => '',
 			];

@@ -81,9 +81,20 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]);
 		}
 
+		if (isset($params['es-form-storage'])) {
+			unset($params['es-form-storage']);
+		}
+
 		// Format body parameters to a key/value array.
 		foreach ($params as $param) {
-			$body[$param['name']] = $param['value'];
+			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if ($name || !$value) {
+				continue;
+			}
+
+			$body[$name] = $value;
 		}
 
 		// Create a custom form action request.
@@ -112,7 +123,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is valid we'll return the generic success message.
 		return \rest_ensure_response([
 			'status' => 'success',
-			'code' => $customResponseCode,
+			'code' => 200,
 			'message' => $this->labels->getLabel('customSuccess', $formId),
 		]);
 	}
