@@ -61,7 +61,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Create a new instance.

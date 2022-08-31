@@ -37,7 +37,7 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	 *
 	 * @var ValidatorInterface
 	 */
-	public $validator;
+	protected $validator;
 
 	/**
 	 * Instance variable of LabelsInterface data.

@@ -19,7 +19,8 @@
 				"eightshift-forms/greenhouse",
 				"eightshift-forms/hubspot",
 				"eightshift-forms/mailerlite",
-				"eightshift-forms/goodbits"
+				"eightshift-forms/goodbits",
+				"eightshift-forms/active-campaign"
 			]
 		}
 	},
@@ -94,6 +95,12 @@
 			"slug": "goodbits",
 			"icon": "esf-form-goodbits",
 			"blockName": "eightshift-forms/goodbits"
+		},
+		{
+			"label": "ActiveCampaign",
+			"slug": "active-campaign",
+			"icon": "esf-form-active-campaign",
+			"blockName": "eightshift-forms/active-campaign"
 		}
 	]
 }

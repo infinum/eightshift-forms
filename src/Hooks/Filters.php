@@ -25,6 +25,8 @@ use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaign;
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
@@ -130,6 +132,14 @@ class Filters
 				],
 			]
 		],
+		SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+			'global' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsActiveCampaign::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsActiveCampaign::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
+			'valid' => SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m4 1.5 10.272 7.276a1.5 1.5 0 0 1 0 2.448L4 18.5m0-12L9.5 10" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
+		],
 		SettingsLocation::SETTINGS_TYPE_KEY => [
 			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME,
@@ -186,6 +196,12 @@ class Filters
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
+			],
+			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
 		'tracking' => [

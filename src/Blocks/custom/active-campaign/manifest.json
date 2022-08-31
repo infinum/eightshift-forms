@@ -1,0 +1,29 @@
+{
+	"blockName": "active-campaign",
+	"title": "ActiveCampaign Form",
+	"description" : "An ActiveCampaign subscription form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-active-campaign"
+	},
+	"keywords": [
+		"active-campaign"
+	],
+	"example": {
+	},
+	"attributes": {
+		"activeCampaignFormPostId": {
+			"type": "string"
+		},
+		"activeCampaignFormServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"activeCampaignFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

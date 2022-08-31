@@ -12,6 +12,7 @@ namespace EightshiftForms\Cache;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
@@ -66,6 +67,10 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
 			MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
 		],
+		'active-campaign' => [
+			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
+			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
+		],
 	];
 
 	/**
@@ -111,10 +116,12 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		$manifestForm = Components::getManifest(\dirname(__DIR__, 1) . '/Blocks/components/form');
 
 		foreach (self::ALL_CACHE as $key => $value) {
+			$name = \ucfirst(\str_replace('-', ' ', $key));
+
 			$output[] = [
 				'component' => 'submit',
 				'submitFieldWidthLarge' => 2,
-				'submitValue' => "Clear " . \ucfirst($key) . ' cache',
+				'submitValue' => "Clear {$name} cache",
 				'submitIcon' => $key,
 				'submitAttrs' => [
 					'data-type' => $key,
