@@ -42,11 +42,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
 
 	/**
-	 * Field Mailchimp Tags.
+	 * Custom form param for tags.
 	 *
 	 * @var string
 	 */
-	public const FIELD_MAILCHIMP_TAGS_KEY = 'es-form-mailchimp-tags';
+	public const CUSTOM_FORM_PARAM_MAILCHIMP_TAGS = 'es-form-mailchimp-tags';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -324,9 +324,9 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						$output[] = [
 							'component' => 'select',
 							'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'selectId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'selectName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-							'selectTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
+							'selectId' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+							'selectName' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+							'selectTracking' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
 							'selectOptions' => \array_merge(
 								[
 									[
@@ -359,7 +359,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						];
 						break;
 					case 'checkboxes':
-						$checkboxesFieldName = self::FIELD_MAILCHIMP_TAGS_KEY;
+						$checkboxesFieldName = self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS;
 
 						$output[] = [
 							'component' => 'checkboxes',
@@ -403,9 +403,9 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							$output[] = [
 								'component' => 'input',
 								'inputType' => 'hidden',
-								'inputId' => self::FIELD_MAILCHIMP_TAGS_KEY,
-								'inputName' => self::FIELD_MAILCHIMP_TAGS_KEY,
-								'inputTracking' => self::FIELD_MAILCHIMP_TAGS_KEY,
+								'inputId' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+								'inputName' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+								'inputTracking' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
 								'inputValue' => $tagsItems,
 								'blockSsr' => $ssr,
 							];

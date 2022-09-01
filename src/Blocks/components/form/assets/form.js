@@ -62,14 +62,11 @@ export class Form {
 		this.selectSelector = `${this.fieldSelector} select`;
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
 
-		// State selectors.
-		this.CLASS_ACTIVE = FORM_SELECTORS.CLASS_ACTIVE;
-		this.CLASS_FILLED = FORM_SELECTORS.CLASS_FILLED;
-		this.CLASS_LOADING = FORM_SELECTORS.CLASS_LOADING;
-		this.CLASS_HAS_ERROR = FORM_SELECTORS.CLASS_HAS_ERROR;
-
 		// LocalStorage
 		this.STORAGE_NAME = 'es-storage';
+
+		// Custom fields params.
+		this.FORM_CUSTOM_FORM_PARAMS = options.customFormParams;
 
 		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
@@ -88,14 +85,6 @@ export class Form {
 		this.customTextareas = [];
 		this.customSelects = [];
 		this.customFiles = [];
-
-		// Data attributes.
-		this.DATA_ATTR_FORM_TYPE = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE;
-		this.DATA_ATTR_FIELD_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID;
-		this.DATA_ATTR_FORM_POST_ID = FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID;
-		this.DATA_ATTR_TRACKING_EVENT_NAME = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_EVENT_NAME;
-		this.DATA_ATTR_TRACKING = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING;
-		this.DATA_ATTR_TRACKING_SELECT_LABEL = FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_SELECT_LABEL;
 	}
 
 	// Init all actions.
@@ -123,7 +112,7 @@ export class Form {
 			}
 
 			// Get form ID.
-			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
 
 			// All fields selectors.
 			const inputs = element.querySelectorAll(this.inputSelector);
@@ -198,7 +187,7 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(this.DATA_ATTR_FORM_POST_ID),
+				formId: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID),
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -251,7 +240,7 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute(this.DATA_ATTR_FORM_TYPE);
+		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
 
 		// Populate body data.
 		const body = {
@@ -375,7 +364,7 @@ export class Form {
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(this.DATA_ATTR_FIELD_ID);
+				const groupId = group.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID);
 				const groupInner = group.querySelectorAll(`
 					${this.groupInnerSelector} input,
 					${this.groupInnerSelector} select,
@@ -413,8 +402,7 @@ export class Form {
 			textarea:not(${this.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute(this.DATA_ATTR_FORM_TYPE);
-		const formAction = element.getAttribute('action');
+		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -487,43 +475,43 @@ export class Form {
 		}
 
 		// Add form ID field.
-		formData.append('es-form-post-id', JSON.stringify({
-			value: element.getAttribute(this.DATA_ATTR_FORM_POST_ID),
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.postId, JSON.stringify({
+			value: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID),
 			type: 'hidden',
 		}));
 
 		// Add form type field.
-		formData.append('es-form-type', JSON.stringify({
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.type, JSON.stringify({
 			value: formType,
 			type: 'hidden',
 		}));
 
 		// Add form action field.
-		formData.append('action', JSON.stringify({
-			value: formAction,
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
+			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add additional options for HubSpot only.
 		if (formType === 'hubspot' && !this.formIsAdmin) {
-			formData.append('es-form-hubspot-cookie', JSON.stringify({
+			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotCookie, JSON.stringify({
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
-			formData.append('es-form-hubspot-page-name', JSON.stringify({
+			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotPageName, JSON.stringify({
 				value: document.title,
 				type: 'hidden',
 			}));
 
-			formData.append('es-form-hubspot-page-url', JSON.stringify({
+			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotPageUrl, JSON.stringify({
 				value: window.location.href,
 				type: 'hidden',
 			}));
 		}
 
 		if (singleSubmit && this.formIsAdmin) {
-			formData.append('es-form-single-submit', JSON.stringify({
+			formData.append(this.FORM_CUSTOM_FORM_PARAMS.singleSubmit, JSON.stringify({
 				value: 'true',
 				type: 'hidden',
 			}));
@@ -532,7 +520,7 @@ export class Form {
 		// Set localStorage to hidden field.
 	 const storage = this.getLocalStorage();
 	 if (storage) {
-		formData.append('es-form-storage', JSON.stringify({
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.storage, JSON.stringify({
 			value: storage,
 			type: 'hidden',
 		}));
@@ -547,7 +535,7 @@ export class Form {
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
 
-			item?.closest(this.fieldSelector).classList.add(this.CLASS_HAS_ERROR);
+			item?.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
 
 			if (item !== null) {
 				item.innerHTML = fields[key];
@@ -567,7 +555,7 @@ export class Form {
 		if (this.formResetOnSuccess) {
 			element.reset();
 
-			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
 
 			// Unset the choices in the submitted form.
 			if (this.customSelects[formId]) {
@@ -586,9 +574,9 @@ export class Form {
 			const fields = element.querySelectorAll(this.fieldSelector);
 
 			[...fields].forEach((item) => {
-				item.classList.remove(this.CLASS_FILLED);
-				item.classList.remove(this.CLASS_ACTIVE);
-				item.classList.remove(this.CLASS_HAS_ERROR);
+				item.classList.remove(FORM_SELECTORS.CLASS_FILLED);
+				item.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
+				item.classList.remove(FORM_SELECTORS.CLASS_HAS_ERROR);
 			});
 
 			// Remove focus from last input.
@@ -607,7 +595,7 @@ export class Form {
 		});
 
 		// Reset all error classes on fields.
-		element.querySelectorAll(`.${this.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.CLASS_HAS_ERROR));
+		element.querySelectorAll(`.${FORM_SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(FORM_SELECTORS.CLASS_HAS_ERROR));
 
 		this.unsetGlobalMsg(element);
 	};
@@ -616,13 +604,13 @@ export class Form {
 	showLoader = (element) => {
 		const loader = element.querySelector(this.loaderSelector);
 
-		element?.classList?.add(this.CLASS_LOADING);
+		element?.classList?.add(FORM_SELECTORS.CLASS_LOADING);
 
 		if (!loader) {
 			return;
 		}
 
-		loader.classList.add(this.CLASS_ACTIVE);
+		loader.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
 	};
 
 	// Hide loader.
@@ -630,13 +618,13 @@ export class Form {
 		const loader = element.querySelector(this.loaderSelector);
 
 		setTimeout(() => {
-			element?.classList?.remove(this.CLASS_LOADING);
+			element?.classList?.remove(FORM_SELECTORS.CLASS_LOADING);
 
 			if (!loader) {
 				return;
 			}
 
-			loader.classList.remove(this.CLASS_ACTIVE);
+			loader.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
 		}, parseInt(this.hideLoadingStateTimeout, 10));
 	};
 
@@ -652,7 +640,7 @@ export class Form {
 			return;
 		}
 
-		messageContainer.classList.add(this.CLASS_ACTIVE);
+		messageContainer.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
 		messageContainer.innerHTML = `<span>${msg}</span>`;
 
@@ -670,7 +658,7 @@ export class Form {
 			return;
 		}
 
-		messageContainer.classList.remove(this.CLASS_ACTIVE);
+		messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -683,12 +671,12 @@ export class Form {
 			return;
 		}
 
-		messageContainer.classList.remove(this.CLASS_ACTIVE);
+		messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
 	}
 
 	// Submit GTM event.
 	gtmSubmit(element) {
-		const eventName = element.getAttribute(this.DATA_ATTR_TRACKING_EVENT_NAME);
+		const eventName = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_EVENT_NAME);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
@@ -702,7 +690,7 @@ export class Form {
 
 	// Build GTM data for the data layer.
 	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${this.DATA_ATTR_TRACKING}]`);
+		const items = element.querySelectorAll(`[${FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING}]`);
 		const dataTemp = {};
 
 		if (!items.length) {
@@ -710,7 +698,7 @@ export class Form {
 		}
 
 		[...items].forEach((item) => {
-			const tracking = item.getAttribute(this.DATA_ATTR_TRACKING);
+			const tracking = item.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING);
 
 			if (tracking) {
 				const {type, checked} = item;
@@ -728,7 +716,7 @@ export class Form {
 				}
 
 				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(this.DATA_ATTR_TRACKING_SELECT_LABEL)) {
+				if (item.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_SELECT_LABEL)) {
 					dataTemp[tracking] = item.selectedOptions[0].label;
 					return;
 				}
@@ -870,11 +858,11 @@ export class Form {
 				// On add one file.
 				myDropzone.on("addedfile", (file) => {
 					setTimeout(() => {
-						file.previewTemplate.classList.add(this.CLASS_ACTIVE);
+						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
 					}, 200);
 
 					setTimeout(() => {
-						file.previewTemplate.classList.add(this.CLASS_FILLED);
+						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_FILLED);
 					}, 1200);
 				});
 
@@ -914,20 +902,20 @@ export class Form {
 			case 'checkbox':
 			case 'radio':
 				if (input.checked) {
-					input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+					input.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
 				}
 				break;
 			case 'select-custom': {
 				const customSelect = input.config.choices;
 
 				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
-					input.passedElement.element.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+					input.passedElement.element.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
 				}
 				break;
 			}
 			default:
 				if (input.value && input.value.length) {
-					input.closest(this.fieldSelector).classList.add(this.CLASS_FILLED);
+					input.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
 				}
 				break;
 		}
@@ -935,7 +923,7 @@ export class Form {
 
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
-		event.target.closest(this.fieldSelector).classList.add(this.CLASS_ACTIVE);
+		event.target.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_ACTIVE);
 	};
 
 	// On Blur generic method. Check for length of value.
@@ -974,10 +962,10 @@ export class Form {
 		}
 
 		if (condition) {
-			field.classList.remove(this.CLASS_ACTIVE);
-			field.classList.add(this.CLASS_FILLED);
+			field.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
+			field.classList.add(FORM_SELECTORS.CLASS_FILLED);
 		} else {
-			field.classList.remove(this.CLASS_ACTIVE, this.CLASS_FILLED);
+			field.classList.remove(FORM_SELECTORS.CLASS_ACTIVE, FORM_SELECTORS.CLASS_FILLED);
 		}
 	};
 
@@ -993,7 +981,7 @@ export class Form {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmit);
 
-			const formId = element.getAttribute(this.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
 
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);

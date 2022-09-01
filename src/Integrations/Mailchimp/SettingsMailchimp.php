@@ -410,7 +410,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 							$this->mailchimp->getFormFields($formId),
 							$formId,
 							[
-								Mailchimp::FIELD_MAILCHIMP_TAGS_KEY
+								Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS
 							]
 						),
 					]

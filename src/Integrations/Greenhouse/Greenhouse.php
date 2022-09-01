@@ -256,16 +256,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				'inputId' => 'latitude',
 				'inputName' => 'latitude',
 			];
-
-			global $wp;
-
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => 'es-form-url',
-				'inputName' => 'es-form-url',
-				'inputValue' => \esc_url(\site_url(\add_query_arg([$_GET], $wp->request))), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			];
 		}
 
 		$output[] = [

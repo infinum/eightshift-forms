@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Class Mailer
@@ -161,15 +163,18 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		foreach ($fields as $field) {
-			$output[] = [
-				'name' => $field['name'] ?? '',
-				'value' => $field['value'] ?? '',
-			];
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		if (isset($fields['es-form-storage'])) {
-			unset($fields['es-form-storage']);
+		foreach ($fields as $key => $param) {
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[] = [
+				'name' => $param['name'] ?? '',
+				'value' => $param['value'] ?? '',
+			];
 		}
 
 		return $output;

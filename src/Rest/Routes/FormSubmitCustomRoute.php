@@ -12,12 +12,19 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Class FormSubmitCustomRoute
  */
 class FormSubmitCustomRoute extends AbstractFormSubmit
 {
+	/**
+	 * Use api helper trait.
+	 */
+	use ApiHelper;
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -69,8 +76,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	{
 		$body = [];
 
-		$formAction = $params['action']['value'];
-		unset($params['action']);
+		$formAction = $params[self::CUSTOM_FORM_PARAM_ACTION]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {
@@ -81,16 +87,19 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]);
 		}
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
-		}
+		// Remove unecesery internal params before continue.
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		// Format body parameters to a key/value array.
-		foreach ($params as $param) {
+		foreach ($params as $key => $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
 			if ($name || !$value) {
+				continue;
+			}
+
+			if (isset($customFields[$key])) {
 				continue;
 			}
 

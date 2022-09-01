@@ -13,7 +13,9 @@ namespace EightshiftForms\Integrations\Goodbits;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -220,12 +222,15 @@ class GoodbitsClient implements ClientInterface
 	{
 		$output = [];
 
-		foreach ($params as $key => $value) {
-			$output[$key] = $value['value'] ?? '';
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
+		foreach ($params as $key => $param) {
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[$key] = $param['value'] ?? '';
 		}
 
 		return $output;

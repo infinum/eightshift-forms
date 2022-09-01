@@ -10,10 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
+use CURLFile;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * GreenhouseClient integration class.
@@ -135,11 +138,6 @@ class GreenhouseClient implements ClientInterface
 			$this->prepareFiles($files)
 		);
 
-		error_log( print_r( ( $body ), true ) );
-		error_log( print_r( ( $this->getHeaders(true) ), true ) );
-		
-		
-
 		$response = \wp_remote_post(
 			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
 			[
@@ -147,8 +145,6 @@ class GreenhouseClient implements ClientInterface
 				'body' => $body,
 			]
 		);
-
-		error_log( print_r( ( $response ), true ) );
 
 		if (\is_wp_error($response)) {
 			Helper::logger([
@@ -325,17 +321,21 @@ class GreenhouseClient implements ClientInterface
 	{
 		$output = [];
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $value) {
+		foreach ($params as $key => $param) {
 			// Get gh_src from url and map it.
-			if ($key === 'es-form-storage' && isset($value['value']['gh_src'])) {
-				$output['mapped_url_token'] = $value['value']['gh_src'];
-			} else {
-				$output[$key] = $value['value'] ?? '';
+			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE && isset($param['value']['gh_src'])) {
+				$output['mapped_url_token'] = $param['value']['gh_src'];
+				continue;
 			}
+
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[$key] = $param['value'] ?? '';
 		}
 
 		return $output;
@@ -367,7 +367,7 @@ class GreenhouseClient implements ClientInterface
 					continue;
 				}
 
-				$output[$id] = new \CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$output[$id] = new CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

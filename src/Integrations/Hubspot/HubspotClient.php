@@ -16,6 +16,8 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * HubspotClient integration class.
@@ -193,9 +195,9 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				'hutk' => $params['es-form-hubspot-cookie']['value'],
-				'pageUri' => $params['es-form-hubspot-page-url']['value'],
-				'pageName' => $params['es-form-hubspot-page-name']['value'],
+				'hutk' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE]['value'],
+				'pageUri' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL]['value'],
+				'pageName' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME]['value'],
 			],
 		];
 
@@ -333,8 +335,14 @@ class HubspotClient implements HubspotClientInterface
 
 		$properties = [];
 
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		foreach ($params as $key => $value) {
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
 			$properties[] = [
 				'property' => $key,
 				'value' => $value,
@@ -689,19 +697,13 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		unset($params['es-form-hubspot-cookie']);
-		unset($params['es-form-hubspot-page-name']);
-		unset($params['es-form-hubspot-page-url']);
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		foreach ($params as $key => $param) {
-			if ($key === 'es-form-storage') {
-				continue;
-			}
-
 			$type = $param['type'] ?? '';
 			$value = $param['value'] ?? '';
 
-			if (!$param) {
+			if (!$value) {
 				continue;
 			}
 
@@ -717,6 +719,11 @@ class HubspotClient implements HubspotClientInterface
 				$value = \str_replace(', ', ';', $value);
 			}
 
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
 			$output[] = [
 				'name' => $param['name'] ?? '',
 				'value' => $value,
@@ -725,8 +732,13 @@ class HubspotClient implements HubspotClientInterface
 		}
 
 		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
-		if (isset($params['es-form-storage']['value']) && \has_filter($filterName)) {
-			return \apply_filters($filterName, $output, $params['es-form-storage']['value']) ?? [];
+		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE]['value']) && \has_filter($filterName)) {
+			return \apply_filters(
+				$filterName,
+				$output,
+				$params[AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE]['value'],
+				$params
+			) ?? [];
 		}
 
 		return $output;

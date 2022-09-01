@@ -3,7 +3,7 @@
 /**
  * Trait that holds all generic helpers.
  *
- * @package EightshiftLibs\Helpers
+ * @package EightshiftForms\Helpers
  */
 
 declare(strict_types=1);

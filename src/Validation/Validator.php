@@ -12,6 +12,7 @@ namespace EightshiftForms\Validation;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
@@ -80,7 +81,7 @@ class Validator extends AbstractValidation
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
 		// If single submit skip all validations.
-		if (isset($params['es-form-single-submit'])) {
+		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAM_SINGLE_SUBMIT])) {
 			return [];
 		}
 
@@ -201,6 +202,12 @@ class Validator extends AbstractValidation
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
 			$inputValue = $paramValue['value'] ?? '';
+			$inputType = $paramValue['type'] ?? '';
+
+			// No need to validate hidden fields.
+			if ($inputType === 'hidden') {
+				continue;
+			}
 
 			// Find validation reference by ID.
 			$reference = $validationReference[$paramKey] ?? [];

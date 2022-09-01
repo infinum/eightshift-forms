@@ -51,6 +51,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
+	 * @throws UnverifiedRequestException Wrong config error.
+	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
@@ -87,9 +89,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					$formData
 				);
 			}
-
-			// Remove unecesery internal params before continue.
-			$params = $this->removeUneceseryParams($params);
 
 			// Extract hidden params from local storage set on the frontend.
 			$params = $this->extractStorageParams($params);

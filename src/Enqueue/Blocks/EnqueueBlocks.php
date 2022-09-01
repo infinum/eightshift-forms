@@ -14,6 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -158,7 +159,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getLocalizations(): array
 	{
-		$output = [];
+		$output = [
+			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
+		];
 
 		// Admin part.
 		if (\is_admin()) {
@@ -203,34 +206,32 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			// Frontend part.
 			$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
 
-			$hideGlobalMsgTimeoutFilterName = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
-			$redirectionTimeoutFilterName = Filters::getBlockFilterName('form', 'redirectionTimeout');
-			$previewRemoveLabelFilterName = Filters::getBlockFilterName('file', 'previewRemoveLabel');
-			$hideLoadingStateTimeoutFilterName = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
+			$hideGlobalMessageTimeout = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
+			$redirectionTimeout = Filters::getBlockFilterName('form', 'redirectionTimeout');
+			$hideLoadingStateTimeout = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
+			$fileCustomRemoveLabel = Filters::getBlockFilterName('file', 'previewRemoveLabel');
 
-			$output = [
-				'formSubmitRestApiUrl' => $restRoutesPath . '/form-submit',
-				'hideGlobalMessageTimeout' => \apply_filters($hideGlobalMsgTimeoutFilterName, 6000),
-				'redirectionTimeout' => \apply_filters($redirectionTimeoutFilterName, 300),
-				'hideLoadingStateTimeout' => \apply_filters($hideLoadingStateTimeoutFilterName, 600),
-				'fileCustomRemoveLabel' => \apply_filters($previewRemoveLabelFilterName, \esc_html__('Remove', 'eightshift-forms')),
-				'formDisableScrollToFieldOnError' => $this->isCheckboxOptionChecked(
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-				),
-				'formDisableScrollToGlobalMessageOnSuccess' => $this->isCheckboxOptionChecked(
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-				),
-				'formDisableAutoInit' => $this->isCheckboxOptionChecked(
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-					SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
-				),
-				'formResetOnSuccess' => !Variables::isDevelopMode(),
-				'formServerErrorMsg' => esc_html__('An server error occurred while submitting your form. Please try again.', 'eightshift-forms'),
-				'captcha' => '',
-				'storageConfig' => '',
-			];
+			$output['formSubmitRestApiUrl'] = $restRoutesPath . '/form-submit';
+			$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
+			$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
+			$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);
+			$output['fileCustomRemoveLabel'] = \apply_filters($fileCustomRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
+			$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+			);
+			$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+			);
+			$output['formDisableAutoInit'] = $this->isCheckboxOptionChecked(
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
+			);
+			$output['formResetOnSuccess'] = !Variables::isDevelopMode();
+			$output['formServerErrorMsg'] = \esc_html__('An server error occurred while submitting your form. Please try again.', 'eightshift-forms');
+			$output['captcha'] = '';
+			$output['storageConfig'] = '';
 
 			// Check if Captcha data is set and valid.
 			$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);

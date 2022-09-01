@@ -13,7 +13,9 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * ActiveCampaignClient integration class.
@@ -154,7 +156,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 				return $this->getApiSuccessOutput(
 					SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 					[
-						'contactId' => $body['fieldValues'][0]['contact'],
+						'contactId' => $body['contact']['id'],
 					]
 				);
 			case 403:
@@ -590,28 +592,23 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
-
-		// Remove unecesery storage field.
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
-		}
-
-		// Remove unecesery action tags field.
-		if (isset($params['actionTags'])) {
-			unset($params['actionTags']);
-		}
-
-		// Remove unecesery action lists field.
-		if (isset($params['actionLists'])) {
-			unset($params['actionLists']);
-		}
 
 		// Map params.
 		foreach ($params as $key => $param) {
 			$value = $param['value'] ?? '';
 
-			if (!$value) {
+			if ($key === 'actionTags') {
+				continue;
+			}
+
+			if ($key === 'actionLists') {
+				continue;
+			}
+
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
 				continue;
 			}
 

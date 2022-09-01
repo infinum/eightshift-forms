@@ -36,6 +36,7 @@ function initAll() {
 			fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
+			customFormParams: esFormsLocalization.customFormParams,
 		});
 
 		// Run forms.
@@ -53,6 +54,8 @@ function initAll() {
 			customFiles: form.customFiles,
 			customTextareas: form.customTextareas,
 			storageConfig: form.storageConfig,
+			customFormParams: form.FORM_CUSTOM_FORM_PARAMS,
+			storageName: form.STORAGE_NAME,
 			init: () => {
 				form.init();
 			},

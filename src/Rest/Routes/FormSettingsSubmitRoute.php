@@ -16,6 +16,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
@@ -82,12 +83,12 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 
-	// Try catch request.
+		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
 
 			// Get encripted form ID and decrypt it.
-			$formId = $this->getFormId($params);
+			$formId = $this->getFormId($params, false);
 
 			// Determine form type.
 			$formType = $this->getFormType($params);
@@ -112,7 +113,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			}
 
 			// Remove unecesery internal params before continue.
-			$params = $this->removeUneceseryParams($params);
+			$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+
+			// Remove unecesery params.
+			foreach ($params as $key => $value) {
+				if (isset($customFields[$key])) {
+					unset($params[$key]);
+				}
+			}
 
 			// Determine form type to use.
 			switch ($formType) {

@@ -41,6 +41,27 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public const FILTER_FORM_FIELDS_NAME = 'es_hubspot_form_fields_filter';
 
 	/**
+	 * Custom form param for cookie.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_HUBSPOT_COOKIE = 'es-form-hubspot-cookie';
+
+	/**
+	 * Custom form param for page name.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME = 'es-form-hubspot-page-name';
+
+	/**
+	 * Custom form param for page url.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL = 'es-form-hubspot-page-url';
+
+	/**
 	 * Instance variable for Hubspot data.
 	 *
 	 * @var HubspotClientInterface
