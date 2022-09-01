@@ -268,7 +268,7 @@ class Filters
 			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
 		],
 		'general' => [
-			'httpRequestArgs' => 'http_request_args',
+			'httpRequestTimeout' => 'http_request_timeout',
 		],
 	];
 

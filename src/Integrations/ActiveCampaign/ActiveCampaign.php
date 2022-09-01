@@ -66,7 +66,8 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	 *
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connection data.
 	 */
-	public function __construct(ActiveCampaignClientInterface $activeCampaignClient) {
+	public function __construct(ActiveCampaignClientInterface $activeCampaignClient)
+	{
 		$this->activeCampaignClient = $activeCampaignClient;
 	}
 

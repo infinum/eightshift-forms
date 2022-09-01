@@ -222,9 +222,6 @@ export class Form {
 					this.hideGlobalMsg(element);
 				}, parseInt(this.hideGlobalMessageTimeout, 10));
 			}
-		})
-		.catch(function() {
-			this.setGlobalMsg(element, this.formServerErrorMsg, 'error');
 		});
 	};
 
@@ -352,6 +349,17 @@ export class Form {
 
 				// Dispatch event.
 				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_END);
+			})
+			.catch(() => {
+				this.setGlobalMsg(element, this.formServerErrorMsg, 'error');
+
+				// Remove loader.
+				this.hideLoader(element);
+
+				// Hide global msg in any case after some time.
+				setTimeout(() => {
+					this.hideGlobalMsg(element);
+				}, parseInt(this.hideGlobalMessageTimeout, 10));
 			});
 	};
 

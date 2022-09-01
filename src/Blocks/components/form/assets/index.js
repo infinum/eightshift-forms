@@ -34,6 +34,7 @@ function initAll() {
 			formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 			formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 			fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
+			formServerErrorMsg: esFormsLocalization.formServerErrorMsg,
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
 			customFormParams: esFormsLocalization.customFormParams,

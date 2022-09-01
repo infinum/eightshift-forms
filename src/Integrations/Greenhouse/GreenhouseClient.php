@@ -11,7 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
+use EightshiftForms\General\General;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -138,15 +140,28 @@ class GreenhouseClient implements ClientInterface
 			$this->prepareFiles($files)
 		);
 
-		$response = \wp_remote_post(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
+		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
+
+		// Curl used because files are not sent via wp request.
+		$curl = \curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
+			$curl,
 			[
-				'headers' => $this->getHeaders(true),
-				'body' => $body,
+				\CURLOPT_URL => self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
+				\CURLOPT_HTTPAUTH => \CURLAUTH_BASIC,
+				\CURLOPT_RETURNTRANSFER => true,
+				\CURLOPT_TIMEOUT => \apply_filters($filterName, General::HTTP_REQUEST_TIMEOUT_DEFAULT),
+				\CURLOPT_POST => true,
+				\CURLOPT_POSTFIELDS => $body,
+				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
 			]
 		);
+		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
+		$code = \curl_getinfo($curl, \CURLINFO_RESPONSE_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 
-		if (\is_wp_error($response)) {
+		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+
+		if ($code === 401) {
 			Helper::logger([
 				'integration' => 'greenhouse',
 				'type' => 'wp',
@@ -161,8 +176,6 @@ class GreenhouseClient implements ClientInterface
 			];
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
 		if ($code === 200) {
 			return [
 				'status' => 'success',
@@ -171,7 +184,7 @@ class GreenhouseClient implements ClientInterface
 			];
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode($response, true);
 		$responseMessage = $responseBody['error'] ?? '';
 
 		$output = [
@@ -184,7 +197,6 @@ class GreenhouseClient implements ClientInterface
 			'integration' => 'greenhouse',
 			'type' => 'service',
 			'body' => $paramsPrepared,
-			'response' => $response['response'],
 			'responseBody' => $responseBody,
 			'output' => $output,
 		]);
@@ -294,20 +306,19 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @param boolean $postHeaders If using post method we need to send Authorization header and type in the request.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, string>
 	 */
 	private function getHeaders(bool $postHeaders = false): array
 	{
-		$headers = [
-			'Content-Type' => 'application/json',
-		];
-
 		if ($postHeaders) {
-			$headers['Authorization'] = "Basic {$this->getApiKey()}";
-			$headers['Content-Type'] = 'multipart/form-data';
+			return [
+				'Authorization: Basic ' . $this->getApiKey(),
+			];
 		}
 
-		return $headers;
+		return [
+			'Content-Type' => 'application/json',
+		];
 	}
 
 	/**
@@ -363,7 +374,7 @@ class GreenhouseClient implements ClientInterface
 				$id = $file['id'] ?? '';
 				$type = $file['type'] ?? '';
 
-				if (!$path || !$fileName || !$id || !$type) {
+				if (!$path) {
 					continue;
 				}
 
