@@ -279,7 +279,7 @@ class MailerliteClient implements ClientInterface
 				continue;
 			}
 
-			// Remove unecesery fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}

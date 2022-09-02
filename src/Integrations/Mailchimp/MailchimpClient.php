@@ -388,7 +388,7 @@ class MailchimpClient implements MailchimpClientInterface
 				continue;
 			}
 
-			// Remove unecesery fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}

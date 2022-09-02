@@ -229,7 +229,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 			);
 			$output['formResetOnSuccess'] = !Variables::isDevelopMode();
-			$output['formServerErrorMsg'] = \esc_html__('An server error occurred while submitting your form. Please try again.', 'eightshift-forms');
+			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 			$output['captcha'] = '';
 			$output['storageConfig'] = '';
 

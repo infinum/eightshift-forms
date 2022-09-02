@@ -87,7 +87,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]);
 		}
 
-		// Remove unecesery internal params before continue.
+		// Remove unnecessary internal params before continue.
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		// Format body parameters to a key/value array.

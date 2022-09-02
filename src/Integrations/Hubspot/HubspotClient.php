@@ -719,7 +719,7 @@ class HubspotClient implements HubspotClientInterface
 				$value = \str_replace(', ', ';', $value);
 			}
 
-			// Remove unecesery fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}

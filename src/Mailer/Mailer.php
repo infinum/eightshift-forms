@@ -166,7 +166,7 @@ class Mailer implements MailerInterface
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		foreach ($fields as $key => $param) {
-			// Remove unecesery fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}

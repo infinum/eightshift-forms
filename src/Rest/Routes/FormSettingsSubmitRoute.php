@@ -87,7 +87,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		try {
 			$params = $this->prepareParams($request->get_body_params());
 
-			// Get encripted form ID and decrypt it.
+			// Get encrypted form ID and decrypt it.
 			$formId = $this->getFormId($params, false);
 
 			// Determine form type.
@@ -112,10 +112,10 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				);
 			}
 
-			// Remove unecesery internal params before continue.
+			// Remove unnecessary internal params before continue.
 			$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-			// Remove unecesery params.
+			// Remove unnecessary params.
 			foreach ($params as $key => $value) {
 				if (isset($customFields[$key])) {
 					unset($params[$key]);

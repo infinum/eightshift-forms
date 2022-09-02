@@ -5,7 +5,7 @@ import manifest from './../manifest.json';
 
 domReady(() => {
 	if (typeof esFormsLocalization === 'undefined') {
-		throw 'Your project is missing global variable esFormsLocalization called from the enqueue script.';
+		throw 'Your project is missing the global "esFormsLocalization" variable called from the enqueue script.';
 	}
 
 	const {

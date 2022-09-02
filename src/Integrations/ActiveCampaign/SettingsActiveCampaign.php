@@ -206,7 +206,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 				[
 					'component' => 'highlighted-content',
 					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('Data from ActiveCampaign couldn\'t be fetched. Check the API key, url or if you have any form created.', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('Data from ActiveCampaign couldn\'t be fetched. Check the API key, URL or if you have any form created.', 'eightshift-forms'),
 					'highlightedContentIcon' => 'error',
 				],
 			];
@@ -317,9 +317,9 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => \__('<ol>
 						<li>Log in to your ActiveCampaign Account.</li>
-						<li>Navigate to your settings page (gear) (bottom left corner).</li>
+						<li>Navigate to your Settings page (gear icon in the bottom-left corner).</li>
 						<li>Click on <strong>Developer</strong>.</li>
-						<li>Copy the API key and url into the fields below or use the global constant.</li>
+						<li>Copy the API key and URL into the fields below or use the global constant.</li>
 					</ol>', 'eightshift-forms'),
 			],
 			[
