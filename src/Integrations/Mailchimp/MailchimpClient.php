@@ -177,24 +177,9 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'mailchimp',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
-
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
-		}
-
 		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
-		if ($code === 200) {
+		if ($code >= 200 && $code <= 299) {
 			return [
 				'status' => 'success',
 				'code' => $code,
@@ -206,20 +191,23 @@ class MailchimpClient implements MailchimpClientInterface
 		$responseMessage = $responseBody['detail'] ?? '';
 		$responseErrors = $responseBody['errors'] ?? [];
 
+		$outputData = [
+			'integration' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+			'params' => $body,
+			'files' => $files,
+			'response' => $response['body'],
+			'listId' => $itemId,
+			'formId' => $formId,
+		];
+
 		$output = [
 			'status' => 'error',
 			'code' => $code,
 			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
+			'data' => $outputData,
 		];
 
-		Helper::logger([
-			'integration' => 'mailchimp',
-			'type' => 'service',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
+		Helper::logger($outputData);
 
 		return $output;
 	}

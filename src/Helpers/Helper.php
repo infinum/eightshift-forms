@@ -202,6 +202,11 @@ class Helper
 
 			if (!empty($wpContentDir)) {
 				$message['time'] = \gmdate("Y-m-d H:i:s");
+			
+				if (isset($message['files'])) {
+					unset($message['files']);
+				}
+
 				\error_log((string) \wp_json_encode($message) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}

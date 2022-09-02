@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -64,23 +65,33 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected $clearbitClient;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
-		ClearbitClientInterface $clearbitClient
+		ClearbitClientInterface $clearbitClient,
+		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -141,6 +152,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 					$clearbitResponse['data'] ?? []
 				);
 			}
+		}
+
+		if ($response['status'] === 'error') {
+			// Send fallback email.
+			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
 		// Always delete the files from the disk.

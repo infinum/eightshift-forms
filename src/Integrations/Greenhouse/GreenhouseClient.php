@@ -134,10 +134,11 @@ class GreenhouseClient implements ClientInterface
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$paramsPrepared = $this->prepareParams($params);
+		$paramsFiles = $this->prepareFiles($files);
 
 		$body = \array_merge(
 			$paramsPrepared,
-			$this->prepareFiles($files)
+			$paramsFiles
 		);
 
 		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
@@ -161,22 +162,7 @@ class GreenhouseClient implements ClientInterface
 
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if ($code === 401) {
-			Helper::logger([
-				'integration' => 'greenhouse',
-				'type' => 'wp',
-				'body' => $paramsPrepared,
-				'response' => $response,
-			]);
-
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
-		}
-
-		if ($code === 200) {
+		if ($code >= 200 && $code <= 299) {
 			return [
 				'status' => 'success',
 				'code' => $code,
@@ -187,19 +173,23 @@ class GreenhouseClient implements ClientInterface
 		$responseBody = \json_decode($response, true);
 		$responseMessage = $responseBody['error'] ?? '';
 
+		$outputData = [
+			'integration' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			'params' => $paramsPrepared,
+			'files' => $paramsFiles,
+			'response' => $response,
+			'listId' => $itemId,
+			'formId' => $formId,
+		];
+
 		$output = [
 			'status' => 'error',
 			'code' => $code,
 			'message' => $this->getErrorMsg($responseMessage),
+			'data' => $outputData,
 		];
 
-		Helper::logger([
-			'integration' => 'greenhouse',
-			'type' => 'service',
-			'body' => $paramsPrepared,
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
+		Helper::logger($outputData);
 
 		return $output;
 	}

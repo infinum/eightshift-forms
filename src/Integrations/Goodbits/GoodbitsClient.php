@@ -113,23 +113,9 @@ class GoodbitsClient implements ClientInterface
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'goodbits',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
-		}
-
 		$code = $response['response']['code'] ? $response['response']['code'] : 200;
 
-		if ($code === 200 || $code === 201) {
+		if ($code >= 200 && $code <= 299) {
 			return [
 				'status' => 'success',
 				'code' => 200,
@@ -141,20 +127,23 @@ class GoodbitsClient implements ClientInterface
 		$responseMessage = !\is_array($responseBody['errors']) ? $responseBody['errors'] : '';
 		$responseErrors = \is_array($responseBody['errors']) ? $responseBody['errors']['message'] : [];
 
+		$outputData = [
+			'integration' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+			'params' => $this->prepareParams($params),
+			'files' => $files,
+			'response' => $response['body'],
+			'listId' => $itemId,
+			'formId' => $formId,
+		];
+
 		$output = [
 			'status' => 'error',
 			'code' => $code,
 			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
+			'data' => $outputData,
 		];
 
-		Helper::logger([
-			'integration' => 'goodbits',
-			'type' => 'service',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
+		Helper::logger($outputData);
 
 		return $output;
 	}

@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -54,20 +55,30 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	protected $greenhouseClient;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $greenhouseClient
+		ClientInterface $greenhouseClient,
+		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->greenhouseClient = $greenhouseClient;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -111,6 +122,11 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 			$files,
 			$formId
 		);
+
+		if ($response['status'] === 'error') {
+			// Send fallback email.
+			$this->mailer->fallbackEmail($response['data'] ?? []);
+		}
 
 		// Always delete the files from the disk.
 		if ($files) {

@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Mailer;
 
+use CURLFile;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -62,6 +64,81 @@ class Mailer implements MailerInterface
 
 		// Send email.
 		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
+	}
+
+	/**
+	 * Send fallback email
+	 *
+	 * @param array<mixed> $data Data to extract data from.
+	 *
+	 * @return boolean
+	 */
+	public function fallbackEmail(array $data): bool
+	{
+		$isSettingsValid = apply_filters(SettingsTroubleshooting::FILTER_SETTINGS_IS_VALID_NAME, []);
+
+		if (!$isSettingsValid) {
+			return false;
+		}
+
+		$integration = $data['integration'] ?? '';
+		$files = $data['files'] ?? [];
+		$response = $data['response'] ?? '';
+		$formId = $data['formId'] ?? '';
+		$listId = $data['listId'] ?? '';
+		$params = $data['params'] ?? [];
+
+		if (is_array($listId)) {
+			$listId = implode(', ', $listId);
+		}
+
+		$paramsOutput = "
+			<p><strong>Form Details:</strong></p>
+			<ul>
+				<li>formId: {$formId}</li>
+				<li>listId: {$listId}</li>
+				<li>integration: {$integration}</li>
+			</ul>
+		";
+
+		if ($params) {
+			$paramsOutput .= "<p><strong>Data sent to integration:</strong></p>";
+			$paramsOutput .= $this->fallbackEmailPrepareParams($params);
+		}
+
+		$paramsOutput .= "
+			<p><strong>Data got from integration response:</strong></p>
+			{$response} 
+		";
+
+		$filesOutput = [];
+		if ($files) {
+			foreach ($files as $file) {
+				if ($file instanceof CURLFile) {
+					$filesOutput[] = $file->name;
+				}
+
+				if (is_array($file)) {
+					foreach ($file as $fileItem) {
+						if (isset($fileItem['path'])) {
+							$filesOutput[] = $fileItem['path'];
+						}
+					}
+				}
+			}
+		}
+
+		$to = $this->getOptionValue(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY);
+		$subject = sprintf(__("Your %s form failed: %s", 'eightshift-forms'), $integration, $formId);
+		$headers = $this->getType();
+		$templateHtml = sprintf(__("
+			<p>It looks like something went wrong with the users form submition, here is all the data to debug.</p>
+			%s", 'eightshift-forms'),
+			$paramsOutput
+		);
+
+		// Send email.
+		return \wp_mail($to, $subject, $templateHtml, $headers, $filesOutput);
 	}
 
 	/**
@@ -209,6 +286,32 @@ class Mailer implements MailerInterface
 
 				$output[] = $path;
 			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepare recursive params for fallback email.
+	 *
+	 * @param array<mixed> $params Params to check.
+	 *
+	 * @return string
+	 */
+	private function fallbackEmailPrepareParams(array $params): string
+	{
+		$output = '';
+
+		foreach($params as $paramKey => $paramValue) {
+			if (is_array($paramValue)) {
+				$paramValueOutput = '<ul>';
+				$paramValueOutput .= $this->fallbackEmailPrepareParams($paramValue);
+				$paramValueOutput .= '</ul>';
+
+				$paramValue = $paramValueOutput;
+			}
+
+			$output .= "<li>{$paramKey}: {$paramValue}</li>";
 		}
 
 		return $output;

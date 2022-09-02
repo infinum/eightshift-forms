@@ -140,16 +140,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		// Bailout if wp error.
-		if (\is_wp_error($response)) {
-			return $this->getApiWpErrorOutput(
-				SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				$details,
-				$requestBody,
-				$response->get_error_message()
-			);
-		}
-
 		switch ($code) {
 			case 200:
 			case 201:
