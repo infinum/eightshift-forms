@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -83,6 +84,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Geolocation', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
 		];
 	}
 

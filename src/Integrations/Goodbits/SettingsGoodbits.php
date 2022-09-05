@@ -16,7 +16,9 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -89,17 +91,27 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 	protected $goodbits;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
 	 * @param MapperInterface $goodbits Inject Goodbits which holds Goodbits form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ClientInterface $goodbitsClient,
-		MapperInterface $goodbits
+		MapperInterface $goodbits,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->goodbitsClient = $goodbitsClient;
 		$this->goodbits = $goodbits;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 	/**
 	 * Register all the hooks
@@ -164,6 +176,7 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Goodbits', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -348,6 +361,9 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsGoodbits::SETTINGS_TYPE_KEY),
+		];
 	}
 }

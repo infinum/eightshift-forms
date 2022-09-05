@@ -18,7 +18,9 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -96,17 +98,27 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	private $activeCampaign;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param MapperInterface $activeCampaign Inject ActiveCampaign which holds ActiveCampaign form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ActiveCampaignClientInterface $activeCampaignClient,
-		MapperInterface $activeCampaign
+		MapperInterface $activeCampaign,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
 		$this->activeCampaign = $activeCampaign;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 
 	/**
@@ -173,6 +185,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 			'label' => \__('ActiveCampaign', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -376,6 +389,9 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsActiveCampaign::SETTINGS_TYPE_KEY),
+		];
 	}
 }

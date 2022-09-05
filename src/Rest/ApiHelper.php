@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -18,6 +20,11 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 trait ApiHelper
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Return API response array details.
 	 *
@@ -80,7 +87,9 @@ trait ApiHelper
 	 */
 	public function getApiErrorOutput(array $details, string $msg): array
 	{
-		Helper::logger($details);
+		if ($this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
+			Helper::logger($details);
+		}
 
 		return [
 			'status' => 'error',

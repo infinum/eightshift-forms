@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Troubleshooting;
 
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsTroubleshooting class.
  */
-class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
+class SettingsTroubleshooting implements ServiceInterface, SettingsTroubleshootingDataInterface
 {
 	/**
 	 * Use general helper trait.
@@ -54,6 +54,14 @@ class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
 	 * Fallback Email key.
 	 */
 	public const SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY = 'troubleshooting-fallback-email';
+
+	/**
+	 * Troubleshooting debugging key.
+	 */
+	public const SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY = 'troubleshooting-debugging';
+	public const SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY = 'skip-validation';
+	public const SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY = 'skip-reset';
+	public const SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY = 'log-mode';
 
 	/**
 	 * Register all the hooks
@@ -95,6 +103,7 @@ class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Troubleshooting', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		];
 	}
 
@@ -121,7 +130,7 @@ class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Fallback emails', 'eightshift-forms'),
-				'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This can email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
+				'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'checkboxes',
@@ -148,14 +157,91 @@ class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
 				'inputName' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY),
 				'inputId' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY),
 				'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Set email where all fallback emails will be sent.', 'eightshift-forms'),
+				'inputFieldHelp' => \__('Set email where all fallback emails will be sent. Use comma to separate multiple emails.', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputIsEmail' => true,
 				'inputIsRequired' => true,
 				'inputValue' => $this->getOptionValue(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY),
 			];
 		}
 
-		return $output;
+		$outputDebugging = [
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Debugging', 'eightshift-forms'),
+				'introSubtitle' => \__('Settings used for debugging forms. USE WITH CAUTION!', 'eightshift-forms'),
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldLabel' => '',
+				'checkboxesName' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+				'checkboxesId' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => \__('Skip validation', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+						'checkboxValue' => self::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => \__('Skip form reset after submit', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY, self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+						'checkboxValue' => self::SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => \__('Output logs', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+						'checkboxValue' => self::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY,
+					]
+				]
+			],
+		];
+
+		return [
+			...$output,
+			...$outputDebugging,
+		];
+	}
+
+	/**
+	 * Output array settings for form.
+	 *
+	 * @param string $integration Integration name used for troubleshooting.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	public function getOutputGlobalTroubleshooting(string $integration): array
+	{
+		$isValid = $this->isSettingsGlobalValid();
+
+		if (!$isValid) {
+			return [];
+		}
+
+		return [
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Troubleshooting', 'eightshift-forms'),
+				'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+			],
+			[
+				'component' => 'input',
+				'inputName' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+				'inputId' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+				'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
+				'inputFieldHelp' => \__('Set email where this integration fallback emails will be sent. This field will be used as "cc", main "from" field will be used from the main Troubleshooting global setting page. Use comma to separate multiple emails.', 'eightshift-forms'),
+				'inputType' => 'text',
+				'inputIsRequired' => true,
+				'inputValue' => $this->getOptionValue(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+			],
+		];
 	}
 }

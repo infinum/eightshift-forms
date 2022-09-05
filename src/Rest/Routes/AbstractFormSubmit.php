@@ -14,7 +14,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use WP_REST_Request;
 
 /**
@@ -81,7 +81,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType]['fields']) ? \apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
 
 			// Validate request.
-			if (!Variables::skipFormValidation()) {
+			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),

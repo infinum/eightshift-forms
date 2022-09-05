@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -164,6 +165,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			'label' => \__('Clearbit', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 

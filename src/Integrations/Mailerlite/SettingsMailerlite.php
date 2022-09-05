@@ -17,7 +17,9 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -90,17 +92,27 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	protected $mailerlite;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 * @param MapperInterface $mailerlite Inject Mailerlite which holds Mailerlite form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ClientInterface $mailerliteClient,
-		MapperInterface $mailerlite
+		MapperInterface $mailerlite,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->mailerliteClient = $mailerliteClient;
 		$this->mailerlite = $mailerlite;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 	/**
 	 * Register all the hooks
@@ -165,6 +177,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			'label' => \__('MailerLite', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -356,6 +369,9 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsMailerlite::SETTINGS_TYPE_KEY),
+		];
 	}
 }

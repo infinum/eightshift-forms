@@ -19,6 +19,7 @@ use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -95,6 +96,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 			'label' => \__('Clear cache', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		];
 	}
 

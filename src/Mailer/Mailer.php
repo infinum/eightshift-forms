@@ -143,11 +143,18 @@ class Mailer implements MailerInterface
 		}
 
 		$to = $this->getOptionValue(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY);
+		$cc = $this->getOptionValue(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration);
 		// translators: %1$s replaces the integration name and %2$s formId.
 		$subject = \sprintf(\__('Your %1$s form failed: %2$s', 'eightshift-forms'), $integration, $formId);
-		$headers = $this->getType();
 		// translators: %s replaces the parameters list html.
 		$templateHtml = \sprintf(\__("<p>It looks like something went wrong with the users form submition, here is all the data to debug.</p>%s", 'eightshift-forms'), $paramsOutput);
+		$headers = [
+			$this->getType()
+		];
+
+		if ($cc) {
+			$headers[] = "Cc: {$cc}";
+		}
 
 		// Send email.
 		return \wp_mail($to, $subject, $templateHtml, $headers, $filesOutput);

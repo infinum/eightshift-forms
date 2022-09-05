@@ -186,13 +186,18 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
+		$settingsSidebarOutput = [];
+		foreach ($this->settingsAll->getSettingsSidebar($formId, $type) as $item) {
+			$settingsSidebarOutput[$item['type'] ?? 'general'][] = $item;
+		}
+
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => Helper::getFormEditPageUrl($formId),
 			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
-			'adminSettingsSidebar' => $this->settingsAll->getSettingsSidebar($formId, $type),
+			'adminSettingsSidebar' => $settingsSidebarOutput,
 			'adminSettingsForm' => $this->settingsAll->getSettingsForm($formId, $type),
 			'adminSettingsType' => $type,
 		];

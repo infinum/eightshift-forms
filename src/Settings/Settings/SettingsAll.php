@@ -20,6 +20,46 @@ use EightshiftForms\Hooks\Filters;
 class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 {
 	/**
+	 * Settings sidebar type - general
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_GENERAL = 'general';
+
+	/**
+	 * Settings sidebar type - integration
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_INTEGRATION = 'integration';
+
+	/**
+	 * Settings sidebar type - troubleshooting
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'troubleshooting';
+
+	/**
+	 * Settings sidebar type - develop
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_DEVELOP = 'develop';
+
+	/**
+	 * Sidebar Sort order.
+	 *
+	 * @var array<string>
+	 */
+	public const SIDEBAR_SORT_ORDER = [
+		self::SETTINGS_SIEDBAR_TYPE_GENERAL,
+		self::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+		self::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+		self::SETTINGS_SIEDBAR_TYPE_DEVELOP
+	];
+
+	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
 	 * @param string $formId Form ID.
