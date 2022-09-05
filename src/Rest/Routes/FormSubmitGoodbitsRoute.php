@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -54,20 +55,30 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	protected $goodbitsClient;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $goodbitsClient
+		ClientInterface $goodbitsClient,
+		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->goodbitsClient = $goodbitsClient;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -111,6 +122,11 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 			[],
 			$formId
 		);
+
+		if ($response['status'] === 'error') {
+			// Send fallback email.
+			$this->mailer->fallbackEmail($response['data'] ?? []);
+		}
 
 		// Finish.
 		return \rest_ensure_response([

@@ -21,13 +21,15 @@ interface ClearbitClientInterface
 	public function getParams(): array;
 
 	/**
-	 * API request to get application.
+	 * API request to post application.
 	 *
-	 * @param string $emailKey Email key to map in params.
+	 * @param string $email Email key to map in params.
 	 * @param array<string, mixed> $params Params array.
 	 * @param array<string, string> $mapData Map data from settings.
+	 * @param string $itemId Item id to search.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApplication(string $emailKey, array $params, array $mapData): array;
+	public function getApplication(string $email, array $params, array $mapData, string $itemId, string $formId): array;
 }

@@ -14,7 +14,8 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -24,6 +25,11 @@ use WP_REST_Request;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -103,7 +109,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
-			if (!Variables::skipFormValidation()) {
+			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),

@@ -13,10 +13,24 @@
 
 	&__sidebar {
 		background-color: var(--global-colors-es-white);
+		height: 100vh;
+		overflow-x: hidden;
 
 		> * {
 			margin-bottom: var(--global-es-spacing-horizontal);
+			border-top: 1px solid var(--global-colors-es-ebb);
+
+			&:first-child {
+				border-top: 0;
+			}
 		}
+	}
+
+	&__sidebar-label {
+		padding: 1rem 1.1rem 0.5rem;
+		font-size: 1.1rem;
+		font-weight: bold;
+		line-height: 1.2;
 	}
 
 	&__main {
@@ -87,7 +101,7 @@
 		}
 
 		&:hover,
-		&:focus, {
+		&:focus {
 			color: var(--global-colors-es-matisse);
 			background-color: var(--global-colors-es-matisse-05);
 		}
