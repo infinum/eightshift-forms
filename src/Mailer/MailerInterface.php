@@ -43,5 +43,5 @@ interface MailerInterface
 	 *
 	 * @return boolean
 	 */
-	public function fallbackEmail (array $data): bool;
+	public function fallbackEmail(array $data): bool;
 }

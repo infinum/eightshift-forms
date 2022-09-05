@@ -202,7 +202,7 @@ class Helper
 
 			if (!empty($wpContentDir)) {
 				$message['time'] = \gmdate("Y-m-d H:i:s");
-			
+
 				if (isset($message['files'])) {
 					unset($message['files']);
 				}

@@ -75,21 +75,24 @@ class Mailer implements MailerInterface
 	 */
 	public function fallbackEmail(array $data): bool
 	{
-		$isSettingsValid = apply_filters(SettingsTroubleshooting::FILTER_SETTINGS_IS_VALID_NAME, []);
+		$isSettingsValid = \apply_filters(SettingsTroubleshooting::FILTER_SETTINGS_IS_VALID_NAME, []);
 
 		if (!$isSettingsValid) {
 			return false;
 		}
 
 		$integration = $data['integration'] ?? '';
+		$url = $data['url'] ?? '';
 		$files = $data['files'] ?? [];
-		$response = $data['response'] ?? '';
+		$response = $data['response'] ? \wp_json_encode($data['response']) : '';
 		$formId = $data['formId'] ?? '';
 		$listId = $data['listId'] ?? '';
 		$params = $data['params'] ?? [];
+		$code = $data['code'] ?? 400;
+		$body = $data['body'] ? \wp_json_encode($data['body']) : '';
 
-		if (is_array($listId)) {
-			$listId = implode(', ', $listId);
+		if (\is_array($listId)) {
+			$listId = \implode(', ', $listId);
 		}
 
 		$paramsOutput = "
@@ -98,6 +101,8 @@ class Mailer implements MailerInterface
 				<li>formId: {$formId}</li>
 				<li>listId: {$listId}</li>
 				<li>integration: {$integration}</li>
+				<li>response code: {$code}</li>
+				<li>url: {$url}</li>
 			</ul>
 		";
 
@@ -106,10 +111,19 @@ class Mailer implements MailerInterface
 			$paramsOutput .= $this->fallbackEmailPrepareParams($params);
 		}
 
-		$paramsOutput .= "
-			<p><strong>Data got from integration response:</strong></p>
-			{$response} 
-		";
+		if ($response) {
+			$paramsOutput .= "
+				<p><strong>Data got from integration response:</strong></p>
+				{$response}
+			";
+		}
+
+		if ($body) {
+			$paramsOutput .= "
+				<p><strong>Data got from integration response body:</strong></p>
+				{$body}
+			";
+		}
 
 		$filesOutput = [];
 		if ($files) {
@@ -118,7 +132,7 @@ class Mailer implements MailerInterface
 					$filesOutput[] = $file->name;
 				}
 
-				if (is_array($file)) {
+				if (\is_array($file)) {
 					foreach ($file as $fileItem) {
 						if (isset($fileItem['path'])) {
 							$filesOutput[] = $fileItem['path'];
@@ -129,13 +143,11 @@ class Mailer implements MailerInterface
 		}
 
 		$to = $this->getOptionValue(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY);
-		$subject = sprintf(__("Your %s form failed: %s", 'eightshift-forms'), $integration, $formId);
+		// translators: %1$s replaces the integration name and %2$s formId.
+		$subject = \sprintf(\__('Your %1$s form failed: %2$s', 'eightshift-forms'), $integration, $formId);
 		$headers = $this->getType();
-		$templateHtml = sprintf(__("
-			<p>It looks like something went wrong with the users form submition, here is all the data to debug.</p>
-			%s", 'eightshift-forms'),
-			$paramsOutput
-		);
+		// translators: %s replaces the parameters list html.
+		$templateHtml = \sprintf(\__("<p>It looks like something went wrong with the users form submition, here is all the data to debug.</p>%s", 'eightshift-forms'), $paramsOutput);
 
 		// Send email.
 		return \wp_mail($to, $subject, $templateHtml, $headers, $filesOutput);
@@ -302,8 +314,8 @@ class Mailer implements MailerInterface
 	{
 		$output = '';
 
-		foreach($params as $paramKey => $paramValue) {
-			if (is_array($paramValue)) {
+		foreach ($params as $paramKey => $paramValue) {
+			if (\is_array($paramValue)) {
 				$paramValueOutput = '<ul>';
 				$paramValueOutput .= $this->fallbackEmailPrepareParams($paramValue);
 				$paramValueOutput .= '</ul>';

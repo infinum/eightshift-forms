@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
 use EightshiftForms\General\General;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -29,6 +29,11 @@ class GreenhouseClient implements ClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Return Greenhouse base url.
@@ -143,12 +148,14 @@ class GreenhouseClient implements ClientInterface
 
 		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
 
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";
+
 		// Curl used because files are not sent via wp request.
 		$curl = \curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
 		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-				\CURLOPT_URL => self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
+				\CURLOPT_URL => $url,
 				\CURLOPT_HTTPAUTH => \CURLAUTH_BASIC,
 				\CURLOPT_RETURNTRANSFER => true,
 				\CURLOPT_TIMEOUT => \apply_filters($filterName, General::HTTP_REQUEST_TIMEOUT_DEFAULT),
@@ -162,47 +169,44 @@ class GreenhouseClient implements ClientInterface
 
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			\json_decode($response, true),
+			$url,
+			$paramsPrepared,
+			$paramsFiles,
+			$itemId,
+			$formId,
+			true
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'greenhouseSuccess',
-			];
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$responseBody = \json_decode($response, true);
-		$responseMessage = $responseBody['error'] ?? '';
-
-		$outputData = [
-			'integration' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
-			'params' => $paramsPrepared,
-			'files' => $paramsFiles,
-			'response' => $response,
-			'listId' => $itemId,
-			'formId' => $formId,
-		];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage),
-			'data' => $outputData,
-		];
-
-		Helper::logger($outputData);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['error'] ?? '';
+
 		switch ($msg) {
 			case 'Bad Request':
 				return 'greenhouseBadRequestError';
@@ -248,21 +252,31 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getGreenhouseJobs()
 	{
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (!isset($body['jobs'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['jobs'] ?? [];
 		}
 
-		return $body['jobs'];
+		return [];
 	}
 
 	/**
@@ -274,21 +288,31 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getGreenhouseJob(string $jobId)
 	{
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (isset($body['error'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
 		}
 
-		return $body;
+		return [];
 	}
 
 	/**

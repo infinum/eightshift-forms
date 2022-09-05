@@ -11,10 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Troubleshooting;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Labels\Labels;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -28,7 +25,7 @@ class SettingsTroubleshooting implements SettingsDataInterface, ServiceInterface
 	 */
 	use SettingsHelper;
 
-		/**
+	/**
 	 * Filter settings sidebar key.
 	 */
 	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_troubleshooting';

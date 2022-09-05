@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -26,6 +26,11 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Transient cache name for items.
@@ -168,8 +173,10 @@ class MailchimpClient implements MailchimpClientInterface
 			$body['merge_fields'] = $prepareParams;
 		}
 
+		$url = "{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}";
+
 		$response = \wp_remote_request(
-			"{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
 				'method' => 'PUT',
@@ -177,51 +184,44 @@ class MailchimpClient implements MailchimpClientInterface
 			]
 		);
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailchimp::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			$files,
+			$itemId,
+			$formId
+		);
 
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'mailchimpSuccess',
-			];
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['detail'] ?? '';
-		$responseErrors = $responseBody['errors'] ?? [];
-
-		$outputData = [
-			'integration' => SettingsMailchimp::SETTINGS_TYPE_KEY,
-			'params' => $body,
-			'files' => $files,
-			'response' => $response['body'],
-			'listId' => $itemId,
-			'formId' => $formId,
-		];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
-			'data' => $outputData,
-		];
-
-		Helper::logger($outputData);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body),
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
-	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg, array $errors = []): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['detail'] ?? '';
+		$errors = $body['errors'] ?? [];
+
 		if ($errors) {
 			$invalidEmail = \array_filter(
 				$errors,
@@ -259,21 +259,31 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getMailchimpTags(string $itemId): array
 	{
+		$url = "{$this->getBaseUrl()}lists/{$itemId}/tag-search";
+
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$itemId}/tag-search",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailchimp::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (!isset($body['tags'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['tags'] ?? [];
 		}
 
-		return $body['tags'];
+		return [];
 	}
 
 	/**
@@ -300,21 +310,31 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getMailchimpListFields(string $listId)
 	{
+		$url = "{$this->getBaseUrl()}lists/{$listId}/merge-fields?count=1000";
+
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists/{$listId}/merge-fields?count=1000",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailchimp::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (!isset($body['merge_fields'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['merge_fields'] ?? [];
 		}
 
-		return $body['merge_fields'];
+		return [];
 	}
 
 	/**
@@ -324,21 +344,31 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getMailchimpLists()
 	{
+		$url = "{$this->getBaseUrl()}lists?count=100";
+
 		$response = \wp_remote_get(
-			"{$this->getBaseUrl()}lists?count=100",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailchimp::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (!isset($body['lists'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['lists'] ?? [];
 		}
 
-		return $body['lists'];
+		return [];
 	}
 
 	/**

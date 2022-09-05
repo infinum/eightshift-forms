@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -28,6 +28,11 @@ class HubspotClient implements HubspotClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Transient cache name for items.
@@ -230,55 +235,48 @@ class HubspotClient implements HubspotClientInterface
 			}
 		}
 
+		$paramsPrepared = $this->prepareParams($params);
+		$paramsFiles = $this->prepareFiles($files, $formId);
+
 		$body['fields'] = \array_merge(
 			$this->prepareParams($params),
 			$this->prepareFiles($files, $formId)
 		);
 
+		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}");
+
 		$response = \wp_remote_post(
-			$this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}"),
+			$url,
 			[
 				'headers' => $this->getHeaders(),
 				'body' => \wp_json_encode($body),
 			]
 		);
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsHubspot::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$paramsPrepared,
+			$paramsFiles,
+			\implode(', ', $itemId),
+			$formId
+		);
 
-		if ($code === 200) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'hubspotSuccess',
-			];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['message'] ?? '';
-		$responseErrors = $responseBody['errors'] ?? [];
-
-		$outputData = [
-			'integration' => SettingsHubspot::SETTINGS_TYPE_KEY,
-			'params' => $body,
-			'files' => $files,
-			'response' => $response['body'],
-			'listId' => $itemId,
-			'formId' => $formId,
-		];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
-			'data' => $outputData,
-		];
-
-		Helper::logger($outputData);
-
-		error_log( print_r( ( $output ), true ) );
-		
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
@@ -291,105 +289,60 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postContactProperty(string $email, array $params): array
 	{
-		if (!$email) {
-			$output = [
-				'status' => 'error',
-				'code' => 400,
-				'message' => 'hubspotContactPropertyMissingEmail',
-			];
-
-			Helper::logger([
-				'integration' => 'hubspot',
-				'email' => $email,
-				'mapKeys' => $params,
-				'output' => $output,
-			]);
-
-			return $output;
-		}
-
-		if (!$params) {
-			$output = [
-				'status' => 'error',
-				'code' => 400,
-				'message' => 'hubspotContactPropertyMissingMapKeys',
-			];
-
-			Helper::logger([
-				'integration' => 'hubspot',
-				'email' => $email,
-				'mapKeys' => $params,
-				'output' => $output,
-			]);
-
-			return $output;
-		}
-
 		$properties = [];
 
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $value) {
-			// Remove unecesery fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
+		if ($params) {
+			foreach ($params as $key => $value) {
+				// Remove unecesery fields.
+				if (isset($customFields[$key])) {
+					continue;
+				}
 
-			$properties[] = [
-				'property' => $key,
-				'value' => $value,
-			];
+				$properties[] = [
+					'property' => $key,
+					'value' => $value,
+				];
+			}
 		}
 
 		$body = [
 			'properties' => $properties,
 		];
 
+		$url = $this->getBaseUrl("contacts/v1/contact/createOrUpdate/email/{$email}", true);
+
 		$response = \wp_remote_post(
-			$this->getBaseUrl("contacts/v1/contact/createOrUpdate/email/{$email}", true),
+			$url,
 			[
 				'headers' => $this->getHeaders(),
 				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsHubspot::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body
+		);
+
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
-		if ($code === 200) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'hubspotContactPropertySuccess',
-			];
-		}
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['message'] ?? '';
-		$responseErrors = $responseBody['errors'] ?? [];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
-		];
-
-		Helper::logger([
-			'integration' => 'hubspot',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
@@ -468,13 +421,15 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
-	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg, array $errors = []): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['message'] ?? '';
+		$errors = $body['errors'] ?? [];
+
 		if ($errors && isset($errors[0])) {
 			$msg = $errors[0]['errorType'];
 		}
@@ -543,15 +498,31 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getHubspotContactProperties()
 	{
+		$url = $this->getBaseUrl('properties/v1/contacts/properties', true);
+
 		$response = \wp_remote_get(
-			$this->getBaseUrl('properties/v1/contacts/properties', true),
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		return \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsHubspot::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**
@@ -561,15 +532,31 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getHubspotItems()
 	{
+		$url = $this->getBaseUrl('forms/v2/forms', true);
+
 		$response = \wp_remote_get(
-			$this->getBaseUrl('forms/v2/forms', true),
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		return \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsHubspot::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**

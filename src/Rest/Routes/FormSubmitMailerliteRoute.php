@@ -74,7 +74,6 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		ClientInterface $mailerliteClient,
 		MailerInterface $mailer
-		
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -26,6 +26,11 @@ class MailerliteClient implements ClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Return Mailerlite base url.
@@ -132,58 +137,53 @@ class MailerliteClient implements ClientInterface
 			'fields' => $this->prepareParams($params),
 		];
 
-		$response = \wp_remote_request(
-			self::BASE_URL . "groups/{$itemId}/subscribers",
+		$url = self::BASE_URL . "groups/{$itemId}/subscribers";
+
+		$response = \wp_remote_post(
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'method' => 'POST',
 				'body' => \wp_json_encode($body),
 			]
 		);
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			$files,
+			$itemId,
+			$formId
+		);
 
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'mailerliteSuccess',
-			];
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['error']['message'] ?? '';
-
-		$outputData = [
-			'integration' => SettingsMailerlite::SETTINGS_TYPE_KEY,
-			'params' => $body,
-			'files' => $files,
-			'response' => $response['body'],
-			'listId' => $itemId,
-			'formId' => $formId,
-		];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage),
-			'data' => $outputData,
-		];
-
-		Helper::logger($outputData);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['error']['message'] ?? '';
+
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailerliteBadRequestError';
@@ -218,17 +218,31 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getMailerliteListFields()
 	{
+		$url = self::BASE_URL . "fields";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "fields",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		return $body ?? [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**
@@ -238,15 +252,31 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getMailerliteLists()
 	{
+		$url = self::BASE_URL . "groups";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "groups",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		return \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**

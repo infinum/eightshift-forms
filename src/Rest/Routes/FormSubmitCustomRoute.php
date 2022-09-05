@@ -107,13 +107,12 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Create a custom form action request.
-		$customResponse = \wp_remote_request(
+		$customResponse = \wp_remote_post(
 			$formAction,
 			[
 				'headers' => [
 					'Content-Type' => 'application/x-www-form-urlencoded',
 				],
-				'method' => 'POST',
 				'body' => \http_build_query($body),
 			]
 		);

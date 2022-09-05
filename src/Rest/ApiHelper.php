@@ -19,101 +19,94 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 trait ApiHelper
 {
 	/**
-	 * Return API response array with logger.
-	 *
-	 * @param string $integration Integration name.
-	 * @param array<string, mixed> $details Details from response.
-	 * @param array<string, mixed> $requestBody Request body sent to the API.
-	 * @param string $msg Msg for the user.
-	 *
-	 * @return array<string, string|int>
-	 */
-	public function getApiWpErrorOutput(
-		string $integration,
-		array $details,
-		array $requestBody,
-		string $msg
-	): array {
-		Helper::logger([
-			'integration' => Components::kebabToCamelCase($integration, '-'),
-			'type' => 'wp',
-			'response' => $details,
-			'requestBody' => $requestBody,
-			'msg' => $msg,
-		]);
-
-		return [
-			'status' => 'error',
-			'code' => 400,
-			'message' => 'submitWpError',
-		];
-	}
-
-	/**
 	 * Return API response array details.
 	 *
 	 * @param array<mixed> $response Response got from the API.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApiReponseDetails($response): array
-	{
+	/**
+	 * Return API response array details.
+	 *
+	 * @param string $integration Integration name from settings.
+	 * @param array<mixed> $response API full reponse.
+	 * @param string $url Url of the request.
+	 * @param array<mixed> $params All params prepared for API.
+	 * @param array<mixed> $files All files prepared for API.
+	 * @param string $listId List Id used for API (questions, form id, list id, item id).
+	 * @param string $formId Internal form ID.
+	 * @param boolean $isCurl Used for some changed if native cURL is used.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getApiReponseDetails(
+		string $integration,
+		array $response,
+		string $url,
+		array $params = [],
+		array $files = [],
+		string $listId = '',
+		string $formId = '',
+		bool $isCurl = false
+	): array {
+		if ($isCurl) {
+			$code = $response['status'] ?? 200;
+			$body = $response;
+		} else {
+			$code = $response['response']['code'] ?? 200;
+			$body = \json_decode($response['body'] ?? '', true) ?? [];
+		}
+
 		return [
-			'code' => $response['response']['code'] ? $response['response']['code'] : 200,
-			'body' => \json_decode(\wp_remote_retrieve_body($response), true) ?? [],
+			'integration' => Components::kebabToCamelCase($integration, '-'),
+			'params' => $params,
+			'files' => $files,
 			'response' => $response['response'] ?? [],
-			'url' => $response['url'] ?? '',
+			'code' => $code,
+			'body' => $body,
+			'url' => $url,
+			'listId' => $listId,
+			'formId' => $formId,
 		];
 	}
 
 	/**
 	 * Return API error response array with logger.
 	 *
-	 * @param string $integration Integration name.
-	 * @param array<string, mixed> $details Details from response.
-	 * @param array<string, mixed> $requestBody Request body sent to the API.
+	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
 	 * @param string $msg Msg for the user.
 	 *
-	 * @return array<string, string|int>
+	 * @return array<string, mixed>
 	 */
-	public function getApiErrorOutput(
-		string $integration,
-		array $details,
-		array $requestBody,
-		string $msg
-	): array {
-		// Log output.
-		Helper::logger([
-			'integration' => Components::kebabToCamelCase($integration, '-'),
-			'type' => 'service',
-			'response' => $details,
-			'requestBody' => $requestBody,
-			'msg' => $msg,
-		]);
+	public function getApiErrorOutput(array $details, string $msg): array
+	{
+		Helper::logger($details);
 
 		return [
 			'status' => 'error',
-			'code' => $details['code'],
+			'code' => $details['code'] ?? 400,
 			'message' => $msg,
+			'data' => $details,
 		];
 	}
 
 	/**
 	 * Return API success response array.
 	 *
-	 * @param string $integration Integration name.
+	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
 	 *
-	 * @return array<string, string|int>
+	 * @return array<string, mixed>
 	 */
-	public function getApiSuccessOutput(string $integration, array $additional = []): array
+	public function getApiSuccessOutput(array $details, array $additional = []): array
 	{
-		$integration = Components::kebabToCamelCase($integration, '-');
+
+		$integration = $details['integration'] ?? '';
 
 		return \array_merge(
 			[
 				'status' => 'success',
-				'code' => 200,
+				'code' => $details['code'] ?? 200,
 				'message' => "{$integration}Success",
 			],
 			$additional
