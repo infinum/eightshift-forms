@@ -213,7 +213,7 @@ class GoodbitsClient implements ClientInterface
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		foreach ($params as $key => $param) {
-			// Remove unecesery fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}
