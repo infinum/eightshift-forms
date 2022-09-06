@@ -59,24 +59,46 @@ public function getGeolocationDisable(): bool
 }
 ```
 
-## Provide custom user location
-This filter provides you with the ability to manually provide user location from your own database or an API.
+## Provide custom geolocation db location.
+This filter provides you with the ability to provide custom database location for geolocation.
 
 **Filter name:**
-`es_forms_geolocation_user_location`
+`es_forms_geolocation_db_location`
 
 **Filter example:**
 ```php
-// Get user location country code.
-add_filter('es_forms_geolocation_user_location', [$this, 'getUserLocation']);
+// Geolocation db location.
+add_filter('es_forms_geolocation_db_location', [$this, 'getGeolocationDbLocation']);
 
 /**
- * Get user location country code.
+ * Geolocation db location.
  *
  * @return string
  */
-public function getUserLocation(): string
+public function getGeolocationDbLocation(): string
 {
-	return 'HR';
+	return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+}
+```
+
+## Provide custom geolocation phar location.
+This filter provides you with the ability to provide custom database location for geolocation.
+
+**Filter name:**
+`es_forms_geolocation_phar_location`
+
+**Filter example:**
+```php
+// Geolocation phar location.
+add_filter('es_forms_geolocation_phar_location', [$this, 'getGeolocationPharLocation']);
+
+/**
+ * Geolocation phar location.
+ *
+ * @return string
+ */
+public function getGeolocationPharLocation(): string
+{
+	return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
 }
 ```

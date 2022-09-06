@@ -218,7 +218,8 @@ class Filters
 		'geolocation' => [
 			'disable' => 'disable',
 			'countries' => 'countries_list',
-			'userLocation' => 'user_location',
+			'dbLocation' => 'db_location',
+			'pharLocation' => 'phar_location',
 		],
 		'blocks' => [
 			'additionalBlocks' => 'additional_blocks',

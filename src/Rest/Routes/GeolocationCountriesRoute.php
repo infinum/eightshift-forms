@@ -89,7 +89,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 		try {
-			return $this->geolocation->getCountries();
+			return $this->geolocation->getCountriesList();
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(

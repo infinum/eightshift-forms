@@ -20,5 +20,5 @@ interface GeolocationInterface
 	 *
 	 * @return array<string>
 	 */
-	public function getCountries(): array;
+	public function getCountriesList(): array;
 }
