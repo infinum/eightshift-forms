@@ -24,7 +24,7 @@ $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 // Provide order we want on output.
 $sortOrder = SettingsAll::SIDEBAR_SORT_ORDER;
 uksort($items, function ($key1, $key2) use ($sortOrder) {
-	return ((array_search($key1, $sortOrder, true) > array_search($key2, $sortOrder, true)) ? 1 : -1);
+	return array_search($key1, $sortOrder, true) <=> array_search($key2, $sortOrder, true);
 });
 
 foreach ($items as $key => $innerItems) {
@@ -44,32 +44,32 @@ foreach ($items as $key => $innerItems) {
 	}
 	?>
 
-<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
-	<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-		<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">
-			<?php echo esc_html($sidebarTitle); ?>
+	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
+		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
+			<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">
+				<?php echo esc_html($sidebarTitle); ?>
+			</div>
+			<ul class="<?php echo esc_attr("{$sectionClass}__menu"); ?>">
+				<?php foreach ($innerItems as $item) { ?>
+					<?php
+					$label = $item['label'] ?? '';
+					$value = $item['value'] ?? '';
+					$icon = $item['icon'] ?? '';
+					?>
+					<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
+						<a
+							href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
+							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+						>
+							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
+								<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+								<?php echo esc_html($label); ?>
+							</span>
+						</a>
+					</li>
+				<?php } ?>
+			</ul>
 		</div>
-		<ul class="<?php echo esc_attr("{$sectionClass}__menu"); ?>">
-			<?php foreach ($innerItems as $item) { ?>
-				<?php
-				$label = $item['label'] ?? '';
-				$value = $item['value'] ?? '';
-				$icon = $item['icon'] ?? '';
-				?>
-				<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
-					<a
-						href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
-						class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
-					>
-						<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-							<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-							<?php echo esc_html($label); ?>
-						</span>
-					</a>
-				</li>
-			<?php } ?>
-		</ul>
 	</div>
-</div>
 
 <?php }

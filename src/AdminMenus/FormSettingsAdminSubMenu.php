@@ -12,6 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsAllInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
@@ -188,7 +189,8 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$settingsSidebarOutput = [];
 		foreach ($this->settingsAll->getSettingsSidebar($formId, $type) as $item) {
-			$settingsSidebarOutput[$item['type'] ?? 'general'][] = $item;
+			$sidebarType = $item['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
+			$settingsSidebarOutput[$sidebarType][] = $item;
 		}
 
 		return [

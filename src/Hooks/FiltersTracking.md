@@ -58,11 +58,11 @@ public function getIntegrationHubspotLocalStorageMap(array $params, array $stora
 	}
 
 	// Additional tags to allow.
-	$allowedTags = \array_flip([
-		'utm_source',
-		'utm_content',
-		'utm_campaign',
-	]);
+	$allowedTags = [
+		'utm_source' => true,
+		'utm_content' => true,
+		'utm_campaign' => true,
+	];
 
 	foreach ($storage as $key => $param) {
 		if (isset($allowedTags[$key]) && isset($originalParams[$key])) {
