@@ -175,7 +175,8 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$settingsSidebarOutput = [];
 		foreach ($this->settingsGlobal->getSettingsSidebar($type) as $item) {
-			$settingsSidebarOutput[$item['type'] ?? 'general'][] = $item;
+			$sidebarType = $item['type'] ?? 'general';
+			$settingsSidebarOutput[$sidebarType][] = $item;
 		}
 
 		return [
