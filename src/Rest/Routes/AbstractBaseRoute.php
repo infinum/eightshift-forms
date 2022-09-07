@@ -12,6 +12,8 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Integrations\Hubspot\Hubspot;
+use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftForms\Validation\Validator; // phpcs:ignore
@@ -23,6 +25,56 @@ use EightshiftForms\Validation\Validator; // phpcs:ignore
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
+	/**
+	 * Custom form param for post ID.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_POST_ID = 'es-form-post-id';
+
+	/**
+	 * Custom form param for type.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_TYPE = 'es-form-type';
+
+	/**
+	 * Custom form param for single submit.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_SINGLE_SUBMIT = 'es-form-single-submit';
+
+	/**
+	 * Custom form param for storage.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_STORAGE = 'es-form-storage';
+
+	/**
+	 * Custom form param for action.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_ACTION = 'es-form-action';
+
+	/**
+	 * List of all custom form params used.
+	 */
+	public const CUSTOM_FORM_PARAMS = [
+		'postId' => self::CUSTOM_FORM_PARAM_POST_ID,
+		'type' => self::CUSTOM_FORM_PARAM_TYPE,
+		'singleSubmit' => self::CUSTOM_FORM_PARAM_SINGLE_SUBMIT,
+		'storage' => self::CUSTOM_FORM_PARAM_STORAGE,
+		'action' => self::CUSTOM_FORM_PARAM_ACTION,
+		'hubspotCookie' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE,
+		'hubspotPageName' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME,
+		'hubspotPageUrl' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL,
+		'mailchimpTags' => Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+	];
+
 	/**
 	 * Method that returns project Route namespace.
 	 *
@@ -210,14 +262,18 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
 	 *
+	 * @throws UnverifiedRequestException Wrong request response.
+	 *
 	 * @return string
 	 */
 	protected function getFormType(array $params): string
 	{
-		$formType = $params['es-form-type'] ?? '';
+		$formType = $params[self::CUSTOM_FORM_PARAM_TYPE] ?? '';
 
 		if (!$formType) {
-			return '';
+			throw new UnverifiedRequestException(
+				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
+			);
 		}
 
 		return $formType['value'] ?? '';
@@ -254,12 +310,15 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Return form ID from form params and determins if ID needs decrypting.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
+	 * @param bool $throwError Throw error if missing post Id.
+	 *
+	 * @throws UnverifiedRequestException Wrong request response.
 	 *
 	 * @return string
 	 */
-	protected function getFormId(array $params): string
+	protected function getFormId(array $params, bool $throwError = true): string
 	{
-		$formId = $params['es-form-post-id'] ?? '';
+		$formId = $params[self::CUSTOM_FORM_PARAM_POST_ID] ?? '';
 
 		if (!$formId) {
 			return '';
@@ -267,34 +326,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		$formId = $formId['value'] ?? '';
 
-		return $formId;
-	}
-
-	/**
-	 * Remove uncesesery params before submitting data to validation.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function removeUneceseryParams(array $params): array
-	{
-		foreach ($params as $key => $value) {
-			if ($key === 'es-form-type') {
-				// Allow action parameter for forms with custom actions.
-				if ($value['value'] !== 'custom') {
-					unset($params['action']);
-				}
-
-				unset($params['es-form-type']);
-			}
-
-			if ($key === 'es-form-post-id') {
-				unset($params['es-form-post-id']);
-			}
+		if (!$formId && $throwError) {
+			throw new UnverifiedRequestException(
+				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
+			);
 		}
 
-		return $params;
+		return $formId;
 	}
 
 	/**
@@ -306,11 +344,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function extractStorageParams(array $params): array
 	{
-		if (!isset($params['es-form-storage'])) {
+		if (!isset($params[self::CUSTOM_FORM_PARAM_STORAGE])) {
 			return $params;
 		}
 
-		$storage = $params['es-form-storage']['value'] ?? [];
+		$storage = $params[self::CUSTOM_FORM_PARAM_STORAGE]['value'] ?? [];
 
 		if (!$storage) {
 			return $params;
@@ -318,7 +356,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		$storage = \json_decode($storage, true);
 
-		$params['es-form-storage']['value'] = $storage;
+		$params[self::CUSTOM_FORM_PARAM_STORAGE]['value'] = $storage;
 
 		return $params;
 	}

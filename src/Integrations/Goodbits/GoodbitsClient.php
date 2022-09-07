@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Goodbits;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -30,6 +32,11 @@ class GoodbitsClient implements ClientInterface
 	 * Helper trait.
 	 */
 	use ObjectHelperTrait;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Return Goodbits base url.
@@ -102,71 +109,54 @@ class GoodbitsClient implements ClientInterface
 			'subscriber' => $this->prepareParams($params),
 		];
 
-		$response = \wp_remote_request(
-			self::BASE_URL . "subscribers",
+		$url = self::BASE_URL . "subscribers";
+
+		$response = \wp_remote_post(
+			$url,
 			[
 				'headers' => $this->getHeaders($itemId),
-				'method' => 'POST',
 				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'goodbits',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGoodbits::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			$files,
+			$itemId,
+			$formId
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
-		if ($code === 200 || $code === 201) {
-			return [
-				'status' => 'success',
-				'code' => 200,
-				'message' => 'goodbitsSuccess',
-			];
-		}
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = !\is_array($responseBody['errors']) ? $responseBody['errors'] : '';
-		$responseErrors = \is_array($responseBody['errors']) ? $responseBody['errors']['message'] : [];
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage, $responseErrors),
-		];
-
-		Helper::logger([
-			'integration' => 'goodbits',
-			'type' => 'service',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body),
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
-	 * @param array<string, mixed> $errors Additional errors got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg, array $errors = []): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = !\is_array($body['errors']) ? $body['errors'] : '';
+		$errors = \is_array($body['errors']) ? $body['errors']['message'] : [];
+
 		if ($errors) {
 			$invalidEmail = \array_filter(
 				$errors,
@@ -220,12 +210,15 @@ class GoodbitsClient implements ClientInterface
 	{
 		$output = [];
 
-		foreach ($params as $key => $value) {
-			$output[$key] = $value['value'] ?? '';
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
+		foreach ($params as $key => $param) {
+			// Remove unnecessary fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[$key] = $param['value'] ?? '';
 		}
 
 		return $output;

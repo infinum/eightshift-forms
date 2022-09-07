@@ -1,28 +1,24 @@
 # Filters General
 This document will provide you with the code examples for forms filters used in general.
 
-## Change http request arguments
-This filter can be used to change CURL timeout for the file upload if you have to upload large files.
+## Change http request timeout
+This filter can be used to change the cURL timeout for the file upload, useful if you have to upload large files.
 
 **Filter name:**
-`es_forms_general_http_request_args`
+`es_forms_general_http_request_timeout`
 
 **Filter example:**
 ```php
-// Return http request args.
-add_filter('es_forms_general_http_request_args', [$this, 'getHttpRequestArgs']);
+// Return the HTTP request timeout.
+add_filter('es_forms_general_http_request_timeout', [$this, 'getHttpRequestTimeout']);
 
 /**
- * Return http request args.
+ * Return the HTTP request timeout.
  *
- * @param array<int, mixed> $args Arguments from core.
- *
- * @return array<int, mixed>
+ * @return int
  */
-public function getHttpRequestArgs(array $args): array
+public function getHttpRequestTimeout(): int
 {
-	$args['timeout'] = 50;
-
-	return $args;
+	return 50;
 }
 ```

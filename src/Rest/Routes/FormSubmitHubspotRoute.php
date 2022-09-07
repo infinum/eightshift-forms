@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -64,23 +65,33 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected $clearbitClient;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
-		ClearbitClientInterface $clearbitClient
+		ClearbitClientInterface $clearbitClient,
+		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -115,9 +126,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			]);
 		}
 
+		$itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
-			$this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId),
+			$itemId,
 			$params,
 			$files,
 			$formId
@@ -127,20 +140,35 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
 
 		if ($useClearbit) {
-			// Get Clearbit data.
-			$clearbitResponse = $this->clearbitClient->getApplication(
-				$this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formId),
-				$params,
-				$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'])
-			);
+			$emailKey = $this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formId);
+			$email = isset($params[$emailKey]['value']) ? $params[$emailKey]['value'] : '';
 
-			// If Clearbit data is ok send data to Hubspot.
-			if ($clearbitResponse['code'] === 200) {
-				$this->hubspotClient->postContactProperty(
-					$clearbitResponse['email'] ?? '',
-					$clearbitResponse['data'] ?? []
+			if ($email) {
+				// Get Clearbit data.
+				$clearbitResponse = $this->clearbitClient->getApplication(
+					$email,
+					$params,
+					$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map']),
+					$itemId,
+					$formId
 				);
+
+				// If Clearbit data is ok send data to Hubspot.
+				if ($clearbitResponse['code'] >= 200 && $clearbitResponse['code'] <= 299) {
+					$this->hubspotClient->postContactProperty(
+						$clearbitResponse['email'] ?? '',
+						$clearbitResponse['data'] ?? []
+					);
+				} else {
+					// Send fallback email.
+					$this->mailer->fallbackEmail($clearbitResponse['data'] ?? []);
+				}
 			}
+		}
+
+		if ($response['status'] === 'error') {
+			// Send fallback email.
+			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
 		// Always delete the files from the disk.

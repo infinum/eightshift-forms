@@ -61,6 +61,7 @@ class SettingsTest implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Test', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_DEVELOP,
 		];
 	}
 

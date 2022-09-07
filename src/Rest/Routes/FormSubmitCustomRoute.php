@@ -12,12 +12,19 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Class FormSubmitCustomRoute
  */
 class FormSubmitCustomRoute extends AbstractFormSubmit
 {
+	/**
+	 * Use api helper trait.
+	 */
+	use ApiHelper;
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -69,8 +76,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	{
 		$body = [];
 
-		$formAction = $params['action']['value'];
-		unset($params['action']);
+		$formAction = $params[self::CUSTOM_FORM_PARAM_ACTION]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {
@@ -81,19 +87,32 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]);
 		}
 
+		// Remove unnecessary internal params before continue.
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+
 		// Format body parameters to a key/value array.
-		foreach ($params as $param) {
-			$body[$param['name']] = $param['value'];
+		foreach ($params as $key => $param) {
+			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if ($name || !$value) {
+				continue;
+			}
+
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$body[$name] = $value;
 		}
 
 		// Create a custom form action request.
-		$customResponse = \wp_remote_request(
+		$customResponse = \wp_remote_post(
 			$formAction,
 			[
 				'headers' => [
 					'Content-Type' => 'application/x-www-form-urlencoded',
 				],
-				'method' => 'POST',
 				'body' => \http_build_query($body),
 			]
 		);
@@ -112,7 +131,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is valid we'll return the generic success message.
 		return \rest_ensure_response([
 			'status' => 'success',
-			'code' => $customResponseCode,
+			'code' => 200,
 			'message' => $this->labels->getLabel('customSuccess', $formId),
 		]);
 	}

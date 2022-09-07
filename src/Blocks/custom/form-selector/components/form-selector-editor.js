@@ -27,11 +27,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 	const hasInnerBlocksCheck = useSelect((select) => {
 		const { innerBlocks } = select('core/block-editor').getBlock(clientId);
 
-		if (!innerBlocks.length) {
-			return false;
-		}
-
-		return true;
+		return innerBlocks.length;
 	});
 
 	// If parent block has inner blocks set internal state.

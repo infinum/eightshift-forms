@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MailerliteClient integration class.
@@ -24,6 +26,11 @@ class MailerliteClient implements ClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Return Mailerlite base url.
@@ -130,69 +137,53 @@ class MailerliteClient implements ClientInterface
 			'fields' => $this->prepareParams($params),
 		];
 
-		$response = \wp_remote_request(
-			self::BASE_URL . "groups/{$itemId}/subscribers",
+		$url = self::BASE_URL . "groups/{$itemId}/subscribers";
+
+		$response = \wp_remote_post(
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'method' => 'POST',
 				'body' => \wp_json_encode($body),
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'mailerlite',
-				'type' => 'wp',
-				'body' => $body,
-				'response' => $response,
-			]);
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			$files,
+			$itemId,
+			$formId
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
-		if ($code === 200) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'mailerliteSuccess',
-			];
-		}
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['error']['message'] ?? '';
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage),
-		];
-
-		Helper::logger([
-			'integration' => 'mailerlite',
-			'type' => 'service',
-			'body' => $body,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['error']['message'] ?? '';
+
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailerliteBadRequestError';
@@ -227,17 +218,31 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getMailerliteListFields()
 	{
+		$url = self::BASE_URL . "fields";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "fields",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		return $body ?? [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**
@@ -247,15 +252,31 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getMailerliteLists()
 	{
+		$url = self::BASE_URL . "groups";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "groups",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		return \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMailerlite::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
+		}
+
+		return [];
 	}
 
 	/**
@@ -269,16 +290,20 @@ class MailerliteClient implements ClientInterface
 	{
 		$output = [];
 
-		if (isset($params['email'])) {
-			unset($params['email']);
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $value) {
-			$output[$key] = $value['value'] ?? '';
-		}
+		foreach ($params as $key => $param) {
+			// Remove email.
+			if ($key === 'email') {
+				continue;
+			}
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
+			// Remove unnecessary fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[$key] = $param['value'] ?? '';
 		}
 
 		return $output;

@@ -35,4 +35,13 @@ interface MailerInterface
 		array $files = [],
 		array $fields = []
 	): bool;
+
+	/**
+	 * Send fallback email.
+	 *
+	 * @param array<mixed> $data Data to extract data from.
+	 *
+	 * @return boolean
+	 */
+	public function fallbackEmail(array $data): bool;
 }

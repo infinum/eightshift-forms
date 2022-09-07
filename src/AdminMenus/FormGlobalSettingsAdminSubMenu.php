@@ -13,6 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
@@ -173,13 +174,19 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
+		$settingsSidebarOutput = [];
+		foreach ($this->settingsGlobal->getSettingsSidebar($type) as $item) {
+			$sidebarType = $item['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
+			$settingsSidebarOutput[$sidebarType][] = $item;
+		}
+
 		return [
 			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Settings', 'eightshift-forms'),
 			'adminSettingsSubTitle' => \esc_html__('These settings apply to all forms.', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsLink' => Helper::getSettingsGlobalPageUrl(''),
-			'adminSettingsSidebar' => $this->settingsGlobal->getSettingsSidebar($type),
+			'adminSettingsSidebar' => $settingsSidebarOutput,
 			'adminSettingsForm' => $this->settingsGlobal->getSettingsForm($type),
 			'adminSettingsType' => $type,
 			'adminSettingsIsGlobal' => true,

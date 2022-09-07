@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -42,20 +43,30 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	private $activeCampaignClient;
 
 	/**
+	 * Instance variable of MailerInterface data.
+	 *
+	 * @var MailerInterface
+	 */
+	public $mailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ActiveCampaignClientInterface $activeCampaignClient
+		ActiveCampaignClientInterface $activeCampaignClient,
+		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->activeCampaignClient = $activeCampaignClient;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -100,7 +111,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		);
 
 		// Make an additional requests to the API.
-		if ($response['code'] === 200 && !empty($response['contactId'])) {
+		if ($response['status'] === 'success' && !empty($response['contactId'])) {
 			// If form has action to save tags.
 			$actionTags = $params['actionTags']['value'] ?? '';
 
@@ -130,6 +141,11 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 					);
 				}
 			}
+		}
+
+		if ($response['status'] === 'error') {
+			// Send fallback email.
+			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
 		// Finish.

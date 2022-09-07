@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -32,6 +34,11 @@ class ClearbitClient implements ClearbitClientInterface
 	use ObjectHelperTrait;
 
 	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
+
+	/**
 	 * Return Clearbit base url.
 	 *
 	 * @var string
@@ -41,115 +48,70 @@ class ClearbitClient implements ClearbitClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $emailKey Email key to map in params.
+	 * @param string $email Email key to map in params.
 	 * @param array<string, mixed> $params Params array.
 	 * @param array<string, string> $mapData Map data from settings.
+	 * @param string $itemId Item id to search.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApplication(string $emailKey, array $params, array $mapData): array
+	public function getApplication(string $email, array $params, array $mapData, string $itemId, string $formId): array
 	{
-		$email = isset($params[$emailKey]['value']) ? $params[$emailKey]['value'] : '';
+		$url = self::BASE_URL . "combined/find?email={$email}";
 
-		if (!$email) {
-			$output = [
-				'status' => 'error',
-				'code' => 400,
-				'message' => 'clearbitMissingEmail',
-			];
-
-			Helper::logger([
-				'integration' => 'clearbit',
-				'email' => $email,
-				'mapKeys' => $mapData,
-				'output' => $output,
-			]);
-
-			return $output;
-		}
-
-		if (!$mapData) {
-			$output = [
-				'status' => 'error',
-				'code' => 400,
-				'message' => 'clearbitMissingMapKeys',
-			];
-
-			Helper::logger([
-				'integration' => 'clearbit',
-				'email' => $email,
-				'mapKeys' => $mapData,
-				'output' => $output,
-			]);
-
-			return $output;
-		}
+		$params = $this->prepareParamsOutput($params);
 
 		$response = \wp_remote_get(
-			self::BASE_URL . "combined/find?email={$email}",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
 			]
 		);
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'clearbit',
-				'type' => 'wp',
-				'email' => $email,
-				'mapKeys' => $mapData,
-				'response' => $response,
-			]);
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
-		}
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsClearbit::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$params,
+			[],
+			$itemId,
+			$formId
+		);
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
+		$code = $details['code'];
+		$body = $details['body'];
 
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-
-		if ($code === 200) {
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
 			$dataOutput = [];
 
-			foreach ($this->prepareParams($responseBody) as $key => $value) {
+			foreach ($this->prepareParams($body) as $key => $value) {
 				if (\array_key_exists($key, $mapData) && !empty($value) && !empty($mapData[$key])) {
 					$dataOutput[$mapData[$key]] = $value;
 				}
 			}
 
-			return [
-				'status' => 'success',
-				'type' => 'service',
-				'code' => $code,
-				'message' => 'clearbitSuccess',
-				'email' => $email,
-				'data' => $dataOutput,
-			];
+			return $this->getApiSuccessOutput(
+				$details,
+				[
+					'email' => $email,
+					'data' => $dataOutput,
+				]
+			);
 		}
 
-		$responseMessage = $responseBody['error']['type'] ?? '';
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'email' => $email,
-			'mapKeys' => $mapData,
-			'message' => $this->getErrorMsg($responseMessage),
-		];
-
-		Helper::logger([
-			'integration' => 'clearbit',
-			'email' => $email,
-			'mapKeys' => $mapData,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			\array_merge(
+				$details,
+				[
+					'email' => $email,
+				]
+			),
+			$this->getErrorMsg($body),
+		);
 	}
 
 	/**
@@ -163,6 +125,39 @@ class ClearbitClient implements ClearbitClientInterface
 
 		foreach ($this->prepareParams() as $key => $value) {
 			$output[] = $key;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepare params for api.
+	 *
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return array<string, string>
+	 */
+	private function prepareParamsOutput(array $params = []): array
+	{
+		$output = [];
+
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+
+		foreach ($params as $key => $param) {
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			if (!isset($param['value'])) {
+				continue;
+			}
+
+			if (!isset($param['type']) || $param['type'] === 'hidden') {
+				continue;
+			}
+
+			$output[$key] = $param;
 		}
 
 		return $output;
@@ -305,15 +300,19 @@ class ClearbitClient implements ClearbitClientInterface
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['error']['type'] ?? '';
+
 		switch ($msg) {
 			case 'auth_required':
 				return 'clearbitAuthRequired';
+			case 'email_invalid':
+				return 'clearbitInvalidEmail';
 			default:
 				return 'submitWpError';
 		}

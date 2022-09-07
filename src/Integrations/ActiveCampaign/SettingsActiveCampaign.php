@@ -18,7 +18,9 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -96,17 +98,27 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	private $activeCampaign;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param MapperInterface $activeCampaign Inject ActiveCampaign which holds ActiveCampaign form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ActiveCampaignClientInterface $activeCampaignClient,
-		MapperInterface $activeCampaign
+		MapperInterface $activeCampaign,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->activeCampaignClient = $activeCampaignClient;
 		$this->activeCampaign = $activeCampaign;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 
 	/**
@@ -173,6 +185,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 			'label' => \__('ActiveCampaign', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -206,7 +219,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 				[
 					'component' => 'highlighted-content',
 					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('Data from ActiveCampaign couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
+					'highlightedContentSubtitle' => \__('Data from ActiveCampaign couldn\'t be fetched. Check the API key, URL or if you have any form created.', 'eightshift-forms'),
 					'highlightedContentIcon' => 'error',
 				],
 			];
@@ -317,11 +330,9 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => \__('<ol>
 						<li>Log in to your ActiveCampaign Account.</li>
-						<li>Navigate to your user profile image (bottom left corner).</li>
-						<li>Click on <strong>Account</strong>.</li>
-						<li>Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.</li>
-						<li>Click on the <strong>Create a Key</strong> button.<br/></li>
-						<li>Copy the API key into the field below or use the global constant.</li>
+						<li>Navigate to your Settings page (gear icon in the bottom-left corner).</li>
+						<li>Click on <strong>Developer</strong>.</li>
+						<li>Copy the API key and URL into the fields below or use the global constant.</li>
 					</ol>', 'eightshift-forms'),
 			],
 			[
@@ -378,6 +389,9 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsActiveCampaign::SETTINGS_TYPE_KEY),
+		];
 	}
 }

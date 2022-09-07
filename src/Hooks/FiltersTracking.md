@@ -40,33 +40,43 @@ This filter provides you with the ability to map you local storage tags got from
 **Filter example:**
 ```php
 // Map Hubspot fields with custom tags from local storage.
-\add_filter('es_forms_integration_hubspot_local_storage_map', [$this, 'getIntegrationHubspotLocalStorageMap'], 10, 2);
+\add_filter('es_forms_integration_hubspot_local_storage_map', [$this, 'getIntegrationHubspotLocalStorageMap'], 10, 3);
 
 /**
  * Map Hubspot fields with custom tags from local storage.
  *
- * @param array<int, mixed> $params Params from Hubspot integration.
+ * @param array<int, mixed> $params Params from Hubspot integration prepared for output.
  * @param array<int, mixed> $storage Data form storage.
+ * @param array<int, mixed> $originalParams Original params with all custom fields.
  *
  * @return array<int, mixed>
  */
-public function getIntegrationHubspotLocalStorageMap(array $params, array $storage): array
+public function getIntegrationHubspotLocalStorageMap(array $params, array $storage, array $originalParams): array
 {
 	if (!$storage) {
 		return $params;
 	}
 
-	foreach ($params as $key => $param) {
-		$name = $param['name'] ?? '';
+	// Additional tags to allow.
+	$allowedTags = [
+		'utm_source' => true,
+		'utm_content' => true,
+		'utm_campaign' => true,
+	];
 
-		if (!$name) {
-			continue;
-		}
+	foreach ($storage as $key => $param) {
+		if (isset($allowedTags[$key]) && isset($originalParams[$key])) {
+			$name = $originalParams[$key]['name'] ?? '';
 
-		if ($name === 'utm_source' || $name === 'utm_content' || $name === 'utm_campaign') {
-			if (isset($storage[$name])) {
-				$params[$key]['value'] = $storage[$name];
+			if (!$name) {
+				continue;
 			}
+
+			$params[] = [
+				'name' => $name,
+				'value' => $param,
+				'objectTypeId' => $originalParams[$key]['objectTypeId'] ?? '',
+			];
 		}
 	}
 

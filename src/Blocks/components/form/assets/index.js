@@ -34,8 +34,10 @@ function initAll() {
 			formDisableScrollToGlobalMessageOnSuccess: esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess,
 			formResetOnSuccess: esFormsLocalization.formResetOnSuccess,
 			fileCustomRemoveLabel: esFormsLocalization.fileCustomRemoveLabel,
+			formServerErrorMsg: esFormsLocalization.formServerErrorMsg,
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
+			customFormParams: esFormsLocalization.customFormParams,
 		});
 
 		// Run forms.
@@ -47,11 +49,14 @@ function initAll() {
 			redirectionTimeout: form.redirectionTimeout,
 			hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 			captchaSiteKey: esFormsLocalization.captcha,
+			formServerErrorMsg: esFormsLocalization.formServerErrorMsg,
 			files: form.files,
 			customSelects: form.customSelects,
 			customFiles: form.customFiles,
 			customTextareas: form.customTextareas,
 			storageConfig: form.storageConfig,
+			customFormParams: form.FORM_CUSTOM_FORM_PARAMS,
+			storageName: form.STORAGE_NAME,
 			init: () => {
 				form.init();
 			},

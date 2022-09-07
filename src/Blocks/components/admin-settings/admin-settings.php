@@ -13,6 +13,7 @@ $manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/admin-setting
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
@@ -47,30 +48,19 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			</a>
 		</div>
 
-		<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
-			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-				<ul class="<?php echo esc_attr("{$sectionClass}__menu"); ?>">
-					<?php foreach ($adminSettingsSidebar as $item) { ?>
-						<?php
-						$label = $item['label'] ?? '';
-						$value = $item['value'] ?? '';
-						$icon = $item['icon'] ?? '';
-						?>
-						<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
-							<a
-								href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
-								class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
-							>
-								<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-									<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-									<?php echo esc_html($label); ?>
-								</span>
-							</a>
-						</li>
-					<?php } ?>
-				</ul>
-			</div>
-		</div>
+		<?php
+		echo Components::renderPartial( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			'component',
+			$componentName,
+			'sidebar-section',
+			[
+				'items' => $adminSettingsSidebar,
+				'sectionClass' => $sectionClass,
+				'adminSettingsLink' => $adminSettingsLink,
+				'adminSettingsType' => $adminSettingsType,
+			]
+		);
+		?>
 	</div>
 	<div class="<?php echo esc_attr("{$sectionClass}__main"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">

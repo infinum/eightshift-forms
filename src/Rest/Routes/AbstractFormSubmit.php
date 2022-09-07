@@ -14,7 +14,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use WP_REST_Request;
 
 /**
@@ -51,6 +51,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
+	 * @throws UnverifiedRequestException Wrong config error.
+	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
@@ -66,6 +68,12 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Get form ID.
 			$formId = $this->getFormId($params);
 
+			if (!$formId) {
+				throw new UnverifiedRequestException(
+					\esc_html__('Invalid nonce.', 'eightshift-forms')
+				);
+			}
+
 			// Determine form type.
 			$formType = $this->getFormType($params);
 
@@ -73,7 +81,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType]['fields']) ? \apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
 
 			// Validate request.
-			if (!Variables::skipFormValidation()) {
+			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),
@@ -81,9 +89,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					$formData
 				);
 			}
-
-			// Remove unecesery internal params before continue.
-			$params = $this->removeUneceseryParams($params);
 
 			// Extract hidden params from local storage set on the frontend.
 			$params = $this->extractStorageParams($params);

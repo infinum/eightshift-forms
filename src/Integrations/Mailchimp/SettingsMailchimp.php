@@ -18,7 +18,9 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -106,17 +108,27 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	protected $mailchimp;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		MailchimpClientInterface $mailchimpClient,
-		MapperInterface $mailchimp
+		MapperInterface $mailchimp,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->mailchimpClient = $mailchimpClient;
 		$this->mailchimp = $mailchimp;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 
 	/**
@@ -182,6 +194,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			'label' => \__('Mailchimp', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -410,7 +423,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 							$this->mailchimp->getFormFields($formId),
 							$formId,
 							[
-								Mailchimp::FIELD_MAILCHIMP_TAGS_KEY
+								Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS
 							]
 						),
 					]
@@ -491,6 +504,9 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsMailchimp::SETTINGS_TYPE_KEY),
+		];
 	}
 }

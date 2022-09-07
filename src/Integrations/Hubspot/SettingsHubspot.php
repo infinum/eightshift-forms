@@ -19,7 +19,9 @@ use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -136,23 +138,33 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	protected $hubspot;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
 	 * @param SettingsClearbitDataInterface $settingsClearbit Inject Clearbit which holds Clearbit settings data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ClearbitClientInterface $clearbitClient,
 		SettingsClearbitDataInterface $settingsClearbit,
 		HubspotClientInterface $hubspotClient,
-		MapperInterface $hubspot
+		MapperInterface $hubspot,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->clearbitClient = $clearbitClient;
 		$this->settingsClearbit = $settingsClearbit;
 		$this->hubspotClient = $hubspotClient;
 		$this->hubspot = $hubspot;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 
 	/**
@@ -218,6 +230,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			'label' => \__('HubSpot', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -379,10 +392,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return \array_merge(
-			$output,
-			$outputValid
-		);
+		return [
+			...$output,
+			...$outputValid,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsHubspot::SETTINGS_TYPE_KEY),
+		];
 	}
 
 	/**

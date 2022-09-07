@@ -62,6 +62,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Display locations', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		];
 	}
 

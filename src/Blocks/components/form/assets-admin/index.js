@@ -4,6 +4,10 @@ import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
 
 domReady(() => {
+	if (typeof esFormsLocalization === 'undefined') {
+		throw 'Your project is missing the global "esFormsLocalization" variable called from the enqueue script.';
+	}
+
 	const {
 		componentJsClass,
 		componentCacheJsClass,
@@ -17,6 +21,7 @@ domReady(() => {
 				formSelector: selector,
 				formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
 				formIsAdmin: true,
+				customFormParams: esFormsLocalization.customFormParams,
 			});
 
 			form.init();

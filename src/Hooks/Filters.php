@@ -31,6 +31,7 @@ use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsTest;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\SettingsValidation;
 
@@ -123,7 +124,7 @@ class Filters
 			'global' => SettingsClearbit::FILTER_SETTINGS_GLOBAL_NAME,
 			'settingsSidebar' => SettingsClearbit::FILTER_SETTINGS_SIDEBAR_NAME,
 			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-			'icon' => '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><g fill-rule="nonzero" fill="none"><path d="M10 0h7.324C18.8 0 20 1.2 20 2.676V10H10V0Z" fill="#31C2C2"/><path d="M0 10h10v10H3.19A3.191 3.191 0 0 1 0 16.81V10Z" fill="#29A3A3"/><path d="M10 10h10v7.431c0 1.42-1.15 2.57-2.57 2.57H10V10Z" fill="#E7F2FC"/><path d="M3.273 0H10v10H0V3.273A3.275 3.275 0 0 1 3.273 0Z" fill="#2CB7B7"/></g></svg>',
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3a2 2 0 0 1 2-2h7v18H3a2 2 0 0 1-2-2V3z" fill="#29A3A3"/><path opacity=".7" d="M10 1h7a2 2 0 0 1 2 2v7h-9V1z" fill="#29A3A3"/><path opacity=".4" d="M10 10h9v7a2 2 0 0 1-2 2h-7v-9z" fill="#29A3A3"/></svg>',
 			'integration' => [
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
 					'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
@@ -149,6 +150,12 @@ class Filters
 			'global' => SettingsGeolocation::FILTER_SETTINGS_GLOBAL_NAME,
 			'settingsSidebar' => SettingsGeolocation::FILTER_SETTINGS_SIDEBAR_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="18.625" rx="2.5" ry=".625" fill="#29A3A3" fill-opacity=".12"/><path d="m10 18-.53.53a.75.75 0 0 0 1.06 0L10 18zm4.75-10.5c0 2.261-1.26 4.726-2.618 6.7a27.012 27.012 0 0 1-2.442 3.04 14.893 14.893 0 0 1-.208.218l-.01.01-.002.002.53.53.53.53h.001l.001-.002a2.19 2.19 0 0 0 .018-.018l.05-.05.183-.193a28.473 28.473 0 0 0 2.585-3.217c1.393-2.026 2.882-4.811 2.882-7.55h-1.5zM10 18l.53-.53-.002-.002-.01-.01a8.665 8.665 0 0 1-.208-.217 27 27 0 0 1-2.442-3.04C6.511 12.225 5.25 9.76 5.25 7.5h-1.5c0 2.739 1.49 5.524 2.882 7.55a28.494 28.494 0 0 0 2.585 3.217 16.44 16.44 0 0 0 .233.244l.014.013.004.004v.002h.001L10 18zM5.25 7.5A4.75 4.75 0 0 1 10 2.75v-1.5A6.25 6.25 0 0 0 3.75 7.5h1.5zM10 2.75a4.75 4.75 0 0 1 4.75 4.75h1.5A6.25 6.25 0 0 0 10 1.25v1.5z" fill="#29A3A3"/><circle cx="10" cy="7.5" r="1.5" fill="#29A3A3" fill-opacity=".3"/></svg>',
+		],
+		SettingsTroubleshooting::SETTINGS_TYPE_KEY => [
+			'global' => SettingsTroubleshooting::FILTER_SETTINGS_GLOBAL_NAME,
+			'settingsSidebar' => SettingsTroubleshooting::FILTER_SETTINGS_SIDEBAR_NAME,
+			'valid' => SettingsTroubleshooting::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 1H7l2.25 6h1.5L13 1zm6 12V7l-6 2.25v1.5L19 13zm-6 6H7l2.25-6h1.5L13 19zM1 13V7l6 2.25v1.5L1 13z" fill="#29A3A3" fill-opacity=".3"/><circle cx="10" cy="10" r="9" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="3" stroke="#29A3A3" stroke-width="1.5" fill="none"/><path d="M8.8 7 7 2m4.2 5L13 2m0 6.8L18 7m-5 4.2 5 1.8m-9.2 0L7 18m4.2-5 1.8 5M7 8.8 2 7m5 4.2L2 13" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle opacity=".6" cx="17" cy="3" r="1" stroke="#29A3A3" fill="none"/><circle opacity=".6" cx="17" cy="17" r="1" stroke="#29A3A3" fill="none"/><circle opacity=".6" cx="3" cy="17" r="1" stroke="#29A3A3" fill="none"/><circle opacity=".6" cx="3" cy="3" r="1" stroke="#29A3A3" fill="none"/></svg>',
 		],
 		SettingsTest::SETTINGS_TYPE_KEY => [
 			'global' => SettingsTest::FILTER_SETTINGS_GLOBAL_NAME,
@@ -268,7 +275,7 @@ class Filters
 			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
 		],
 		'general' => [
-			'httpRequestArgs' => 'http_request_args',
+			'httpRequestTimeout' => 'http_request_timeout',
 		],
 	];
 

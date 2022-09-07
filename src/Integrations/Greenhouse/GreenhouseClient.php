@@ -10,10 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Helpers\Helper;
+use CURLFile;
+use EightshiftForms\General\General;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * GreenhouseClient integration class.
@@ -24,6 +29,11 @@ class GreenhouseClient implements ClientInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
 
 	/**
 	 * Return Greenhouse base url.
@@ -129,75 +139,74 @@ class GreenhouseClient implements ClientInterface
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$paramsPrepared = $this->prepareParams($params);
+		$paramsFiles = $this->prepareFiles($files);
 
 		$body = \array_merge(
 			$paramsPrepared,
-			$this->prepareFiles($files)
+			$paramsFiles
 		);
 
-		$response = \wp_remote_post(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}",
+		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
+
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";
+
+		// Curl used because files are not sent via wp request.
+		$curl = \curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
+			$curl,
 			[
-				'headers' => $this->getHeaders(true),
-				'body' => \wp_json_encode($body),
+				\CURLOPT_URL => $url,
+				\CURLOPT_HTTPAUTH => \CURLAUTH_BASIC,
+				\CURLOPT_RETURNTRANSFER => true,
+				\CURLOPT_TIMEOUT => \apply_filters($filterName, General::HTTP_REQUEST_TIMEOUT_DEFAULT),
+				\CURLOPT_POST => true,
+				\CURLOPT_POSTFIELDS => $body,
+				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
 			]
 		);
+		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
+		$code = \curl_getinfo($curl, \CURLINFO_RESPONSE_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 
-		if (\is_wp_error($response)) {
-			Helper::logger([
-				'integration' => 'greenhouse',
-				'type' => 'wp',
-				'body' => $paramsPrepared,
-				'response' => $response,
-			]);
+		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->getErrorMsg('submitWpError'),
-			];
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			\json_decode($response, true),
+			$url,
+			$paramsPrepared,
+			$paramsFiles,
+			$itemId,
+			$formId,
+			true
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $this->getApiSuccessOutput($details);
 		}
 
-		$code = $response['response']['code'] ? $response['response']['code'] : 200;
-
-		if ($code === 200) {
-			return [
-				'status' => 'success',
-				'code' => $code,
-				'message' => 'greenhouseSuccess',
-			];
-		}
-
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		$responseMessage = $responseBody['error'] ?? '';
-
-		$output = [
-			'status' => 'error',
-			'code' => $code,
-			'message' => $this->getErrorMsg($responseMessage),
-		];
-
-		Helper::logger([
-			'integration' => 'greenhouse',
-			'type' => 'service',
-			'body' => $paramsPrepared,
-			'response' => $response['response'],
-			'responseBody' => $responseBody,
-			'output' => $output,
-		]);
-
-		return $output;
+		// Output error.
+		return $this->getApiErrorOutput(
+			$details,
+			$this->getErrorMsg($body)
+		);
 	}
 
 	/**
 	 * Map service messages with our own.
 	 *
-	 * @param string $msg Message got from the API.
+	 * @param array<mixed> $body API response body.
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(string $msg): string
+	private function getErrorMsg(array $body): string
 	{
+		$msg = $body['error'] ?? '';
+
 		switch ($msg) {
 			case 'Bad Request':
 				return 'greenhouseBadRequestError';
@@ -243,21 +252,31 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getGreenhouseJobs()
 	{
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (!isset($body['jobs'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['jobs'] ?? [];
 		}
 
-		return $body['jobs'];
+		return [];
 	}
 
 	/**
@@ -269,41 +288,51 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getGreenhouseJob(string $jobId)
 	{
+		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true";
+
 		$response = \wp_remote_get(
-			self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true",
+			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'timeout' => 60,
 			]
 		);
 
-		$body = \json_decode(\wp_remote_retrieve_body($response), true);
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		if (isset($body['error'])) {
-			return [];
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body ?? [];
 		}
 
-		return $body;
+		return [];
 	}
 
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @param boolean $useAuth If using post method we need to send Authorization header in the request.
+	 * @param boolean $postHeaders If using post method we need to send Authorization header and type in the request.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, string>
 	 */
-	private function getHeaders(bool $useAuth = false): array
+	private function getHeaders(bool $postHeaders = false): array
 	{
-		$headers = [
-			'Content-Type' => 'application/json; charset=utf-8',
-		];
-
-		if ($useAuth) {
-			$headers['Authorization'] = "Basic {$this->getApiKey()}";
+		if ($postHeaders) {
+			return [
+				'Authorization: Basic ' . $this->getApiKey(),
+			];
 		}
 
-		return $headers;
+		return [
+			'Content-Type' => 'application/json',
+		];
 	}
 
 	/**
@@ -317,17 +346,21 @@ class GreenhouseClient implements ClientInterface
 	{
 		$output = [];
 
-		foreach ($params as $key => $value) {
-			// Get gh_src from url and map it.
-			if ($key === 'es-form-storage' && isset($value['value']['gh_src'])) {
-				$output['mapped_url_token'] = $value['value']['gh_src'];
-			} else {
-				$output[$key] = $value['value'] ?? '';
-			}
-		}
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		if (isset($params['es-form-storage'])) {
-			unset($params['es-form-storage']);
+		foreach ($params as $key => $param) {
+			// Get gh_src from url and map it.
+			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE && isset($param['value']['gh_src'])) {
+				$output['mapped_url_token'] = $param['value']['gh_src'];
+				continue;
+			}
+
+			// Remove unecesery fields.
+			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			$output[$key] = $param['value'] ?? '';
 		}
 
 		return $output;
@@ -353,13 +386,13 @@ class GreenhouseClient implements ClientInterface
 				$fileName = $file['fileName'] ?? '';
 				$path = $file['path'] ?? '';
 				$id = $file['id'] ?? '';
+				$type = $file['type'] ?? '';
 
-				if (!$path || !$fileName || !$id) {
+				if (!$path) {
 					continue;
 				}
 
-				$output["{$id}_content"] = \base64_encode((string) \file_get_contents($path)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-				$output["{$id}_content_filename"] = $fileName;
+				$output[$id] = new CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

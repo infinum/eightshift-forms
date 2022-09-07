@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use Throwable;
 
@@ -23,6 +24,9 @@ use Throwable;
  */
 class Geolocation implements ServiceInterface, GeolocationInterface
 {
+	/**
+	 * Use general helper trait.
+	 */
 	use SettingsHelper;
 
 	/**
@@ -111,15 +115,20 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return $formId;
 		}
 
+		$useLogger = $this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY);
+
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			Helper::logger([
-				'geolocation' => 'Filter disabled active, skip geolocation.',
-				'formIdOriginal' => $formId,
-				'formIdUsed' => $formId,
-				'userLocation' => '',
-			]);
+			if ($useLogger) {
+				Helper::logger([
+					'geolocation' => 'Disable filter is active, skipping geolocation.',
+					'formIdOriginal' => $formId,
+					'formIdUsed' => $formId,
+					'userLocation' => '',
+				]);
+			}
+
 			return $formId;
 		}
 
@@ -155,12 +164,14 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 			// If additional locations match output that new form.
 			if ($matchAdditionalLocations) {
-				Helper::logger([
-					'geolocation' => 'Locations exists, locations match. Outputing new form.',
-					'formIdOriginal' => $formId,
-					'formIdUsed' => $matchAdditionalLocations['formId'] ?? '',
-					'userLocation' => $userLocation,
-				]);
+				if ($useLogger) {
+					Helper::logger([
+						'geolocation' => 'Locations exists, locations match. Outputing new form.',
+						'formIdOriginal' => $formId,
+						'formIdUsed' => $matchAdditionalLocations['formId'] ?? '',
+						'userLocation' => $userLocation,
+					]);
+				}
 				return $matchAdditionalLocations['formId'] ?? '';
 			}
 		}
@@ -181,32 +192,38 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 			// If default locations match output that new form.
 			if ($matchDefaultLocations) {
-				Helper::logger([
-					'geolocation' => 'Locations doesn\'t match or exist, default location match. Outputing new form.',
-					'formIdOriginal' => $formId,
-					'formIdUsed' => $formId,
-					'userLocation' => $userLocation,
-				]);
+				if ($useLogger) {
+					Helper::logger([
+						'geolocation' => 'Locations don\'t match or exist, default location selected. Outputting new form.',
+						'formIdOriginal' => $formId,
+						'formIdUsed' => $formId,
+						'userLocation' => $userLocation,
+					]);
+				}
 				return $formId;
 			}
 
 			// If we have set default locations but no match return empty form.
-			Helper::logger([
-				'geolocation' => 'Locations doesn\'t exists, default location doesn\'t match. Outputing nothing.',
-				'formIdOriginal' => $formId,
-				'formIdUsed' => '',
-				'userLocation' => $userLocation,
-			]);
+			if ($useLogger) {
+				Helper::logger([
+					'geolocation' => 'Locations don\'t exists, default location doesn\'t match. Outputting nothing.',
+					'formIdOriginal' => $formId,
+					'formIdUsed' => '',
+					'userLocation' => $userLocation,
+				]);
+			}
 			return '';
 		}
 
 		// Final fallback if the user has no locations, no default locations or they didn't match. Just return the current form.
-		Helper::logger([
-			'geolocation' => 'Final fallback that returns the current form. Outputing the original form.',
-			'formIdOriginal' => $formId,
-			'formIdUsed' => $formId,
-			'userLocation' => $userLocation,
-		]);
+		if ($useLogger) {
+			Helper::logger([
+				'geolocation' => 'Final fallback that returns the current form. Outputing the original form.',
+				'formIdOriginal' => $formId,
+				'formIdUsed' => $formId,
+				'userLocation' => $userLocation,
+			]);
+		}
 		return $formId;
 	}
 

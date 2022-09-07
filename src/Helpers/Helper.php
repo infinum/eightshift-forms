@@ -3,7 +3,7 @@
 /**
  * Trait that holds all generic helpers.
  *
- * @package EightshiftLibs\Helpers
+ * @package EightshiftForms\Helpers
  */
 
 declare(strict_types=1);
@@ -14,7 +14,6 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 /**
@@ -197,13 +196,16 @@ class Helper
 	 */
 	public static function logger(array $message): void
 	{
-		if (Variables::isLogMode()) {
-			$wpContentDir = \defined('WP_CONTENT_DIR') ? \WP_CONTENT_DIR : '';
+		$wpContentDir = \defined('WP_CONTENT_DIR') ? \WP_CONTENT_DIR : '';
 
-			if (!empty($wpContentDir)) {
-				$message['time'] = \gmdate("Y-m-d H:i:s");
-				\error_log((string) \wp_json_encode($message) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		if (!empty($wpContentDir)) {
+			$message['time'] = \gmdate("Y-m-d H:i:s");
+
+			if (isset($message['files'])) {
+				unset($message['files']);
 			}
+
+			\error_log((string) \wp_json_encode($message) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 	}
 

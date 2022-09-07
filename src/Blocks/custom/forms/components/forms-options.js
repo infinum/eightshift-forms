@@ -112,7 +112,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						isLarge
 						icon={icons.trash}
 						onClick={removeItem}
-						label={__('Remove', 'eightshift-form')}
+						label={__('Remove', 'eightshift-forms')}
 						style={{ marginTop: '0.2rem' }}
 					/>
 				</div>
@@ -210,7 +210,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							setIsModalOpen(true);
 						}}
 					>
-						{__('Geolocation rules', 'eightshift-form')}
+						{__('Geolocation rules', 'eightshift-forms')}
 					</Button>
 
 					{geoRepeater?.length > 0 &&
@@ -229,7 +229,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						<Modal
 							overlayClassName='es-geolocation-modal'
 							className='es-modal-max-width-l'
-							title={__('Geolocation rules', 'eightshift-form')}
+							title={__('Geolocation rules', 'eightshift-forms')}
 							shouldCloseOnClickOutside={false}
 							shouldCloseOnEsc={false}
 							isDismissible={false}
@@ -238,7 +238,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
 							<p>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
 							{geolocationApi && 
-								<p>{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-form')}</ExternalLink>.</p>
+								<p>{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.</p>
 							}
 
 							<br />
@@ -248,7 +248,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								icon={icons.add}
 								onClick={addItem}
 							>
-								{__('Add rule', 'eightshift-form')}
+								{__('Add rule', 'eightshift-forms')}
 							</Button>
 
 							{geoRepeater?.length > 0 &&
@@ -284,7 +284,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 										setAttributes({ formsFormGeolocationAlternatives: prevGeoRepeater });
 										setIsModalOpen(false);
 									}}>
-										{__('Cancel', 'eightshift-form')}
+										{__('Cancel', 'eightshift-forms')}
 									</Button>
 
 									<Button
@@ -294,7 +294,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											setAttributes({ formsFormGeolocationAlternatives: geoRepeater });
 										}}
 									>
-										{__('Save', 'eightshift-form')}
+										{__('Save', 'eightshift-forms')}
 									</Button>
 								</div>
 							}

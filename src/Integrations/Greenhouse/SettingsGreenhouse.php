@@ -17,7 +17,9 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -95,17 +97,27 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	protected $greenhouse;
 
 	/**
+	 * Instance variable for Troubleshooting settings.
+	 *
+	 * @var SettingsTroubleshootingDataInterface
+	 */
+	protected $settingsTroubleshooting;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
+	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
 	 */
 	public function __construct(
 		ClientInterface $greenhouseClient,
-		MapperInterface $greenhouse
+		MapperInterface $greenhouse,
+		SettingsTroubleshootingDataInterface $settingsTroubleshooting
 	) {
 		$this->greenhouseClient = $greenhouseClient;
 		$this->greenhouse = $greenhouse;
+		$this->settingsTroubleshooting = $settingsTroubleshooting;
 	}
 
 	/**
@@ -172,6 +184,7 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			'label' => \__('Greenhouse', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
 			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
+			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 		];
 	}
 
@@ -389,6 +402,9 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 			);
 		}
 
-		return $output;
+		return [
+			...$output,
+			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsGreenhouse::SETTINGS_TYPE_KEY),
+		];
 	}
 }

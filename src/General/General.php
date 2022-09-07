@@ -19,6 +19,13 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class General implements ServiceInterface
 {
 	/**
+	 * Default timeout for all http requests.
+	 *
+	 * @var int
+	 */
+	public const HTTP_REQUEST_TIMEOUT_DEFAULT = 30;
+
+	/**
 	 * Register all hooks.
 	 *
 	 * @return void
@@ -37,8 +44,10 @@ class General implements ServiceInterface
 	 */
 	public function getHttpRequestArgs(array $args): array
 	{
-		$args['timeout'] = 30;
+		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
 
-		return \apply_filters(Filters::getGeneralSettingsFilterName('httpRequestArgs'), $args); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+		$args['timeout'] = \apply_filters($filterName, self::HTTP_REQUEST_TIMEOUT_DEFAULT);
+
+		return $args;
 	}
 }

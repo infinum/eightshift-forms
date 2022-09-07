@@ -14,8 +14,10 @@ use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
@@ -23,6 +25,11 @@ use WP_REST_Request;
  */
 class FormSettingsSubmitRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -82,12 +89,12 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 
-	// Try catch request.
+		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
 
-			// Get encripted form ID and decrypt it.
-			$formId = $this->getFormId($params);
+			// Get encrypted form ID and decrypt it.
+			$formId = $this->getFormId($params, false);
 
 			// Determine form type.
 			$formType = $this->getFormType($params);
@@ -102,7 +109,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
-			if (!Variables::skipFormValidation()) {
+			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),
@@ -111,8 +118,15 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 				);
 			}
 
-			// Remove unecesery internal params before continue.
-			$params = $this->removeUneceseryParams($params);
+			// Remove unnecessary internal params before continue.
+			$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+
+			// Remove unnecessary params.
+			foreach ($params as $key => $value) {
+				if (isset($customFields[$key])) {
+					unset($params[$key]);
+				}
+			}
 
 			// Determine form type to use.
 			switch ($formType) {
@@ -147,7 +161,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 200,
 				'status' => 'success',
-				'message' => \esc_html__('Changes saved!', 'eightshift-form'),
+				'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
 			]);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
@@ -175,7 +189,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-form'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 			]);
 		}
 
@@ -192,7 +206,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-form'),
+			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-forms'),
 		]);
 	}
 }

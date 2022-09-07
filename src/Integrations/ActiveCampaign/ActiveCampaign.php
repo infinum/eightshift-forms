@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -63,24 +62,13 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	private $activeCampaignClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	private $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connection data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ActiveCampaignClientInterface $activeCampaignClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ActiveCampaignClientInterface $activeCampaignClient)
+	{
 		$this->activeCampaignClient = $activeCampaignClient;
-		$this->validator = $validator;
 	}
 
 	/**

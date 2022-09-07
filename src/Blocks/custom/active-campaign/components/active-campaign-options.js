@@ -1,4 +1,4 @@
-/* global esFormsBlocksLocalization */
+/* global esFormsLocalization */
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
@@ -11,7 +11,7 @@ export const ActiveCampaignOptions = ({ postId }) => {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsBlocksLocalization.wpAdminUrl;
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
 	return (
 		<PanelBody title={__('ActiveCampaign', 'eightshift-forms')}>

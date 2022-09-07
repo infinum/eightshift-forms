@@ -16,33 +16,13 @@ namespace EightshiftForms\Hooks;
 class Variables
 {
 	/**
-	 * Get forms mode.
+	 * Get forms develop mode, this will output new global settings for testing inputs.
 	 *
 	 * @return bool
 	 */
 	public static function isDevelopMode(): bool
 	{
 		return \defined('ES_DEVELOP_MODE') ? true : false;
-	}
-
-	/**
-	 * Get forms to skip validation used for development of integration.
-	 *
-	 * @return bool
-	 */
-	public static function skipFormValidation(): bool
-	{
-		return \defined('ES_DEVELOP_MODE_SKIP_VALIDATION') ? true : false;
-	}
-
-	/**
-	 * Get forms to log out requests/responses.
-	 *
-	 * @return bool
-	 */
-	public static function isLogMode(): bool
-	{
-		return \defined('ES_LOG_MODE') ? true : false;
 	}
 
 	/**

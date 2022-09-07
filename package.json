@@ -33,7 +33,7 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^7.0.0",
+		"@eightshift/frontend-libs": "^7.1.0",
 		"autosize": "^5.0.1",
 		"choices.js": "^10.1.0",
 		"dropzone": "^6.0.0-beta.1"
