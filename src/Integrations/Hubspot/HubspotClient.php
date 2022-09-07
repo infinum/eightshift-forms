@@ -239,8 +239,8 @@ class HubspotClient implements HubspotClientInterface
 		$paramsFiles = $this->prepareFiles($files, $formId);
 
 		$body['fields'] = \array_merge(
-			$this->prepareParams($params),
-			$this->prepareFiles($files, $formId)
+			$paramsPrepared,
+			$paramsFiles
 		);
 
 		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}");
