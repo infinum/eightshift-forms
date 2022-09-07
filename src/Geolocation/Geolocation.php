@@ -51,7 +51,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
 
-		/**
+	/**
 	 * Get geolocation cookie name.
 	 *
 	 * @return string
@@ -86,7 +86,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		return $path;
 	}
 
-		/**
+	/**
 	 * Get geolocation database location.
 	 *
 	 * @throws Exception If file is missing in provided path.
@@ -126,7 +126,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			return false; 
+			return false;
 		}
 
 		return true;
