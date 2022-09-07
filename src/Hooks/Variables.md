@@ -79,13 +79,13 @@ define('ES_GOOGLE_RECAPTCHA_SITE_KEY', '<site-key>');
 define('ES_GOOGLE_RECAPTCHA_SECRET_KEY', '<secret-key>');
 ```
 
-## Set Geolocation country code
+## Set Geolocation IP
 
-This constant will manually set geolocation country code and will skip cookie set or any caching. Please use (ISO 3166-1) Alpha-2 code standard.
+This constant will manually set geolocation IP address and will skip cookie set or any caching.
 
 string:
 ```php
-define('ES_GEOLOCAITON', '<country-code>');
+define('ES_GEOLOCAITON_IP', '<ip>');
 ```
 
 ## Set Clearbit api key

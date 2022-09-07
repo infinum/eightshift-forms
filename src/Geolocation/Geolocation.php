@@ -10,19 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
-use Throwable;
+use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
+use Exception;
 
 /**
  * Geolocation class.
  */
-class Geolocation implements ServiceInterface, GeolocationInterface
+class Geolocation extends AbstractGeolocation implements GeolocationInterface
 {
 	/**
 	 * Use general helper trait.
@@ -30,18 +29,11 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	use SettingsHelper;
 
 	/**
-	 * Internal countries list stored in a variable for caching.
-	 *
-	 * @var array<string>
-	 */
-	private $countries = [];
-
-	/**
-	 * Geolocation cookie name const.
+	 * User location cache variable so we can optimize loading of db.
 	 *
 	 * @var string
 	 */
-	public const GEOLOCATION_COOKIE = 'esForms-country';
+	private $userLocation = '';
 
 	/**
 	 * Geolocation check if user is geolocated constant.
@@ -51,9 +43,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
 
 	/**
-	 * Register all the hooks.
-	 *
-	 * @return void
+	 * Register all the hooks
 	 */
 	public function register(): void
 	{
@@ -62,40 +52,110 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 	}
 
 	/**
-	 * Set geolocation cookie.
+	 * Get geolocation cookie name.
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function setLocationCookie(): void
+	public function getGeolocationCookieName(): string
 	{
-		// Skip admin.
-		if (\is_admin()) {
-			return;
+		return 'esForms-country';
+	}
+
+	/**
+	 * Get geolocation executable phar location.
+	 *
+	 * @throws Exception If file is missing in provided path.
+	 *
+	 * @return string
+	 */
+	public function getGeolocationPharLocation(): string
+	{
+		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+
+		$filterName = Filters::getGeolocationFilterName('pharLocation');
+
+		if (\has_filter($filterName)) {
+			$path = \apply_filters($filterName, null);
 		}
 
+		if (!\file_exists($path)) {
+			// translators: %s will be replaced with the phar location.
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Get geolocation database location.
+	 *
+	 * @throws Exception If file is missing in provided path.
+	 *
+	 * @return string
+	 */
+	public function getGeolocationDbLocation(): string
+	{
+		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+
+		$filterName = Filters::getGeolocationFilterName('dbLocation');
+		if (\has_filter($filterName)) {
+			$path = \apply_filters($filterName, null);
+		}
+
+		if (!\file_exists($path)) {
+			// translators: %s will be replaced with the database location.
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Tooggle geolocation usage based on this flag.
+	 *
+	 * @return boolean
+	 */
+	public function useGeolocation(): bool
+	{
 		// Bailout if not in use.
 		$isGeolocationSettingsGlobalValid = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		if (!$isGeolocationSettingsGlobalValid) {
-			return;
+			return false;
 		}
 
 		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			return;
+			return false;
 		}
 
-		// If cookie exists don't set it again.
-		if (isset($_COOKIE[self::GEOLOCATION_COOKIE])) {
-			return;
+		return true;
+	}
+
+	/**
+	 * Gets the list of all countries from the manifest.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getCountriesList(): array
+	{
+		$filterName = Filters::getGeolocationFilterName('countries');
+
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $this->getCountries());
 		}
 
-		\setcookie(
-			self::GEOLOCATION_COOKIE,
-			$this->getLocationDetails(),
-			\time() + \DAY_IN_SECONDS,
-			'/'
-		);
+		return $this->getCountries();
+	}
+
+	/**
+	 * Gets an IP address manually. Generally used for development and testing.
+	 *
+	 * @return string
+	 */
+	public function getIpAddress(): string
+	{
+		return Variables::getGeolocationIp();
 	}
 
 	/**
@@ -115,12 +175,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			return $formId;
 		}
 
-		$useLogger = $this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY);
+		$logModeCheck = $this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY);
 
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			if ($useLogger) {
+			if ($logModeCheck) {
 				Helper::logger([
 					'geolocation' => 'Disable filter is active, skipping geolocation.',
 					'formIdOriginal' => $formId,
@@ -133,7 +193,12 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		}
 
 		// Returns user location retrieved from the API or cookie.
-		$userLocation = $this->getLocationDetails();
+		// Used internal variable for caching optimisations.
+		$userLocation = $this->userLocation;
+
+		if (!$userLocation) {
+			$userLocation = $this->getGeolocation();
+		}
 
 		// Check if additional location exists on the form.
 		if ($additionalLocations) {
@@ -164,7 +229,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 			// If additional locations match output that new form.
 			if ($matchAdditionalLocations) {
-				if ($useLogger) {
+				if ($logModeCheck) {
 					Helper::logger([
 						'geolocation' => 'Locations exists, locations match. Outputing new form.',
 						'formIdOriginal' => $formId,
@@ -192,7 +257,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 
 			// If default locations match output that new form.
 			if ($matchDefaultLocations) {
-				if ($useLogger) {
+				if ($logModeCheck) {
 					Helper::logger([
 						'geolocation' => 'Locations don\'t match or exist, default location selected. Outputting new form.',
 						'formIdOriginal' => $formId,
@@ -204,7 +269,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			}
 
 			// If we have set default locations but no match return empty form.
-			if ($useLogger) {
+			if ($logModeCheck) {
 				Helper::logger([
 					'geolocation' => 'Locations don\'t exists, default location doesn\'t match. Outputting nothing.',
 					'formIdOriginal' => $formId,
@@ -216,7 +281,7 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		}
 
 		// Final fallback if the user has no locations, no default locations or they didn't match. Just return the current form.
-		if ($useLogger) {
+		if ($logModeCheck) {
 			Helper::logger([
 				'geolocation' => 'Final fallback that returns the current form. Outputing the original form.',
 				'formIdOriginal' => $formId,
@@ -225,69 +290,6 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 			]);
 		}
 		return $formId;
-	}
-
-	/**
-	 * Get all country lists from the manifest.json.
-	 *
-	 * @return array<mixed>
-	 */
-	public function getCountries(): array
-	{
-		$output = [
-			[
-				'label' => \__('Europe', 'eightshift-forms'),
-				'value' => 'europe',
-				'group' => [
-					'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR',
-					'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK',
-					'SI', 'ES', 'SE', 'AL', 'AD', 'AM', 'BY', 'BA', 'FO', 'GE', 'GI', 'IS',
-					'IM', 'XK', 'LI', 'MK', 'MD', 'MC', 'NO', 'RU', 'SM', 'RS', 'CH', 'TR',
-					'UA', 'GB', 'VA',
-				],
-			],
-			[
-				'label' => \__('European Union', 'eightshift-forms'),
-				'value' => 'european-union',
-				'group' => [
-					'BE', 'EL', 'LT', 'PT', 'BG', 'ES', 'LU', 'RO', 'CZ',
-					'FR', 'HU', 'SI', 'DK', 'HR', 'MT', 'SK', 'DE', 'IT',
-					'NL', 'FI', 'EE', 'CY', 'AT', 'SE', 'IE', 'LV', 'PL',
-				],
-			],
-			[
-				'label' => \__('Ex Yugoslavia', 'eightshift-forms'),
-				'value' => 'ex-yugoslavia',
-				'group' => [
-					'HR', 'RS', 'BA', 'ME', 'SI', 'MK'
-				],
-			],
-		];
-
-		// Save to internal cache so we don't read manifest all the time.
-		if (!$this->countries) {
-			$this->countries = Components::getManifestDirect(__DIR__);
-		}
-
-		foreach ($this->countries as $country) {
-			$code = $country['Code'];
-
-			$output[] = [
-				'label' => $country['Name'],
-				'value' => $code,
-				'group' => [
-					\strtoupper($code),
-				],
-			];
-		}
-
-		// Provide custom countries.
-		$filterName = Filters::getGeolocationFilterName('countries');
-		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, $output);
-		}
-
-		return $output;
 	}
 
 	/**
@@ -318,64 +320,5 @@ class Geolocation implements ServiceInterface, GeolocationInterface
 		}
 
 		return \array_flip($country['group']);
-	}
-
-	/**
-	 * Get current country, based on the IP address.
-	 *
-	 * @return string
-	 */
-	private function getLocationDetails(): string
-	{
-		if (\getenv('TEST_GEOLOCATION')) {
-			return (string) \getenv('TEST_GEOLOCATION');
-		}
-
-		// Set country code manually for development purposes.
-		if (Variables::getGeolocation()) {
-			return Variables::getGeolocation();
-		}
-
-		// Filter provides user location from external source.
-		$filterName = Filters::getGeolocationFilterName('userLocation');
-		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, '');
-		}
-
-		// Check cookie for country code.
-		if (isset($_COOKIE[self::GEOLOCATION_COOKIE])) {
-			return \wp_kses_post(\wp_unslash($_COOKIE[self::GEOLOCATION_COOKIE]));
-		}
-
-		$ipAddr = '';
-
-		// Find user's remote address.
-		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$ipAddr = \filter_var($_SERVER['REMOTE_ADDR'], \FILTER_VALIDATE_IP); //phpcs:ignore
-		}
-
-		// Skip if empty for some reason or if you are on local host.
-		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
-			try {
-				// Get data from the local DB.
-				require_once __DIR__ . '/geoip2.phar';
-
-				// phpcs:disable
-				$reader = new \GeoIp2\Database\Reader(__DIR__ . '/geoip.mmdb'); // @phpstan-ignore-line
-				// phpcs:enable
-				$record = $reader->country($ipAddr); // @phpstan-ignore-line
-				$cookieCountry = $record->country;
-
-				if (!empty($cookieCountry)) {
-					return \strtoupper($cookieCountry->isoCode);
-				}
-
-				return '';
-			} catch (Throwable $th) {
-				return 'ERROR: ' . $th->getMessage();
-			}
-		} else {
-			return 'localhost';
-		}
 	}
 }

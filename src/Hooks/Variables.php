@@ -106,13 +106,13 @@ class Variables
 	}
 
 	/**
-	 * Get forms geolocation country code.
+	 * Get forms geolocation ip.
 	 *
 	 * @return string
 	 */
-	public static function getGeolocation(): string
+	public static function getGeolocationIp(): string
 	{
-		return \defined('ES_GEOLOCAITON') ? \strtoupper(\ES_GEOLOCAITON) : '';
+		return \defined('ES_GEOLOCAITON_IP') ? \ES_GEOLOCAITON_IP : '';
 	}
 
 	/**
