@@ -182,12 +182,13 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			if ($logModeCheck) {
 				Helper::logger([
-					'geolocation' => 'Filter disabled active, skip geolocation.',
+					'geolocation' => 'Disable filter is active, skipping geolocation.',
 					'formIdOriginal' => $formId,
 					'formIdUsed' => $formId,
 					'userLocation' => '',
 				]);
 			}
+
 			return $formId;
 		}
 
@@ -258,7 +259,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			if ($matchDefaultLocations) {
 				if ($logModeCheck) {
 					Helper::logger([
-						'geolocation' => 'Locations doesn\'t match or exist, default location match. Outputing new form.',
+						'geolocation' => 'Locations don\'t match or exist, default location selected. Outputting new form.',
 						'formIdOriginal' => $formId,
 						'formIdUsed' => $formId,
 						'userLocation' => $userLocation,
@@ -270,7 +271,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			// If we have set default locations but no match return empty form.
 			if ($logModeCheck) {
 				Helper::logger([
-					'geolocation' => 'Locations doesn\'t exists, default location doesn\'t match. Outputing nothing.',
+					'geolocation' => 'Locations don\'t exists, default location doesn\'t match. Outputting nothing.',
 					'formIdOriginal' => $formId,
 					'formIdUsed' => '',
 					'userLocation' => $userLocation,
