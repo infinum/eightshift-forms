@@ -193,7 +193,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Returns user location retrieved from the API or cookie.
-		// USed internal variable for caching optimisations.
+		// Used internal variable for caching optimisations.
 		$userLocation = $this->userLocation;
 
 		if (!$userLocation) {
