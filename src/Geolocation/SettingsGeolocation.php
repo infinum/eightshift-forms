@@ -111,7 +111,8 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Geolocation', 'eightshift-forms'),
-				'introSubtitle' => \__('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info.', 'eightshift-forms'),
+				// translators: %s provides the link to external source.
+				'introSubtitle' => \sprintf(\__('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info. <br />This product includes GeoLite2 data created by MaxMind, available from <a href="%1$s">%1$s</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
 			],
 			[
 				'component' => 'checkboxes',
