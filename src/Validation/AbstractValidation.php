@@ -116,6 +116,16 @@ abstract class AbstractValidation implements ValidatorInterface
 			return false;
 		}
 
+		// Check for the first and last item in array, this issue is due to Google Docs docx export file.
+		$fileMimetype = \explode('/', $fileMimetype);
+
+		if (\count($fileMimetype) > 1) {
+			$last = \end($fileMimetype);
+			$fileMimetype = "{$fileMimetype[0]}/{$last}";
+		} else {
+			$fileMimetype = $fileMimetype[0];
+		}
+
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
 
 		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? '');

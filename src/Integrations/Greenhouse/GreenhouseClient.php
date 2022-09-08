@@ -169,10 +169,19 @@ class GreenhouseClient implements ClientInterface
 
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
+		if (!$response) {
+			$response = [
+				'status' => 408,
+				'error' => 'timeout',
+			];
+		} else {
+			$response = \json_decode($response, true);
+		}
+
 		// Structure response details.
 		$details = $this->getApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
-			\json_decode($response, true),
+			$response,
 			$url,
 			$paramsPrepared,
 			$paramsFiles,
@@ -327,6 +336,7 @@ class GreenhouseClient implements ClientInterface
 		if ($postHeaders) {
 			return [
 				'Authorization: Basic ' . $this->getApiKey(),
+				'Content-Type: multipart/form-data',
 			];
 		}
 
@@ -349,6 +359,10 @@ class GreenhouseClient implements ClientInterface
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		foreach ($params as $key => $param) {
+			if (!isset($param['value'])) {
+				continue;
+			}
+
 			// Get gh_src from url and map it.
 			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE && isset($param['value']['gh_src'])) {
 				$output['mapped_url_token'] = $param['value']['gh_src'];
@@ -357,6 +371,10 @@ class GreenhouseClient implements ClientInterface
 
 			// Remove unecesery fields.
 			if (isset($customFields[$key])) {
+				continue;
+			}
+
+			if (empty($param['value'])) {
 				continue;
 			}
 
