@@ -278,6 +278,9 @@ class Filters
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',
 		],
+		'troubleshooting' => [
+			'outputLog' => 'output_log',
+		],
 	];
 
 	/**
@@ -407,7 +410,7 @@ class Filters
 	 *
 	 * @example filter_name es_forms_validation_force_mimetype_from_fs
 	 */
-	public static function getValidationSettingsFilterName(string $name): string
+	public static function getValidationFilterName(string $name): string
 	{
 		$filter = self::ALL_PUBLIC['validation'][$name] ?? '';
 		if (!$filter) {
@@ -426,9 +429,9 @@ class Filters
 	 *
 	 * @return string
 	 *
-	 * @example filter_name es_forms_general_http_request_args
+	 * @example filter_name es_forms_general_http_request_timeout
 	 */
-	public static function getGeneralSettingsFilterName(string $name): string
+	public static function getGeneralFilterName(string $name): string
 	{
 		$filter = self::ALL_PUBLIC['general'][$name] ?? '';
 		if (!$filter) {
@@ -436,5 +439,26 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_general_{$filter}";
+	}
+
+	/**
+	 * Get Troubleshooting filter by name.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 *
+	 * @return string
+	 *
+	 * @example filter_name es_forms_troubleshooting_output_log
+	 */
+	public static function getTroubleshootingFilterName(string $name): string
+	{
+		$filter = self::ALL_PUBLIC['troubleshooting'][$name] ?? '';
+		if (!$filter) {
+			throw MissingFilterInfoException::viewException('troubleshooting', '', $name);
+		}
+
+		return self::FILTER_PREFIX . "_troubleshooting_{$filter}";
 	}
 }

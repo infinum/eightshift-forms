@@ -35,3 +35,7 @@ All releases are listed here: https://datahub.io/core/country-list
 
 Files used:
 * manifest.json
+
+
+# License
+This product includes GeoLite2 data created by MaxMind, available from: [https://www.maxmind.com](https://www.maxmind.com).

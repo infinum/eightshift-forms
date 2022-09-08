@@ -146,7 +146,7 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles
 		);
 
-		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
+		$filterName = Filters::getGeneralFilterName('httpRequestTimeout');
 
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";
 

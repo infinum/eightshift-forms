@@ -61,6 +61,7 @@ class SettingsTroubleshooting implements ServiceInterface, SettingsTroubleshooti
 	public const SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY = 'troubleshooting-debugging';
 	public const SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY = 'skip-validation';
 	public const SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY = 'skip-reset';
+	public const SETTINGS_TROUBLESHOOTING_SKIP_CAPTCHA_KEY = 'skip-captcha';
 	public const SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY = 'log-mode';
 
 	/**
@@ -190,6 +191,12 @@ class SettingsTroubleshooting implements ServiceInterface, SettingsTroubleshooti
 						'checkboxLabel' => \__('Skip form reset after submit', 'eightshift-forms'),
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY, self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
 						'checkboxValue' => self::SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY,
+					],
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => \__('Skip captcha', 'eightshift-forms'),
+						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_TROUBLESHOOTING_SKIP_CAPTCHA_KEY, self::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY),
+						'checkboxValue' => self::SETTINGS_TROUBLESHOOTING_SKIP_CAPTCHA_KEY,
 					],
 					[
 						'component' => 'checkbox',
