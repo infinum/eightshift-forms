@@ -171,7 +171,7 @@ class GreenhouseClient implements ClientInterface
 
 		if (!$response) {
 			$response = [
-				'status' => 400,
+				'status' => 408,
 				'error' => 'timeout',
 			];
 		} else {
