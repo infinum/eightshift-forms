@@ -44,7 +44,7 @@ class General implements ServiceInterface
 	 */
 	public function getHttpRequestArgs(array $args): array
 	{
-		$filterName = Filters::getGeneralSettingsFilterName('httpRequestTimeout');
+		$filterName = Filters::getGeneralFilterName('httpRequestTimeout');
 
 		$args['timeout'] = \apply_filters($filterName, self::HTTP_REQUEST_TIMEOUT_DEFAULT);
 

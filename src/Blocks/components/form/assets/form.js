@@ -203,7 +203,7 @@ export class Form {
 		.then((response) => {
 			// On success state.
 			if (response.code === 200) {
-				this.formSubmit(element,);
+				this.formSubmit(element);
 			}
 
 			// Normal errors.

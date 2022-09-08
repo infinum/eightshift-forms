@@ -95,7 +95,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isMimeTypeValid(array $file): bool
 	{
-		$denyIfFileIsNotUploaded = \apply_filters(Filters::getValidationSettingsFilterName('failMimetypeValidationWhenFileNotOnFS'), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+		$denyIfFileIsNotUploaded = \apply_filters(Filters::getValidationFilterName('failMimetypeValidationWhenFileNotOnFS'), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
 		if (\getenv('TEST')) {
 			$denyIfFileIsNotUploaded = \getenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
