@@ -39,6 +39,14 @@
 		}
 	}
 
+	&.dz-max-files-reached {
+		.es-field__inner {
+			opacity: 0.5;
+			pointer-events: none;
+			cursor: default;
+		}
+	}
+
 	.dz-preview {
 		display: flex;
 		align-items: center;

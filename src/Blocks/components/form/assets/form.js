@@ -140,7 +140,7 @@ export class Form {
 			// Setup file single inputs.
 			this.customFiles[formId] = [];
 			[...files].forEach((file, index) => {
-				this.setupFileField(file, formId, index);
+				this.setupFileField(file, formId, index, element);
 			});
 		});
 
@@ -369,6 +369,8 @@ export class Form {
 
 		const groups = element.querySelectorAll(`${this.groupSelector}`);
 
+		const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
@@ -465,7 +467,7 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.isCustom(item)) {
-					fileList = this.files[id] ?? [];
+					fileList = this.files[formId][id] ?? [];
 				}
 
 				// Loop files and append.
@@ -484,7 +486,7 @@ export class Form {
 
 		// Add form ID field.
 		formData.append(this.FORM_CUSTOM_FORM_PARAMS.postId, JSON.stringify({
-			value: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID),
+			value: formId,
 			type: 'hidden',
 		}));
 
@@ -839,8 +841,18 @@ export class Form {
 	};
 
 	// Setup file single field.
-	setupFileField = (file, formId, index) => {
+	setupFileField = (file, formId, index, element) => {
 		if (this.isCustom(file)) {
+
+			const fileId = file?.id;
+
+			if (typeof this.files[formId] === 'undefined') {
+				this.files[formId] = {};
+			}
+
+			if (typeof this.files[formId][fileId] === 'undefined') {
+				this.files[formId][fileId] = [];
+			}
 
 			import('dropzone').then((Dropzone) => {
 				// Init dropzone.
@@ -858,11 +870,6 @@ export class Form {
 
 				this.customFiles[formId].push(myDropzone);
 
-				// On add files.
-				myDropzone.on("addedfiles", () => {
-					this.files[file.id] = myDropzone.files;
-				});
-
 				// On add one file.
 				myDropzone.on("addedfile", (file) => {
 					setTimeout(() => {
@@ -872,11 +879,33 @@ export class Form {
 					setTimeout(() => {
 						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_FILLED);
 					}, 1200);
+
+					this.files[formId][fileId].push(file);
+				});
+
+				// On max file size reached.
+				myDropzone.on('maxfilesreached', () => {
+					myDropzone.removeEventListeners();
+				});
+
+				// On error while upload.
+				myDropzone.on("error", (file) => {
+					setTimeout(() => {
+						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
+					}, 1500);
+
+					const itemsLeft = this.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+					this.files[formId][fileId] = [...itemsLeft];
 				});
 
 				// On remove files.
-				myDropzone.on("removedfile", () => {
-					this.files[file.id] = myDropzone.files;
+				myDropzone.on("removedfile", (file) => {
+					const itemsLeft = this.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+					this.files[formId][fileId] = [...itemsLeft];
+
+					myDropzone.setupEventListeners();
 				});
 
 				// Trigger on wrap click.
