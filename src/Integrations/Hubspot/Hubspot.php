@@ -422,6 +422,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 						break;
 					case 'radio':
+						$selectedOption = $field['selectedOptions'] ?? [];
+
 						$output[] = [
 							'component' => 'radios',
 							'radiosFieldHidden' => $hidden,
@@ -430,9 +432,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $required,
 							'radiosContent' => \array_map(
-								static function ($radio) use ($name, $objectTypeId) {
+								static function ($radio) use ($name, $objectTypeId, $selectedOption) {
 									return [
 										'component' => 'radio',
+										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
 										'radioLabel' => $radio['label'],
 										'radioValue' => $radio['value'],
 										'radioTracking' => $name,

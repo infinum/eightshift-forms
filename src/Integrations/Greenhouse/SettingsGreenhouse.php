@@ -83,6 +83,16 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY = 'greenhouse-integration-fields';
 
 	/**
+	 * File upload limit Key.
+	 */
+	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY = 'greenhouse-file-upload-limit';
+
+	/**
+	 * File upload limit default. Defined in MB.
+	 */
+	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
+
+	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var ClientInterface
@@ -397,6 +407,29 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 						'inputIsRequired' => true,
 						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 						'inputIsDisabled' => !empty($boardToken),
+					],
+					[
+						'component' => 'divider',
+					],
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Options', 'eightshift-forms'),
+						'introSubtitle' => \__('Here you can find some of options specific to Greenhouse integration.', 'eightshift-forms'),
+						'introTitleSize' => 'medium',
+					],
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+						'inputFieldLabel' => \__('File upload limit', 'eightshift-forms'),
+						'inputFieldHelp' => \__('Limit the size of files users can send via upload files. We set the default to 5MB, and limited the max file size to 25MB.', 'eightshift-forms'),
+						'inputType' => 'number',
+						'inputIsNumber' => true,
+						'inputIsRequired' => true,
+						'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+						'inputMin' => 1,
+						'inputMax' => 25,
+						'inputStep' => 1,
 					],
 				]
 			);

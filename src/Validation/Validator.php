@@ -330,18 +330,18 @@ class Validator extends AbstractValidation
 
 				// Check validation for size min/max.
 				foreach ($fileValue['size'] as $fileSize) {
-					// Check validation for min size.
+					// Check validation for min size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'minSize') {
 						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue);
+							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue / 1000);
 							continue;
 						}
 					}
 
-					// Check validation for max size.
+					// Check validation for max size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'maxSize') {
 						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue);
+							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue / 1000);
 							continue;
 						}
 					}

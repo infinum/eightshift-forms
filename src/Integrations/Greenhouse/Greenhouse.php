@@ -172,6 +172,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						];
 						break;
 					case 'input_file':
+						$maxFileSize = $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
 						$output[] = [
 							'component' => 'file',
 							'fileName' => $name,
@@ -182,6 +184,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => 1,
+							'fileMaxSize' => (int) $maxFileSize * 1000,
 							'blockSsr' => $ssr,
 						];
 						break;

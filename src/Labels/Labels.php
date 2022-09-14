@@ -132,9 +132,9 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying file type value.
 			'validationAcceptMime' => \__('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
-			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s kB.', 'eightshift-forms'),
+			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
-			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s kB.', 'eightshift-forms'),
+			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
 		];
 	}
 
