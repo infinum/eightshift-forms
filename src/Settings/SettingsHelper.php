@@ -251,8 +251,6 @@ trait SettingsHelper
 			$fieldsValues = $this->prepareFormViewDetails(\apply_filters($formViewDetailsFilterName, $formFields, $formId) ?? []);
 		}
 
-		$totalFields = \count($formFields);
-
 		$filterName = Filters::getBlockFilterName('field', 'styleOptions');
 		$fieldStyle = \apply_filters($filterName, []);
 
@@ -304,6 +302,9 @@ trait SettingsHelper
 					'inputFieldUseTooltip' => true,
 					// translators: %s is replaced with the breakpoint name.
 					'inputFieldTooltipContent' => \sprintf(\esc_html__('Define field width for %s breakpoint.', 'eightshift-forms'), $breakpoint),
+					'inputAttrs' => [
+						'data-integration-field-type' => $breakpoint,
+					],
 				];
 
 				$fieldsOutput[0]['groupContent'][] = $item;
@@ -316,15 +317,12 @@ trait SettingsHelper
 				'component' => 'input',
 				'inputId' => "{$id}---{$this->integrationFieldOrder}",
 				'inputFieldLabel' => \__('Order', 'eightshift-forms'),
-				'inputType' => 'number',
+				'inputType' => 'hidden',
 				'inputValue' => $fieldsValues["{$id}---{$this->integrationFieldOrder}"] ?? $fieldKey + 1,
-				'inputMin' => 1,
-				'inputMax' => $totalFields,
-				'inputStep' => 1,
 				'inputIsDisabled' => $disabledEdit,
-				'inputPlaceholder' => \__('auto', 'eightshift-forms'),
-				'inputFieldUseTooltip' => true,
-				'inputFieldTooltipContent' => \__('Define field order that is going to be used.', 'eightshift-forms'),
+				'inputAttrs' => [
+					'data-integration-field-type' => $this->integrationFieldOrder,
+				],
 			];
 
 			// Use.
@@ -357,7 +355,10 @@ trait SettingsHelper
 						'selectOptionValue' => 'false',
 						'selectOptionIsSelected' => $toggleValue === 'false',
 					]
-				]
+				],
+				'selectAttrs' => [
+					'data-integration-field-type' => $this->integrationFieldUse,
+				],
 			];
 
 			// Changes for file type.
@@ -385,7 +386,10 @@ trait SettingsHelper
 							'selectOptionValue' => 'true',
 							'selectOptionIsSelected' => $fileInfoLabelValue === 'true',
 						]
-					]
+						],
+						'selectAttrs' => [
+							'data-integration-field-type' => $this->integrationFieldFileInfoLabel,
+						],
 				];
 			}
 
@@ -412,6 +416,9 @@ trait SettingsHelper
 						},
 						$fieldStyle[$component]
 					),
+					'selectAttrs' => [
+						'data-integration-field-type' => $this->integrationFieldStyle,
+					],
 				];
 			}
 
@@ -425,6 +432,9 @@ trait SettingsHelper
 					'inputIsDisabled' => $disabledEdit,
 					'selectFieldUseTooltip' => true,
 					'selectFieldTooltipContent' => \__('Define field label value.', 'eightshift-forms'),
+					'selectAttrs' => [
+						'data-integration-field-type' => $this->integrationFieldLabel,
+					],
 				];
 			}
 

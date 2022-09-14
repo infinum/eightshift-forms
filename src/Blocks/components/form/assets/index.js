@@ -117,8 +117,8 @@ function initAll() {
 			setupTextareaField: (textarea, formId) => {
 				form.setupTextareaField(textarea, formId);
 			},
-			setupFileField: (file, formId, index, element) => {
-				form.setupFileField(file, formId, index, element);
+			setupFileField: (file, formId, index) => {
+				form.setupFileField(file, formId, index);
 			},
 			onCustomFileWrapClickEvent: (event) => {
 				form.onCustomFileWrapClickEvent(event);

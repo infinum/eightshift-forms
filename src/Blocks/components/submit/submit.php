@@ -26,6 +26,7 @@ $submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $
 $submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
 $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
+$submitIsLayoutFree = Components::checkAttr('submitIsLayoutFree', $attributes, $manifest);
 
 
 $submitClass = Components::classnames([
@@ -33,6 +34,7 @@ $submitClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
+	Components::selector($submitIsLayoutFree, $componentClass, '', 'layout-free'),
 ]);
 
 if ($submitTracking) {
@@ -84,6 +86,11 @@ if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
 if ($submitServerSideRender) {
 	$button = str_replace('<button', '<div', $button);
 	$button = str_replace('</button>', '</div>', $button);
+}
+
+if ($submitIsLayoutFree) {
+	echo $button; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	return;
 }
 
 echo Components::render(

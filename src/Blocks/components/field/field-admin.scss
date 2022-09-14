@@ -4,6 +4,11 @@
 	$this: &;
 	margin-bottom: 1rem;
 
+	&--hidden {
+		display: none;
+		user-select: none;
+	}
+
 	&--submit {
 		margin-bottom: 1.75rem;
 	}
