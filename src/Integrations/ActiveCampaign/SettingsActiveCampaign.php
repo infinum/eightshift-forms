@@ -297,7 +297,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 						'introTitleSize' => 'medium',
 						// translators: %s replaces the button or string.
 						'introSubtitle' => \sprintf(\__('
-							Controls which fields show up on the frontend, and set up how they look and work. <br />
+							Control which fields show up on the frontend, and set up how they look and work. <br />
 							If you want to change the fields order click on the button below. To save new order please click on the "save settings" button on the bottom of the page. <br /><br />
 							%s', 'eightshift-forms'), $sortingButton),
 					],
