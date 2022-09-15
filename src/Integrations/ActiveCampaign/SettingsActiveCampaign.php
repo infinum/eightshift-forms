@@ -282,7 +282,7 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 
 			$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
 			if (\has_filter($formViewDetailsIsEditableFilterName)) {
-				$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
+				$sortingButton = \__('Sorting and editing fields for this integration is disabled because of an active filter in your project!', 'eightshift-forms');
 			}
 
 			$output = \array_merge(
