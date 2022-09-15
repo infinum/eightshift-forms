@@ -8,6 +8,9 @@ export class Sorting {
 
 		this.CLASS_ACTIVE = 'is-active';
 
+		this.DISPLAY_STYLE_NONE = 'none';
+		this.DISPLAY_STYLE_BLOCK = 'block';
+
 		this.sortable = null;
 		this.container = null;
 
@@ -23,8 +26,8 @@ export class Sorting {
 	// Handle form submit and all logic.
 	onClickTrigger = (event) => {
 		event.preventDefault();
-		this.triggerElement.style.display = "none";
-		this.updateElement.style.display = "block";
+		this.triggerElement.style.display = this.DISPLAY_STYLE_NONE;
+		this.updateElement.style.display = this.DISPLAY_STYLE_BLOCK;
 
 		this.container = document.querySelector(`${this.selector} > *`);
 
@@ -38,8 +41,8 @@ export class Sorting {
 	// Handle form submit and all logic.
 	onClickUpdate = (event) => {
 		event.preventDefault();
-		this.updateElement.style.display = "none";
-		this.triggerElement.style.display = "block";
+		this.updateElement.style.display = this.DISPLAY_STYLE_NONE;
+		this.triggerElement.style.display = this.DISPLAY_STYLE_BLOCK;
 
 		const fields = document.querySelectorAll(`${this.selector} [data-integration-field-type='order']`);
 
