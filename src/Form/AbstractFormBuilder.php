@@ -224,6 +224,10 @@ abstract class AbstractFormBuilder
 			$additionalAttributes['additionalFieldClass'] = $attributes['additionalFieldClass'];
 		}
 
+		if (isset($attributes['additionalGroupClass'])) {
+			$additionalAttributes['additionalGroupClass'] = $attributes['additionalGroupClass'];
+		}
+
 		// Build the component.
 		return Components::render(
 			$attributes['component'],

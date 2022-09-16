@@ -1,0 +1,35 @@
+.es-sorting {
+	&__update {
+		display: none;
+	}
+
+	&__trigger,
+	&__update {
+		&.es-submit {
+			width: auto;
+		}
+	}
+
+	> * {
+		> * {
+			transition: {
+				property: border, padding, margin;
+				timing-function: ease-out;
+				duration: 0.3s;
+			}
+		}
+	}
+
+	> .is-active {
+		> * {
+			cursor: ns-resize;
+			border: 2px dashed var(--global-colors-es-french);
+			padding: 20px;
+			margin-bottom: -2px;
+
+			* {
+				pointer-events: none;
+			}
+		}
+	}
+}

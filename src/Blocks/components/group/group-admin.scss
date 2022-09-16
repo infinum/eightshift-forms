@@ -50,6 +50,12 @@
 					margin-bottom: 10px;
 					padding-bottom: 10px;
 					border-bottom: 1px solid var(--global-colors-es-ebb);
+
+					transition: {
+						property: border, padding, margin;
+						timing-function: ease-out;
+						duration: 0.3s;
+					}
 				}
 
 				&:last-child {
@@ -57,6 +63,18 @@
 						margin-bottom: 0;
 						padding-bottom: 0;
 						border: none;
+					}
+				}
+			}
+
+			&.is-active {
+				> * {
+					background-color: var(--global-colors-es-white);
+
+					> #{$this}__content {
+						border-bottom: none;
+						padding-bottom: 0;
+						margin-bottom: 0;
 					}
 				}
 			}
@@ -100,10 +118,6 @@
 
 			@include media(large up) {
 				grid-template-columns: repeat(4, 1fr);
-			}
-
-			> *:nth-child(n + 7) {
-				grid-column: span 2;
 			}
 
 			.es-field {

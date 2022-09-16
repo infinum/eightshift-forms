@@ -841,7 +841,7 @@ export class Form {
 	};
 
 	// Setup file single field.
-	setupFileField = (file, formId, index, element) => {
+	setupFileField = (file, formId, index) => {
 		if (this.isCustom(file)) {
 
 			const fileId = file?.id;

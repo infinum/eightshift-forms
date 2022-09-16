@@ -19,6 +19,7 @@ use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -263,6 +264,13 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 				$beforeContent = \apply_filters($filterName, '') ?? '';
 			}
 
+			$sortingButton = Components::render('sorting');
+
+			$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
+			if (\has_filter($formViewDetailsIsEditableFilterName)) {
+				$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
+			}
+
 			$output = \array_merge(
 				$output,
 				[
@@ -273,12 +281,17 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 						'component' => 'intro',
 						'introTitle' => \__('Form fields', 'eightshift-forms'),
 						'introTitleSize' => 'medium',
-						'introSubtitle' => \__('Control which fields show up on the frontend, set up how they look and work.', 'eightshift-forms'),
+						// translators: %s replaces the button or string.
+						'introSubtitle' => \sprintf(\__('
+							Control which fields show up on the frontend, and set up how they look and work. <br />
+							To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
+							%s', 'eightshift-forms'), $sortingButton),
 					],
 					[
 						'component' => 'group',
 						'groupId' => $this->getSettingsName(self::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY),
 						'groupBeforeContent' => $beforeContent,
+						'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
 						'groupStyle' => 'integration',
 						'groupContent' => $this->getIntegrationFieldsDetails(
 							self::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY,
