@@ -548,7 +548,20 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					$formFields,
 					$formId
 				),
-			]
+			],
+			[
+				'component' => 'divider',
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Conditional logic', 'eightshift-forms'),
+				'introTitleSize' => 'medium',
+				'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'conditional-logic-repeater',
+				'conditionalLogicRepeaterFieldLabel' => '',
+			],
 		];
 	}
 }

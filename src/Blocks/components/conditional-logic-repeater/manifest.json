@@ -1,0 +1,11 @@
+{
+	"componentName": "conditional-logic-repeater",
+	"attributes": {
+		"conditionalLogicRepeaterFields": {
+			"type": "array"
+		}
+	},
+	"components": {
+		"field": "field"
+	}
+}
