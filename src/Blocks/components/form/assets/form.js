@@ -61,6 +61,7 @@ export class Form {
 		this.textareaSelector = `${this.fieldSelector} textarea`;
 		this.selectSelector = `${this.fieldSelector} select`;
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
+		this.conditionalTagsSelector = `${this.fieldSelector} input[id='conditional-tags']`;
 
 		// LocalStorage
 		this.STORAGE_NAME = 'es-storage';
@@ -119,6 +120,7 @@ export class Form {
 			const textareas = element.querySelectorAll(this.textareaSelector);
 			const selects = element.querySelectorAll(this.selectSelector);
 			const files = element.querySelectorAll(this.fileSelector);
+			const conditionalTags = element.querySelector(this.conditionalTagsSelector);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -142,6 +144,17 @@ export class Form {
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
+
+			if (conditionalTags) {
+				import('./conditional-tags').then(({ ConditionalTags }) => {
+					const conditionalTagsClass = new ConditionalTags({
+						formSelector: this.formSelector,
+						data: conditionalTags.value,
+					});
+
+					conditionalTagsClass.init();
+				});
+			}
 		});
 
 		// Set localStorage data from global variable.
