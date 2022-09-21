@@ -262,6 +262,15 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		}
 
 		$output[] = [
+			'component' => 'input',
+			'inputName' => 'conditional-tags',
+			'inputId' => 'conditional-tags',
+			'inputType' => 'text',
+			'inputValue' => '{"name":["show","all",[["email","is","ivan@gmail.com"]]], "pero":["show","all",[["email","is","ivan@gmail.com"]]]}',
+			'blockSsr' => $ssr,
+		];
+
+		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
 			'submitId' => 'submit',

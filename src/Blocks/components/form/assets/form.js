@@ -1,43 +1,13 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-
-const ePrefix = 'esForms';
-
-// All custom events.
-export const FORM_EVENTS = {
-	BEFORE_FORM_SUBMIT: `${ePrefix}BeforeFormSubmit`,
-	AFTER_FORM_SUBMIT: `${ePrefix}AfterFormSubmit`,
-	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${ePrefix}AfterFormSubmitSuccessRedirect`,
-	AFTER_FORM_SUBMIT_SUCCESS: `${ePrefix}AfterFormSubmitSuccess`,
-	AFTER_FORM_SUBMIT_RESET: `${ePrefix}AfterFormSubmitReset`,
-	AFTER_FORM_SUBMIT_ERROR: `${ePrefix}AfterFormSubmitError`,
-	AFTER_FORM_SUBMIT_ERROR_FATAL: `${ePrefix}AfterFormSubmitErrorFatal`,
-	AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${ePrefix}AfterFormSubmitErrorValidation`,
-	AFTER_FORM_SUBMIT_END: `${ePrefix}AfterFormSubmitEnd`,
-	AFTER_FORM_EVENTS_CLEAR: `${ePrefix}AfterFormEventsClear`,
-	BEFORE_GTM_DATA_PUSH: `${ePrefix}BeforeGtmDataPush`,
-	FORMS_JS_LOADED: `${ePrefix}JsLoaded`,
-};
-
-// All form custom state selectors.
-export const FORM_SELECTORS = {
-	CLASS_ACTIVE: 'is-active',
-	CLASS_FILLED: 'is-filled',
-	CLASS_LOADING: 'is-loading',
-	CLASS_HAS_ERROR: 'has-error',
-};
-
-// All form data attributes.
-export const FORM_DATA_ATTRIBUTES = {
-	DATA_ATTR_FORM_TYPE: 'data-form-type',
-	DATA_ATTR_FIELD_ID: 'data-field-id',
-	DATA_ATTR_FORM_POST_ID: 'data-form-post-id',
-	DATA_ATTR_TRACKING_EVENT_NAME: 'data-tracking-event-name',
-	DATA_ATTR_TRACKING: 'data-tracking',
-	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
-	DATA_ATTR_SUCCESS_REDIRECT: 'data-success-redirect',
-};
+import {
+	FORM_EVENTS,
+	FORM_SELECTORS,
+	FORM_DATA_ATTRIBUTES,
+	CONDITIONAL_TAGS_CONSTANTS,
+	utilIsCustom,
+} from './utilities';
 
 export class Form {
 	constructor(options) {
@@ -145,14 +115,53 @@ export class Form {
 				this.setupFileField(file, formId, index, element);
 			});
 
+			// Load conditional data class if used.
 			if (conditionalTags) {
 				import('./conditional-tags').then(({ ConditionalTags }) => {
-					const conditionalTagsClass = new ConditionalTags({
+					const cTagsClass = new ConditionalTags({
 						formSelector: this.formSelector,
+						fieldSelector: this.fieldSelector,
+						customSelector: this.customSelector,
 						data: conditionalTags.value,
+						formIsAdmin: this.formIsAdmin,
+						FORM_SELECTORS,
 					});
 
-					conditionalTagsClass.init();
+					cTagsClass.init();
+
+					// Populate window with necessary functions and prefix everything with "ct".
+					window['esForms'] = {
+						...window['esForms'],
+						ctConstants: CONDITIONAL_TAGS_CONSTANTS,
+						ctInternalData: cTagsClass.internalData,
+						ctInit: () => {
+							cTagsClass.init();
+						},
+						ctSetData: () => {
+							cTagsClass.setData();
+						},
+						ctSetInit: () => {
+							cTagsClass.setInit();
+						},
+						ctSetListeners: () => {
+							cTagsClass.setListeners();
+						},
+						ctOnCustomSelectChange: (event) => {
+							cTagsClass.onCustomSelectChange(event);
+						},
+						ctOnFieldChange: (event) => {
+							cTagsClass.onFieldChange(event);
+						},
+						ctAreAllRulesValid: (logic, item) => {
+							cTagsClass.areAllRulesValid(logic, item);
+						},
+						ctIsRuleValid: (rule, inputValue, item, index) => {
+							cTagsClass.isRuleValid(rule, inputValue, item, index);
+						},
+						ctIsCustom: (element) => {
+							cTagsClass.isCustom(element);
+						},
+					}
 				});
 			}
 		});
@@ -1021,7 +1030,7 @@ export class Form {
 
 	// Determine if field is custom type or normal.
 	isCustom(item) {
-		return item.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
+		return utilIsCustom(item, this.fieldSelector, this.customSelector.substring(1), this.formIsAdmin);
 	}
 
 	removeEvents() {

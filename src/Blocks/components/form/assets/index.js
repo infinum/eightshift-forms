@@ -2,7 +2,12 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
+import {
+	FORM_EVENTS,
+	FORM_SELECTORS,
+	FORM_DATA_ATTRIBUTES,
+	windowUtilities,
+} from './utilities';
 
 if (typeof esFormsLocalization === 'undefined') {
 	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
@@ -46,6 +51,7 @@ function initAll() {
 		// Populate window object with the rest of the functions.
 		window['esForms'] = {
 			...window['esForms'],
+			...windowUtilities,
 			redirectionTimeout: form.redirectionTimeout,
 			hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 			captchaSiteKey: esFormsLocalization.captcha,
