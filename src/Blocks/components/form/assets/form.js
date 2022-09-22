@@ -202,7 +202,7 @@ export class Form {
 		})
 		.then((response) => {
 			// On success state.
-			if (response.code === 200) {
+			if (response.code >= 200 && response.code <= 299) {
 				this.formSubmit(element);
 			}
 
@@ -273,7 +273,7 @@ export class Form {
 				this.hideLoader(element);
 
 				// On success state.
-				if (response.code === 200) {
+				if (response.code >= 200 && response.code <= 299) {
 					// Send GTM.
 					this.gtmSubmit(element);
 
