@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use WP_Error;
 
 /**
  * ApiHelper trait.
@@ -36,7 +37,7 @@ trait ApiHelper
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param array<mixed> $response API full reponse.
+	 * @param array<mixed>|WP_Error $response API full reponse.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
@@ -48,7 +49,7 @@ trait ApiHelper
 	 */
 	public function getApiReponseDetails(
 		string $integration,
-		array $response,
+		$response,
 		string $url,
 		array $params = [],
 		array $files = [],
@@ -56,12 +57,23 @@ trait ApiHelper
 		string $formId = '',
 		bool $isCurl = false
 	): array {
-		if ($isCurl) {
-			$code = $response['status'] ?? 200;
-			$body = $response;
+
+		// Do regular stuff if this is not and WP_Error.
+		if (!is_wp_error($response)) {
+			if ($isCurl) {
+				$code = $response['status'] ?? 200;
+				$body = $response;
+			} else {
+				$code = $response['response']['code'] ?? 200;
+				$body = \json_decode($response['body'] ?? '', true) ?? [];
+			}
 		} else {
-			$code = $response['response']['code'] ?? 200;
-			$body = \json_decode($response['body'] ?? '', true) ?? [];
+			// Mock response for WP_Error.
+			$code = 404;
+			$body = [
+				'error' => $response->get_error_message(),
+			];
+			$response = [];
 		}
 
 		return [
