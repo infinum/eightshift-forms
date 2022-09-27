@@ -79,13 +79,49 @@ define('ES_GOOGLE_RECAPTCHA_SITE_KEY', '<site-key>');
 define('ES_GOOGLE_RECAPTCHA_SECRET_KEY', '<secret-key>');
 ```
 
-## Set Geolocation IP
+## Set geolocation IP
 
 This constant will manually set geolocation IP address and will skip cookie set or any caching.
 
 string:
 ```php
-define('ES_GEOLOCAITON_IP', '<ip>');
+define('ES_GEOLOCATION_IP', '<ip>');
+```
+
+## Set geolocation cookie name
+
+This constant will define cookie name used for geolocation.
+
+string:
+```php
+define('ES_GEOLOCATION_COOKIE_NAME', 'esForms-country');
+```
+
+## Set geolocation Phar location
+
+This constant will define geolocation phar location.
+
+string:
+```php
+define('ES_GEOLOCATION_PHAR_PATH', '<absolute-path>');
+```
+
+## Set geolocation Db location
+
+This constant will define geolocation db location.
+
+string:
+```php
+define('ES_GEOLOCATION_DB_PATH', '<absolute-path>');
+```
+
+## Set geolocation cookie expiration time
+
+This constant will define geolocation cookie expiration time.
+
+string:
+```php
+define('ES_GEOLOCATION_COOKIE_EXPIRATION', '<time>');
 ```
 
 ## Set Clearbit api key

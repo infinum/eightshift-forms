@@ -47,7 +47,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('init', [$this, 'setLocationCookie']);
+		if (!is_plugin_active('wp-rocket/wp-rocket.php')) {
+			\add_filter('init', [$this, 'setLocationCookie']);
+		}
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
 
@@ -58,7 +60,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationCookieName(): string
 	{
-		return 'esForms-country';
+		$name = Variables::getGeolocationCookieName();
+
+		$filterName = Filters::getGeolocationFilterName('name');
+		if (\has_filter($filterName)) {
+			$name = \apply_filters($filterName, null);
+		}
+
+		return $name;
 	}
 
 	/**
@@ -70,10 +79,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+		$path = Variables::getGeolocationPharPath();
 
 		$filterName = Filters::getGeolocationFilterName('pharLocation');
-
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -95,7 +103,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+		$path = Variables::getGeolocationDbPath();
 
 		$filterName = Filters::getGeolocationFilterName('dbLocation');
 		if (\has_filter($filterName)) {
@@ -156,6 +164,16 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function getIpAddress(): string
 	{
 		return Variables::getGeolocationIp();
+	}
+
+	/**
+	 * Get geolocation expiration time.
+	 *
+	 * @return int
+	 */
+	public function getGeolocationExpiration(): int
+	{
+		return Variables::getGeolocationExpiration();
 	}
 
 	/**
