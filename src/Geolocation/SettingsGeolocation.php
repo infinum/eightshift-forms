@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftForms\Settings\SettingsHelper;
@@ -107,6 +108,19 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$use = Variables::getGeolocationUse();
+		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
+
+		$outputHelp = '';
+
+		if ($use) {
+			$outputHelp .= \__('Hook "ES_GEOLOCATION_USE" is active.<br />', 'eightshift-forms');
+		}
+
+		if ($useRocket) {
+			$outputHelp .= \__('Hook "ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE" is active.', 'eightshift-forms');
+		}
+
 		return [
 			[
 				'component' => 'intro',
@@ -117,6 +131,7 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
+				'checkboxesFieldHelp' => $outputHelp,
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
 				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
 				'checkboxesIsRequired' => true,
@@ -124,7 +139,8 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 					[
 						'component' => 'checkbox',
 						'checkboxLabel' => \__('Use geolocation', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
+						'checkboxIsChecked' => $use ? $use : $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
+						'checkboxIsDisabled' => $use,
 						'checkboxValue' => self::SETTINGS_GEOLOCATION_USE_KEY,
 						'checkboxSingleSubmit' => true,
 					]

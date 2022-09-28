@@ -106,7 +106,27 @@ class Variables
 	}
 
 	/**
-	 * Get forms geolocation ip.
+	 * Get forms geolocation use feature. Default: false.
+	 *
+	 * @return bool
+	 */
+	public static function getGeolocationUse(): bool
+	{
+		return \defined('ES_GEOLOCATION_USE') ? \ES_GEOLOCATION_USE : false;
+	}
+
+	/**
+	 * Get forms geolocation use WP Rocket advanced cache. Default: false.
+	 *
+	 * @return bool
+	 */
+	public static function getGeolocationUseWpRocketAdvancedCache(): bool
+	{
+		return \defined('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE') ? \ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE : false;
+	}
+
+	/**
+	 * Get forms geolocation ip. Default: empty.
 	 *
 	 * @return string
 	 */

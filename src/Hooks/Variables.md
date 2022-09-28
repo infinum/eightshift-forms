@@ -79,6 +79,24 @@ define('ES_GOOGLE_RECAPTCHA_SITE_KEY', '<site-key>');
 define('ES_GOOGLE_RECAPTCHA_SECRET_KEY', '<secret-key>');
 ```
 
+## Set geolocation use
+
+This constant will manually set geolocation usage to active. While this constant is active you will not be able to deactivate it from settings.
+
+string:
+```php
+define('ES_GEOLOCATION_USE', false);
+```
+
+## Set geolocation WP-Rocket advanced cache
+
+This constant will activate WP-Rocket advanced cache filter to create custom geolocation function in advanced-cache.php file. This constant requires some additional manual settings, please refer to the readme.
+
+string:
+```php
+define('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE', false);
+```
+
 ## Set geolocation IP
 
 This constant will manually set geolocation IP address and will skip cookie set or any caching.
@@ -94,7 +112,7 @@ This constant will define cookie name used for geolocation.
 
 string:
 ```php
-define('ES_GEOLOCATION_COOKIE_NAME', 'esForms-country');
+define('ES_GEOLOCATION_COOKIE_NAME', '<cookie-name>');
 ```
 
 ## Set geolocation Phar location

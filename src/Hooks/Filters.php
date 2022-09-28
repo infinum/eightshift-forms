@@ -216,10 +216,12 @@ class Filters
 			'expiration' => 'expiration',
 		],
 		'geolocation' => [
-			'disable' => 'disable',
 			'countries' => 'countries_list',
+			'disable' => 'disable',
 			'dbLocation' => 'db_location',
 			'pharLocation' => 'phar_location',
+			'cookieName' => 'cookie_name',
+			'wpRocketAdvancedCache' => 'wp_rocket_advanced_cache',
 		],
 		'blocks' => [
 			'additionalBlocks' => 'additional_blocks',

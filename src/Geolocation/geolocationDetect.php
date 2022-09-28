@@ -15,12 +15,22 @@ use EightshiftForms\Hooks\Variables;
  *
  * @return void
  */
-function setEightshiftFormsLocationCookie(): void {
+function setEightshiftFormsLocationCookie(): void
+{
 	$sep = \DIRECTORY_SEPARATOR;
 
-	require_once dirname(__DIR__, 2) . "{$sep}vendor{$sep}infinum{$sep}eightshift-libs{$sep}src{$sep}Geolocation{$sep}geolocationDetect.php";
+	// Require forms hooks.
 	require_once dirname(__DIR__, 2) . "{$sep}src{$sep}Hooks{$sep}Variables.php";
+	
+	// Bailout if geolocation is not used.
+	if (!Variables::getGeolocationUse() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+		return;
+	}
 
+	// Require geo detect file from libs.
+	require_once dirname(__DIR__, 2) . "{$sep}vendor{$sep}infinum{$sep}eightshift-libs{$sep}src{$sep}Geolocation{$sep}geolocationDetect.php";
+
+	// Run setting of cookie.
 	setLocationCookie(
 		Variables::getGeolocationCookieName(),
 		Variables::getGeolocationPharPath(),
@@ -29,3 +39,6 @@ function setEightshiftFormsLocationCookie(): void {
 		Variables::getGeolocationExpiration()
 	);
 }
+
+// Activate function.
+setEightshiftFormsLocationCookie();
