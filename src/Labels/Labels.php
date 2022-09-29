@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
+
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;

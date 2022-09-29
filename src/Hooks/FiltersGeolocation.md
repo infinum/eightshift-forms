@@ -1,6 +1,8 @@
 # Filters Geolocation
 This document will provide you with the code examples for forms filters used in geolocation.
 
+> If the filter has global variable equivalent and the constant is active, filter will not be used.
+
 ## Change default countries list
 This filter provides you with the ability to add/remove/edit countries list and countries groups.
 
@@ -40,6 +42,9 @@ public function getGeolocationCountriesList(array $countries): array
 This filter provides you with the ability to totally disable geolocation on the frontend usage.
 Generally used for GDPR and other purposes.
 
+**Global variable alternative:**
+`ES_GEOLOCATION_USE`
+
 **Filter name:**
 `es_forms_geolocation_disable`
 
@@ -61,6 +66,9 @@ public function getGeolocationDisable(): bool
 
 ## Provide custom geolocation db location.
 This filter provides you with the ability to provide custom database location for geolocation.
+
+**Global variable alternative:**
+`ES_GEOLOCATION_DB_PATH`
 
 **Filter name:**
 `es_forms_geolocation_db_location`
@@ -84,6 +92,9 @@ public function getGeolocationDbLocation(): string
 ## Provide custom geolocation phar location.
 This filter provides you with the ability to provide custom database location for geolocation.
 
+**Global variable alternative:**
+`ES_GEOLOCATION_PHAR_PATH`
+
 **Filter name:**
 `es_forms_geolocation_phar_location`
 
@@ -105,6 +116,9 @@ public function getGeolocationPharLocation(): string
 
 ## Provide custom geolocation cookie name.
 This filter provides you with the ability to provide custom cookie name for geolocation.
+
+**Global variable alternative:**
+`ES_GEOLOCATION_COOKIE_NAME`
 
 **Filter name:**
 `es_forms_geolocation_cookie_name`

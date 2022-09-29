@@ -47,7 +47,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function register(): void
 	{
-		if (!is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+		if (!\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocketAdvancedCache()) {
 			\add_filter('init', [$this, 'setLocationCookie']);
 		}
 
