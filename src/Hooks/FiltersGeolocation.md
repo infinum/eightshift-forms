@@ -115,7 +115,7 @@ public function getGeolocationPharLocation(): string
 ```
 
 ## Provide custom geolocation cookie name.
-This filter provides you with the ability to provide custom cookie name for geolocation.
+This filter enables providing custom cookie name for geolocation.
 
 **Global variable alternative:**
 `ES_GEOLOCATION_COOKIE_NAME`
@@ -140,7 +140,7 @@ public function getGeolocationCookieName(): string
 ```
 
 ## Provide custom WP-Rocket advanced-cache.php function.
-This filter provides you with the ability to provide custom function in WP-Rocket plugin activation process.
+This filter enables providing custom function in WP-Rocket plugin activation process.
 
 **Filter name:**
 `es_forms_geolocation_wp_rocket_advanced_cache`
