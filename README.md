@@ -1,5 +1,4 @@
-![image](https://user-images.githubusercontent.com/77000136/146530002-a4a79990-cf36-46e7-8879-42b21ffa8c59.png#gh-light-mode-only)
-![image](https://user-images.githubusercontent.com/77000136/146530025-c4a40917-ef4f-4b6d-a87b-e517cf8d8497.png#gh-dark-mode-only)
+![image](https://repository-images.githubusercontent.com/204961525/1788eeba-8046-47bf-b315-32b060db1c8e)
 
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-forms.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-forms)
@@ -19,12 +18,12 @@ Clone the project + build to get started:
 3. `npm install`
 4. `npm start`
 
-**For more details about this and all other eightshift-boilerplate based plugins follow [this link](https://infinum.github.io/eightshift-docs).**
+**For more details about this and all other eightshift-boilerplate based plugins follow [this link](https://eightshift.com).**
 
 This is required for the GitHub action which builds assets on new releases and adds them to the release as a zip file (so the plugin can be installed without manually building it)
 ## :mailbox: Who do I talk to?
 
-If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms-plugin/issues) on github and we will do our best to give you a timely answer.
+If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on github and we will do our best to give you a timely answer.
 
 Eightshift WordPress Boilerplate Plugin is maintained and sponsored by
 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.co).
