@@ -4,7 +4,7 @@ This document will provide you with the code examples for forms global variables
 
 ## Set forms to develop mode
 
-This variable will set forms to develop mode that will do some changes in code.
+This variable will set forms to develop mode, which will do the code changes listed in the 'actions' paragraph below.
 
 Actions:
 * output new global settings for testing inputs
