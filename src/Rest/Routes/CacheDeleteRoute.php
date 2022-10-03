@@ -110,6 +110,11 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			\delete_transient($item);
 		}
 
+		// Clear WP-Rocket cache if cache is cleared.
+		if (\function_exists('rocket_clean_domain')) {
+			\rocket_clean_domain();
+		}
+
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',

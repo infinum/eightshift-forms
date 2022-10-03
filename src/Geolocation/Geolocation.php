@@ -47,8 +47,66 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('init', [$this, 'setLocationCookie']);
+		if (!\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+			\add_filter('init', [$this, 'setLocationCookie']);
+		}
+
+		// WP Rocket specific hooks.
+		\add_filter('rocket_advanced_cache_file', [$this, 'addNginxAdvanceCacheRules']);
+		\add_filter('rocket_cache_dynamic_cookies', [$this, 'dynamicCookiesList']);
+
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
+	}
+
+	/**
+	 * List all dynamic cookies that will create new cached version.
+	 *
+	 * @param array<string, mixed> $items Items from the admin.
+	 *
+	 * @return array<int|string, mixed>
+	 */
+	public function dynamicCookiesList(array $items): array
+	{
+		if (!$this->useGeolocation() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+			return $items;
+		}
+
+		$items[] = $this->getGeolocationCookieName();
+
+		return $items;
+	}
+
+	/**
+	 * Add geolocation function in the advance-cache.php config file on plugin activation
+	 *
+	 * Used only with Nginx web servers.
+	 *
+	 * @param string $content Original file output.
+	 */
+	public function addNginxAdvanceCacheRules(string $content): string
+	{
+		if (!$this->useGeolocation() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+			return $content;
+		}
+
+		$position = \strpos($content, '$rocket_config_class');
+
+		// This part is string on purpose.
+		$output = '
+		$esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
+		if (file_exists($esFormsPath)) {
+			require_once $esFormsPath;
+		};';
+
+		$outputContent = \substr_replace($content, $output, $position, 0);
+
+		// Override output with filter.
+		$filterName = Filters::getGeolocationFilterName('wpRocketAdvancedCache');
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $content, $outputContent);
+		}
+
+		return $outputContent;
 	}
 
 	/**
@@ -58,7 +116,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationCookieName(): string
 	{
-		return 'esForms-country';
+		$name = Variables::getGeolocationCookieName();
+
+		$filterName = Filters::getGeolocationFilterName('cookieName');
+		if (\has_filter($filterName)) {
+			$name = \apply_filters($filterName, null);
+		}
+
+		return $name;
 	}
 
 	/**
@@ -70,10 +135,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+		$path = Variables::getGeolocationPharPath();
 
 		$filterName = Filters::getGeolocationFilterName('pharLocation');
-
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -95,7 +159,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+		$path = Variables::getGeolocationDbPath();
 
 		$filterName = Filters::getGeolocationFilterName('dbLocation');
 		if (\has_filter($filterName)) {
@@ -117,6 +181,10 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function useGeolocation(): bool
 	{
+		if (Variables::getGeolocationUse()) {
+			return true;
+		}
+
 		// Bailout if not in use.
 		$isGeolocationSettingsGlobalValid = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		if (!$isGeolocationSettingsGlobalValid) {
@@ -156,6 +224,16 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function getIpAddress(): string
 	{
 		return Variables::getGeolocationIp();
+	}
+
+	/**
+	 * Get geolocation expiration time.
+	 *
+	 * @return int
+	 */
+	public function getGeolocationExpiration(): int
+	{
+		return Variables::getGeolocationExpiration();
 	}
 
 	/**

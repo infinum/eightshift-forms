@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use WP_Error;
 
 /**
  * ApiHelper trait.
@@ -37,7 +36,7 @@ trait ApiHelper
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param array<mixed>|WP_Error $response API full reponse.
+	 * @param mixed $response API full reponse.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
@@ -59,7 +58,7 @@ trait ApiHelper
 	): array {
 
 		// Do regular stuff if this is not and WP_Error.
-		if (!is_wp_error($response)) {
+		if (!\is_wp_error($response)) {
 			if ($isCurl) {
 				$code = $response['status'] ?? 200;
 				$body = $response;
