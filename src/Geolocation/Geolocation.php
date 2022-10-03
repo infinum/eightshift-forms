@@ -77,7 +77,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	}
 
 	/**
-	 * Add geolocation function in advance-cache.php config file on plugin activation used only with Nginx.
+	 * Add geolocation function in the advance-cache.php config file on plugin activation
+	 *
+	 * Used only with Nginx web servers.
 	 *
 	 * @param string $content Original file output.
 	 */

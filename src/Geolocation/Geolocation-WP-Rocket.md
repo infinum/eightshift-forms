@@ -6,7 +6,7 @@ WP-Rocket plugin provides options/hooks to fix this. By using hook `rocket_advan
 
 For this to use you need to make a few changes.
 
-> Make sure all of these constants are set and configured **before** activating WP-Rocket plugin. If you change anything in this constants you will need to **deactivate and activate** the WP-Rocket plugin!
+> Make sure all of these constants are set and configured **before** activating the WP-Rocket plugin. If you change anything in these constants you will need to **deactivate and activate** the WP-Rocket plugin!
 
 ## Set global variables in wp-config.php
 
@@ -14,7 +14,7 @@ We don't like to duplicate code and configuration so if you want to use geolocat
 
 ### ES_GEOLOCATION_USE
 
-This constant will set geolocation to active and you will not be able to disable it from the setting. This is used to make sure the geolocation is active in the WP-Rocket plugin activation process.
+This constant will activate geolocation and you will not be able to disable it from the setting. This is used to make sure the geolocation is active during the WP-Rocket plugin activation process.
 
 ```php
 define('ES_GEOLOCATION_USE', true);
@@ -22,7 +22,7 @@ define('ES_GEOLOCATION_USE', true);
 
 ### ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE
 
-This constant will set geolocation settings so you can use this feature because there are some structural changes that needs to happen in the backend.
+This constant is used so that the advanced cache settings can work correctly with the WP-Rocket plugin.
 
 ```php
 define('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE', true);
@@ -30,6 +30,6 @@ define('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE', true);
 
 ## What will happen when activating WP-Rocket plugins?
 
-When activating WP-Rocket plugin we will set our geolocation cookie to the WP-Rocket dynamic cookie list and provide our custom geolocation function in the `advanced-cache.php` file that will set the necessary cookie before the WP-Rocket detects the correct cache file.
+When activating the WP-Rocket plugin we will set our geolocation cookie to the WP-Rocket dynamic cookie list and include our custom geolocation function in the `advanced-cache.php` file that will set the necessary cookie before the WP-Rocket detects the correct cache file.
 
-We have a bunch additional global constants that you can use with this feature. All details you can read [here](./../Hooks/Variables.md).
+We have some additional global constants that you can use with this feature. All details you can read [here](./../Hooks/Variables.md).

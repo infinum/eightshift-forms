@@ -176,7 +176,7 @@ define('ES_GEOLOCATION_IP', '<ip>');
 
 ## Set geolocation cookie name
 
-This constant will define cookie name used for geolocation. In general you will never need to change this value.
+This constant will define the cookie name used for geolocation. Generally, you will never need to change this value.
 
 Type:
 * string
@@ -190,7 +190,7 @@ define('ES_GEOLOCATION_COOKIE_NAME', '<cookie-name>');
 
 ## Set geolocation Phar location
 
-This constant will define geolocation phar location. With this constant you can provide your custom projects geolocation phar file. You will use this if you want to control the phar file version and keep it better up to date.
+This constant will define geolocation phar location. With this constant, you can provide your custom project's geolocation phar file. You will use this if you want to control the phar file version and keep it better up to date.
 
 Type:
 * string
@@ -204,7 +204,7 @@ define('ES_GEOLOCATION_PHAR_PATH', '<absolute-path>');
 
 ## Set geolocation Db location
 
-This constant will define geolocation db location. With this constant you can provide your custom projects geolocation db file. You will use this if you want to control the db file version and keep it better up to date.
+This constant will define geolocation db location. With this constant, you can provide your custom project's geolocation db file. You will use this if you want to control the db file version and keep it better up to date.
 
 Type:
 * string
