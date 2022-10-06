@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl } from '@wordpress/components';
+import { TextControl, ToggleControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -17,6 +17,7 @@ export const FormOptions = (attributes) => {
 
 	const formName = checkAttr('formName', attributes, manifest);
 	const formAction = checkAttr('formAction', attributes, manifest);
+	const formActionExternal = checkAttr('formActionExternal', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 
 	return (
@@ -33,8 +34,15 @@ export const FormOptions = (attributes) => {
 			<TextControl
 				label={<IconLabel icon={icons.fieldName} label={__('Form Action', 'eightshift-forms')} />}
 				value={formAction}
-				help={__('Custom form action that will process form data. Setting this value will redirect user to the provided URL on succesfull form submit.' ,'eightshift-forms')}
+				help={__('Custom form action that will process form data.' ,'eightshift-forms')}
 				onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
+			/>
+
+			<ToggleControl
+				label={__('Process this form externally?', 'eightshift-forms')}
+				checked={formActionExternal}
+				help={__('Select this option to redirect and process the form data on external site. On successful form submission the user will be redirected to an external site.' ,'eightshift-forms')}
+				onChange={(value) => setAttributes({ [getAttrKey('formActionExternal', attributes, manifest)]: value })}
 			/>
 
 			<TextControl

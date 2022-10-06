@@ -29,6 +29,10 @@
 		"formAction": {
 			"type": "string"
 		},
+		"formActionExternal": {
+			"type": "boolean",
+			"default": false
+		},
 		"formMethod": {
 			"type": "string",
 			"default": "post"
