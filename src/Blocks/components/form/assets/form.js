@@ -37,6 +37,7 @@ export const FORM_DATA_ATTRIBUTES = {
 	DATA_ATTR_TRACKING: 'data-tracking',
 	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
 	DATA_ATTR_SUCCESS_REDIRECT: 'data-success-redirect',
+	DATA_ATTR_ACTION_EXTERNAL: 'data-action-external',
 };
 
 export class Form {
@@ -312,6 +313,20 @@ export class Form {
 					}
 				}
 
+				// On redirect state.
+				if (response.code >= 300 && response.code <= 399) {
+					// Send GTM.
+					this.gtmSubmit(element);
+
+					// Set global msg.
+					this.setGlobalMsg(element, response.message, 'success');
+
+					// Do the actual redirect after some time.
+					setTimeout(() => {
+						element.submit();
+					}, parseInt(this.redirectionTimeout, 10));
+				}
+
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
@@ -499,6 +514,12 @@ export class Form {
 		// Add form action field.
 		formData.append(this.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
 			value: element.getAttribute('action'),
+			type: 'hidden',
+		}));
+
+		// Add action external field.
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.actionExternal, JSON.stringify({
+			value: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_ACTION_EXTERNAL),
 			type: 'hidden',
 		}));
 

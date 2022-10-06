@@ -77,6 +77,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$body = [];
 
 		$formAction = $params[self::CUSTOM_FORM_PARAM_ACTION]['value'];
+		$formActionExternal = $params[self::CUSTOM_FORM_PARAM_ACTION_EXTERNAL]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {
@@ -84,6 +85,14 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				'status' => 'error',
 				'code' => 400,
 				'message' => $this->labels->getLabel('customNoAction', $formId),
+			]);
+		}
+
+		if ($formActionExternal) {
+			return \rest_ensure_response([
+				'status' => 'redirect',
+				'code' => 301,
+				'message' => $this->labels->getLabel('customSuccessRedirect', $formId),
 			]);
 		}
 

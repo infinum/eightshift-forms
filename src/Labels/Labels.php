@@ -149,6 +149,7 @@ class Labels implements LabelsInterface
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
 			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
+			'customSuccessRedirect' => \__('Form was successfuly submitted. Redirecting you now.', 'eightshift-forms'),
 		];
 	}
 

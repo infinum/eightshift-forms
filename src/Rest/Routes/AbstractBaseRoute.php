@@ -61,6 +61,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const CUSTOM_FORM_PARAM_ACTION = 'es-form-action';
 
 	/**
+	 * Custom form param for action external toggle.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_ACTION_EXTERNAL = 'es-form-action-external';
+
+	/**
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
@@ -69,6 +76,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'singleSubmit' => self::CUSTOM_FORM_PARAM_SINGLE_SUBMIT,
 		'storage' => self::CUSTOM_FORM_PARAM_STORAGE,
 		'action' => self::CUSTOM_FORM_PARAM_ACTION,
+		'actionExternal' => self::CUSTOM_FORM_PARAM_ACTION_EXTERNAL,
 		'hubspotCookie' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE,
 		'hubspotPageName' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME,
 		'hubspotPageUrl' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL,
