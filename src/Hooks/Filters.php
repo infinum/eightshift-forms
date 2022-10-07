@@ -277,6 +277,7 @@ class Filters
 		],
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',
+			'setLocale' => 'set_locale',
 		],
 		'troubleshooting' => [
 			'outputLog' => 'output_log',
