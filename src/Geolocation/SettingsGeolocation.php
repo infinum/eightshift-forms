@@ -71,7 +71,21 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		return $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY);
+		if (Variables::getGeolocationUse()) {
+			return true;
+		}
+
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+			return false;
+		}
+
+		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
+		$filterName = Filters::getGeolocationFilterName('disable');
+		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

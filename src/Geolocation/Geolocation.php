@@ -67,7 +67,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function dynamicCookiesList(array $items): array
 	{
-		if (!$this->useGeolocation() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
 			return $items;
 		}
 
@@ -85,7 +85,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function addNginxAdvanceCacheRules(string $content): string
 	{
-		if (!$this->useGeolocation() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
 			return $content;
 		}
 
@@ -172,32 +172,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		return $path;
-	}
-
-	/**
-	 * Tooggle geolocation usage based on this flag.
-	 *
-	 * @return boolean
-	 */
-	public function useGeolocation(): bool
-	{
-		if (Variables::getGeolocationUse()) {
-			return true;
-		}
-
-		// Bailout if not in use.
-		$isGeolocationSettingsGlobalValid = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		if (!$isGeolocationSettingsGlobalValid) {
-			return false;
-		}
-
-		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
-		$filterName = Filters::getGeolocationFilterName('disable');
-		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
