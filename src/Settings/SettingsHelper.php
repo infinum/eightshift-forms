@@ -13,6 +13,7 @@ namespace EightshiftForms\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * SettingsHelper trait.
@@ -259,16 +260,17 @@ trait SettingsHelper
 				continue;
 			}
 
-			$component = $field['component'] ? Components::kebabToCamelCase($field['component']) : '';
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($field);
 
-			$inputType = $field["{$component}Type"] ?? '';
+			$inputType = $fieldDetails['inputType'];
 			if ($inputType === 'hidden') {
 				continue;
 			}
 
-			$id = $field["{$component}Id"] ?? '';
-			$required = $field["{$component}IsRequired"] ?? false;
-			$label = $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '';
+			$component = $fieldDetails['component'];
+			$id = $fieldDetails['id'];
+			$required = $fieldDetails['required'];
+			$label = $fieldDetails['label'];
 
 			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
 				$label = "{$label} Text";
@@ -494,14 +496,16 @@ trait SettingsHelper
 				continue;
 			}
 
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($value);
+
 			// Find field component name.
-			$component = $value['component'] ? Components::kebabToCamelCase($value['component']) : '';
+			$component = $fieldDetails['component'];
 
 			// Find field id.
-			$id = $value["{$component}Id"] ?? '';
+			$id = $fieldDetails['id'];
 
 			// Find field label.
-			$label = $value["{$component}FieldLabel"] ?? '';
+			$label = $fieldDetails['fieldLabel'];
 
 			// Get saved values in relation with current field.
 			$dbSettingsValuePreparedItem = $dbSettingsValuePrepared[$id] ?? [];
@@ -569,6 +573,103 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get Integration forms Conditional tags details.
+	 *
+	 * @param string $key Key to save in db.
+	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getConditionalTagsFieldsDetails(string $key, array $formFields, string $formId): array
+	{
+		// Loop form fields.
+		$fields = [];
+
+		// Prepare all fields used in the component selector.
+		$conditionalLogicRepeaterFields = array_filter(array_map(
+			function ($item) {
+				$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($item);
+
+				if ($fieldDetails['inputType'] === 'hidden' || $fieldDetails['component'] === 'submit') {
+					return false;
+				}
+
+				return [
+					'label' => $fieldDetails['label'],
+					'value' => $fieldDetails['id'],
+				];
+			},
+			$formFields
+		));
+
+		$fieldsValues = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup($key, $formId));
+
+		foreach ($formFields as $field) {
+			if (!$field) {
+				continue;
+			}
+
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($field);
+
+			if ($fieldDetails['inputType'] === 'hidden' || $fieldDetails['component'] === 'submit') {
+				continue;
+			}
+
+			$id = $fieldDetails['id'];
+			$name = $fieldDetails['name'];
+			$label = $fieldDetails['label'];
+
+			$fields[] = [
+				'component' => 'group',
+				'groupLabel' => \ucfirst($label),
+				'groupSaveOneField' => true,
+				'groupStyle' => 'full-inner',
+				'groupContent' => [
+					[
+						'component' => 'conditional-logic-repeater',
+						'groupLabel' => \ucfirst($label),
+						'conditionalLogicRepeaterFieldLabel' => '',
+						'conditionalLogicRepeaterName' => $name,
+						'conditionalLogicRepeaterId' => $id,
+						'conditionalLogicRepeaterFields' => $conditionalLogicRepeaterFields,
+						'conditionalLogicRepeaterValue' => $fieldsValues[$id] ?? [],
+					]
+				],
+			];
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Build integration forms Conditional tags output with full component array.
+	 *
+	 * @param array<string, mixed> $dbSettingsValue Field to search in settings.
+	 * @param array<int, array<string, mixed>> $formFields Full form components array.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getConditionalTagsFieldsValue(array $dbSettingsValue, array $formFields): array
+	{
+		$output = $this->getGroupDataWithoutKeyPrefix($dbSettingsValue);
+
+		if (!$output) {
+			return $formFields;
+		}
+
+		$formFields[] = [
+			'component' => 'input',
+			'inputType' => 'hidden',
+			'inputName' => AbstractBaseRoute::CUSTOM_FORM_PARAM_CONDITIONAL_TAGS,
+			'inputId' => AbstractBaseRoute::CUSTOM_FORM_PARAM_CONDITIONAL_TAGS,
+			'inputValue' => wp_json_encode($output),
+		];
+
+		return $formFields;
+	}
+
+	/**
 	 * Convert nested array from filter to data in db.
 	 *
 	 * @param array<string, mixed> $data Data provided by filter for group.
@@ -617,5 +718,54 @@ trait SettingsHelper
 
 		$index = \count(Components::getSettingsGlobalVariablesBreakpoints());
 		return $a['groupContent'][$index]['inputValue'] > $b['groupContent'][$index]['inputValue'];
+	}
+
+	/**
+	 * Return Form field details but without component name in array key.
+	 *
+	 * @param array<string, mixed> $field Form field array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getFormFieldDetailsWithoutComponentName(array $field): array
+	{
+		$component = $field['component'] ? Components::kebabToCamelCase($field['component']) : '';
+
+		return [
+			'component' => $component,
+			'id' => $field["{$component}Id"] ?? '',
+			'name' => $field["{$component}Name"] ?? '',
+			'label' => $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '',
+			'fieldLabel' => $field["{$component}FieldLabel"] ?? '',
+			'inputType' => $field["{$component}Type"] ?? '',
+			'required' => $field["{$component}IsRequired"] ?? false,
+		];
+	}
+
+	/**
+	 * Prepare group data to have keys without the prefix
+	 *
+	 * @param array<string, mixed> $data Data to check.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getGroupDataWithoutKeyPrefix(array $data): array
+	{
+		$output = [];
+		foreach ($data as $key => $value) {
+			$key = \explode('---', $key);
+
+			if (!isset($key[1])) {
+				continue;
+			}
+
+			if (!$value) {
+				continue;
+			}
+
+			$output[$key[1]] = $value;
+		}
+
+		return $output;
 	}
 }

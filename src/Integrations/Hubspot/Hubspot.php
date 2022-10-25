@@ -497,10 +497,17 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
+		$output = $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsHubspot::SETTINGS_TYPE_KEY
 		);
+
+		$output = $this->getConditionalTagsFieldsValue(
+			$this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY, $formId),
+			$output
+		);
+
+		return $output;
 	}
 }

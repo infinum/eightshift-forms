@@ -431,10 +431,17 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
+		$output = $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsMailchimp::SETTINGS_TYPE_KEY
 		);
+
+		$output = $this->getConditionalTagsFieldsValue(
+			$this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY, $formId),
+			$output
+		);
+
+		return $output;
 	}
 }

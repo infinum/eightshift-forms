@@ -84,6 +84,11 @@ class SettingsActiveCampaign implements SettingsDataInterface, SettingsGlobalDat
 	public const SETTINGS_ACTIVE_CAMPAIGN_INTEGRATION_FIELDS_KEY = 'active-campaign-integration-fields';
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY = 'active-campaign-conditional-tags';
+
+	/**
 	 * Instance variable for ActiveCampaign data.
 	 *
 	 * @var ActiveCampaignClientInterface

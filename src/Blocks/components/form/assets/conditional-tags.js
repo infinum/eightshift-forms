@@ -33,8 +33,6 @@ export class ConditionalTags {
 
 	// Init all actions.
 	init = () => {
-		console.log(this.internalData);
-
 		this.setData();
 		this.setInit();
 		this.setListeners();
@@ -164,8 +162,6 @@ export class ConditionalTags {
 				const field = input.closest(this.fieldSelector);
 
 				this.isRuleValid(rule, inputValue, item, index);
-
-				console.log(this.areAllRulesValid(logic, item));
 
 				// Validate rule by checking input value.
 				if (this.areAllRulesValid(logic, item)) {

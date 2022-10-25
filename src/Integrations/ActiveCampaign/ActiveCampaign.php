@@ -373,10 +373,17 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
+		$output = $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY
 		);
+
+		$output = $this->getConditionalTagsFieldsValue(
+			$this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY, $formId),
+			$output
+		);
+
+		return $output;
 	}
 }

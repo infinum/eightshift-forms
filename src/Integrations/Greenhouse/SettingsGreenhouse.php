@@ -93,6 +93,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY = 'greenhouse-conditional-tags';
+
+	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var ClientInterface

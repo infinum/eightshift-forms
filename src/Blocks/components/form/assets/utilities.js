@@ -81,10 +81,6 @@ export const CONDITIONAL_TAGS_CONSTANTS = {
  * @returns 
  */
 export const utilIsCustom = (element, fieldSelector, customSelector, isAdmin) => {
-	console.log(typeof element);
-	console.log(typeof fieldSelector);
-	console.log(typeof customSelector);
-	console.log(typeof isAdmin);
 	return element.closest(fieldSelector).classList.contains(customSelector) && !isAdmin;
 }
 

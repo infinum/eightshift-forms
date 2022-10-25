@@ -78,6 +78,11 @@ class SettingsGoodbits implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY = 'goodbits-integration-fields';
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_GOODBITS_CONDITIONAL_TAGS_KEY = 'goodbits-conditional-tags';
+
+	/**
 	 * Instance variable for Goodbits data.
 	 *
 	 * @var ClientInterface

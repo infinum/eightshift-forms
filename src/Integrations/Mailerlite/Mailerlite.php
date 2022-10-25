@@ -212,10 +212,17 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
+		$output = $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsMailerlite::SETTINGS_TYPE_KEY
 		);
+
+		$output = $this->getConditionalTagsFieldsValue(
+			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY, $formId),
+			$output
+		);
+
+		return $output;
 	}
 }

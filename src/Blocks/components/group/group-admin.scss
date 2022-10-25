@@ -264,4 +264,63 @@
 			}
 		}
 	}
+
+	&--full {
+		> #{$this}__content {
+			#{$this} {
+				display: grid;
+				column-gap: 20px;
+				grid-template-columns: repeat(12, 1fr);
+
+				> #{$this}__label {
+					grid-column: 1/13;
+					margin-bottom: 20px;
+
+					@include media(desktop up) {
+						grid-column-end: 4;
+						padding-top: 13px;
+					}
+				}
+
+				// 	> #{$this}__label-inner {
+				// 		padding-bottom: 5px;
+				// 		border-bottom: 1px solid var(--global-colors-es-ebb);
+				// 		font-size: 15px;
+
+				// 		@include media(desktop up) {
+				// 			font-size: inherit;
+				// 		}
+				// 	}
+
+				// 	> #{$this}__sub-label {
+				// 		padding-top: 10px;
+				// 		color: var(--global-colors-es-chalice);
+				// 	}
+				// }
+
+				> #{$this}__content {
+					grid-column: 1 / 13;
+					margin-bottom: 10px;
+					padding-bottom: 10px;
+					border-bottom: 1px solid var(--global-colors-es-ebb);
+
+					@include media(desktop up) {
+						grid-column: 4/11;
+					}
+
+					.es-field__inner {
+						display: block;
+					}
+				}
+
+				// > #{$this}__help {
+				// 	grid-column: 1 / 13;
+				// 	margin-top: -10px;
+
+				// 	@include media(desktop up) {
+				// 		grid-column: 4 / 11;
+				// 	}
+			}
+		}
+	}
 }

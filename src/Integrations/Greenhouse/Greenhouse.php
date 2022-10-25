@@ -262,15 +262,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		}
 
 		$output[] = [
-			'component' => 'input',
-			'inputName' => 'conditional-tags',
-			'inputId' => 'conditional-tags',
-			'inputType' => 'text',
-			'inputValue' => '{"name":["show","all",[["email","is","ivan@gmail.com"]]], "pero":["show","all",[["email","is","ivan@gmail.com"]]]}',
-			'blockSsr' => $ssr,
-		];
-
-		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
 			'submitId' => 'submit',
@@ -286,10 +277,17 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
+		$output = $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsGreenhouse::SETTINGS_TYPE_KEY
 		);
+
+		$output = $this->getConditionalTagsFieldsValue(
+			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId),
+			$output
+		);
+
+		return $output;
 	}
 }

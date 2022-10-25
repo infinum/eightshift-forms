@@ -94,6 +94,11 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	public const SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY = 'mailchimp-integration-fields';
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY = 'mailchimp-conditional-tags';
+
+	/**
 	 * Instance variable for Mailchimp data.
 	 *
 	 * @var MailchimpClientInterface

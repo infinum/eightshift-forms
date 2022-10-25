@@ -78,6 +78,11 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY = 'mailerlite-integration-fields';
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY = 'mailerlite-conditional-tags';
+
+	/**
 	 * Instance variable for mailerlite data.
 	 *
 	 * @var ClientInterface

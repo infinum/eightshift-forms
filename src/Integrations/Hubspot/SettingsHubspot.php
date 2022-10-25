@@ -110,6 +110,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY = 'hubspot-conditional-tags';
+
+	/**
 	 * Instance variable for Clearbit data.
 	 *
 	 * @var ClearbitClientInterface
@@ -559,9 +564,23 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'conditional-logic-repeater',
-				'conditionalLogicRepeaterFieldLabel' => '',
+				'component' => 'group',
+				'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
+				'groupBeforeContent' => $beforeContent,
+				'groupStyle' => 'full',
+				'groupContent' => $this->getConditionalTagsFieldsDetails(
+					self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY,
+					$formFields,
+					$formId
+				),
 			],
+			// [
+			// 	'component' => 'conditional-logic-repeater',
+			// 	'conditionalLogicRepeaterFieldLabel' => '',
+			// 	'conditionalLogicRepeaterName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
+			// 	'conditionalLogicRepeaterId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
+			// 	'conditionalLogicRepeaterValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY, $formId),
+			// ],
 		];
 	}
 }

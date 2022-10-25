@@ -8,13 +8,24 @@ domReady(() => {
 		throw 'Your project is missing the global "esFormsLocalization" variable called from the enqueue script.';
 	}
 
-	// const selector = `.${componentJsClass}`;
-	// const elements = document.querySelectorAll(selector);
+	const {
+		componentJsClass,
+		componentIdPrefix
+	} = manifest;
 
-	// if (elements.length) {
-		import('./conditional-logic-repeater').then(({ conditionalLogicRepeater }) => {
-			conditionalLogicRepeater();
+	const selector = `.${componentJsClass}`;
+	const elements = document.querySelectorAll(selector);
+
+	if (elements.length) {
+		import('./conditional-logic-repeater').then(({ conditionalLogicRepeaterComponent, ConditionalTags }) => {
+			conditionalLogicRepeaterComponent();
+
+			const conditionalTags = new ConditionalTags({
+				fieldSelector: selector,
+				idPrefix: componentIdPrefix,
+			});
+
+			conditionalTags.init();
 		});
-	// }
-
+	}
 });

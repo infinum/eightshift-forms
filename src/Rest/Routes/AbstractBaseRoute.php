@@ -61,6 +61,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const CUSTOM_FORM_PARAM_ACTION = 'es-form-action';
 
 	/**
+	 * Custom form param for conditional tags.
+	 *
+	 * @var string
+	 */
+	public const CUSTOM_FORM_PARAM_CONDITIONAL_TAGS = 'es-form-conditional-tags';
+
+	/**
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
@@ -69,6 +76,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'singleSubmit' => self::CUSTOM_FORM_PARAM_SINGLE_SUBMIT,
 		'storage' => self::CUSTOM_FORM_PARAM_STORAGE,
 		'action' => self::CUSTOM_FORM_PARAM_ACTION,
+		'conditionalTags' => self::CUSTOM_FORM_PARAM_CONDITIONAL_TAGS,
 		'hubspotCookie' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE,
 		'hubspotPageName' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME,
 		'hubspotPageUrl' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL,
