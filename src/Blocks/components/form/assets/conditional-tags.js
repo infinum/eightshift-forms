@@ -225,7 +225,7 @@ export class ConditionalTags {
 					output = true;
 				}
 				break;
-			case CONDITIONAL_TAGS_CONSTANTS.GET:
+			case CONDITIONAL_TAGS_CONSTANTS.GTE:
 				if (value >= inputValue) {
 					output = true;
 				}
@@ -235,7 +235,7 @@ export class ConditionalTags {
 					output = true;
 				}
 				break;
-			case CONDITIONAL_TAGS_CONSTANTS.LET:
+			case CONDITIONAL_TAGS_CONSTANTS.LTE:
 				if (value <= inputValue) {
 					output = true;
 				}

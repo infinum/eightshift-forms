@@ -634,7 +634,7 @@ trait SettingsHelper
 						'conditionalLogicRepeaterName' => $name,
 						'conditionalLogicRepeaterId' => $id,
 						'conditionalLogicRepeaterFields' => $conditionalLogicRepeaterFields,
-						'conditionalLogicRepeaterValue' => $componentValues[$id] ?? [],
+						'conditionalLogicRepeaterValue' => $componentValues[$id] ?? ['enabled' => false],
 						'conditionalLogicRepeaterInputValue' => $inputValues[$id] ?? [],
 					]
 				],

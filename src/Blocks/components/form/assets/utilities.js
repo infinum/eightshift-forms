@@ -1,6 +1,8 @@
 const ePrefix = 'esForms';
 
-// All custom events.
+/**
+ * All custom events.
+ */
 export const FORM_EVENTS = {
 	BEFORE_FORM_SUBMIT: `${ePrefix}BeforeFormSubmit`,
 	AFTER_FORM_SUBMIT: `${ePrefix}AfterFormSubmit`,
@@ -16,7 +18,9 @@ export const FORM_EVENTS = {
 	FORMS_JS_LOADED: `${ePrefix}JsLoaded`,
 };
 
-// All form custom state selectors.
+/**
+ * All form custom state selectors.
+ */
 export const FORM_SELECTORS = {
 	CLASS_ACTIVE: 'is-active',
 	CLASS_FILLED: 'is-filled',
@@ -25,7 +29,9 @@ export const FORM_SELECTORS = {
 	CLASS_HAS_ERROR: 'has-error',
 };
 
-// All form data attributes.
+/**
+ * All form data attributes.
+ */
 export const FORM_DATA_ATTRIBUTES = {
 	DATA_ATTR_FORM_TYPE: 'data-form-type',
 	DATA_ATTR_FIELD_ID: 'data-field-id',
@@ -48,20 +54,20 @@ export const FORM_DATA_ATTRIBUTES = {
  * is  - is                  - if value is exact match.
  * isn - is not              - if value is not exact match.
  * gt  - greater than        - if value is greater than.
- * get  - greater/equal than - if value is greater than.
+ * gte  - greater/equal than - if value is greater/equal than.
  * lt  - less than           - if value is less than.
- * let  - less/equal than    - if value is less than.
+ * lte  - less/equal than    - if value is less/equal than.
  * c   - contains            - if value contains value.
  * sw  - starts with         - if value starts with value.
  * ew  - ends with           - if value starts with value.
  */
 export const CONDITIONAL_TAGS_CONSTANTS = {
-	IS: 'IS',
+	IS: 'is',
 	ISN: 'isn',
 	GT: 'gt',
-	GET: 'get',
+	GTE: 'gte',
 	LT: 'lt',
-	LET: 'let',
+	LTE: 'lte',
 	C: 'c',
 	SW: 'sw',
 	EW: 'ew',
@@ -78,12 +84,16 @@ export const CONDITIONAL_TAGS_CONSTANTS = {
  * @param {string} fieldSelector Fields selector string.
  * @param {string} customSelector Custom selector string.
  * @param {boolean} isAdmin Check if this is used in admin or frontend.
- * @returns 
+ *
+ * @returns {boolean}
  */
 export const utilIsCustom = (element, fieldSelector, customSelector, isAdmin) => {
 	return element.closest(fieldSelector).classList.contains(customSelector) && !isAdmin;
 }
 
+/**
+ * List all utility methods exported in the window object.
+ */
 export const windowUtilities = {
 	utilIsCustom: (element, fieldSelector, customSelector, isAdmin) => {
 		utilIsCustom(element, fieldSelector, customSelector, isAdmin);
