@@ -13,7 +13,6 @@ namespace EightshiftForms\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * SettingsHelper trait.
@@ -587,7 +586,7 @@ trait SettingsHelper
 		$fields = [];
 
 		// Prepare all fields used in the component selector.
-		$conditionalLogicRepeaterFields = array_values(array_filter(array_map(
+		$conditionalLogicRepeaterFields = \array_values(\array_filter(\array_map(
 			function ($item) {
 				$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($item);
 
@@ -753,14 +752,14 @@ trait SettingsHelper
 	 */
 	private function getConditionalLogicRepeaterValue(array $fieldsValues): array
 	{
-		return array_map(
-			static function($item) {
-				$item = json_decode($item);
+		return \array_map(
+			static function ($item) {
+				$item = \json_decode($item);
 				return [
 					'enabled' => true,
 					'behavior' => $item[0] ?? '',
 					'logic' => $item[1] ?? '',
-					'conditions' => array_map(
+					'conditions' => \array_map(
 						static function ($inner) {
 							return [
 								'field' => $inner[0] ?? '',

@@ -119,8 +119,6 @@ export class Form {
 
 			// Load conditional data class if used.
 			if (conditionalTagsData) {
-				console.log(conditionalTagsData);
-				
 				import('./conditional-tags').then(({ ConditionalTags }) => {
 					const cTagsClass = new ConditionalTags({
 						formSelector: this.formSelector,

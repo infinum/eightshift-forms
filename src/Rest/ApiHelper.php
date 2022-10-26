@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use WP_Error;
 
 /**
  * ApiHelper trait.
@@ -59,7 +58,7 @@ trait ApiHelper
 	): array {
 
 		// Do regular stuff if this is not and WP_Error.
-		if (!is_wp_error($response)) {
+		if (!\is_wp_error($response)) {
 			if ($isCurl) {
 				$code = $response['status'] ?? 200;
 				$body = $response;

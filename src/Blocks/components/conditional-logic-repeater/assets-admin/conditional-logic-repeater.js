@@ -33,7 +33,6 @@ export class ConditionalTags {
 						behavior,
 						logic,
 						conditions.map((item) => {
-							console.log(item);
 							if (item.field !== '') {
 								return [
 									item.field,

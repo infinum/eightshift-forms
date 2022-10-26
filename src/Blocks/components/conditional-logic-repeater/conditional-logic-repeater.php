@@ -29,7 +29,7 @@ $conditionalLogicRepeaterClass = Components::classnames([
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
-$id = "{$componentIdPrefix}---{$conditionalLogicRepeaterId}";
+$componentId = "{$componentIdPrefix}---{$conditionalLogicRepeaterId}";
 
 $output = "
 	<conditional-logic-repeater
@@ -37,16 +37,16 @@ $output = "
 		value='$value'
 		toggleable='$conditionalLogicRepeaterUse'
 		class='$conditionalLogicRepeaterClass'
-		data-id='$id'
+		data-id='$componentId'
 	></conditional-logic-repeater>";
 
 $output .= Components::render(
 	'input',
 	array_merge(
 		Components::props('input', $attributes, [
-			'inputType' => 'text',
-			'inputId' => $id,
-			'inputName' => $id,
+			'inputType' => 'hidden',
+			'inputId' => $componentId,
+			'inputName' => $componentId,
 			'inputValue' => $conditionalLogicRepeaterInputValue,
 		]),
 	)
@@ -57,8 +57,8 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $output,
-			'fieldId' => $id,
-			'fieldName' => $id,
+			'fieldId' => $componentId,
+			'fieldName' => $componentId,
 		]),
 	)
 );
