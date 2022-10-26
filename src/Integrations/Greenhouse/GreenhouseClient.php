@@ -364,7 +364,7 @@ class GreenhouseClient implements ClientInterface
 			}
 
 			// Get gh_src from url and map it.
-			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE && isset($param['value']['gh_src'])) {
+			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage'] && isset($param['value']['gh_src'])) {
 				$output['mapped_url_token'] = $param['value']['gh_src'];
 				continue;
 			}

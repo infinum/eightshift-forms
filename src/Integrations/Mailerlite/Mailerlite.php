@@ -109,6 +109,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
 
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
+
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
 			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
@@ -212,17 +216,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		$output = $this->getIntegrationFieldsValue(
+		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsMailerlite::SETTINGS_TYPE_KEY
 		);
-
-		$output = $this->getConditionalTagsFieldsValue(
-			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY, $formId),
-			$output
-		);
-
-		return $output;
 	}
 }

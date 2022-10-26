@@ -76,7 +76,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	{
 		$body = [];
 
-		$formAction = $params[self::CUSTOM_FORM_PARAM_ACTION]['value'];
+		$formAction = $params[self::CUSTOM_FORM_PARAMS['action']]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {

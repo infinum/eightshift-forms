@@ -4,7 +4,6 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import {
 	FORM_EVENTS,
 	FORM_SELECTORS,
-	FORM_DATA_ATTRIBUTES,
 	CONDITIONAL_TAGS_CONSTANTS,
 	utilIsCustom,
 } from './utilities';
@@ -38,6 +37,9 @@ export class Form {
 
 		// Custom fields params.
 		this.FORM_CUSTOM_FORM_PARAMS = options.customFormParams;
+
+		// Custom data attributes.
+		this.FORM_CUSTOM_DATA_ATTRIBUTES = options.customFormDataAttributes;
 
 		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
@@ -83,14 +85,14 @@ export class Form {
 			}
 
 			// Get form ID.
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			// All fields selectors.
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);
 			const selects = element.querySelectorAll(this.selectSelector);
 			const files = element.querySelectorAll(this.fileSelector);
-			const conditionalTags = element.querySelector(this.conditionalTagsSelector);
+			const conditionalTagsData = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -116,13 +118,15 @@ export class Form {
 			});
 
 			// Load conditional data class if used.
-			if (conditionalTags) {
+			if (conditionalTagsData) {
+				console.log(conditionalTagsData);
+				
 				import('./conditional-tags').then(({ ConditionalTags }) => {
 					const cTagsClass = new ConditionalTags({
 						formSelector: this.formSelector,
 						fieldSelector: this.fieldSelector,
 						customSelector: this.customSelector,
-						data: conditionalTags.value,
+						data: conditionalTagsData,
 						formIsAdmin: this.formIsAdmin,
 						FORM_SELECTORS,
 					});
@@ -209,7 +213,7 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID),
+				formId: element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId),
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -259,7 +263,7 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
+		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// Populate body data.
 		const body = {
@@ -300,14 +304,14 @@ export class Form {
 					this.gtmSubmit(element);
 
 					// Redirect on success.
-					if (element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) || singleSubmit) {
+					if (element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 						// Dispatch event.
 						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
 
-						let redirectUrl = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) ?? '';
+						let redirectUrl = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) ?? '';
 
 						// Replace string templates used for passing data via url.
 						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -391,12 +395,12 @@ export class Form {
 
 		const groups = element.querySelectorAll(`${this.groupSelector}`);
 
-		const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+		const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID);
+				const groupId = group.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldId);
 				const groupInner = group.querySelectorAll(`
 					${this.groupInnerSelector} input,
 					${this.groupInnerSelector} select,
@@ -434,7 +438,7 @@ export class Form {
 			textarea:not(${this.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
+		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -587,7 +591,7 @@ export class Form {
 		if (this.formResetOnSuccess) {
 			element.reset();
 
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
 			if (this.customSelects[formId]) {
@@ -662,7 +666,7 @@ export class Form {
 
 	// Set global message.
 	setGlobalMsg = (element, msg, status) => {
-		if(element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) && status === 'success') {
+		if(element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) && status === 'success') {
 			return;
 		}
 
@@ -708,7 +712,7 @@ export class Form {
 
 	// Submit GTM event.
 	gtmSubmit(element) {
-		const eventName = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_EVENT_NAME);
+		const eventName = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
@@ -722,7 +726,7 @@ export class Form {
 
 	// Build GTM data for the data layer.
 	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING}]`);
+		const items = element.querySelectorAll(`[${this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking}]`);
 		const dataTemp = {};
 
 		if (!items.length) {
@@ -730,7 +734,7 @@ export class Form {
 		}
 
 		[...items].forEach((item) => {
-			const tracking = item.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING);
+			const tracking = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking);
 
 			if (tracking) {
 				const {type, checked} = item;
@@ -748,7 +752,7 @@ export class Form {
 				}
 
 				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_SELECT_LABEL)) {
+				if (item.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingSelectLabel)) {
 					dataTemp[tracking] = item.selectedOptions[0].label;
 					return;
 				}
@@ -1040,7 +1044,7 @@ export class Form {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmit);
 
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);

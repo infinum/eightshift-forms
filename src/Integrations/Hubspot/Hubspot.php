@@ -41,27 +41,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public const FILTER_FORM_FIELDS_NAME = 'es_hubspot_form_fields_filter';
 
 	/**
-	 * Custom form param for cookie.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_HUBSPOT_COOKIE = 'es-form-hubspot-cookie';
-
-	/**
-	 * Custom form param for page name.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME = 'es-form-hubspot-page-name';
-
-	/**
-	 * Custom form param for page url.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL = 'es-form-hubspot-page-url';
-
-	/**
 	 * Instance variable for Hubspot data.
 	 *
 	 * @var HubspotClientInterface
@@ -109,6 +88,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
+
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
 
 		// Return form to the frontend.
 		return $this->buildForm(
@@ -497,17 +480,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		$output = $this->getIntegrationFieldsValue(
+		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsHubspot::SETTINGS_TYPE_KEY
 		);
-
-		$output = $this->getConditionalTagsFieldsValue(
-			$this->getSettingsValueGroup(SettingsHubspot::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY, $formId),
-			$output
-		);
-
-		return $output;
 	}
 }

@@ -8,6 +8,7 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -25,6 +26,7 @@ $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
+$formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getBlockFilterName('form', 'dataTypeSelector');
@@ -44,23 +46,27 @@ $formClass = Components::classnames([
 ]);
 
 if ($formDataTypeSelector) {
-	$formAttrs['data-type-selector'] = esc_attr($formDataTypeSelector);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['typeSelector']] = esc_attr($formDataTypeSelector);
 }
 
 if ($formSuccessRedirect) {
-	$formAttrs['data-success-redirect'] = esc_attr($formSuccessRedirect);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect']] = esc_attr($formSuccessRedirect);
 }
 
 if ($formTrackingEventName) {
-	$formAttrs['data-tracking-event-name'] = esc_attr($formTrackingEventName);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['trackingEventName']] = esc_attr($formTrackingEventName);
+}
+
+if ($formConditionalTags) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_attr($formConditionalTags);
 }
 
 if ($formPostId) {
-	$formAttrs['data-form-post-id'] = esc_attr($formPostId);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId']] = esc_attr($formPostId);
 }
 
 if ($formType) {
-	$formAttrs['data-form-type'] = esc_html($formType);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
 }
 
 if ($formId) {

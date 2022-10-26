@@ -587,7 +587,7 @@ trait SettingsHelper
 		$fields = [];
 
 		// Prepare all fields used in the component selector.
-		$conditionalLogicRepeaterFields = array_filter(array_map(
+		$conditionalLogicRepeaterFields = array_values(array_filter(array_map(
 			function ($item) {
 				$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($item);
 
@@ -601,7 +601,7 @@ trait SettingsHelper
 				];
 			},
 			$formFields
-		));
+		)));
 
 		$inputValues = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup($key, $formId));
 		$componentValues = $this->getConditionalLogicRepeaterValue($inputValues);
@@ -642,33 +642,6 @@ trait SettingsHelper
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Build integration forms Conditional tags output with full component array.
-	 *
-	 * @param array<string, mixed> $dbSettingsValue Field to search in settings.
-	 * @param array<int, array<string, mixed>> $formFields Full form components array.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getConditionalTagsFieldsValue(array $dbSettingsValue, array $formFields): array
-	{
-		$output = $this->getGroupDataWithoutKeyPrefix($dbSettingsValue);
-
-		if (!$output) {
-			return $formFields;
-		}
-
-		$formFields[] = [
-			'component' => 'input',
-			'inputType' => 'hidden',
-			'inputName' => AbstractBaseRoute::CUSTOM_FORM_PARAM_CONDITIONAL_TAGS,
-			'inputId' => AbstractBaseRoute::CUSTOM_FORM_PARAM_CONDITIONAL_TAGS,
-			'inputValue' => wp_json_encode($output),
-		];
-
-		return $formFields;
 	}
 
 	/**

@@ -9,6 +9,7 @@
 use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
@@ -72,7 +73,7 @@ if ($isCustomFile && $fileUseCustom) {
 }
 
 if ($fileTracking) {
-	$fileAttrs['data-tracking'] = esc_attr($fileTracking);
+	$fileAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($fileTracking);
 }
 
 $fileAttrsOutput = '';

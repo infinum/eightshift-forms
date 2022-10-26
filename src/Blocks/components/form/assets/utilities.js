@@ -30,19 +30,6 @@ export const FORM_SELECTORS = {
 };
 
 /**
- * All form data attributes.
- */
-export const FORM_DATA_ATTRIBUTES = {
-	DATA_ATTR_FORM_TYPE: 'data-form-type',
-	DATA_ATTR_FIELD_ID: 'data-field-id',
-	DATA_ATTR_FORM_POST_ID: 'data-form-post-id',
-	DATA_ATTR_TRACKING_EVENT_NAME: 'data-tracking-event-name',
-	DATA_ATTR_TRACKING: 'data-tracking',
-	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
-	DATA_ATTR_SUCCESS_REDIRECT: 'data-success-redirect',
-};
-
-/**
  * Data constants.
  *
  * show - show item it conditions is set, hidden by default.

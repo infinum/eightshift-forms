@@ -17,6 +17,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
@@ -440,7 +441,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 							$this->mailchimp->getFormFields($formId),
 							$formId,
 							[
-								Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS
+								AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags']
 							]
 						),
 					]

@@ -103,6 +103,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
 
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
+
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
 			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
@@ -373,17 +377,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		$output = $this->getIntegrationFieldsValue(
+		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY
 		);
-
-		$output = $this->getConditionalTagsFieldsValue(
-			$this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY, $formId),
-			$output
-		);
-
-		return $output;
 	}
 }

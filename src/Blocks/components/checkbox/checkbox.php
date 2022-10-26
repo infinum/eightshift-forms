@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -43,7 +44,7 @@ if (empty($checkboxLabel)) {
 }
 
 if ($checkboxTracking) {
-	$checkboxAttrs['data-tracking'] = esc_attr($checkboxTracking);
+	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
 }
 
 if ($checkboxValue) {

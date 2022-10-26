@@ -9,6 +9,7 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -38,7 +39,7 @@ $submitClass = Components::classnames([
 ]);
 
 if ($submitTracking) {
-	$submitAttrs['data-tracking'] = esc_attr($submitTracking);
+	$submitAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($submitTracking);
 }
 
 if ($submitId) {

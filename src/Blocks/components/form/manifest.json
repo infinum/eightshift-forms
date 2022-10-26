@@ -45,6 +45,9 @@
 		"formTrackingEventName": {
 			"type": "string"
 		},
+		"formConditionalTags": {
+			"type": "string"
+		},
 		"formType": {
 			"type": "string"
 		},

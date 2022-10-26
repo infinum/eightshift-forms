@@ -33,12 +33,11 @@ $id = "{$componentIdPrefix}---{$conditionalLogicRepeaterId}";
 
 $output = "
 	<conditional-logic-repeater
-		fields='{$fields}'
-		value='{$value}'
-		toggleable='{$conditionalLogicRepeaterUse}'
-		class='{$conditionalLogicRepeaterClass}'
-		data-id='{$id}'
-		autoclear='true'
+		fields='$fields'
+		value='$value'
+		toggleable='$conditionalLogicRepeaterUse'
+		class='$conditionalLogicRepeaterClass'
+		data-id='$id'
 	></conditional-logic-repeater>";
 
 $output .= Components::render(

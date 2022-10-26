@@ -426,7 +426,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function prepareTags(array $params): array
 	{
-		$key = Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS;
+		$key = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
 
 		if (!isset($params[$key])) {
 			return [];

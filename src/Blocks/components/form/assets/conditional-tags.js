@@ -16,7 +16,7 @@ export class ConditionalTags {
 		this.customSelector = options.customSelector;
 
 		// Data
-		this.data = require('./conditional-tags-test-data')['CONDITIONAL_TAGS_TEST_DATA'];
+		this.data = options.data;
 
 		// Internal Data Constants.
 		this.DATA_FIELDS = 'fields';
@@ -43,10 +43,12 @@ export class ConditionalTags {
 		Object.entries(JSON.parse(this.data)).forEach(([key, value]) => {
 			this.internalData[this.DATA_REFERENCE][key] = [];
 
+			const internalValue = JSON.parse(value);
+
 			this.internalData[this.DATA_FIELDS][key] = {
-				'action': value[0],
-				'logic': value[1],
-				'rules': value[2].map((innerItem) => {
+				'action': internalValue[0],
+				'logic': internalValue[1],
+				'rules': internalValue[2].map((innerItem) => {
 
 					if (!(innerItem[0] in this.internalData[this.DATA_EVENT_ITEMS])) {
 						this.internalData[this.DATA_EVENT_ITEMS][innerItem[0]] = [];

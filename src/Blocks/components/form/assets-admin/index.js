@@ -23,6 +23,7 @@ domReady(() => {
 				formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
 				formIsAdmin: true,
 				customFormParams: esFormsLocalization.customFormParams,
+				customFormDataAttributes: esFormsLocalization.customFormDataAttributes,
 			});
 
 			form.init();

@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -40,7 +41,7 @@ if (empty($radioLabel)) {
 }
 
 if ($radioTracking) {
-	$radioAttrs['data-tracking'] = esc_attr($radioTracking);
+	$radioAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($radioTracking);
 }
 
 if ($radioValue) {

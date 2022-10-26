@@ -90,6 +90,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Check if it is loaded on the front or the backend.
 		$ssr = $formAdditionalProps['ssr'] ?? false;
 
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
+
 		// Return form to the frontend.
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
@@ -277,17 +281,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		$output = $this->getIntegrationFieldsValue(
+		return $this->getIntegrationFieldsValue(
 			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),
 			$output,
 			SettingsGreenhouse::SETTINGS_TYPE_KEY
 		);
-
-		$output = $this->getConditionalTagsFieldsValue(
-			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId),
-			$output
-		);
-
-		return $output;
 	}
 }

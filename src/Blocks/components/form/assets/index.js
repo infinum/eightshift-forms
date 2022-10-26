@@ -5,7 +5,6 @@ import manifest from './../manifest.json';
 import {
 	FORM_EVENTS,
 	FORM_SELECTORS,
-	FORM_DATA_ATTRIBUTES,
 	windowUtilities,
 } from './utilities';
 
@@ -22,7 +21,6 @@ const selector = `.${componentJsClass}`;
 window['esForms'] = {
 	events: FORM_EVENTS,
 	selectors: FORM_SELECTORS,
-	dataAttributes: FORM_DATA_ATTRIBUTES,
 	formSelector: selector,
 };
 
@@ -43,6 +41,7 @@ function initAll() {
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
 			customFormParams: esFormsLocalization.customFormParams,
+			customFormDataAttributes: esFormsLocalization.customFormDataAttributes,
 		});
 
 		// Run forms.
@@ -62,6 +61,7 @@ function initAll() {
 			customTextareas: form.customTextareas,
 			storageConfig: form.storageConfig,
 			customFormParams: form.FORM_CUSTOM_FORM_PARAMS,
+			customFormDataAttributes: form.FORM_CUSTOM_DATA_ATTRIBUTES,
 			storageName: form.STORAGE_NAME,
 			init: () => {
 				form.init();

@@ -162,6 +162,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	{
 		$output = [
 			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
+			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
 		];
 
 		// Admin part.
