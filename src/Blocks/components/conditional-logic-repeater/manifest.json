@@ -8,6 +8,9 @@
 			"type": "array"
 		},
 		"conditionalLogicRepeaterValue": {
+			"type": "array"
+		},
+		"conditionalLogicRepeaterInputValue": {
 			"type": "string"
 		},
 		"conditionalLogicRepeaterName": {

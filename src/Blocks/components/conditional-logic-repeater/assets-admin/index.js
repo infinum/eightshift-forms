@@ -10,7 +10,6 @@ domReady(() => {
 
 	const {
 		componentJsClass,
-		componentIdPrefix
 	} = manifest;
 
 	const selector = `.${componentJsClass}`;
@@ -22,7 +21,6 @@ domReady(() => {
 
 			const conditionalTags = new ConditionalTags({
 				fieldSelector: selector,
-				idPrefix: componentIdPrefix,
 			});
 
 			conditionalTags.init();

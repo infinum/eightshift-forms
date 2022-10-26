@@ -574,13 +574,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					$formId
 				),
 			],
-			// [
-			// 	'component' => 'conditional-logic-repeater',
-			// 	'conditionalLogicRepeaterFieldLabel' => '',
-			// 	'conditionalLogicRepeaterName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
-			// 	'conditionalLogicRepeaterId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
-			// 	'conditionalLogicRepeaterValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY, $formId),
-			// ],
 		];
 	}
 }

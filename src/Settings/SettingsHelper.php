@@ -603,7 +603,8 @@ trait SettingsHelper
 			$formFields
 		));
 
-		$fieldsValues = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup($key, $formId));
+		$inputValues = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup($key, $formId));
+		$componentValues = $this->getConditionalLogicRepeaterValue($inputValues);
 
 		foreach ($formFields as $field) {
 			if (!$field) {
@@ -633,7 +634,8 @@ trait SettingsHelper
 						'conditionalLogicRepeaterName' => $name,
 						'conditionalLogicRepeaterId' => $id,
 						'conditionalLogicRepeaterFields' => $conditionalLogicRepeaterFields,
-						'conditionalLogicRepeaterValue' => $fieldsValues[$id] ?? [],
+						'conditionalLogicRepeaterValue' => $componentValues[$id] ?? [],
+						'conditionalLogicRepeaterInputValue' => $inputValues[$id] ?? [],
 					]
 				],
 			];
@@ -767,5 +769,37 @@ trait SettingsHelper
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Convert conditional logic repeater database values to values for the component.
+	 *
+	 * @param array<string, mixed> $fieldsValues Field values got from DB.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getConditionalLogicRepeaterValue(array $fieldsValues): array
+	{
+		return array_map(
+			static function($item) {
+				$item = json_decode($item);
+				return [
+					'enabled' => true,
+					'behavior' => $item[0] ?? '',
+					'logic' => $item[1] ?? '',
+					'conditions' => array_map(
+						static function ($inner) {
+							return [
+								'field' => $inner[0] ?? '',
+								'comparison' => $inner[1] ?? '',
+								'value' => $inner[2] ?? '',
+							];
+						},
+						$item[2] ?? []
+					),
+				];
+			},
+			$fieldsValues
+		) ?? [];
 	}
 }
