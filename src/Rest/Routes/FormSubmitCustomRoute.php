@@ -104,7 +104,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
-			if ($name || !$value) {
+			if (!$name || !$value) {
 				continue;
 			}
 
