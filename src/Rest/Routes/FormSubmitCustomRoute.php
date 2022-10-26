@@ -129,7 +129,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
-		if ($customResponseCode > 400) {
+		if ($customResponseCode > 399) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => $customResponseCode,
