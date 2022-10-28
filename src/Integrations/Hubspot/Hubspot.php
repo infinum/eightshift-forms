@@ -227,7 +227,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputId' => $id,
 							'inputName' => $name,
 							'inputTracking' => $name,
-							'inputType' => 'text',
+							'inputType' => $hidden ? 'hidden' : 'text',
 							'inputPlaceholder' => $placeholder,
 							'inputIsRequired' => $required,
 							'inputValue' => $value,
@@ -255,7 +255,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
 							'inputId' => $id,
-							'inputType' => 'number',
+							'inputType' => $hidden ? 'hidden' : 'number',
 							'inputIsRequired' => $required,
 							'inputValue' => $value,
 							'inputAttrs' => [
