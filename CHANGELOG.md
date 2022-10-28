@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [2.0.1]
+
+### Fixed
+- Hubspot fix so the input hidden is not displayed on the frontend.
+
 ## [2.0.0]
 
-## Added
+### Added
 - custom form params are now in one place and used as an enum for PHP and JS.
 - server errors will no longer produce a fatal error on the form but will output the message to the user, which is also translatable.
 - option to remove all unnecessary custom params set on the form before the final integration post, so we don't send unnecessary stuff.
@@ -20,7 +25,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - geolocation license copy
 - new sortable option to all integration fields.
 
-## Changed
+### Changed
 - all JS global variables for frontend and backend are now using the same name.
 - internal custom field for actions is now called es-form-action.
 - filter for setting http request from `httpRequestArgs ` to `httpRequestTimeout` because it is used only to set timeout.
@@ -31,7 +36,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - updating libs.
 - `ES_GEOLOCAITON` global constant to `ES_GEOLOCAITON_IP`.
 
-## Fixed
+### Fixed
 - all wrong text domains are changed from `eightshift-form` to `eightshift-forms`.
 - Active campaign body was set wrong and was not working.
 - Active campaign setting info copy for setting api key and url.
@@ -41,7 +46,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - wrong mime type for google docs file format .docx
 - internal filter naming for functions
 
-## Removed
+### Removed
 - `ES_DEVELOP_MODE_SKIP_VALIDATION ` because it is used from admin now.
 - `ES_LOG_MODE ` because it is used from admin now.
 - `es_forms_geolocation_user_location` filter.
@@ -137,6 +142,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.0.1]: https://github.com/infinum/eightshift-forms/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-forms/compare/1.4.0...2.0.0
 [1.4.0]: https://github.com/infinum/eightshift-forms/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/infinum/eightshift-forms/compare/1.2.4...1.3.0
