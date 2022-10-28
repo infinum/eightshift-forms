@@ -230,7 +230,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputId' => $id,
-						'inputType' => 'text',
+						'inputType' => 'hidden',
 						'inputFieldHidden' => 'hidden',
 						'blockSsr' => $ssr,
 					];
