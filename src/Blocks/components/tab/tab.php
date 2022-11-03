@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Template for the Tab Component.
+ *
+ * @package EightshiftForms
+ */
+
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+
+$manifest = Components::getManifest(__DIR__);
+$manifestTabs = Components::getComponent('tabs');
+
+$componentClass = $manifest['componentClass'] ?? '';
+$componentJsTabClass = $manifestTabs['componentJsTabClass'] ?? '';
+
+$tabLabel = Components::checkAttr('tabLabel', $attributes, $manifest);
+$tabContent = Components::checkAttr('tabContent', $attributes, $manifest);
+
+$tabLabelClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'label'),
+	Components::selector($componentJsTabClass, $componentJsTabClass),
+]);
+
+$tabContentClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'content'),
+]);
+
+if (!$tabLabel || !$tabContent) {
+	return;
+}
+
+?>
+
+<div class="<?php echo esc_attr($tabLabelClass); ?>" data-hash="<?php echo urlencode($tabLabel); ?>">
+	<?php
+		echo $tabLabel; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	?>
+</div>
+
+
+<div class="<?php echo esc_attr($tabContentClass); ?>">
+	<?php
+		echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	?>
+</div>

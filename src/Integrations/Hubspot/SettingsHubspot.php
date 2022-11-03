@@ -275,30 +275,38 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		// Find selected item.
-		$selectedItem = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+		// Find selected form id.
+		$selectedFormId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+
+		$output = [];
 
 		// If the user has selected the list item add additional settings.
-		if ($selectedItem) {
+		if ($selectedFormId) {
 			$formFields = $this->hubspot->getFormFields($formId);
 
-			$output = \array_merge(
-				$this->getOutputFilemanager($formId),
-				$this->settingsClearbit->getOutputClearbit(
-					$formId,
-					$formFields,
-					[
-						'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
-						'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
-					]
-				),
-				$this->getOutputFields($formId, $formFields)
-			);
+			$output = [
+				[
+					'component' => 'tabs',
+					'tabsContent' => [
+						$this->getOutputFilemanager($formId),
+						$this->settingsClearbit->getOutputClearbit(
+							$formId,
+							$formFields,
+							[
+								'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
+								'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
+							]
+						),
+						$this->getOutputIntegrationFields($formId, $formFields),
+						$this->getOutputConditionalTags($formId, $formFields),
+					],
+				],
+			];
 		}
 
 		return \array_merge(
-			$this->getOutputFormSelection($formId, $items, $selectedItem),
-			$output ?? []
+			$this->getOutputFormSelection($formId, $items, $selectedFormId),
+			$output
 		);
 	}
 
@@ -311,7 +319,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	{
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY);
 
-		$output = [
+		$outputIntro = [
 			[
 				'component' => 'intro',
 				'introTitle' => \__('HubSpot', 'eightshift-forms'),
@@ -328,9 +336,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 						<li>On the page that loads in the <strong>Active API key</strong> panel, click on <strong>Show</strong>, verify the captcha if needed, then click <strong>Copy</strong></li>
 						<li>Copy the API key into the field below or use the global constant.</li>
 					</ol>', 'eightshift-forms'),
-			],
-			[
-				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
@@ -350,57 +355,67 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 			],
 		];
 
-		$outputValid = [];
+		$output = [];
 
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyHubspot();
 
-			$outputValid = \array_merge(
+			$output = [
 				[
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-						'inputType' => 'password',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-						'inputIsDisabled' => !empty($apiKey),
-					],
-					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => \__('File Upload', 'eightshift-forms'),
-						'introSubtitle' => \__('Define global settings for file upload fields.', 'eightshift-forms'),
-						'introTitleSize' => 'small',
-					],
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-						'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
-						// translators: %s will be replaced with the link.
-						'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
-						'inputType' => 'text',
-						'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'component' => 'tabs',
+					'tabsContent' => [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('API', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+							],
+						],
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('File upload', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'intro',
+									'introSubtitle' => \__('Define global settings for file upload fields.', 'eightshift-forms'),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+									'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+									'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+									// translators: %s will be replaced with the link.
+									'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+									'inputType' => 'text',
+									'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+								],
+							],
+						],
+						$this->settingsClearbit->getOutputGlobalClearbit(
+							$this->hubspotClient->getContactProperties(),
+							[
+								'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
+							]
+						),
+						$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsHubspot::SETTINGS_TYPE_KEY),
 					],
 				],
-				$this->settingsClearbit->getOutputGlobalClearbit(
-					$this->hubspotClient->getContactProperties(),
-					[
-						'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
-					]
-				)
-			);
+			];
 		}
 
 		return [
+			...$outputIntro,
 			...$output,
-			...$outputValid,
-			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsHubspot::SETTINGS_TYPE_KEY),
 		];
 	}
 
@@ -409,11 +424,11 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<string, mixed> $items Items from cache data.
-	 * @param string $selectedItem Selected form item.
+	 * @param string $selectedFormId Selected form id.
 	 *
 	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
 	 */
-	private function getOutputFormSelection(string $formId, array $items, string $selectedItem): array
+	private function getOutputFormSelection(string $formId, array $items, string $selectedFormId): array
 	{
 		$manifestForm = Components::getManifest(\dirname(__DIR__, 2) . '/Blocks/components/form');
 
@@ -455,7 +470,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 					)
 				),
 				'selectIsRequired' => true,
-				'selectValue' => $selectedItem,
+				'selectValue' => $selectedFormId,
 				'selectSingleSubmit' => true,
 			],
 		];
@@ -471,35 +486,31 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	private function getOutputFilemanager(string $formId): array
 	{
 		return [
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('File manager', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-				'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
-				'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
-				'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-				'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-				'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
-				// translators: %s will be replaced with the link.
-				'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
-				'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-				'inputType' => 'text',
-				'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
-			],
+			'component' => 'tab',
+			'tabLabel' => \__('File manager', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
+					'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
+					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+					// translators: %s will be replaced with the link.
+					'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+					'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputType' => 'text',
+					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
+				],
+			]
 		];
 	}
 
@@ -511,7 +522,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getOutputFields(string $formId, array $formFields): array
+	private function getOutputIntegrationFields(string $formId, array $formFields): array
 	{
 		$beforeContent = '';
 
@@ -528,51 +539,62 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
-			[
-				'component' => 'divider',
+			'component' => 'tab',
+			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					// translators: %s replaces the button or string.
+					'introSubtitle' => \sprintf(\__('
+						Control which fields show up on the frontend, and set up how they look and work. <br />
+						To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
+						%s', 'eightshift-forms'), $sortingButton),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
+					'groupBeforeContent' => $beforeContent,
+					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
+					'groupStyle' => 'integration',
+					'groupContent' => $this->getIntegrationFieldsDetails(
+						self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
+						self::SETTINGS_TYPE_KEY,
+						$formFields,
+						$formId
+					),
+				],
 			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Form fields', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-				// translators: %s replaces the button or string.
-				'introSubtitle' => \sprintf(\__('
-					Control which fields show up on the frontend, and set up how they look and work. <br />
-					To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
-					%s', 'eightshift-forms'), $sortingButton),
-			],
-			[
-				'component' => 'group',
-				'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY),
-				'groupBeforeContent' => $beforeContent,
-				'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
-				'groupStyle' => 'integration',
-				'groupContent' => $this->getIntegrationFieldsDetails(
-					self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
-					self::SETTINGS_TYPE_KEY,
-					$formFields,
-					$formId
-				),
-			],
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Conditional logic', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-				'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'group',
-				'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
-				'groupBeforeContent' => $beforeContent,
-				'groupStyle' => 'full',
-				'groupContent' => $this->getConditionalTagsFieldsDetails(
-					self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY,
-					$formFields,
-					$formId
-				),
+		];
+	}
+
+	/**
+	 * Output array - conditional tags.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputConditionalTags(string $formId, array $formFields): array
+	{
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Conditional logic', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY),
+					'groupStyle' => 'full',
+					'groupContent' => $this->getConditionalTagsFieldsDetails(
+						self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY,
+						$formFields,
+						$formId
+					),
+				],
 			],
 		];
 	}

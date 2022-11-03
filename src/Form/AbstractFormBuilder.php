@@ -165,24 +165,35 @@ abstract class AbstractFormBuilder
 			$component === 'checkboxes' ||
 			$component === 'select' ||
 			$component === 'radios' ||
-			$component === 'group'
+			$component === 'group' ||
+			$component === 'tabs'
 		) {
 			$output = '';
 			switch ($component) {
 				case 'checkboxes':
 					$key = 'checkboxesContent';
+					$nested = false;
+					$nestedKey = '';
 					break;
 				case 'radios':
 					$key = 'radiosContent';
+					$nestedKey = '';
 					break;
 				case 'select':
 					$key = 'selectOptions';
+					$nestedKey = '';
 					break;
 				case 'group':
 					$key = 'groupContent';
+					$nestedKey = 'groupContent';
+					break;
+				case 'tabs':
+					$key = 'tabsContent';
+					$nestedKey = 'tabContent';
 					break;
 				default:
 					$key = '';
+					$nestedKey = '';
 					break;
 			}
 
@@ -193,13 +204,15 @@ abstract class AbstractFormBuilder
 					$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 
 					// Add new nesting iteration if component is group.
-					if ($key === 'groupContent' && isset($item["groupContent"]) && \is_array($item["groupContent"])) {
-						$groupOutput = '';
-						foreach ($item["groupContent"] as $group) {
-							$groupOutput .= $this->buildComponent($group);
-						}
+					if ($nestedKey) {
+						if (isset($item[$nestedKey]) && \is_array($item[$nestedKey])) {
+							$groupOutput = '';
+							foreach ($item[$nestedKey] as $group) {
+								$groupOutput .= $this->buildComponent($group);
+							}
 
-						$item["groupContent"] = $groupOutput;
+							$item[$nestedKey] = $groupOutput;
+						}
 					}
 
 					// Build child component.

@@ -195,6 +195,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
 			return [
 				[
@@ -208,9 +209,8 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 		}
 
 		$items = $this->mailerliteClient->getItems(false);
-		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
-		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
 
+		// Bailout if items are missing.
 		if (!$items) {
 			return [
 				[
@@ -222,100 +222,28 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$itemOptions = \array_map(
-			function ($option) use ($formId) {
-				return [
-					'component' => 'select-option',
-					'selectOptionLabel' => $option['title'] ?? '',
-					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILERLITE_LIST_KEY, $formId),
-				];
-			},
-			$items
-		);
-
-		\array_unshift(
-			$itemOptions,
-			[
-				'component' => 'select-option',
-				'selectOptionLabel' => '',
-				'selectOptionValue' => '',
-			]
-		);
-
-		$selectedItem = $this->getSettingsValue(self::SETTINGS_MAILERLITE_LIST_KEY, $formId);
-
-		$manifestForm = Components::getManifest(\dirname(__DIR__, 2) . '/Blocks/components/form');
-
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('MailerLite', 'eightshift-forms'),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
-				'selectFieldLabel' => \__('Mailing list', 'eightshift-forms'),
-				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
-				'selectOptions' => $itemOptions,
-				'selectIsRequired' => true,
-				'selectValue' => $selectedItem,
-				'selectSingleSubmit' => true,
-			],
-		];
+		// Find selected form id.
+		$selectedFormId = $this->getSettingsValue(self::SETTINGS_MAILERLITE_LIST_KEY, $formId);
 
 		// If the user has selected the list.
-		if ($selectedItem) {
-			$beforeContent = '';
+		if ($selectedFormId) {
+			$formFields = $this->mailerlite->getFormFields($formId);
 
-			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-			if (\has_filter($filterName)) {
-				$beforeContent = \apply_filters($filterName, '') ?? '';
-			}
-
-			$sortingButton = Components::render('sorting');
-
-			$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
-			if (\has_filter($formViewDetailsIsEditableFilterName)) {
-				$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
-			}
-
-			$output = \array_merge(
-				$output,
+			$output = [
 				[
-					[
-						'component' => 'divider',
+					'component' => 'tabs',
+					'tabsContent' => [
+						$this->getOutputIntegrationFields($formId, $formFields),
+						$this->getOutputConditionalTags($formId, $formFields),
 					],
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Form fields', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-						// translators: %s replaces the button or string.
-						'introSubtitle' => \sprintf(\__('
-							Control which fields show up on the frontend, and set up how they look and work. <br />
-							To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
-							%s', 'eightshift-forms'), $sortingButton),
-					],
-					[
-						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY),
-						'groupBeforeContent' => $beforeContent,
-						'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
-						'groupStyle' => 'integration',
-						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY,
-							self::SETTINGS_TYPE_KEY,
-							$this->mailerlite->getFormFields($formId),
-							$formId
-						),
-					]
-				]
-			);
+				],
+			];
 		}
 
-		return $output;
+		return \array_merge(
+			$this->getOutputFormSelection($formId, $items, $selectedFormId),
+			$output
+		);
 	}
 
 	/**
@@ -327,7 +255,7 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 	{
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY);
 
-		$output = [
+		$outputIntro = [
 			[
 				'component' => 'intro',
 				'introTitle' => \__('MailerLite', 'eightshift-forms'),
@@ -343,9 +271,6 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 						<li>Copy the API key into the field below or use the global constant.</li>
 					<ol>
 				', 'eightshift-forms'),
-			],
-			[
-				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
@@ -365,30 +290,181 @@ class SettingsMailerlite implements SettingsDataInterface, ServiceInterface
 			],
 		];
 
+		$output = [];
+
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyMailerlite();
 
-			$output = \array_merge(
-				$output,
+			$output = [
 				[
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
-						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-						'inputType' => 'password',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
-						'inputIsDisabled' => !empty($apiKey),
+					'component' => 'tabs',
+					'tabsContent' => [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('API', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+									'inputId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+							],
+						],
+						$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsMailerlite::SETTINGS_TYPE_KEY),
 					],
-				]
-			);
+				],
+			];
 		}
 
 		return [
+			...$outputIntro,
 			...$output,
-			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsMailerlite::SETTINGS_TYPE_KEY),
+		];
+	}
+
+	/**
+	 * Output array - form selection.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedFormId Selected form id.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelection(string $formId, array $items, string $selectedFormId): array
+	{
+		$manifestForm = Components::getComponent('form');
+
+		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
+
+		return [
+			[
+				'component' => 'intro',
+				'introTitle' => \__('MailerLite', 'eightshift-forms'),
+			],
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
+				'selectId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_LIST_KEY),
+				'selectFieldLabel' => \__('Mailing list', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
+				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
+				'selectOptions' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					\array_map(
+						function ($option) use ($formId) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILERLITE_LIST_KEY, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedFormId,
+				'selectSingleSubmit' => true,
+			],
+		];
+	}
+
+	/**
+	 * Output array - integration fields.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputIntegrationFields(string $formId, array $formFields): array
+	{
+		$beforeContent = '';
+
+		$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
+		if (\has_filter($filterName)) {
+			$beforeContent = \apply_filters($filterName, '') ?? '';
+		}
+
+		$sortingButton = Components::render('sorting');
+
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
+		}
+
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					// translators: %s replaces the button or string.
+					'introSubtitle' => \sprintf(\__('
+						Control which fields show up on the frontend, and set up how they look and work. <br />
+						To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
+						%s', 'eightshift-forms'), $sortingButton),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY),
+					'groupBeforeContent' => $beforeContent,
+					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
+					'groupStyle' => 'integration',
+					'groupContent' => $this->getIntegrationFieldsDetails(
+						self::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY,
+						self::SETTINGS_TYPE_KEY,
+						$formFields,
+						$formId
+					),
+				]
+			],
+		];
+	}
+
+	/**
+	 * Output array - conditional tags.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputConditionalTags(string $formId, array $formFields): array
+	{
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Conditional logic', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName(self::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY),
+					'groupStyle' => 'full',
+					'groupContent' => $this->getConditionalTagsFieldsDetails(
+						self::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY,
+						$formFields,
+						$formId
+					),
+				],
+			],
 		];
 	}
 }

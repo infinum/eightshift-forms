@@ -230,24 +230,23 @@ class SettingsTroubleshooting implements ServiceInterface, SettingsTroubleshooti
 		}
 
 		return [
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Troubleshooting', 'eightshift-forms'),
-				'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-			],
-			[
-				'component' => 'input',
-				'inputName' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
-				'inputId' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
-				'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-				'inputFieldHelp' => \__('Set email where this integration fallback emails will be sent. This field will be used as "cc", main "from" field will be used from the main Troubleshooting global setting page. Use comma to separate multiple emails.', 'eightshift-forms'),
-				'inputType' => 'text',
-				'inputIsRequired' => true,
-				'inputValue' => $this->getOptionValue(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+			'component' => 'tab',
+			'tabLabel' => \__('Troubleshooting', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputId' => $this->getSettingsName(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Set email where this integration fallback emails will be sent. This field will be used as "cc", main "from" field will be used from the main Troubleshooting global setting page. Use comma to separate multiple emails.', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $this->getOptionValue(self::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration),
+				],
 			],
 		];
 	}

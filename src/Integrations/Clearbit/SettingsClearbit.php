@@ -190,7 +190,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	{
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
 
-		$output = [
+		$outputIntro = [
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Clearbit', 'eightshift-forms'),
@@ -205,9 +205,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						<li>Then click on the <strong><a target="_blank" href="https://dashboard.clearbit.com/api">API</a></strong> in the sidebar.</li>
 						<li>Copy the secret API key into the field below or use the global constant</li>
 					</ol>', 'eightshift-forms'),
-			],
-			[
-				'component' => 'divider',
 			],
 			[
 				'component' => 'checkboxes',
@@ -227,61 +224,66 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			],
 		];
 
-		$outputApi = [];
+		$output = [];
 
 		if ($isUsed) {
 			$apiKey = Variables::getApiKeyClearbit();
 
-			$outputApi = [
+			$output = [
 				[
-					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-					'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-					'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-					'inputType' => 'password',
-					'inputIsRequired' => true,
-					'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-					'inputIsDisabled' => !empty($apiKey),
+					'component' => 'tabs',
+					'tabsContent' => [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('API', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+									'inputId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+							],
+						],
+						self::isSettingsGlobalValid() ? [
+							'component' => 'tab',
+							'tabLabel' => \__('Fields', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
+									'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
+									'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+									'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+									'checkboxesIsRequired' => true,
+									'checkboxesContent' => \array_map(
+										function ($item) {
+											return [
+												'component' => 'checkbox',
+												'checkboxLabel' => $item,
+												'checkboxIsChecked' => $this->isCheckboxOptionChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+												'checkboxValue' => $item,
+											];
+										},
+										$this->clearbitClient->getParams()
+									),
+								],
+							],
+						 ] : [],
+					],
 				],
 			];
 		}
 
-		$isValid = self::isSettingsGlobalValid();
-		$outputUsage = [];
-
-		if ($isValid) {
-			$outputUsage = [
-				[
-					'component' => 'divider',
-				],
-				[
-					'component' => 'checkboxes',
-					'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
-					'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
-					'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-					'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-					'checkboxesIsRequired' => true,
-					'checkboxesContent' => \array_map(
-						function ($item) {
-							return [
-								'component' => 'checkbox',
-								'checkboxLabel' => $item,
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-								'checkboxValue' => $item,
-							];
-						},
-						$this->clearbitClient->getParams()
-					),
-				],
-			];
-		}
-
-		return \array_merge(
-			$output,
-			$outputApi,
-			$outputUsage
-		);
+		return [
+			...$outputIntro,
+			...$output,
+		];
 	}
 
 	/**
@@ -307,14 +309,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		$isUsed = $this->isCheckboxSettingsChecked($useKey, $useKey, $formId);
 
 		$output = [
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Clearbit', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-			],
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
@@ -371,10 +365,11 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			];
 		}
 
-		return \array_merge(
-			$output,
-			$outputEmail
-		);
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Clearbit', 'eightshift-forms'),
+			'tabContent' => \array_merge($output, $outputEmail),
+		];
 	}
 
 	/**
@@ -400,59 +395,58 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		$clearbitMapValue = $this->getOptionValueGroup($mapKey);
 
 		return [
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Clearbit', 'eightshift-forms'),
-				'introSubtitle' => \__('Control which fields from Clearbit are connected to the HubSpot properties. <br/>First column is Clearbit field, and the secound column is HubSpot field.', 'eightshift-forms'),
-				'introTitleSize' => 'medium',
-			],
-			$clearbitAvailableKeys ? [
-				'component' => 'group',
-				'groupId' => $this->getSettingsName($mapKey),
-				'groupStyle' => 'default',
-				'groupContent' => [
+			'component' => 'tab',
+				'tabLabel' => \__('Clearbit', 'eightshift-forms'),
+				'tabContent' => [
 					[
-						'component' => 'group',
-						'groupSaveOneField' => true,
-						'groupContent' =>  \array_map(
-							static function ($item) use ($clearbitMapValue, $properties) {
-								$selectedValue = $clearbitMapValue[$item] ?? '';
-
-								return [
-									'component' => 'select',
-									'selectName' => $item,
-									'selectId' => $item,
-									'selectFieldLabel' => $item,
-									'selectOptions' => \array_merge(
-										[
-											[
-												'component' => 'select-option',
-												'selectOptionLabel' => '',
-												'selectOptionValue' => '',
-											],
-										],
-										\array_map(
-											static function ($option) use ($selectedValue) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $selectedValue === $option,
-												];
-											},
-											$properties
-										)
-									),
-								];
-							},
-							$clearbitAvailableKeys
-						),
+						'component' => 'intro',
+						'introSubtitle' => \__('Control which fields from Clearbit are connected to the HubSpot properties. <br/>First column is Clearbit field, and the secound column is HubSpot field.', 'eightshift-forms'),
 					],
+					$clearbitAvailableKeys ? [
+						'component' => 'group',
+						'groupId' => $this->getSettingsName($mapKey),
+						'groupStyle' => 'default',
+						'groupContent' => [
+							[
+								'component' => 'group',
+								'groupSaveOneField' => true,
+								'groupContent' =>  \array_map(
+									static function ($item) use ($clearbitMapValue, $properties) {
+										$selectedValue = $clearbitMapValue[$item] ?? '';
+		
+										return [
+											'component' => 'select',
+											'selectName' => $item,
+											'selectId' => $item,
+											'selectFieldLabel' => $item,
+											'selectOptions' => \array_merge(
+												[
+													[
+														'component' => 'select-option',
+														'selectOptionLabel' => '',
+														'selectOptionValue' => '',
+													],
+												],
+												\array_map(
+													static function ($option) use ($selectedValue) {
+														return [
+															'component' => 'select-option',
+															'selectOptionLabel' => $option,
+															'selectOptionValue' => $option,
+															'selectOptionIsSelected' => $selectedValue === $option,
+														];
+													},
+													$properties
+												)
+											),
+										];
+									},
+									$clearbitAvailableKeys
+								),
+							],
+						],
+					] : [],
 				],
-			] : [],
 		];
 	}
 }
