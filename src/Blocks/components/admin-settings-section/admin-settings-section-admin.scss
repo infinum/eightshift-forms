@@ -48,18 +48,14 @@
 	&__section {
 		&--clean {
 			margin-left: 1.25rem;
-			margin-top: var(--global-es-spacing-horizontal);
+			margin-top: 1rem;
+			margin-bottom: 1rem;
 		}
 	}
 
 	&__heading {
 		padding: 1rem var(--global-es-spacing-horizontal);
 		border-bottom: 1px solid var(--global-colors-es-ebb);
-		margin-bottom: var(--global-es-spacing-horizontal);
-
-		&--no-spacing {
-			margin-bottom: 0;
-		}
 	}
 
 	&__heading-wrap {
@@ -89,7 +85,7 @@
 		letter-spacing: 0.05em;
 		font-size: 0.7rem;
 		border-radius: 3px;
-		padding: 0.2rem 0.15rem;
+		padding: 0.25rem 0.15rem;
 
 		display: inline-flex;
 		align-items: center;

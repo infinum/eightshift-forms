@@ -279,10 +279,15 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		return [
 			[
 				'component' => 'intro',
+				"introIsFirst" => true,
 				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
+				'introSubtitle' => \__('
+					In these settings, you can change all options regarding Mailchimp integration.', 'eightshift-forms'),
+				// 'introSubtitle' => \__('Is a marketing automation platform designed and developed for businesses using email to reach out to their target markets.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
+				'introIsHighlighted' => true,
 				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
@@ -308,11 +313,14 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY),
 						'checkboxValue' => self::SETTINGS_MAILCHIMP_USE_KEY,
 						'checkboxSingleSubmit' => true,
+						'checkboxAsToggle' => true,
+						'checkboxAsToggleSize' => 'medium',
 					]
 				]
 			],
 			$isUsed ? [
 				'component' => 'tabs',
+				'tabsIsFirst' => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',

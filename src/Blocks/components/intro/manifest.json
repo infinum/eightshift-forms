@@ -12,6 +12,14 @@
 		},
 		"introSubtitle": {
 			"type": "string"
+		},
+		"introIsFirst": {
+			"type": "boolean",
+			"default": false
+		},
+		"introIsHighlighted": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

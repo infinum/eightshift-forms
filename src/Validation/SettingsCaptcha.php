@@ -156,14 +156,33 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	{
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
 
-		$output = [
+		$siteKey = Variables::getGoogleReCaptchaSiteKey();
+		$secretKey = Variables::getGoogleReCaptchaSecretKey();
+
+		return [
 			[
 				'component' => 'intro',
+				"introIsFirst" => true,
 				'introTitle' => \__('Google reCaptcha', 'eightshift-forms'),
-				'introSubtitle' => \__("To get the Google reCaptcha site key please visit this <a href='https://www.google.com/recaptcha/admin/create' target='_blank' rel='noopener noreferrer'>link</a>. <br /> <br /> <strong>Important:</strong> Make sure to select <strong>reCaptcha version 3</strong>!"),
+				'introSubtitle' => \__('In these settings, you can change all options regarding Google reCaptcha.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'divider',
+				'component' => 'intro',
+				'introTitle' => \__('What is Google reCaptcha', 'eightshift-forms'),
+				'introTitleSize' => 'small',
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a turing test to tell human and bots apart.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+				'introTitleSize' => 'small',
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'introSubtitle' => \sprintf(\__('<ol>
+						<li>Visit this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.</li>
+						<li>Configure all the options. Make sure to select <strong>reCaptcha version 3</strong>!</li>
+						<li>Copy the API key into the field below or use the global constant.</li>
+					</ol>', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
 			],
 			[
 				'component' => 'checkboxes',
@@ -178,54 +197,61 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY),
 						'checkboxValue' => self::SETTINGS_CAPTCHA_USE_KEY,
 						'checkboxSingleSubmit' => true,
+						'checkboxAsToggle' => true,
+						'checkboxAsToggleSize' => 'medium',
 					]
 				]
 			],
+			$isUsed ? [
+				'component' => 'tabs',
+				'tabsIsFirst' => false,
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
+								'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
+								'inputType' => 'password',
+								'inputIsRequired' => true,
+								'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
+								'inputIsDisabled' => !empty($siteKey),
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
+								'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
+								'inputType' => 'password',
+								'inputIsRequired' => true,
+								'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
+								'inputIsDisabled' => !empty($secretKey),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Advanced', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
+								'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
+								'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. In general, normal users will get a score of around 0.8-0.9. The value should be between 0.1 and 1.0 (default is 0.5).', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
+								'inputMin' => 0,
+								'inputMax' => 1,
+								'inputStep' => 0.1,
+								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
+							],
+						],
+					],
+				],
+			] : [],
 		];
-
-		if ($isUsed) {
-			$siteKey = Variables::getGoogleReCaptchaSiteKey();
-			$secretKey = Variables::getGoogleReCaptchaSecretKey();
-
-			$output = \array_merge(
-				$output,
-				[
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
-						'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
-						'inputType' => 'password',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
-						'inputIsDisabled' => !empty($siteKey),
-					],
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
-						'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
-						'inputType' => 'password',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
-						'inputIsDisabled' => !empty($secretKey),
-					],
-					[
-						'component' => 'input',
-						'inputId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
-						'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
-						'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. In general, normal users will get a score of around 0.8-0.9. The value should be between 0.1 and 1.0 (default is 0.5).', 'eightshift-forms'),
-						'inputType' => 'number',
-						'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
-						'inputMin' => 0,
-						'inputMax' => 1,
-						'inputStep' => 0.1,
-						'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
-					],
-				]
-			);
-		}
-
-		return $output;
 	}
 }

@@ -1,5 +1,14 @@
 .es-intro {
-	margin-bottom: 40px;
+	margin-bottom: 35px;
+
+	&--first {
+		margin-top: 35px;
+	}
+
+	&--highlighted {
+		background-color: var(--global-colors-es-matisse-05);
+		padding: 20px;
+	}
 
 	&__title {
 		font-size: 22px;
@@ -19,6 +28,7 @@
 		font-size: 14px;
 		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
+		max-width: 768px;
 	}
 
 	a {

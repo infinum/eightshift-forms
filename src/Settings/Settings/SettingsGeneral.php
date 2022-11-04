@@ -168,93 +168,125 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	{
 		return [
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Built-in scripts and styles', 'eightshift-forms'),
-				'checkboxesFieldHelp' => \__('
-					Don\'t forget to provide your own scripts and styles if you disable the built-in ones. You can get a template for the stylesheet using a WP CLI command.
-					<br /> <br />
-					<i>Disable default styles</i> will disable all the frontend and block editor styles.
-					<br /> <br />
-					<i>Disable default scripts</i> will remove all the frontend logic, including validation and form submission.
-					<br /> <br />
-					<i>Don\'t auto-initialize scripts</i> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.
-				', 'eightshift-forms'),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable default styles', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
-					],
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable default scripts', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
-					],
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Don\'t auto-initialize scripts', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-					]
-				]
+				'component' => 'intro',
+				"introIsFirst" => true,
+				'introTitle' => \__('General', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all options regarding forms, fields, actions, etc.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('Custom fields', 'eightshift-forms'),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-				'checkboxesFieldHelp' => \__('If checked, fields will use the default browser implementation.', 'eightshift-forms'),
-				'checkboxesContent' => [
+				'component' => 'tabs',
+				"tabsIsFirst" => false,
+				'tabsContent' => [
 					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable custom selection dropdown', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
+						'component' => 'tab',
+						'tabLabel' => \__('Scripts & Styles', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Built-in scripts and styles', 'eightshift-forms'),
+								'checkboxesFieldHelp' => \__('
+									Don\'t forget to provide your own scripts and styles if you disable the built-in ones. You can get a template for the stylesheet using a WP CLI command.
+									<br /> <br />
+									<i>Disable default styles</i> will disable all the frontend and block editor styles.
+									<br /> <br />
+									<i>Disable default scripts</i> will remove all the frontend logic, including validation and form submission.
+									<br /> <br />
+									<i>Don\'t auto-initialize scripts</i> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.
+								', 'eightshift-forms'),
+								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable default styles', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable default scripts', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Don\'t auto-initialize scripts', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+						],
 					],
 					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable custom textarea', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
+						'component' => 'tab',
+						'tabLabel' => \__('Fields', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Custom fields', 'eightshift-forms'),
+								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+								'checkboxesFieldHelp' => \__('If checked, fields will use the default browser implementation.', 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable custom selection dropdown', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable custom textarea', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable custom file picker', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+						],
 					],
 					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable custom file picker', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
+						'component' => 'tab',
+						'tabLabel' => \__('Actions', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('After submitting the form', 'eightshift-forms'),
+								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+								'checkboxesFieldHelp' => \__('If checked, forms will not use these features.', 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable scroll to first field with an error', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable scroll to top of the form to see the success message', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+						],
 					],
-				]
-			],
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => \__('After submitting the form', 'eightshift-forms'),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-				'checkboxesFieldHelp' => \__('If checked, forms will not use these features.', 'eightshift-forms'),
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable scroll to first field with an error', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-					],
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Disable scroll to top of the form to see the success message', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-						'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-					]
-				]
+				],
 			],
 		];
 	}

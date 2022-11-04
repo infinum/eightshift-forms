@@ -1,0 +1,19 @@
+{
+	"componentName": "card",
+	"title": "Card",
+	"componentClass": "es-card",
+	"attributes": {
+		"cardTitle": {
+			"type": "string"
+		},
+		"cardIcon": {
+			"type": "string"
+		},
+		"cardLinks": {
+			"type": "array"
+		},
+		"cardToggle": {
+			"type": "string"
+		}
+	}
+}

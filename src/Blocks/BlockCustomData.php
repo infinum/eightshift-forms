@@ -143,7 +143,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 				break;
 		}
 
-		return $this->buildComponent($output);
+		return $this->buildComponents($output);
 	}
 
 	/**

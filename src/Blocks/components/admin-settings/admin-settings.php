@@ -80,9 +80,11 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 					<?php } ?>
 				</div>
 
-				<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
-					<?php echo esc_html($adminSettingsSubTitle); ?>
-				</div>
+				<?php if ($adminSettingsSubTitle) { ?>
+					<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
+						<?php echo esc_html($adminSettingsSubTitle); ?>
+					</div>
+				<?php } ?>
 			</div>
 			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>

@@ -6,7 +6,11 @@
 	"componentJsTabClass": "js-es-tabs-item",
 	"attributes": {
 		"tabsContent": {
-			"type": "array"
+			"type": "string"
+		},
+		"tabsIsFirst": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }

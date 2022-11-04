@@ -155,50 +155,16 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 			$validationPatterns .= "<li><code>{$key} : {$value}</code></li>";
 		}
 
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Form validation', 'eightshift-forms'),
-			],
-			[
-				'component' => 'textarea',
-				'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
-				'textareaIsMonospace' => true,
-				'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
-				// translators: %s will be replaced with local validation patterns.
-				'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-					These patterns can be selected inside the Form editor.
-					<br /> <br />
-					Each pattern should be in its own line and in the following format:
-					<br />
-					<code>pattern-name : pattern </code>
-					<br /> <br />
-					If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>click here</a>.
-					<br /> <br /> <br />
-					Use these patterns as an example:
-					<ul>
-					%2\$s
-					</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-				'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
-			],
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Validation messages', 'eightshift-forms'),
-			],
-		];
+		$labels = \array_flip(Labels::ALL_LOCAL_LABELS);
 
-		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
-
+		$messagesOutput = [];
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
-			if (isset($local[$key])) {
+			if (isset($labels[$key])) {
 				continue;
 			}
 
-			$output[] = [
+			$messagesOutput[] = [
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
 				'inputId' => $this->getSettingsName($key),
@@ -208,6 +174,51 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		return $output;
+		return [
+			[
+				'component' => 'intro',
+				"introIsFirst" => true,
+				'introTitle' => \__('Validation', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all options regarding validations.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'tabs',
+				"tabsIsFirst" => false,
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Patterns', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'textarea',
+								'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaIsMonospace' => true,
+								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+									These patterns can be selected inside the Form editor.
+									<br /> <br />
+									Each pattern should be in its own line and in the following format:
+									<br />
+									<code>pattern-name : pattern </code>
+									<br /> <br />
+									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>click here</a>.
+									<br /> <br /> <br />
+									Use these patterns as an example:
+									<ul>
+									%2\$s
+									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
+								'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabContent' => $messagesOutput,
+					],
+				]
+			],
+		];
 	}
 }

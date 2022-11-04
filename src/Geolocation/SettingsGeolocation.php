@@ -110,9 +110,11 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
+				"introIsFirst" => true,
 				'introTitle' => \__('Geolocation', 'eightshift-forms'),
-				// translators: %s provides the link to external source.
-				'introSubtitle' => \sprintf(\__('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info. <br />This product includes GeoLite2 data created by MaxMind, available from <a href="%1$s">%1$s</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
+				'introSubtitle' => \sprintf(\__('
+					In these settings, you can change all options regarding geolocation, allowing you to render different forms based on the user\'s location conditionally by using local Geolocation API.<br/><br/>
+					This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
 			],
 			[
 				'component' => 'checkboxes',
@@ -127,6 +129,8 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
 						'checkboxValue' => self::SETTINGS_GEOLOCATION_USE_KEY,
 						'checkboxSingleSubmit' => true,
+						'checkboxAsToggle' => true,
+						'checkboxAsToggleSize' => 'medium',
 					]
 				]
 			],

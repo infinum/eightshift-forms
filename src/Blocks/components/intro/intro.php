@@ -16,9 +16,13 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
 $introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
 $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
+$introIsFirst = Components::checkAttr('introIsFirst', $attributes, $manifest);
+$introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
 
 $introClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
+	Components::selector($introIsFirst && $componentClass, $componentClass, '', 'first'),
+	Components::selector($introIsHighlighted && $componentClass, $componentClass, '', 'highlighted'),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
 ]);

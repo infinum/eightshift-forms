@@ -166,69 +166,59 @@ abstract class AbstractFormBuilder
 			$component === 'select' ||
 			$component === 'radios' ||
 			$component === 'group' ||
+			$component === 'layout' ||
 			$component === 'tabs'
 		) {
 			$output = '';
-			switch ($component) {
-				case 'checkboxes':
-					$key = 'checkboxesContent';
-					$nested = false;
-					$nestedKey = '';
-					break;
-				case 'radios':
-					$key = 'radiosContent';
-					$nestedKey = '';
-					break;
-				case 'select':
-					$key = 'selectOptions';
-					$nestedKey = '';
-					break;
-				case 'group':
-					$key = 'groupContent';
-					$nestedKey = 'groupContent';
-					break;
-				case 'tabs':
-					$key = 'tabsContent';
-					$nestedKey = 'tabContent';
-					break;
-				default:
-					$key = '';
-					$nestedKey = '';
-					break;
-			}
 
-			if (isset($attributes[$key])) {
-				// Loop children and do the same ad on top level.
-				foreach ($attributes[$key] as $innerKey => $item) {
-					// Determine the component's name.
-					$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+			$nestedKeys = array_flip([
+				'checkboxesContent',
+				'radiosContent',
+				'selectOptions',
+				'groupContent',
+				'tabsContent',
+				'tabContent',
+				'layout',
+				'layoutItems',
+				'card',
+				'cardToggle',
+			]);
 
-					// Add new nesting iteration if component is group.
-					if ($nestedKey) {
-						if (isset($item[$nestedKey]) && \is_array($item[$nestedKey])) {
-							$groupOutput = '';
-							foreach ($item[$nestedKey] as $group) {
-								$groupOutput .= $this->buildComponent($group);
+			foreach ($nestedKeys as $nestedKey => $value) {
+				if (isset($attributes[$nestedKey])) {
+					// Loop children and do the same ad on top level.
+					foreach ($attributes[$nestedKey] as $item) {
+						// Determine the component's name.
+						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+	
+						foreach ($item as $itemKey => $itemValue) {
+							if (isset($nestedKeys[$itemKey]) && \is_array($itemValue)) {
+								$groupOutput = '';
+								foreach ($itemValue as $group) {
+									$groupOutput .= $this->buildComponent($group);
+								}
+	
+								$itemValue = $groupOutput;
 							}
-
-							$item[$nestedKey] = $groupOutput;
+	
+							$item[$itemKey] = $itemValue;
+						}
+	
+						// Build child component.
+						if ($item) {
+							$output .= Components::render(
+								$item['component'],
+								Components::props($innerComponent, $item),
+								'',
+								true
+							);
 						}
 					}
-
-					// Build child component.
-					if ($item) {
-						$output .= Components::render(
-							$item['component'],
-							Components::props($innerComponent, $item),
-							'',
-							true
-						);
-					}
 				}
+				// Output child to the parent array.
+				$attributes[$nestedKey] = $output;
 			}
 
-			// Output child to the parent array.
-			$attributes[$key] = $output;
 		}
 
 		$additionalAttributes = [];

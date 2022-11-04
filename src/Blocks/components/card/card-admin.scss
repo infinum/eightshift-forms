@@ -1,0 +1,44 @@
+.es-card {
+	border: 1px solid var(--global-colors-es-ebb);
+	padding: 20px;
+	border-radius: 6px;
+
+	&__intro {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__icon {
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	&__title {
+		font-size: 22px;
+		font-weight: bold;
+		display: flex;
+		align-items: center;
+		margin-top: 20px;
+	}
+
+	&__links {
+
+	}
+
+	&__link {
+
+	}
+
+	&__toggle {
+		.es-field {
+			margin: 0;
+
+			&__inner {
+				display: block;
+			}
+		}
+	}
+}
