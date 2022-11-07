@@ -6,4 +6,9 @@
 	*::before {
 		box-sizing: border-box;
 	}
+
+	&__fields {
+		display: grid;
+		row-gap: var(--global-es-spacing-horizontal);
+	}
 }

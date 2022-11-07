@@ -304,20 +304,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your HubSpot account</li>
-						<li>Click on the settings cog icon in the top right, next to your account</li>
-						<li>In the menu on the left, under <strong>Integrations</strong> click <strong>API Key</strong></li>
-						<li>On the page that loads in the <strong>Active API key</strong> panel, click on <strong>Show</strong>, verify the captcha if needed, then click <strong>Copy</strong></li>
-						<li>Copy the API key into the field below or use the global constant.</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -364,6 +350,26 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 						]
 					),
 					$this->settingsFallback->getOutputGlobalFallback(SettingsHubspot::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introIsHighlighted' => true,
+								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'introTitleSize' => 'small',
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'introSubtitle' => \__('<ol>
+										<li>Log in to your HubSpot account</li>
+										<li>Click on the settings cog icon in the top right, next to your account</li>
+										<li>In the menu on the left, under <strong>Integrations</strong> click <strong>API Key</strong></li>
+										<li>On the page that loads in the <strong>Active API key</strong> panel, click on <strong>Show</strong>, verify the captcha if needed, then click <strong>Copy</strong></li>
+										<li>Copy the API key into the field below or use the global constant.</li>
+									</ol>', 'eightshift-forms'),
+							],
+						],
+					],
 				],
 			],
 		];

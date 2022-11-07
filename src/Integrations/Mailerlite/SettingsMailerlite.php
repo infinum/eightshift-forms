@@ -243,19 +243,6 @@ class SettingsMailerlite implements SettingInterface, ServiceInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				'introSubtitle' => \__('
-					<ol>
-						<li>Log in to your MailerLite Account.</li>
-						<li>Go to <a target="_blank" href="https://app.mailerlite.com/integrations/api/">Developer API</a>.</li>
-						<li>Copy the API key into the field below or use the global constant.</li>
-					<ol>
-				', 'eightshift-forms'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -276,6 +263,25 @@ class SettingsMailerlite implements SettingInterface, ServiceInterface
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsMailerlite::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introIsHighlighted' => true,
+								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'introTitleSize' => 'small',
+								'introSubtitle' => \__('
+									<ol>
+										<li>Log in to your MailerLite Account.</li>
+										<li>Go to <a target="_blank" href="https://app.mailerlite.com/integrations/api/">Developer API</a>.</li>
+										<li>Copy the API key into the field below or use the global constant.</li>
+									<ol>
+								', 'eightshift-forms'),
+							],
+						],
+					],
 				],
 			],
 		];

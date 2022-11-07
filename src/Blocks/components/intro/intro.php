@@ -16,13 +16,11 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
 $introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
 $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
-$introIsFirst = Components::checkAttr('introIsFirst', $attributes, $manifest);
 $introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
 $introIsHeading = Components::checkAttr('introIsHeading', $attributes, $manifest);
 
 $introClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($introIsFirst && $componentClass, $componentClass, '', 'first'),
 	Components::selector($introIsHighlighted && $componentClass, $componentClass, '', 'highlighted'),
 	Components::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
 	Components::selector($additionalClass, $additionalClass),
@@ -37,9 +35,11 @@ $titleClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($introClass); ?>">
-	<div class="<?php echo esc_attr($titleClass); ?>">
-		<?php echo esc_html($introTitle); ?>
-	</div>
+	<?php if ($introTitle) { ?>
+		<div class="<?php echo esc_attr($titleClass); ?>">
+			<?php echo esc_html($introTitle); ?>
+		</div>
+	<?php } ?>
 
 	<?php if ($introSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">

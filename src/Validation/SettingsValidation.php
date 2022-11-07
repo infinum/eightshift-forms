@@ -117,7 +117,6 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
-				"tabsIsFirst" => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',
@@ -164,7 +163,6 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
-				"tabsIsFirst" => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',

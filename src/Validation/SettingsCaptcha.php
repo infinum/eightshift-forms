@@ -160,7 +160,6 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 			],
 			[
 				'component' => 'tabs',
-				'tabsIsFirst' => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',

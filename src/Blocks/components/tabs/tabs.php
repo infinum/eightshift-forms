@@ -16,11 +16,9 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $tabsContent = Components::checkAttr('tabsContent', $attributes, $manifest);
-$tabsIsFirst = Components::checkAttr('tabsIsFirst', $attributes, $manifest);
 
 $tabsClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($tabsIsFirst && $componentClass, $componentClass, '', 'first'),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
@@ -33,5 +31,10 @@ if (!$tabsContent) {
 <div class="<?php echo esc_attr($tabsClass); ?>">
 	<?php
 		echo $tabsContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+
+		echo Components::render(
+			'loader',
+			Components::props('loader', $attributes)
+		);
 	?>
 </div>

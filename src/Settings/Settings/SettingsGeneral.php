@@ -162,7 +162,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
-				"tabsIsFirst" => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',

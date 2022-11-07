@@ -261,40 +261,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'layout',
-				'layoutType' => 'layout-grid-2',
-				'layoutItems' => [
-					[
-						'component' => 'intro',
-						'introIsHighlighted' => true,
-						'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-						'introTitleSize' => 'small',
-						// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-						'introSubtitle' => \__('<ol>
-								<li>Log in to your Greenhouse Account.</li>
-								<li>Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.</li>
-								<li>Click on <strong>Create New API Key</strong>.</li>
-								<li>Select <strong>Job Board</strong> as your API Type.</li>
-								<li>Copy the API key into the field below or use the global constant.</li>
-							</ol>', 'eightshift-forms'),
-					],
-					[
-						'component' => 'intro',
-						'introIsHighlighted' => true,
-						'introTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-						'introTitleSize' => 'small',
-						// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-						'introSubtitle' => \__('<ol>
-								<li>Log in to your Greenhouse Account.</li>
-								<li>Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>.</li>
-								<li>Copy the <strong>Board Name</strong> you want to use.</li>
-								<li>Make the name all lowercase.</li>
-								<li>Copy the Board Name into the field below or use the global constant.</li>
-							</ol>', 'eightshift-forms'),
-					],
-				],
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -350,6 +316,46 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsGreenhouse::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-grid-2',
+								'layoutItems' => [
+									[
+										'component' => 'intro',
+										'introIsHighlighted' => true,
+										'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+										'introTitleSize' => 'small',
+										// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+										'introSubtitle' => \__('<ol>
+												<li>Log in to your Greenhouse Account.</li>
+												<li>Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.</li>
+												<li>Click on <strong>Create New API Key</strong>.</li>
+												<li>Select <strong>Job Board</strong> as your API Type.</li>
+												<li>Copy the API key into the field below or use the global constant.</li>
+											</ol>', 'eightshift-forms'),
+									],
+									[
+										'component' => 'intro',
+										'introIsHighlighted' => true,
+										'introTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
+										'introTitleSize' => 'small',
+										// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+										'introSubtitle' => \__('<ol>
+												<li>Log in to your Greenhouse Account.</li>
+												<li>Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>.</li>
+												<li>Copy the <strong>Board Name</strong> you want to use.</li>
+												<li>Make the name all lowercase.</li>
+												<li>Copy the Board Name into the field below or use the global constant.</li>
+											</ol>', 'eightshift-forms'),
+									],
+								],
+							],
+						],
+					],
 				],
 			],
 		];

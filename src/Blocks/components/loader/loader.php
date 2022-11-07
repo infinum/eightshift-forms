@@ -14,10 +14,13 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
+$loaderIsActive = Components::checkAttr('loaderIsActive', $attributes, $manifest);
+
 $loaderClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($componentJsClass, $componentJsClass),
+	Components::selector($loaderIsActive && $componentClass, 'is-active'),
 ]);
 
 ?>

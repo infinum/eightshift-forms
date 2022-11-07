@@ -1,20 +1,15 @@
 .es-intro {
-	margin-bottom: 35px;
-
-	&--first {
-		margin-top: 35px;
-	}
+	$this: &;
 
 	&--highlighted {
 		background-color: var(--global-colors-es-matisse-05);
 		padding: 20px;
+		border-radius: 3px;
 	}
 
 	&--heading {
 		border-bottom: 1px solid var(--global-colors-es-ebb);
 		padding-bottom: 15px;
-		margin-bottom: 25px;
-		margin-top: 35px;
 	}
 
 	&__title {
@@ -36,6 +31,10 @@
 		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
 		max-width: 768px;
+
+		&:first-child {
+			margin-top: 0;
+		}
 	}
 
 	a {

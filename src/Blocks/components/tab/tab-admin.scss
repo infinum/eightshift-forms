@@ -100,12 +100,14 @@
 
 	&__content {
 		display: none;
-		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal) 0;
+		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal);
 		border-top: 1px solid var(--global-colors-es-ebb);
 		border-bottom: 1px solid var(--global-colors-es-ebb);
 		margin-bottom: -1px;
+		row-gap: var(--global-es-spacing-horizontal);
 
 		@include media(desktop up) {
+			padding-bottom: 0;
 			order: 99;
 			flex-grow: 1;
 			width: 100%;
@@ -116,7 +118,7 @@
 
 	&__label.is-active {
 		& + #{$this}__content {
-			display: block;
+			display: grid;
 		}
 
 		&::after {

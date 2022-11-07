@@ -3,6 +3,7 @@ export class Tabs {
 		this.tabSelector = options.tabSelector;
 
 		this.CLASS_ACTIVE = 'is-active';
+		this.CLASS_LOADED = 'is-loaded';
 	}
 
 	init = () => {
@@ -17,6 +18,8 @@ export class Tabs {
 		});
 
 		this.setActiveByHash(elements);
+
+		this.addLoadedParent(elements[0].parentElement);
 	};
 
 	setActiveByHash = (elements) => {
@@ -53,6 +56,12 @@ export class Tabs {
 	addActive = (element) => {
 		if (element) {
 			element.classList.add(this.CLASS_ACTIVE);
+		}
+	}
+
+	addLoadedParent = (element) => {
+		if (element) {
+			element.classList.add(this.CLASS_LOADED);
 		}
 	}
 

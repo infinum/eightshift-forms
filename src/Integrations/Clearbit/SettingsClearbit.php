@@ -176,18 +176,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your Clearbit Account.</li>
-						<li>Then click on the <strong><a target="_blank" href="https://dashboard.clearbit.com/api">API</a></strong> in the sidebar.</li>
-						<li>Copy the secret API key into the field below or use the global constant</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -232,6 +220,24 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 							],
 						],
 					 ] : [],
+					 [
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introIsHighlighted' => true,
+								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'introTitleSize' => 'small',
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'introSubtitle' => \__('<ol>
+										<li>Log in to your Clearbit Account.</li>
+										<li>Then click on the <strong><a target="_blank" href="https://dashboard.clearbit.com/api">API</a></strong> in the sidebar.</li>
+										<li>Copy the secret API key into the field below or use the global constant</li>
+									</ol>', 'eightshift-forms'),
+							],
+						],
+					],
 				],
 			],
 		];
@@ -273,6 +279,8 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'checkboxIsChecked' => $isUsed,
 						'checkboxValue' => $useKey,
 						'checkboxSingleSubmit' => true,
+						'checkboxAsToggle' => true,
+						'checkboxAsToggleSize' => 'medium',
 					]
 				]
 			],

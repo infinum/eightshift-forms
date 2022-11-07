@@ -17,6 +17,8 @@
 		"esMaxCols": 12,
 		"esSpacingVertical": "25px",
 		"esSpacingHorizontal": "30px",
+		"esSpacingHorizontalSmall": "15px",
+		"esMaxWidth": "768px",
 		"esInputHeight": "42px",
 		"breakpoints": {
 			"mobile": 480,
@@ -114,6 +116,11 @@
 				"name": "Chalice 5%",
 				"slug": "es-chalice-05",
 				"color": "#AFAFAF0D"
+			},
+			{
+				"name": "Dusty",
+				"slug": "es-dusty",
+				"color": "#999999"
 			}
 		]
 	}

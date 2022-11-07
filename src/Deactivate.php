@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 use WP_Role;
@@ -37,8 +37,14 @@ class Deactivate implements HasDeactivationInterface
 		}
 
 		// Delet transients.
-		foreach (SettingsCache::ALL_CACHE as $items) {
-			foreach ($items as $item) {
+		foreach (Filters::ALL as $items) {
+			$cache = $items['cache'] ?? [];
+
+			if (!$cache) {
+				continue;
+			}
+
+			foreach ($cache as $item) {
 				\delete_transient($item);
 			}
 		}

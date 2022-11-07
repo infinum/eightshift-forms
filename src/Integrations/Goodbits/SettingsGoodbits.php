@@ -242,18 +242,6 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your Goodbits Account.</li>
-						<li>Go to <strong>Settings</strong>, then click <strong><a target="_blank" href="https://app.Goodbits.com/integrations/api/">API</a></strong>.</li>
-						<li>Copy the API key into the field below or use the global constant</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -274,6 +262,24 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsGoodbits::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introIsHighlighted' => true,
+								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'introTitleSize' => 'small',
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'introSubtitle' => \__('<ol>
+										<li>Log in to your Goodbits Account.</li>
+										<li>Go to <strong>Settings</strong>, then click <strong><a target="_blank" href="https://app.Goodbits.com/integrations/api/">API</a></strong>.</li>
+										<li>Copy the API key into the field below or use the global constant</li>
+									</ol>', 'eightshift-forms'),
+							],
+						],
+					],
 				],
 			],
 		];

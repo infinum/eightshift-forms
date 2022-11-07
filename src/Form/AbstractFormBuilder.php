@@ -191,21 +191,21 @@ abstract class AbstractFormBuilder
 						// Determine the component's name.
 						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
 	
-						foreach ($item as $itemKey => $itemValue) {
-							if (isset($nestedKeys[$itemKey]) && \is_array($itemValue)) {
-								$groupOutput = '';
-								foreach ($itemValue as $group) {
-									$groupOutput .= $this->buildComponent($group);
-								}
-	
-								$itemValue = $groupOutput;
-							}
-	
-							$item[$itemKey] = $itemValue;
-						}
-	
 						// Build child component.
 						if ($item) {
+							foreach ($item as $itemKey => $itemValue) {
+								if (isset($nestedKeys[$itemKey]) && \is_array($itemValue)) {
+									$groupOutput = '';
+									foreach ($itemValue as $group) {
+										$groupOutput .= $this->buildComponent($group);
+									}
+		
+									$itemValue = $groupOutput;
+								}
+		
+								$item[$itemKey] = $itemValue;
+							}
+
 							$output .= Components::render(
 								$item['component'],
 								Components::props($innerComponent, $item),

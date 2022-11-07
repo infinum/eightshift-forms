@@ -19,6 +19,7 @@ domReady(() => {
 	if (elements.length) {
 		import('./tabs').then(({ Tabs }) => {
 			const tabs = new Tabs({
+				tabsSelector: selector,
 				tabSelector: `.${componentJsTabClass}`,
 			});
 

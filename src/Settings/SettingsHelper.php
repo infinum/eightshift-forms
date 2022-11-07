@@ -787,7 +787,6 @@ trait SettingsHelper
 	{
 		return [
 			'component' => 'intro',
-			'introIsFirst' => true,
 			'introTitle' => Filters::getSettingsLabels($type),
 			'introSubtitle' => Filters::getSettingsLabels($type, 'desc'),
 		];
@@ -870,7 +869,7 @@ trait SettingsHelper
 				[
 					'component' => 'group',
 					'groupId' => $this->getSettingsName($key),
-					'groupStyle' => 'full',
+					'groupStyle' => 'conditional-tags',
 					'groupContent' => $this->getConditionalTagsFieldsDetails(
 						$key,
 						$formFields,
@@ -967,9 +966,9 @@ trait SettingsHelper
 				'component' => 'select',
 				'selectName' => $this->getSettingsName($key),
 				'selectId' => $this->getSettingsName($key),
-				'selectFieldLabel' => \__('Subscription list', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Form', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
+				'selectFieldHelp' => \sprintf(\__('If a form isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
 				'selectOptions' => \array_merge(
 					[
 						[
@@ -1013,7 +1012,7 @@ trait SettingsHelper
 				continue;
 			}
 
-			$isUsedKey = $value['dashboard']['key'] ?? '';
+			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
 			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey)) {

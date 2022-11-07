@@ -8,9 +8,12 @@
 		"tabsContent": {
 			"type": "string"
 		},
-		"tabsIsFirst": {
+		"tabsLoaderIsActive": {
 			"type": "boolean",
-			"default": false
+			"default": true
 		}
+	},
+	"components": {
+		"loader": "loader"
 	}
 }

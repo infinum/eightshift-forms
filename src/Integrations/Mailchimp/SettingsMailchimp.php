@@ -266,21 +266,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your Mailchimp Account.</li>
-						<li>Navigate to your user profile image (bottom left corner).</li>
-						<li>Click on <strong>Account</strong>.</li>
-						<li>Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.</li>
-						<li>Click on the <strong>Create a Key</strong> button.<br/></li>
-						<li>Copy the API key into the field below or use the global constant.</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -301,6 +286,27 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsMailchimp::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introIsHighlighted' => true,
+								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'introTitleSize' => 'small',
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'introSubtitle' => \__('<ol>
+										<li>Log in to your Mailchimp Account.</li>
+										<li>Navigate to your user profile image (bottom left corner).</li>
+										<li>Click on <strong>Account</strong>.</li>
+										<li>Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.</li>
+										<li>Click on the <strong>Create a Key</strong> button.<br/></li>
+										<li>Copy the API key into the field below or use the global constant.</li>
+									</ol>', 'eightshift-forms'),
+							],
+						],
+					],
 				],
 			],
 		];
@@ -323,33 +329,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 		}
 
 		$isTagsShowHidden = $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
-
-		$tagsLabelsOverrides = [];
-
-		if (!$isTagsShowHidden) {
-			$tagsLabelsOverrides = [
-				'component' => 'group',
-				'groupHelp' => \__('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
-				'groupSaveOneField' => true,
-				'groupContent' => \array_map(
-					function ($tag, $index) use ($formId) {
-						$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
-						$id = $tag['id'] ?? '';
-
-						return [
-							'component' => 'input',
-							'inputFieldLabel' => '',
-							'inputName' => $id,
-							'inputId' => $id,
-							'inputPlaceholder' => $tag['name'],
-							'inputValue' => $value[$id] ?? '',
-						];
-					},
-					$tags,
-					\array_keys($tags)
-				),
-			];
-		}
 
 		return [
 			'component' => 'tab',
@@ -397,6 +376,7 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 							'component' => 'group',
 							'groupName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
 							'groupHelp' => $isTagsShowHidden ? \__('Select tags that will be added to you form as a hidden field. If nothing is selected nothing will be sent.', 'eightshift-forms') : \__('Select tags that will be displayed in the form field. If nothing is selected everything will be displayed.', 'eightshift-forms'),
+							'groupStyle' => !$isTagsShowHidden ? 'tags-inner-checkbox' : '',
 							'groupContent' => [
 								[
 									'component' => 'checkboxes',
@@ -417,7 +397,28 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 								],
 							],
 						],
-						$tagsLabelsOverrides,
+						!$isTagsShowHidden ? [
+							'component' => 'group',
+							'groupHelp' => \__('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
+							'groupStyle' => 'tags-inner-input',
+							'groupSaveOneField' => true,
+							'groupContent' => \array_map(
+								function ($tag) use ($formId) {
+									$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
+									$id = $tag['id'] ?? '';
+			
+									return [
+										'component' => 'input',
+										'inputFieldLabel' => '',
+										'inputName' => $id,
+										'inputId' => $id,
+										'inputPlaceholder' => $tag['name'],
+										'inputValue' => $value[$id] ?? '',
+									];
+								},
+								$tags,
+							),
+						] : [],
 					],
 				],
 			],

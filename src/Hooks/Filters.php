@@ -26,7 +26,12 @@ use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaign;
+use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
+use EightshiftForms\Integrations\Hubspot\HubspotClient;
+use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
+use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
@@ -99,6 +104,11 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.927 11.43c-.615-.488-1.661-1.85-.923-3.408.923-1.947 3.23-5.354 5.076-6.328 2.662-1.404 2.768-.973 4.152 0" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4.772 9.969c0-1.947 1.043-5.94 8.306-9.005 2.307-.973 4.614 1.541 1.845 4.137" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14.924 5.101c-2.153-.649-6.736-1.752-9.69 2.92m9.69-2.92c.308.65.923 2.19.923 4.138.923.243 2.492 1.022 1.384 2.19.77.487 1.846 2.142 0 4.868-1.846 2.725-5.075 3.082-6.46 2.92-1.23-.162-3.968-1.265-5.075-4.38" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.616 7.535c-.154-.487-1.061-1.655-2.538-.487-1.697 1.343-3.23-1.46-3.691 1.947 0 .325.185 1.266.923 2.434-.77.974-1.486 2.761-.462 4.38.923 1.461 3.23 2.921 7.383.488" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M17.231 11.43c-.461.486-1.846 1.46-3.691 1.46-1.846 0-2.307.648-2.307.973.153 1.136 1.245 3.115 5.306 0m-5.063-4.031c.175-.2.65-.5 1.149-.1m1.376-1.223.23.73" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="14.117" cy="11.064" rx=".577" ry=".608" fill="#29A3A3"/><ellipse cx="14.809" cy="10.821" rx=".577" ry=".608" fill="#29A3A3"/><path d="M2.927 11.43c.566-1.088 1.385-1.461 1.846-1.461.462 0 1.846.487 1.846 2.92 0 2.613-3.158 1.835-3.62.861-.499-1-.499-1.5-.072-2.32z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5.695 14.35c-.307-.812-.825-2.49-1.195-2.1" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
+			'cache' => [
+				MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
+				MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
+				MailchimpClient::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME,
+			],
 		],
 		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
@@ -108,6 +118,10 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="#29A3A3"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
+			'cache' => [
+				GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
+				GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
+			],
 		],
 		SettingsHubspot::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
@@ -117,6 +131,10 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="#29A3A3" r="1.75"/><circle cx="14.25" cy="2.75" fill="#29A3A3" r="1.75"/><circle cx="7.75" cy="17.75" fill="#29A3A3" r="1.75"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
+			'cache' => [
+				HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
+				HubspotClient::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME,
+			],
 		],
 		SettingsMailerlite::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
@@ -126,6 +144,10 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25 11.25v-5m2.5 5v-3" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="m11.25 11.2-.304.06a1 1 0 0 1-1.196-.98V6.25l-1 1h2" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="6.75" cy="6.5" r=".75" fill="#29A3A3"/><path d="M13 9h3.25v-.725c0-.897-.727-1.625-1.625-1.625v0c-.898 0-1.625.728-1.625 1.625V9zm0 0v.4c0 2 1.5 2.1 3.25 1.668" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M3.676 14.703 1 17.5V4a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 19 4v9.203a1.5 1.5 0 0 1-1.5 1.5H3.676z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
+			'cache' => [
+				MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
+				MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
+			],
 		],
 		SettingsGoodbits::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
@@ -158,6 +180,10 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m4 1.5 10.272 7.276a1.5 1.5 0 0 1 0 2.448L4 18.5m0-12L9.5 10" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
+			'cache' => [
+				ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
+				ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
+			],
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,

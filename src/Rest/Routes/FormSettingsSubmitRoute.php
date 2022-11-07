@@ -196,11 +196,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		}
 
 		foreach ($params as $key => $items) {
-			if (!isset(SettingsCache::ALL_CACHE[$key])) {
+			if (!isset(Filters::ALL[$key]['cache'])) {
 				continue;
 			}
 
-			foreach (SettingsCache::ALL_CACHE[$key] as $item) {
+			foreach (Filters::ALL[$key]['cache'] as $item) {
 				\delete_transient($item);
 			}
 		}
