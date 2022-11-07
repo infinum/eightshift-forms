@@ -10,31 +10,24 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsHubspot class.
  */
-class SettingsHubspot implements SettingsDataInterface, ServiceInterface
+class SettingsHubspot implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_hubspot';
 
 	/**
 	 * Filter settings key.
@@ -176,7 +169,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
@@ -219,25 +211,6 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('HubSpot', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
-		];
 	}
 
 	/**
@@ -302,12 +275,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('HubSpot', 'eightshift-forms'),
-				'introSubtitle' => \__('Sends simple e-mails.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			...$this->getOutputFormSelection(
 				$formId,
 				$items,
@@ -334,12 +302,7 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 		$apiKey = Variables::getApiKeyHubspot();
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('HubSpot', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding HubSpot integration.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,

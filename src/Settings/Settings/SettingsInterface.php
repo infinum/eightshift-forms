@@ -11,27 +11,24 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 /**
- * Interface for SettingsAllInterface
+ * Interface for SettingsInterface
  */
-interface SettingsAllInterface
+interface SettingsInterface
 {
 	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
-	 * @param string $formId Form ID.
-	 * @param string $type Form Type to show.
-	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSettingsSidebar(string $formId, string $type): array;
+	public function getSettingsSidebar(string $formId = ''): array;
 
 	/**
 	 * Get all settings array for building settings page.
 	 *
-	 * @param string $formId Form ID.
 	 * @param string $type Form Type to show.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	public function getSettingsForm(string $formId, string $type): string;
+	public function getSettingsForm(string $type, string $formId = ''): string;
 }

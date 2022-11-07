@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 
 /**
  * Interface for SettingsClearbitDataInterface.
  */
-interface SettingsClearbitDataInterface extends SettingsDataInterface
+interface SettingsClearbitDataInterface extends SettingInterface
 {
 	/**
 	 * Output array settings for form.

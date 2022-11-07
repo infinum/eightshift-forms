@@ -10,31 +10,23 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailchimp class.
  */
-class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInterface, ServiceInterface
+class SettingsMailchimp implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_mailchimp';
 
 	/**
 	 * Filter settings key.
@@ -141,7 +133,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
@@ -184,25 +175,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('Mailchimp', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
-		];
 	}
 
 	/**
@@ -265,12 +237,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
-				'introSubtitle' => \__('Sends simple e-mails.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			...$this->getOutputFormSelection(
 				$formId,
 				$items,
@@ -297,12 +264,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 		$apiKey = Variables::getApiKeyMailchimp();
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding Mailchimp integration.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,

@@ -10,26 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGeolocation class.
  */
-class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
+class SettingsGeolocation implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_geolocation';
 
 	/**
 	 * Filter settings key.
@@ -58,7 +51,6 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
@@ -71,25 +63,6 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		return $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY);
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
-			return [];
-		}
-	
-		return [
-			'label' => \__('Geolocation', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
 	}
 
 	/**
@@ -117,10 +90,9 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Geolocation', 'eightshift-forms'),
 				'introSubtitle' => \sprintf(\__('
 					In these settings, you can change all options regarding geolocation, allowing you to render different forms based on the user\'s location conditionally by using local Geolocation API.<br/><br/>
 					This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),

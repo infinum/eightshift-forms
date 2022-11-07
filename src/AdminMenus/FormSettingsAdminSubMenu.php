@@ -12,8 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsAllInterface;
+use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
@@ -25,18 +24,18 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for all settings.
 	 *
-	 * @var SettingsAllInterface
+	 * @var SettingsInterface
 	 */
-	protected $settingsAll;
+	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsAllInterface $settingsAll Inject form all settings data.
+	 * @param SettingsInterface $settings Inject form all settings data.
 	 */
-	public function __construct(SettingsAllInterface $settingsAll)
+	public function __construct(SettingsInterface $settings)
 	{
-		$this->settingsAll = $settingsAll;
+		$this->settings = $settings;
 	}
 
 	/**
@@ -187,20 +186,14 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$settingsSidebarOutput = [];
-		foreach ($this->settingsAll->getSettingsSidebar($formId, $type) as $item) {
-			$sidebarType = $item['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
-			$settingsSidebarOutput[$sidebarType][] = $item;
-		}
-
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => Helper::getFormEditPageUrl($formId),
 			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
-			'adminSettingsSidebar' => $settingsSidebarOutput,
-			'adminSettingsForm' => $this->settingsAll->getSettingsForm($formId, $type),
+			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId),
+			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
 		];
 	}

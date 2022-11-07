@@ -783,6 +783,21 @@ trait SettingsHelper
 	 *
 	 * @return array
 	 */
+	private function getIntroOutput(string $type): array
+	{
+		return [
+			'component' => 'intro',
+			'introIsFirst' => true,
+			'introTitle' => Filters::getSettingsLabels($type),
+			'introSubtitle' => Filters::getSettingsLabels($type, 'desc'),
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @return array
+	 */
 	private function getNoActiveFeatureOutput(): array
 	{
 		return [
@@ -980,5 +995,88 @@ trait SettingsHelper
 				'selectSingleSubmit' => true,
 			],
 		];
+	}
+
+	protected function getSettingsSidebarOutput(string $formId = ''): array
+	{
+		$internalType = 'settingsGlobal';
+
+		if ($formId) {
+			$internalType = 'settings';
+		}
+
+		$output = [];
+
+		foreach (Filters::ALL as $key => $value) {
+			// Determin if there is filter key name.
+			if (!isset($value[$internalType])) {
+				continue;
+			}
+
+			$isUsedKey = $value['dashboard']['key'] ?? '';
+
+			// Bailout if used key is missing.
+			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey)) {
+				continue;
+			}
+
+			$type = $value['type'] ?? '';
+
+			if(!$type) {
+				continue;
+			}
+
+			// Populate sidebar data.
+			$output[$type][] = [
+				'label' => Filters::getSettingsLabels($key),
+				'value' => $key,
+				'icon' => $value['icon'] ?? '',
+				'type' => $value['type'] ?? '',
+			];
+		}
+
+		// Return all settings data.
+		return $output;
+	}
+
+		/**
+	 * Get all settings array for building settings page.
+	 *
+	 * @param string $type Form Type to show.
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	protected function getSettingsFormOutput(string $type, string $formId = ''): string
+	{
+		$internalType = 'settingsGlobal';
+
+		if ($formId) {
+			$internalType = 'settings';
+		}
+
+		// Find settings page.
+		$filter = Filters::ALL[$type][$internalType] ?? '';
+
+		// Determin if there is a filter for settings page.
+		if (!\has_filter($filter)) {
+			return '';
+		}
+
+		// Get filter data.
+		$data = \apply_filters($filter, $formId);
+
+		// Add additional props to form component.
+		$formAdditionalProps['formType'] = $type;
+
+		if ($formId) {
+			$formAdditionalProps['formPostId'] = $formId;
+		}
+
+		// Populate and build form.
+		return $this->buildSettingsForm(
+			$data ?? [],
+			$formAdditionalProps
+		);
 	}
 }

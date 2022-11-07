@@ -11,31 +11,24 @@ declare(strict_types=1);
 namespace EightshiftForms\Cache;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCache class.
  */
-class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
+class SettingsCache implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_cache';
 
 	/**
 	 * Filter global settings key.
@@ -81,23 +74,19 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
-	 * Get Settings sidebar data.
+	 * Get Form settings data array
 	 *
-	 * @return array<string, mixed>
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
 	 */
-	public function getSettingsSidebar(): array
+	public function getSettingsData(string $formId): array
 	{
-		return [
-			'label' => \__('Clear cache', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		];
+		return [];
 	}
 
 	/**
@@ -108,12 +97,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$output = [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Clear cache', 'eightshift-forms'),
-				'introSubtitle' => \__('Use the buttons below to clear the cache if the entry you\'re looking for isn\'t available or has changed.', 'eightshift-forms'),
-			]
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 		];
 
 		$manifestForm = Components::getManifest(\dirname(__DIR__, 1) . '/Blocks/components/form');

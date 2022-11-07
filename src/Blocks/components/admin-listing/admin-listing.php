@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/admin-settings-section');
+$manifestSection = Components::getComponent('admin-settings-section');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 

@@ -11,24 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGeneral class.
  */
-class SettingsGeneral implements SettingsDataInterface, ServiceInterface
+class SettingsGeneral implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_general';
 
 	/**
 	 * Filter settings key.
@@ -85,24 +79,8 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('General', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
 	}
 
 	/**
@@ -123,12 +101,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 		// }
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('General', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding forms, fields, actions, etc.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -186,12 +159,7 @@ class SettingsGeneral implements SettingsDataInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('General', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding forms, fields, actions, etc.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				"tabsIsFirst" => false,

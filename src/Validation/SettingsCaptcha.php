@@ -10,30 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCaptcha class.
  */
-class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
+class SettingsCaptcha implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_captcha';
 
 	/**
 	 * Filter global settings key.
@@ -99,7 +90,6 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
@@ -120,25 +110,6 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('Captcha', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
 	}
 
 	/**
@@ -169,21 +140,15 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 		$secretKey = Variables::getGoogleReCaptchaSecretKey();
 
 		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Google reCaptcha', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding Google reCaptcha.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('What is Google reCaptcha', 'eightshift-forms'),
-				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a turing test to tell human and bots apart.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
+				'introIsHighlighted' => true,
 				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings

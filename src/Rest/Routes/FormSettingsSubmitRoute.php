@@ -102,7 +102,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Check if form settings or global settings.
 			$formInternalType = 'settings';
 			if (!$formId) {
-				$formInternalType = 'global';
+				$formInternalType = 'settingsGlobal';
 			}
 
 			// Get form fields for validation.
@@ -134,11 +134,13 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					return $this->cache($params);
 				default:
 					// If form ID is not set this is considered an global setting.
-					if (empty($formId)) {
+					if (!$formId) {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
 							// Check if key needs updating or deleting.
+							
 							if ($value['value']) {
+								
 								\update_option($key, $value['value']);
 							} else {
 								\delete_option($key);

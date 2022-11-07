@@ -10,19 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Labels\Labels;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingsDataInterface, ServiceInterface
+class SettingsValidation implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -36,11 +35,6 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		'MM/DD' => '^(1[0-2]|0[1-9])\/(3[01]|[12][0-9]|0[1-9])$',
 		'DD/MM' => '^(3[01]|[12][0-9]|0[1-9])\/(1[0-2]|0[1-9])$'
 	];
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_validation';
 
 	/**
 	 * Filter settings key.
@@ -86,24 +80,8 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('Validation', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
 	}
 
 	/**
@@ -136,12 +114,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Validation', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding validations.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				"tabsIsFirst" => false,
@@ -188,12 +161,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Validation', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding validations.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				"tabsIsFirst" => false,

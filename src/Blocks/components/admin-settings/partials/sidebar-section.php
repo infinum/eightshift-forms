@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Settings\Settings\SettingsAll;
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $items = $attributes['items'] ?? [];
@@ -21,33 +21,13 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsLink = $attributes['adminSettingsLink'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
-// Provide order we want on output.
-$sortOrder = SettingsAll::SIDEBAR_SORT_ORDER;
-uksort($items, function ($key1, $key2) use ($sortOrder) {
-	return array_search($key1, $sortOrder, true) <=> array_search($key2, $sortOrder, true);
-});
-
 foreach ($items as $key => $innerItems) {
-	switch ($key) {
-		case SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION:
-			$sidebarTitle = __('Integrations', 'eightshift-forms');
-			break;
-		case SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING:
-			$sidebarTitle = __('Troubleshooting', 'eightshift-forms');
-			break;
-		case SettingsAll::SETTINGS_SIEDBAR_TYPE_DEVELOP:
-			$sidebarTitle = __('Develop Mode', 'eightshift-forms');
-			break;
-		default:
-			$sidebarTitle = __('General', 'eightshift-forms');
-			break;
-	}
 	?>
 
 	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 			<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">
-				<?php echo esc_html($sidebarTitle); ?>
+				<?php echo esc_html(Filters::getSettingsLabels($key)); ?>
 			</div>
 			<ul class="<?php echo esc_attr("{$sectionClass}__menu"); ?>">
 				<?php foreach ($innerItems as $item) { ?>

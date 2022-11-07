@@ -11,26 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Mailer;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements SettingsDataInterface, ServiceInterface
+class SettingsMailer implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_mailer';
 
 	/**
 	 * Filter settings key.
@@ -99,7 +92,6 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData'], 10, 2);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
@@ -152,25 +144,6 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('Mailer', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
-	}
-
-	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -189,12 +162,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 		$formNames = Helper::getFormNames($formId);
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Mailer', 'eightshift-forms'),
-				'introSubtitle' => \__('Sends simple e-mails.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
@@ -348,12 +316,7 @@ class SettingsMailer implements SettingsDataInterface, ServiceInterface
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Mailer', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding Mailer.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 		];
 	}
 }

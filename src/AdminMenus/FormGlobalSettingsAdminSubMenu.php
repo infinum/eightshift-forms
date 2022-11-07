@@ -12,9 +12,9 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\GlobalSettings\SettingsGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -25,18 +25,18 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for global settings.
 	 *
-	 * @var SettingsGlobalInterface
+	 * @var SettingsInterface
 	 */
-	protected $settingsGlobal;
+	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsGlobalInterface $settingsGlobal Inject form global settings data.
+	 * @param SettingsInterface $settings Inject form global settings data.
 	 */
-	public function __construct(SettingsGlobalInterface $settingsGlobal)
+	public function __construct(SettingsInterface $settings)
 	{
-		$this->settingsGlobal = $settingsGlobal;
+		$this->settings = $settings;
 	}
 
 	/**
@@ -174,19 +174,13 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$settingsSidebarOutput = [];
-		foreach ($this->settingsGlobal->getSettingsSidebar($type) as $item) {
-			$sidebarType = $item['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
-			$settingsSidebarOutput[$sidebarType][] = $item;
-		}
-
 		return [
 			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsLink' => Helper::getSettingsGlobalPageUrl(''),
-			'adminSettingsSidebar' => $settingsSidebarOutput,
-			'adminSettingsForm' => $this->settingsGlobal->getSettingsForm($type),
+			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
+			'adminSettingsForm' => $this->settings->getSettingsForm($type),
 			'adminSettingsType' => $type,
 			'adminSettingsIsGlobal' => true,
 		];

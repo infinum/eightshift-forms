@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -25,11 +24,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_clearbit';
 
 	/**
 	 * Filter global settings key.
@@ -90,7 +84,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
@@ -155,25 +148,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	}
 
 	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('Clearbit', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
-		];
-	}
-
-	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -200,12 +174,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		$apiKey = Variables::getApiKeyClearbit();
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Clearbit', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding Clearbit integration.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,

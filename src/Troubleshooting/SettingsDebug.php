@@ -10,26 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsDebug class.
  */
-class SettingsDebug implements ServiceInterface, SettingsDataInterface
+class SettingsDebug implements ServiceInterface, SettingInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_debug';
 
 	/**
 	 * Filter global settings key.
@@ -68,7 +61,6 @@ class SettingsDebug implements ServiceInterface, SettingsDataInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
@@ -87,25 +79,6 @@ class SettingsDebug implements ServiceInterface, SettingsDataInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		if(!$this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
-			return [];
-		}
-
-		return [
-			'label' => \__('Debug', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		];
 	}
 
 	/**
@@ -132,12 +105,7 @@ class SettingsDebug implements ServiceInterface, SettingsDataInterface
 		}
 
 		return [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Debug', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you can change all options regarding debug.', 'eightshift-forms'),
-			],
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

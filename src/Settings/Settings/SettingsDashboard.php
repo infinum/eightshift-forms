@@ -18,17 +18,12 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsDashboard class.
  */
-class SettingsDashboard implements SettingsDataInterface, ServiceInterface
+class SettingsDashboard implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use dashboard helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_dashboard';
 
 	/**
 	 * Filter settings key.
@@ -52,24 +47,8 @@ class SettingsDashboard implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('Dashboard', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
 	}
 
 	/**
@@ -91,24 +70,21 @@ class SettingsDashboard implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$output = [];
+		$filtered = [];
 
 		foreach (Filters::ALL as $key => $value) {
-			$dashboard = $value['dashboard'] ?? [];
+			$use = $value['use'] ?? '';
 
-			if (!$dashboard) {
+			if (!$use) {
 				continue;
 			}
 
 			$icon = $value['icon'] ?? '';
-			$useKey = $value['dashboard']['key'] ?? '';
-			$external = $value['dashboard']['external'] ?? '';
-			$type = $value['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
-			$label = \ucwords(\str_replace('-', ' ', $key));
+			$type = $value['type'] ?? Settings::SETTINGS_SIEDBAR_TYPE_GENERAL;
 
-			$output[$type][] = [
+			$filtered[$type][] = [
 				'component' => 'card',
-				'cardTitle' => $label,
+				'cardTitle' => Filters::getSettingsLabels($key),
 				'cardIcon' => $icon,
 				'cardLinks' => [
 					[
@@ -117,22 +93,22 @@ class SettingsDashboard implements SettingsDataInterface, ServiceInterface
 					],
 					[
 						'label' => \__('External', 'eightshift-forms'),
-						'url' => $external,
+						'url' => Filters::getSettingsLabels($key, 'externalLink'),
 					]
 				],
 				'cardToggle' => [
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldSkip' => true,
-						'checkboxesName' => $this->getSettingsName($useKey),
-						'checkboxesId' => $this->getSettingsName($useKey),
+						'checkboxesName' => $this->getSettingsName($use),
+						'checkboxesId' => $this->getSettingsName($use),
 						'checkboxesIsRequired' => true,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $key,
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked($useKey, $useKey),
-								'checkboxValue' => $useKey,
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked($use, $use),
+								'checkboxValue' => $use,
 								'checkboxAsToggle' => true,
 								'checkboxAsToggleSize' => 'medium',
 								'checkboxHideLabelText' => true,
@@ -143,42 +119,22 @@ class SettingsDashboard implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		$a = [
-			[
-				'component' => 'intro',
-				'introIsFirst' => true,
-				'introTitle' => \__('Dashboard', 'eightshift-forms'),
-				'introSubtitle' => \__('In these settings, you decide all the features you would like to use in your project. Once the feature is turned on, you will see additional settings in the sidebar.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('General', 'eightshift-forms'),
-				'introIsHeading' => true,
-			],
-			[
-				'component' => 'layout',
-				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL],
-			],
-			[
-				'component' => 'intro',
-				'introIsHeading' => true,
-				'introTitle' => \__('Integrations', 'eightshift-forms'),
-			],
-			[
-				'component' => 'layout',
-				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION],
-			],
-			[
-				'component' => 'intro',
-				'introIsHeading' => true,
-				'introTitle' => \__('Troubleshooting', 'eightshift-forms'),
-			],
-			[
-				'component' => 'layout',
-				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING],
-			],
+		$output = [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 		];
 
-		return $a;
+		foreach ($filtered as $key => $value) {
+			$output[] = [
+					'component' => 'intro',
+					'introTitle' => Filters::getSettingsLabels($key),
+					'introIsHeading' => true,
+			];
+			$output[] = [
+				'component' => 'layout',
+				'layoutItems' => $value,
+			];
+		}
+
+		return $output;
 	}
 }
