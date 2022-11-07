@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use Throwable;
 use WP_REST_Request;
@@ -82,7 +82,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 		// Bailout if troubleshooting skip captcha is on.
-		if ($this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_CAPTCHA_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			return \rest_ensure_response([
 				'status' => 'success',
 				'code' => 200,

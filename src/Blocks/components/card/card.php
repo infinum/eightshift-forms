@@ -27,39 +27,45 @@ $cardClass = Components::classnames([
 
 <div class="<?php echo esc_attr($cardClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__intro"); ?>">
+		<div class="<?php echo esc_attr("{$componentClass}__title-wrap"); ?>">
+			<?php if ($cardTitle) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
+					<?php echo $cardTitle; ?>
+				</div>
+			<?php } ?>
+			<?php if ($cardLinks) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__links"); ?>">
+					<?php foreach ($cardLinks as $link) { ?>
+						<?php
+							$label = $link['label'] ?? '';
+							$url = $link['url'] ?? '';
+
+							if (!$label || !$url) {
+								continue;
+							}
+						?>
+						<a
+							href="<?php echo esc_url($url); ?>"
+							class="<?php echo esc_attr("{$componentClass}__link"); ?>"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<?php echo esc_html($label); ?>
+						</a>
+					<?php } ?>
+				</div>
+			<?php } ?>
+		</div>
 		<?php if ($cardIcon) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
 				<?php echo $cardIcon; ?>
 			</div>
 		<?php } ?>
-		<?php if ($cardToggle) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__toggle"); ?>">
-				<?php echo $cardToggle; ?>
-			</div>
-		<?php } ?>
 	</div>
 
-	<?php if ($cardTitle) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
-			<?php echo $cardTitle; ?>
-		</div>
-	<?php } ?>
-
-	<?php if ($cardLinks) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__links"); ?>">
-			<?php foreach ($cardLinks as $link) { ?>
-				<?php
-					$label = $link['label'] ?? '';
-					$url = $link['url'] ?? '';
-
-					if (!$label || !$url) {
-						continue;
-					}
-				?>
-				<a href="<?php echo esc_url($url); ?>" class="<?php echo esc_attr("{$componentClass}__link"); ?>">
-					<?php echo esc_html($label); ?>
-				</a>
-			<?php } ?>
+	<?php if ($cardToggle) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__toggle"); ?>">
+			<?php echo $cardToggle; ?>
 		</div>
 	<?php } ?>
 </div>

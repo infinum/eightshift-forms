@@ -91,69 +91,94 @@ class SettingsDashboard implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		return [
+		$output = [];
+
+		foreach (Filters::ALL as $key => $value) {
+			$dashboard = $value['dashboard'] ?? [];
+
+			if (!$dashboard) {
+				continue;
+			}
+
+			$icon = $value['icon'] ?? '';
+			$useKey = $value['dashboard']['key'] ?? '';
+			$external = $value['dashboard']['external'] ?? '';
+			$type = $value['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
+			$label = \ucwords(\str_replace('-', ' ', $key));
+
+			$output[$type][] = [
+				'component' => 'card',
+				'cardTitle' => $label,
+				'cardIcon' => $icon,
+				'cardLinks' => [
+					[
+						'label' => \__('Settings', 'eightshift-forms'),
+						'url' => Helper::getSettingsGlobalPageUrl($key),
+					],
+					[
+						'label' => \__('External', 'eightshift-forms'),
+						'url' => $external,
+					]
+				],
+				'cardToggle' => [
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldSkip' => true,
+						'checkboxesName' => $this->getSettingsName($useKey),
+						'checkboxesId' => $this->getSettingsName($useKey),
+						'checkboxesIsRequired' => true,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => $key,
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked($useKey, $useKey),
+								'checkboxValue' => $useKey,
+								'checkboxAsToggle' => true,
+								'checkboxAsToggleSize' => 'medium',
+								'checkboxHideLabelText' => true,
+							],
+						],
+					],
+				]
+			];
+		}
+
+		$a = [
 			[
 				'component' => 'intro',
-				"introIsFirst" => true,
+				'introIsFirst' => true,
 				'introTitle' => \__('Dashboard', 'eightshift-forms'),
 				'introSubtitle' => \__('In these settings, you decide all the features you would like to use in your project. Once the feature is turned on, you will see additional settings in the sidebar.', 'eightshift-forms'),
 			],
 			[
+				'component' => 'intro',
+				'introTitle' => \__('General', 'eightshift-forms'),
+				'introIsHeading' => true,
+			],
+			[
 				'component' => 'layout',
-				'layoutItems' => \array_values(\array_filter(\array_map(
-					function ($item, $keys) {
-						$dashboard = $item['dashboard'] ?? [];
-		
-						if (!$dashboard) {
-							return false;
-						}
-	
-						$icon = $item['icon'] ?? '';
-						$key = $dashboard['key'] ?? '';
-						$external = $dashboard['external'] ?? '';
-						$type = $dashboard['type'] ?? '';
-						$label = \ucwords(\str_replace('-', ' ', $keys));
-	
-						return [
-							'component' => 'card',
-							'cardTitle' => $label,
-							'cardIcon' => $icon,
-							'cardLinks' => [
-								[
-									'label' => \__('Settings', 'eightshift-forms'),
-									'url' => Helper::getSettingsGlobalPageUrl($keys),
-								],
-								[
-									'label' => \__('External', 'eightshift-forms'),
-									'url' => $external,
-								]
-							],
-							'cardToggle' => [
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => $this->getSettingsName($key),
-									'checkboxesId' => $this->getSettingsName($key),
-									'checkboxesIsRequired' => true,
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => $key,
-											'checkboxIsChecked' => $this->isCheckboxOptionChecked($key, $key),
-											'checkboxValue' => $key,
-											'checkboxAsToggle' => true,
-											'checkboxAsToggleSize' => 'medium',
-											'checkboxHideLabelText' => true,
-										],
-									],
-								],
-							]
-						];
-					},
-					Filters::ALL,
-					array_keys(Filters::ALL)
-				))),
+				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL],
+			],
+			[
+				'component' => 'intro',
+				'introIsHeading' => true,
+				'introTitle' => \__('Integrations', 'eightshift-forms'),
+			],
+			[
+				'component' => 'layout',
+				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION],
+			],
+			[
+				'component' => 'intro',
+				'introIsHeading' => true,
+				'introTitle' => \__('Troubleshooting', 'eightshift-forms'),
+			],
+			[
+				'component' => 'layout',
+				'layoutItems' => $output[SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING],
 			],
 		];
+
+		return $a;
 	}
 }

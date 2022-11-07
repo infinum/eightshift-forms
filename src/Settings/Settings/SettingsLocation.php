@@ -75,31 +75,25 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$output = [
+		$locations = $this->getBlockLocations($formId);
+
+		return [
 			[
 				'component' => 'intro',
+				'introIsFirst' => true,
 				'introTitle' => \__('Display locations', 'eightshift-forms'),
 				'introSubtitle' => \__('See where your form appears throughout the website.', 'eightshift-forms'),
 			],
-		];
-
-		$locations = $this->getBlockLocations($formId);
-
-		if (!$locations) {
-			$output[] = [
+			!$locations ? [
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Nothing to see here...', 'eightshift-forms'),
 				'highlightedContentSubtitle' => \__('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
 				'highlightedContentIcon' => 'empty',
-			];
-		} else {
-			$output[] = [
+			] : [
 				'component' => 'admin-listing',
 				'adminListingForms' => $this->getBlockLocations($formId),
-			];
-		}
-
-		return $output;
+			]
+		];
 	}
 
 	/**

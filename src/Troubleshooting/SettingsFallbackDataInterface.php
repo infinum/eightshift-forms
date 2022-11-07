@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface that holds all methods for Troubleshooting settings.
+ * Interface that holds all methods for Fallback settings.
  *
  * @package EightshiftForms\Troubleshooting
  */
@@ -13,16 +13,16 @@ namespace EightshiftForms\Troubleshooting;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 
 /**
- * Interface for SettingsTroubleshootingDataInterface.
+ * Interface for SettingsFallbackDataInterface.
  */
-interface SettingsTroubleshootingDataInterface extends SettingsDataInterface
+interface SettingsFallbackDataInterface extends SettingsDataInterface
 {
 	/**
 	 * Output array settings for form.
 	 *
-	 * @param string $integration Integration name used for troubleshooting.
+	 * @param string $integration Integration name used for fallback.
 	 *
 	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
 	 */
-	public function getOutputGlobalTroubleshooting(string $integration): array;
+	public function getOutputGlobalFallback(string $integration): array;
 }

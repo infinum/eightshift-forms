@@ -10,9 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 
 /**
  * SettingsHelper trait.
@@ -773,5 +776,209 @@ trait SettingsHelper
 			},
 			$fieldsValues
 		) ?? [];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @return array
+	 */
+	private function getNoActiveFeatureOutput(): array
+	{
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Feature not active', 'eightshift-forms'),
+				// translators: %s will be replaced with the global settings url.
+				'highlightedContentSubtitle' => \sprintf(\__('Oh no it looks like this feature is not active, please go to your <a href="%s">dashboard</a> and activate it.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'highlightedContentIcon' => 'tools',
+			],
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @return array
+	 */
+	private function getNoValidGlobalConfigOutput($type): array
+	{
+		$label = \ucwords(\str_replace('-', ' ', $type));
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
+				// translators: %s will be replaced with the global settings url.
+				'highlightedContentSubtitle' => \sprintf(\__('Before using %s you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentIcon' => 'tools',
+			],
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @return array
+	 */
+	private function getNoIntegrationFetchDataOutput($type): array
+	{
+		$label = \ucwords(\str_replace('-', ' ', $type));
+
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+				'highlightedContentSubtitle' => \sprintf(\__('Data from %s couldn\'t be fetched. Check the API key.', 'eightshift-forms'), $label),
+				'highlightedContentIcon' => 'error',
+			],
+		];
+	}
+
+	/**
+	 * Output array - conditional tags.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputConditionalTags(string $formId, array $formFields, string $key): array
+	{
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Conditional logic', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName($key),
+					'groupStyle' => 'full',
+					'groupContent' => $this->getConditionalTagsFieldsDetails(
+						$key,
+						$formFields,
+						$formId
+					),
+				],
+			],
+		];
+	}
+
+		/**
+	 * Output array - integration fields.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getOutputIntegrationFields(
+		string $formId,
+		array $formFields,
+		string $settingsType,
+		string $key,
+		array $additional = []
+	): array {
+		$beforeContent = '';
+
+		$filterName = Filters::getIntegrationFilterName($settingsType, 'adminFieldsSettings');
+		if (\has_filter($filterName)) {
+			$beforeContent = \apply_filters($filterName, '') ?? '';
+		}
+
+		$sortingButton = Components::render('sorting');
+
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName($settingsType, 'fieldsSettingsIsEditable');
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
+		}
+
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					// translators: %s replaces the button or string.
+					'introSubtitle' => \sprintf(\__('
+						Control which fields show up on the frontend, and set up how they look and work. <br />
+						To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
+						%s', 'eightshift-forms'), $sortingButton),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName($key),
+					'groupBeforeContent' => $beforeContent,
+					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
+					'groupStyle' => 'integration',
+					'groupContent' => $this->getIntegrationFieldsDetails(
+						$key,
+						$settingsType,
+						$formFields,
+						$formId,
+						$additional
+					),
+				],
+			],
+		];
+	}
+
+	/**
+	 * Output array - form selection.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedFormId Selected form id.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelection(
+		string $formId,
+		array $items,
+		string $selectedFormId,
+		string $settingsType,
+		string $key
+		): array
+	{
+		$manifestForm = Components::getComponent('form');
+
+		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
+
+		return [
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName($key),
+				'selectId' => $this->getSettingsName($key),
+				'selectFieldLabel' => \__('Subscription list', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
+				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
+				'selectOptions' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					\array_map(
+						function ($option) use ($formId, $key) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedFormId,
+				'selectSingleSubmit' => true,
+			],
+		];
 	}
 }

@@ -20,7 +20,7 @@ $tabsIsFirst = Components::checkAttr('tabsIsFirst', $attributes, $manifest);
 
 $tabsClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector(!$tabsIsFirst && $componentClass, $componentClass, '', 'first'),
+	Components::selector($tabsIsFirst && $componentClass, $componentClass, '', 'first'),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);

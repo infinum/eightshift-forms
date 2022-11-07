@@ -16,6 +16,16 @@ if (!$fieldUse) {
 	return;
 }
 
+$fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
+$fieldSkip = Components::checkAttr('fieldSkip', $attributes, $manifest);
+
+// Enable option to skip field and just render content.
+if ($fieldSkip) {
+	echo $fieldContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	return;
+}
+
+
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
@@ -41,7 +51,6 @@ $fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldHideLabel = Components::checkAttr('fieldHideLabel', $attributes, $manifest);
 $fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
-$fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
 $fieldBeforeContent = Components::checkAttr('fieldBeforeContent', $attributes, $manifest);
 $fieldAfterContent = Components::checkAttr('fieldAfterContent', $attributes, $manifest);
 $fieldType = Components::checkAttr('fieldType', $attributes, $manifest);

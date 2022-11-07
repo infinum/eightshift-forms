@@ -15,7 +15,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -109,7 +109,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
-			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
+			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),

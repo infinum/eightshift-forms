@@ -10,11 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\SettingsAll;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -127,6 +129,10 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if(!$this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY)) {
+			return [];
+		}
+
 		return [
 			'label' => \__('Captcha', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -154,7 +160,10 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
 
 		$siteKey = Variables::getGoogleReCaptchaSiteKey();
 		$secretKey = Variables::getGoogleReCaptchaSecretKey();
@@ -162,7 +171,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				"introIsFirst" => true,
+				'introIsFirst' => true,
 				'introTitle' => \__('Google reCaptcha', 'eightshift-forms'),
 				'introSubtitle' => \__('In these settings, you can change all options regarding Google reCaptcha.', 'eightshift-forms'),
 			],
@@ -185,24 +194,6 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 					</ol>', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
 			],
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_CAPTCHA_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Google reCaptcha', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY),
-						'checkboxValue' => self::SETTINGS_CAPTCHA_USE_KEY,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					]
-				]
-			],
-			$isUsed ? [
 				'component' => 'tabs',
 				'tabsIsFirst' => false,
 				'tabsContent' => [
@@ -251,7 +242,7 @@ class SettingsCaptcha implements SettingsDataInterface, ServiceInterface
 						],
 					],
 				],
-			] : [],
+			],
 		];
 	}
 }

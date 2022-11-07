@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -98,7 +98,7 @@ trait ApiHelper
 	 */
 	public function getApiErrorOutput(array $details, string $msg): array
 	{
-		if ($this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			Helper::logger($details);
 		}
 

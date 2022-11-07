@@ -161,6 +161,10 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if(!$this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
+			return [];
+		}
+
 		return [
 			'label' => \__('Clearbit', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -188,15 +192,23 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
 
-		$outputIntro = [
+		$apiKey = Variables::getApiKeyClearbit();
+
+		return [
 			[
 				'component' => 'intro',
+				'introIsFirst' => true,
 				'introTitle' => \__('Clearbit', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all options regarding Clearbit integration.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
+				'introIsHighlighted' => true,
 				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
 				'introTitleSize' => 'small',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
@@ -207,82 +219,52 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					</ol>', 'eightshift-forms'),
 			],
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
+				'component' => 'tabs',
+				'tabsContent' => [
 					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Clearbit', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY),
-						'checkboxValue' => self::SETTINGS_CLEARBIT_USE_KEY,
-						'checkboxSingleSubmit' => true,
-					]
-				]
-			],
-		];
-
-		$output = [];
-
-		if ($isUsed) {
-			$apiKey = Variables::getApiKeyClearbit();
-
-			$output = [
-				[
-					'component' => 'tabs',
-					'tabsContent' => [
-						[
-							'component' => 'tab',
-							'tabLabel' => \__('API', 'eightshift-forms'),
-							'tabContent' => [
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-									'inputId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-									'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-									'inputIsDisabled' => !empty($apiKey),
-								],
+						'component' => 'tab',
+						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputType' => 'password',
+								'inputIsRequired' => true,
+								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								'inputIsDisabled' => !empty($apiKey),
 							],
 						],
-						self::isSettingsGlobalValid() ? [
-							'component' => 'tab',
-							'tabLabel' => \__('Fields', 'eightshift-forms'),
-							'tabContent' => [
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
-									'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
-									'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-									'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-									'checkboxesIsRequired' => true,
-									'checkboxesContent' => \array_map(
-										function ($item) {
-											return [
-												'component' => 'checkbox',
-												'checkboxLabel' => $item,
-												'checkboxIsChecked' => $this->isCheckboxOptionChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-												'checkboxValue' => $item,
-											];
-										},
-										$this->clearbitClient->getParams()
-									),
-								],
-							],
-						 ] : [],
 					],
+					self::isSettingsGlobalValid() ? [
+						'component' => 'tab',
+						'tabLabel' => \__('Fields', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
+								'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+								'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+								'checkboxesIsRequired' => true,
+								'checkboxesContent' => \array_map(
+									function ($item) {
+										return [
+											'component' => 'checkbox',
+											'checkboxLabel' => $item,
+											'checkboxIsChecked' => $this->isCheckboxOptionChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+											'checkboxValue' => $item,
+										];
+									},
+									$this->clearbitClient->getParams()
+								),
+							],
+						],
+					 ] : [],
 				],
-			];
-		}
-
-		return [
-			...$outputIntro,
-			...$output,
+			],
 		];
 	}
 

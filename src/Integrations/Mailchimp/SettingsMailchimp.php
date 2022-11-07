@@ -10,18 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsAll;
 use EightshiftForms\Settings\Settings\SettingsDataInterface;
-use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
+use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -114,27 +111,27 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	protected $mailchimp;
 
 	/**
-	 * Instance variable for Troubleshooting settings.
+	 * Instance variable for Fallback settings.
 	 *
-	 * @var SettingsTroubleshootingDataInterface
+	 * @var SettingsFallbackDataInterface
 	 */
-	protected $settingsTroubleshooting;
+	protected $settingsFallback;
 
 	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
-	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
+	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
 		MailchimpClientInterface $mailchimpClient,
 		MapperInterface $mailchimp,
-		SettingsTroubleshootingDataInterface $settingsTroubleshooting
+		SettingsFallbackDataInterface $settingsFallback
 	) {
 		$this->mailchimpClient = $mailchimpClient;
 		$this->mailchimp = $mailchimp;
-		$this->settingsTroubleshooting = $settingsTroubleshooting;
+		$this->settingsFallback = $settingsFallback;
 	}
 
 	/**
@@ -196,6 +193,10 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if(!$this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
+			return [];
+		}
+
 		return [
 			'label' => \__('Mailchimp', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -213,29 +214,19 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$type = self::SETTINGS_TYPE_KEY;
+
+		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return [
-				[
-					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
-					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => \sprintf(\__('Before using Mailchimp you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
-					'highlightedContentIcon' => 'tools',
-				],
-			];
+			return $this->getNoValidGlobalConfigOutput($type);
 		}
 
+		// Get forms from the API.
 		$items = $this->mailchimpClient->getItems(false);
 
+		// Bailout if integration can't fetch data.
 		if (!$items) {
-			return [
-				[
-					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('Data from Mailchimp couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
-					'highlightedContentIcon' => 'error',
-				],
-			];
+			return $this->getNoIntegrationFetchDataOutput($type);
 		}
 
 		// Find selected form id.
@@ -243,26 +234,52 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 
 		$output = [];
 
-		// If the user has selected the list.
+		// If the user has selected the form id populate additional config.
 		if ($selectedFormId) {
 			$formFields = $this->mailchimp->getFormFields($formId);
 
+			// Output additonal tabs for config.
 			$output = [
-				[
-					'component' => 'tabs',
-					'tabsContent' => [
-						$this->getOutputTags($formId, $selectedFormId),
-						$this->getOutputIntegrationFields($formId, $formFields),
-						$this->getOutputConditionalTags($formId, $formFields),
-					],
+				'component' => 'tabs',
+				'tabsContent' => [
+					$this->getOutputIntegrationFields(
+						$formId,
+						$formFields,
+						$type,
+						self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
+						[
+							AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags']
+						]
+					),
+					$this->getOutputConditionalTags(
+						$formId,
+						$formFields,
+						self::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY
+					),
+					$this->getOutputTags(
+						$formId,
+						$selectedFormId
+					),
 				],
 			];
 		}
 
-		return \array_merge(
-			$this->getOutputFormSelection($formId, $items, $selectedFormId),
-			$output
-		);
+		return [
+			[
+				'component' => 'intro',
+				'introIsFirst' => true,
+				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
+				'introSubtitle' => \__('Sends simple e-mails.', 'eightshift-forms'),
+			],
+			...$this->getOutputFormSelection(
+				$formId,
+				$items,
+				$selectedFormId,
+				self::SETTINGS_TYPE_KEY,
+				self::SETTINGS_MAILCHIMP_LIST_KEY
+			),
+			$output,
+		];
 	}
 
 	/**
@@ -272,18 +289,19 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
 
 		$apiKey = Variables::getApiKeyMailchimp();
 
 		return [
 			[
 				'component' => 'intro',
-				"introIsFirst" => true,
+				'introIsFirst' => true,
 				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
-				'introSubtitle' => \__('
-					In these settings, you can change all options regarding Mailchimp integration.', 'eightshift-forms'),
-				// 'introSubtitle' => \__('Is a marketing automation platform designed and developed for businesses using email to reach out to their target markets.', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all options regarding Mailchimp integration.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
@@ -301,26 +319,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 					</ol>', 'eightshift-forms'),
 			],
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Mailchimp', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY),
-						'checkboxValue' => self::SETTINGS_MAILCHIMP_USE_KEY,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					]
-				]
-			],
-			$isUsed ? [
 				'component' => 'tabs',
-				'tabsIsFirst' => false,
 				'tabsContent' => [
 					[
 						'component' => 'tab',
@@ -339,118 +338,7 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 							],
 						],
 					],
-					$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsMailchimp::SETTINGS_TYPE_KEY),
-				],
-			] : [],
-		];
-	}
-
-		/**
-	 * Output array - form selection.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $items Items from cache data.
-	 * @param string $selectedFormId Selected form id.
-	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
-	 */
-	private function getOutputFormSelection(string $formId, array $items, string $selectedFormId): array
-	{
-		$manifestForm = Components::getComponent('form');
-
-		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
-		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
-
-		return [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Mailchimp', 'eightshift-forms'),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_KEY),
-				'selectFieldLabel' => \__('Subscription list', 'eightshift-forms'),
-				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => \sprintf(\__('If a list isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
-				'selectOptions' => \array_merge(
-					[
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => '',
-							'selectOptionValue' => '',
-						]
-					],
-					\array_map(
-						function ($option) use ($formId) {
-							return [
-								'component' => 'select-option',
-								'selectOptionLabel' => $option['title'] ?? '',
-								'selectOptionValue' => $option['id'] ?? '',
-								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
-							];
-						},
-						$items
-					)
-				),
-				'selectIsRequired' => true,
-				'selectValue' => $selectedFormId,
-				'selectSingleSubmit' => true,
-			],
-		];
-	}
-
-	/**
-	 * Output array - integration fields.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getOutputIntegrationFields(string $formId, array $formFields): array
-	{
-		$beforeContent = '';
-
-		$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-		if (\has_filter($filterName)) {
-			$beforeContent = \apply_filters($filterName, '') ?? '';
-		}
-
-		$sortingButton = Components::render('sorting');
-
-		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
-		if (\has_filter($formViewDetailsIsEditableFilterName)) {
-			$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
-		}
-
-		return [
-			'component' => 'tab',
-			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
-			'tabContent' => [
-				[
-					'component' => 'intro',
-					// translators: %s replaces the button or string.
-					'introSubtitle' => \sprintf(\__('
-						Control which fields show up on the frontend, and set up how they look and work. <br />
-						To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
-						%s', 'eightshift-forms'), $sortingButton),
-				],
-				[
-					'component' => 'group',
-					'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY),
-					'groupBeforeContent' => $beforeContent,
-					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
-					'groupStyle' => 'integration',
-					'groupContent' => $this->getIntegrationFieldsDetails(
-						self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
-						self::SETTINGS_TYPE_KEY,
-						$formFields,
-						$formId,
-						[
-							AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags']
-						]
-					),
+					$this->settingsFallback->getOutputGlobalFallback(SettingsMailchimp::SETTINGS_TYPE_KEY),
 				],
 			],
 		];
@@ -569,38 +457,6 @@ class SettingsMailchimp implements SettingsDataInterface, SettingsGlobalDataInte
 						],
 						$tagsLabelsOverrides,
 					],
-				],
-			],
-		];
-	}
-
-	/**
-	 * Output array - conditional tags.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getOutputConditionalTags(string $formId, array $formFields): array
-	{
-		return [
-			'component' => 'tab',
-			'tabLabel' => \__('Conditional logic', 'eightshift-forms'),
-			'tabContent' => [
-				[
-					'component' => 'intro',
-					'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
-				],
-				[
-					'component' => 'group',
-					'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY),
-					'groupStyle' => 'full',
-					'groupContent' => $this->getConditionalTagsFieldsDetails(
-						self::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY,
-						$formFields,
-						$formId
-					),
 				],
 			],
 		];

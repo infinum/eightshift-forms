@@ -110,6 +110,7 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
+				'introIsFirst' => true,
 				'introTitle' => \__('Clear cache', 'eightshift-forms'),
 				'introSubtitle' => \__('Use the buttons below to clear the cache if the entry you\'re looking for isn\'t available or has changed.', 'eightshift-forms'),
 			]

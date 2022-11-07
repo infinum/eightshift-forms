@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Tracking\TrackingInterface;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
@@ -230,7 +230,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 			);
-			$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_RESET_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY);
+			$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 			$output['captcha'] = '';

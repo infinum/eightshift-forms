@@ -115,12 +115,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Validation messages', 'eightshift-forms'),
-			]
-		];
+		$output = [];
 
 		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
 
@@ -140,7 +135,25 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 			];
 		}
 
-		return $output;
+		return [
+			[
+				'component' => 'intro',
+				'introIsFirst' => true,
+				'introTitle' => \__('Validation', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all options regarding validations.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'tabs',
+				"tabsIsFirst" => false,
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Success', 'eightshift-forms'),
+						'tabContent' => $output,
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -177,7 +190,7 @@ class SettingsValidation implements SettingsDataInterface, ServiceInterface
 		return [
 			[
 				'component' => 'intro',
-				"introIsFirst" => true,
+				'introIsFirst' => true,
 				'introTitle' => \__('Validation', 'eightshift-forms'),
 				'introSubtitle' => \__('In these settings, you can change all options regarding validations.', 'eightshift-forms'),
 			],

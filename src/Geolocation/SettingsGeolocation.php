@@ -80,6 +80,10 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsSidebar(): array
 	{
+		if(!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+			return [];
+		}
+	
 		return [
 			'label' => \__('Geolocation', 'eightshift-forms'),
 			'value' => self::SETTINGS_TYPE_KEY,
@@ -107,32 +111,19 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
+
 		return [
 			[
 				'component' => 'intro',
-				"introIsFirst" => true,
+				'introIsFirst' => true,
 				'introTitle' => \__('Geolocation', 'eightshift-forms'),
 				'introSubtitle' => \sprintf(\__('
 					In these settings, you can change all options regarding geolocation, allowing you to render different forms based on the user\'s location conditionally by using local Geolocation API.<br/><br/>
 					This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use geolocation', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
-						'checkboxValue' => self::SETTINGS_GEOLOCATION_USE_KEY,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					]
-				]
 			],
 		];
 	}

@@ -5,10 +5,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		overflow: hidden;
+		border-top: 1px solid var(--global-colors-es-ebb);
 	}
 
 	&--first {
-		border-top: 1px solid var(--global-colors-es-ebb);
-		margin-top: 40px;
+		border-top: none;
 	}
 }

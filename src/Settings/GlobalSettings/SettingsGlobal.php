@@ -33,26 +33,19 @@ class SettingsGlobal extends AbstractFormBuilder implements SettingsGlobalInterf
 	{
 		$output = [];
 
-		// Loop all settings.
-		foreach ($this->getAllSettingsSidebars() as $filter) {
-			// Determin if there is a filter for settings page.
-			if (!\has_filter($filter)) {
+		foreach (Filters::ALL as $key => $value) {
+			// Determin if there is filter key name.
+			if (!isset($value['global'])) {
 				continue;
 			}
-
-			// Get filter data.
-			$data = \apply_filters($filter, '');
-
-			// If empty array skip.
-			if (!$data) {
-				continue;
-			}
-
-			// Check sidebar value for type.
-			$value = $data['value'] ?? '';
 
 			// Populate sidebar data.
-			$output[$value] = $data;
+			$output[$key] = [
+				'label' =>  \ucfirst(\str_replace('-', ' ', $key)),
+				'value' => $key,
+				'icon' => $value['icon'] ?? '',
+				'type' => $value['type'] ?? '',
+			];
 		}
 
 		// Return all settings data.

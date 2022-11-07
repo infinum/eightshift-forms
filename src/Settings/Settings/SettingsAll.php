@@ -75,6 +75,9 @@ class SettingsAll extends AbstractFormBuilder implements SettingsAllInterface
 			return [];
 		}
 
+		error_log( print_r( ( $this->getAllSettingsSidebars() ), true ) );
+		
+
 		// Loop all settings.
 		foreach ($this->getAllSettingsSidebars() as $filter) {
 			// Determine if there is a filter for settings page.

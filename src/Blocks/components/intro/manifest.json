@@ -20,6 +20,10 @@
 		"introIsHighlighted": {
 			"type": "boolean",
 			"default": false
+		},
+		"introIsHeading": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }
