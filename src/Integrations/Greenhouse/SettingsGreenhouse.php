@@ -325,32 +325,26 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 								'layoutType' => 'layout-grid-2',
 								'layoutItems' => [
 									[
-										'component' => 'intro',
-										'introIsHighlighted' => true,
-										'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-										'introTitleSize' => 'small',
-										// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-										'introSubtitle' => \__('<ol>
-												<li>Log in to your Greenhouse Account.</li>
-												<li>Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.</li>
-												<li>Click on <strong>Create New API Key</strong>.</li>
-												<li>Select <strong>Job Board</strong> as your API Type.</li>
-												<li>Copy the API key into the field below or use the global constant.</li>
-											</ol>', 'eightshift-forms'),
+										'component' => 'steps',
+										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+										'stepsContent' => [
+											sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+											sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
+											\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
+											\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
+											\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+										],
 									],
 									[
-										'component' => 'intro',
-										'introIsHighlighted' => true,
-										'introTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-										'introTitleSize' => 'small',
-										// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-										'introSubtitle' => \__('<ol>
-												<li>Log in to your Greenhouse Account.</li>
-												<li>Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>.</li>
-												<li>Copy the <strong>Board Name</strong> you want to use.</li>
-												<li>Make the name all lowercase.</li>
-												<li>Copy the Board Name into the field below or use the global constant.</li>
-											</ol>', 'eightshift-forms'),
+										'component' => 'steps',
+										'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
+										'stepsContent' => [
+											sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+											sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
+											\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
+											\__('Make the name all lowercase.', 'eightshift-forms'),
+											\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
+										],
 									],
 								],
 							],

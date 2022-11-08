@@ -291,19 +291,16 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								'introTitleSize' => 'small',
-								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-								'introSubtitle' => \__('<ol>
-										<li>Log in to your Mailchimp Account.</li>
-										<li>Navigate to your user profile image (bottom left corner).</li>
-										<li>Click on <strong>Account</strong>.</li>
-										<li>Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.</li>
-										<li>Click on the <strong>Create a Key</strong> button.<br/></li>
-										<li>Copy the API key into the field below or use the global constant.</li>
-									</ol>', 'eightshift-forms'),
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+										__('Log in to your Mailchimp Account.', 'eightshift-forms'),
+										__('Navigate to your user profile image (bottom left corner).', 'eightshift-forms'),
+										__('Click on <strong>Account</strong>.', 'eightshift-forms'),
+										__('Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.', 'eightshift-forms'),
+										__('Click on the <strong>Create a Key</strong> button.', 'eightshift-forms'),
+										__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],

@@ -267,16 +267,14 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								'introTitleSize' => 'small',
-								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-								'introSubtitle' => \__('<ol>
-										<li>Log in to your Goodbits Account.</li>
-										<li>Go to <strong>Settings</strong>, then click <strong><a target="_blank" href="https://app.Goodbits.com/integrations/api/">API</a></strong>.</li>
-										<li>Copy the API key into the field below or use the global constant</li>
-									</ol>', 'eightshift-forms'),
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									\__('Log in to your Goodbits Account.', 'eightshift-forms'),
+									\__('Go to <strong>Settings</strong> page located in the sidabar.', 'eightshift-forms'),
+									\__('Click on the <strong>API</strong> link located under the header.', 'eightshift-forms'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],

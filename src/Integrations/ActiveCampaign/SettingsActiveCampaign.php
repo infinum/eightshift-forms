@@ -287,17 +287,14 @@ class SettingsActiveCampaign implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								'introTitleSize' => 'small',
-								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-								'introSubtitle' => \__('<ol>
-										<li>Log in to your ActiveCampaign Account.</li>
-										<li>Navigate to your Settings page (gear icon in the bottom-left corner).</li>
-										<li>Click on <strong>Developer</strong>.</li>
-										<li>Copy the API key and URL into the fields below or use the global constant.</li>
-									</ol>', 'eightshift-forms'),
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									\__('Log in to your ActiveCampaign Account.', 'eightshift-forms'),
+									\__('Navigate to your Settings page (gear icon in the bottom-left corner).', 'eightshift-forms'),
+									\__('Click on <strong>Developer</strong> link.', 'eightshift-forms'),
+									\__('Copy the API key and URL into the fields under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],

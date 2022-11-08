@@ -268,17 +268,13 @@ class SettingsMailerlite implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								'introTitleSize' => 'small',
-								'introSubtitle' => \__('
-									<ol>
-										<li>Log in to your MailerLite Account.</li>
-										<li>Go to <a target="_blank" href="https://app.mailerlite.com/integrations/api/">Developer API</a>.</li>
-										<li>Copy the API key into the field below or use the global constant.</li>
-									<ol>
-								', 'eightshift-forms'),
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									\__('Log in to your MailerLite Account.', 'eightshift-forms'),
+									sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Developer API</a>.', 'eightshift-forms'), 'https://app.mailerlite.com/integrations/api/'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],

@@ -225,16 +225,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								'introTitleSize' => 'small',
-								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-								'introSubtitle' => \__('<ol>
-										<li>Log in to your Clearbit Account.</li>
-										<li>Then click on the <strong><a target="_blank" href="https://dashboard.clearbit.com/api">API</a></strong> in the sidebar.</li>
-										<li>Copy the secret API key into the field below or use the global constant</li>
-									</ol>', 'eightshift-forms'),
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									\__('Log in to your Clearbit Account.', 'eightshift-forms'),
+									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong> in the sidebar.', 'eightshift-forms'), 'https://dashboard.clearbit.com/api'),
+									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],

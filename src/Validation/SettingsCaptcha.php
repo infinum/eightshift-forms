@@ -147,18 +147,6 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a turing test to tell human and bots apart.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \sprintf(\__('<ol>
-						<li>Visit this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.</li>
-						<li>Configure all the options. Make sure to select <strong>reCaptcha version 3</strong>!</li>
-						<li>Copy the API key into the field below or use the global constant.</li>
-					</ol>', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
-			],
-			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -202,6 +190,22 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 								'inputMax' => 1,
 								'inputStep' => 0.1,
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'stepsContent' => [
+									\sprintf(\__('Visit this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
+									\__('Configure all the options. Make sure to select <strong>reCaptcha version 3</strong>!', 'eightshift-forms'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
 							],
 						],
 					],
