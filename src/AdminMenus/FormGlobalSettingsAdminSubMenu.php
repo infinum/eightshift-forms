@@ -12,7 +12,6 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;

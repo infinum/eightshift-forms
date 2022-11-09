@@ -1,5 +1,21 @@
 // stylelint-disable number-max-precision
 
+.eightshift-forms_page_es-settings-global,
+.toplevel_page_es-forms,
+.admin_page_es-settings {
+	#wpbody-content {
+		padding-bottom: 0;
+
+		> .notice {
+			display: none;
+		}
+	}
+
+	#wpfooter {
+		display: none;
+	}
+}
+
 .es-admin-settings-section {
 	$this: &;
 	background-color: var(--global-colors-es-white);
@@ -86,7 +102,7 @@
 		letter-spacing: 0.05em;
 		font-size: 0.7rem;
 		border-radius: 3px;
-		padding: 0.25rem 0.15rem;
+		padding: 0.25rem;
 
 		display: inline-flex;
 		align-items: center;
@@ -231,6 +247,11 @@
 			&::before {
 				opacity: 0.08;
 			}
+		}
+
+		&:focus,
+		&:active {
+			color: var(--global-colors-es-matisse);
 		}
 
 		&--active,

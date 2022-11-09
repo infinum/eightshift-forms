@@ -93,7 +93,12 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$output = [];
+		$output = [
+			[
+				'component' => 'intro',
+				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. All global validation options you can configure in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+			],
+		];
 
 		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
 
@@ -142,7 +147,12 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 
 		$labels = \array_flip(Labels::ALL_LOCAL_LABELS);
 
-		$messagesOutput = [];
+		$messagesOutput = [
+			[
+				'component' => 'intro',
+				'introSubtitle' => \__('In these settings, you can change all validation messages and this settings will be used on all forms.', 'eightshift-forms'),
+			],
+		];
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
 			if (isset($labels[$key])) {
@@ -175,15 +185,11 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-									These patterns can be selected inside the Form editor.
-									<br /> <br />
-									Each pattern should be in its own line and in the following format:
-									<br />
-									<code>pattern-name : pattern </code>
-									<br /> <br />
-									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>click here</a>.
-									<br /> <br /> <br />
-									Use these patterns as an example:
+									Custom validation patterns can be defined in this field so it can be selected inside the Form editor.<br />
+									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>click here</a>.<br /><br />
+									Validation patterns should be provided each in its own line and in the following format:<br />
+									<code>pattern-name : pattern </code><br /><br />
+									Here are some examples:
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),

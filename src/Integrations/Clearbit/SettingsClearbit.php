@@ -356,16 +356,18 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'tabContent' => [
 					[
 						'component' => 'intro',
-						'introSubtitle' => \__('Control which fields from Clearbit are connected to the HubSpot properties. <br/>First column is Clearbit field, and the secound column is HubSpot field.', 'eightshift-forms'),
+						'introSubtitle' => \__('
+							Control which fields from Clearbit are connected to the HubSpot properties.<br/>
+							Label is a Clearbit field, and the input is a HubSpot field to map to.', 'eightshift-forms'),
 					],
 					$clearbitAvailableKeys ? [
 						'component' => 'group',
 						'groupId' => $this->getSettingsName($mapKey),
-						'groupStyle' => 'default',
 						'groupContent' => [
 							[
 								'component' => 'group',
 								'groupSaveOneField' => true,
+								'groupStyle' => 'default-listing',
 								'groupContent' =>  \array_map(
 									static function ($item) use ($clearbitMapValue, $properties) {
 										$selectedValue = $clearbitMapValue[$item] ?? '';

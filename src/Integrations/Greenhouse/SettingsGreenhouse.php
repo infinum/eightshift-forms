@@ -296,10 +296,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Here you can find some of options specific to Greenhouse integration.', 'eightshift-forms'),
-							],
-							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),

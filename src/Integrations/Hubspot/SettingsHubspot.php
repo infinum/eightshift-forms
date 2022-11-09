@@ -325,12 +325,8 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('File upload', 'eightshift-forms'),
+						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Define global settings for file upload fields.', 'eightshift-forms'),
-							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
@@ -383,15 +379,19 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	{
 		return [
 			'component' => 'tab',
-			'tabLabel' => \__('File manager', 'eightshift-forms'),
+			'tabLabel' => \__('Options', 'eightshift-forms'),
 			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('In these settings, you can configure additional HubSpot specific options.', 'eightshift-forms'),
+				],
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
 					'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
-					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder.', 'eightshift-forms'),
+					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder in your HubSpot file manager.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
 				],

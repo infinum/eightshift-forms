@@ -116,15 +116,12 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'inputFieldHelp' => \sprintf(\__('
-									If URL is provided, after a successful submission the user is redirected to the provided URL. The success message will <strong>not</strong> be shown.
-									<br /> <br />
-									Data from the form can be used in the form of template tags (<code>{field-name}</code>).
-									<br /> <br />
+									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.<br />
+									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
+									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%s
-									<br /> <br />
-									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.', 'eightshift-forms'), Helper::getFormNames($formId)),
+									%s', 'eightshift-forms'), Helper::getFormNames($formId)),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
@@ -140,7 +137,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Tracking event name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Used when pushing data to Google Tag Manager.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
 							]
@@ -171,14 +168,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('Built-in scripts and styles', 'eightshift-forms'),
 								'checkboxesFieldHelp' => \__('
-									Don\'t forget to provide your own scripts and styles if you disable the built-in ones. You can get a template for the stylesheet using a WP CLI command.
-									<br /> <br />
-									<i>Disable default styles</i> will disable all the frontend and block editor styles.
-									<br /> <br />
-									<i>Disable default scripts</i> will remove all the frontend logic, including validation and form submission.
-									<br /> <br />
-									<i>Don\'t auto-initialize scripts</i> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.
-								', 'eightshift-forms'),
+									Don\'t forget to provide your own scripts and styles if you disable the built-in ones.<br /><br />
+									<strong>Disable default styles</strong> will disable all the frontend and block editor styles.<br />
+									<strong>Disable default scripts</strong> will remove all the frontend logic, including validation and form submission.<br />
+									<strong>Don\'t auto-initialize scripts</strong> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.', 'eightshift-forms'),
 								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 								'checkboxesContent' => [

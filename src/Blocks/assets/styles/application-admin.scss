@@ -12,3 +12,78 @@
 
 // Find all components and require component_name-admin.scss inside it.
 @import './../../components/*/*-admin.scss';
+
+// Create a color scheme for the WP admin.
+.admin-color {
+	&-fresh { // default
+		--global-colors-es-matisse: #2271b1;
+		--global-colors-es-matisse-50: #2271b180;
+		--global-colors-es-matisse-10: #2271b11A;
+		--global-colors-es-matisse-05: #2271b10D;
+		--global-colors-es-blumine: #135e96;
+	}
+
+	&-light {
+		--global-colors-es-matisse: #0073aa;
+		--global-colors-es-matisse-50: #0073aa80;
+		--global-colors-es-matisse-10: #0073aa1A;
+		--global-colors-es-matisse-05: #0073aa0D;
+		--global-colors-es-blumine: #0096dd;
+	}
+
+	&-modern {
+		--global-colors-es-matisse: #3858e9;
+		--global-colors-es-matisse-50: #3858e980;
+		--global-colors-es-matisse-10: #3858e91A;
+		--global-colors-es-matisse-05: #3858e90D;
+		--global-colors-es-blumine: #183ad6;
+	}
+
+	&-blue {
+		--global-colors-es-matisse: #4796b3;
+		--global-colors-es-matisse-50: #4796b380;
+		--global-colors-es-matisse-10: #4796b31A;
+		--global-colors-es-matisse-05: #4796b30D;
+		--global-colors-es-blumine: #096484;
+	}
+
+	&-coffee {
+		--global-colors-es-matisse: #9d816b;
+		--global-colors-es-matisse-50: #9d816b80;
+		--global-colors-es-matisse-10: #9d816b1A;
+		--global-colors-es-matisse-05: #9d816b0D;
+		--global-colors-es-blumine: #46403c;
+	}
+
+	&-ectoplasm {
+		--global-colors-es-matisse: #6e5395;
+		--global-colors-es-matisse-50: #6e539580;
+		--global-colors-es-matisse-10: #6e53951A;
+		--global-colors-es-matisse-05: #6e53950D;
+		--global-colors-es-blumine: #413256;
+	}
+
+	&-midnight {
+		--global-colors-es-matisse: #69a8bb;
+		--global-colors-es-matisse-50: #69a8bb80;
+		--global-colors-es-matisse-10: #69a8bb1A;
+		--global-colors-es-matisse-05: #69a8bb0D;
+		--global-colors-es-blumine: #4f7d8b;
+	}
+
+	&-ocean {
+		--global-colors-es-matisse: #738e96;
+		--global-colors-es-matisse-50: #738e9680;
+		--global-colors-es-matisse-10: #738e961A;
+		--global-colors-es-matisse-05: #738e960D;
+		--global-colors-es-blumine: #627c83;
+	}
+
+	&-sunrise {
+		--global-colors-es-matisse: #cf4944;
+		--global-colors-es-matisse-50: #cf494480;
+		--global-colors-es-matisse-10: #cf49441A;
+		--global-colors-es-matisse-05: #cf49440D;
+		--global-colors-es-blumine: #be3631;
+	}
+}

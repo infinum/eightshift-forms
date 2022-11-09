@@ -202,7 +202,7 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 								'inputFieldLabel' => \__('Sender e-mail', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Shows in the e-mail client as <i>From:</i>', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Shows in the e-mail client as <strong>From:</strong>', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsEmail' => true,
 								'inputIsRequired' => true,
@@ -215,16 +215,19 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 						'tabLabel' => \__('Email details', 'eightshift-forms'),
 						'tabContent' => [
 							[
+								'component' => 'intro',
+								'introSubtitle' => \__('In these settings, your can define details when the email will be sent once the user submits.', 'eightshift-forms'),
+							],
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 								'inputFieldLabel' => \__('E-mail destination', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
-								'inputFieldHelp' => \sprintf(\__('The e-mail will be sent to this address.
-								<br /> <br />
-								Data from the form can be used in the form of template tags (<code>{field-name}</code>).
-								<br />
-								<b>WARNING: Be careful when using template tags and make sure that tag you are using contains a valid email address value.</b>', 'eightshift-forms'), $formNames),
+								'inputFieldHelp' => \sprintf(\__('
+									The e-mail will be sent to this address.<br />
+									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
+									<b>WARNING: Be careful when using template tags and make sure that tag you are using contains a valid email address value.</b>', 'eightshift-forms'), $formNames),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
@@ -246,13 +249,11 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 								'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 								'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
-								'textareaFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).
-									<br /> <br />
-									These tags are detected from the form:
-									<br />
-									%s
-									<br /> <br />
-									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.', 'eightshift-forms'), $formNames),
+								'textareaFieldHelp' => \sprintf(\__('
+									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
+									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
+									These tags are detected from the form:<br />
+									%s', 'eightshift-forms'), $formNames),
 								'textareaIsRequired' => true,
 								'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 							],
@@ -264,8 +265,8 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('The confirmation mail is sent to the user that filled in the form, usually a "thank you" e-mail or similar.
-									<br /> <br />
+								'introSubtitle' => \__('
+									The confirmation mail is sent to the user that filled in the form, usually a "thank you" e-mail or similar.<br />
 									Leave blank to disable the confirmation e-mail.', 'eightshift-forms'),
 							],
 							[
@@ -285,14 +286,11 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 								'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 								'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
-								'textareaFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).
-									<br /> <br />
-									These tags are detected from the form:
-									<br />
-									%s
-									<br /> <br />
-									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.
-								', 'eightshift-forms'), $formNames),
+								'textareaFieldHelp' => \sprintf(\__('
+									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
+									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
+									These tags are detected from the form:<br />
+									%s', 'eightshift-forms'), $formNames),
 								'textareaIsRequired' => false,
 								'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 							],
@@ -317,6 +315,11 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introSubtitle' => \__('Please keep in mind Mailer system uses the default WordPress mailing system. If you need to use something else, you need to configure it manually or use a plugin.', 'eightshift-forms'),
+			],
 		];
 	}
 }

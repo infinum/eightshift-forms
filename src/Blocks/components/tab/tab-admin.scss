@@ -107,11 +107,10 @@
 		row-gap: var(--global-es-spacing-horizontal);
 
 		@include media(desktop up) {
-			padding-bottom: 0;
 			order: 99;
 			flex-grow: 1;
 			width: 100%;
-			border: none;
+			border-top: none;
 			margin: 0;
 		}
 	}

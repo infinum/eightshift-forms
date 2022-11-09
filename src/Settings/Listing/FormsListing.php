@@ -13,6 +13,7 @@ namespace EightshiftForms\Settings\Listing;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use WP_Query;
 
@@ -80,6 +81,12 @@ class FormsListing implements FormListingInterface
 			$validFilterName = $integration['valid'] ?? '';
 
 			if (!$validFilterName) {
+				continue;
+			}
+
+			$type = $integration['type'] ?? Settings::SETTINGS_SIEDBAR_TYPE_GENERAL;
+
+			if ($type === Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING) {
 				continue;
 			}
 

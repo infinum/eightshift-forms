@@ -115,7 +115,8 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Settings used for debugging forms. USE WITH CAUTION!', 'eightshift-forms'),
+								'introIsHighlighted' => true,
+								'introSubtitle' => \__('These options can make your forms not work correctly, so please use them cautiously!', 'eightshift-forms'),
 							],
 							[
 								'component' => 'checkboxes',
@@ -128,24 +129,28 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 										'checkboxLabel' => \__('Skip validation', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
+										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Skip form reset after submit', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
+										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Skip captcha', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
+										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Output logs', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
+										'checkboxAsToggle' => true,
 									]
 								]
 							],

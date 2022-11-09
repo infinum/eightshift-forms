@@ -93,9 +93,14 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
-				'introSubtitle' => \sprintf(\__('
-					In these settings, you can change all options regarding geolocation, allowing you to render different forms based on the user\'s location conditionally by using local Geolocation API.<br/><br/>
-					This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
+				'introSubtitle' => \sprintf(\__('This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
+			],
+			[
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introTitle' => \__('Caching'),
+				'introTitleSize' => 'medium',
+				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly, if you have some caching on the user\'s side of your website, like WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), '#'),
 			],
 		];
 	}

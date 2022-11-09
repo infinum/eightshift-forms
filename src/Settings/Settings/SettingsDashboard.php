@@ -109,6 +109,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 								'checkboxLabel' => $key,
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked($use, $use),
 								'checkboxValue' => $use,
+								'checkboxSingleSubmit' => true,
 								'checkboxAsToggle' => true,
 								'checkboxAsToggleSize' => 'medium',
 								'checkboxHideLabelText' => true,

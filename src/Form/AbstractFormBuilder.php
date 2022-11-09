@@ -51,14 +51,6 @@ abstract class AbstractFormBuilder
 	{
 		$formContent = '';
 
-		// Add divider on the bottom of every form.
-		$formContent .= Components::render(
-			'divider',
-			Components::props('divider', []),
-			'',
-			true
-		);
-
 		// Add submit on the bottom of every form.
 		$formContent .= Components::render(
 			'submit',

@@ -627,7 +627,6 @@ trait SettingsHelper
 				'component' => 'group',
 				'groupLabel' => \ucfirst($label),
 				'groupSaveOneField' => true,
-				'groupStyle' => 'full-inner',
 				'groupContent' => [
 					[
 						'component' => 'conditional-logic-repeater',
@@ -815,15 +814,15 @@ trait SettingsHelper
 	 *
 	 * @return array
 	 */
-	private function getNoValidGlobalConfigOutput($type): array
+	private function getNoValidGlobalConfigOutput(string $type): array
 	{
-		$label = \ucwords(\str_replace('-', ' ', $type));
+		$label = Filters::getSettingsLabels($type);
 		return [
 			[
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %s you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentSubtitle' => \sprintf(\__('Before using %s you need to configure it in <a href="%s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'tools',
 			],
 		];
@@ -834,15 +833,17 @@ trait SettingsHelper
 	 *
 	 * @return array
 	 */
-	private function getNoIntegrationFetchDataOutput($type): array
+	private function getNoIntegrationFetchDataOutput(string $type): array
 	{
-		$label = \ucwords(\str_replace('-', ' ', $type));
+		$label = Filters::getSettingsLabels($type);
 
 		return [
 			[
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
-				'highlightedContentSubtitle' => \sprintf(\__('Data from %s couldn\'t be fetched. Check the API key.', 'eightshift-forms'), $label),
+				'highlightedContentSubtitle' => \sprintf(\__('
+					We are sorry but we couldn\'t get any data from the external source. <br />
+					Please go to %s <a href="%s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'error',
 			],
 		];
@@ -864,12 +865,12 @@ trait SettingsHelper
 			'tabContent' => [
 				[
 					'component' => 'intro',
-					'introSubtitle' => \__('Provide conditional tags for fields and their relationships.', 'eightshift-forms'),
+					'introSubtitle' => \__('In these setting, you can provide conditional tags for fields and their relationships. <br />', 'eightshift-forms'),
 				],
 				[
 					'component' => 'group',
 					'groupId' => $this->getSettingsName($key),
-					'groupStyle' => 'conditional-tags',
+					'groupStyle' => 'default-listing-divider',
 					'groupContent' => $this->getConditionalTagsFieldsDetails(
 						$key,
 						$formFields,
@@ -917,8 +918,8 @@ trait SettingsHelper
 					'component' => 'intro',
 					// translators: %s replaces the button or string.
 					'introSubtitle' => \sprintf(\__('
-						Control which fields show up on the frontend, and set up how they look and work. <br />
-						To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
+						In these setting, you can provide additional configuration for all the integration fields. <br />
+						If you want to change the fields order click on the button below. Please remember to save the new order, by clicking click on the "save settings" button at the bottom of the page. <br /><br />
 						%s', 'eightshift-forms'), $sortingButton),
 				],
 				[
@@ -926,7 +927,7 @@ trait SettingsHelper
 					'groupId' => $this->getSettingsName($key),
 					'groupBeforeContent' => $beforeContent,
 					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
-					'groupStyle' => 'integration',
+					'groupStyle' => 'default-listing-divider',
 					'groupContent' => $this->getIntegrationFieldsDetails(
 						$key,
 						$settingsType,
@@ -966,7 +967,7 @@ trait SettingsHelper
 				'component' => 'select',
 				'selectName' => $this->getSettingsName($key),
 				'selectId' => $this->getSettingsName($key),
-				'selectFieldLabel' => \__('Form', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Selected integration form', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
 				'selectFieldHelp' => \sprintf(\__('If a form isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
 				'selectOptions' => \array_merge(
@@ -1071,6 +1072,10 @@ trait SettingsHelper
 		if ($formId) {
 			$formAdditionalProps['formPostId'] = $formId;
 		}
+
+		$formAdditionalProps['formAttrs'] = [
+			'data-settings-type' => $internalType,
+		];
 
 		// Populate and build form.
 		return $this->buildSettingsForm(

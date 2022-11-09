@@ -333,7 +333,7 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 			'tabContent' => [
 				[
 					'component' => 'intro',
-					'introSubtitle' => \__('Control which tags wil show up on the frontend and set up how will they look and work.', 'eightshift-forms'),
+					'introSubtitle' => \__('In these settings, you can control which tags will show up on the frontend and set up how will they look and work.', 'eightshift-forms'),
 				],
 				[
 					'component' => 'select',

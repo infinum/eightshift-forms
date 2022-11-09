@@ -18,18 +18,7 @@
 		}
 	}
 
-	&--integration {
-		> #{$this}__content {
-			display: grid;
-			row-gap: var(--global-es-spacing-horizontal);
-
-			> * {
-				padding-top: var(--global-es-spacing-horizontal);
-				border-top: 1px solid var(--global-colors-es-ebb);
-			}
-		}
-	}
-
+	// Integration specific.
 	&--integration-inner {
 		> #{$this}__content {
 			display: grid;
@@ -66,7 +55,16 @@
 		}
 	}
 
-	&--conditional-tags {
+	// Default listing for fields.
+	&--default-listing {
+		> #{$this}__content {
+			display: grid;
+			row-gap: var(--global-es-spacing-horizontal);
+		}
+	}
+
+	// Default listing with top divider.
+	&--default-listing-divider {
 		> #{$this}__content {
 			display: grid;
 			row-gap: var(--global-es-spacing-horizontal);
@@ -74,15 +72,11 @@
 			> * {
 				padding-top: var(--global-es-spacing-horizontal);
 				border-top: 1px solid var(--global-colors-es-ebb);
-
-				&:first-child {
-					padding-top: 0;
-					border-top: none;
-				}
 			}
 		}
 	}
 
+	// Tags listing top group.
 	&--tags {
 		> #{$this}__content {
 			display: grid;
@@ -91,6 +85,7 @@
 		}
 	}
 
+	// Tags listing for checkboxes.
 	&--tags-inner-checkbox {
 		> #{$this}__content {
 			.es-field__content-wrap {
@@ -106,6 +101,7 @@
 		}
 	}
 
+	// Tags listing for input.
 	&--tags-inner-input {
 		grid-row-start: 1;
 
