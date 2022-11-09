@@ -43,9 +43,9 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 *
 	 * @return array<int|string, mixed>
 	 */
-	public function getSettingsSidebar(string $formId = ''): array
+	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array
 	{
-		return $this->getSettingsSidebarOutput($formId);
+		return $this->getSettingsSidebarOutput($formId, $integrationTypeUsed);
 	}
 
 	/**

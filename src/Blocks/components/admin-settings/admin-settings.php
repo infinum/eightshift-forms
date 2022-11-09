@@ -26,6 +26,7 @@ $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attribute
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
 $adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
 $adminSettingsIsGlobal = Components::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
+$adminSettingsNotice = Components::checkAttr('adminSettingsNotice', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -38,6 +39,12 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 }
 
 ?>
+
+<?php if ($adminSettingsNotice) { ?>
+	<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
+		<?php echo esc_html($adminSettingsNotice); ?>
+	</div>
+<?php } ?>
 
 <div class="<?php echo esc_attr($layoutClass); ?>">
 	<div class="<?php echo esc_attr("{$sectionClass}__sidebar"); ?>">

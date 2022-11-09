@@ -15,6 +15,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 
 /**
@@ -997,7 +998,7 @@ trait SettingsHelper
 		];
 	}
 
-	protected function getSettingsSidebarOutput(string $formId = ''): array
+	protected function getSettingsSidebarOutput(string $formId = '', string $integrationTypeUsed = ''): array
 	{
 		$internalType = 'settingsGlobal';
 
@@ -1013,16 +1014,21 @@ trait SettingsHelper
 				continue;
 			}
 
+			$type = $value['type'] ?? '';
+
+			if (!$type) {
+				continue;
+			}
+
+			// Skip integration forms if they are not used in the Block editor.
+			if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed ) {
+				continue;
+			}
+
 			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
 			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey)) {
-				continue;
-			}
-
-			$type = $value['type'] ?? '';
-
-			if(!$type) {
 				continue;
 			}
 

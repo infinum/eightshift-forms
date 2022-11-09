@@ -20,7 +20,7 @@ interface SettingsInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSettingsSidebar(string $formId = ''): array;
+	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array;
 
 	/**
 	 * Get all settings array for building settings page.

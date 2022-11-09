@@ -93,7 +93,7 @@ class Filters
 			'settings' => SettingsMailer::FILTER_SETTINGS_NAME,
 			'valid' => SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="4" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="m2 5 8 6 8-6M2 15.5l5.5-6m11 6-5.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 		],
 		SettingsMailchimp::SETTINGS_TYPE_KEY => [
@@ -413,8 +413,8 @@ class Filters
 				'desc' => \__('In these settings, you can change all options regarding all general configuration.', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION => [
-				'title' => \__('Integration', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding all forms integrations.', 'eightshift-forms'),
+				'title' => \__('Form Type', 'eightshift-forms'),
+				'desc' => \__('In these settings, you can change all options regarding all forms types.', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING => [
 				'title' => \__('Troubleshooting', 'eightshift-forms'),

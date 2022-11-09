@@ -296,4 +296,30 @@ class Helper
 	{
 		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 	}
+
+	public static function getUsedFormTypeById(string $formId): string
+	{
+		$content = get_post_field('post_content', (int) $formId);
+
+		if (!$content) {
+			return '';
+		}
+
+		$blocks = parse_blocks($content);
+
+		if (!$blocks) {
+			return '';
+		}
+
+		$blockName = $blocks[0]['innerBlocks'][0]['blockName'] ?? '';
+
+		if (!$blockName) {
+			return '';
+		}
+
+		$blockName = explode('/', $blockName);
+
+		return end($blockName) ?? '';
+		
+	}
 }

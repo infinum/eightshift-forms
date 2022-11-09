@@ -30,6 +30,9 @@
 		"adminSettingsIsGlobal": {
 			"type": "boolean",
 			"default": false
+		},
+		"adminSettingsNotice": {
+			"type": "string"
 		}
 	}
 }
