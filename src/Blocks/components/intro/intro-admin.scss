@@ -44,13 +44,12 @@
 		text-decoration-thickness: 1px;
 	}
 
-	ul,
-	ol {
+	ul {
 		margin: 0;
-		list-style-position: inside;
 	}
 
 	li {
-		margin: 0;
+		list-style: initial;
+		margin-left: 23px;
 	}
 }

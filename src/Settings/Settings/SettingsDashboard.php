@@ -92,7 +92,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 						'url' => Helper::getSettingsGlobalPageUrl($key),
 					],
 					[
-						'label' => \__('External', 'eightshift-forms'),
+						'label' => \__('Website', 'eightshift-forms'),
 						'url' => Filters::getSettingsLabels($key, 'externalLink'),
 					]
 				],
