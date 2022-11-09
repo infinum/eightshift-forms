@@ -25,12 +25,16 @@
 	&--with-sidebar {
 		display: grid;
 		grid-template-columns: 15rem 1fr;
-	}
+		grid-template-areas: 
+			"notice notice notice"
+			"sidebar main main";
+		}
 
 	&__sidebar {
 		background-color: var(--global-colors-es-white);
 		height: 100vh;
 		overflow-x: hidden;
+		grid-area: sidebar;
 
 		> * {
 			margin-bottom: var(--global-es-spacing-horizontal);
@@ -49,7 +53,12 @@
 		line-height: 1.2;
 	}
 
+	&__notice {
+		grid-area: notice;
+	}
+
 	&__main {
+		grid-area: main;
 		border-left: 1px solid var(--global-colors-es-ebb);
 
 		#{$this}__content {
@@ -81,12 +90,21 @@
 		min-height: 36px;
 	}
 
+	&__heading-inner-wrap {
+		display: flex;
+		align-items: center;
+	}
+
 	&__heading-title {
 		font-size: 1.5rem;
 		font-weight: bold;
 		min-height: 1.25rem;
 		line-height: 1.2;
 		color: var(--global-colors-es-matisse);
+	}
+
+	&__heading-filter {
+		margin-left: 30px;
 	}
 
 	&__description {

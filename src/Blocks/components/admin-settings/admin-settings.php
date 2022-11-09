@@ -40,13 +40,21 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 ?>
 
-<?php if ($adminSettingsNotice) { ?>
-	<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
-		<?php echo esc_html($adminSettingsNotice); ?>
-	</div>
-<?php } ?>
-
 <div class="<?php echo esc_attr($layoutClass); ?>">
+	<?php if ($adminSettingsNotice) { ?>
+		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
+			<?php
+				echo Components::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+					'notice',
+					[
+						'noticeContent' => $adminSettingsNotice,
+					],
+					'',
+					true
+				);
+			?>
+		</div>
+	<?php } ?>
 	<div class="<?php echo esc_attr("{$sectionClass}__sidebar"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__section {$sectionClass}__section--clean"); ?>">
 			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">

@@ -13,13 +13,13 @@ export class Tabs {
 			return
 		}
 
-		[...elements].forEach((element) => {
-			element.addEventListener('click', this.onClick, true);
-		});
-
 		this.setActiveByHash(elements);
 
 		this.addLoadedParent(elements[0].parentElement);
+
+		[...elements].forEach((element) => {
+			element.addEventListener('click', this.onClick, true);
+		});
 	};
 
 	setActiveByHash = (elements) => {

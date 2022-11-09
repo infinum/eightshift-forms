@@ -6,6 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
+use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -14,6 +15,8 @@ $manifestSection = Components::getComponent('admin-settings-section');
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $componentClass = $manifest['componentClass'] ?? '';
+$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+$componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -23,6 +26,7 @@ $adminListingTrashLink = Components::checkAttr('adminListingTrashLink', $attribu
 $adminListingForms = Components::checkAttr('adminListingForms', $attributes, $manifest);
 $adminListingType = Components::checkAttr('adminListingType', $attributes, $manifest);
 $adminListingListingLink = Components::checkAttr('adminListingListingLink', $attributes, $manifest);
+$adminListingIntegrations = Components::checkAttr('adminListingIntegrations', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -36,8 +40,18 @@ $layoutClass = Components::classnames([
 		<?php if ($adminListingPageTitle || $adminListingSubTitle) { ?>
 			<div class="<?php echo esc_attr("{$sectionClass}__heading"); ?>">
 				<div class="<?php echo esc_attr("{$sectionClass}__heading-wrap"); ?>">
-					<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
-						<?php echo esc_html($adminListingPageTitle); ?>
+					<div class="<?php echo esc_attr("{$sectionClass}__heading-inner-wrap"); ?>">
+						<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
+							<?php echo esc_html($adminListingPageTitle); ?>
+						</div>
+
+						<div class="<?php echo esc_attr("{$sectionClass}__heading-filter {$componentJsFilterClass}"); ?>">
+							<?php
+								if ($adminListingIntegrations) {
+									echo $adminListingIntegrations;
+								}
+							?>
+						</div>
 					</div>
 
 					<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
@@ -100,14 +114,14 @@ $layoutClass = Components::classnames([
 						$settingsLocationLink = $form['settingsLocationLink'] ?? '';
 						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$activeIntegrations = $form['activeIntegrations'] ?? [];
+						$activeIntegration = $form['activeIntegration'] ?? [];
 
 						$slug = $editLink;
 						if (!$editLink) {
 							$slug = '#';
 						}
 						?>
-						<li class="<?php echo esc_attr("{$componentClass}__list-item"); ?>">
+						<li class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>" data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>">
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($slug); ?>" class="<?php echo esc_attr("{$componentClass}__label"); ?>">
 									<?php if ($postType === 'post') { ?>
@@ -120,21 +134,11 @@ $layoutClass = Components::classnames([
 
 									<span><?php echo $title ? esc_html($title) : esc_html($id); ?></span>
 
-									<?php if ($activeIntegrations) { ?>
+									<?php if ($activeIntegration) { ?>
 										<div class="<?php echo esc_attr("{$componentClass}__integration"); ?>">
-											<?php foreach ($activeIntegrations as $integration) { ?>
-												<?php
-												$label = $integration['label'] ?? '';
-												$icon = $integration['icon'] ?? '';
-
-												if (!$label || !$icon) {
-													continue;
-												}
-												?>
-												<span title="<?php echo esc_attr($label); ?>">
-													<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-												</span>
-											<?php } ?>
+											<span title="<?php echo esc_attr($activeIntegration['label'] ?? ''); ?>">
+												<?php echo $activeIntegration['icon'] ?? ''; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+											</span>
 										</div>
 									<?php } ?>
 

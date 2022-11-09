@@ -30,7 +30,7 @@
 		font-size: 14px;
 		line-height: 1.7;
 		color: var(--global-colors-es-boulder);
-		max-width: 768px;
+		max-width: var(--global-es-max-width);
 
 		&:first-child {
 			margin-top: 0;

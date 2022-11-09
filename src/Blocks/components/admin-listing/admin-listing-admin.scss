@@ -38,6 +38,10 @@
 		&:first-child:last-child {
 			border-bottom: none;
 		}
+
+		&.is-hidden {
+			display: none;
+		}
 	}
 
 	&__item-intro {

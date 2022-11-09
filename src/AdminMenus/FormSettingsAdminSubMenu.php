@@ -12,6 +12,8 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
@@ -187,17 +189,18 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		$integrationTypeUsed = Helper::getUsedFormTypeById($formId);
+		$formEditLink = Helper::getFormEditPageUrl($formId);
 
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsFormEditLink' => Helper::getFormEditPageUrl($formId),
+			'adminSettingsFormEditLink' => $formEditLink,
 			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
-			'adminSettingsNotice' => $integrationTypeUsed,
+			'adminSettingsNotice' => !$integrationTypeUsed ? sprintf(\__('Please add a block type in your form block editor so you can see the configuration options in the sidebar. You can edit the form on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), $formEditLink) : '',
 		];
 	}
 

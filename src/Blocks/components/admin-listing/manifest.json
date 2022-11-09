@@ -2,6 +2,8 @@
 	"componentName": "admin-listing",
 	"title": "Admin Listing",
 	"componentClass": "es-admin-listing",
+	"componentJsFilterClass": "js-es-admin-listing-filter",
+	"componentJsItemClass": "js-es-admin-listing-item",
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"
@@ -22,6 +24,9 @@
 			"type": "string"
 		},
 		"adminListingListingLink": {
+			"type": "string"
+		},
+		"adminListingIntegrations": {
 			"type": "string"
 		}
 	}
