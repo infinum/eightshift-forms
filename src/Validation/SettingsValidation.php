@@ -14,7 +14,6 @@ use EightshiftForms\Labels\Labels;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -96,6 +95,7 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 		$output = [
 			[
 				'component' => 'intro',
+				// translators: %s will be replaced with the settings link.
 				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. All global validation options you can configure in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 			],
 		];

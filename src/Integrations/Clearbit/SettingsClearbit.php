@@ -229,6 +229,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Clearbit Account.', 'eightshift-forms'),
+									// translators: %s will be replaced with the api externa link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong> in the sidebar.', 'eightshift-forms'), 'https://dashboard.clearbit.com/api'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
@@ -247,7 +248,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */
 	public function getOutputClearbit(string $formId, array $formFields, array $keys): array
 	{
@@ -324,7 +325,10 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		return [
 			'component' => 'tab',
 			'tabLabel' => \__('Clearbit', 'eightshift-forms'),
-			'tabContent' => \array_merge($output, $outputEmail),
+			'tabContent' => [
+				...$output,
+				...$outputEmail,
+			],
 		];
 	}
 
@@ -334,7 +338,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 * @param array<string, string> $properties Array of properties from integration.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, array<int|string, array<string, bool|string>>|string>>|bool|string>>|string>>|string>
 	 */
 	public function getOutputGlobalClearbit(array $properties, array $keys): array
 	{
@@ -368,10 +372,9 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 								'component' => 'group',
 								'groupSaveOneField' => true,
 								'groupStyle' => 'default-listing',
-								'groupContent' =>  \array_map(
+								'groupContent' => \array_map(
 									static function ($item) use ($clearbitMapValue, $properties) {
 										$selectedValue = $clearbitMapValue[$item] ?? '';
-		
 										return [
 											'component' => 'select',
 											'selectName' => $item,

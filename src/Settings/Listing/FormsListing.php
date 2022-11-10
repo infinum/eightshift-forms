@@ -13,7 +13,6 @@ namespace EightshiftForms\Settings\Listing;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use WP_Query;
 
@@ -71,7 +70,7 @@ class FormsListing implements FormListingInterface
 	 *
 	 * @param string $id Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, string>
 	 */
 	private function getActiveIntegrationIcons(string $id): array
 	{

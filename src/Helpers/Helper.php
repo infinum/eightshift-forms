@@ -297,15 +297,22 @@ class Helper
 		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 	}
 
+	/**
+	 * Output the form type used by checking the post_content and extracting the block used for the integration.
+	 *
+	 * @param string $formId Form ID to check.
+	 *
+	 * @return string
+	 */
 	public static function getUsedFormTypeById(string $formId): string
 	{
-		$content = get_post_field('post_content', (int) $formId);
+		$content = \get_post_field('post_content', (int) $formId);
 
 		if (!$content) {
 			return '';
 		}
 
-		$blocks = parse_blocks($content);
+		$blocks = \parse_blocks($content);
 
 		if (!$blocks) {
 			return '';
@@ -317,9 +324,8 @@ class Helper
 			return '';
 		}
 
-		$blockName = explode('/', $blockName);
+		$blockName = \explode('/', $blockName);
 
-		return end($blockName) ?? '';
-		
+		return \end($blockName);
 	}
 }

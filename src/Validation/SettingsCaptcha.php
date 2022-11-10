@@ -127,7 +127,7 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 	/**
 	 * Get global settings array for building settings page.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array<mixed>>
 	 */
 	public function getSettingsGlobalData(): array
 	{
@@ -200,8 +200,8 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 							[
 								'component' => 'steps',
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
-								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 								'stepsContent' => [
+									// translators: %s will be replaced with the external link.
 									\sprintf(\__('Visit this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
 									\__('Configure all the options. Make sure to select <strong>reCaptcha version 3</strong>!', 'eightshift-forms'),
 									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),

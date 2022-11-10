@@ -35,7 +35,7 @@ if (!$stepsContent) {
 		<?php foreach ($stepsContent as $step) { ?>
 			<li class="<?php echo esc_attr("{$componentClass}__step"); ?>">
 				<span class="<?php echo esc_attr("{$componentClass}__step-inner"); ?>">
-					<?php echo $step; ?>
+					<?php echo wp_kses_post($step); ?>
 				</span>
 			</li>
 		<?php } ?>

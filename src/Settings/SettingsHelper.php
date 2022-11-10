@@ -15,7 +15,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 
 /**
@@ -286,6 +285,7 @@ trait SettingsHelper
 					'groupSaveOneField' => true,
 					'groupStyle' => 'integration-inner',
 					'groupContent' => [],
+					'groupBeforeContent' => $this->getAppliedFilterOutput($formViewDetailsFilterName),
 				]
 			];
 
@@ -775,13 +775,15 @@ trait SettingsHelper
 				];
 			},
 			$fieldsValues
-		) ?? [];
+		);
 	}
 
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<string, string>
 	 */
 	private function getIntroOutput(string $type): array
 	{
@@ -795,7 +797,7 @@ trait SettingsHelper
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array
+	 * @return array<int, array<string, string>>
 	 */
 	private function getNoActiveFeatureOutput(): array
 	{
@@ -813,17 +815,20 @@ trait SettingsHelper
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<int, array<string, string>>
 	 */
 	private function getNoValidGlobalConfigOutput(string $type): array
 	{
 		$label = Filters::getSettingsLabels($type);
+
 		return [
 			[
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %s you need to configure it in <a href="%s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'tools',
 			],
 		];
@@ -832,7 +837,9 @@ trait SettingsHelper
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<int, array<string, string>>
 	 */
 	private function getNoIntegrationFetchDataOutput(string $type): array
 	{
@@ -842,12 +849,31 @@ trait SettingsHelper
 			[
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+				// translators: %s will be replaced with links.
 				'highlightedContentSubtitle' => \sprintf(\__('
 					We are sorry but we couldn\'t get any data from the external source. <br />
-					Please go to %s <a href="%s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+					Please go to %1$s <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'error',
 			],
 		];
+	}
+
+	/**
+	 * Applied filter settings output.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 */
+	private function getAppliedFilterOutput(string $name): string
+	{
+		if (!\has_filter($name)) {
+			return '';
+		}
+
+		$svg = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.157 16.801 8.673 2.522c.562-1.068 2.092-1.068 2.654 0l7.516 14.28A1.5 1.5 0 0 1 17.515 19H2.486a1.5 1.5 0 0 1-1.328-2.199z" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M10 7.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"></path><circle cx="10" cy="15.25" r="1" fill="currentColor"></circle></svg>';
+
+		return '<br /> <span class="is-filter-applied">' . $svg . \__('This field has a code filter applied or a constant global set. Please be aware the filter output may override the output of this setting field.', 'eightshift-forms') . '</span>';
 	}
 
 	/**
@@ -855,8 +881,9 @@ trait SettingsHelper
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 * @param string $key Settings key used.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|string>>|string>
 	 */
 	private function getOutputConditionalTags(string $formId, array $formFields, string $key): array
 	{
@@ -882,13 +909,16 @@ trait SettingsHelper
 		];
 	}
 
-		/**
+	/**
 	 * Output array - integration fields.
 	 *
 	 * @param string $formId Form ID.
 	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 * @param string $settingsType Settings type used.
+	 * @param string $key Settings key used.
+	 * @param array<int, string> $additional Additional settins key to add to the integration output.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
 	private function getOutputIntegrationFields(
 		string $formId,
@@ -947,6 +977,8 @@ trait SettingsHelper
 	 * @param string $formId Form ID.
 	 * @param array<string, mixed> $items Items from cache data.
 	 * @param string $selectedFormId Selected form id.
+	 * @param string $settingsType Settings type used.
+	 * @param string $key Settings key used.
 	 *
 	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
 	 */
@@ -956,8 +988,7 @@ trait SettingsHelper
 		string $selectedFormId,
 		string $settingsType,
 		string $key
-		): array
-	{
+	): array {
 		$manifestForm = Components::getComponent('form');
 
 		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
@@ -996,97 +1027,5 @@ trait SettingsHelper
 				'selectSingleSubmit' => true,
 			],
 		];
-	}
-
-	protected function getSettingsSidebarOutput(string $formId = '', string $integrationTypeUsed = ''): array
-	{
-		$internalType = 'settingsGlobal';
-
-		if ($formId) {
-			$internalType = 'settings';
-		}
-
-		$output = [];
-
-		foreach (Filters::ALL as $key => $value) {
-			// Determin if there is filter key name.
-			if (!isset($value[$internalType])) {
-				continue;
-			}
-
-			$type = $value['type'] ?? '';
-
-			if (!$type) {
-				continue;
-			}
-
-			// Skip integration forms if they are not used in the Block editor.
-			if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed ) {
-				continue;
-			}
-
-			$isUsedKey = $value['use'] ?? '';
-
-			// Bailout if used key is missing.
-			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey)) {
-				continue;
-			}
-
-			// Populate sidebar data.
-			$output[$type][] = [
-				'label' => Filters::getSettingsLabels($key),
-				'value' => $key,
-				'icon' => $value['icon'] ?? '',
-				'type' => $value['type'] ?? '',
-			];
-		}
-
-		// Return all settings data.
-		return $output;
-	}
-
-		/**
-	 * Get all settings array for building settings page.
-	 *
-	 * @param string $type Form Type to show.
-	 * @param string $formId Form ID.
-	 *
-	 * @return string
-	 */
-	protected function getSettingsFormOutput(string $type, string $formId = ''): string
-	{
-		$internalType = 'settingsGlobal';
-
-		if ($formId) {
-			$internalType = 'settings';
-		}
-
-		// Find settings page.
-		$filter = Filters::ALL[$type][$internalType] ?? '';
-
-		// Determin if there is a filter for settings page.
-		if (!\has_filter($filter)) {
-			return '';
-		}
-
-		// Get filter data.
-		$data = \apply_filters($filter, $formId);
-
-		// Add additional props to form component.
-		$formAdditionalProps['formType'] = $type;
-
-		if ($formId) {
-			$formAdditionalProps['formPostId'] = $formId;
-		}
-
-		$formAdditionalProps['formAttrs'] = [
-			'data-settings-type' => $internalType,
-		];
-
-		// Populate and build form.
-		return $this->buildSettingsForm(
-			$data ?? [],
-			$formAdditionalProps
-		);
 	}
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;

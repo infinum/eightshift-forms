@@ -28,7 +28,7 @@ $highlightedContentClass = Components::classnames([
 	<?php
 	if (!empty($highlightedContentIcon) && $manifest['icons'][$highlightedContentIcon]) {
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo $manifest['icons'][$highlightedContentIcon];
+		echo wp_kses_post($manifest['icons'][$highlightedContentIcon]);
 	}
 	?>
 
@@ -38,7 +38,7 @@ $highlightedContentClass = Components::classnames([
 
 	<?php if ($highlightedContentSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
-			<?php echo $highlightedContentSubtitle; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo wp_kses_post($highlightedContentSubtitle); ?>
 		</div>
 	<?php } ?>
 </div>

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -92,14 +93,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		// if (\has_filter(Filters::getBlockFilterName('form', 'successRedirectUrl'))) {
-		// 	$successRedirectUrl['inputFieldHelp'] = $successRedirectUrl['inputFieldHelp'] . '<br /> <strong>' . \__('The redirect URL is set by a global constant, the value above will be ignored.', 'eightshift-forms') . '</strong>';
-		// }
-
-		// if (\has_filter(Filters::getBlockFilterName('form', 'trackingEventName'))) {
-		// 	$trackingEventName['inputFieldHelp'] = $trackingEventName['inputFieldHelp'] . '<br /> <strong>' . \__('The tracking event name is set by a global constant, the value above will be ignored.', 'eightshift-forms') . '</strong>';
-		// }
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -114,14 +107,14 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
+								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
 									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.<br />
 									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
 									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%s', 'eightshift-forms'), Helper::getFormNames($formId)),
+									%1$s %2$s', 'eightshift-forms'), Helper::getFormNames($formId), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'successRedirectUrl'))),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
@@ -137,7 +130,8 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Tracking event name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent.', 'eightshift-forms'),
+								// translators: %s will be replaced with th filter output copy.
+								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'trackingEventName'))),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
 							]

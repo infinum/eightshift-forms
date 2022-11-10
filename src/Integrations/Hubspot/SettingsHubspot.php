@@ -373,7 +373,7 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 *
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<string, array<int, array<string, string>>|string>
 	 */
 	private function getOutputFilemanager(string $formId): array
 	{

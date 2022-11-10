@@ -42,7 +42,7 @@ foreach ($items as $key => $innerItems) {
 							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-								<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+								<?php echo wp_kses_post($icon); ?>
 								<?php echo esc_html($label); ?>
 							</span>
 						</a>
@@ -51,5 +51,4 @@ foreach ($items as $key => $innerItems) {
 			</ul>
 		</div>
 	</div>
-
 <?php }

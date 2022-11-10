@@ -294,12 +294,12 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 								'component' => 'steps',
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
-										__('Log in to your Mailchimp Account.', 'eightshift-forms'),
-										__('Navigate to your user profile image (bottom left corner).', 'eightshift-forms'),
-										__('Click on <strong>Account</strong>.', 'eightshift-forms'),
-										__('Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.', 'eightshift-forms'),
-										__('Click on the <strong>Create a Key</strong> button.', 'eightshift-forms'),
-										__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+										\__('Log in to your Mailchimp Account.', 'eightshift-forms'),
+										\__('Navigate to your user profile image (bottom left corner).', 'eightshift-forms'),
+										\__('Click on <strong>Account</strong>.', 'eightshift-forms'),
+										\__('Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.', 'eightshift-forms'),
+										\__('Click on the <strong>Create a Key</strong> button.', 'eightshift-forms'),
+										\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
 						],
@@ -312,10 +312,10 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 	/**
 	 * Output array - tags.
 	 *
-	 * @param string $selectedFormId Selected form id.
 	 * @param string $formId Form ID.
+	 * @param string $selectedFormId Selected form id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|bool|string>>|string>
 	 */
 	private function getOutputTags(string $formId, string $selectedFormId): array
 	{
@@ -403,7 +403,7 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 								function ($tag) use ($formId) {
 									$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
 									$id = $tag['id'] ?? '';
-			
+
 									return [
 										'component' => 'input',
 										'inputFieldLabel' => '',

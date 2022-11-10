@@ -99,15 +99,12 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			return $this->getNoActiveFeatureOutput();
 		}
 
-
-		$isUsedFallbackEmails = $this->isCheckboxOptionChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
-					$isUsedFallbackEmails ? [
+					[
 						'component' => 'tab',
 						'tabLabel' => \__('Emails', 'eightshift-forms'),
 						'tabContent' => [
@@ -126,7 +123,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								'inputValue' => $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 							],
 						],
-					] : [],
+					],
 				]
 			],
 		];

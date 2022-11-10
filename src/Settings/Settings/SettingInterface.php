@@ -27,7 +27,7 @@ interface SettingInterface
 	/**
 	 * Get global settings array for building settings page.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array<mixed>>
 	 */
 	public function getSettingsGlobalData(): array;
 }

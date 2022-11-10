@@ -24,7 +24,7 @@ interface SettingsClearbitDataInterface extends SettingInterface
 	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */
 	public function getOutputClearbit(string $formId, array $formFields, array $keys): array;
 
@@ -34,7 +34,7 @@ interface SettingsClearbitDataInterface extends SettingInterface
 	 * @param array<string, string> $properties Array of properties from integration.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, array<int|string, array<string, bool|string>>|string>>|bool|string>>|string>>|string>
 	 */
 	public function getOutputGlobalClearbit(array $properties, array $keys): array;
 }

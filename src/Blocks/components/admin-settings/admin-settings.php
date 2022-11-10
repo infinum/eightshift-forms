@@ -44,7 +44,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
 			<?php
-				echo Components::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				echo Components::render(
 					'notice',
 					[
 						'noticeContent' => $adminSettingsNotice,

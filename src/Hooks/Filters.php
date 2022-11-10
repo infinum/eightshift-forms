@@ -336,7 +336,17 @@ class Filters
 		],
 	];
 
-	public static function getSettingsLabels(string $type, string $key = 'title') {
+	/**
+	 * Get the settings labels and details by type and key.
+	 * This method is used to provide the ability to translate all strings.
+	 *
+	 * @param string $type Settings type from the Settins class.
+	 * @param string $key Key to output.
+	 *
+	 * @return string
+	 */
+	public static function getSettingsLabels(string $type, string $key = 'title'): string
+	{
 		$data = [
 			SettingsDashboard::SETTINGS_TYPE_KEY => [
 				'title' => \__('Dashboard', 'eightshift-forms'),

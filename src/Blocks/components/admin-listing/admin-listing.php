@@ -47,9 +47,9 @@ $layoutClass = Components::classnames([
 
 						<div class="<?php echo esc_attr("{$sectionClass}__heading-filter {$componentJsFilterClass}"); ?>">
 							<?php
-								if ($adminListingIntegrations) {
-									echo $adminListingIntegrations;
-								}
+							if ($adminListingIntegrations) {
+								echo wp_kses_post($adminListingIntegrations);
+							}
 							?>
 						</div>
 					</div>
@@ -95,7 +95,6 @@ $layoutClass = Components::classnames([
 
 				echo Components::render('highlighted-content', [
 					'highlightedContentTitle' => __('Nothing to see here', 'eightshift-forms'),
-					// translators: %s will be replaced with the global settings url.
 					'highlightedContentSubtitle' => $emptyStateSubtitle,
 					'highlightedContentIcon' => 'empty',
 				]);
@@ -137,7 +136,7 @@ $layoutClass = Components::classnames([
 									<?php if ($activeIntegration) { ?>
 										<div class="<?php echo esc_attr("{$componentClass}__integration"); ?>">
 											<span title="<?php echo esc_attr($activeIntegration['label'] ?? ''); ?>">
-												<?php echo $activeIntegration['icon'] ?? ''; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+												<?php echo wp_kses_post($activeIntegration['icon'] ?? '');?>
 											</span>
 										</div>
 									<?php } ?>

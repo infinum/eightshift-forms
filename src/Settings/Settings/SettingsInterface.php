@@ -18,6 +18,9 @@ interface SettingsInterface
 	/**
 	 * Get all settings sidebar array for building settings page.
 	 *
+	 * @param string $formId Form ID.
+	 * @param string $integrationTypeUsed Used integration in this form.
+	 *
 	 * @return array<string, mixed>
 	 */
 	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array;
@@ -25,7 +28,7 @@ interface SettingsInterface
 	/**
 	 * Get all settings array for building settings page.
 	 *
-	 * @param string $type Form Type to show.
+	 * @param string $type Form settings Type to show.
 	 * @param string $formId Form ID.
 	 *
 	 * @return string

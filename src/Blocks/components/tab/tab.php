@@ -32,15 +32,10 @@ if (!$tabLabel || !$tabContent) {
 
 ?>
 
-<div class="<?php echo esc_attr($tabLabelClass); ?>" data-hash="<?php echo urlencode($tabLabel); ?>">
-	<?php
-		echo $tabLabel; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	?>
+<div class="<?php echo esc_attr($tabLabelClass); ?>" data-hash="<?php echo rawurlencode($tabLabel); ?>">
+	<?php echo esc_html($tabLabel); ?>
 </div>
 
-
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php
-		echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	?>
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 </div>

@@ -43,7 +43,7 @@ abstract class AbstractFormBuilder
 	 * Build settings form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
+	 * @param array<string, array<string, string>|string> $formAdditionalProps Additional attributes for form component.
 	 *
 	 * @return string
 	 */
@@ -163,7 +163,7 @@ abstract class AbstractFormBuilder
 		) {
 			$output = '';
 
-			$nestedKeys = array_flip([
+			$nestedKeys = \array_flip([
 				'checkboxesContent',
 				'radiosContent',
 				'selectOptions',
@@ -182,7 +182,7 @@ abstract class AbstractFormBuilder
 					foreach ($attributes[$nestedKey] as $item) {
 						// Determine the component's name.
 						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
-	
+
 						// Build child component.
 						if ($item) {
 							foreach ($item as $itemKey => $itemValue) {
@@ -191,10 +191,10 @@ abstract class AbstractFormBuilder
 									foreach ($itemValue as $group) {
 										$groupOutput .= $this->buildComponent($group);
 									}
-		
+
 									$itemValue = $groupOutput;
 								}
-		
+
 								$item[$itemKey] = $itemValue;
 							}
 
@@ -210,7 +210,6 @@ abstract class AbstractFormBuilder
 				// Output child to the parent array.
 				$attributes[$nestedKey] = $output;
 			}
-
 		}
 
 		$additionalAttributes = [];

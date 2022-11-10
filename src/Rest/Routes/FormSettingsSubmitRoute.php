@@ -138,9 +138,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
 							// Check if key needs updating or deleting.
-							
 							if ($value['value']) {
-								
 								\update_option($key, $value['value']);
 							} else {
 								\delete_option($key);

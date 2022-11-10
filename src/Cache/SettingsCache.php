@@ -12,11 +12,6 @@ namespace EightshiftForms\Cache;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
-use EightshiftForms\Integrations\Hubspot\HubspotClient;
-use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
-use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -76,16 +71,17 @@ class SettingsCache implements SettingInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutItems' => array_map(
-					static function($key, $value) use ($manifestForm) {
+				'layoutItems' => \array_values(\array_filter(\array_map(
+					static function ($key, $value) use ($manifestForm) {
 						$cache = $value['cache'] ?? [];
-
+		
 						if ($cache) {
 							$title = Filters::getSettingsLabels($key);
-
+		
 							return [
 								'component' => 'submit',
 								'submitFieldSkip' => true,
+								// translators: %s will be replaced with the title.
 								'submitValue' => \sprintf(\__('Clear %s cache', 'eightshift-forms'), $title),
 								'submitIcon' => $key,
 								'submitAttrs' => [
@@ -95,9 +91,9 @@ class SettingsCache implements SettingInterface, ServiceInterface
 							];
 						}
 					},
-					array_keys(Filters::ALL),
+					\array_keys(Filters::ALL),
 					Filters::ALL
-				),
+				))),
 			],
 		];
 	}

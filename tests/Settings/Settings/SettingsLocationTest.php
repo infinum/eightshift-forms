@@ -28,16 +28,7 @@ afterAll(function() {
 test('Register method will call custom hooks', function () {
 	$this->locationSettings->register();
 
-	$this->assertSame(10, \has_filter(SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME, 'EightshiftForms\Settings\Settings\SettingsLocation->getSettingsSidebar()'), 'The callback getSettingsSidebar should be hooked to custom filter hook with priority 10.');
 	$this->assertSame(10, \has_filter(SettingsLocation::FILTER_SETTINGS_NAME, 'EightshiftForms\Settings\Settings\SettingsLocation->getSettingsData()'), 'The callback getSettingsData should be hooked to custom filter hook with priority 10.');
-});
-
-test('getSettingsSidebar should return correct array keys', function () {
-	$sidebar = $this->locationSettings->getSettingsSidebar();
-
-	$this->assertArrayHasKey('label', $sidebar, 'Key label must be present in the array');
-	$this->assertArrayHasKey('value', $sidebar, 'Key value must be present in the array');
-	$this->assertArrayHasKey('icon', $sidebar, 'Key icon must be present in the array');
 });
 
 test('getSettingsData should return array of correct keys with data items.', function () {

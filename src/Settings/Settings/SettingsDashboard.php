@@ -79,8 +79,8 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 				continue;
 			}
 
-			$icon = $value['icon'] ?? '';
-			$type = $value['type'] ?? Settings::SETTINGS_SIEDBAR_TYPE_GENERAL;
+			$icon = $value['icon'];
+			$type = $value['type'];
 
 			$filtered[$type][] = [
 				'component' => 'card',

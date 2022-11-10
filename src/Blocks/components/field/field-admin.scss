@@ -43,6 +43,20 @@
 		}
 	}
 
+	&__help,
+	&__before-content,
+	&__after-content {
+		.is-filter-applied {
+			color: var(--global-colors-es-pome);
+			display: flex;
+			align-items: center;
+
+			svg {
+				margin-right: 10px;
+			}
+		}
+	}
+
 	&__before-content {
 		max-width: var(--global-es-max-width);
 

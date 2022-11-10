@@ -30,11 +30,11 @@ if (!$tabsContent) {
 ?>
 <div class="<?php echo esc_attr($tabsClass); ?>">
 	<?php
-		echo $tabsContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo $tabsContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
-		echo Components::render(
-			'loader',
-			Components::props('loader', $attributes)
-		);
+	echo Components::render(
+		'loader',
+		Components::props('loader', $attributes)
+	);
 	?>
 </div>

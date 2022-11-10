@@ -30,7 +30,7 @@
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-		"infinum/eightshift-coding-standards": "^1.5",
+		"infinum/eightshift-coding-standards": "^1.6",
 		"pestphp/pest": "^1.2",
 		"php-stubs/wordpress-stubs": "^5.9",
 		"phpunit/phpunit": "^9.5",

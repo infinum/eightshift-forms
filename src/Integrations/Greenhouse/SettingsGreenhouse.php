@@ -324,8 +324,10 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 										'component' => 'steps',
 										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 										'stepsContent' => [
-											sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
-											sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
+											// translators: %s will be replaced with the link.
+											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+												// translators: %s will be replaced with the link.
+											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
 											\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
 											\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
 											\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
@@ -335,8 +337,10 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 										'component' => 'steps',
 										'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
 										'stepsContent' => [
-											sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
-											sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
+											// translators: %s will be replaced with the link.
+											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+												// translators: %s will be replaced with the link.
+											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
 											\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
 											\__('Make the name all lowercase.', 'eightshift-forms'),
 											\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),

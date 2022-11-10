@@ -83,7 +83,6 @@ test('Theme scripts are registered and enqueued when not disabled', function () 
 
 	Functions\expect('wp_register_script')->once()->andReturn(true);
 	Functions\expect('wp_enqueue_script')->once()->andReturn(true);
-	Functions\expect('wp_localize_script')->atLeast()->once()->andReturn(true);
 
 	$this->enqueueTheme->enqueueScriptsLocal();
 
@@ -93,28 +92,6 @@ test('Theme scripts are registered and enqueued when not disabled', function () 
 
 	destroyTestBlocks();
 });
-
-test('Theme scripts are localized properly when not disabled', function ($handle, $objectName, $dataArray) {
-	buildTestBlocks();
-
-	$originalESTest = getenv('ES_TEST');
-	putenv('ES_TEST=true');
-	
-	Filters\expectApplied('es_forms_settings_global_is_valid_captcha')->with(false)->andReturn(true);
-	putenv('test_force_option_es-forms-captcha-site-key-HR=nevershareyourkeys');
-	
-	Functions\expect('wp_register_script')->once()->andReturn(true);
-	Functions\expect('wp_enqueue_script')->once()->andReturn(true);
-	Functions\expect('wp_localize_script')->atLeast()->once()->with($handle, $objectName, $dataArray)->andReturn(true);
-
-	$this->enqueueTheme->enqueueScriptsLocal();
-
-	if ($originalESTest === false) {
-		putenv('ES_TEST');
-	}
-
-	destroyTestBlocks();
-})->with('default theme localizations');
 
 test('Recaptcha script is not enqueued when captcha is disabled or settings are disabled', function() {
 	Functions\expect('wp_register_script')->never();

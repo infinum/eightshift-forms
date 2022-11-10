@@ -142,8 +142,8 @@ class Mailer implements MailerInterface
 			}
 		}
 
-		$to = $this->getOptionValue(SettingsFallback::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY);
-		$cc = $this->getOptionValue(SettingsFallback::SETTINGS_TROUBLESHOOTING_FALLBACK_EMAIL_KEY . '-' . $integration);
+		$to = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
 		// translators: %1$s replaces the integration name and %2$s formId.
 		$subject = \sprintf(\__('Your %1$s form failed: %2$s', 'eightshift-forms'), $integration, $formId);
 		// translators: %s replaces the parameters list html.

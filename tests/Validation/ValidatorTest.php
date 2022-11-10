@@ -3,8 +3,6 @@
 namespace Tests\Unit\Validation;
 
 use Brain\Monkey;
-use Brain\Monkey\Functions;
-
 use function Tests\setupMocks;
 
 use EightshiftForms\Validation\Validator;

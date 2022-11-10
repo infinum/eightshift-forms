@@ -36,7 +36,7 @@ trait ApiHelper
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param array<mixed>|WP_Error $response API full reponse.
+	 * @param mixed $response API full reponse.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.

@@ -30,19 +30,19 @@ $cardClass = Components::classnames([
 		<div class="<?php echo esc_attr("{$componentClass}__title-wrap"); ?>">
 			<?php if ($cardTitle) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
-					<?php echo $cardTitle; ?>
+					<?php echo esc_html($cardTitle); ?>
 				</div>
 			<?php } ?>
 			<?php if ($cardLinks) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__links"); ?>">
-					<?php foreach ($cardLinks as $link) { ?>
+					<?php foreach ($cardLinks as $link) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited ?>
 						<?php
-							$label = $link['label'] ?? '';
-							$url = $link['url'] ?? '';
+						$label = $link['label'] ?? '';
+						$url = $link['url'] ?? '';
 
-							if (!$label || !$url) {
-								continue;
-							}
+						if (!$label || !$url) {
+							continue;
+						}
 						?>
 						<a
 							href="<?php echo esc_url($url); ?>"
@@ -58,14 +58,14 @@ $cardClass = Components::classnames([
 		</div>
 		<?php if ($cardIcon) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-				<?php echo $cardIcon; ?>
+				<?php echo wp_kses_post($cardIcon); ?>
 			</div>
 		<?php } ?>
 	</div>
 
 	<?php if ($cardToggle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__toggle"); ?>">
-			<?php echo $cardToggle; ?>
+			<?php echo wp_kses_post($cardToggle); ?>
 		</div>
 	<?php } ?>
 </div>

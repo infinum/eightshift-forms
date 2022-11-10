@@ -549,8 +549,8 @@ dataset('file validation', [
 	[
 		[
 			'file-wrong-type' => 'The file type is not supported. Only .pdf are allowed.',
-			'file-too-small' => 'The file is smaller than allowed. Minimum file size is 100 kB.',
-			'file-too-large' => 'The file is larger than allowed. Maximum file size is 400 kB.',
+			'file-too-small' => 'The file is smaller than allowed. Minimum file size is 0.1 MB.',
+			'file-too-large' => 'The file is larger than allowed. Maximum file size is 0.4 MB.',
 			'file-wrong-mimetype' => 'The file seems to be corrupted. Only .pdf are allowed.',
 			'file-wrong-mimetype2' => 'The file seems to be corrupted. Only .jpg are allowed.',
 		], // expected
