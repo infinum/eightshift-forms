@@ -163,18 +163,18 @@ abstract class AbstractFormBuilder
 		) {
 			$output = '';
 
-			$nestedKeys = \array_flip([
-				'checkboxesContent',
-				'radiosContent',
-				'selectOptions',
-				'groupContent',
-				'tabsContent',
-				'tabContent',
-				'layout',
-				'layoutItems',
-				'card',
-				'cardToggle',
-			]);
+			$nestedKeys = [
+				'checkboxesContent' => 0,
+				'radiosContent' => 1,
+				'selectOptions' => 2,
+				'groupContent' => 3,
+				'tabsContent' => 4,
+				'tabContent' => 5,
+				'layout' => 6,
+				'layoutItems' => 7,
+				'card' => 8,
+				'cardToggle' => 9,
+			];
 
 			foreach ($nestedKeys as $nestedKey => $value) {
 				if (isset($attributes[$nestedKey])) {
