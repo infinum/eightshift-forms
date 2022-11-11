@@ -178,7 +178,7 @@ abstract class AbstractFormBuilder
 
 			foreach ($nestedKeys as $nestedKey => $value) {
 				if (isset($attributes[$nestedKey])) {
-					// Loop children and do the same ad on top level.
+					// Loop children and do the same on top level.
 					foreach ($attributes[$nestedKey] as $item) {
 						// Determine the component's name.
 						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
