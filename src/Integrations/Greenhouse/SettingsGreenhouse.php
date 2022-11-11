@@ -300,7 +300,7 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. We have set the default to 5MB, and limited the max file size to 25MB.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputIsRequired' => true,

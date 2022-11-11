@@ -20,28 +20,28 @@ use EightshiftForms\Hooks\Filters;
 class Settings extends AbstractFormBuilder implements SettingsInterface
 {
 	/**
-	 * Settings sidebar type - general
+	 * Settings sidebar type - general.
 	 *
 	 * @var string
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_GENERAL = 'sidebar-general';
 
 	/**
-	 * Settings sidebar type - integration
+	 * Settings sidebar type - integration.
 	 *
 	 * @var string
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_INTEGRATION = 'sidebar-integration';
 
 	/**
-	 * Settings sidebar type - troubleshooting
+	 * Settings sidebar type - troubleshooting.
 	 *
 	 * @var string
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
 
 	/**
-	 * Get all settings sidebar array for building settings page.
+	 * Get sidebar settings array for building settings page.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $integrationTypeUsed Used integration in this form.
@@ -92,7 +92,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	}
 
 	/**
-	 * Get all settings array for building settings page.
+	 * Get form settings array for building settings page.
 	 *
 	 * @param string $type Form settings Type to show.
 	 * @param string $formId Form ID.
@@ -110,7 +110,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		// Find settings page.
 		$filter = Filters::ALL[$type][$internalType] ?? '';
 
-		// Determin if there is a filter for settings page.
+		// Determine if there is a filter for settings page.
 		if (!\has_filter($filter)) {
 			return '';
 		}

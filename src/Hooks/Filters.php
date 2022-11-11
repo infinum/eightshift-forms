@@ -344,7 +344,7 @@ class Filters
 	 * Get the settings labels and details by type and key.
 	 * This method is used to provide the ability to translate all strings.
 	 *
-	 * @param string $type Settings type from the Settins class.
+	 * @param string $type Settings type from the Settings class.
 	 * @param string $key Key to output.
 	 *
 	 * @return string
@@ -371,7 +371,7 @@ class Filters
 			],
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Geolocation', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding geolocation allowing you to render different forms based on the user\'s location conditionally by using local Geolocation API.', 'eightshift-forms'),
+				'desc' => \__('In these settings, you can change all options regarding geolocation. Geolocation allows you to render different forms based on the user\'s location conditionally, using an internal geolocation API.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),
@@ -422,7 +422,7 @@ class Filters
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),
-				'desc' => \__('Clear cache for the specific integration.', 'eightshift-forms'),
+				'desc' => \__('Clear cache for specific integrations.', 'eightshift-forms'),
 			],
 			SettingsLocation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Locations', 'eightshift-forms'),
@@ -438,7 +438,7 @@ class Filters
 			],
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Documentation', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can view all links and details for the plugin.', 'eightshift-forms'),
+				'desc' => \__('Need help? Interested in learning more? Find resources here.', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_GENERAL => [
 				'title' => \__('General', 'eightshift-forms'),
@@ -450,7 +450,7 @@ class Filters
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING => [
 				'title' => \__('Troubleshooting', 'eightshift-forms'),
-				'desc' => \__('Troubleshooting settings.', 'eightshift-forms'),
+				'desc' => \__('Settings for various troubleshooting and debugging options.', 'eightshift-forms'),
 			],
 		];
 

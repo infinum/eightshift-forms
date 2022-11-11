@@ -43,7 +43,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'dashboard';
 
 	/**
-	 * Register all the hooks
+	 * Register all the hooks.
 	 *
 	 * @return void
 	 */
@@ -54,7 +54,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form settings data array
+	 * Get Form settings data array.
 	 *
 	 * @param string $formId Form Id.
 	 *

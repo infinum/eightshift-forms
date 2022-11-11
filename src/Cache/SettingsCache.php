@@ -47,7 +47,7 @@ class SettingsCache implements SettingInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form settings data array
+	 * Get Form settings data array.
 	 *
 	 * @param string $formId Form Id.
 	 *

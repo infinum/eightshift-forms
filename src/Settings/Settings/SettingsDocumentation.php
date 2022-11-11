@@ -35,7 +35,7 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'documentation';
 
 	/**
-	 * Register all the hooks
+	 * Register all the hooks.
 	 *
 	 * @return void
 	 */
@@ -45,7 +45,7 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Form settings data array
+	 * Get Form settings data array.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -89,8 +89,8 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => \__('What is Eightshift forms?', 'eightshift-forms'),
-				'introSubtitle' => \__('Eightshift forms plugins is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.', 'eightshift-forms'),
+				'introTitle' => \__('What is Eightshift Forms?', 'eightshift-forms'),
+				'introSubtitle' => \__('Eightshift forms plugin is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'divider',
@@ -123,9 +123,9 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,
-				'introTitle' => \__('Where can I found developers documentation?', 'eightshift-forms'),
+				'introTitle' => \__('Where can I find developer documentation?', 'eightshift-forms'),
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__("We provided a complete documentation for all our features and hooks you can use on this <a href='%s' target='_blank' rel='noopener noreferrer'>link</a>.", 'eightshift-forms'), 'https://github.com/infinum/eightshift-forms/tree/develop/src/Hooks'),
+				'introSubtitle' => \sprintf(\__("We provide complete documentation for all features and hooks you can use on this <a href='%s' target='_blank' rel='noopener noreferrer'>link</a>.", 'eightshift-forms'), 'https://github.com/infinum/eightshift-forms/tree/develop/src/Hooks'),
 			],
 			[
 				'component' => 'divider',
@@ -135,7 +135,7 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 				'introTitle' => \__('Credits', 'eightshift-forms'),
 				// translators: %s will be replaced with links.
 				'introSubtitle' => \sprintf(\__("
-					WordPress team @<a href='%1\$s' target='_blank' rel='noopener noreferrer'>Infinum</a> created this plugin using our <a href='%2\$s' target='_blank' rel='noopener noreferrer'>Eightshift boilerplate</a> as a platform.<br />
+					WordPress team @<a href='%1\$s' target='_blank' rel='noopener noreferrer'>Infinum</a> created this plugin using <a href='%2\$s' target='_blank' rel='noopener noreferrer'>Eightshift Development Kit</a>.<br />
 					If you have any questions or problems, please open an <a href='%3\$s' target='_blank' rel='noopener noreferrer'>issue on GitHub</a>, and we will do our best to give you a timely answer. <br /> <br />%4\$s", 'eightshift-forms'), 'https://infinum.com/', 'https://eightshift.com/', 'https://github.com/infinum/eightshift-forms/issues', $logo),
 			],
 			[

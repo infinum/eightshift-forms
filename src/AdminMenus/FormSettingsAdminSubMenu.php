@@ -31,7 +31,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsInterface $settings Inject form all settings data.
+	 * @param SettingsInterface $settings Settings data for injecting the form.
 	 */
 	public function __construct(SettingsInterface $settings)
 	{
@@ -198,7 +198,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
 			// translators: %s will be replaced with the form edit link.
-			'adminSettingsNotice' => !$integrationTypeUsed ? \sprintf(\__('Please add a block type in your form block editor so you can see the configuration options in the sidebar. You can edit the form on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), $formEditLink) : '',
+			'adminSettingsNotice' => !$integrationTypeUsed ? \sprintf(\__('Please set a block type in the form's block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
 		];
 	}
 

@@ -17,7 +17,7 @@ use EightshiftFormsVendor\EightshiftLibs\View\AbstractEscapedView;
 class EscapedView extends AbstractEscapedView implements ServiceInterface
 {
 	/**
-	 * Register all the hooks
+	 * Register all the hooks.
 	 */
 	public function register(): void
 	{
@@ -25,7 +25,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	}
 
 	/**
-	 * Add tags to default wp_kses_post
+	 * Add tags to default wp_kses_post.
 	 *
 	 * @param array<string, array<string, bool>|true> $tags Allowed tags array.
 	 * @param string $context Context in which the filter is called.

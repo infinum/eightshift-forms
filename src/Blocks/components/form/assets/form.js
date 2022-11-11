@@ -32,7 +32,7 @@ export class Form {
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
 		this.conditionalTagsSelector = `${this.fieldSelector} input[id='conditional-tags']`;
 
-		// LocalStorage
+		// LocalStorage.
 		this.STORAGE_NAME = 'es-storage';
 
 		// Custom fields params.

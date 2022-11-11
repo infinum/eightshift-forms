@@ -96,7 +96,7 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				// translators: %s will be replaced with the settings link.
-				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. All global validation options you can configure in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. Global validation options can be configured in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 			],
 		];
 
@@ -150,7 +150,7 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 		$messagesOutput = [
 			[
 				'component' => 'intro',
-				'introSubtitle' => \__('In these settings, you can change all validation messages and this settings will be used on all forms.', 'eightshift-forms'),
+				'introSubtitle' => \__('In these settings, you can change all validation messages. These settings will be used on all forms.', 'eightshift-forms'),
 			],
 		];
 		// List all labels for settings override.
@@ -185,9 +185,9 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-									Custom validation patterns can be defined in this field so it can be selected inside the Form editor.<br />
-									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>click here</a>.<br /><br />
-									Validation patterns should be provided each in its own line and in the following format:<br />
+									Custom validation patterns that are defined in this field can be selected inside the Form editor.<br />
+									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
+									One validation pattern should be provided per line, in the following format:<br />
 									<code>pattern-name : pattern </code><br /><br />
 									Here are some examples:
 									<ul>

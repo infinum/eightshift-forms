@@ -77,7 +77,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	}
 
 	/**
-	 * Get Form settings data array
+	 * Get Form settings data array.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -110,7 +110,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('In the event of an error on the forms, they will send an email as a fallback containing all the data. This email can be used to debug or provide manual input of the data for any integration.', 'eightshift-forms'),
+								'introSubtitle' => \__('In the event of an error on the forms, Eightshift Forms can send an email notification containing all the form submission data as a fallback. The email can be used to debug or allow manual data processing.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'input',

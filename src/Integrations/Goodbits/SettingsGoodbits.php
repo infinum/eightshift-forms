@@ -271,7 +271,7 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Goodbits Account.', 'eightshift-forms'),
-									\__('Go to <strong>Settings</strong> page located in the sidabar.', 'eightshift-forms'),
+									\__('Go to <strong>Settings</strong> page located in the sidebar.', 'eightshift-forms'),
 									\__('Click on the <strong>API</strong> link located under the header.', 'eightshift-forms'),
 									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],

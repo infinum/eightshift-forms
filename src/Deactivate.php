@@ -36,7 +36,7 @@ class Deactivate implements HasDeactivationInterface
 			}
 		}
 
-		// Delet transients.
+		// Delete transients.
 		foreach (Filters::ALL as $items) {
 			$cache = $items['cache'] ?? [];
 

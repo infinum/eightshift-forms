@@ -82,7 +82,7 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 	}
 
 	/**
-	 * Get Form settings data array
+	 * Get Form settings data array.
 	 *
 	 * @param string $formId Form Id.
 	 *
@@ -116,7 +116,7 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 							[
 								'component' => 'intro',
 								'introIsHighlighted' => true,
-								'introSubtitle' => \__('These options can make your forms not work correctly, so please use them cautiously!', 'eightshift-forms'),
+								'introSubtitle' => \__('These options can stop your forms from working correctly, so please use them cautiously!', 'eightshift-forms'),
 							],
 							[
 								'component' => 'checkboxes',

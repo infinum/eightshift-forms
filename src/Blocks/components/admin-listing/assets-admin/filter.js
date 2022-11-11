@@ -10,7 +10,7 @@ export class Filter {
 
 	init = () => {
 		if (!this.items) {
-			return
+			return;
 		}
 
 		this.setActiveFilterByUrl();

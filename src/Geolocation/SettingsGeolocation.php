@@ -134,7 +134,7 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 				'introTitle' => \__('Caching'),
 				'introTitleSize' => 'medium',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly, if you have some caching on the user\'s side of your website, like WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
+				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly if you have caching on the user\'s side of your website such as WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
 			],
 			($use || $useRocket) ? [
 				'component' => 'intro',

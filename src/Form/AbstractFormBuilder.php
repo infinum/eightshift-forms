@@ -43,7 +43,7 @@ abstract class AbstractFormBuilder
 	 * Build settings form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, array<string, string>|string> $formAdditionalProps Additional attributes for form component.
+	 * @param array<string, array<string, string>|string> $formAdditionalProps Additional attributes for the form component.
 	 *
 	 * @return string
 	 */

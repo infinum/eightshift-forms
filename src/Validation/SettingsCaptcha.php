@@ -144,7 +144,7 @@ class SettingsCaptcha implements SettingInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a turing test to tell human and bots apart.', 'eightshift-forms'),
+				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a Turing test to tell human and bots apart.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'tabs',
