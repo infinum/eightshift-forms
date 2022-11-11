@@ -227,7 +227,7 @@ trait SettingsHelper
 	 * @param string $formId Form ID.
 	 * @param array<int, string> $additionalLabel Additional label to show.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, mixed>>
 	 */
 	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId, array $additionalLabel = []): array
 	{
@@ -977,7 +977,7 @@ trait SettingsHelper
 		if ($integration['hiddenFields']) {
 			$hiddenFields .= \__('<br />You have some additional hidden fields defined in the form. These fields will also be added to the frontend form and sent via API:', 'eightshift-forms');
 			$hiddenFields .= '<ul>';
-			foreach($integration['hiddenFields'] as $hidden) {
+			foreach ($integration['hiddenFields'] as $hidden) {
 				$hiddenFields .= "<li>{$hidden}</li>";
 			}
 			$hiddenFields .= '</ul>';

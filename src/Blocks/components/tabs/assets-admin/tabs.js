@@ -1,5 +1,6 @@
 export class Tabs {
 	constructor(options) {
+		this.tabsSelector = options.tabsSelector;
 		this.tabSelector = options.tabSelector;
 
 		this.CLASS_ACTIVE = 'is-active';
@@ -7,41 +8,45 @@ export class Tabs {
 	}
 
 	init = () => {
-		const elements = document.querySelectorAll(this.tabSelector);
+		const tabsElements = document.querySelectorAll(this.tabsSelector);
 
-		if (!elements) {
-			return
+		if (!tabsElements) {
+			return;
 		}
 
-		this.setActiveByHash(elements);
+		[...tabsElements].forEach((tabs) => {
+			this.setActiveByHash(tabs);
 
-		this.addLoadedParent(elements[0].parentElement);
+			this.addLoadedParent(tabs);
 
-		[...elements].forEach((element) => {
-			element.addEventListener('click', this.onClick, true);
+			const tabElements = tabs.querySelectorAll(this.tabSelector);
+
+			[...tabElements].forEach((tab) => {
+				tab.addEventListener('click', this.onClick, true);
+			});
 		});
 	};
 
 	setActiveByHash = (elements) => {
 		const hash = window.location.hash.substring(1);
 
-		const element = document.querySelector(`${this.tabSelector}[data-hash="${hash}"]`);
+		const element = elements.querySelector(`${this.tabSelector}[data-hash="${hash}"]`);
 
 		if (element) {
 			this.addActive(element);
 		} else {
-			this.addActive(elements[0]);
+			this.addActive(elements.children[0]);
 		}
-	}
+	};
 
-	// Handle form submit and all logic.
+	// The onclick handler handles the tab switching logic.
 	onClick = (event) => {
-		const element = event.target;
+		const element = event.target.closest(this.tabSelector);
 
 		this.removeActive(element);
 		this.addActive(element);
 		this.updateHash(element);
-	}
+	};
 
 	removeActive = (element) => {
 		const elements = element.parentElement.querySelectorAll(this.tabSelector);
@@ -51,23 +56,23 @@ export class Tabs {
 				item.classList.remove(this.CLASS_ACTIVE);
 			});
 		}
-	}
+	};
 
 	addActive = (element) => {
 		if (element) {
 			element.classList.add(this.CLASS_ACTIVE);
 		}
-	}
+	};
 
 	addLoadedParent = (element) => {
 		if (element) {
 			element.classList.add(this.CLASS_LOADED);
 		}
-	}
+	};
 
 	updateHash = (element) => {
 		if (element) {
 			window.location.hash = element.getAttribute('data-hash');
 		}
-	}
+	};
 }
