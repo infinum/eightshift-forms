@@ -133,7 +133,7 @@ class MailerliteClient implements ClientInterface
 			'email' => $email,
 			'resubscribe' => true,
 			'autoresponders' => true,
-			'type' => 'unconfirmed',
+			'type' => 'active',
 			'fields' => $this->prepareParams($params),
 		];
 

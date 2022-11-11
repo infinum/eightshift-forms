@@ -25,6 +25,14 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Removed
 - `ES_DEVELOP_MODE` constant because you can configure everything from the settings page.
 
+## [2.1.0]
+
+### Fixed
+- Issue with the hidden field and legacy items in the integration settings.
+
+### Changed
+- MailerLite default status to active
+
 ## [2.0.1]
 
 ### Fixed
@@ -163,6 +171,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.0.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...3.0.0
+[2.1.0]: https://github.com/infinum/eightshift-forms/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/infinum/eightshift-forms/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-forms/compare/1.4.0...2.0.0
 [1.4.0]: https://github.com/infinum/eightshift-forms/compare/1.3.0...1.4.0

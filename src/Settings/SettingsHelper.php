@@ -508,6 +508,9 @@ trait SettingsHelper
 			// Find field id.
 			$id = $fieldDetails['id'];
 
+			// Find field type.
+			$fieldType = $value["{$component}Type"] ?? '';
+
 			// Find field label.
 			$label = $fieldDetails['fieldLabel'];
 
@@ -546,7 +549,9 @@ trait SettingsHelper
 						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
 						break;
 					case $this->integrationFieldUse:
-						$formFields[$key]["{$component}FieldUse"] = \filter_var($itemValue, \FILTER_VALIDATE_BOOLEAN);
+						if ($fieldType !== 'hidden') {
+							$formFields[$key]["{$component}FieldUse"] = \filter_var($itemValue, \FILTER_VALIDATE_BOOLEAN);
+						}
 						break;
 					case $this->integrationFieldFileInfoLabel:
 						if ($itemValue === 'true') {
