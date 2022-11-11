@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.0]
+
+### Added
+- Forms listing filter will allow you to filter form by type.
+- Forms settings will now follow the used theme admin color scheme.
+- New Dashboard settings page where you can toggle options you want to use in the project.
+- New checkbox toggle state for the settings pages.
+- Conditional logic for all integration forms.
+- Documentation page in the settings.
+
+### Changed
+- Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.
+- Fallback emails are no longer in the troubleshooting class but as a standalone class.
+- Your forms will now show only integrations in the settings set in the Block editor.
+
+### Fixed
+- Optimized loading of all settings pages.
+
+### Removed
+- `ES_DEVELOP_MODE` constant because you can configure everything from the settings page.
+
 ## [2.0.1]
 
 ### Fixed
