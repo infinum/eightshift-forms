@@ -96,6 +96,7 @@ class Filters
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="4" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="m2 5 8 6 8-6M2 15.5l5.5-6m11 6-5.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
+			'formBlockName' => 'form',
 		],
 		SettingsMailchimp::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
@@ -332,6 +333,7 @@ class Filters
 		],
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',
+			'setLocale' => 'set_locale',
 		],
 		'troubleshooting' => [
 			'outputLog' => 'output_log',

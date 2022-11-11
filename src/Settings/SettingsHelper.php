@@ -202,16 +202,17 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Set locale depending ond default locale or hook override.
+	 * Set locale depending on default locale or hook override.
 	 *
 	 * @return string
 	 */
 	public function getLocale(): string
 	{
 		$locale = \get_locale();
+		$filterName = Filters::getGeneralFilterName('setLocale');
 
-		if (\has_filter('es_forms_set_locale')) {
-			$locale = \apply_filters('es_forms_set_locale', $locale);
+		if (\has_filter($filterName)) {
+			$locale = \apply_filters($filterName, $locale);
 		}
 
 		return $locale;

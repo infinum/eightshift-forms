@@ -32,6 +32,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
 		'action' => 'es-form-action',
+		'actionExternal' => 'es-form-action-external',
 		'conditionalTags' => 'es-form-conditional-tags',
 		'hubspotCookie' => 'es-form-hubspot-cookie',
 		'hubspotPageName' => 'es-form-hubspot-page-name',
@@ -52,6 +53,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'successRedirect' => 'data-success-redirect',
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
+		'actionExternal' => 'data-action-external',
 	];
 
 	/**

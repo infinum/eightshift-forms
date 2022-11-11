@@ -20,6 +20,7 @@ $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
+$formActionExternal = Components::checkAttr('formActionExternal', $attributes, $manifest);
 $formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
 $formId = Components::checkAttr('formId', $attributes, $manifest);
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
@@ -79,6 +80,10 @@ if ($formName) {
 
 if ($formAction) {
 	$formAttrs['action'] = esc_attr($formAction);
+}
+
+if ($formActionExternal) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['actionExternal']] = esc_attr($formActionExternal);
 }
 
 if ($formMethod) {
