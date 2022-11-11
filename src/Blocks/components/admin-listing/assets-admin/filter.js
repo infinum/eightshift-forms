@@ -41,8 +41,6 @@ export class Filter {
 
 		const param = url.searchParams.get('filter');
 
-		console.log(param);
-
 		if (param) {
 			document.querySelector(`${this.filterSelector} select option[value=${param}]`).selected = true;
 			this.setActiveItemsByFilter(param);
