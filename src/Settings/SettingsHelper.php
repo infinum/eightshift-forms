@@ -238,6 +238,7 @@ trait SettingsHelper
 
 		// Loop form fields.
 		$fields = [];
+		$hiddenFields = [];
 
 		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
 		$disabledEdit = false;
@@ -265,11 +266,6 @@ trait SettingsHelper
 
 			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($field);
 
-			$inputType = $fieldDetails['inputType'];
-			if ($inputType === 'hidden') {
-				continue;
-			}
-
 			$component = $fieldDetails['component'];
 			$id = $fieldDetails['id'];
 			$required = $fieldDetails['required'];
@@ -277,6 +273,12 @@ trait SettingsHelper
 
 			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
 				$label = "{$label} Text";
+			}
+
+			$inputType = $fieldDetails['inputType'];
+			if ($inputType === 'hidden') {
+				$hiddenFields[] = $label;
+				continue;
 			}
 
 			$fieldsOutput = [
@@ -449,7 +451,10 @@ trait SettingsHelper
 
 		\usort($fields, [$this, 'sortFields']);
 
-		return $fields;
+		return [
+			'fields' => $fields,
+			'hiddenFields' => $hiddenFields,
+		];
 	}
 
 	/**
@@ -960,6 +965,24 @@ trait SettingsHelper
 			$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
 		}
 
+		$integration = $this->getIntegrationFieldsDetails(
+			$key,
+			$settingsType,
+			$formFields,
+			$formId,
+			$additional
+		);
+
+		$hiddenFields = '';
+		if ($integration['hiddenFields']) {
+			$hiddenFields .= \__('<br />You have some additional hidden fields defined in the form. These fields will also be added to the frontend form and sent via API:', 'eightshift-forms');
+			$hiddenFields .= '<ul>';
+			foreach($integration['hiddenFields'] as $hidden) {
+				$hiddenFields .= "<li>{$hidden}</li>";
+			}
+			$hiddenFields .= '</ul>';
+		}
+
 		return [
 			'component' => 'tab',
 			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
@@ -970,7 +993,7 @@ trait SettingsHelper
 					'introSubtitle' => \sprintf(\__('
 						In these setting, you can provide additional configuration for all the integration fields. <br />
 						If you want to change the fields order click on the button below. Please remember to save the new order, by clicking click on the "save settings" button at the bottom of the page. <br /><br />
-						%s', 'eightshift-forms'), $sortingButton),
+						%1$s %2$s', 'eightshift-forms'), $sortingButton, $hiddenFields),
 				],
 				[
 					'component' => 'group',
@@ -978,13 +1001,7 @@ trait SettingsHelper
 					'groupBeforeContent' => $beforeContent,
 					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
 					'groupStyle' => 'default-listing-divider',
-					'groupContent' => $this->getIntegrationFieldsDetails(
-						$key,
-						$settingsType,
-						$formFields,
-						$formId,
-						$additional
-					),
+					'groupContent' => $integration['fields'],
 				],
 			],
 		];

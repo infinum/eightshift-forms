@@ -1,12 +1,15 @@
 .es-sorting {
-	&__update {
-		display: none;
+	&__trigger {
+		&.es-submit {
+			width: auto;
+			display: block;
+		}
 	}
 
-	&__trigger,
 	&__update {
 		&.es-submit {
 			width: auto;
+			display: none;
 		}
 	}
 
