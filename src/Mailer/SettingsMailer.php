@@ -192,7 +192,7 @@ class SettingsMailer implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 								'inputFieldLabel' => \__('Sender name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Most e-mail clients show this instead of the e-mail address in the list of e-mails.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Most e-mail clients show the sender name instead of the e-mail address in the list of e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),

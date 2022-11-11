@@ -333,7 +333,7 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 								'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
 								// translators: %s will be replaced with the link.
-								'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+								'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 							],
@@ -399,9 +399,9 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-					'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					// translators: %s will be replaced with the link.
-					'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+					'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
 					'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputType' => 'text',
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),

@@ -110,14 +110,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
+								'introSubtitle' => \__('In the event of an error on the forms, they will send an email as a fallback containing all the data. This email can be used to debug or provide manual input of the data for any integration.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Set email where all fallback emails will be sent. Use comma to separate multiple emails.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
@@ -144,14 +144,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			'tabContent' => [
 				[
 					'component' => 'intro',
-					'introSubtitle' => \__('Your forms will send email fallbacks with all the data if there is any kind of error. This email can be used to debug or provide manual input of the data to any integration.', 'eightshift-forms'),
+					'introSubtitle' => \__('In the event of an error on the forms, they will send an email as a fallback containing all the data. This email can be used to debug or provide manual input of the data for any integration.', 'eightshift-forms'),
 				],
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-					'inputFieldHelp' => \__('Set email where this integration fallback emails will be sent. This field will be used as "cc", main "from" field will be used from the main fallback global setting page. Use comma to separate multiple emails.', 'eightshift-forms'),
+					'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),

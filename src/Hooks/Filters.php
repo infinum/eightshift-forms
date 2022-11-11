@@ -354,19 +354,19 @@ class Filters
 		$data = [
 			SettingsDashboard::SETTINGS_TYPE_KEY => [
 				'title' => \__('Dashboard', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change activate all featured you would like to use in your project.', 'eightshift-forms'),
+				'desc' => \__('Activate or deactivate all features you want to use in your project.', 'eightshift-forms'),
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
 				'title' => \__('General', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding general configuration.', 'eightshift-forms'),
+				'desc' => \__('Options that modify the general behavior of the forms (disabling styles and scripts, custom fields, action behavior, etc.).', 'eightshift-forms'),
 			],
 			SettingsValidation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Validation', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding form validation.', 'eightshift-forms'),
+				'desc' => \__('Form validation settings.', 'eightshift-forms'),
 			],
 			SettingsCaptcha::SETTINGS_TYPE_KEY => [
 				'title' => \__('Captcha', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Google reCaptcha.', 'eightshift-forms'),
+				'desc' => \__('Google reCaptcha specific settings.', 'eightshift-forms'),
 				'externalLink' => 'https://www.google.com/recaptcha/about/',
 			],
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
@@ -375,66 +375,66 @@ class Filters
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding simple emails.', 'eightshift-forms'),
+				'desc' => \__('Regular mail specific settings.', 'eightshift-forms'),
 				'detail' => \__('An internal emailing system that is used for sending and creating beautiful emails.', 'eightshift-forms'),
 			],
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailchimp', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Mailchimp integration.', 'eightshift-forms'),
+				'desc' => \__('Mailchimp integration settings (API key, etc.).', 'eightshift-forms'),
 				'detail' => \__('Mailchimp is a comprehensive email marketing platform that fulfills all your requirements of email correspondence with customers, affiliates, and more.', 'eightshift-forms'),
 				'externalLink' => 'https://mailchimp.com/',
 			],
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'title' => \__('Greenhouse', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Greenhouse integration.', 'eightshift-forms'),
+				'desc' => \__('Greenhouse integration settings (API key, file size limit, etc.).', 'eightshift-forms'),
 				'detail' => \__('Greenhouse is a sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
 				'externalLink' => 'https://www.greenhouse.io/',
 			],
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
 				'title' => \__('HubSpot', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding HubSpot integration.', 'eightshift-forms'),
+				'desc' => \__('HubSpot integration settings (API key, allowed file types for upload, etc.).', 'eightshift-forms'),
 				'detail' => \__('HubSpot is a CRM platform that connects everything scaling companies need to deliver a best-in-class customer experience into one place.', 'eightshift-forms'),
 				'externalLink' => 'https://www.hubspot.com/',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'title' => \__('MailerLite', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding MailerLite integration.', 'eightshift-forms'),
+				'desc' => \__('MailerLite integration settings.', 'eightshift-forms'),
 				'detail' => \__('MailerLite is an email service provider that makes it easier to plan email marketing campaigns for any growing business.', 'eightshift-forms'),
 				'externalLink' => 'https://www.mailerlite.com/',
 			],
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'title' => \__('Goodbits', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Goodbits integration.', 'eightshift-forms'),
+				'desc' => \__('Goodbits integration settings.', 'eightshift-forms'),
 				'detail' => \__('Goodbits helps you and your business create stellar newsletters from the best links your team and customers are reading.', 'eightshift-forms'),
 				'externalLink' => 'https://goodbits.io/',
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'title' => \__('Clearbit', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Clearbit integration.', 'eightshift-forms'),
+				'desc' => \__('Clearbit integration settings.', 'eightshift-forms'),
 				'detail' => \__('Clearbit is a marketing intelligence tool that you can use to effectively get quality B2B data for understanding customers, identifying prospects, and creating personalised marketing and sales exchanges.', 'eightshift-forms'),
 				'externalLink' => 'https://clearbit.com/',
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 				'title' => \__('Active Campaign', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding Active Campaign integration.', 'eightshift-forms'),
+				'desc' => \__('Active Campaign integration settings.', 'eightshift-forms'),
 				'detail' => \__('ActiveCampaign is an integrated email marketing, automation, sales software, and CRM platform. It lets users perform powerful automation, email marketing, and customer relationship management.', 'eightshift-forms'),
 				'externalLink' => 'https://www.activecampaign.com/',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding forms internal caching.', 'eightshift-forms'),
+				'desc' => \__('Clear cache for the specific integration.', 'eightshift-forms'),
 			],
 			SettingsLocation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Locations', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding forms location usage.', 'eightshift-forms'),
+				'desc' => \__('Change the options regarding forms location usage.', 'eightshift-forms'),
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
 				'title' => \__('Fallback', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding forms fallbacks.', 'eightshift-forms'),
+				'desc' => \__('Options for handling form errors by sending a plain email', 'eightshift-forms'),
 			],
 			SettingsDebug::SETTINGS_TYPE_KEY => [
 				'title' => \__('Debug', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding forms debugging.', 'eightshift-forms'),
+				'desc' => \__('Form debugging settings.', 'eightshift-forms'),
 			],
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Documentation', 'eightshift-forms'),
@@ -442,7 +442,7 @@ class Filters
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_GENERAL => [
 				'title' => \__('General', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding all general configuration.', 'eightshift-forms'),
+				'desc' => \__('General plugin configuration.', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION => [
 				'title' => \__('Form Type', 'eightshift-forms'),
@@ -450,7 +450,7 @@ class Filters
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING => [
 				'title' => \__('Troubleshooting', 'eightshift-forms'),
-				'desc' => \__('In these settings, you can change all options regarding all troubleshooting.', 'eightshift-forms'),
+				'desc' => \__('Troubleshooting settings.', 'eightshift-forms'),
 			],
 		];
 
