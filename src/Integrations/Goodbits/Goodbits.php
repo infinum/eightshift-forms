@@ -78,7 +78,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 

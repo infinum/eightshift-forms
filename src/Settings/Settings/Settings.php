@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 
 /**
@@ -80,7 +81,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			// Populate sidebar data.
 			$output[$type][] = [
 				'label' => Filters::getSettingsLabels($key),
-				'value' => $key,
+				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
 				'icon' => $value['icon'],
 				'type' => $value['type'],
 			];

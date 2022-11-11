@@ -22,7 +22,7 @@ interface SettingsFallbackDataInterface extends SettingInterface
 	 *
 	 * @param string $integration Integration name used for fallback.
 	 *
-	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getOutputGlobalFallback(string $integration): array;
 }

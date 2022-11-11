@@ -10,7 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -62,7 +66,21 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		return $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY);
+		if (Variables::getGeolocationUse()) {
+			return true;
+		}
+
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+			return false;
+		}
+
+		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
+		$filterName = Filters::getGeolocationFilterName('disable');
+		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -84,9 +102,23 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$use = Variables::getGeolocationUse();
+
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY) && !$use) {
 			return $this->getNoActiveFeatureOutput();
+		}
+
+		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
+
+		$outputConstants = '';
+
+		if ($use) {
+			$outputConstants .= $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE');
+		}
+
+		if (Variables::getGeolocationUseWpRocketAdvancedCache()) {
+			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE');
 		}
 
 		return [
@@ -102,8 +134,16 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 				'introTitle' => \__('Caching'),
 				'introTitleSize' => 'medium',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly, if you have some caching on the user\'s side of your website, like WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), '#'),
+				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly, if you have some caching on the user\'s side of your website, like WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
 			],
+			($use || $useRocket) ? [
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+				'introTitleSize' => 'medium',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => $outputConstants,
+			] : [],
 		];
 	}
 }

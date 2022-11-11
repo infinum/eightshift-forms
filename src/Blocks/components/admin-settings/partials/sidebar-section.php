@@ -18,7 +18,6 @@ if (!$items) {
 }
 
 $sectionClass = $attributes['sectionClass'] ?? '';
-$adminSettingsLink = $attributes['adminSettingsLink'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
 foreach ($items as $key => $innerItems) {
@@ -33,13 +32,14 @@ foreach ($items as $key => $innerItems) {
 				<?php foreach ($innerItems as $item) { ?>
 					<?php
 					$label = $item['label'] ?? '';
-					$value = $item['value'] ?? '';
+					$url = $item['url'] ?? '';
+					$internalType = $item['type'] ?? '';
 					$icon = $item['icon'] ?? '';
 					?>
 					<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
 						<a
-							href="<?php echo esc_url("{$adminSettingsLink}&type={$value}"); ?>"
-							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($value === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+							href="<?php echo esc_url($url); ?>"
+							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($internalType === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 								<?php echo wp_kses_post($icon); ?>

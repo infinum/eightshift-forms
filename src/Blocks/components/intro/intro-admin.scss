@@ -1,10 +1,22 @@
 .es-intro {
 	$this: &;
 
-	&--highlighted {
+	&__highlighted {
 		background-color: var(--global-colors-es-matisse-05);
 		padding: 20px;
 		border-radius: 3px;
+
+		&--important {
+			background-color: var(--global-colors-es-pome);
+			color: var(--global-colors-es-white);
+			display: flex;
+			align-items: center;
+
+			#{$this}__title,
+			#{$this}__subtitle {
+				color: var(--global-colors-es-white);
+			}
+		}
 	}
 
 	&--heading {

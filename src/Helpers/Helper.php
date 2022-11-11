@@ -211,7 +211,7 @@ class Helper
 			if (\has_filter($filterName)) {
 				\apply_filters($filterName, $data);
 			} else {
-				\error_log((string) \wp_json_encode($data) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				\error_log((string) \wp_json_encode($data) . "\n -------------------------------------", 3, $wpContentDir . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 	}

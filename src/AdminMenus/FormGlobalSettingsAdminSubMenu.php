@@ -177,7 +177,6 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsLink' => Helper::getSettingsGlobalPageUrl(''),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type),
 			'adminSettingsType' => $type,

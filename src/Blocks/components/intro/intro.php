@@ -17,11 +17,13 @@ $introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
 $introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
 $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
 $introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
+$introIsHighlightedImportant = Components::checkAttr('introIsHighlightedImportant', $attributes, $manifest);
 $introIsHeading = Components::checkAttr('introIsHeading', $attributes, $manifest);
 
 $introClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($introIsHighlighted && $componentClass, $componentClass, '', 'highlighted'),
+	Components::selector($introIsHighlighted && $componentClass, $componentClass, 'highlighted'),
+	Components::selector($introIsHighlightedImportant && $componentClass, $componentClass, 'highlighted', 'important'),
 	Components::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($introTitleSize, $componentClass, 'size', $introTitleSize),

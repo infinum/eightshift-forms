@@ -17,6 +17,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"introIsHighlightedImportant": {
+			"type": "boolean",
+			"default": false
+		},
 		"introIsHeading": {
 			"type": "boolean",
 			"default": false

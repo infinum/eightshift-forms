@@ -74,10 +74,10 @@ class SettingsCache implements SettingInterface, ServiceInterface
 				'layoutItems' => \array_values(\array_filter(\array_map(
 					static function ($key, $value) use ($manifestForm) {
 						$cache = $value['cache'] ?? [];
-		
+
 						if ($cache) {
 							$title = Filters::getSettingsLabels($key);
-		
+
 							return [
 								'component' => 'submit',
 								'submitFieldSkip' => true,

@@ -194,7 +194,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
-			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,

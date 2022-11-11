@@ -21,7 +21,6 @@ $adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attri
 $adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
 $adminSettingsFormEditLink = Components::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
-$adminSettingsLink = Components::checkAttr('adminSettingsLink', $attributes, $manifest);
 $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
 $adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
@@ -71,7 +70,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			[
 				'items' => $adminSettingsSidebar,
 				'sectionClass' => $sectionClass,
-				'adminSettingsLink' => $adminSettingsLink,
 				'adminSettingsType' => $adminSettingsType,
 			]
 		);

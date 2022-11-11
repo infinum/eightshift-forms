@@ -26,7 +26,7 @@ class Editor implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('admin_init', [$this, 'getEditorBackLink']);
+		\add_action('admin_head-edit.php', [$this, 'getEditorBackLink']);
 	}
 
 	/**
@@ -36,12 +36,14 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
+		$port = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$isMockedRequestForTest = false;
+
+		$actialUrl = ($port ? "https" : "http") . "://{$host}{$request}";
 
 		if (\getenv('test_force_request_uri')) {
 			$request = \getenv('test_force_request_uri');
-			$isMockedRequestForTest = true;
 		}
 
 		$postType = Forms::POST_TYPE_SLUG;
@@ -56,14 +58,8 @@ class Editor implements ServiceInterface
 			\get_admin_url(null, "edit.php?post_status=future&post_type={$postType}"),
 		];
 
-		if (\in_array($request, $links, true)) {
-			\wp_safe_redirect(\get_admin_url(null, "admin.php?page={$page}"));
-		} else {
-			return;
-		}
-
-		if (!$isMockedRequestForTest) {
-			exit;
+		if (\in_array($actialUrl, $links, true)) {
+			echo '<script>window.location.replace("' . \get_admin_url(null, "admin.php?page={$page}") . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 	}
 }

@@ -33,12 +33,10 @@
 		--es-checkbox-scoped-border-color: var(--global-colors-es-matisse);
 	}
 
-	&__input:disabled + #{$this}__label::before {
-		--es-checkbox-scoped-opacity: 0.7;
-	}
-
+	&__input:disabled + #{$this}__label::before,
 	&__input:disabled:checked + #{$this}__label::before {
-		--es-checkbox-scoped-opacity: 0.7;
+		--es-checkbox-scoped-border-color: var(--global-colors-es-matisse-30);
+		--es-checkbox-scoped-background-color: var(--global-colors-es-matisse-30);
 	}
 
 	&__label {
@@ -152,5 +150,10 @@
 		& + #{$this}__label::after {
 			transform: translateX(calc(var(--es-checkbox-toggle-scoped-width) - (var(--es-checkbox-toggle-scoped-dot-spacing)) - var(--es-checkbox-toggle-scoped-dot-size)));
 		}
+	}
+
+	&__input:disabled + #{$this}__label::before,
+	&__input:disabled:checked + #{$this}__label::before {
+		background-color: var(--global-colors-es-matisse-30);
 	}
 }
