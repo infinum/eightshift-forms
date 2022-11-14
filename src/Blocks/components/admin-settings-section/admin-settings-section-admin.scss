@@ -1,4 +1,4 @@
-// stylelint-disable number-max-precision
+// stylelint-disable number-max-precision, selector-max-specificity
 
 .eightshift-forms_page_es-settings-global,
 .toplevel_page_es-forms,
@@ -25,10 +25,10 @@
 	&--with-sidebar {
 		display: grid;
 		grid-template-columns: 15rem 1fr;
-		grid-template-areas: 
-			"notice notice notice"
-			"sidebar main main";
-		}
+		grid-template-areas:
+			'notice notice notice'
+			'sidebar main main';
+	}
 
 	&__sidebar {
 		background-color: var(--global-colors-es-white);

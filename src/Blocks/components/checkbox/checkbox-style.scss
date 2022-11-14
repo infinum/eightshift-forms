@@ -82,13 +82,13 @@
 	&--medium {
 		--es-checkbox-toggle-scoped-height: 30px;
 		--es-checkbox-toggle-scoped-dot-spacing: 6px;
-		--es-checkbox-toggle-scoped-label-spacing: 15px
+		--es-checkbox-toggle-scoped-label-spacing: 15px;
 	}
 
 	&--big {
 		--es-checkbox-toggle-scoped-height: 40px;
 		--es-checkbox-toggle-scoped-dot-spacing: 6px;
-		--es-checkbox-toggle-scoped-label-spacing: 20px
+		--es-checkbox-toggle-scoped-label-spacing: 20px;
 	}
 
 	&__label {
@@ -121,7 +121,7 @@
 			left: calc(var(--es-checkbox-toggle-scoped-dot-spacing) / 2);
 			width: var(--es-checkbox-toggle-scoped-dot-size);
 			height: var(--es-checkbox-toggle-scoped-dot-size);
-			background-color: #fff;
+			background-color: var(--global-colors-es-white);
 			border-radius: 90px;
 			transition: {
 				property: background-color, width, transform;

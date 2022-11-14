@@ -29,6 +29,19 @@ export class ConditionalTags {
 			[this.DATA_EVENT_ITEMS]: {},
 			[this.DATA_REFERENCE]: {},
 		};
+
+		// Map all conditional logic as ca object.
+		this.conditionalLogic = {
+			[CONDITIONAL_TAGS_CONSTANTS.IS]: (input, value) => value === input,
+			[CONDITIONAL_TAGS_CONSTANTS.ISN]: (input, value) => value !== input,
+			[CONDITIONAL_TAGS_CONSTANTS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[CONDITIONAL_TAGS_CONSTANTS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_CONSTANTS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[CONDITIONAL_TAGS_CONSTANTS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_CONSTANTS.C]: (input, value) => input.includes(value),
+			[CONDITIONAL_TAGS_CONSTANTS.SW]: (input, value) => input.startsWith(value),
+			[CONDITIONAL_TAGS_CONSTANTS.EW]: (input, value) => input.endsWith(value),
+		};
 	}
 
 	// Init all actions.
@@ -209,55 +222,7 @@ export class ConditionalTags {
 			value,
 		} = rule;
 
-		let output = false;
-
-		switch (operator) {
-			case CONDITIONAL_TAGS_CONSTANTS.IS:
-				if (value === inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.ISN:
-				if (value !== inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.GT:
-				if (value > inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.GTE:
-				if (value >= inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.LT:
-				if (value < inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.LTE:
-				if (value <= inputValue) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.C:
-				if (inputValue.includes(value)) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.SW:
-				if (inputValue.startsWith(value)) {
-					output = true;
-				}
-				break;
-			case CONDITIONAL_TAGS_CONSTANTS.EW:
-				if (inputValue.endsWith(value)) {
-					output = true;
-				}
-				break;
-		}
+		const output = this.conditionalLogic[operator](inputValue, value);
 
 		// Used for all type of action.
 		// Push true for each valid rule and later compare number of rules with the length of this array.

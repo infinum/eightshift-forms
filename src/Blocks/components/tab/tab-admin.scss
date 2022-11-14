@@ -1,3 +1,5 @@
+// stylelint-disable max-nesting-depth
+
 .es-tab {
 	$this: &;
 
@@ -95,6 +97,18 @@
 					opacity: 1;
 				}
 			}
+
+			& + #{$this}__content {
+				display: grid;
+			}
+
+			&::after {
+				transform: rotate(-135deg);
+
+				@include media(desktop up) {
+					transform: initial;
+				}
+			}
 		}
 	}
 
@@ -112,20 +126,6 @@
 			width: 100%;
 			border-top: none;
 			margin: 0;
-		}
-	}
-
-	&__label.is-active {
-		& + #{$this}__content {
-			display: grid;
-		}
-
-		&::after {
-			transform: rotate(-135deg);
-
-			@include media(desktop up) {
-				transform: initial
-			}
 		}
 	}
 }

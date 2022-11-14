@@ -5,17 +5,15 @@
 
 	> #{$this}__before-content {
 		margin-bottom: var(--global-es-spacing-horizontal);
+
+		> * {
+			margin: 0;
+		}
 	}
 
 	> #{$this}__label,
 	> #{$this}__content {
 		max-width: var(--global-es-max-width);
-	}
-
-	> #{$this}__before-content {
-		> * {
-			margin: 0;
-		}
 	}
 
 	// Integration specific.

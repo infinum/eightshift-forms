@@ -1145,6 +1145,8 @@ export class Form {
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
 
+		console.log(searchParams.entries());
+
 		// Get storage from backend this is considered new by the page request.
 		const newStorage = {};
 
