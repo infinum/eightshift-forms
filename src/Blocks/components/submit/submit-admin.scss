@@ -5,7 +5,10 @@
 	border-radius: 6px;
 }
 
-.es-submit--global,
-.es-submit--migration {
+.es-submit--global {
 	width: auto;
+}
+
+.es-submit--migration {
+	width: fit-content;
 }

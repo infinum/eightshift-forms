@@ -83,7 +83,7 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 				'component' => 'intro',
 				'introTitle' => \__('Version 2 to 3'),
 				'introTitleSize' => 'medium',
-				'introSubtitle' => \__('In this vesion we hae changed the option and custom meta name for the fallback emails. This migration will remove your old options and custom meta keys and updated them to the new ones.', 'eightshift-forms')
+				'introSubtitle' => \__('In this vesion we have changed the option and custom meta name for the fallback emails. This migration will remove your old options and custom meta keys and updated them to the new ones.', 'eightshift-forms')
 			],
 			[
 				'component' => 'submit',
