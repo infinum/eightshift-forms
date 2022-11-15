@@ -76,7 +76,7 @@ export const CONDITIONAL_TAGS_CONSTANTS = {
  */
 export const utilIsCustom = (element, fieldSelector, customSelector, isAdmin) => {
 	return element.closest(fieldSelector).classList.contains(customSelector) && !isAdmin;
-}
+};
 
 /**
  * List all utility methods exported in the window object.
@@ -85,4 +85,4 @@ export const windowUtilities = {
 	utilIsCustom: (element, fieldSelector, customSelector, isAdmin) => {
 		utilIsCustom(element, fieldSelector, customSelector, isAdmin);
 	}
-}
+};

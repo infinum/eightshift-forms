@@ -33,6 +33,7 @@ use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
@@ -214,6 +215,11 @@ class Filters
 		SettingsDocumentation::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsDocumentation::FILTER_SETTINGS_GLOBAL_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.5 4h2m-2 3h2m-2 3h2m-2 3h2m-2 3h2m0-14v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.5 18.5h-11A1.5 1.5 0 0 1 3 17V3a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 3v14a1.5 1.5 0 0 1-1.5 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M8.25 4.5h5m-5 2.5h3m-3 2.5h2" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+		],
+		SettingsMigration::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14 13H2.5A1.5 1.5 0 0 1 1 11.5v-9A1.5 1.5 0 0 1 2.5 1h9A1.5 1.5 0 0 1 13 2.5V4m1 9-2 2m2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M6 7h11.5A1.5 1.5 0 0 1 19 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 7 17.5V16M6 7l2-2M6 7l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		],
 	];
@@ -439,6 +445,10 @@ class Filters
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Documentation', 'eightshift-forms'),
 				'desc' => \__('Need help? Interested in learning more? Find resources here.', 'eightshift-forms'),
+			],
+			SettingsMigration::SETTINGS_TYPE_KEY => [
+				'title' => \__('Migration', 'eightshift-forms'),
+				'desc' => \__('Migrate your form from older version to the latest one with one easy click.', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_GENERAL => [
 				'title' => \__('General', 'eightshift-forms'),

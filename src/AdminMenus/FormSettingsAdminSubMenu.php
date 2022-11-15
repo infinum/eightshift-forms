@@ -61,6 +61,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		);
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
+		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
 	}
 
 	/**
@@ -91,7 +92,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Form Settings', 'eightshift-forms');
+		return \esc_html__('Form settings', 'eightshift-forms');
 	}
 
 	/**
@@ -101,7 +102,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Form Settings', 'eightshift-forms');
+		return \esc_html__('Form settings', 'eightshift-forms');
 	}
 
 	/**
@@ -188,7 +189,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$integrationTypeUsed = Helper::getUsedFormTypeById($formId);
 		$formEditLink = Helper::getFormEditPageUrl($formId);
-
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
@@ -218,5 +218,22 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		return $parentFile ?? '';
+	}
+
+	/**
+	 * Update the page title.
+	 *
+	 * @param string $adminTitle The page title, with extra context added.
+	 * @param string $title The original page title.
+
+	 * @return string
+	 */
+	public function fixPageTitle(string $adminTitle, string $title): string
+	{
+		if (\get_current_screen()->id === "admin_page_" . self::ADMIN_MENU_SLUG && $title === '') {
+			$adminTitle = $this->getTitle() . $adminTitle;
+		}
+
+		return $adminTitle;
 	}
 }

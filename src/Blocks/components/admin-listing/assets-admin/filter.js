@@ -24,7 +24,7 @@ export class Filter {
 		const selectedValue = element.options[element.selectedIndex].value;
 
 		this.setActiveItemsByFilter(selectedValue);
-	}
+	};
 
 	setActiveItemsByFilter = (selectedValue) => {
 		this.updateFilterToUrl(selectedValue);
@@ -34,7 +34,7 @@ export class Filter {
 		if (selectedValue !== 'all') {
 			this.filterItems(selectedValue);
 		}
-	}
+	};
 
 	setActiveFilterByUrl = () => {
 		const url = new URL(window.location);
@@ -45,7 +45,7 @@ export class Filter {
 			document.querySelector(`${this.filterSelector} select option[value=${param}]`).selected = true;
 			this.setActiveItemsByFilter(param);
 		}
-	}
+	};
 
 	filterItems = (selectedValue) => {
 		[...this.items].forEach((item) => {
@@ -53,13 +53,13 @@ export class Filter {
 				item.classList.add(this.CLASS_HIDDEN);
 			}
 		});
-	}
+	};
 
 	filterResetItems = () => {
 		[...this.items].forEach((item) => {
 			item.classList.remove(this.CLASS_HIDDEN);
 		});
-	}
+	};
 
 	updateFilterToUrl = (filter) => {
 		const url = new URL(window.location);
@@ -70,5 +70,5 @@ export class Filter {
 			url.searchParams.delete('filter');
 		}
 		window.history.pushState(null, '', url.toString());
-	}
+	};
 }

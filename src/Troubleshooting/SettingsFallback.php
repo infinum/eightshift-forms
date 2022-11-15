@@ -46,7 +46,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	/**
 	 * Fallback Email key.
 	 */
-	public const SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY = 'fallback-fallback-email';
+	public const SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY = 'fallback-email';
 
 	/**
 	 * Register all the hooks

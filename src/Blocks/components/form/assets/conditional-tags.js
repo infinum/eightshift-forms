@@ -49,7 +49,7 @@ export class ConditionalTags {
 		this.setData();
 		this.setInit();
 		this.setListeners();
-	}
+	};
 
 	// Prepare data.
 	setData() {
@@ -74,9 +74,9 @@ export class ConditionalTags {
 						'id': innerItem[0],
 						'operator': innerItem[1],
 						'value': innerItem[2],
-					}
+					};
 				})
-			}
+			};
 		});
 	}
 
@@ -125,7 +125,7 @@ export class ConditionalTags {
 
 	onCustomSelectChange = (event) => {
 		this.onFieldChange(event);
-	}
+	};
 
 	// Do action on input change.
 	onFieldChange = (event) => {
@@ -164,8 +164,6 @@ export class ConditionalTags {
 			rules.map((rule, index) => {
 				const {
 					id,
-					operator,
-					value,
 				} = rule;
 
 				// Find only rules applied to this this input.

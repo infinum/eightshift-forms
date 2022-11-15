@@ -89,7 +89,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Settings', 'eightshift-forms');
+		return \esc_html__('Global settings', 'eightshift-forms');
 	}
 
 	/**
@@ -99,7 +99,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Settings', 'eightshift-forms');
+		return \esc_html__('Global settings', 'eightshift-forms');
 	}
 
 	/**

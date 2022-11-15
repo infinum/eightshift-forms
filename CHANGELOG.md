@@ -13,6 +13,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - New checkbox toggle state for the settings pages.
 - Conditional logic for all integration forms.
 - Documentation page in the settings.
+- Migrations page where you can migrate the data for the options that were changed in the major versions.
 
 ### Changed
 - Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.

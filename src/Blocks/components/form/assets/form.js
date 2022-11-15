@@ -163,7 +163,7 @@ export class Form {
 						ctIsCustom: (element) => {
 							cTagsClass.isCustom(element);
 						},
-					}
+					};
 				});
 			}
 		});

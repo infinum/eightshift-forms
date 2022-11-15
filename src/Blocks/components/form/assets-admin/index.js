@@ -11,6 +11,7 @@ domReady(() => {
 	const {
 		componentJsClass,
 		componentCacheJsClass,
+		componentMigrationJsClass,
 	} = manifest;
 
 	const selector = `.${componentJsClass}`;
@@ -42,6 +43,21 @@ domReady(() => {
 			});
 
 			cache.init();
+		});
+	}
+
+	const selectorMigration = `.${componentMigrationJsClass}`;
+	const elementsMigration = document.querySelectorAll(selectorMigration);
+
+	if (elementsMigration.length) {
+		import('./migration').then(({ Migration }) => {
+			const migration = new Migration({
+				selector: selectorMigration,
+				formSelector: selector,
+				migrationRestUrl: esFormsLocalization.migrationRestUrl,
+			});
+
+			migration.init();
 		});
 	}
 });

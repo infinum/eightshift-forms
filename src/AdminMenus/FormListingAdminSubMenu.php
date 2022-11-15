@@ -86,7 +86,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return '';
+		return \esc_html__('Forms', 'eightshift-forms');
 	}
 
 	/**
