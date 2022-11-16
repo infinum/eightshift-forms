@@ -25,10 +25,6 @@ $errorClass = Components::classnames([
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
-if (!$errorValue) {
-	return;
-}
-
 ?>
 
 <div
