@@ -28,6 +28,9 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaign;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Integrations\Airtable\Airtable;
+use EightshiftForms\Integrations\Airtable\AirtableClient;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
@@ -188,6 +191,18 @@ class Filters
 				ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
 			],
 		],
+		SettingsAirtable::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsAirtable::FILTER_SETTINGS_NAME,
+			'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
+			'valid' => SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1.5 13.595V7.88c0-.18.184-.3.348-.23l6.157 2.639a.25.25 0 0 1 .013.453L1.862 13.82a.25.25 0 0 1-.362-.224ZM9.91 2.783 3.087 5.285a.25.25 0 0 0-.013.464l6.83 2.96a.25.25 0 0 0 .193.002l6.823-2.729a.25.25 0 0 0 0-.464l-6.831-2.732a.25.25 0 0 0-.179-.003Zm8.59 11.546V8.115a.25.25 0 0 0-.34-.233l-7.25 2.806a.25.25 0 0 0-.16.233v6.214a.25.25 0 0 0 .34.233l7.25-2.806a.25.25 0 0 0 .16-.233Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>',
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+			'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
+			'cache' => [
+				AirtableClient::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME,
+			],
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.5 1.75h-15A1.5 1.5 0 0 0 1 3.25v13.5a1.5 1.5 0 0 0 1.5 1.5h15a1.5 1.5 0 0 0 1.5-1.5V3.25a1.5 1.5 0 0 0-1.5-1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M1.5 7.25h17m-17 5.5h17" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="14" y="3.5" width="3" height="2" rx="0.5" fill="currentColor"/><rect x="14" y="9" width="3" height="2" rx="0.5" fill="currentColor"/><rect x="14" y="14.5" width="3" height="2" rx="0.5" fill="currentColor"/></svg>',
@@ -265,6 +280,12 @@ class Filters
 				'map' => 'map',
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
+			],
+			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
@@ -425,6 +446,12 @@ class Filters
 				'desc' => \__('Active Campaign integration settings.', 'eightshift-forms'),
 				'detail' => \__('ActiveCampaign is an integrated email marketing, automation, sales software, and CRM platform. It lets users perform powerful automation, email marketing, and customer relationship management.', 'eightshift-forms'),
 				'externalLink' => 'https://www.activecampaign.com/',
+			],
+			SettingsAirtable::SETTINGS_TYPE_KEY => [
+				'title' => \__('Airtable', 'eightshift-forms'),
+				'desc' => \__('Airtable integration settings.', 'eightshift-forms'),
+				'detail' => \__('Airtable is a platform that makes it easy to build powerful, custom applications.', 'eightshift-forms'),
+				'externalLink' => 'https://airtable.com/',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),

@@ -488,6 +488,9 @@ export class Form {
 				type,
 			};
 
+			// Adde internal type for additional logic in some integrations.
+			data.internalType = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldTypeInternal);
+
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
 			}
@@ -495,7 +498,7 @@ export class Form {
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
 				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute('data-unchecked-value') ?? '';
+				data.value = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
 			// Append files field.
@@ -588,6 +591,7 @@ export class Form {
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
+			console.log(element);
 
 			item?.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
 

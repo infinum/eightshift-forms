@@ -117,7 +117,7 @@ class GreenhouseClient implements ClientInterface
 			$questions = $job['questions'] ?? [];
 
 			if ($itemId && $questions) {
-				$output[$itemId] = $job['questions'] ?? [];
+				$output[$itemId] = $questions;
 
 				\set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
 			}

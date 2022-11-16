@@ -43,13 +43,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailerlite_form_fields_filter';
 
 	/**
-	 * Field Mailerlite Tags.
-	 *
-	 * @var string
-	 */
-	public const FIELD_MAILERLITE_TAGS_KEY = 'es-form-mailerlite-tags';
-
-	/**
 	 * Instance variable for Mailerlite data.
 	 *
 	 * @var ClientInterface

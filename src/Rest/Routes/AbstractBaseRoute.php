@@ -54,6 +54,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',
+		'fieldTypeInternal' => 'data-type-internal',
+		'fieldUncheckedValue' => 'data-unchecked-value',
 	];
 
 	/**

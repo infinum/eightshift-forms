@@ -253,3 +253,16 @@ Default:
 ```php
 define('ES_API_URL_ACTIVE_CAMPAIGN', '<api-url>');
 ```
+
+## Set the Airtable API key
+
+This variable will set form's Airtable API key. You will not be able to change it from the admin.
+
+Type:
+* string
+
+Default:
+* empty
+
+```php
+define('ES_API_KEY_AIRTABLE', '<api-key>');

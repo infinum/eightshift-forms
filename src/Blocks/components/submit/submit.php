@@ -29,7 +29,6 @@ $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
 $submitIsLayoutFree = Components::checkAttr('submitIsLayoutFree', $attributes, $manifest);
 
-
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
@@ -60,7 +59,17 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$submitIconContent = !empty($submitIcon) && $manifest['icons'][$submitIcon] ? $manifest['icons'][$submitIcon] : '';
+$submitIconContent = '';
+if (!empty($submitIcon)) {
+	$manifestIcon = $manifest['icons'][$submitIcon] ?? '';
+
+	if ($manifestIcon) {
+		$submitIconContent = $manifestIcon;
+	} else {
+		$submitIconContent = $submitIcon;
+	}
+}
+
 
 $button = '
 	<button
