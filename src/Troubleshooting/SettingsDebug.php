@@ -53,6 +53,7 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 	public const SETTINGS_DEBUG_SKIP_RESET_KEY = 'skip-reset';
 	public const SETTINGS_DEBUG_SKIP_CAPTCHA_KEY = 'skip-captcha';
 	public const SETTINGS_DEBUG_LOG_MODE_KEY = 'log-mode';
+	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = 'developer-mode';
 
 	/**
 	 * Register all the hooks
@@ -151,7 +152,14 @@ class SettingsDebug implements ServiceInterface, SettingInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
 										'checkboxAsToggle' => true,
-									]
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
+										'checkboxAsToggle' => true,
+									],
 								]
 							],
 						],

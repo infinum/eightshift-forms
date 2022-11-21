@@ -35,11 +35,13 @@ foreach ($items as $key => $innerItems) {
 					$url = $item['url'] ?? '';
 					$internalType = $item['type'] ?? '';
 					$icon = $item['icon'] ?? '';
+					$internalKey = $item['key'] ?? '';
+
 					?>
 					<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
 						<a
 							href="<?php echo esc_url($url); ?>"
-							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($internalType === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($internalKey === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 								<?php echo wp_kses_post($icon); ?>

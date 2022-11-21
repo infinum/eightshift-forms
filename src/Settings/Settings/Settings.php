@@ -83,7 +83,8 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 				'label' => Filters::getSettingsLabels($key),
 				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
 				'icon' => $value['icon'],
-				'type' => $value['type'],
+				'type' => $type,
+				'key' => $key,
 			];
 		}
 

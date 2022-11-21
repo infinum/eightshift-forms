@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -106,15 +107,21 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 			return [];
 		}
 
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
 		return \array_map(
-			static function ($item) {
+			static function ($item) use ($isDeveloperMode) {
+				$id = $item->ID;
+				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+				$title = $isDeveloperMode ? "{$id} - {$title}" : $title;
+
 				return [
-					'id' => $item->ID,
+					'id' => $id,
 					'postType' => $item->post_type, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-					'title' => $item->post_title, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+					'title' => $title,
 					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-					'editLink' => Helper::getFormEditPageUrl((string) $item->ID),
-					'viewLink' => \get_permalink($item->ID),
+					'editLink' => Helper::getFormEditPageUrl((string) $id),
+					'viewLink' => \get_permalink($id),
 				];
 			},
 			$items

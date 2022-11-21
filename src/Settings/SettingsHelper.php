@@ -16,6 +16,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * SettingsHelper trait.
@@ -1030,6 +1031,8 @@ trait SettingsHelper
 		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
 		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
 
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
 		return [
 			[
 				'component' => 'select',
@@ -1047,11 +1050,14 @@ trait SettingsHelper
 						]
 					],
 					\array_map(
-						function ($option) use ($formId, $key) {
+						function ($option) use ($formId, $key, $isDeveloperMode) {
+							$title = $option['title'] ?? '';
+							$id = $option['id'] ?? '';
+
 							return [
 								'component' => 'select-option',
-								'selectOptionLabel' => $option['title'] ?? '',
-								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionLabel' => $isDeveloperMode ? "{$id} - {$title}" : $title,
+								'selectOptionValue' => $id,
 								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
 							];
 						},
@@ -1081,6 +1087,8 @@ trait SettingsHelper
 		string $selectedFormId,
 		string $key
 	): array {
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
 		return [
 			[
 				'component' => 'select',
@@ -1096,11 +1104,14 @@ trait SettingsHelper
 						]
 					],
 					\array_map(
-						function ($option) use ($formId, $key) {
+						function ($option) use ($formId, $key, $isDeveloperMode) {
+							$title = $option['title'] ?? '';
+							$id = $option['id'] ?? '';
+
 							return [
 								'component' => 'select-option',
-								'selectOptionLabel' => $option['title'] ?? '',
-								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionLabel' => $isDeveloperMode ? "{$id} - {$title}" : $title,
+								'selectOptionValue' => $id,
 								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
 							];
 						},
