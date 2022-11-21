@@ -17,7 +17,7 @@ export const AirtableOptions = ({ postId }) => {
 		<PanelBody title={__('Airtable', 'eightshift-forms')}>
 			<BaseControl
 				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On Airtable settings page you can setup all details regarding you integration.', 'eightshift-forms')}
+				help={__('On the Airtable settings page, you can set up all details regarding your integration.', 'eightshift-forms')}
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=airtable`}

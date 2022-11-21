@@ -293,8 +293,8 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 								'stepsContent' => [
 									\__('Log in to your Airtable Account.', 'eightshift-forms'),
 									// translators: %s will be replaced with the link.
-									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Developers Hub</a>.', 'eightshift-forms'), 'https://airtable.com/create/tokens/new'),
-									\__('Create a new Personal access token with this scopes <strong>"data.records:write"</strong> and <strong>"schema.bases:read"</strong>.', 'eightshift-forms'),
+									\sprintf(\__('Go to the <a target="_blank" rel="noopener noreferrer" href="%s">Developers Hub</a>.', 'eightshift-forms'), 'https://airtable.com/create/tokens/new'),
+									\__('Create a new Personal access token with the scopes <strong>"data.records:write"</strong> and <strong>"schema.bases:read"</strong>.', 'eightshift-forms'),
 								],
 							],
 						],

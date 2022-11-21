@@ -1,7 +1,7 @@
 {
 	"blockName": "airtable",
 	"title": "Airtable Form",
-	"description" : "A Airtable subscription form",
+	"description" : "An Airtable subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-airtable"

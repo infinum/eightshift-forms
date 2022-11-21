@@ -591,7 +591,6 @@ export class Form {
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
-			console.log(element);
 
 			item?.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
 

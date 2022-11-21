@@ -61,13 +61,7 @@ if (has_filter($filterName)) {
 
 $submitIconContent = '';
 if (!empty($submitIcon)) {
-	$manifestIcon = $manifest['icons'][$submitIcon] ?? '';
-
-	if ($manifestIcon) {
-		$submitIconContent = $manifestIcon;
-	} else {
-		$submitIconContent = $submitIcon;
-	}
+	$submitIconContent = $manifest['icons'][$submitIcon] ?? $submitIcon;
 }
 
 
