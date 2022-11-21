@@ -1086,7 +1086,7 @@ trait SettingsHelper
 				'component' => 'select',
 				'selectName' => $this->getSettingsName($key),
 				'selectId' => $this->getSettingsName($key),
-				'selectFieldLabel' => \__('Select sub form', 'eightshift-forms'),
+				'selectFieldLabel' => \__('Selected integration sub form', 'eightshift-forms'),
 				'selectOptions' => \array_merge(
 					[
 						[
