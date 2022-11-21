@@ -43,21 +43,13 @@ abstract class AbstractFormBuilder
 	 * Build settings form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, string|int> $formAdditionalProps Additional attributes for form component.
+	 * @param array<string, array<string, string>|string> $formAdditionalProps Additional attributes for the form component.
 	 *
 	 * @return string
 	 */
 	public function buildSettingsForm(array $formItems, array $formAdditionalProps = []): string
 	{
 		$formContent = '';
-
-		// Add divider on the bottom of every form.
-		$formContent .= Components::render(
-			'divider',
-			Components::props('divider', []),
-			'',
-			true
-		);
 
 		// Add submit on the bottom of every form.
 		$formContent .= Components::render(
@@ -165,57 +157,59 @@ abstract class AbstractFormBuilder
 			$component === 'checkboxes' ||
 			$component === 'select' ||
 			$component === 'radios' ||
-			$component === 'group'
+			$component === 'group' ||
+			$component === 'layout' ||
+			$component === 'tabs'
 		) {
 			$output = '';
-			switch ($component) {
-				case 'checkboxes':
-					$key = 'checkboxesContent';
-					break;
-				case 'radios':
-					$key = 'radiosContent';
-					break;
-				case 'select':
-					$key = 'selectOptions';
-					break;
-				case 'group':
-					$key = 'groupContent';
-					break;
-				default:
-					$key = '';
-					break;
-			}
 
-			if (isset($attributes[$key])) {
-				// Loop children and do the same ad on top level.
-				foreach ($attributes[$key] as $innerKey => $item) {
-					// Determine the component's name.
-					$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+			$nestedKeys = [
+				'checkboxesContent' => 0,
+				'radiosContent' => 1,
+				'selectOptions' => 2,
+				'groupContent' => 3,
+				'tabsContent' => 4,
+				'tabContent' => 5,
+				'layout' => 6,
+				'layoutItems' => 7,
+				'card' => 8,
+				'cardToggle' => 9,
+			];
 
-					// Add new nesting iteration if component is group.
-					if ($key === 'groupContent' && isset($item["groupContent"]) && \is_array($item["groupContent"])) {
-						$groupOutput = '';
-						foreach ($item["groupContent"] as $group) {
-							$groupOutput .= $this->buildComponent($group);
+			foreach ($nestedKeys as $nestedKey => $value) {
+				if (isset($attributes[$nestedKey])) {
+					// Loop children and do the same on top level.
+					foreach ($attributes[$nestedKey] as $item) {
+						// Determine the component's name.
+						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+
+						// Build child component.
+						if ($item) {
+							foreach ($item as $itemKey => $itemValue) {
+								if (isset($nestedKeys[$itemKey]) && \is_array($itemValue)) {
+									$groupOutput = '';
+									foreach ($itemValue as $group) {
+										$groupOutput .= $this->buildComponent($group);
+									}
+
+									$itemValue = $groupOutput;
+								}
+
+								$item[$itemKey] = $itemValue;
+							}
+
+							$output .= Components::render(
+								$item['component'],
+								Components::props($innerComponent, $item),
+								'',
+								true
+							);
 						}
-
-						$item["groupContent"] = $groupOutput;
-					}
-
-					// Build child component.
-					if ($item) {
-						$output .= Components::render(
-							$item['component'],
-							Components::props($innerComponent, $item),
-							'',
-							true
-						);
 					}
 				}
+				// Output child to the parent array.
+				$attributes[$nestedKey] = $output;
 			}
-
-			// Output child to the parent array.
-			$attributes[$key] = $output;
 		}
 
 		$additionalAttributes = [];

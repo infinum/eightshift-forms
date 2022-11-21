@@ -7,7 +7,7 @@
 
 # Eightshift Forms Plugin
 
-This is a form builder plugin by Eightshift.
+Eightshift forms plugins is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.
 
 ## :rocket: Quick start
 
@@ -25,8 +25,7 @@ This is required for the GitHub action which builds assets on new releases and a
 
 If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on github and we will do our best to give you a timely answer.
 
-Eightshift WordPress Boilerplate Plugin is maintained and sponsored by
-[Eightshift](https://eightshift.com) and [Infinum](https://infinum.co).
+Eightshift WordPress Boilerplate Plugin is maintained and sponsored by [Infinum](https://infinum.co).
 
 ## :scroll: License
 

@@ -21,11 +21,11 @@ $adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attri
 $adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
 $adminSettingsFormEditLink = Components::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
-$adminSettingsLink = Components::checkAttr('adminSettingsLink', $attributes, $manifest);
 $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
 $adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
 $adminSettingsIsGlobal = Components::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
+$adminSettingsNotice = Components::checkAttr('adminSettingsNotice', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -40,6 +40,20 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 ?>
 
 <div class="<?php echo esc_attr($layoutClass); ?>">
+	<?php if ($adminSettingsNotice) { ?>
+		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
+			<?php
+				echo Components::render(
+					'notice',
+					[
+						'noticeContent' => $adminSettingsNotice,
+					],
+					'',
+					true
+				);
+			?>
+		</div>
+	<?php } ?>
 	<div class="<?php echo esc_attr("{$sectionClass}__sidebar"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__section {$sectionClass}__section--clean"); ?>">
 			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
@@ -56,7 +70,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			[
 				'items' => $adminSettingsSidebar,
 				'sectionClass' => $sectionClass,
-				'adminSettingsLink' => $adminSettingsLink,
 				'adminSettingsType' => $adminSettingsType,
 			]
 		);
@@ -80,9 +93,11 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 					<?php } ?>
 				</div>
 
-				<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
-					<?php echo esc_html($adminSettingsSubTitle); ?>
-				</div>
+				<?php if ($adminSettingsSubTitle) { ?>
+					<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
+						<?php echo esc_html($adminSettingsSubTitle); ?>
+					</div>
+				<?php } ?>
 			</div>
 			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>

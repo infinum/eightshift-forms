@@ -23,6 +23,14 @@ export const FieldEditor = (attributes) => {
 		clientId,
 	} = attributes;
 
+	const fieldContent = checkAttr('fieldContent', attributes, manifest);
+	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
+
+	// Enable option to skip field and just render content.
+	if (fieldSkip) {
+		return fieldContent;
+	}
+
 	// Update media breakpoints from the filter.
 	if (
 		typeof esFormsLocalization !== 'undefined' &&
@@ -37,7 +45,6 @@ export const FieldEditor = (attributes) => {
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
-	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);

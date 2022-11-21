@@ -1,6 +1,6 @@
 // stylelint-disable declaration-no-important
 .es-block-form-selector {
-	--wp-admin-theme-color: #29A3A3;
+	--wp-admin-theme-color: var(--global-colors-es-matisse);
 
 	.esf-form-type-picker-group {
 		display: flex;

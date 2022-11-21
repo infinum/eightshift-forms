@@ -11,24 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsLocation class.
  */
-class SettingsLocation implements SettingsDataInterface, ServiceInterface
+class SettingsLocation implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_location';
 
 	/**
 	 * Filter settings key.
@@ -47,23 +41,7 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-	}
-
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('Display locations', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		];
 	}
 
 	/**
@@ -75,31 +53,20 @@ class SettingsLocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Display locations', 'eightshift-forms'),
-				'introSubtitle' => \__('See where your form appears throughout the website.', 'eightshift-forms'),
-			],
-		];
-
 		$locations = $this->getBlockLocations($formId);
 
-		if (!$locations) {
-			$output[] = [
+		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			!$locations ? [
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Nothing to see here...', 'eightshift-forms'),
 				'highlightedContentSubtitle' => \__('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
 				'highlightedContentIcon' => 'empty',
-			];
-		} else {
-			$output[] = [
+			] : [
 				'component' => 'admin-listing',
 				'adminListingForms' => $this->getBlockLocations($formId),
-			];
-		}
-
-		return $output;
+			]
+		];
 	}
 
 	/**

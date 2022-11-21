@@ -1,0 +1,13 @@
+{
+	"componentName": "tab",
+	"title": "Tab",
+	"componentClass": "es-tab",
+	"attributes": {
+		"tabLabel": {
+			"type": "string"
+		},
+		"tabContent": {
+			"type": "string"
+		}
+	}
+}

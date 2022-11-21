@@ -14,6 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\FormSettingsSubmitRoute;
+use EightshiftForms\Rest\Routes\MigrationRoute;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -78,8 +79,10 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 		return [
 			'esFormsLocalization' => [
 				'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
+				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
 				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
 				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
+				'migrationRestUrl' => $restRoutesPath . MigrationRoute::ROUTE_SLUG,
 			]
 		];
 	}

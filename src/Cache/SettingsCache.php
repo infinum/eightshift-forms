@@ -10,32 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClient;
-use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
-use EightshiftForms\Integrations\Hubspot\HubspotClient;
-use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
-use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCache class.
  */
-class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
+class SettingsCache implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_cache';
 
 	/**
 	 * Filter global settings key.
@@ -48,56 +37,25 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'cache';
 
 	/**
-	 * List all cache options in the project.
-	 */
-	public const ALL_CACHE = [
-		'mailchimp' => [
-			MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
-			MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
-			MailchimpClient::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME,
-		],
-		'greenhouse' => [
-			GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
-			GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
-		],
-		'hubspot' => [
-			HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
-			HubspotClient::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME,
-		],
-		'mailerlite' => [
-			MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
-			MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
-		],
-		'active-campaign' => [
-			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
-			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
-		],
-	];
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
-	 * Get Settings sidebar data.
+	 * Get Form settings data array.
 	 *
-	 * @return array<string, mixed>
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
 	 */
-	public function getSettingsSidebar(): array
+	public function getSettingsData(string $formId): array
 	{
-		return [
-			'label' => \__('Clear cache', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		];
+		return [];
 	}
 
 	/**
@@ -107,31 +65,36 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$output = [
+		$manifestForm = Components::getComponent('form');
+
+		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introTitle' => \__('Clear cache', 'eightshift-forms'),
-				'introSubtitle' => \__('Use the buttons below to clear the cache if the entry you\'re looking for isn\'t available or has changed.', 'eightshift-forms'),
-			]
+				'component' => 'layout',
+				'layoutItems' => \array_values(\array_filter(\array_map(
+					static function ($key, $value) use ($manifestForm) {
+						$cache = $value['cache'] ?? [];
+
+						if ($cache) {
+							$title = Filters::getSettingsLabels($key);
+
+							return [
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								// translators: %s will be replaced with the title.
+								'submitValue' => \sprintf(\__('Clear %s cache', 'eightshift-forms'), $title),
+								'submitIcon' => $value['icon'],
+								'submitAttrs' => [
+									'data-type' => $key,
+								],
+								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+							];
+						}
+					},
+					\array_keys(Filters::ALL),
+					Filters::ALL
+				))),
+			],
 		];
-
-		$manifestForm = Components::getManifest(\dirname(__DIR__, 1) . '/Blocks/components/form');
-
-		foreach (self::ALL_CACHE as $key => $value) {
-			$name = \ucfirst(\str_replace('-', ' ', $key));
-
-			$output[] = [
-				'component' => 'submit',
-				'submitFieldWidthLarge' => 2,
-				'submitValue' => "Clear {$name} cache",
-				'submitIcon' => $key,
-				'submitAttrs' => [
-					'data-type' => $key,
-				],
-				'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
-			];
-		};
-
-		return $output;
 	}
 }

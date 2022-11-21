@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Labels;
 
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
@@ -41,6 +42,7 @@ class Labels implements LabelsInterface
 		'goodbitsSuccess',
 		'customSuccess',
 		'activeCampaignSuccess',
+		'airtableSuccess',
 	];
 
 	/**
@@ -90,6 +92,11 @@ class Labels implements LabelsInterface
 		// ActiveCampaign.
 		if ($this->isCheckboxOptionChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
 			$output = \array_merge($output, $this->getActiveCampaignLabels());
+		}
+
+		// Airtable.
+		if ($this->isCheckboxOptionChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
+			$output = \array_merge($output, $this->getAirtableLabels());
 		}
 
 		return $output;
@@ -149,6 +156,7 @@ class Labels implements LabelsInterface
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
 			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
+			'customSuccessRedirect' => \__('Form was successfuly submitted. Redirecting you now.', 'eightshift-forms'),
 		];
 	}
 
@@ -210,7 +218,7 @@ class Labels implements LabelsInterface
 			'mailchimpInvalidResourceError' => \__('Something is not right with the resource. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'mailchimpMissingFieldsError' => \__('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpSuccess' => \__('Newsletter subscription successful. Thank you!', 'eightshift-forms'),
+			'mailchimpSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -266,7 +274,7 @@ class Labels implements LabelsInterface
 			'mailerliteBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailerliteInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'mailerliteEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
-			'mailerliteSuccess' => \__('The newsletter was successful. Thank you!', 'eightshift-forms'),
+			'mailerliteSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -319,6 +327,23 @@ class Labels implements LabelsInterface
 			'captchaWrongAction' => \__('The Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaIncorrectCaptchaSol' => \__('The Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The automated system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Airtable
+	 *
+	 * @return array<string, string>
+	 */
+	private function getAirtableLabels(): array
+	{
+		return [
+			'airtableNotFoundError' => \__('Airtable integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'airtableInvalidPermissionsOrModelNotFoundError' => \__('Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct.', 'eightshift-forms'),
+			'airtableInvalidPermissionsError' => \__('You are not permitted to perform this operation.', 'eightshift-forms'),
+			'airtableInvalidRequestUnknownError' => \__('Invalid request: parameter validation failed. Check your request data.', 'eightshift-forms'),
+			'airtableInvalidValueForColumnError' => \__('One or more fields are invalid. Please try again.', 'eightshift-forms'),
+			'airtableSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

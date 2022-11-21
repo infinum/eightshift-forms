@@ -1,4 +1,20 @@
-// stylelint-disable number-max-precision
+// stylelint-disable number-max-precision, selector-max-specificity
+
+.eightshift-forms_page_es-settings-global,
+.toplevel_page_es-forms,
+.admin_page_es-settings {
+	#wpbody-content {
+		padding-bottom: 0;
+
+		> .notice {
+			display: none;
+		}
+	}
+
+	#wpfooter {
+		display: none;
+	}
+}
 
 .es-admin-settings-section {
 	$this: &;
@@ -9,12 +25,16 @@
 	&--with-sidebar {
 		display: grid;
 		grid-template-columns: 15rem 1fr;
+		grid-template-areas:
+			'notice notice notice'
+			'sidebar main main';
 	}
 
 	&__sidebar {
 		background-color: var(--global-colors-es-white);
 		height: 100vh;
 		overflow-x: hidden;
+		grid-area: sidebar;
 
 		> * {
 			margin-bottom: var(--global-es-spacing-horizontal);
@@ -33,11 +53,16 @@
 		line-height: 1.2;
 	}
 
+	&__notice {
+		grid-area: notice;
+	}
+
 	&__main {
+		grid-area: main;
 		border-left: 1px solid var(--global-colors-es-ebb);
 
 		#{$this}__content {
-			padding: 0 var(--global-es-spacing-horizontal);
+			padding: var(--global-es-spacing-horizontal);
 
 			#{$this}__content {
 				padding: 0;
@@ -48,24 +73,26 @@
 	&__section {
 		&--clean {
 			margin-left: 1.25rem;
-			margin-top: var(--global-es-spacing-horizontal);
+			margin-top: 1.25rem;
+			margin-bottom: 1.25rem;
 		}
 	}
 
 	&__heading {
 		padding: 1rem var(--global-es-spacing-horizontal);
 		border-bottom: 1px solid var(--global-colors-es-ebb);
-		margin-bottom: var(--global-es-spacing-horizontal);
-
-		&--no-spacing {
-			margin-bottom: 0;
-		}
 	}
 
 	&__heading-wrap {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		min-height: 36px;
+	}
+
+	&__heading-inner-wrap {
+		display: flex;
+		align-items: center;
 	}
 
 	&__heading-title {
@@ -74,6 +101,10 @@
 		min-height: 1.25rem;
 		line-height: 1.2;
 		color: var(--global-colors-es-matisse);
+	}
+
+	&__heading-filter {
+		margin-left: 30px;
 	}
 
 	&__description {
@@ -89,7 +120,7 @@
 		letter-spacing: 0.05em;
 		font-size: 0.7rem;
 		border-radius: 3px;
-		padding: 0.2rem 0.15rem;
+		padding: 0.25rem;
 
 		display: inline-flex;
 		align-items: center;
@@ -234,6 +265,11 @@
 			&::before {
 				opacity: 0.08;
 			}
+		}
+
+		&:focus,
+		&:active {
+			color: var(--global-colors-es-matisse);
 		}
 
 		&--active,

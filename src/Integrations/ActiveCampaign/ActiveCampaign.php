@@ -79,7 +79,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
@@ -102,6 +102,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
+
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),

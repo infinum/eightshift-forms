@@ -43,13 +43,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailerlite_form_fields_filter';
 
 	/**
-	 * Field Mailerlite Tags.
-	 *
-	 * @var string
-	 */
-	public const FIELD_MAILERLITE_TAGS_KEY = 'es-form-mailerlite-tags';
-
-	/**
 	 * Instance variable for Mailerlite data.
 	 *
 	 * @var ClientInterface
@@ -85,7 +78,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
@@ -108,6 +101,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
+
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),

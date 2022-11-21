@@ -1,0 +1,65 @@
+.es-card {
+	border: 1px solid var(--global-colors-es-ebb);
+	padding: 20px;
+	border-radius: 6px;
+	transition: {
+		property: box-shadow;
+		timing-function: ease-in-out;
+		duration: 0.3s;
+	}
+
+	&:hover {
+		box-shadow: 0 0 5px var(--global-colors-es-chalice-50);
+	}
+
+	&__intro {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__icon {
+		margin-left: 10px;
+
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	&__title {
+		font-size: 21px;
+		font-weight: 600;
+	}
+
+	&__links {
+		margin-top: 5px;
+	}
+
+	&__link {
+		color: var(--global-colors-es-french);
+		text-decoration: none;
+		transition: {
+			property: color;
+			timing-function: ease-in-out;
+			duration: 0.3s;
+		}
+
+		&:hover {
+			color: var(--global-colors-es-matisse);
+		}
+
+		&::after {
+			content: '|';
+			margin: 0 3px;
+		}
+
+		&:last-child::after {
+			display: none;
+		}
+	}
+
+	&__toggle {
+		margin-top: 20px;
+	}
+}

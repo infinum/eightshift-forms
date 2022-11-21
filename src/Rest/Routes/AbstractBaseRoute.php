@@ -12,8 +12,6 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Integrations\Hubspot\Hubspot;
-use EightshiftForms\Integrations\Mailchimp\Mailchimp;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftForms\Validation\Validator; // phpcs:ignore
@@ -26,53 +24,38 @@ use EightshiftForms\Validation\Validator; // phpcs:ignore
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
 	/**
-	 * Custom form param for post ID.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_POST_ID = 'es-form-post-id';
-
-	/**
-	 * Custom form param for type.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_TYPE = 'es-form-type';
-
-	/**
-	 * Custom form param for single submit.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_SINGLE_SUBMIT = 'es-form-single-submit';
-
-	/**
-	 * Custom form param for storage.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_STORAGE = 'es-form-storage';
-
-	/**
-	 * Custom form param for action.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_ACTION = 'es-form-action';
-
-	/**
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
-		'postId' => self::CUSTOM_FORM_PARAM_POST_ID,
-		'type' => self::CUSTOM_FORM_PARAM_TYPE,
-		'singleSubmit' => self::CUSTOM_FORM_PARAM_SINGLE_SUBMIT,
-		'storage' => self::CUSTOM_FORM_PARAM_STORAGE,
-		'action' => self::CUSTOM_FORM_PARAM_ACTION,
-		'hubspotCookie' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE,
-		'hubspotPageName' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME,
-		'hubspotPageUrl' => Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL,
-		'mailchimpTags' => Mailchimp::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+		'postId' => 'es-form-post-id',
+		'type' => 'es-form-type',
+		'singleSubmit' => 'es-form-single-submit',
+		'storage' => 'es-form-storage',
+		'action' => 'es-form-action',
+		'actionExternal' => 'es-form-action-external',
+		'conditionalTags' => 'es-form-conditional-tags',
+		'hubspotCookie' => 'es-form-hubspot-cookie',
+		'hubspotPageName' => 'es-form-hubspot-page-name',
+		'hubspotPageUrl' => 'es-form-hubspot-page-url',
+		'mailchimpTags' => 'es-form-mailchimp-tags',
+	];
+
+	/**
+	 * List of all custom form data attributes used.
+	 */
+	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
+		'formType' => 'data-form-type',
+		'formPostId' => 'data-form-post-id',
+		'fieldId' => 'data-field-id',
+		'trackingEventName' => 'data-tracking-event-name',
+		'tracking' => 'data-tracking',
+		'trackingSelectLabel' => 'data-tracking-select-label',
+		'successRedirect' => 'data-success-redirect',
+		'conditionalTags' => 'data-conditional-tags',
+		'typeSelector' => 'data-type-selector',
+		'actionExternal' => 'data-action-external',
+		'fieldTypeInternal' => 'data-type-internal',
+		'fieldUncheckedValue' => 'data-unchecked-value',
 	];
 
 	/**
@@ -268,7 +251,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function getFormType(array $params): string
 	{
-		$formType = $params[self::CUSTOM_FORM_PARAM_TYPE] ?? '';
+		$formType = $params[self::CUSTOM_FORM_PARAMS['type']] ?? '';
 
 		if (!$formType) {
 			throw new UnverifiedRequestException(
@@ -318,7 +301,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function getFormId(array $params, bool $throwError = true): string
 	{
-		$formId = $params[self::CUSTOM_FORM_PARAM_POST_ID] ?? '';
+		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
 
 		if (!$formId) {
 			return '';
@@ -344,11 +327,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function extractStorageParams(array $params): array
 	{
-		if (!isset($params[self::CUSTOM_FORM_PARAM_STORAGE])) {
+		if (!isset($params[self::CUSTOM_FORM_PARAMS['storage']])) {
 			return $params;
 		}
 
-		$storage = $params[self::CUSTOM_FORM_PARAM_STORAGE]['value'] ?? [];
+		$storage = $params[self::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
 
 		if (!$storage) {
 			return $params;
@@ -356,7 +339,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		$storage = \json_decode($storage, true);
 
-		$params[self::CUSTOM_FORM_PARAM_STORAGE]['value'] = $storage;
+		$params[self::CUSTOM_FORM_PARAMS['storage']]['value'] = $storage;
 
 		return $params;
 	}

@@ -3,10 +3,10 @@
 /**
  * Plugin Name: Eightshift Forms
  * Plugin URI: https://github.com/infinum/eightshift-forms
- * Description: Eightshift form builder plugin.
- * Author: Team Eightshift
+ * Description: Eightshift Forms is a complete form builder plugin that utilizes modern Block editor features with multiple third-party integrations, bringing your project to a new level.
+ * Author: WordPress team @Infinum
  * Author URI: https://eightshift.com/
- * Version: 2.0.0
+ * Version: 3.0.0
  * Text Domain: eightshift-forms
  *
  * @package EightshiftForms

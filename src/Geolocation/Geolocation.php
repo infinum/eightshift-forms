@@ -14,7 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
 
@@ -48,7 +48,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function register(): void
 	{
 		if (!\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocketAdvancedCache()) {
-			\add_filter('init', [$this, 'setLocationCookie']);
+			\add_filter('init', [$this, 'setLocationCookie']); // @phpstan-ignore-line
 		}
 
 		// WP Rocket specific hooks.
@@ -227,7 +227,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return $formId;
 		}
 
-		$logModeCheck = $this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_LOG_MODE_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY);
+		$logModeCheck = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getGeolocationFilterName('disable');

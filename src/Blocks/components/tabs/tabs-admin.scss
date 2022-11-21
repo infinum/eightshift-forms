@@ -1,0 +1,21 @@
+.es-tabs {
+	margin: 0 calc(-1 * var(--global-es-spacing-horizontal));
+	position: relative;
+
+	@include media(desktop up) {
+		display: flex;
+		flex-wrap: wrap;
+		overflow: hidden;
+		border-top: 1px solid var(--global-colors-es-ebb);
+	}
+
+	&--first {
+		border-top: none;
+	}
+
+	&.is-loaded {
+		.es-loader {
+			display: none;
+		}
+	}
+}

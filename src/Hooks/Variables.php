@@ -16,16 +16,6 @@ namespace EightshiftForms\Hooks;
 class Variables
 {
 	/**
-	 * Get forms develop mode, this will output new global settings for testing inputs.
-	 *
-	 * @return bool
-	 */
-	public static function isDevelopMode(): bool
-	{
-		return \defined('ES_DEVELOP_MODE') ? true : false;
-	}
-
-	/**
 	 * Get API Key for HubSpot.
 	 *
 	 * @return string
@@ -203,5 +193,15 @@ class Variables
 	public static function getApiUrlActiveCampaign(): string
 	{
 		return \defined('ES_API_URL_ACTIVE_CAMPAIGN') ? \ES_API_URL_ACTIVE_CAMPAIGN : '';
+	}
+
+	/**
+	 * Get API key for Airtable.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyAirtable(): string
+	{
+		return \defined('ES_API_KEY_AIRTABLE') ? \ES_API_KEY_AIRTABLE : '';
 	}
 }

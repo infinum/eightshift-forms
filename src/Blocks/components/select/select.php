@@ -10,6 +10,7 @@ use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
@@ -53,7 +54,7 @@ if ($isCustomSelect && $selectUseCustom) {
 }
 
 if ($selectTracking) {
-	$selectAttrs['data-tracking'] = esc_attr($selectTracking);
+	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($selectTracking);
 }
 
 $selectAttrsOutput = '';

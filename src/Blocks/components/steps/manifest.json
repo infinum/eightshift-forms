@@ -1,0 +1,13 @@
+{
+	"componentName": "steps",
+	"title": "Steps",
+	"componentClass": "es-steps",
+	"attributes": {
+		"stepsTitle": {
+			"type": "string"
+		},
+		"stepsContent": {
+			"type": "array"
+		}
+	}
+}

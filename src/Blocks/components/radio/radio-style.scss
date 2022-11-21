@@ -29,12 +29,10 @@
 		--es-radio-scoped-border-color: var(--global-colors-es-matisse);
 	}
 
-	&__input:disabled + #{$this}__label::before {
-		--es-radio-scoped-opacity: 0.6;
-	}
-
+	&__input:disabled + #{$this}__label::before,
 	&__input:disabled:checked + #{$this}__label::before {
-		--es-radio-scoped-opacity: 0.6;
+		--es-radio-scoped-border-color: var(--global-colors-es-matisse-30);
+		--es-radio-scoped-background-color: var(--global-colors-es-matisse-30);
 	}
 
 	&__label {

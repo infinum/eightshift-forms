@@ -11,17 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 /**
- * Interface for SettingsDataInterface
+ * Interface for SettingInterface
  */
-interface SettingsDataInterface
+interface SettingInterface
 {
-	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array;
-
 	/**
 	 * Get Form settings data array
 	 *
@@ -30,4 +23,11 @@ interface SettingsDataInterface
 	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsData(string $formId): array;
+
+	/**
+	 * Get global settings array for building settings page.
+	 *
+	 * @return array<int, array<mixed>>
+	 */
+	public function getSettingsGlobalData(): array;
 }

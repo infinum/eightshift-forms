@@ -1,0 +1,38 @@
+.es-steps {
+	&__title {
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+	&__step {
+		font-size: 14px;
+		line-height: 1.7;
+		color: var(--global-colors-es-boulder);
+		counter-increment: section;
+		display: flex;
+		align-items: flex-start;
+		min-height: 40px;
+
+		a {
+			color: var(--global-colors-es-matisse);
+			text-decoration-style: dotted;
+			text-underline-offset: 0.1em;
+			text-decoration-thickness: 1px;
+		}
+
+		&::before {
+			border-radius: 100px;
+			margin-right: 10px;
+			font-size: 16px;
+			background-color: var(--global-colors-es-matisse);
+			color: var(--global-colors-es-white);
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			content: counter(section);
+			flex: 0 0 auto;
+		}
+	}
+}

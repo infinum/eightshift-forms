@@ -1,0 +1,69 @@
+.es-layout {
+	$this: &;
+
+	--es-layout-scoped-gutters-default: 20px;
+
+	&__wrap {
+		display: grid;
+		column-gap: var(--es-layout-scoped-gutters-default);
+		row-gap: var(--es-layout-scoped-gutters-default);
+	}
+
+	&__col > * {
+		margin-bottom: 3rem;
+
+		@include media(desktop up) {
+			margin-bottom: 4rem;
+		}
+	}
+
+	&[data-layout-type='layout-grid-2'] {
+		#{$this}__wrap {
+			@include media(desktop up) {
+				grid-template-columns: repeat(12, 1fr);
+			}
+
+			> * {
+				@include media(desktop up) { // stylelint-disable-line max-nesting-depth
+					grid-column-end: span 6;
+				}
+			}
+		}
+	}
+
+	&[data-layout-type='layout-grid-3'] {
+		#{$this}__wrap {
+			@include media(desktop up) {
+				grid-template-columns: repeat(12, 1fr);
+			}
+
+			> * {
+				@include media(desktop) { // stylelint-disable-line max-nesting-depth
+					grid-column-end: span 6;
+				}
+
+				@include media(large up) { // stylelint-disable-line max-nesting-depth
+					grid-column-end: span 4;
+				}
+			}
+		}
+	}
+
+	&[data-layout-type='layout-grid-4'] {
+		#{$this}__wrap {
+			@include media(desktop up) {
+				grid-template-columns: repeat(12, 1fr);
+			}
+
+			> * {
+				@include media(desktop) { // stylelint-disable-line max-nesting-depth
+					grid-column-end: span 6;
+				}
+
+				@include media(large up) { // stylelint-disable-line max-nesting-depth
+					grid-column-end: span 3;
+				}
+			}
+		}
+	}
+}

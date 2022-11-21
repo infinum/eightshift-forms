@@ -211,7 +211,7 @@ class Helper
 			if (\has_filter($filterName)) {
 				\apply_filters($filterName, $data);
 			} else {
-				\error_log((string) \wp_json_encode($data) . "\n -------------------------------------", 3, \WP_CONTENT_DIR . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				\error_log((string) \wp_json_encode($data) . "\n -------------------------------------", 3, $wpContentDir . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 	}
@@ -295,5 +295,52 @@ class Helper
 	public static function camelToSnakeCase($input): string
 	{
 		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+	}
+
+	/**
+	 * Output the form type used by checking the post_content and extracting the block used for the integration.
+	 *
+	 * @param string $formId Form ID to check.
+	 *
+	 * @return string
+	 */
+	public static function getUsedFormTypeById(string $formId): string
+	{
+		$content = \get_post_field('post_content', (int) $formId);
+
+		if (!$content) {
+			return '';
+		}
+
+		$blocks = \parse_blocks($content);
+
+		if (!$blocks) {
+			return '';
+		}
+
+		$blockName = $blocks[0]['innerBlocks'][0]['blockName'] ?? '';
+
+		if (!$blockName) {
+			return '';
+		}
+
+		$blockName = \explode('/', $blockName);
+
+		$name = \end($blockName);
+
+		// Block name can be different from the settings name due to legacy reasons.
+		foreach (Filters::ALL as $key => $value) {
+			if (!isset($value['formBlockName'])) {
+				continue;
+			}
+
+			if ($value['formBlockName'] !== $name) {
+				continue;
+			}
+
+			$name = $key;
+		}
+
+		return $name;
 	}
 }

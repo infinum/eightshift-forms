@@ -66,7 +66,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
@@ -89,6 +89,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = $formAdditionalProps['ssr'] ?? false;
+
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
 
 		// Return form to the frontend.
 		return $this->buildForm(

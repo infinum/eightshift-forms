@@ -1,0 +1,33 @@
+.es-notice {
+	$this: &;
+	background-color: var(--global-colors-es-matisse);
+	color: var(--global-colors-es-white);
+	padding: 20px;
+	display: flex;
+	align-items: center;
+	font-size: 18px;
+	line-height: 1.6;
+
+	&__icon {
+		margin-right: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			width: 30px;
+			height: 30px;
+		}
+	}
+
+	&__text {
+		max-width: calc(var(--global-es-max-width) + 15rem);
+
+		a {
+			color: var(--global-colors-es-white);
+			text-decoration-style: dotted;
+			text-underline-offset: 0.1em;
+			text-decoration-thickness: 1px;
+		}
+	}
+}

@@ -1,43 +1,12 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-
-const ePrefix = 'esForms';
-
-// All custom events.
-export const FORM_EVENTS = {
-	BEFORE_FORM_SUBMIT: `${ePrefix}BeforeFormSubmit`,
-	AFTER_FORM_SUBMIT: `${ePrefix}AfterFormSubmit`,
-	AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${ePrefix}AfterFormSubmitSuccessRedirect`,
-	AFTER_FORM_SUBMIT_SUCCESS: `${ePrefix}AfterFormSubmitSuccess`,
-	AFTER_FORM_SUBMIT_RESET: `${ePrefix}AfterFormSubmitReset`,
-	AFTER_FORM_SUBMIT_ERROR: `${ePrefix}AfterFormSubmitError`,
-	AFTER_FORM_SUBMIT_ERROR_FATAL: `${ePrefix}AfterFormSubmitErrorFatal`,
-	AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${ePrefix}AfterFormSubmitErrorValidation`,
-	AFTER_FORM_SUBMIT_END: `${ePrefix}AfterFormSubmitEnd`,
-	AFTER_FORM_EVENTS_CLEAR: `${ePrefix}AfterFormEventsClear`,
-	BEFORE_GTM_DATA_PUSH: `${ePrefix}BeforeGtmDataPush`,
-	FORMS_JS_LOADED: `${ePrefix}JsLoaded`,
-};
-
-// All form custom state selectors.
-export const FORM_SELECTORS = {
-	CLASS_ACTIVE: 'is-active',
-	CLASS_FILLED: 'is-filled',
-	CLASS_LOADING: 'is-loading',
-	CLASS_HAS_ERROR: 'has-error',
-};
-
-// All form data attributes.
-export const FORM_DATA_ATTRIBUTES = {
-	DATA_ATTR_FORM_TYPE: 'data-form-type',
-	DATA_ATTR_FIELD_ID: 'data-field-id',
-	DATA_ATTR_FORM_POST_ID: 'data-form-post-id',
-	DATA_ATTR_TRACKING_EVENT_NAME: 'data-tracking-event-name',
-	DATA_ATTR_TRACKING: 'data-tracking',
-	DATA_ATTR_TRACKING_SELECT_LABEL: 'data-tracking-select-label',
-	DATA_ATTR_SUCCESS_REDIRECT: 'data-success-redirect',
-};
+import {
+	FORM_EVENTS,
+	FORM_SELECTORS,
+	CONDITIONAL_TAGS_CONSTANTS,
+	utilIsCustom,
+} from './utilities';
 
 export class Form {
 	constructor(options) {
@@ -61,12 +30,16 @@ export class Form {
 		this.textareaSelector = `${this.fieldSelector} textarea`;
 		this.selectSelector = `${this.fieldSelector} select`;
 		this.fileSelector = `${this.fieldSelector} input[type='file']`;
+		this.conditionalTagsSelector = `${this.fieldSelector} input[id='conditional-tags']`;
 
-		// LocalStorage
+		// LocalStorage.
 		this.STORAGE_NAME = 'es-storage';
 
 		// Custom fields params.
 		this.FORM_CUSTOM_FORM_PARAMS = options.customFormParams;
+
+		// Custom data attributes.
+		this.FORM_CUSTOM_DATA_ATTRIBUTES = options.customFormDataAttributes;
 
 		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
@@ -112,13 +85,14 @@ export class Form {
 			}
 
 			// Get form ID.
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			// All fields selectors.
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);
 			const selects = element.querySelectorAll(this.selectSelector);
 			const files = element.querySelectorAll(this.fileSelector);
+			const conditionalTagsData = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -142,6 +116,56 @@ export class Form {
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
+
+			// Load conditional data class if used.
+			if (conditionalTagsData) {
+				import('./conditional-tags').then(({ ConditionalTags }) => {
+					const cTagsClass = new ConditionalTags({
+						formSelector: this.formSelector,
+						fieldSelector: this.fieldSelector,
+						customSelector: this.customSelector,
+						data: conditionalTagsData,
+						formIsAdmin: this.formIsAdmin,
+						FORM_SELECTORS,
+					});
+
+					cTagsClass.init();
+
+					// Populate window with necessary functions and prefix everything with "ct".
+					window['esForms'] = {
+						...window['esForms'],
+						ctConstants: CONDITIONAL_TAGS_CONSTANTS,
+						ctInternalData: cTagsClass.internalData,
+						ctInit: () => {
+							cTagsClass.init();
+						},
+						ctSetData: () => {
+							cTagsClass.setData();
+						},
+						ctSetInit: () => {
+							cTagsClass.setInit();
+						},
+						ctSetListeners: () => {
+							cTagsClass.setListeners();
+						},
+						ctOnCustomSelectChange: (event) => {
+							cTagsClass.onCustomSelectChange(event);
+						},
+						ctOnFieldChange: (event) => {
+							cTagsClass.onFieldChange(event);
+						},
+						ctAreAllRulesValid: (logic, item) => {
+							cTagsClass.areAllRulesValid(logic, item);
+						},
+						ctIsRuleValid: (rule, inputValue, item, index) => {
+							cTagsClass.isRuleValid(rule, inputValue, item, index);
+						},
+						ctIsCustom: (element) => {
+							cTagsClass.isCustom(element);
+						},
+					};
+				});
+			}
 		});
 
 		// Set localStorage data from global variable.
@@ -187,7 +211,7 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID),
+				formId: element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId),
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -237,7 +261,7 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
+		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// Populate body data.
 		const body = {
@@ -278,14 +302,14 @@ export class Form {
 					this.gtmSubmit(element);
 
 					// Redirect on success.
-					if (element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) || singleSubmit) {
+					if (element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 						// Dispatch event.
 						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
 						this.setGlobalMsg(element, response.message, 'success');
 
-						let redirectUrl = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) ?? '';
+						let redirectUrl = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) ?? '';
 
 						// Replace string templates used for passing data via url.
 						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -310,6 +334,20 @@ export class Form {
 						// Clear form values.
 						this.resetForm(element);
 					}
+				}
+
+				// On redirect state.
+				if (response.code >= 300 && response.code <= 399) {
+					// Send GTM.
+					this.gtmSubmit(element);
+
+					// Set global msg.
+					this.setGlobalMsg(element, response.message, 'success');
+
+					// Do the actual redirect after some time.
+					setTimeout(() => {
+						element.submit();
+					}, parseInt(this.redirectionTimeout, 10));
 				}
 
 				// Normal errors.
@@ -369,12 +407,12 @@ export class Form {
 
 		const groups = element.querySelectorAll(`${this.groupSelector}`);
 
-		const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+		const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FIELD_ID);
+				const groupId = group.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldId);
 				const groupInner = group.querySelectorAll(`
 					${this.groupInnerSelector} input,
 					${this.groupInnerSelector} select,
@@ -412,7 +450,7 @@ export class Form {
 			textarea:not(${this.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_TYPE);
+		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -450,6 +488,9 @@ export class Form {
 				type,
 			};
 
+			// Adde internal type for additional logic in some integrations.
+			data.internalType = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldTypeInternal);
+
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
 			}
@@ -457,7 +498,7 @@ export class Form {
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
 				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute('data-unchecked-value') ?? '';
+				data.value = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
 			// Append files field.
@@ -499,6 +540,12 @@ export class Form {
 		// Add form action field.
 		formData.append(this.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
 			value: element.getAttribute('action'),
+			type: 'hidden',
+		}));
+
+		// Add action external field.
+		formData.append(this.FORM_CUSTOM_FORM_PARAMS.actionExternal, JSON.stringify({
+			value: element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
 
@@ -565,7 +612,7 @@ export class Form {
 		if (this.formResetOnSuccess) {
 			element.reset();
 
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
 			if (this.customSelects[formId]) {
@@ -640,7 +687,7 @@ export class Form {
 
 	// Set global message.
 	setGlobalMsg = (element, msg, status) => {
-		if(element.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_SUCCESS_REDIRECT) && status === 'success') {
+		if(element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) && status === 'success') {
 			return;
 		}
 
@@ -686,7 +733,7 @@ export class Form {
 
 	// Submit GTM event.
 	gtmSubmit(element) {
-		const eventName = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_EVENT_NAME);
+		const eventName = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
@@ -700,7 +747,7 @@ export class Form {
 
 	// Build GTM data for the data layer.
 	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING}]`);
+		const items = element.querySelectorAll(`[${this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking}]`);
 		const dataTemp = {};
 
 		if (!items.length) {
@@ -708,7 +755,7 @@ export class Form {
 		}
 
 		[...items].forEach((item) => {
-			const tracking = item.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING);
+			const tracking = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking);
 
 			if (tracking) {
 				const {type, checked} = item;
@@ -726,7 +773,7 @@ export class Form {
 				}
 
 				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_TRACKING_SELECT_LABEL)) {
+				if (item.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingSelectLabel)) {
 					dataTemp[tracking] = item.selectedOptions[0].label;
 					return;
 				}
@@ -1008,7 +1055,7 @@ export class Form {
 
 	// Determine if field is custom type or normal.
 	isCustom(item) {
-		return item.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
+		return utilIsCustom(item, this.fieldSelector, this.customSelector.substring(1), this.formIsAdmin);
 	}
 
 	removeEvents() {
@@ -1018,7 +1065,7 @@ export class Form {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmit);
 
-			const formId = element.getAttribute(FORM_DATA_ATTRIBUTES.DATA_ATTR_FORM_POST_ID);
+			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			const inputs = element.querySelectorAll(this.inputSelector);
 			const textareas = element.querySelectorAll(this.textareaSelector);
@@ -1100,6 +1147,8 @@ export class Form {
 
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
+
+		console.log(searchParams.entries());
 
 		// Get storage from backend this is considered new by the page request.
 		const newStorage = {};

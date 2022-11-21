@@ -139,9 +139,9 @@ test('setLocationCookie will exit if disable filter is provided.', function () {
 test('setLocationCookie will exit if cookie is set.', function () {
 	$action = 'is_cookie';
 
-	$_COOKIE[Geolocation::GEOLOCATION_COOKIE] = 'HR';
+	$_COOKIE['esForms-country'] = 'HR';
 
-	if (isset($_COOKIE[Geolocation::GEOLOCATION_COOKIE])) {
+	if (isset($_COOKIE['esForms-country'])) {
 		putenv("SIDEAFFECT_GEOLOCATION_COOKIE_EXIT={$action}");
 	}
 
@@ -153,7 +153,7 @@ test('setLocationCookie will exit if cookie is set.', function () {
 	$this->assertNull($geo);
 
 	// Cleanup.
-	unset($_COOKIE[Geolocation::GEOLOCATION_COOKIE]);
+	unset($_COOKIE['esForms-country']);
 	putenv('SIDEAFFECT_GEOLOCATION_COOKIE_EXIT=');
 });
 
@@ -166,7 +166,7 @@ test('setLocationCookie will set cookie.', function () {
 
 	$lastSetCookieCall = json_decode(getenv('test_setcookie_last_call'), true);
 	$lastCookieName = $lastSetCookieCall['name'] ?? '';
-	$this->assertSame($lastCookieName, Geolocation::GEOLOCATION_COOKIE);
+	$this->assertSame($lastCookieName, 'esForms-country');
 	$this->assertNull($geo);
 
 	// Cleanup.

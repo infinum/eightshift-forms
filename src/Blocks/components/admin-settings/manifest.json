@@ -15,9 +15,6 @@
 		"adminSettingsFormEditLink": {
 			"type": "string"
 		},
-		"adminSettingsLink": {
-			"type": "string"
-		},
 		"adminSettingsSidebar": {
 			"type": "array"
 		},
@@ -30,6 +27,9 @@
 		"adminSettingsIsGlobal": {
 			"type": "boolean",
 			"default": false
+		},
+		"adminSettingsNotice": {
+			"type": "string"
 		}
 	}
 }

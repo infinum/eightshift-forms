@@ -2,7 +2,11 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { FORM_EVENTS, FORM_SELECTORS, FORM_DATA_ATTRIBUTES } from './form';
+import {
+	FORM_EVENTS,
+	FORM_SELECTORS,
+	windowUtilities,
+} from './utilities';
 
 if (typeof esFormsLocalization === 'undefined') {
 	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
@@ -17,7 +21,6 @@ const selector = `.${componentJsClass}`;
 window['esForms'] = {
 	events: FORM_EVENTS,
 	selectors: FORM_SELECTORS,
-	dataAttributes: FORM_DATA_ATTRIBUTES,
 	formSelector: selector,
 };
 
@@ -38,6 +41,7 @@ function initAll() {
 			captcha: esFormsLocalization.captcha,
 			storageConfig: esFormsLocalization.storageConfig,
 			customFormParams: esFormsLocalization.customFormParams,
+			customFormDataAttributes: esFormsLocalization.customFormDataAttributes,
 		});
 
 		// Run forms.
@@ -46,6 +50,7 @@ function initAll() {
 		// Populate window object with the rest of the functions.
 		window['esForms'] = {
 			...window['esForms'],
+			...windowUtilities,
 			redirectionTimeout: form.redirectionTimeout,
 			hideGlobalMessageTimeout: form.hideGlobalMessageTimeout,
 			captchaSiteKey: esFormsLocalization.captcha,
@@ -56,6 +61,7 @@ function initAll() {
 			customTextareas: form.customTextareas,
 			storageConfig: form.storageConfig,
 			customFormParams: form.FORM_CUSTOM_FORM_PARAMS,
+			customFormDataAttributes: form.FORM_CUSTOM_DATA_ATTRIBUTES,
 			storageName: form.STORAGE_NAME,
 			init: () => {
 				form.init();

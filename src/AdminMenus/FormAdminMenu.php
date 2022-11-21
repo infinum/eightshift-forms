@@ -12,7 +12,9 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Listing\FormListingInterface;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
@@ -64,6 +66,13 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * @var int
 	 */
 	public const ADMIN_MENU_POSITION = 4;
+
+	/**
+	 * Menu position filter not configured key.
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MENU_FILTER_NOT_CONFIGURED = 'not-configured';
 
 	/**
 	 * Get the title to use for the admin page.
@@ -191,6 +200,43 @@ class FormAdminMenu extends AbstractAdminMenu
 			$listingLink = Helper::getListingPageUrl();
 		}
 
+		$filterOptions = Components::render(
+			'select-option',
+			[
+				'selectOptionLabel' => \__('All', 'eightshift-forms'),
+				'selectOptionValue' => 'all',
+			]
+		);
+		$filterOptions .= Components::render(
+			'select-option',
+			[
+				'selectOptionLabel' => \__('Not Configured', 'eightshift-forms'),
+				'selectOptionValue' => self::ADMIN_MENU_FILTER_NOT_CONFIGURED,
+			]
+		);
+
+		foreach (Filters::ALL as $key => $value) {
+			if ($value['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+				continue;
+			}
+
+			$filterOptions .= Components::render(
+				'select-option',
+				[
+					'selectOptionLabel' => Filters::getSettingsLabels($key),
+					'selectOptionValue' => $key,
+				]
+			);
+		}
+
+		$filter = Components::render(
+			'select',
+			[
+				'fieldSkip' => true,
+				'selectOptions' => $filterOptions,
+			]
+		);
+
 		return [
 			'adminListingPageTitle' => $title,
 			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
@@ -198,6 +244,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'adminListingForms' => $this->formsListing->getFormsList($status),
 			'adminListingType' => $status,
 			'adminListingListingLink' => $listingLink,
+			'adminListingIntegrations' => $filter,
 		];
 	}
 }

@@ -1,0 +1,15 @@
+{
+	"componentName": "notice",
+	"title": "Notice",
+	"componentClass": "es-notice",
+	"example": {
+		"attributes": {
+			"noticeContent": "Value"
+		}
+	},
+	"attributes": {
+		"noticeContent": {
+			"type": "string"
+		}
+	}
+}

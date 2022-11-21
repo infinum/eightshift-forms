@@ -1,0 +1,29 @@
+{
+	"componentName": "layout",
+	"title": "Layout",
+	"componentClass": "es-layout",
+	"example": {
+		"attributes": {
+			"layoutType": "layout-grid-3",
+			"layoutTag": "div",
+			"layoutUse": true
+		}
+	},
+	"attributes": {
+		"layoutItems": {
+			"type": "string"
+		},
+		"layoutType": {
+			"type": "string",
+			"default": "layout-grid-3"
+		},
+		"layoutTag": {
+			"type": "string",
+			"default": "div"
+		},
+		"layoutUse": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

@@ -58,7 +58,7 @@ class FormsListing implements FormListingInterface
 				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
-				'activeIntegrations' => $this->getActiveIntegrationsIcons((string) $id),
+				'activeIntegration' =>  $this->getActiveIntegrationIcons((string) $id),
 			];
 		}
 
@@ -66,33 +66,24 @@ class FormsListing implements FormListingInterface
 	}
 
 	/**
-	 * Get all active integrations on specific form.
+	 * Get all active integration on specific form.
 	 *
 	 * @param string $id Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, string>
 	 */
-	private function getActiveIntegrationsIcons(string $id): array
+	private function getActiveIntegrationIcons(string $id): array
 	{
-		$output = [];
+		$integrationTypeUsed = Helper::getUsedFormTypeById($id);
 
-		foreach (Filters::ALL as $key => $integration) {
-			$validFilterName = $integration['valid'] ?? '';
-
-			if (!$validFilterName) {
-				continue;
-			}
-
-			$valid = \apply_filters($validFilterName, $id);
-
-			if ($valid) {
-				$output[] = [
-					'label' => \ucfirst($key),
-					'icon' => Filters::ALL[$key]['icon'],
-				];
-			}
+		if (!$integrationTypeUsed) {
+			return [];
 		}
 
-		return $output;
+		return [
+			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
+			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
+			'value' => $integrationTypeUsed,
+		];
 	}
 }

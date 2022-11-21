@@ -76,7 +76,8 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	{
 		$body = [];
 
-		$formAction = $params[self::CUSTOM_FORM_PARAM_ACTION]['value'];
+		$formAction = $params[self::CUSTOM_FORM_PARAMS['action']]['value'];
+		$formActionExternal = $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {
@@ -84,6 +85,14 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				'status' => 'error',
 				'code' => 400,
 				'message' => $this->labels->getLabel('customNoAction', $formId),
+			]);
+		}
+
+		if ($formActionExternal) {
+			return \rest_ensure_response([
+				'status' => 'redirect',
+				'code' => 301,
+				'message' => $this->labels->getLabel('customSuccessRedirect', $formId),
 			]);
 		}
 
@@ -95,7 +104,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
-			if ($name || !$value) {
+			if (!$name || !$value) {
 				continue;
 			}
 
@@ -120,7 +129,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
-		if ($customResponseCode > 400) {
+		if ($customResponseCode > 399) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => $customResponseCode,

@@ -15,7 +15,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -102,14 +102,14 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Check if form settings or global settings.
 			$formInternalType = 'settings';
 			if (!$formId) {
-				$formInternalType = 'global';
+				$formInternalType = 'settingsGlobal';
 			}
 
 			// Get form fields for validation.
 			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
 
 			// Validate request.
-			if (!$this->isCheckboxOptionChecked(SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_SKIP_VALIDATION_KEY, SettingsTroubleshooting::SETTINGS_TROUBLESHOOTING_DEBUGGING_KEY)) {
+			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
 					$request->get_file_params(),
@@ -134,7 +134,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 					return $this->cache($params);
 				default:
 					// If form ID is not set this is considered an global setting.
-					if (empty($formId)) {
+					if (!$formId) {
 						// Save all fields in the settings.
 						foreach ($params as $key => $value) {
 							// Check if key needs updating or deleting.
@@ -194,11 +194,11 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		}
 
 		foreach ($params as $key => $items) {
-			if (!isset(SettingsCache::ALL_CACHE[$key])) {
+			if (!isset(Filters::ALL[$key]['cache'])) {
 				continue;
 			}
 
-			foreach (SettingsCache::ALL_CACHE[$key] as $item) {
+			foreach (Filters::ALL[$key]['cache'] as $item) {
 				\delete_transient($item);
 			}
 		}

@@ -4,6 +4,7 @@
 	"componentClass": "es-form",
 	"componentJsClass": "js-es-block-form",
 	"componentCacheJsClass": "js-es-cache-delete",
+	"componentMigrationJsClass": "js-es-migration",
 	"components": {
 		"loader": "loader",
 		"field": "field",
@@ -29,6 +30,10 @@
 		"formAction": {
 			"type": "string"
 		},
+		"formActionExternal": {
+			"type": "boolean",
+			"default": false
+		},
 		"formMethod": {
 			"type": "string",
 			"default": "post"
@@ -43,6 +48,9 @@
 			"type": "string"
 		},
 		"formTrackingEventName": {
+			"type": "string"
+		},
+		"formConditionalTags": {
 			"type": "string"
 		},
 		"formType": {

@@ -1,0 +1,131 @@
+// stylelint-disable max-nesting-depth
+
+.es-tab {
+	$this: &;
+
+	&__label {
+		border-top: 1px solid var(--global-colors-es-ebb);
+		border-bottom: 1px solid var(--global-colors-es-ebb);
+		padding: 1rem 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		cursor: pointer;
+		font-weight: bold;
+		margin-bottom: -1px;
+		font-size: 15px;
+		transition: {
+			property: background-color, color;
+			timing-function: ease-in-out;
+			duration: 0.3s;
+		}
+
+		@include media(desktop up) {
+			order: 1;
+			display: block;
+			border-top: none;
+			border-right: 1px solid var(--global-colors-es-ebb);
+			position: relative;
+			margin: 0;
+		}
+
+		// Line on the bottom for mask.
+		&::before {
+			@include media(desktop up) {
+				content: '';
+				width: 100%;
+				height: 1px;
+				background-color: var(--global-colors-es-white);
+				position: absolute;
+				left: 0;
+				bottom: -1px;
+				opacity: 0;
+				z-index: 1;
+			}
+		}
+
+		&:hover {
+			background-color: var(--global-colors-es-matisse);
+			color: var(--global-colors-es-white);
+
+			&::after {
+				border-color: var(--global-colors-es-white);
+			}
+		}
+
+		// Down arrow on mobile only for accordion.
+		&::after {
+			content: '';
+			border: solid var(--global-colors-es-french);
+			border-width: 0 3px 3px 0;
+			display: inline-block;
+			padding: 3px;
+			transform: rotate(45deg);
+			transition: {
+				property: border-color, transform;
+				timing-function: ease-in-out;
+				duration: 0.3s;
+			}
+
+			@include media(desktop up) {
+				display: none;
+				transition: none;
+			}
+		}
+
+		&:first-child {
+			&::after {
+				@include media(desktop up) {
+					content: '';
+					display: block;
+					padding: 0;
+					transform: initial;
+					border: none;
+					width: 100vw;
+					height: 1px;
+					background-color: var(--global-colors-es-ebb);
+					position: absolute;
+					left: 0;
+					bottom: -1px;
+				}
+			}
+		}
+
+		&.is-active {
+			&::before {
+				@include media(desktop up) {
+					opacity: 1;
+				}
+			}
+
+			& + #{$this}__content {
+				display: grid;
+			}
+
+			&::after {
+				transform: rotate(-135deg);
+
+				@include media(desktop up) {
+					transform: initial;
+				}
+			}
+		}
+	}
+
+	&__content {
+		display: none;
+		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal);
+		border-top: 1px solid var(--global-colors-es-ebb);
+		border-bottom: 1px solid var(--global-colors-es-ebb);
+		margin-bottom: -1px;
+		row-gap: var(--global-es-spacing-horizontal);
+
+		@include media(desktop up) {
+			order: 99;
+			flex-grow: 1;
+			width: 100%;
+			border-top: none;
+			margin: 0;
+		}
+	}
+}

@@ -18,12 +18,29 @@
 			duration: 0.3s;
 		}
 
+		#{$this}__actions {
+			opacity: 0;
+			transition: {
+				property: opacity;
+				timing-function: ease-in-out;
+				duration: 0.3s;
+			}
+		}
+
 		&:hover {
 			background: linear-gradient(to right, var(--global-colors-es-matisse-10) 0%, transparent 85%);
+
+			#{$this}__actions {
+				opacity: 1;
+			}
 		}
 
 		&:first-child:last-child {
 			border-bottom: none;
+		}
+
+		&.is-hidden {
+			display: none;
 		}
 	}
 
@@ -79,6 +96,7 @@
 	}
 
 	&__item-status {
+		margin-left: 20px;
 		font-size: 0.65rem;
 		text-transform: uppercase;
 		letter-spacing: 0.075em; // stylelint-disable-line number-max-precision
@@ -91,6 +109,7 @@
 	}
 
 	&__item-post-type {
+		margin-left: 20px;
 		font-size: 0.65rem;
 		text-transform: uppercase;
 		letter-spacing: 0.075em; // stylelint-disable-line number-max-precision

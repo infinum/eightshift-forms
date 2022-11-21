@@ -10,9 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 
 /**
  * SettingsHelper trait.
@@ -199,16 +202,17 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Set locale depending ond default locale or hook override.
+	 * Set locale depending on default locale or hook override.
 	 *
 	 * @return string
 	 */
 	public function getLocale(): string
 	{
 		$locale = \get_locale();
+		$filterName = Filters::getGeneralFilterName('setLocale');
 
-		if (\has_filter('es_forms_set_locale')) {
-			$locale = \apply_filters('es_forms_set_locale', $locale);
+		if (\has_filter($filterName)) {
+			$locale = \apply_filters($filterName, $locale);
 		}
 
 		return $locale;
@@ -223,7 +227,7 @@ trait SettingsHelper
 	 * @param string $formId Form ID.
 	 * @param array<int, string> $additionalLabel Additional label to show.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, mixed>>
 	 */
 	public function getIntegrationFieldsDetails(string $key, string $type, array $formFields, string $formId, array $additionalLabel = []): array
 	{
@@ -234,6 +238,7 @@ trait SettingsHelper
 
 		// Loop form fields.
 		$fields = [];
+		$hiddenFields = [];
 
 		$fieldsValues = $this->getSettingsValueGroup($key, $formId);
 		$disabledEdit = false;
@@ -259,19 +264,21 @@ trait SettingsHelper
 				continue;
 			}
 
-			$component = $field['component'] ? Components::kebabToCamelCase($field['component']) : '';
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($field);
 
-			$inputType = $field["{$component}Type"] ?? '';
-			if ($inputType === 'hidden') {
-				continue;
-			}
-
-			$id = $field["{$component}Id"] ?? '';
-			$required = $field["{$component}IsRequired"] ?? false;
-			$label = $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '';
+			$component = $fieldDetails['component'];
+			$id = $fieldDetails['id'];
+			$required = $fieldDetails['required'];
+			$label = $fieldDetails['label'];
 
 			if ($type === SettingsGreenhouse::SETTINGS_TYPE_KEY && ($id === 'resume_text' || $id === 'cover_letter_text')) {
 				$label = "{$label} Text";
+			}
+
+			$inputType = $fieldDetails['inputType'];
+			if ($inputType === 'hidden') {
+				$hiddenFields[] = $label;
+				continue;
 			}
 
 			$fieldsOutput = [
@@ -281,6 +288,7 @@ trait SettingsHelper
 					'groupSaveOneField' => true,
 					'groupStyle' => 'integration-inner',
 					'groupContent' => [],
+					'groupBeforeContent' => $this->getAppliedFilterOutput($formViewDetailsFilterName),
 				]
 			];
 
@@ -443,7 +451,10 @@ trait SettingsHelper
 
 		\usort($fields, [$this, 'sortFields']);
 
-		return $fields;
+		return [
+			'fields' => $fields,
+			'hiddenFields' => $hiddenFields,
+		];
 	}
 
 	/**
@@ -494,14 +505,19 @@ trait SettingsHelper
 				continue;
 			}
 
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($value);
+
 			// Find field component name.
-			$component = $value['component'] ? Components::kebabToCamelCase($value['component']) : '';
+			$component = $fieldDetails['component'];
 
 			// Find field id.
-			$id = $value["{$component}Id"] ?? '';
+			$id = $fieldDetails['id'];
+
+			// Find field type.
+			$fieldType = $value["{$component}Type"] ?? '';
 
 			// Find field label.
-			$label = $value["{$component}FieldLabel"] ?? '';
+			$label = $fieldDetails['fieldLabel'];
 
 			// Get saved values in relation with current field.
 			$dbSettingsValuePreparedItem = $dbSettingsValuePrepared[$id] ?? [];
@@ -538,7 +554,9 @@ trait SettingsHelper
 						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
 						break;
 					case $this->integrationFieldUse:
-						$formFields[$key]["{$component}FieldUse"] = \filter_var($itemValue, \FILTER_VALIDATE_BOOLEAN);
+						if ($fieldType !== 'hidden') {
+							$formFields[$key]["{$component}FieldUse"] = \filter_var($itemValue, \FILTER_VALIDATE_BOOLEAN);
+						}
 						break;
 					case $this->integrationFieldFileInfoLabel:
 						if ($itemValue === 'true') {
@@ -566,6 +584,77 @@ trait SettingsHelper
 		}
 
 		return $formFields;
+	}
+
+	/**
+	 * Get Integration forms Conditional tags details.
+	 *
+	 * @param string $key Key to save in db.
+	 * @param array<int, array<string, mixed>> $formFields All form fields got from helper.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getConditionalTagsFieldsDetails(string $key, array $formFields, string $formId): array
+	{
+		// Loop form fields.
+		$fields = [];
+
+		// Prepare all fields used in the component selector.
+		$conditionalLogicRepeaterFields = \array_values(\array_filter(\array_map(
+			function ($item) {
+				$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($item);
+
+				if ($fieldDetails['inputType'] === 'hidden' || $fieldDetails['component'] === 'submit') {
+					return false;
+				}
+
+				return [
+					'label' => $fieldDetails['label'],
+					'value' => $fieldDetails['id'],
+				];
+			},
+			$formFields
+		)));
+
+		$inputValues = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup($key, $formId));
+		$componentValues = $this->getConditionalLogicRepeaterValue($inputValues);
+
+		foreach ($formFields as $field) {
+			if (!$field) {
+				continue;
+			}
+
+			$fieldDetails = $this->getFormFieldDetailsWithoutComponentName($field);
+
+			if ($fieldDetails['inputType'] === 'hidden' || $fieldDetails['component'] === 'submit') {
+				continue;
+			}
+
+			$id = $fieldDetails['id'];
+			$name = $fieldDetails['name'];
+			$label = $fieldDetails['label'];
+
+			$fields[] = [
+				'component' => 'group',
+				'groupLabel' => \ucfirst($label),
+				'groupSaveOneField' => true,
+				'groupContent' => [
+					[
+						'component' => 'conditional-logic-repeater',
+						'groupLabel' => \ucfirst($label),
+						'conditionalLogicRepeaterFieldLabel' => '',
+						'conditionalLogicRepeaterName' => $name,
+						'conditionalLogicRepeaterId' => $id,
+						'conditionalLogicRepeaterFields' => $conditionalLogicRepeaterFields,
+						'conditionalLogicRepeaterValue' => $componentValues[$id] ?? ['enabled' => false],
+						'conditionalLogicRepeaterInputValue' => $inputValues[$id] ?? [],
+					]
+				],
+			];
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -617,5 +706,411 @@ trait SettingsHelper
 
 		$index = \count(Components::getSettingsGlobalVariablesBreakpoints());
 		return $a['groupContent'][$index]['inputValue'] > $b['groupContent'][$index]['inputValue'];
+	}
+
+	/**
+	 * Return Form field details but without component name in array key.
+	 *
+	 * @param array<string, mixed> $field Form field array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getFormFieldDetailsWithoutComponentName(array $field): array
+	{
+		$component = $field['component'] ? Components::kebabToCamelCase($field['component']) : '';
+
+		return [
+			'component' => $component,
+			'id' => $field["{$component}Id"] ?? '',
+			'name' => $field["{$component}Name"] ?? '',
+			'label' => $field["{$component}FieldLabel"] ?? $field["{$component}Name"] ?? '',
+			'fieldLabel' => $field["{$component}FieldLabel"] ?? '',
+			'inputType' => $field["{$component}Type"] ?? '',
+			'required' => $field["{$component}IsRequired"] ?? false,
+		];
+	}
+
+	/**
+	 * Prepare group data to have keys without the prefix
+	 *
+	 * @param array<string, mixed> $data Data to check.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getGroupDataWithoutKeyPrefix(array $data): array
+	{
+		$output = [];
+		foreach ($data as $key => $value) {
+			$key = \explode('---', $key);
+
+			if (!isset($key[1])) {
+				continue;
+			}
+
+			if (!$value) {
+				continue;
+			}
+
+			$output[$key[1]] = $value;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Convert conditional logic repeater database values to values for the component.
+	 *
+	 * @param array<string, mixed> $fieldsValues Field values got from DB.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getConditionalLogicRepeaterValue(array $fieldsValues): array
+	{
+		return \array_map(
+			static function ($item) {
+				$item = \json_decode($item);
+				return [
+					'enabled' => true,
+					'behavior' => $item[0] ?? '',
+					'logic' => $item[1] ?? '',
+					'conditions' => \array_map(
+						static function ($inner) {
+							return [
+								'field' => $inner[0] ?? '',
+								'comparison' => $inner[1] ?? '',
+								'value' => $inner[2] ?? '',
+							];
+						},
+						$item[2] ?? []
+					),
+				];
+			},
+			$fieldsValues
+		);
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getIntroOutput(string $type): array
+	{
+		return [
+			'component' => 'intro',
+			'introTitle' => Filters::getSettingsLabels($type),
+			'introSubtitle' => Filters::getSettingsLabels($type, 'desc'),
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	private function getNoActiveFeatureOutput(): array
+	{
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Feature not active', 'eightshift-forms'),
+				// translators: %s will be replaced with the global settings url.
+				'highlightedContentSubtitle' => \sprintf(\__('Oh no it looks like this feature is not active, please go to your <a href="%s">dashboard</a> and activate it.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'highlightedContentIcon' => 'tools',
+			],
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	private function getNoValidGlobalConfigOutput(string $type): array
+	{
+		$label = Filters::getSettingsLabels($type);
+
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
+				// translators: %s will be replaced with the global settings url.
+				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentIcon' => 'tools',
+			],
+		];
+	}
+
+	/**
+	 * No active feature settings output.
+	 *
+	 * @param string $type Settings/Integration type.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	private function getNoIntegrationFetchDataOutput(string $type): array
+	{
+		$label = Filters::getSettingsLabels($type);
+
+		return [
+			[
+				'component' => 'highlighted-content',
+				'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
+				// translators: %s will be replaced with links.
+				'highlightedContentSubtitle' => \sprintf(\__('
+					We are sorry but we couldn\'t get any data from the external source. <br />
+					Please go to %1$s <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentIcon' => 'error',
+			],
+		];
+	}
+
+	/**
+	 * Applied filter settings output.
+	 *
+	 * @param string $name Filter name.
+	 *
+	 * @return string
+	 */
+	private function getAppliedFilterOutput(string $name): string
+	{
+		if (!\has_filter($name)) {
+			return '';
+		}
+
+		$svg = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.157 16.801 8.673 2.522c.562-1.068 2.092-1.068 2.654 0l7.516 14.28A1.5 1.5 0 0 1 17.515 19H2.486a1.5 1.5 0 0 1-1.328-2.199z" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M10 7.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"></path><circle cx="10" cy="15.25" r="1" fill="currentColor"></circle></svg>';
+
+		return '<br /> <span class="is-filter-applied">' . $svg . \__('This field has a code filter applied or a constant global set. Please be aware the filter output may override the output of this setting field.', 'eightshift-forms') . '</span>';
+	}
+
+	/**
+	 * Applied Global Contant settings output.
+	 *
+	 * @param string $name Variable name.
+	 *
+	 * @return string
+	 */
+	private function getAppliedGlobalConstantOutput(string $name): string
+	{
+		// translators: %s replaces global variable name.
+		return \sprintf(\__('Global variable "%s" is active.', 'eightshift-forms'), $name);
+	}
+
+	/**
+	 * Output array - conditional tags.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 * @param string $key Settings key used.
+	 *
+	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|string>>|string>
+	 */
+	private function getOutputConditionalTags(string $formId, array $formFields, string $key): array
+	{
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Conditional logic', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					'introSubtitle' => \__('In these setting, you can provide conditional tags for fields and their relationships. <br />', 'eightshift-forms'),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName($key),
+					'groupStyle' => 'default-listing-divider',
+					'groupContent' => $this->getConditionalTagsFieldsDetails(
+						$key,
+						$formFields,
+						$formId
+					),
+				],
+			],
+		];
+	}
+
+	/**
+	 * Output array - integration fields.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
+	 * @param string $settingsType Settings type used.
+	 * @param string $key Settings key used.
+	 * @param array<int, string> $additional Additional settins key to add to the integration output.
+	 *
+	 * @return array<string, array<int, array<string, mixed>>|string>
+	 */
+	private function getOutputIntegrationFields(
+		string $formId,
+		array $formFields,
+		string $settingsType,
+		string $key,
+		array $additional = []
+	): array {
+		$beforeContent = '';
+
+		$filterName = Filters::getIntegrationFilterName($settingsType, 'adminFieldsSettings');
+		if (\has_filter($filterName)) {
+			$beforeContent = \apply_filters($filterName, '') ?? '';
+		}
+
+		$sortingButton = Components::render('sorting');
+
+		$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName($settingsType, 'fieldsSettingsIsEditable');
+		if (\has_filter($formViewDetailsIsEditableFilterName)) {
+			$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
+		}
+
+		$integration = $this->getIntegrationFieldsDetails(
+			$key,
+			$settingsType,
+			$formFields,
+			$formId,
+			$additional
+		);
+
+		$hiddenFields = '';
+		if ($integration['hiddenFields']) {
+			$hiddenFields .= \__('<br />You have some additional hidden fields defined in the form. These fields will also be added to the frontend form and sent via API:', 'eightshift-forms');
+			$hiddenFields .= '<ul>';
+			foreach ($integration['hiddenFields'] as $hidden) {
+				$hiddenFields .= "<li>{$hidden}</li>";
+			}
+			$hiddenFields .= '</ul>';
+		}
+
+		return [
+			'component' => 'tab',
+			'tabLabel' => \__('Integration fields', 'eightshift-forms'),
+			'tabContent' => [
+				[
+					'component' => 'intro',
+					// translators: %s replaces the button or string.
+					'introSubtitle' => \sprintf(\__('
+						In these setting, you can provide additional configuration for all the integration fields. <br />
+						If you want to change the fields order click on the button below. Please remember to save the new order, by clicking click on the "save settings" button at the bottom of the page. <br /><br />
+						%1$s %2$s', 'eightshift-forms'), $sortingButton, $hiddenFields),
+				],
+				[
+					'component' => 'group',
+					'groupId' => $this->getSettingsName($key),
+					'groupBeforeContent' => $beforeContent,
+					'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
+					'groupStyle' => 'default-listing-divider',
+					'groupContent' => $integration['fields'],
+				],
+			],
+		];
+	}
+
+	/**
+	 * Output array - form selection.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedFormId Selected form id.
+	 * @param string $settingsType Settings type used.
+	 * @param string $key Settings key used.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelection(
+		string $formId,
+		array $items,
+		string $selectedFormId,
+		string $settingsType,
+		string $key
+	): array {
+		$manifestForm = Components::getComponent('form');
+
+		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
+		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
+
+		return [
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName($key),
+				'selectId' => $this->getSettingsName($key),
+				'selectFieldLabel' => \__('Selected integration form', 'eightshift-forms'),
+				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
+				'selectFieldHelp' => \sprintf(\__('If a form isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
+				'selectOptions' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					\array_map(
+						function ($option) use ($formId, $key) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedFormId,
+				'selectSingleSubmit' => true,
+			],
+		];
+	}
+
+	/**
+	 * Output array - form selection additional.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedFormId Selected form id.
+	 * @param string $key Settings key used.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelectionAdditional(
+		string $formId,
+		array $items,
+		string $selectedFormId,
+		string $key
+	): array {
+		return [
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName($key),
+				'selectId' => $this->getSettingsName($key),
+				'selectFieldLabel' => \__('Selected integration sub form', 'eightshift-forms'),
+				'selectOptions' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					\array_map(
+						function ($option) use ($formId, $key) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedFormId,
+				'selectSingleSubmit' => true,
+			],
+		];
 	}
 }

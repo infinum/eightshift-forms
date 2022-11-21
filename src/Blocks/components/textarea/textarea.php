@@ -9,6 +9,7 @@
 use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
@@ -53,7 +54,7 @@ if ($isCustomTextarea && $textareaUseCustom) {
 }
 
 if ($textareaTracking) {
-	$textareaAttrs['data-tracking'] = esc_attr($textareaTracking);
+	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($textareaTracking);
 }
 
 if ($textareaPlaceholder) {

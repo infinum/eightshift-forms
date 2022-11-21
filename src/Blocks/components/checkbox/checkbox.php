@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -26,9 +27,17 @@ $checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $
 $checkboxTracking = Components::checkAttr('checkboxTracking', $attributes, $manifest);
 $checkboxSingleSubmit = Components::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
 $checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
+$checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $manifest);
+$checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
+$checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
+
+if ($checkboxAsToggle) {
+	$componentClass = "{$componentClass}-toggle";
+}
 
 $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
+	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
 ]);
@@ -38,12 +47,8 @@ $checkboxInputClass = Components::classnames([
 	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if (empty($checkboxLabel)) {
-	return;
-}
-
 if ($checkboxTracking) {
-	$checkboxAttrs['data-tracking'] = esc_attr($checkboxTracking);
+	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
 }
 
 if ($checkboxValue) {
@@ -81,9 +86,11 @@ $isWpFiveNine = is_wp_version_compatible('5.9');
 			for="<?php echo esc_attr($checkboxId); ?>"
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
-			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-				<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
-			</span>
+			<?php if (!$checkboxHideLabelText) { ?>
+				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+					<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
+				</span>
+			<?php } ?>
 		</label>
 	</div>
 </div>

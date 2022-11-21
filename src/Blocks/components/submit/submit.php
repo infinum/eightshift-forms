@@ -9,6 +9,7 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -28,7 +29,6 @@ $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
 $submitIsLayoutFree = Components::checkAttr('submitIsLayoutFree', $attributes, $manifest);
 
-
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
@@ -38,7 +38,7 @@ $submitClass = Components::classnames([
 ]);
 
 if ($submitTracking) {
-	$submitAttrs['data-tracking'] = esc_attr($submitTracking);
+	$submitAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($submitTracking);
 }
 
 if ($submitId) {
@@ -59,7 +59,11 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$submitIconContent = !empty($submitIcon) && $manifest['icons'][$submitIcon] ? $manifest['icons'][$submitIcon] : '';
+$submitIconContent = '';
+if (!empty($submitIcon)) {
+	$submitIconContent = $manifest['icons'][$submitIcon] ?? $submitIcon;
+}
+
 
 $button = '
 	<button

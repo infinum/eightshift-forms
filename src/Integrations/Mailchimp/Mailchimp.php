@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -40,13 +41,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 * @var string
 	 */
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
-
-	/**
-	 * Custom form param for tags.
-	 *
-	 * @var string
-	 */
-	public const CUSTOM_FORM_PARAM_MAILCHIMP_TAGS = 'es-form-mailchimp-tags';
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -84,7 +78,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 3);
+		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
@@ -107,6 +101,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		// Check if it is loaded on the front or the backend.
 		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
+
+		// Add conditional tags.
+		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY, $formId));
+		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
 
 		return $this->buildForm(
 			$this->getFormFields($formId, $ssr),
@@ -319,14 +317,16 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			}
 
 			if ($tagsItems) {
+				$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
+
 				switch ($tagsShow) {
 					case 'select':
 						$output[] = [
 							'component' => 'select',
 							'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'selectId' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
-							'selectName' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
-							'selectTracking' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+							'selectId' => $customTagParamName,
+							'selectName' => $customTagParamName,
+							'selectTracking' => $customTagParamName,
 							'selectOptions' => \array_merge(
 								[
 									[
@@ -359,15 +359,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						];
 						break;
 					case 'checkboxes':
-						$checkboxesFieldName = self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS;
-
 						$output[] = [
 							'component' => 'checkboxes',
 							'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'checkboxesId' => $checkboxesFieldName,
-							'checkboxesName' => $checkboxesFieldName,
+							'checkboxesId' => $customTagParamName,
+							'checkboxesName' => $customTagParamName,
 							'checkboxesContent' => \array_map(
-								static function ($option) use ($checkboxesFieldName, $tagsLabels) {
+								static function ($option) use ($customTagParamName, $tagsLabels) {
 									$name = $option['name'] ?? '';
 									$id = $option['id'] ?? '';
 									$nameOverride = $name;
@@ -381,7 +379,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 										'component' => 'checkbox',
 										'checkboxLabel' => $nameOverride,
 										'checkboxValue' => $name,
-										'checkboxTracking' => $checkboxesFieldName,
+										'checkboxTracking' => $customTagParamName,
 									];
 								},
 								$tagsItems
@@ -403,9 +401,9 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							$output[] = [
 								'component' => 'input',
 								'inputType' => 'hidden',
-								'inputId' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
-								'inputName' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
-								'inputTracking' => self::CUSTOM_FORM_PARAM_MAILCHIMP_TAGS,
+								'inputId' => $customTagParamName,
+								'inputName' => $customTagParamName,
+								'inputTracking' => $customTagParamName,
 								'inputValue' => $tagsItems,
 								'blockSsr' => $ssr,
 							];

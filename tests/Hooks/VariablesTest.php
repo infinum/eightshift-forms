@@ -29,18 +29,6 @@ afterEach(function() {
  * constant values are set.
  */
 
-test('isDevelopMode returns false when ES_DEVELOP_MODE is not set', function() {
-	expect(Variables::isDevelopMode())->toBe(false);
-});
-
-test('skipFormValidation returns false when ES_DEVELOP_MODE_SKIP_VALIDATION is not set', function() {
-	expect(Variables::skipFormValidation())->toBe(false);
-});
-
-test('isLogMode return false when ES_LOG_MODE is not set', function() {
-	expect(Variables::isLogMode())->toBe(false);
-});
-
 test('getApiKeyKeyHubspot returns an empty string when constant is not set', function() {
 	expect(Variables::getApiKeyHubspot())->toBe('');
 });
@@ -73,8 +61,8 @@ test('getGoogleReCaptchaSecretKey returns an empty string when constant is not s
 	expect(Variables::getGoogleReCaptchaSiteKey())->toBe('');
 });
 
-test('getGeolocation returns an empty string when constant is not set', function() {
-	expect(Variables::getGeolocation())->toBe('');
+test('getGeolocationIp returns an empty string when constant is not set', function() {
+	expect(Variables::getGeolocationIp())->toBe('');
 });
 
 test('getApiKeyClearbit returns an empty string when constant is not set', function() {
@@ -82,21 +70,6 @@ test('getApiKeyClearbit returns an empty string when constant is not set', funct
 });
 
 //---------------------------------------------------------------------------------//
-
-test('isDevelopMode returns true when ES_DEVELOP_MODE is set', function() {
-	define('ES_DEVELOP_MODE', true);
-	expect(Variables::isDevelopMode())->toBe(true);
-});
-
-test('skipFormValidation returns true when ES_DEVELOP_MODE_SKIP_VALIDATION is set', function() {
-	define('ES_DEVELOP_MODE_SKIP_VALIDATION', true);
-	expect(Variables::skipFormValidation())->toBe(true);
-});
-
-test('isLogMode return true when ES_LOG_MODE is set', function() {
-	define('ES_LOG_MODE', true);
-	expect(Variables::isLogMode())->toBe(true);
-});
 
 test('getApiKeyKeyHubspot returns correctly when constant is set', function() {
 	define('ES_API_KEY_HUBSPOT', 'test');
@@ -138,12 +111,22 @@ test('getGoogleReCaptchaSecretKey returns correclty string when constant is set'
 	expect(Variables::getGoogleReCaptchaSecretKey())->toBe('test');
 });
 
-test('getGeolocation returns correctly when constant is set', function() {
-	define('ES_GEOLOCAITON'	, 'test');
-	expect(Variables::getGeolocation())->toBe('TEST');
+test('getGeolocationIp returns correctly when constant is set', function() {
+	define('ES_GEOLOCAITON_IP', 'test');
+	expect(Variables::getGeolocationIp())->toBe('test');
 });
 
 test('getApiKeyClearbit returns correctly when constant is set', function() {
 	define('ES_API_KEY_CLEARBIT', 'test');
 	expect(Variables::getApiKeyClearbit())->toBe('test');
+});
+
+test('getApiKeyActiveCampaign returns correctly when constant is set', function() {
+	define('ES_API_KEY_ACTIVE_CAMPAIGN', 'test');
+	expect(Variables::getApiKeyActiveCampaign())->toBe('test');
+});
+
+test('getApiUrlActiveCampaign returns correctly when constant is set', function() {
+	define('ES_API_URL_ACTIVE_CAMPAIGN', 'test');
+	expect(Variables::getApiUrlActiveCampaign())->toBe('test');
 });

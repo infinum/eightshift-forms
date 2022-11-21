@@ -12,8 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsAllInterface;
+use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
@@ -25,18 +24,18 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for all settings.
 	 *
-	 * @var SettingsAllInterface
+	 * @var SettingsInterface
 	 */
-	protected $settingsAll;
+	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsAllInterface $settingsAll Inject form all settings data.
+	 * @param SettingsInterface $settings Settings data for injecting the form.
 	 */
-	public function __construct(SettingsAllInterface $settingsAll)
+	public function __construct(SettingsInterface $settings)
 	{
-		$this->settingsAll = $settingsAll;
+		$this->settings = $settings;
 	}
 
 	/**
@@ -62,6 +61,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		);
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
+		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
 	}
 
 	/**
@@ -92,7 +92,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Form Settings', 'eightshift-forms');
+		return \esc_html__('Form settings', 'eightshift-forms');
 	}
 
 	/**
@@ -102,7 +102,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Form Settings', 'eightshift-forms');
+		return \esc_html__('Form settings', 'eightshift-forms');
 	}
 
 	/**
@@ -187,21 +187,18 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$settingsSidebarOutput = [];
-		foreach ($this->settingsAll->getSettingsSidebar($formId, $type) as $item) {
-			$sidebarType = $item['type'] ?? SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL;
-			$settingsSidebarOutput[$sidebarType][] = $item;
-		}
-
+		$integrationTypeUsed = Helper::getUsedFormTypeById($formId);
+		$formEditLink = Helper::getFormEditPageUrl($formId);
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsFormEditLink' => Helper::getFormEditPageUrl($formId),
-			'adminSettingsLink' => Helper::getSettingsPageUrl($formId, ''),
-			'adminSettingsSidebar' => $settingsSidebarOutput,
-			'adminSettingsForm' => $this->settingsAll->getSettingsForm($formId, $type),
+			'adminSettingsFormEditLink' => $formEditLink,
+			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
+			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
+			// translators: %s will be replaced with the form edit link.
+			'adminSettingsNotice' => !$integrationTypeUsed ? \sprintf(\__('Please set a block type in the form\'s block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
 		];
 	}
 
@@ -221,5 +218,22 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		return $parentFile ?? '';
+	}
+
+	/**
+	 * Update the page title.
+	 *
+	 * @param string $adminTitle The page title, with extra context added.
+	 * @param string $title The original page title.
+
+	 * @return string
+	 */
+	public function fixPageTitle(string $adminTitle, string $title): string
+	{
+		if (\get_current_screen()->id === "admin_page_" . self::ADMIN_MENU_SLUG && $title === '') {
+			$adminTitle = $this->getTitle() . $adminTitle;
+		}
+
+		return $adminTitle;
 	}
 }

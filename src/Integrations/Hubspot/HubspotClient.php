@@ -200,9 +200,9 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				'hutk' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_COOKIE]['value'],
-				'pageUri' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_URL]['value'],
-				'pageName' => $params[Hubspot::CUSTOM_FORM_PARAM_HUBSPOT_PAGE_NAME]['value'],
+				'hutk' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotCookie']]['value'],
+				'pageUri' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageUrl']]['value'],
+				'pageName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageName']]['value'],
 			],
 		];
 
@@ -711,11 +711,11 @@ class HubspotClient implements HubspotClientInterface
 		}
 
 		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
-		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE]['value']) && \has_filter($filterName)) {
+		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']) && \has_filter($filterName)) {
 			return \apply_filters(
 				$filterName,
 				$output,
-				$params[AbstractBaseRoute::CUSTOM_FORM_PARAM_STORAGE]['value'],
+				$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
 				$params
 			) ?? [];
 		}

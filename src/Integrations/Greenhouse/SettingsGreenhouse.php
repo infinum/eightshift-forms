@@ -10,32 +10,23 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
-use EightshiftForms\Troubleshooting\SettingsTroubleshootingDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGreenhouse class.
  */
-class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
+class SettingsGreenhouse implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_greenhouse';
 
 	/**
 	 * Filter settings key.
@@ -93,6 +84,11 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
 
 	/**
+	 * Conditional tags key.
+	 */
+	public const SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY = 'greenhouse-conditional-tags';
+
+	/**
 	 * Instance variable for Greenhouse data.
 	 *
 	 * @var ClientInterface
@@ -107,27 +103,27 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	protected $greenhouse;
 
 	/**
-	 * Instance variable for Troubleshooting settings.
+	 * Instance variable for Fallback settings.
 	 *
-	 * @var SettingsTroubleshootingDataInterface
+	 * @var SettingsFallbackDataInterface
 	 */
-	protected $settingsTroubleshooting;
+	protected $settingsFallback;
 
 	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
-	 * @param SettingsTroubleshootingDataInterface $settingsTroubleshooting Inject Troubleshooting which holds Troubleshooting settings data.
+	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
 		ClientInterface $greenhouseClient,
 		MapperInterface $greenhouse,
-		SettingsTroubleshootingDataInterface $settingsTroubleshooting
+		SettingsFallbackDataInterface $settingsFallback
 	) {
 		$this->greenhouseClient = $greenhouseClient;
 		$this->greenhouse = $greenhouse;
-		$this->settingsTroubleshooting = $settingsTroubleshooting;
+		$this->settingsFallback = $settingsFallback;
 	}
 
 	/**
@@ -137,7 +133,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
@@ -184,21 +179,6 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('Greenhouse', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
-		];
-	}
-
-	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -207,127 +187,60 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$type = self::SETTINGS_TYPE_KEY;
+
+		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return [
-				[
-					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
-					// translators: %s will be replaced with the global settings url.
-					'highlightedContentSubtitle' => \sprintf(\__('Before using Greenhouse you need to configure it in  <a href="%s">global settings</a>.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
-					'highlightedContentIcon' => 'tools',
-				]
-			];
+			return $this->getNoValidGlobalConfigOutput($type);
 		}
 
+		// Get forms from the API.
 		$items = $this->greenhouseClient->getItems(false);
-		$lastUpdatedTime = $items[ClientInterface::TRANSIENT_STORED_TIME]['title'] ?? '';
-		unset($items[ClientInterface::TRANSIENT_STORED_TIME]);
 
+		// Bailout if integration can't fetch data.
 		if (!$items) {
-			return [
-				[
-					'component' => 'highlighted-content',
-					'highlightedContentTitle' => \__('Something went wrong', 'eightshift-forms'),
-					'highlightedContentSubtitle' => \__('Data from Greenhouse couldn\'t be fetched. Check the API key.', 'eightshift-forms'),
-					'highlightedContentIcon' => 'error',
+			return $this->getNoIntegrationFetchDataOutput($type);
+		}
+
+		// Find selected form id.
+		$selectedFormId = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
+
+		$output = [];
+
+		// If the user has selected the form id populate additional config.
+		if ($selectedFormId) {
+			$formFields = $this->greenhouse->getFormFields($formId);
+
+			// Output additonal tabs for config.
+			$output = [
+				'component' => 'tabs',
+				'tabsContent' => [
+					$this->getOutputIntegrationFields(
+						$formId,
+						$formFields,
+						$type,
+						self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
+					),
+					$this->getOutputConditionalTags(
+						$formId,
+						$formFields,
+						self::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY
+					),
 				],
 			];
 		}
 
-		$itemOptions = \array_map(
-			function ($option) use ($formId) {
-				return [
-					'component' => 'select-option',
-					'selectOptionLabel' => $option['title'] ?? '',
-					'selectOptionValue' => $option['id'] ?? '',
-					'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
-				];
-			},
-			$items
-		);
-
-		\array_unshift(
-			$itemOptions,
-			[
-				'component' => 'select-option',
-				'selectOptionLabel' => '',
-				'selectOptionValue' => '',
-			]
-		);
-
-		$selectedItem = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
-
-		$manifestForm = Components::getManifest(\dirname(__DIR__, 2) . '/Blocks/components/form');
-
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Greenhouse', 'eightshift-forms'),
-			],
-			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-				'selectId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_JOB_ID_KEY),
-				'selectFieldLabel' => \__('Job post', 'eightshift-forms'),
-				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => \sprintf(\__('If a job post isn\'t showing up or is missing some jobs, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], self::SETTINGS_TYPE_KEY, $lastUpdatedTime),
-				'selectOptions' => $itemOptions,
-				'selectIsRequired' => true,
-				'selectValue' => $selectedItem,
-				'selectSingleSubmit' => true,
-			],
+		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			...$this->getOutputFormSelection(
+				$formId,
+				$items,
+				$selectedFormId,
+				self::SETTINGS_TYPE_KEY,
+				self::SETTINGS_GREENHOUSE_JOB_ID_KEY
+			),
+			$output,
 		];
-
-		// If the user has selected the list.
-		if ($selectedItem) {
-			$beforeContent = '';
-
-			$filterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'adminFieldsSettings');
-			if (\has_filter($filterName)) {
-				$beforeContent = \apply_filters($filterName, '') ?? '';
-			}
-
-			$sortingButton = Components::render('sorting');
-
-			$formViewDetailsIsEditableFilterName = Filters::getIntegrationFilterName(self::SETTINGS_TYPE_KEY, 'fieldsSettingsIsEditable');
-			if (\has_filter($formViewDetailsIsEditableFilterName)) {
-				$sortingButton = \__('This integration sorting and editing is disabled because of the active filter in your project!', 'eightshift-forms');
-			}
-
-			$output = \array_merge(
-				$output,
-				[
-					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Form fields', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-						// translators: %s replaces the button or string.
-						'introSubtitle' => \sprintf(\__('
-							Control which fields show up on the frontend, and set up how they look and work. <br />
-							To change the field order, click on the button below. To save the new order, please click on the "save settings" button at the bottom of the page. <br /><br />
-							%s', 'eightshift-forms'), $sortingButton),
-					],
-					[
-						'component' => 'group',
-						'groupId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY),
-						'groupBeforeContent' => $beforeContent,
-						'additionalGroupClass' => Components::getComponent('sorting')['componentCombinedClass'],
-						'groupStyle' => 'integration',
-						'groupContent' => $this->getIntegrationFieldsDetails(
-							self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
-							self::SETTINGS_TYPE_KEY,
-							$this->greenhouse->getFormFields($formId),
-							$formId
-						),
-					]
-				]
-			);
-		}
-
-		return $output;
 	}
 
 	/**
@@ -337,119 +250,108 @@ class SettingsGreenhouse implements SettingsDataInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
-
-		$output = [
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Greenhouse', 'eightshift-forms'),
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('How to get the API key?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your Greenhouse Account.</li>
-						<li>Go to <a target="_blank" href="https://app.greenhouse.io/configure/dev_center/credentials">API Credentials Settings</a>.</li>
-						<li>Click on <strong>Create New API Key</strong>.</li>
-						<li>Select <strong>Job Board</strong> as your API Type.</li>
-						<li>Copy the API key into the field below or use the global constant.</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-				'introTitleSize' => 'small',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('<ol>
-						<li>Log in to your Greenhouse Account.</li>
-						<li>Go to <a target="_blank" href="https://app.greenhouse.io/jobboard">Job Boards Settings</a>.</li>
-						<li>Copy the <strong>Board Name</strong> you want to use.</li>
-						<li>Make the name all lowercase.</li>
-						<li>Copy the Board Name into the field below or use the global constant.</li>
-					</ol>', 'eightshift-forms'),
-			],
-			[
-				'component' => 'divider',
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Greenhouse', 'eightshift-forms'),
-						'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY),
-						'checkboxValue' => self::SETTINGS_GREENHOUSE_USE_KEY,
-						'checkboxSingleSubmit' => true,
-					]
-				]
-			],
-		];
-
-		if ($isUsed) {
-			$apiKey = Variables::getApiKeyGreenhouse();
-			$boardToken = Variables::getBoardTokenGreenhouse();
-
-			$output = \array_merge(
-				$output,
-				[
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-						'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-						'inputType' => 'password',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-						'inputIsDisabled' => !empty($apiKey),
-					],
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-						'inputFieldLabel' => \__('Job Board name', 'eightshift-forms'),
-						'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-						'inputType' => 'text',
-						'inputIsRequired' => true,
-						'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-						'inputIsDisabled' => !empty($boardToken),
-					],
-					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Options', 'eightshift-forms'),
-						'introSubtitle' => \__('Here you can find some of options specific to Greenhouse integration.', 'eightshift-forms'),
-						'introTitleSize' => 'medium',
-					],
-					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
-						'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
-						'inputFieldLabel' => \__('File upload limit', 'eightshift-forms'),
-						'inputFieldHelp' => \__('Limit the size of files users can send via upload files. We set the default to 5MB, and limited the max file size to 25MB.', 'eightshift-forms'),
-						'inputType' => 'number',
-						'inputIsNumber' => true,
-						'inputIsRequired' => true,
-						'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'inputMin' => 1,
-						'inputMax' => 25,
-						'inputStep' => 1,
-					],
-				]
-			);
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
 		}
 
+		$apiKey = Variables::getApiKeyGreenhouse();
+		$boardToken = Variables::getBoardTokenGreenhouse();
+
 		return [
-			...$output,
-			...$this->settingsTroubleshooting->getOutputGlobalTroubleshooting(SettingsGreenhouse::SETTINGS_TYPE_KEY),
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputType' => 'password',
+								'inputIsRequired' => true,
+								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+								'inputIsDisabled' => !empty($apiKey),
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+								'inputFieldLabel' => \__('Job Board name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputIsRequired' => true,
+								'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+								'inputIsDisabled' => !empty($boardToken),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputIsNumber' => true,
+								'inputIsRequired' => true,
+								'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+								'inputMin' => 1,
+								'inputMax' => 25,
+								'inputStep' => 1,
+							],
+						],
+					],
+					$this->settingsFallback->getOutputGlobalFallback(SettingsGreenhouse::SETTINGS_TYPE_KEY),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-grid-2',
+								'layoutItems' => [
+									[
+										'component' => 'steps',
+										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+										'stepsContent' => [
+											// translators: %s will be replaced with the link.
+											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+												// translators: %s will be replaced with the link.
+											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
+											\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
+											\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
+											\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+										],
+									],
+									[
+										'component' => 'steps',
+										'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
+										'stepsContent' => [
+											// translators: %s will be replaced with the link.
+											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+												// translators: %s will be replaced with the link.
+											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
+											\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
+											\__('Make the name all lowercase.', 'eightshift-forms'),
+											\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+			],
 		];
 	}
 }

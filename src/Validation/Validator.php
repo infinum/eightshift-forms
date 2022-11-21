@@ -81,7 +81,7 @@ class Validator extends AbstractValidation
 	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
 	{
 		// If single submit skip all validations.
-		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAM_SINGLE_SUBMIT])) {
+		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['singleSubmit']])) {
 			return [];
 		}
 

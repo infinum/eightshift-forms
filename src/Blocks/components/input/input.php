@@ -8,6 +8,7 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -54,7 +55,7 @@ if ($inputType === 'email' || $inputType === 'url') {
 }
 
 if ($inputTracking) {
-	$inputAttrs['data-tracking'] = esc_attr($inputTracking);
+	$inputAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($inputTracking);
 }
 
 if ($inputValue) {

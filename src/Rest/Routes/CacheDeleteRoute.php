@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;
 
@@ -98,7 +98,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 		$type = $params['type'];
 
-		if (!isset(SettingsCache::ALL_CACHE[$type])) {
+		if (!isset(Filters::ALL[$type]['cache'])) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
@@ -106,7 +106,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			]);
 		}
 
-		foreach (SettingsCache::ALL_CACHE[$type] as $item) {
+		foreach (Filters::ALL[$type]['cache'] as $item) {
 			\delete_transient($item);
 		}
 

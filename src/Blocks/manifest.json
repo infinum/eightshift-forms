@@ -17,6 +17,8 @@
 		"esMaxCols": 12,
 		"esSpacingVertical": "25px",
 		"esSpacingHorizontal": "30px",
+		"esSpacingHorizontalSmall": "15px",
+		"esMaxWidth": "768px",
 		"esInputHeight": "42px",
 		"breakpoints": {
 			"mobile": 480,
@@ -44,6 +46,11 @@
 				"name": "Matisse 50%",
 				"slug": "es-matisse-50",
 				"color": "#29A3A380"
+			},
+			{
+				"name": "Matisse 30%",
+				"slug": "es-matisse-30",
+				"color": "#29a3a333"
 			},
 			{
 				"name": "Matisse 10%",
@@ -114,6 +121,11 @@
 				"name": "Chalice 5%",
 				"slug": "es-chalice-05",
 				"color": "#AFAFAF0D"
+			},
+			{
+				"name": "Dusty",
+				"slug": "es-dusty",
+				"color": "#999999"
 			}
 		]
 	}

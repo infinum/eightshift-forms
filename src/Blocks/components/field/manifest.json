@@ -93,6 +93,10 @@
 		},
 		"fieldAttrs": {
 			"type": "array"
+		},
+		"fieldSkip": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"responsiveAttributes": {

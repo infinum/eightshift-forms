@@ -6,14 +6,17 @@
  * @package EightshiftForms\Blocks.
  */
 
+use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestSection = Components::getManifest(dirname(__DIR__, 1) . '/admin-settings-section');
+$manifestSection = Components::getComponent('admin-settings-section');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $componentClass = $manifest['componentClass'] ?? '';
+$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+$componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -23,6 +26,7 @@ $adminListingTrashLink = Components::checkAttr('adminListingTrashLink', $attribu
 $adminListingForms = Components::checkAttr('adminListingForms', $attributes, $manifest);
 $adminListingType = Components::checkAttr('adminListingType', $attributes, $manifest);
 $adminListingListingLink = Components::checkAttr('adminListingListingLink', $attributes, $manifest);
+$adminListingIntegrations = Components::checkAttr('adminListingIntegrations', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -34,10 +38,20 @@ $layoutClass = Components::classnames([
 <div class="<?php echo esc_attr($layoutClass); ?>">
 	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
 		<?php if ($adminListingPageTitle || $adminListingSubTitle) { ?>
-			<div class="<?php echo esc_attr("{$sectionClass}__heading {$sectionClass}__heading--no-spacing"); ?>">
+			<div class="<?php echo esc_attr("{$sectionClass}__heading"); ?>">
 				<div class="<?php echo esc_attr("{$sectionClass}__heading-wrap"); ?>">
-					<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
-						<?php echo esc_html($adminListingPageTitle); ?>
+					<div class="<?php echo esc_attr("{$sectionClass}__heading-inner-wrap"); ?>">
+						<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
+							<?php echo esc_html($adminListingPageTitle); ?>
+						</div>
+
+						<div class="<?php echo esc_attr("{$sectionClass}__heading-filter {$componentJsFilterClass}"); ?>">
+							<?php
+							if ($adminListingIntegrations) {
+								echo wp_kses_post($adminListingIntegrations);
+							}
+							?>
+						</div>
 					</div>
 
 					<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
@@ -81,7 +95,6 @@ $layoutClass = Components::classnames([
 
 				echo Components::render('highlighted-content', [
 					'highlightedContentTitle' => __('Nothing to see here', 'eightshift-forms'),
-					// translators: %s will be replaced with the global settings url.
 					'highlightedContentSubtitle' => $emptyStateSubtitle,
 					'highlightedContentIcon' => 'empty',
 				]);
@@ -100,14 +113,14 @@ $layoutClass = Components::classnames([
 						$settingsLocationLink = $form['settingsLocationLink'] ?? '';
 						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$activeIntegrations = $form['activeIntegrations'] ?? [];
+						$activeIntegration = $form['activeIntegration'] ?? [];
 
 						$slug = $editLink;
 						if (!$editLink) {
 							$slug = '#';
 						}
 						?>
-						<li class="<?php echo esc_attr("{$componentClass}__list-item"); ?>">
+						<li class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>" data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>">
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($slug); ?>" class="<?php echo esc_attr("{$componentClass}__label"); ?>">
 									<?php if ($postType === 'post') { ?>
@@ -120,38 +133,28 @@ $layoutClass = Components::classnames([
 
 									<span><?php echo $title ? esc_html($title) : esc_html($id); ?></span>
 
-									<?php if ($activeIntegrations) { ?>
+									<?php if ($activeIntegration) { ?>
 										<div class="<?php echo esc_attr("{$componentClass}__integration"); ?>">
-											<?php foreach ($activeIntegrations as $integration) { ?>
-												<?php
-												$label = $integration['label'] ?? '';
-												$icon = $integration['icon'] ?? '';
-
-												if (!$label || !$icon) {
-													continue;
-												}
-												?>
-												<span title="<?php echo esc_attr($label); ?>">
-													<?php echo $icon; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-												</span>
-											<?php } ?>
+											<span title="<?php echo esc_attr($activeIntegration['label'] ?? ''); ?>">
+												<?php echo wp_kses_post($activeIntegration['icon'] ?? '');?>
+											</span>
 										</div>
 									<?php } ?>
+
+									<?php if ($status !== 'publish') { ?>
+										<span class="<?php echo esc_attr("{$componentClass}__item-status"); ?>">
+											<?php echo esc_html($status); ?>
+										</span>
+									<?php } ?>
+
+									<?php if ($postType) { ?>
+										<span class="<?php echo esc_attr("{$componentClass}__item-post-type"); ?>">
+											<?php echo esc_html($postType); ?>
+										</span>
+									<?php } ?>
 								</a>
-
-								<?php if ($status !== 'publish') { ?>
-									<span class="<?php echo esc_attr("{$componentClass}__item-status"); ?>">
-										<?php echo esc_html($status); ?>
-									</span>
-								<?php } ?>
-
-								<?php if ($postType) { ?>
-									<span class="<?php echo esc_attr("{$componentClass}__item-post-type"); ?>">
-										<?php echo esc_html($postType); ?>
-									</span>
-								<?php } ?>
 							</div>
-							<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
+							<div class="<?php echo esc_attr("{$sectionClass}__actions {$componentClass}__actions"); ?>">
 								<?php if ($editLink) { ?>
 									<a href="<?php echo esc_url($editLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
 										<svg class="<?php echo esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m15.5 7.5-3-3-8.665 8.184a1.5 1.5 0 0 0-.435.765l-.708 3.189a.5.5 0 0 0 .646.583l3.326-1.109a1.5 1.5 0 0 0 .586-.362L15.5 7.5z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="m12.5 4.5 1.44-1.44a1.5 1.5 0 0 1 2.12 0l.88.88a1.5 1.5 0 0 1 0 2.12L15.5 7.5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
@@ -188,7 +191,7 @@ $layoutClass = Components::classnames([
 
 								<?php if ($settingsLocationLink) { ?>
 									<a href="<?php echo esc_url($settingsLocationLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-										<svg class="<?php echo esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".3" d="M7.5 11.75H12m-4.5 3H11m-6.5-6h5" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle opacity=".3" cx="5" cy="11.75" r="1" fill="#29A3A3"/><circle opacity=".3" cx="5" cy="14.75" r="1" fill="#29A3A3"/><path d="M19 14.125c0 2.273-2.5 4.773-2.5 4.773s-2.5-2.5-2.5-4.773a2.5 2.5 0 0 1 5 0z" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="16.5" cy="14.125" r=".682" fill="#29A3A3"/><path opacity=".2" fill="#29A3A3" d="M1 1h18v5H1z"/><path d="M19 10V2.5A1.5 1.5 0 0 0 17.5 1h-15A1.5 1.5 0 0 0 1 2.5v15A1.5 1.5 0 0 0 2.5 19H13M4.5 3.75h8" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+										<svg class="<?php echo esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".3" d="M7.5 11.75H12m-4.5 3H11m-6.5-6h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle opacity=".3" cx="5" cy="11.75" r="1" fill="currentColor"/><circle opacity=".3" cx="5" cy="14.75" r="1" fill="currentColor"/><path d="M19 14.125c0 2.273-2.5 4.773-2.5 4.773s-2.5-2.5-2.5-4.773a2.5 2.5 0 0 1 5 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="16.5" cy="14.125" r=".682" fill="currentColor"/><path opacity=".2" fill="currentColor" d="M1 1h18v5H1z"/><path d="M19 10V2.5A1.5 1.5 0 0 0 17.5 1h-15A1.5 1.5 0 0 0 1 2.5v15A1.5 1.5 0 0 0 2.5 19H13M4.5 3.75h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
 										<?php echo esc_html__('Locations', 'eightshift-forms'); ?>
 									</a>
 								<?php } ?>

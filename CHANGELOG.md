@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.0]
+
+### Added
+- Forms listing filter will allow you to filter form by type.
+- Forms settings will now follow the used theme admin color scheme.
+- New Dashboard settings page where you can toggle options you want to use in the project.
+- New checkbox toggle state for the settings pages.
+- Conditional logic for all integration forms.
+- Documentation page in the settings.
+- Migrations page where you can migrate the data for the options that were changed in the major versions.
+
+### Changed
+- Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.
+- Fallback emails are no longer in the troubleshooting class but as a standalone class.
+- Your forms will now show only integrations in the settings set in the Block editor.
+
+### Fixed
+- Optimized loading of all settings pages.
+
+### Removed
+- `ES_DEVELOP_MODE` constant because you can configure everything from the settings page.
+
+## [2.1.0]
+
+### Fixed
+- Issue with the hidden field and legacy items in the integration settings.
+
+### Changed
+- MailerLite default status to active
+
 ## [2.0.1]
 
 ### Fixed
@@ -142,6 +172,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.0.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...3.0.0
+[2.1.0]: https://github.com/infinum/eightshift-forms/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/infinum/eightshift-forms/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-forms/compare/1.4.0...2.0.0
 [1.4.0]: https://github.com/infinum/eightshift-forms/compare/1.3.0...1.4.0

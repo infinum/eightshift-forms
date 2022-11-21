@@ -8,6 +8,7 @@ use Brain\Monkey\Functions;
 use EightshiftForms\Enqueue\Blocks\EnqueueBlocks;
 use EightshiftForms\Labels\Labels;
 use EightshiftForms\Manifest\Manifest;
+use EightshiftForms\Tracking\Tracking;
 use EightshiftForms\Validation\Validator;
 
 use function Tests\buildTestBlocks;
@@ -23,8 +24,9 @@ beforeEach(function () {
 	$this->manifest = new Manifest;
 	$this->labels = new Labels;
 	$this->validator = new Validator($this->labels);
+	$this->tracking = new Tracking();
 
-	$this->enqueueBlocks = new EnqueueBlocks($this->manifest, $this->validator);
+	$this->enqueueBlocks = new EnqueueBlocks($this->manifest, $this->validator, $this->tracking);
 });
 
 afterEach(function () {

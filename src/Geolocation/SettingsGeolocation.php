@@ -10,27 +10,23 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingsAll;
-use EightshiftForms\Settings\Settings\SettingsDataInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGeolocation class.
  */
-class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
+class SettingsGeolocation implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter settings sidebar key.
-	 */
-	public const FILTER_SETTINGS_SIDEBAR_NAME = 'es_forms_settings_sidebar_geolocation';
 
 	/**
 	 * Filter settings key.
@@ -59,7 +55,6 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_SIDEBAR_NAME, [$this, 'getSettingsSidebar']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
@@ -89,21 +84,6 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	}
 
 	/**
-	 * Get Settings sidebar data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getSettingsSidebar(): array
-	{
-		return [
-			'label' => \__('Geolocation', 'eightshift-forms'),
-			'value' => self::SETTINGS_TYPE_KEY,
-			'icon' => Filters::ALL[self::SETTINGS_TYPE_KEY]['icon'],
-			'type' => SettingsAll::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		];
-	}
-
-	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -123,43 +103,47 @@ class SettingsGeolocation implements SettingsDataInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$use = Variables::getGeolocationUse();
-		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
 
-		$outputHelp = '';
-
-		if ($use) {
-			$outputHelp .= \__('Hook "ES_GEOLOCATION_USE" is active.<br />', 'eightshift-forms');
+		// Bailout if feature is not active.
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY) && !$use) {
+			return $this->getNoActiveFeatureOutput();
 		}
 
-		if ($useRocket) {
-			$outputHelp .= \__('Hook "ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE" is active.', 'eightshift-forms');
+		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
+
+		$outputConstants = '';
+
+		if ($use) {
+			$outputConstants .= $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE');
+		}
+
+		if (Variables::getGeolocationUseWpRocketAdvancedCache()) {
+			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE');
 		}
 
 		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
-				'introTitle' => \__('Geolocation', 'eightshift-forms'),
-				// translators: %s provides the link to external source.
-				'introSubtitle' => \sprintf(\__('Allows conditionally rendering different forms based on the user\'s location. Uses a local geolocation API. Consult documentation for more info. <br />This product includes GeoLite2 data created by MaxMind, available from <a href="%1$s">%1$s</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
 			],
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesFieldHelp' => $outputHelp,
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_GEOLOCATION_USE_KEY),
-				'checkboxesIsRequired' => true,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use geolocation', 'eightshift-forms'),
-						'checkboxIsChecked' => $use ? $use : $this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY),
-						'checkboxIsDisabled' => $use,
-						'checkboxValue' => self::SETTINGS_GEOLOCATION_USE_KEY,
-						'checkboxSingleSubmit' => true,
-					]
-				]
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introTitle' => \__('Caching'),
+				'introTitleSize' => 'medium',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly if you have caching on the user\'s side of your website such as WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
 			],
+			($use || $useRocket) ? [
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+				'introTitleSize' => 'medium',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => $outputConstants,
+			] : [],
 		];
 	}
 }

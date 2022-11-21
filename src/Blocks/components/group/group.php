@@ -55,7 +55,7 @@ $groupClass = Components::classnames([
 
 	<?php if ($groupBeforeContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
-			<?php echo $groupBeforeContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo wp_kses_post($groupBeforeContent); ?>
 		</div>
 	<?php } ?>
 
@@ -67,7 +67,7 @@ $groupClass = Components::classnames([
 
 	<?php if ($groupHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-			<?php echo $groupHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo wp_kses_post($groupHelp); ?>
 		</div>
 	<?php } ?>
 </div>

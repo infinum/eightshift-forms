@@ -2,23 +2,6 @@
 
 This document will provide you with the code examples for forms global variables that you usually put in the `wp-config.php` file.
 
-## Set forms to develop mode
-
-This variable will set forms to develop mode, which will do the code changes listed in the 'actions' paragraph below.
-
-Actions:
-* output new global settings for testing inputs
-
-Type:
-* boolean
-
-Default:
-* false
-
-```php
-define('ES_DEVELOP_MODE', true);
-```
-
 ## Set Hubspot api key
 
 This variable will set forms Hubspot api key and you will not be able to change it from the admin.
@@ -270,3 +253,16 @@ Default:
 ```php
 define('ES_API_URL_ACTIVE_CAMPAIGN', '<api-url>');
 ```
+
+## Set the Airtable API key
+
+This variable will set form's Airtable API key. You will not be able to change it from the admin.
+
+Type:
+* string
+
+Default:
+* empty
+
+```php
+define('ES_API_KEY_AIRTABLE', '<api-key>');
