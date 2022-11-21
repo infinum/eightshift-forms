@@ -83,7 +83,7 @@ class SettingsCache implements SettingInterface, ServiceInterface
 								'submitFieldSkip' => true,
 								// translators: %s will be replaced with the title.
 								'submitValue' => \sprintf(\__('Clear %s cache', 'eightshift-forms'), $title),
-								'submitIcon' => $key,
+								'submitIcon' => $value['icon'],
 								'submitAttrs' => [
 									'data-type' => $key,
 								],

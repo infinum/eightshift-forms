@@ -16,8 +16,7 @@ domReady(() => {
 	const elements = document.querySelectorAll(selector);
 
 	if (elements.length) {
-		import('./conditional-logic-repeater').then(({ conditionalLogicRepeaterComponent, ConditionalTags }) => {
-			conditionalLogicRepeaterComponent();
+		import('./conditional-logic-repeater').then(({ ConditionalTags }) => {
 
 			const conditionalTags = new ConditionalTags({
 				fieldSelector: selector,

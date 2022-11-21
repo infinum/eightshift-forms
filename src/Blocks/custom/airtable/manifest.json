@@ -1,0 +1,29 @@
+{
+	"blockName": "airtable",
+	"title": "Airtable Form",
+	"description" : "An Airtable subscription form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-airtable"
+	},
+	"keywords": [
+		"airtable"
+	],
+	"example": {
+	},
+	"attributes": {
+		"airtableFormPostId": {
+			"type": "string"
+		},
+		"airtableFormServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"airtableFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

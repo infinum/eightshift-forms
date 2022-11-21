@@ -9,9 +9,8 @@ Adding new integration steps:
 6. Add new class `Rest/Routes/FormSubmit<Integration_Name>Route.php`.
 7. Add new block to for the specific integration in the `Blocks/custom` folder.
 8. Add new allowed block in the manifest.json of the `Blocks/custom/form-selector/manifest.json` block.
-9. Add transient cache to the cache busting list in the `Cache/SettingsCache.php::ALL_CACHE`.
-10. Add new API key global variable in the `Hooks/Variables.php`.
-11. Add labels for new integration `Labels/Labels.php`.
+9. Add new API key global variable in the `Hooks/Variables.php`.
+10. Add labels for new integration `Labels/Labels.php`.
 
 # Goodbits
 
@@ -103,3 +102,20 @@ Version: **v3**
 
 Supported fields:
 * All
+
+# Airtable
+
+[API](https://airtable.com/developers/web/api/introduction)
+
+Version: **v0 - beta**
+
+Supported fields:
+* Input
+* Email
+* Url
+* Number
+* Phone number
+* Textarea
+* Single Select
+* Multiple Choices
+* Checkbox

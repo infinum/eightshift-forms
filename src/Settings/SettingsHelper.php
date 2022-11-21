@@ -1064,4 +1064,53 @@ trait SettingsHelper
 			],
 		];
 	}
+
+	/**
+	 * Output array - form selection additional.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items from cache data.
+	 * @param string $selectedFormId Selected form id.
+	 * @param string $key Settings key used.
+	 *
+	 * @return array<int, array<string, array<int|string, array<string, mixed>>|bool|string>>
+	 */
+	private function getOutputFormSelectionAdditional(
+		string $formId,
+		array $items,
+		string $selectedFormId,
+		string $key
+	): array {
+		return [
+			[
+				'component' => 'select',
+				'selectName' => $this->getSettingsName($key),
+				'selectId' => $this->getSettingsName($key),
+				'selectFieldLabel' => \__('Selected integration sub form', 'eightshift-forms'),
+				'selectOptions' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						]
+					],
+					\array_map(
+						function ($option) use ($formId, $key) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['title'] ?? '',
+								'selectOptionValue' => $option['id'] ?? '',
+								'selectOptionIsSelected' => $this->isCheckedSettings($option['id'], $key, $formId),
+							];
+						},
+						$items
+					)
+				),
+				'selectIsRequired' => true,
+				'selectValue' => $selectedFormId,
+				'selectSingleSubmit' => true,
+			],
+		];
+	}
 }
