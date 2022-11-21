@@ -267,7 +267,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 					$additionalLocation['geoLocation'],
 					function ($geo) use ($userLocation) {
 						$country = $this->getCountryGroup($geo['value']);
-
 						return isset($country[$userLocation]);
 					}
 				) ?? [];
@@ -354,9 +353,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	private function getCountryGroup(string $value): array
 	{
 		$country = \array_filter(
-			$this->getCountries(),
+			$this->getCountriesList(),
 			static function ($item) use ($value) {
-				$itemValue = $item['value'] ? $item['value'] : '';
+				$itemValue = $item['value'] ?? '';
 				return $itemValue === $value;
 			}
 		);
