@@ -46,11 +46,6 @@ export class Migration {
 			})
 			.then((response) => {
 				this.setGlobalMsg(response.message, response.status);
-
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					location.reload();
-				}, 1000);
 			});
 	};
 

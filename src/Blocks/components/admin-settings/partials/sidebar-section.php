@@ -32,6 +32,7 @@ foreach ($items as $key => $innerItems) {
 				<?php foreach ($innerItems as $item) { ?>
 					<?php
 					$label = $item['label'] ?? '';
+					$desc = $item['desc'] ?? '';
 					$url = $item['url'] ?? '';
 					$internalType = $item['type'] ?? '';
 					$icon = $item['icon'] ?? '';
@@ -42,6 +43,7 @@ foreach ($items as $key => $innerItems) {
 						<a
 							href="<?php echo esc_url($url); ?>"
 							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($internalKey === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+							title="<?php echo esc_html($desc); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 								<?php echo wp_kses_post($icon); ?>

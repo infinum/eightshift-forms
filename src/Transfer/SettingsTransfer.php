@@ -109,64 +109,58 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Export', 'eightshift-forms'),
+						'tabLabel' => \__('Export Global Settings', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Export all global settings or one of many forms with their settings.', 'eightshift-forms'),
+								'introSubtitle' => \__('Export all global settings.', 'eightshift-forms'),
 							],
 							[
-								'component' => 'layout',
-								'layoutItems' => [
-									[
-										'component' => 'card',
-										'cardTitle' => \__('Global Settings'),
-										'cardSubTitle' => \__('Export global settings.', 'eightshift-forms'),
-										'cardContent' => [
-											[
-												'component' => 'submit',
-												'submitFieldSkip' => true,
-												'submitValue' => \__('Export', 'eightshift-forms'),
-												'submitAttrs' => [
-													'data-type' => self::TYPE_EXPORT_GLOBAL_SETTINGS,
-												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
-											],
-										],
-									],
-									[
-										'component' => 'card',
-										'cardTitle' => \__('Forms'),
-										'cardSubTitle' => \__('Export one or many forms with settings.', 'eightshift-forms'),
-										'cardContent' => [
-											[
-												'component' => 'submit',
-												'submitFieldSkip' => true,
-												'submitValue' => \__('Export Forms', 'eightshift-forms'),
-												'submitAttrs' => [
-													'data-type' => self::TYPE_EXPORT_FORMS,
-												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
-											],
-										],
-									],
-									[
-										'component' => 'card',
-										'cardTitle' => \__('All'),
-										'cardSubTitle' => \__('Export all form and global settings.', 'eightshift-forms'),
-										'cardContent' => [
-											[
-												'component' => 'submit',
-												'submitFieldSkip' => true,
-												'submitValue' => \__('Export Forms', 'eightshift-forms'),
-												'submitAttrs' => [
-													'data-type' => self::TYPE_EXPORT_ALL,
-												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
-											],
-										],
-									],
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Export global settings', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 								],
+								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Export Forms', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Export one or many forms with settings', 'eightshift-forms'),
+							],
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Export Forms', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::TYPE_EXPORT_FORMS,
+								],
+								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Export All', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Export all form and global settings.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Export all', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::TYPE_EXPORT_ALL,
+								],
+								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
 						],
 					],

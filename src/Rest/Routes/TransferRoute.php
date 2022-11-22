@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -102,23 +103,26 @@ class TransferRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$type = $params['type'];
+		$output = [
+			'globalSettings' => [],
+			'forms' => [],
+		];
 
 		switch ($params['type']) {
 			case SettingsTransfer::TYPE_EXPORT_GLOBAL_SETTINGS:
-				$output = $this->getExportGlobalSettings();
+				$output['globalSettings'] = $this->getExportGlobalSettings();
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_FORMS:
-				$output = [];
+				$output['forms'] = $this->getExportForms();
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_ALL:
-				$output = [];
+				$output['globalSettings'] = $this->getExportGlobalSettings();
+				$output['forms'] = $this->getExportForms();
 				$internalType = 'export';
 				break;
 			default:
-				$output = [];
 				$internalType = 'transfer';
 				break;
 		}
@@ -132,22 +136,25 @@ class TransferRoute extends AbstractBaseRoute
 			]);
 		}
 
+		$output = \wp_json_encode($output);
+
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
 			// translators: %s will be replaced with the transfer internal type.
 			'message' => \sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
+			'data' => $output,
 		]);
 	}
 
 	/**
-	 * Get formated output.
+	 * Get formated meta/options output.
 	 *
 	 * @param array<int, object> $items Query output items.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getOutput(array $items): array
+	private function getMetaOutput(array $items): array
 	{
 		$output = [];
 		foreach ($items as $item) {
@@ -179,10 +186,63 @@ class TransferRoute extends AbstractBaseRoute
 		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			"SELECT option_name as name, option_value as value
 				FROM $wpdb->options
-				WHERE option_name
-				REGEXP 'es-forms-'"
+				WHERE option_name REGEXP 'es-forms-'"
 		);
 
-		return $options ? $this->getOutput($options) : [];
+		return $options ? $this->getMetaOutput($options) : [];
+	}
+
+	/**
+	 * Export Forms with settings.
+	 *
+	 * @param array<int, string> $items Specify items to query.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getExportForms(array $items = []): array
+	{
+		$args = [
+			'post_type' => Forms::POST_TYPE_SLUG,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+			'posts_per_page' => 10000,
+		];
+
+		if ($items) {
+			$args['post__in'] = $items;
+		}
+
+		$theQuery = new \WP_Query($args);
+
+		$forms = $theQuery->posts;
+		wp_reset_postdata();
+
+		if (!$forms) {
+			return [];
+		}
+
+		global $wpdb;
+
+		$output = [];
+		foreach ($forms as $key => $form) {
+			$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->prepare(
+					"SELECT meta_key name, meta_value as value
+					FROM $wpdb->postmeta
+					WHERE post_id='%d'
+					AND meta_key REGEXP 'es-forms-'"
+				, $form->ID)
+			);
+
+			$output[$key] = (array) $form;
+
+			if (!$settings) {
+				continue;
+			}
+
+			$output[$key]['es_settings'] = $this->getMetaOutput($settings);
+		}
+
+		return $output;
 	}
 }
