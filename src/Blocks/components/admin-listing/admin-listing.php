@@ -27,6 +27,7 @@ $adminListingForms = Components::checkAttr('adminListingForms', $attributes, $ma
 $adminListingType = Components::checkAttr('adminListingType', $attributes, $manifest);
 $adminListingListingLink = Components::checkAttr('adminListingListingLink', $attributes, $manifest);
 $adminListingIntegrations = Components::checkAttr('adminListingIntegrations', $attributes, $manifest);
+$adminListingIsDeveloperMode = Components::checkAttr('adminListingIsDeveloperMode', $attributes, $manifest);
 
 $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -131,7 +132,15 @@ $layoutClass = Components::classnames([
 										<svg class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 11.75h5m-5 3h5" stroke="currentColor" stroke-opacity=".12" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M4.5 8.75h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="5" cy="11.75" r="1" fill="currentColor"/><circle cx="5" cy="14.75" r="1" fill="currentColor"/><path d="M1 2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4H1V2z" fill="currentColor" fill-opacity=".12"/><rect x="1" y="1" width="18" height="18" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M4.5 3.75h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
 									<?php } ?>
 
-									<span><?php echo $title ? esc_html($title) : esc_html($id); ?></span>
+									<span>
+										<?php
+										if ($adminListingIsDeveloperMode) {
+											echo esc_html("{$id} - {$title}");
+										} else {
+											echo $title ? esc_html($title) : esc_html($id);
+										}
+										?>
+									</span>
 
 									<?php if ($activeIntegration) { ?>
 										<div class="<?php echo esc_attr("{$componentClass}__integration"); ?>">

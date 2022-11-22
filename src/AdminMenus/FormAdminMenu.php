@@ -15,6 +15,8 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
@@ -22,6 +24,11 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
  */
 class FormAdminMenu extends AbstractAdminMenu
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable for listing data.
 	 *
@@ -245,6 +252,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'adminListingType' => $status,
 			'adminListingListingLink' => $listingLink,
 			'adminListingIntegrations' => $filter,
+			'adminListingIsDeveloperMode' => $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY),
 		];
 	}
 }

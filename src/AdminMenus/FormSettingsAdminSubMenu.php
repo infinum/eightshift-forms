@@ -14,6 +14,8 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -21,6 +23,11 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
  */
 class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable for all settings.
 	 *
@@ -181,7 +188,13 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			return [];
 		}
 
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
 		$formTitle = \get_the_title((int) $formId);
+
+		if ($isDeveloperMode) {
+			$formTitle = "{$formId} - {$formTitle}";
+		}
 
 		if (!$formTitle) {
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
@@ -189,6 +202,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$integrationTypeUsed = Helper::getUsedFormTypeById($formId);
 		$formEditLink = Helper::getFormEditPageUrl($formId);
+
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),

@@ -46,6 +46,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	public function register(): void
 	{
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
+		\add_filter('script_loader_tag', [$this, 'enqueueScriptsCaptchaDefer'], 10, 2);
 	}
 
 	/**
@@ -124,5 +125,22 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
+	}
+
+	/**
+	 * Overide default script tag and add defer to it.
+	 *
+	 * @param string $tag The <script> tag for the enqueued script.
+	 * @param string $handle The script's registered handle.
+	 *
+	 * @return string
+	 */
+	public function enqueueScriptsCaptchaDefer(string $tag, string $handle): string
+	{
+		if ($handle !== "{$this->getAssetsPrefix()}-captcha") {
+			return $tag;
+		}
+
+		return \str_replace(' src', ' defer src', $tag);
 	}
 }
