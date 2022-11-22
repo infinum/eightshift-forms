@@ -10,10 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Transfer;
 
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use WP_Query;
 
 /**
  * SettingsTransfer class.
@@ -109,7 +112,7 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Export Global Settings', 'eightshift-forms'),
+						'tabLabel' => \__('Export global settings', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
@@ -128,18 +131,21 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Export Forms', 'eightshift-forms'),
+						'tabLabel' => \__('Export forms', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('Export one or many forms with settings', 'eightshift-forms'),
 							],
+							$this->getFormsList(),
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Export Forms', 'eightshift-forms'),
+								'submitValue' => \__('Export selected forms', 'eightshift-forms'),
+								'submitIsDisabled' => true,
 								'submitAttrs' => [
 									'data-type' => self::TYPE_EXPORT_FORMS,
+									'data-items' => '',
 								],
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
@@ -147,7 +153,7 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Export All', 'eightshift-forms'),
+						'tabLabel' => \__('Export all', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
@@ -176,6 +182,56 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 					],
 				]
 			],
+		];
+	}
+
+	/**
+	 * Get form list.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getFormsList(): array
+	{
+		$manifestForm = Components::getComponent('form');
+
+		$args = [
+			'post_type' => Forms::POST_TYPE_SLUG,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'posts_per_page' => 10000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+		];
+
+		$theQuery = new WP_Query($args);
+
+		$output = [];
+
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		while ($theQuery->have_posts()) {
+			$theQuery->the_post();
+
+			$id = \get_the_ID();
+			$title = \get_the_title();
+			$title = $isDeveloperMode ? "{$id} - {$title}" : $title;
+
+
+			$output[] = [
+				'component' => 'checkbox',
+				'checkboxLabel' => $title,
+				'checkboxValue' => $id,
+				'additionalClass' => "{$manifestForm['componentTransferJsClass']}-item",
+			];
+		}
+
+		\wp_reset_postdata();
+
+		return [
+			'component' => 'checkboxes',
+			'checkboxesId' => 'a',
+			'checkboxesName' => 'a',
+			'checkboxesFieldLabel' => \__('Forms', 'eightshift-forms'),
+			'checkboxesContent' => $output,
 		];
 	}
 }

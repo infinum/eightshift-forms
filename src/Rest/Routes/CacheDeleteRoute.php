@@ -82,7 +82,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: you don\'t have enough permissions to perform this action!', 'eightshift-forms'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 			]);
 		}
 
@@ -92,7 +92,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: cache type key was not provided.', 'eightshift-forms'),
+				'message' => \esc_html__('Type key was not provided.', 'eightshift-forms'),
 			]);
 		}
 
@@ -102,7 +102,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: provided cache type doesn\'t exist.', 'eightshift-forms'),
+				'message' => \esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
 			]);
 		}
 

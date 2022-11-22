@@ -70,6 +70,7 @@ domReady(() => {
 			const transfer = new Transfer({
 				selector: selectorTransfer,
 				formSelector: selector,
+				itemSelector: `.${componentTransferJsClass}-item`,
 				transferRestUrl: esFormsLocalization.transferRestUrl,
 			});
 

@@ -15,6 +15,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Validation\ValidatorInterface;
+use WP_Query;
 use WP_REST_Request;
 
 /**
@@ -89,17 +90,19 @@ class TransferRoute extends AbstractBaseRoute
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: you don\'t have enough permissions to perform this action!', 'eightshift-forms'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 			]);
 		}
 
 		$params = $request->get_body_params();
 
-		if (!isset($params['type'])) {
+		$type = $params['type'] ?? '';
+
+		if (!$type) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: transfer version type key was not provided.', 'eightshift-forms'),
+				'message' => \esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
 			]);
 		}
 
@@ -108,13 +111,25 @@ class TransferRoute extends AbstractBaseRoute
 			'forms' => [],
 		];
 
-		switch ($params['type']) {
+		switch ($type) {
 			case SettingsTransfer::TYPE_EXPORT_GLOBAL_SETTINGS:
 				$output['globalSettings'] = $this->getExportGlobalSettings();
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_FORMS:
-				$output['forms'] = $this->getExportForms();
+				$items = $params['items'] ?? [];
+
+				if (!$items) {
+					return \rest_ensure_response([
+						'code' => 400,
+						'status' => 'error',
+						'message' => \esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
+					]);
+				}
+
+				$items = \explode(',', $items);
+
+				$output['forms'] = $this->getExportForms($items);
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_ALL:
@@ -127,23 +142,19 @@ class TransferRoute extends AbstractBaseRoute
 				break;
 		}
 
-		if (!$output) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				// translators: %s will be replaced with the transfer internal type.
-				'message' => \sprintf(\esc_html__('Error: there is nothing to %s.', 'eightshift-forms'), $internalType),
-			]);
-		}
-
 		$output = \wp_json_encode($output);
+
+		$date = \current_datetime()->format('Y-m-d-H-i-s-u');
 
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
 			// translators: %s will be replaced with the transfer internal type.
 			'message' => \sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
-			'data' => $output,
+			'data' => [
+				'name' => "eightshift-forms-{$type}-{$date}",
+				'content' => $output,
+			],
 		]);
 	}
 
@@ -205,17 +216,17 @@ class TransferRoute extends AbstractBaseRoute
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'no_found_rows' => true,
 			'update_post_term_cache' => false,
-			'posts_per_page' => 10000,
+			'posts_per_page' => 10000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 		];
 
 		if ($items) {
 			$args['post__in'] = $items;
 		}
 
-		$theQuery = new \WP_Query($args);
+		$theQuery = new WP_Query($args);
 
 		$forms = $theQuery->posts;
-		wp_reset_postdata();
+		\wp_reset_postdata();
 
 		if (!$forms) {
 			return [];
@@ -229,9 +240,10 @@ class TransferRoute extends AbstractBaseRoute
 				$wpdb->prepare(
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
-					WHERE post_id='%d'
-					AND meta_key REGEXP 'es-forms-'"
-				, $form->ID)
+					WHERE post_id=%d
+					AND meta_key REGEXP 'es-forms-'",
+					$form->ID
+				)
 			);
 
 			$output[$key] = (array) $form;

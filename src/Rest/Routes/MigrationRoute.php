@@ -91,7 +91,7 @@ class MigrationRoute extends AbstractBaseRoute
 			\rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: you don\'t have enough permissions to perform this action!', 'eightshift-forms'),
+				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 			]);
 		}
 
@@ -101,7 +101,7 @@ class MigrationRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: migration version type key was not provided.', 'eightshift-forms'),
+				'message' => \esc_html__('Migration version type key was not provided.', 'eightshift-forms'),
 			]);
 		}
 
@@ -120,7 +120,7 @@ class MigrationRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: migration version type key is not valid.', 'eightshift-forms'),
+				'message' => \esc_html__('Version type key is not valid.', 'eightshift-forms'),
 			]);
 		}
 

@@ -18,6 +18,11 @@
 		background-color: var(--global-colors-es-blumine);
 	}
 
+	&:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
+
 	&__inner {
 		pointer-events: none;
 	}
