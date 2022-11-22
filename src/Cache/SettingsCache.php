@@ -73,21 +73,26 @@ class SettingsCache implements SettingInterface, ServiceInterface
 				'component' => 'layout',
 				'layoutItems' => \array_values(\array_filter(\array_map(
 					static function ($key, $value) use ($manifestForm) {
+						$icon = $value['icon'];
 						$cache = $value['cache'] ?? [];
 
 						if ($cache) {
-							$title = Filters::getSettingsLabels($key);
-
 							return [
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								// translators: %s will be replaced with the title.
-								'submitValue' => \sprintf(\__('Clear %s cache', 'eightshift-forms'), $title),
-								'submitIcon' => $value['icon'],
-								'submitAttrs' => [
-									'data-type' => $key,
+								'component' => 'card',
+								'cardTitle' => Filters::getSettingsLabels($key),
+								'cardSubTitle' => Filters::getSettingsLabels($key),
+								'cardIcon' => $icon,
+								'cardContent' => [
+									[
+										'component' => 'submit',
+										'submitFieldSkip' => true,
+										'submitValue' => \__('Clear cache', 'eightshift-forms'),
+										'submitAttrs' => [
+											'data-type' => $key,
+										],
+										'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+									],
 								],
-								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
 							];
 						}
 					},

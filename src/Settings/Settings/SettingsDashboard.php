@@ -108,7 +108,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 						'url' => Filters::getSettingsLabels($key, 'externalLink'),
 					]
 				],
-				'cardToggle' => [
+				'cardContent' => [
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldSkip' => true,

@@ -12,6 +12,7 @@ domReady(() => {
 		componentJsClass,
 		componentCacheJsClass,
 		componentMigrationJsClass,
+		componentTransferJsClass,
 	} = manifest;
 
 	const selector = `.${componentJsClass}`;
@@ -58,6 +59,21 @@ domReady(() => {
 			});
 
 			migration.init();
+		});
+	}
+
+	const selectorTransfer = `.${componentTransferJsClass}`;
+	const elementsTransfer = document.querySelectorAll(selectorTransfer);
+
+	if (elementsTransfer.length) {
+		import('./transfer').then(({ Transfer }) => {
+			const transfer = new Transfer({
+				selector: selectorTransfer,
+				formSelector: selector,
+				transferRestUrl: esFormsLocalization.transferRestUrl,
+			});
+
+			transfer.init();
 		});
 	}
 });

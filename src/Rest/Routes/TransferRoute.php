@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for versions migration endpoint
+ * The class register route for transfer endpoint
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -11,18 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Migration\SettingsMigration;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;
 
 /**
- * Class MigrationRoute
+ * Class TransferRoute
  */
-class MigrationRoute extends AbstractBaseRoute
+class TransferRoute extends AbstractBaseRoute
 {
 	/**
 	 * Use general helper trait.
@@ -50,7 +47,7 @@ class MigrationRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/migration';
+	public const ROUTE_SLUG = '/transfer';
 
 	/**
 	 * Get the base url of the route
@@ -101,76 +98,91 @@ class MigrationRoute extends AbstractBaseRoute
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: migration version type key was not provided.', 'eightshift-forms'),
+				'message' => \esc_html__('Error: transfer version type key was not provided.', 'eightshift-forms'),
 			]);
 		}
 
 		$type = $params['type'];
 
 		switch ($params['type']) {
-			case SettingsMigration::VERSION_2_3:
-				$success = $this->getMigration2To3();
+			case SettingsTransfer::TYPE_EXPORT_GLOBAL_SETTINGS:
+				$output = $this->getExportGlobalSettings();
+				$internalType = 'export';
+				break;
+			case SettingsTransfer::TYPE_EXPORT_FORMS:
+				$output = [];
+				$internalType = 'export';
+				break;
+			case SettingsTransfer::TYPE_EXPORT_ALL:
+				$output = [];
+				$internalType = 'export';
 				break;
 			default:
-				$success = false;
+				$output = [];
+				$internalType = 'transfer';
 				break;
 		}
 
-		if (!$success) {
+		if (!$output) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Error: migration version type key is not valid.', 'eightshift-forms'),
+				// translators: %s will be replaced with the transfer internal type.
+				'message' => \sprintf(\esc_html__('Error: there is nothing to %s.', 'eightshift-forms'), $internalType),
 			]);
 		}
 
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			// translators: %s will be replaced with the migration type.
-			'message' => \sprintf(\esc_html__('Migration %s successfully done!', 'eightshift-forms'), $type),
+			// translators: %s will be replaced with the transfer internal type.
+			'message' => \sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
 		]);
 	}
 
 	/**
-	 * Migration version 2-3.
+	 * Get formated output.
 	 *
-	 * @return boolean
+	 * @param array<int, object> $items Query output items.
+	 *
+	 * @return array<int, array<string, mixed>>
 	 */
-	private function getMigration2To3(): bool
+	private function getOutput(array $items): array
 	{
-		$config = [
-			'options' => [
-				'new' => SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY,
-				'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
-				'old' => 'troubleshooting-fallback-email',
-			],
-		];
+		$output = [];
+		foreach ($items as $item) {
+			$name = $item->name ?? '';
+			$value = $item->value ?? '';
 
-		// Migrate global fallback.
-		$globalFallback = $this->getOptionValue($config['options']['old']);
-
-		if ($globalFallback) {
-			\update_option($this->getSettingsName($config['options']['new']), $globalFallback);
-			\update_option($this->getSettingsName($config['options']['use']), $config['options']['use']);
-			\delete_option($this->getSettingsName($config['options']['old']));
-		}
-
-		// Migrate each integration fallback.
-		foreach (Filters::ALL as $key => $value) {
-			if ($value['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+			if (!$name || !$value) {
 				continue;
 			}
 
-			$globalIntegrationFallback = $this->getOptionValue($config['options']['old'] . '-' . $key);
-
-			if ($globalIntegrationFallback) {
-				\update_option($this->getSettingsName($config['options']['new'] . '-' . $key), $globalIntegrationFallback);
-				\delete_option($this->getSettingsName($config['options']['old'] . '-' . $key));
-			}
+			$output[] = [
+				'name' => $name,
+				'value' => $value,
+			];
 		}
 
+		return $output;
+	}
 
-		return true;
+	/**
+	 * Export global settings.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getExportGlobalSettings(): array
+	{
+		global $wpdb;
+
+		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			"SELECT option_name as name, option_value as value
+				FROM $wpdb->options
+				WHERE option_name
+				REGEXP 'es-forms-'"
+		);
+
+		return $options ? $this->getOutput($options) : [];
 	}
 }

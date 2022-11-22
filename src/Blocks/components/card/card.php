@@ -14,8 +14,9 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $cardTitle = Components::checkAttr('cardTitle', $attributes, $manifest);
+$cardSubTitle = Components::checkAttr('cardSubTitle', $attributes, $manifest);
 $cardLinks = Components::checkAttr('cardLinks', $attributes, $manifest);
-$cardToggle = Components::checkAttr('cardToggle', $attributes, $manifest);
+$cardContent = Components::checkAttr('cardContent', $attributes, $manifest);
 $cardIcon = Components::checkAttr('cardIcon', $attributes, $manifest);
 
 $cardClass = Components::classnames([
@@ -55,6 +56,11 @@ $cardClass = Components::classnames([
 					<?php } ?>
 				</div>
 			<?php } ?>
+			<?php if ($cardSubTitle) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+					<?php echo esc_html($cardSubTitle); ?>
+				</div>
+			<?php } ?>
 		</div>
 		<?php if ($cardIcon) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
@@ -63,9 +69,9 @@ $cardClass = Components::classnames([
 		<?php } ?>
 	</div>
 
-	<?php if ($cardToggle) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__toggle"); ?>">
-			<?php echo wp_kses_post($cardToggle); ?>
+	<?php if ($cardContent) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+			<?php echo wp_kses_post($cardContent); ?>
 		</div>
 	<?php } ?>
 </div>

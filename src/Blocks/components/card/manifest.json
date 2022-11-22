@@ -6,13 +6,16 @@
 		"cardTitle": {
 			"type": "string"
 		},
+		"cardSubTitle": {
+			"type": "string"
+		},
 		"cardIcon": {
 			"type": "string"
 		},
 		"cardLinks": {
 			"type": "array"
 		},
-		"cardToggle": {
+		"cardContent": {
 			"type": "string"
 		}
 	}

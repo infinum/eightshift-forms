@@ -5,6 +5,7 @@
 	"componentJsClass": "js-es-block-form",
 	"componentCacheJsClass": "js-es-cache-delete",
 	"componentMigrationJsClass": "js-es-migration",
+	"componentTransferJsClass": "js-es-transfer",
 	"components": {
 		"loader": "loader",
 		"field": "field",
