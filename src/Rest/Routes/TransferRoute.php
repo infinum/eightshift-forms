@@ -50,9 +50,8 @@ class TransferRoute extends AbstractBaseRoute
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ValidatorInterface $validator
-	) {
+	public function __construct(ValidatorInterface $validator)
+	{
 		$this->validator = $validator;
 	}
 
