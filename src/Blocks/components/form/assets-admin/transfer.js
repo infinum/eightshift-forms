@@ -1,26 +1,41 @@
+import {
+	setGlobalMsg,
+	hideGlobalMsg,
+} from './utilities';
+
 export class Transfer {
 	constructor(options) {
 		this.selector = options.selector;
 		this.formSelector = options.formSelector;
 		this.itemSelector = options.itemSelector;
+		this.uploadSelector = options.uploadSelector;
+		this.overrideExistingSelector = options.overrideExistingSelector;
+		this.uploadConfirmMsg = options.uploadConfirmMsg;
 
 		this.transferRestUrl = options.transferRestUrl;
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
-
-		this.CLASS_ACTIVE = 'is-active';
 	}
 
 	init = () => {
 		const elements = document.querySelectorAll(this.selector);
 
-		[...elements].forEach((element) => {
-			element.addEventListener('click', this.onClick, true);
-		});
+		if (elements.length) {
+			[...elements].forEach((element) => {
+				element.addEventListener('click', this.onClick, true);
+			});
+		}
 
 		const items = document.querySelectorAll(`${this.itemSelector} input`);
-		[...items].forEach((element) => {
-			element.addEventListener('click', this.onClickItem, true);
-		});
+			if (items.length) {
+			[...items].forEach((element) => {
+				element.addEventListener('click', this.onClickItem, true);
+			});
+		}
+
+		const upload = document.querySelector(this.uploadSelector);
+		if (upload) {
+			this.setUpload(upload);
+		}
 	};
 
 	// Handle form submit and all logic.
@@ -28,18 +43,29 @@ export class Transfer {
 		event.preventDefault();
 
 		const element = event.target;
+		const type = element.getAttribute('data-type');
 
 		const formData = new FormData();
 
-		formData.append('type', element.getAttribute('data-type'));
+		formData.append('type', type);
 		formData.append('items', element.getAttribute('data-items'));
+
+		if (type === 'import') {
+			const upload = document.querySelector(this.uploadSelector);
+			formData.append('upload', upload.files[0]);
+
+			const existing = document.querySelector(`${this.overrideExistingSelector} input`);
+			formData.append('override', existing.checked);
+
+			confirm(this.uploadConfirmMsg);
+		}
 
 		// Populate body data.
 		const body = {
 			method: 'POST',
 			mode: 'same-origin',
 			headers: {
-				Accept: 'application/json',
+				Accept: 'multipart/form-data',
 			},
 			body: formData,
 			credentials: 'same-origin',
@@ -52,11 +78,22 @@ export class Transfer {
 				return response.json();
 			})
 			.then((response) => {
-				this.setGlobalMsg(response.message, response.status);
+				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
 
 				if (response.code >= 200 && response.code <= 299) {
-					this.createFile(response.data.content, response.data.name);
+
+					if (type === 'import') {
+						setTimeout(() => {
+							// location.reload();
+						}, 1000);
+					} else {
+						this.createFile(response.data.content, response.data.name);
+					}
 				}
+
+				setTimeout(() => {
+					hideGlobalMsg(this.globalMsgSelector);
+				}, 6000);
 			});
 	};
 
@@ -81,17 +118,20 @@ export class Transfer {
 		button.setAttribute('data-items', output);
 	};
 
-	// Set global message.
-	setGlobalMsg = (msg, status) => {
-		const messageContainer = document.querySelector(this.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.add(this.CLASS_ACTIVE);
-		messageContainer.dataset.status = status;
-		messageContainer.innerHTML = `<span>${msg}</span>`;
+	setUpload = (element) => {
+		// import('dropzone').then((Dropzone) => {
+		// 	// Init dropzone.
+		// 	const myDropzone = new Dropzone.default(
+		// 		element,
+		// 		{
+		// 			url: "/",
+		// 			addRemoveLinks: true,
+		// 			autoProcessQueue: false,
+		// 			autoDiscover: false,
+		// 			maxFiles: 1,
+		// 		}
+		// 	);
+		// });
 	};
 
 	createFile(data, exportName) {

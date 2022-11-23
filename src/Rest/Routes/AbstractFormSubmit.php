@@ -64,6 +64,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
+			$files = $request->get_file_params();
 
 			// Get form ID.
 			$formId = $this->getFormId($params);
@@ -84,7 +85,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				$this->verifyRequest(
 					$params,
-					$request->get_file_params(),
+					$files,
 					$formId,
 					$formData
 				);
@@ -94,7 +95,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$params = $this->extractStorageParams($params);
 
 			// Upload files to temp folder.
-			$files = $this->uploadFiles($request->get_file_params());
+			$files = $this->uploadFiles($files);
 
 			// Do Action.
 			return $this->submitAction($formId, $params, $files);

@@ -71,7 +71,10 @@ domReady(() => {
 				selector: selectorTransfer,
 				formSelector: selector,
 				itemSelector: `.${componentTransferJsClass}-item`,
+				uploadSelector: `.${componentTransferJsClass}-upload`,
+				overrideExistingSelector: `.${componentTransferJsClass}-existing`,
 				transferRestUrl: esFormsLocalization.transferRestUrl,
+				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
 			});
 
 			transfer.init();

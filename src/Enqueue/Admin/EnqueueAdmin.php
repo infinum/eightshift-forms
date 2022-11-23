@@ -85,6 +85,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
 				'migrationRestUrl' => $restRoutesPath . MigrationRoute::ROUTE_SLUG,
 				'transferRestUrl' => $restRoutesPath . TransferRoute::ROUTE_SLUG,
+				'uploadConfirmMsg' => \__('Are you sure you want to contine?')
 			]
 		];
 	}
