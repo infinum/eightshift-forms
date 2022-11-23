@@ -84,7 +84,7 @@ export class Transfer {
 
 					if (type === 'import') {
 						setTimeout(() => {
-							// location.reload();
+							location.reload();
 						}, 1000);
 					} else {
 						this.createFile(response.data.content, response.data.name);
