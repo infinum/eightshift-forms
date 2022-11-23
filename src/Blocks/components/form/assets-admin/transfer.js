@@ -31,11 +31,6 @@ export class Transfer {
 				element.addEventListener('click', this.onClickItem, true);
 			});
 		}
-
-		const upload = document.querySelector(this.uploadSelector);
-		if (upload) {
-			this.setUpload(upload);
-		}
 	};
 
 	// Handle form submit and all logic.
@@ -116,22 +111,6 @@ export class Transfer {
 		button.disabled = !output.length;
 
 		button.setAttribute('data-items', output);
-	};
-
-	setUpload = (element) => {
-		// import('dropzone').then((Dropzone) => {
-		// 	// Init dropzone.
-		// 	const myDropzone = new Dropzone.default(
-		// 		element,
-		// 		{
-		// 			url: "/",
-		// 			addRemoveLinks: true,
-		// 			autoProcessQueue: false,
-		// 			autoDiscover: false,
-		// 			maxFiles: 1,
-		// 		}
-		// 	);
-		// });
 	};
 
 	createFile(data, exportName) {
