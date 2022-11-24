@@ -112,7 +112,7 @@ trait SettingsHelper
 			return [];
 		}
 
-		return \unserialize($value); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+		return $value;
 	}
 
 	/**
