@@ -327,13 +327,13 @@ class GreenhouseClient implements ClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @param boolean $postHeaders If using post method we need to send Authorization header and type in the request.
+	 * @param boolean $isCurl If using post method we need to send Authorization header and type in the request.
 	 *
 	 * @return array<int|string, string>
 	 */
-	private function getHeaders(bool $postHeaders = false): array
+	private function getHeaders(bool $isCurl = false): array
 	{
-		if ($postHeaders) {
+		if ($isCurl) {
 			return [
 				'Authorization: Basic ' . $this->getApiKey(),
 				'Content-Type: multipart/form-data',

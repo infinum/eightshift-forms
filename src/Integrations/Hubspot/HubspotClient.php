@@ -365,7 +365,6 @@ class HubspotClient implements HubspotClientInterface
 			return '';
 		}
 
-
 		$folder = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
 		if (!$folder) {
@@ -400,7 +399,8 @@ class HubspotClient implements HubspotClientInterface
 				\CURLOPT_FAILONERROR => true,
 				\CURLOPT_POST => true,
 				\CURLOPT_RETURNTRANSFER => true,
-				\CURLOPT_POSTFIELDS => $postData
+				\CURLOPT_POSTFIELDS => $postData,
+				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
 			]
 		);
 
@@ -562,12 +562,22 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @return array<string, mixed>
+	 * @param boolean $isCurl If using post method we need to send Authorization header and type in the request.
+	 *
+	 * @return array<mixed>
 	 */
-	private function getHeaders(): array
+	private function getHeaders(bool $isCurl = false): array
 	{
+		if ($isCurl) {
+			return [
+				'Content-Type: multipart/form-data',
+				'Authorization: Bearer ' . $this->getApiKey(),
+			];
+		}
+
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',
+			'Authorization' => "Bearer {$this->getApiKey()}"
 		];
 	}
 
@@ -791,6 +801,6 @@ class HubspotClient implements HubspotClientInterface
 			$url = 'https://api.hubapi.com';
 		}
 
-		return "{$url}/{$path}?hapikey={$this->getApiKey()}";
+		return "{$url}/{$path}";
 	}
 }
