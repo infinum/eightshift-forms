@@ -32,6 +32,11 @@
 		font-weight: 600;
 	}
 
+	&__subtitle {
+		margin-top: 5px;
+		color: var(--global-colors-es-french);
+	}
+
 	&__links {
 		margin-top: 5px;
 	}
@@ -59,7 +64,7 @@
 		}
 	}
 
-	&__toggle {
+	&__content {
 		margin-top: 20px;
 	}
 }

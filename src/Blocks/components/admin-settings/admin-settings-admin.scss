@@ -7,7 +7,8 @@
 	.es-form[data-form-type='documentation'],
 	.es-form[data-form-type='migration'],
 	.es-form[data-settings-type='settingsGlobal'][data-form-type='geolocation'],
-	.es-form[data-settings-type='settingsGlobal'][data-form-type='mailer'] {
+	.es-form[data-settings-type='settingsGlobal'][data-form-type='mailer'],
+	.es-form[data-settings-type='settingsGlobal'][data-form-type='transfer'] {
 		.es-submit--global {
 			display: none;
 		}

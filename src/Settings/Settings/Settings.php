@@ -81,6 +81,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			// Populate sidebar data.
 			$output[$type][] = [
 				'label' => Filters::getSettingsLabels($key),
+				'desc' => Filters::getSettingsLabels($key, 'desc'),
 				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
 				'icon' => $value['icon'],
 				'type' => $type,

@@ -80,19 +80,25 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 				'introSubtitle' => \__('Please backup your database before running any migrations. This proces is not reversable.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'intro',
-				'introTitle' => \__('Version 2 to 3'),
-				'introTitleSize' => 'medium',
-				'introSubtitle' => \__('In this vesion we have changed the option and custom meta name for the fallback emails. This migration will remove your old options and custom meta keys and updated them to the new ones.', 'eightshift-forms')
-			],
-			[
-				'component' => 'submit',
-				'submitFieldSkip' => true,
-				'submitValue' => \__('Migrate version 2 to 3', 'eightshift-forms'),
-				'submitAttrs' => [
-					'data-type' => self::VERSION_2_3,
-				],
-				'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+				'component' => 'layout',
+				'layoutItems' => [
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 2 to 3'),
+						'cardSubTitle' => \__('In this version we have changed the option and custom meta name for the fallback emails. This migration will remove your old options and custom meta keys and update them to the new ones.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::VERSION_2_3,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
+					]
+				]
 			],
 		];
 	}

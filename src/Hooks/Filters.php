@@ -42,6 +42,7 @@ use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\SettingsCaptcha;
@@ -220,6 +221,17 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 			'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 		],
+		SettingsMigration::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14 13H2.5A1.5 1.5 0 0 1 1 11.5v-9A1.5 1.5 0 0 1 2.5 1h9A1.5 1.5 0 0 1 13 2.5V4m1 9-2 2m2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M6 7h11.5A1.5 1.5 0 0 1 19 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 7 17.5V16M6 7l2-2M6 7l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+		],
+		SettingsTransfer::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_NAME,
+			'valid' => SettingsTransfer::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 7H6V4L1 8l5 5v-3h8V7l5 4-5 5v-3h-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+		],
 		SettingsDebug::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsDebug::FILTER_SETTINGS_GLOBAL_NAME,
 			'valid' => SettingsDebug::FILTER_SETTINGS_IS_VALID_NAME,
@@ -230,11 +242,6 @@ class Filters
 		SettingsDocumentation::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsDocumentation::FILTER_SETTINGS_GLOBAL_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.5 4h2m-2 3h2m-2 3h2m-2 3h2m-2 3h2m0-14v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.5 18.5h-11A1.5 1.5 0 0 1 3 17V3a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 3v14a1.5 1.5 0 0 1-1.5 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M8.25 4.5h5m-5 2.5h3m-3 2.5h2" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		],
-		SettingsMigration::SETTINGS_TYPE_KEY => [
-			'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
-			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14 13H2.5A1.5 1.5 0 0 1 1 11.5v-9A1.5 1.5 0 0 1 2.5 1h9A1.5 1.5 0 0 1 13 2.5V4m1 9-2 2m2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M6 7h11.5A1.5 1.5 0 0 1 19 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 7 17.5V16M6 7l2-2M6 7l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		],
 	];
@@ -468,6 +475,10 @@ class Filters
 			SettingsDebug::SETTINGS_TYPE_KEY => [
 				'title' => \__('Debug', 'eightshift-forms'),
 				'desc' => \__('Form debugging settings.', 'eightshift-forms'),
+			],
+			SettingsTransfer::SETTINGS_TYPE_KEY => [
+				'title' => \__('Import/Export', 'eightshift-forms'),
+				'desc' => \__('Transfer your forms and settings from one enviroment to another.', 'eightshift-forms'),
 			],
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Documentation', 'eightshift-forms'),

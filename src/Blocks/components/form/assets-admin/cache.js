@@ -1,3 +1,8 @@
+import {
+	setGlobalMsg,
+	hideGlobalMsg,
+} from './utilities';
+
 export class Cache {
 	constructor(options) {
 		this.selector = options.selector;
@@ -5,8 +10,6 @@ export class Cache {
 
 		this.clearCacheRestUrl = options.clearCacheRestUrl;
 		this.globalMsgSelector = `${this.formSelector}-global-msg`;
-
-		this.CLASS_ACTIVE = 'is-active';
 	}
 
 	init = () => {
@@ -45,25 +48,11 @@ export class Cache {
 				return response.json();
 			})
 			.then((response) => {
-				this.setGlobalMsg(response.message, response.status);
+				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
 
-				// Hide global msg in any case after some time.
 				setTimeout(() => {
-					location.reload();
-				}, 1000);
+					hideGlobalMsg(this.globalMsgSelector);
+				}, 6000);
 			});
-	};
-
-	// Set global message.
-	setGlobalMsg = (msg, status) => {
-		const messageContainer = document.querySelector(this.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.add(this.CLASS_ACTIVE);
-		messageContainer.dataset.status = status;
-		messageContainer.innerHTML = `<span>${msg}</span>`;
 	};
 }

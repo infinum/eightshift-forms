@@ -173,7 +173,7 @@ abstract class AbstractFormBuilder
 				'layout' => 6,
 				'layoutItems' => 7,
 				'card' => 8,
-				'cardToggle' => 9,
+				'cardContent' => 9,
 			];
 
 			foreach ($nestedKeys as $nestedKey => $value) {
