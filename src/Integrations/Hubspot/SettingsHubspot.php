@@ -319,8 +319,9 @@ class SettingsHubspot implements SettingsDataInterface, ServiceInterface
 				'introSubtitle' => \__('<ol>
 						<li>Log in to your HubSpot account</li>
 						<li>Click on the settings cog icon in the top right, next to your account</li>
-						<li>In the menu on the left, under <strong>Integrations</strong> click <strong>API Key</strong></li>
-						<li>On the page that loads in the <strong>Active API key</strong> panel, click on <strong>Show</strong>, verify the captcha if needed, then click <strong>Copy</strong></li>
+						<li>In the menu on the left, under <strong>Integrations</strong> click <strong>Private Apps</strong></li>
+						<li>Click on <strong>Create a private app</strong></li>
+						<li>Provide the app name and these scopes: <strong>forms, files, crm.objects.contacts.write, crm.schemas.custom.read</strong>.</li>
 						<li>Copy the API key into the field below or use the global constant.</li>
 					</ol>', 'eightshift-forms'),
 			],

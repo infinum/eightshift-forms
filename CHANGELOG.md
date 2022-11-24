@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [2.2.0]
+
+### Changed
+- HubSpot internal logic for api auth. Switching from API Key to Private App.
+
 ## [2.1.0]
 
 ### Fixed
@@ -150,6 +155,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.2.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/infinum/eightshift-forms/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/infinum/eightshift-forms/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-forms/compare/1.4.0...2.0.0

@@ -398,15 +398,14 @@ class HubspotClient implements HubspotClientInterface
 				\CURLOPT_FAILONERROR => true,
 				\CURLOPT_POST => true,
 				\CURLOPT_RETURNTRANSFER => true,
-				\CURLOPT_POSTFIELDS => $postData
+				\CURLOPT_POSTFIELDS => $postData,
+				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
 			]
 		);
 
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
 		$statusCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
-
-		error_log( print_r( ( $statusCode ), true ) );
 
 		if ($statusCode === 200) {
 			$response = \json_decode((string) $response, true);
@@ -562,10 +561,19 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
+	 * @param boolean $isCurl If using post method we need to send Authorization header and type in the request.
+	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHeaders(): array
+	private function getHeaders(bool $isCurl = false): array
 	{
+		if ($isCurl) {
+			return [
+				'Content-Type: multipart/form-data',
+				'Authorization: Bearer ' . $this->getApiKey(),
+			];
+		}
+
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Authorization' => "Bearer {$this->getApiKey()}"
