@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\SettingsCaptcha;
 
@@ -43,6 +44,7 @@ class Labels implements LabelsInterface
 		'customSuccess',
 		'activeCampaignSuccess',
 		'airtableSuccess',
+		'momentsSuccess',
 	];
 
 	/**
@@ -97,6 +99,11 @@ class Labels implements LabelsInterface
 		// Airtable.
 		if ($this->isCheckboxOptionChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getAirtableLabels());
+		}
+
+		// Moments.
+		if ($this->isCheckboxOptionChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
+			$output = \array_merge($output, $this->getMomentsLabels());
 		}
 
 		return $output;
@@ -344,6 +351,22 @@ class Labels implements LabelsInterface
 			'airtableInvalidRequestUnknownError' => \__('Invalid request: parameter validation failed. Check your request data.', 'eightshift-forms'),
 			'airtableInvalidValueForColumnError' => \__('One or more fields are invalid. Please try again.', 'eightshift-forms'),
 			'airtableSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Moments
+	 *
+	 * @return array<string, string>
+	 */
+	private function getMomentsLabels(): array
+	{
+		return [
+			'momentsErrorSettingsMissing' => \__('Moments integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'momentsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'momentsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
+			'momentsEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
+			'momentsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
 

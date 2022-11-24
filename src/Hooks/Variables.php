@@ -204,4 +204,24 @@ class Variables
 	{
 		return \defined('ES_API_KEY_AIRTABLE') ? \ES_API_KEY_AIRTABLE : '';
 	}
+
+	/**
+	 * Get API URL for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiUrlMoments(): string
+	{
+		return \defined('ES_API_URL_MOMENTS') ? \ES_API_URL_MOMENTS : '';
+	}
+
+	/**
+	 * Get API Key for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyMoments(): string
+	{
+		return \defined('ES_API_KEY_MOMENTS') ? \ES_API_KEY_MOMENTS : '';
+	}
 }

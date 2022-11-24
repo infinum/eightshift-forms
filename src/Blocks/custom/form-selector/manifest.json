@@ -21,7 +21,8 @@
 				"eightshift-forms/mailerlite",
 				"eightshift-forms/goodbits",
 				"eightshift-forms/active-campaign",
-				"eightshift-forms/airtable"
+				"eightshift-forms/airtable",
+				"eightshift-forms/moments"
 			]
 		}
 	},
@@ -108,6 +109,12 @@
 			"slug": "airtable",
 			"icon": "esf-form-airtable",
 			"blockName": "eightshift-forms/airtable"
+		},
+		{
+			"label": "Moments",
+			"slug": "moments",
+			"icon": "esf-form-moments",
+			"blockName": "eightshift-forms/moments"
 		}
 	]
 }

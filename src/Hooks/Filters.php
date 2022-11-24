@@ -35,6 +35,9 @@ use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
+use EightshiftForms\Integrations\Moments\Moments;
+use EightshiftForms\Integrations\Moments\MomentsClient;
+use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Settings\Settings\Settings;
@@ -204,6 +207,18 @@ class Filters
 				AirtableClient::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME,
 			],
 		],
+		SettingsMoments::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsMoments::FILTER_SETTINGS_NAME,
+			'fields' => Moments::FILTER_FORM_FIELDS_NAME,
+			'valid' => SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="8.5" y="8.5" width="3" height="3" rx="0.5" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="1.5"/><rect x="5" y="5" width="10" height="10" rx="2.75" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="5.25" y="5.25" width="9.5" height="9.5" rx="3.25" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1" y="1" width="18" height="18" rx="9" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1.75" y="1.75" width="16.5" height="16.5" rx="6.75" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+			'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
+			'cache' => [
+				MomentsClient::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME,
+			],
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.5 1.75h-15A1.5 1.5 0 0 0 1 3.25v13.5a1.5 1.5 0 0 0 1.5 1.5h15a1.5 1.5 0 0 0 1.5-1.5V3.25a1.5 1.5 0 0 0-1.5-1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M1.5 7.25h17m-17 5.5h17" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="14" y="3.5" width="3" height="2" rx="0.5" fill="currentColor"/><rect x="14" y="9" width="3" height="2" rx="0.5" fill="currentColor"/><rect x="14" y="14.5" width="3" height="2" rx="0.5" fill="currentColor"/></svg>',
@@ -293,6 +308,12 @@ class Filters
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
+			],
+			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
@@ -459,6 +480,12 @@ class Filters
 				'desc' => \__('Airtable integration settings.', 'eightshift-forms'),
 				'detail' => \__('Airtable is a platform that makes it easy to build powerful, custom applications.', 'eightshift-forms'),
 				'externalLink' => 'https://airtable.com/',
+			],
+			SettingsMoments::SETTINGS_TYPE_KEY => [
+				'title' => \__('Moments', 'eightshift-forms'),
+				'desc' => \__('Moments integration settings.', 'eightshift-forms'),
+				'detail' => \__('Moments is about sending out relevant content derived from important customer information, their interests, and activities.', 'eightshift-forms'),
+				'externalLink' => 'https://www.infobip.com/moments/',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),
