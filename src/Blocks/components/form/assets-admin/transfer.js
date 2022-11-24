@@ -105,7 +105,7 @@ export class Transfer {
 		if (element.checked) {
 			output.push(value);
 		} else {
-			output = output.filter((item) => item !== value)
+			output = output.filter((item) => item !== value);
 		}
 
 		button.disabled = !output.length;
@@ -121,7 +121,7 @@ export class Transfer {
 		downloadAnchorNode.setAttribute("href", dataStr);
 		downloadAnchorNode.setAttribute("download", exportName + ".json");
 
-		document.body.appendChild(downloadAnchorNode); // required for firefox
+		document.body.appendChild(downloadAnchorNode); // required for Firefox browser
 
 		downloadAnchorNode.click();
 		downloadAnchorNode.remove();

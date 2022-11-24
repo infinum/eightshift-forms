@@ -136,7 +136,7 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Export one or many forms with settings', 'eightshift-forms'),
+								'introSubtitle' => \__('Export single or multiple forms with settings', 'eightshift-forms'),
 							],
 							$this->getFormsList(),
 							[
@@ -159,7 +159,7 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Export all form and global settings.', 'eightshift-forms'),
+								'introSubtitle' => \__('Export all forms and global settings.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'submit',

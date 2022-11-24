@@ -41,4 +41,4 @@ export const hideGlobalMsg = (selector) => {
 	}
 
 	messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-}
+};
