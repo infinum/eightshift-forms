@@ -329,7 +329,6 @@ class HubspotClient implements HubspotClientInterface
 			$body
 		);
 
-
 		$code = $details['code'];
 		$body = $details['body'];
 
@@ -364,7 +363,6 @@ class HubspotClient implements HubspotClientInterface
 		if (!$path) {
 			return '';
 		}
-
 
 		$folder = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
@@ -407,6 +405,8 @@ class HubspotClient implements HubspotClientInterface
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
 		$statusCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+
+		error_log( print_r( ( $statusCode ), true ) );
 
 		if ($statusCode === 200) {
 			$response = \json_decode((string) $response, true);
@@ -568,6 +568,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',
+			'Authorization' => "Bearer {$this->getApiKey()}"
 		];
 	}
 
@@ -791,6 +792,6 @@ class HubspotClient implements HubspotClientInterface
 			$url = 'https://api.hubapi.com';
 		}
 
-		return "{$url}/{$path}?hapikey={$this->getApiKey()}";
+		return "{$url}/{$path}";
 	}
 }

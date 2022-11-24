@@ -107,11 +107,12 @@ trait SettingsHelper
 	public function getOptionValueGroup(string $key): array
 	{
 		$value = \get_option($this->getSettingsName($key), false);
+
 		if (!$value) {
 			return [];
 		}
 
-		return $value;
+		return unserialize($value);
 	}
 
 	/**
