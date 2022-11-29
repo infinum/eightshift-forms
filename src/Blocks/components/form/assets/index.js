@@ -59,6 +59,7 @@ function initAll() {
 			customSelects: form.customSelects,
 			customFiles: form.customFiles,
 			customTextareas: form.customTextareas,
+			customInputs: form.customInputs,
 			storageConfig: form.storageConfig,
 			customFormParams: form.FORM_CUSTOM_FORM_PARAMS,
 			customFormDataAttributes: form.FORM_CUSTOM_DATA_ATTRIBUTES,

@@ -6,14 +6,18 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
+$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
+$additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
 $inputId = Components::checkAttr('inputId', $attributes, $manifest);
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
@@ -28,14 +32,12 @@ $inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
 $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
 $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
+$inputUseCustom = Components::checkAttr('inputUseCustom', $attributes, $manifest);
+
+$isCustomInput = false;
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
-
-$inputClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-]);
 
 if ($inputType === 'number') {
 	if ($inputMin || $inputMin === 0) {
@@ -53,6 +55,29 @@ if ($inputType === 'number') {
 if ($inputType === 'email' || $inputType === 'url') {
 	$inputType = 'text';
 }
+
+if ($inputType === 'date' || $inputType === 'time' || $inputType === 'datetime') {
+	$isCustomInput = !apply_filters(
+		Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
+		SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE,
+		SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
+	);
+
+	if ($isCustomInput && $inputUseCustom) {
+		$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
+		$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
+	}
+}
+
+if ($inputType === 'datetime') {
+	$inputType = 'datetime-local';
+}
+
+$inputClass = Components::classnames([
+	Components::selector($componentClass, $componentClass),
+	Components::selector($additionalClass, $additionalClass),
+	Components::selector($isCustomInput && $inputUseCustom, $componentClass, '', 'custom'),
+]);
 
 if ($inputTracking) {
 	$inputAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($inputTracking);
@@ -111,7 +136,7 @@ echo Components::render(
 			],
 		]),
 		[
-			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
+			'additionalFieldClass' => $additionalFieldClass,
 			'selectorClass' => $manifest['componentName'] ?? ''
 		]
 	)

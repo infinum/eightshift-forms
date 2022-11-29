@@ -58,6 +58,7 @@ export class Form {
 		this.customTextareas = [];
 		this.customSelects = [];
 		this.customFiles = [];
+		this.customInputs = [];
 	}
 
 	// Init all actions.
@@ -95,6 +96,7 @@ export class Form {
 			const conditionalTagsData = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
+			this.customInputs[formId] = [];
 			[...inputs].forEach((input) => {
 				this.setupInputField(input);
 			});
@@ -833,6 +835,18 @@ export class Form {
 	// Setup Regular field.
 	setupInputField = (input) => {
 		this.preFillOnInit(input, input.type);
+
+		if (this.isCustom(input)) {
+			console.log(input);
+
+			import('air-datepicker').then(({ AirDatepicker }) => {
+
+				const picker = new AirDatepicker(input, {
+				});
+
+				this.customInputs[formId].push(picker);
+			});
+		}
 
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);

@@ -72,6 +72,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT = 'select';
 	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA = 'textarea';
 	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE = 'file';
+	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE = 'date';
 
 	/**
 	 * Register all the hooks
@@ -224,6 +225,13 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 										'checkboxLabel' => \__('Disable custom file picker', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable custom date/time picker', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE,
 										'checkboxAsToggle' => true,
 									],
 								],
