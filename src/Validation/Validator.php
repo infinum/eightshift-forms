@@ -108,7 +108,15 @@ class Validator extends AbstractValidation
 	 */
 	public function getValidationPatterns(): array
 	{
-		$localPatterns = SettingsValidation::VALIDATION_PATTERNS;
+		$output = [
+			[
+				'value' => '',
+				'label' => '---',
+				'name' => '',
+			],
+			...SettingsValidation::VALIDATION_PATTERNS,
+			...SettingsValidation::VALIDATION_PATTERNS_PRIVATE,
+		];
 
 		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
 
@@ -120,22 +128,13 @@ class Validator extends AbstractValidation
 						continue;
 				};
 
-				$localPatterns[$pattern[0]] = $pattern[1];
+				$output[] = [
+					'value' => $pattern[1],
+					'label' => $pattern[0],
+					'output' => $pattern[2],
+				];
 			}
 		}
-
-		$output = [
-			[
-				'value' => '',
-				'label' => '---'
-			]
-		];
-		foreach ($localPatterns as $key => $value) {
-			$output[] = [
-				'value' => $value,
-				'label' => $key
-			];
-		};
 
 		return $output;
 	}
@@ -164,13 +163,13 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Get validation pattern - name from pattern.
+	 * Get validation pattern - output from pattern.
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
 	 * @return string
 	 */
-	public function getValidationPatternName(string $pattern): string
+	public function getValidationPatternOutput(string $pattern): string
 	{
 		$patterns = \array_filter(
 			$this->getValidationPatterns(),
@@ -179,8 +178,22 @@ class Validator extends AbstractValidation
 			}
 		);
 
-		if ($patterns) {
-			return \reset($patterns)['label'] ?? $pattern;
+		$patterns = \reset($patterns);
+
+		if (!$patterns) {
+			return $pattern;
+		}
+
+		$output = $patterns['output'] ?? '';
+
+		if ($output) {
+			return $output;
+		}
+
+		$label = $patterns['label'] ?? '';
+
+		if ($label) {
+			return $label;
 		}
 
 		return $pattern;
@@ -267,7 +280,7 @@ class Validator extends AbstractValidation
 						$key = $matches[0] ?? '';
 
 						if ($dataValue && (empty($key) || $key[0] !== $inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternName($dataValue));
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternOutput($dataValue));
 						}
 						break;
 				}

@@ -50,9 +50,15 @@ export class Cache {
 			.then((response) => {
 				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
 
-				setTimeout(() => {
-					hideGlobalMsg(this.globalMsgSelector);
-				}, 6000);
+				if (element.getAttribute('data-reload') === 'true') {
+					setTimeout(() => {
+						location.reload();
+					}, 1000);
+				} else {
+					setTimeout(() => {
+						hideGlobalMsg(this.globalMsgSelector);
+					}, 6000);
+				}
 			});
 	};
 }

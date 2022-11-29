@@ -217,6 +217,7 @@ class Filters
 			'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
 			'cache' => [
 				MomentsClient::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME,
+				MomentsClient::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME,
 			],
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [

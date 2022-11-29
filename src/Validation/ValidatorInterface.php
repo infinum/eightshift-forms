@@ -41,13 +41,4 @@ interface ValidatorInterface
 	 * @return string
 	 */
 	public function getValidationPattern(string $name): string;
-
-	/**
-	 * Get validation pattern - name from pattern.
-	 *
-	 * @param string $pattern Pattern to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPatternName(string $pattern): string;
 }

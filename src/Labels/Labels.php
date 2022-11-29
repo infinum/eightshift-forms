@@ -140,7 +140,7 @@ class Labels implements LabelsInterface
 			'validationMaxLength' => \__('This field value has more characters than expected. We expect maximum %s characters.', 'eightshift-forms'),
 			'validationNumber' => \__('This field should only contain numbers.', 'eightshift-forms'),
 			// translators: %s used for displaying validation pattern to the user.
-			'validationPattern' => \__('This field doesn\'t satisfy the validation pattern: %s.', 'eightshift-forms'),
+			'validationPattern' => \__('This field value should be in this format: %s.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAccept' => \__('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.

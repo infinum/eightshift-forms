@@ -1041,7 +1041,7 @@ trait SettingsHelper
 				'selectId' => $this->getSettingsName($key),
 				'selectFieldLabel' => \__('Selected integration form', 'eightshift-forms'),
 				// translators: %1$s will be replaced with js selector, %2$s will be replaced with the cache type, %3$s will be replaced with latest update time.
-				'selectFieldHelp' => \sprintf(\__('If a form isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
+				'selectFieldHelp' => \sprintf(\__('If a form isn\'t showing up or is missing some items, try <a href="#" class="%1$s" data-type="%2$s" data-reload="true">clearing the cache</a>. Last updated: %3$s.', 'eightshift-forms'), $manifestForm['componentCacheJsClass'], $settingsType, $lastUpdatedTime),
 				'selectOptions' => \array_merge(
 					[
 						[

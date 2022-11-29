@@ -38,6 +38,11 @@ class MomentsClient implements ClientInterface
 	public const CACHE_MOMENTS_ITEMS_TRANSIENT_NAME = 'es_moments_items_cache';
 
 	/**
+	 * Transient cache name for IBSSO Token.
+	 */
+	public const CACHE_MOMENTS_TOKEN_TRANSIENT_NAME = 'es_moments_token_cache';
+
+	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -49,7 +54,7 @@ class MomentsClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		// if (empty($output)) {
+		if (empty($output)) {
 			$items = $this->getMomentsLists();
 
 			if ($items) {
@@ -59,6 +64,7 @@ class MomentsClient implements ClientInterface
 					$output[$id] = [
 						'id' => (string) $id,
 						'title' => $item['name'] ?? '',
+						'fields' => $item['elements'] ?? [],
 					];
 				}
 
@@ -69,7 +75,7 @@ class MomentsClient implements ClientInterface
 
 				\set_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
-		// }
+		}
 
 		if ($hideUpdateTime) {
 			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
@@ -111,12 +117,12 @@ class MomentsClient implements ClientInterface
 	{
 		$body = $this->prepareParams($params);
 
-		$url = "{$this->getBaseUrl()}{$itemId}/data";
+		$url = "{$this->getBaseUrl()}forms/1/forms/{$itemId}/data";
 
 		$response = \wp_remote_post(
 			$url,
 			[
-				'headers' => $this->getHeaders(),
+				'headers' => $this->getHeaders('api'),
 				'body' => \wp_json_encode($body),
 			]
 		);
@@ -173,17 +179,27 @@ class MomentsClient implements ClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
+	 * @param string $isPostType Type of post. Options: default, api, ibsso.
+	 * @param string $token Auth token.
+	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHeaders(): array
+	private function getHeaders(string $isPostType = 'default', string $token = ''): array
 	{
-		$headers = [
+		$output = [
 			'Content-Type' => 'application/json',
 			'Accept' => 'application/json',
-			'Authorization' => "App {$this->getApiKey()}",
 		];
 
-		return $headers;
+		if ($isPostType === 'api') {
+			$output['Authorization'] = "App {$this->getApiKey()}";
+		}
+
+		if ($isPostType === 'ibsso') {
+			$output['Authorization'] = "IBSSO {$token}";
+		}
+
+		return $output;
 	}
 
 	/**
@@ -193,16 +209,16 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getMomentsLists()
 	{
-		$url = "{$this->getBaseUrl()}?limit=100";
+		$token = $this->getIbssoToken();
+
+		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=100";
 
 		$response = \wp_remote_get(
 			$url,
 			[
-				'headers' => $this->getHeaders(),
+				'headers' => $this->getHeaders('ibsso', $token),
 			]
 		);
-
-		error_log( print_r( ( $response ), true ) );
 
 		// Structure response details.
 		$details = $this->getApiReponseDetails(
@@ -216,10 +232,62 @@ class MomentsClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $body ?? [];
+			return $body['forms'] ?? [];
 		}
 
 		return [];
+	}
+
+	/**
+	 * Create and api call to get a IBSSO token or get it from transient.
+	 *
+	 * @return string
+	 */
+	private function getIbssoToken(): string
+	{
+		$token = \get_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if ($token) {
+			return $token;
+		}
+
+		$url = "{$this->getBaseUrl()}auth/1/session";
+
+		$response = \wp_remote_post(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+				'body' => \wp_json_encode([
+					'username' => $this->getApiUsername(),
+					'password' => $this->getApiPassword(),
+					'unsafe' => false,
+				]),
+			]
+		);
+
+		// Structure response details.
+		$details = $this->getApiReponseDetails(
+			SettingsMoments::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			$token = $body['token'] ?? '';
+
+			if (!$token) {
+				return '';
+			}
+
+			\set_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME, $token, \HOUR_IN_SECONDS - 60);
+			return $token;
+		}
+
+		return '';
 	}
 
 	/**
@@ -254,7 +322,7 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getBaseUrl(): string
 	{
-		$url = \rtrim($this->getApiUrl(), '/forms/1/forms');
+		$url = \rtrim($this->getApiUrl(), '/');
 
 		return "{$url}/";
 	}
@@ -281,5 +349,29 @@ class MomentsClient implements ClientInterface
 		$apiUrl = Variables::getApiUrlMoments();
 
 		return !empty($apiUrl) ? $apiUrl : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
+	}
+
+	/**
+	 * Return Api Username from settings or global vairaible.
+	 *
+	 * @return string
+	 */
+	private function getApiUsername(): string
+	{
+		$apiUsername = Variables::getApiUsernameMoments();
+
+		return !empty($apiUsername) ? $apiUsername : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_USERNAME_KEY);
+	}
+
+	/**
+	 * Return Api Password from settings or global vairaible.
+	 *
+	 * @return string
+	 */
+	private function getApiPassword(): string
+	{
+		$apiPAssword = Variables::getApiPasswordMoments();
+
+		return !empty($apiPAssword) ? $apiPAssword : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_PASSWORD_KEY);
 	}
 }

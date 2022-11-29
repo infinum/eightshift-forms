@@ -154,18 +154,41 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		foreach ($data as $field) {
+		$fields = $data['fields'] ?? [];
+
+		if (!$fields) {
+			return $output;
+		}
+
+		foreach ($fields as $field) {
 			if (empty($field)) {
 				continue;
 			}
 
-			$type = $field['type'] ? \strtolower($field['type']) : '';
-			$name = $field['key'] ?? '';
-			$label = $field['title'] ?? '';
+			$type = $field['component'] ? \strtolower($field['component']) : '';
+			$name = $field['fieldId'] ?? '';
+			$label = $field['label'] ?? '';
+			$placeholder = $field['placeholder'] ?? '';
 			$id = $name;
+			$options = $field['options'] ?? [];
+			$isRequired = $field['isRequired'] ?? false;
+			$isHidden = $field['isHidden'] ?? false;
 
 			switch ($type) {
 				case 'text':
+				case 'msisdn':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => $isHidden ? 'hidden' : 'text',
+						'inputIsRequired' => $isRequired,
+						'inputPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
 				case 'date':
 					$output[] = [
 						'component' => 'input',
@@ -173,9 +196,39 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsRequired' => $name === 'email',
-						'inputIsEmail' => $name === 'email',
+						'inputType' => $isHidden ? 'hidden' : 'text',
+						'inputIsRequired' => $isRequired,
+						'inputPlaceholder' => $placeholder,
+						'inputValidationPattern' => $this->validator->getValidationPattern('momentsDate'),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'datetime':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputType' => $isHidden ? 'hidden' : 'text',
+						'inputIsRequired' => $isRequired,
+						'inputPlaceholder' => $placeholder,
+						'inputValidationPattern' => $this->validator->getValidationPattern('momentsDateTime'),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'email':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputId' => $id,
+						'inputFieldHidden' => $isHidden,
+						'inputType' => $isHidden ? 'hidden' : 'email',
+						'inputIsRequired' => $isRequired,
+						'inputPlaceholder' => $placeholder,
+						'inputValidationPattern' => $this->validator->getValidationPattern('momentsEmail'),
 						'blockSsr' => $ssr,
 					];
 					break;
@@ -186,7 +239,122 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
-						'inputType' => 'number',
+						'inputFieldHidden' => $isHidden,
+						'inputType' => $isHidden ? 'hidden' : 'number',
+						'inputPlaceholder' => $placeholder,
+						'inputValidationPattern' => $this->validator->getValidationPattern('momentsNumber'),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'textarea':
+					$output[] = [
+						'component' => 'textarea',
+						'textareaFieldHidden' => $isHidden,
+						'textareaFieldLabel' => $label,
+						'textareaId' => $id,
+						'textareaName' => $name,
+						'textareaTracking' => $name,
+						'textareaType' => 'textarea',
+						'textareaIsRequired' => $isRequired,
+						'textareaPlaceholder' => $placeholder,
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'dropdown':
+					$output[] = [
+						'component' => 'select',
+						'selectFieldHidden' => $isHidden,
+						'selectFieldLabel' => $label,
+						'selectId' => $id,
+						'selectName' => $name,
+						'selectTracking' => $name,
+						'selectType' => 'select',
+						'selectPlaceholder' => $placeholder,
+						'selectIsRequired' => $isRequired,
+						'selectOptions' => \array_values(
+							\array_merge(
+								[
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
+										'selectOptionValue' => ' ',
+										'selectOptionIsSelected' => true,
+										'selectOptionIsDisabled' => true,
+									],
+								],
+								\array_map(
+									static function ($selectOption) {
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $selectOption['name'],
+											'selectOptionValue' => $selectOption['value'],
+										];
+									},
+									$options
+								)
+							)
+						),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'radiobutton':
+					$output[] = [
+						'component' => 'radios',
+						'radiosFieldHidden' => $isHidden,
+						'radiosId' => $id,
+						'radiosName' => $name,
+						'radiosFieldLabel' => $label,
+						'radiosIsRequired' => $isRequired,
+						'radiosContent' => \array_map(
+							static function ($radio) use ($name) {
+								return [
+									'component' => 'radio',
+									'radioLabel' => $radio['name'],
+									'radioValue' => $radio['value'],
+									'radioTracking' => $name,
+								];
+							},
+							$options
+						),
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'checkbox':
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldHideLabel' => true,
+						'checkboxesId' => $id,
+						'checkboxesName' => $name,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => $label,
+								'checkboxValue' => false,
+								'checkboxTracking' => $name,
+							],
+						],
+						'blockSsr' => $ssr,
+					];
+					break;
+				case 'checkbox_group':
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldHidden' => $isHidden,
+						'checkboxesId' => $id,
+						'checkboxesName' => $name,
+						'checkboxesFieldLabel' => $label,
+						'checkboxesIsRequired' => $isRequired,
+						'checkboxesContent' => \array_map(
+							static function ($radio) use ($name) {
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $radio['name'],
+									'checkboxValue' => $radio['value'],
+									'checkboxTracking' => $name,
+								];
+							},
+							$options
+						),
 						'blockSsr' => $ssr,
 					];
 					break;

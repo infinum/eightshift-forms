@@ -266,3 +266,32 @@ Default:
 
 ```php
 define('ES_API_KEY_AIRTABLE', '<api-key>');
+```
+
+## Set the Airtable API username
+
+This variable will set form's Airtable API username. You will not be able to change it from the admin.
+
+Type:
+* string
+
+Default:
+* empty
+
+```php
+define('ES_API_USERNAME_AIRTABLE', '<api-username>');
+```
+
+## Set the Airtable API password
+
+This variable will set form's Airtable API password. You will not be able to change it from the admin.
+
+Type:
+* string
+
+Default:
+* empty
+
+```php
+define('ES_API_PASSWORD_AIRTABLE', '<api-password>');
+```

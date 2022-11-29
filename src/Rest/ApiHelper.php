@@ -64,7 +64,11 @@ trait ApiHelper
 				$body = $response;
 			} else {
 				$code = $response['response']['code'] ?? 200;
-				$body = \json_decode($response['body'] ?? '', true) ?? [];
+				$body = $response['body'] ?? '';
+
+				if (Components::isJson($body)) {
+					$body = \json_decode($body, true) ?? [];
+				}
 			}
 		} else {
 			// Mock response for WP_Error.

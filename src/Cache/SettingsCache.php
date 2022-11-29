@@ -89,6 +89,7 @@ class SettingsCache implements SettingInterface, ServiceInterface
 										'submitValue' => \__('Clear cache', 'eightshift-forms'),
 										'submitAttrs' => [
 											'data-type' => $key,
+											'data-reload' => 'false',
 										],
 										'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
 									],

@@ -52,7 +52,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 *
 	 * @var ClientInterface
 	 */
-	protected $MOMENTSClient;
+	protected $momentsClient;
 
 	/**
 	 * Instance variable of MailerInterface data.
