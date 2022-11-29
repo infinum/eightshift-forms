@@ -329,7 +329,6 @@ class HubspotClient implements HubspotClientInterface
 			$body
 		);
 
-
 		$code = $details['code'];
 		$body = $details['body'];
 
