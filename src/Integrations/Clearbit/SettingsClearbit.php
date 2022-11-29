@@ -121,6 +121,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
+
 		$mapSet = $this->getOptionValueGroup($typeItems[$type]['map']);
 
 		if (empty($mapSet)) {
