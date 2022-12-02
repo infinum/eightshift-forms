@@ -46,10 +46,12 @@ export class Migration {
 				return response.json();
 			})
 			.then((response) => {
-				this.utils.setGlobalMsg(element, response.message, response.status);
+				const formElement = element.closest(this.utils.formSelector);
+
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
 				setTimeout(() => {
-					this.utils.hideGlobalMsg(element);
+					this.utils.hideGlobalMsg(formElement);
 				}, 6000);
 			});
 	};
