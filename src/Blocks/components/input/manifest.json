@@ -2,7 +2,6 @@
 	"componentName": "input",
 	"title": "Input",
 	"componentClass": "es-input",
-	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"inputName": "Name",
@@ -85,10 +84,6 @@
 		},
 		"inputAttrs": {
 			"type": "array"
-		},
-		"inputUseCustom": {
-			"type": "boolean",
-			"default": true
 		}
 	},
 	"options": {
