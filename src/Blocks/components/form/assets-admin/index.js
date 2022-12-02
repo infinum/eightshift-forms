@@ -2,6 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
+import { Utils } from './../assets/utilities';
 
 domReady(() => {
 	if (typeof esFormsLocalization === 'undefined') {
@@ -20,13 +21,10 @@ domReady(() => {
 
 	if (elements.length) {
 		import('./../assets/form').then(({ Form }) => {
-			const form = new Form({
-				formSelector: selector,
+			const form = new Form(new Utils({
 				formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
 				formIsAdmin: true,
-				customFormParams: esFormsLocalization.customFormParams,
-				customFormDataAttributes: esFormsLocalization.customFormDataAttributes,
-			});
+			}));
 
 			form.init();
 		});
@@ -38,8 +36,8 @@ domReady(() => {
 	if (elementsCache.length) {
 		import('./cache').then(({ Cache }) => {
 			const cache = new Cache({
+				...new Utils(),
 				selector: selectorCache,
-				formSelector: selector,
 				clearCacheRestUrl: esFormsLocalization.clearCacheRestUrl,
 			});
 
@@ -53,8 +51,8 @@ domReady(() => {
 	if (elementsMigration.length) {
 		import('./migration').then(({ Migration }) => {
 			const migration = new Migration({
+				...new Utils(),
 				selector: selectorMigration,
-				formSelector: selector,
 				migrationRestUrl: esFormsLocalization.migrationRestUrl,
 			});
 
@@ -68,8 +66,8 @@ domReady(() => {
 	if (elementsTransfer.length) {
 		import('./transfer').then(({ Transfer }) => {
 			const transfer = new Transfer({
+				...new Utils(),
 				selector: selectorTransfer,
-				formSelector: selector,
 				itemSelector: `.${componentTransferJsClass}-item`,
 				uploadSelector: `.${componentTransferJsClass}-upload`,
 				overrideExistingSelector: `.${componentTransferJsClass}-existing`,

@@ -1,15 +1,13 @@
-import {
-	setGlobalMsg,
-	hideGlobalMsg,
-} from './utilities';
+import { Utils } from "../assets/utilities";
 
 export class Cache {
 	constructor(options) {
+		/** @type Utils */
+		this.utils = options ?? new Utils();
+
 		this.selector = options.selector;
-		this.formSelector = options.formSelector;
 
 		this.clearCacheRestUrl = options.clearCacheRestUrl;
-		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 	}
 
 	init = () => {
@@ -48,7 +46,7 @@ export class Cache {
 				return response.json();
 			})
 			.then((response) => {
-				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
+				this.utils.setGlobalMsg(element, response.message, response.status);
 
 				if (element.getAttribute('data-reload') === 'true') {
 					setTimeout(() => {
@@ -56,7 +54,7 @@ export class Cache {
 					}, 1000);
 				} else {
 					setTimeout(() => {
-						hideGlobalMsg(this.globalMsgSelector);
+						this.utils.hideGlobalMsg(element);
 					}, 6000);
 				}
 			});

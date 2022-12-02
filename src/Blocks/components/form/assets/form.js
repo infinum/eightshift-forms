@@ -1,74 +1,20 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import {
-	FORM_EVENTS,
-	FORM_SELECTORS,
-	CONDITIONAL_TAGS_CONSTANTS,
-	utils,
-} from './utilities';
+import { Utils } from './utilities';
 
+/**
+ * Main Forms class.
+ */
 export class Form {
 	constructor(options) {
-		// Detect if form is used in admin for settings or on the frontend.
-		this.formIsAdmin = options.formIsAdmin || false;
-
-		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl;
-
-		// Selectors.
-		this.formSelector = options.formSelector;
-
-		this.utils = utils(
-			this.formSelector,
-			this.formIsAdmin
-		);
-
-		this.submitSingleSelector = `${this.formSelector}-single-submit`;
-		this.errorSelector = `${this.formSelector}-error`;
-		this.loaderSelector = `${this.formSelector}-loader`;
-		this.globalMsgSelector = `${this.formSelector}-global-msg`;
-		this.groupSelector = `${this.formSelector}-group`;
-		this.groupInnerSelector = `${this.formSelector}-group-inner`;
-		this.customSelector = `${this.formSelector}-custom`;
-		this.fieldSelector = `${this.formSelector}-field`;
-		this.inputSelector = `${this.fieldSelector} input`;
-		this.textareaSelector = `${this.fieldSelector} textarea`;
-		this.selectSelector = `${this.fieldSelector} select`;
-		this.fileSelector = `${this.fieldSelector} input[type='file']`;
-		this.conditionalTagsSelector = `${this.fieldSelector} input[id='conditional-tags']`;
-
-		// LocalStorage.
-		this.STORAGE_NAME = 'es-storage';
-
-		// Custom fields params.
-		this.FORM_CUSTOM_FORM_PARAMS = options.customFormParams;
-
-		// Custom data attributes.
-		this.FORM_CUSTOM_DATA_ATTRIBUTES = options.customFormDataAttributes;
-
-		// Settings options.
-		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? true;
-		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
-		this.formResetOnSuccess = Boolean(options.formResetOnSuccess);
-		this.redirectionTimeout = options.redirectionTimeout ?? 600;
-		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? 6000;
-		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? 600;
-		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? '';
-		this.formServerErrorMsg = options.formServerErrorMsg ?? '';
-		this.captcha = options.captcha ?? '';
-		this.storageConfig = options.storageConfig ?? '';
-
-		// Internal state.
-		this.files = {};
-		this.customTextareas = [];
-		this.customSelects = [];
-		this.customFiles = [];
+		/** @type Utils */
+		this.utils = options ?? new Utils();
 	}
 
 	// Init all actions.
 	init = () => {
-		const elements = document.querySelectorAll(this.formSelector);
+		const elements = document.querySelectorAll(this.utils.formSelector);
 
 		// Loop all forms on the page.
 		[...elements].forEach((element) => {
@@ -77,8 +23,8 @@ export class Form {
 			element.addEventListener('submit', this.onFormSubmit);
 
 			// Single submit for admin settings.
-			if (this.formIsAdmin) {
-				const items = element.querySelectorAll(this.submitSingleSelector);
+			if (this.utils.formIsAdmin) {
+				const items = element.querySelectorAll(this.utils.submitSingleSelector);
 
 				// Look all internal items for single submit option.
 				[...items].forEach((item) => {
@@ -91,14 +37,14 @@ export class Form {
 			}
 
 			// Get form ID.
-			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 			// All fields selectors.
-			const inputs = element.querySelectorAll(this.inputSelector);
-			const textareas = element.querySelectorAll(this.textareaSelector);
-			const selects = element.querySelectorAll(this.selectSelector);
-			const files = element.querySelectorAll(this.fileSelector);
-			const conditionalTagsData = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
+			const inputs = element.querySelectorAll(this.utils.inputSelector);
+			const textareas = element.querySelectorAll(this.utils.textareaSelector);
+			const selects = element.querySelectorAll(this.utils.selectSelector);
+			const files = element.querySelectorAll(this.utils.fileSelector);
+			const conditionalTagsData = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -106,19 +52,19 @@ export class Form {
 			});
 
 			// Setup select inputs.
-			this.customSelects[formId] = [];
+			this.utils.customSelects[formId] = [];
 			[...selects].forEach((select) => {
 				this.setupSelectField(select, formId);
 			});
 
 			// Setup textarea inputs.
-			this.customTextareas[formId] = [];
+			this.utils.customTextareas[formId] = [];
 			[...textareas].forEach((textarea) => {
 				this.setupTextareaField(textarea, formId);
 			});
 
 			// Setup file single inputs.
-			this.customFiles[formId] = [];
+			this.utils.customFiles[formId] = [];
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
@@ -127,12 +73,8 @@ export class Form {
 			if (conditionalTagsData) {
 				import('./conditional-tags').then(({ ConditionalTags }) => {
 					const cTagsClass = new ConditionalTags({
-						formSelector: this.formSelector,
-						fieldSelector: this.fieldSelector,
-						customSelector: this.customSelector,
+						...this.utils,
 						data: conditionalTagsData,
-						formIsAdmin: this.formIsAdmin,
-						FORM_SELECTORS,
 					});
 
 					cTagsClass.init();
@@ -140,34 +82,8 @@ export class Form {
 					// Populate window with necessary functions and prefix everything with "ct".
 					window['esForms'] = {
 						...window['esForms'],
-						ctConstants: CONDITIONAL_TAGS_CONSTANTS,
-						ctInternalData: cTagsClass.internalData,
-						ctInit: () => {
-							cTagsClass.init();
-						},
-						ctSetData: () => {
-							cTagsClass.setData();
-						},
-						ctSetInit: () => {
-							cTagsClass.setInit();
-						},
-						ctSetListeners: () => {
-							cTagsClass.setListeners();
-						},
-						ctOnCustomSelectChange: (event) => {
-							cTagsClass.onCustomSelectChange(event);
-						},
-						ctOnFieldChange: (event) => {
-							cTagsClass.onFieldChange(event);
-						},
-						ctAreAllRulesValid: (logic, item) => {
-							cTagsClass.areAllRulesValid(logic, item);
-						},
-						ctIsRuleValid: (rule, inputValue, item, index) => {
-							cTagsClass.isRuleValid(rule, inputValue, item, index);
-						},
-						ctIsCustom: (element) => {
-							cTagsClass.isCustom(element);
+						conditionalTags: {
+							...cTagsClass
 						},
 					};
 				});
@@ -175,7 +91,7 @@ export class Form {
 		});
 
 		// Set localStorage data from global variable.
-		this.setLocalStorage();
+		this.utils.setLocalStorage();
 	};
 
 	// Handle form submit and all logic.
@@ -184,9 +100,9 @@ export class Form {
 
 		const element = event.target;
 
-		if (this.captcha) {
+		if (this.utils.captcha) {
 			grecaptcha.ready(() => {
-				grecaptcha.execute(this.captcha, {action: 'submit'}).then((token) => {
+				grecaptcha.execute(this.utils.captcha, {action: 'submit'}).then((token) => {
 					this.formSubmitCaptcha(element, token);
 				});
 			});
@@ -200,13 +116,13 @@ export class Form {
 		event.preventDefault();
 		const {target} = event;
 
-		this.formSubmit(target.closest(this.formSelector), target);
+		this.formSubmit(target.closest(this.utils.formSelector), target);
 	};
 
 	// Handle form submit and all logic in case we have captcha in place.
 	formSubmitCaptcha = (element, token) => {
 		// Loader show.
-		this.showLoader(element);
+		this.utils.showLoader(element);
 
 		// Populate body data.
 		const body = {
@@ -217,20 +133,19 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId),
+				formId: element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId),
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
 
-		let url = `${this.formSubmitRestApiUrl}-captcha`;
-
-		fetch(url, body)
+		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
 		.then((response) => {
 			return response.json();
 		})
 		.then((response) => {
+			console.log(response);
 			// On success state.
 			if (response.code >= 200 && response.code <= 299) {
 				this.formSubmit(element);
@@ -239,18 +154,18 @@ export class Form {
 			// Normal errors.
 			if (response.status === 'error') {
 				// Clear all errors.
-				this.util.reset(element);
+				this.utils.reset(element);
 
 				// Remove loader.
-				this.hideLoader(element);
+				this.utils.hideLoader(element);
 
 				// Set global msg.
-				this.setGlobalMsg(element, response.message, 'error');
+				this.utils.setGlobalMsg(element, response.message, 'error');
 
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
-					this.hideGlobalMsg(element);
-				}, parseInt(this.hideGlobalMessageTimeout, 10));
+					this.utils.hideGlobalMsg(element);
+				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
 			}
 		});
 	};
@@ -258,16 +173,16 @@ export class Form {
 	// Handle form submit and all logic.
 	formSubmit = (element, singleSubmit = false) => {
 		// Dispatch event.
-		this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_FORM_SUBMIT);
+		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
-		if (!this.captcha) {
-			this.showLoader(element);
+		if (!this.utils.captcha) {
+			this.utils.showLoader(element);
 		}
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
+		const formType = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// Populate body data.
 		const body = {
@@ -282,128 +197,98 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		let url = this.formSubmitRestApiUrl;
-
-		if (!this.formIsAdmin) {
-			url = `${this.formSubmitRestApiUrl}-${formType}`;
-		}
-
-		fetch(url, body)
+		fetch(!this.utils.formIsAdmin ? `${this.utils.formSubmitRestApiUrl}-${formType}` : this.utils.formSubmitRestApiUrl, body)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT);
+				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT);
 
 				// Clear all errors.
-				this.util.reset(element);
+				this.utils.reset(element);
 
 				// Remove loader.
-				this.hideLoader(element);
+				this.utils.hideLoader(element);
 
 				// On success state.
 				if (response.code >= 200 && response.code <= 299) {
 					// Send GTM.
-					this.gtmSubmit(element);
+					this.utils.gtmSubmit(element);
 
 					// Redirect on success.
-					if (element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
+					if (element.hasAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 						// Dispatch event.
-						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
-						this.setGlobalMsg(element, response.message, 'success');
+						this.utils.setGlobalMsg(element, response.message, 'success');
 
-						let redirectUrl = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) ?? '';
-
-						// Replace string templates used for passing data via url.
-						for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
-							if (typeof val === 'string') {
-								const { value, name } = JSON.parse(val);
-								redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
-							}
-						}
-
-						// Do the actual redirect after some time.
-						setTimeout(() => {
-							window.location.href = redirectUrl;
-						}, parseInt(this.redirectionTimeout, 10));
+						// Redirect to url and update url params from from data.
+						this.utils.redirectToUrl(element, formData);
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
-						this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
 
 						// Set global msg.
-						this.setGlobalMsg(element, response.message, 'success');
+						this.utils.setGlobalMsg(element, response.message, 'success');
 
 						// Clear form values.
-						this.resetForm(element);
+						this.utils.resetForm(element);
 					}
 				}
 
-				// On redirect state.
+				// On redirect with custom action state.
 				if (response.code >= 300 && response.code <= 399) {
 					// Send GTM.
-					this.gtmSubmit(element);
+					this.utils.gtmSubmit(element);
 
 					// Set global msg.
-					this.setGlobalMsg(element, response.message, 'success');
+					this.utils.setGlobalMsg(element, response.message, 'success');
 
 					// Do the actual redirect after some time.
 					setTimeout(() => {
 						element.submit();
-					}, parseInt(this.redirectionTimeout, 10));
+					}, parseInt(this.utils.redirectionTimeout, 10));
 				}
 
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
-					this.dispatchFormEvent(elemen<t, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
 
 					// Set global msg.
-					this.setGlobalMsg(element, response.message, 'error');
-				}
-
-				// Fatal errors, trigger bugsnag.
-				if (response.status === 'error_fatal') {
-					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_FATAL);
-
-					// Set global msg.
-					this.setGlobalMsg(element, response.message, 'error');
-
-					// Trigger error.
-					throw new Error(JSON.stringify(response));
+					this.utils.setGlobalMsg(element, response.message, 'error');
 				}
 
 				// Validate fields error.
 				if (response.status === 'error_validation') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
+					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
 
 					// Output field errors.
-					this.outputErrors(element, response.validation);
+					this.utils.outputErrors(element, response.validation);
 				}
 
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
-					this.hideGlobalMsg(element);
-				}, parseInt(this.hideGlobalMessageTimeout, 10));
+					this.utils.hideGlobalMsg(element);
+				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
 
 				// Dispatch event.
-				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_END);
+				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
 			})
 			.catch(() => {
-				this.setGlobalMsg(element, this.formServerErrorMsg, 'error');
+				this.utils.setGlobalMsg(element, this.utils.formServerErrorMsg, 'error');
 
 				// Remove loader.
-				this.hideLoader(element);
+				this.utils.hideLoader(element);
 
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
-					this.hideGlobalMsg(element);
-				}, parseInt(this.hideGlobalMessageTimeout, 10));
+					this.utils.hideGlobalMsg(element);
+				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
 			});
 	};
 
@@ -411,18 +296,18 @@ export class Form {
 	getFormData = (element, singleSubmit = false) => {
 		const formData = new FormData();
 
-		const groups = element.querySelectorAll(`${this.groupSelector}`);
+		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
 
-		const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+		const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldId);
+				const groupId = group.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldId);
 				const groupInner = group.querySelectorAll(`
-					${this.groupInnerSelector} input,
-					${this.groupInnerSelector} select,
-					${this.groupInnerSelector} textarea
+					${this.utils.groupInnerSelector} input,
+					${this.utils.groupInnerSelector} select,
+					${this.utils.groupInnerSelector} textarea
 				`);
 
 				if (groupInner.length) {
@@ -451,12 +336,12 @@ export class Form {
 		}
 
 		let items = element.querySelectorAll(`
-			input:not(${this.groupInnerSelector} input),
-			select:not(${this.groupInnerSelector} select),
-			textarea:not(${this.groupInnerSelector} textarea)
+			input:not(${this.utils.groupInnerSelector} input),
+			select:not(${this.utils.groupInnerSelector} select),
+			textarea:not(${this.utils.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
+		const formType = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -495,7 +380,7 @@ export class Form {
 			};
 
 			// Adde internal type for additional logic in some integrations.
-			data.internalType = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldTypeInternal);
+			data.internalType = item.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldTypeInternal);
 
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
@@ -504,7 +389,7 @@ export class Form {
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
 				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+				data.value = item.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
 			// Append files field.
@@ -514,7 +399,7 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.utils.isCustom(item)) {
-					fileList = this.files[formId][id] ?? [];
+					fileList = this.utils.files[formId][id] ?? [];
 				}
 
 				// Loop files and append.
@@ -532,58 +417,58 @@ export class Form {
 		}
 
 		// Add form ID field.
-		formData.append(this.FORM_CUSTOM_FORM_PARAMS.postId, JSON.stringify({
+		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.postId, JSON.stringify({
 			value: formId,
 			type: 'hidden',
 		}));
 
 		// Add form type field.
-		formData.append(this.FORM_CUSTOM_FORM_PARAMS.type, JSON.stringify({
+		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.type, JSON.stringify({
 			value: formType,
 			type: 'hidden',
 		}));
 
 		// Add form action field.
-		formData.append(this.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
+		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
 			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add action external field.
-		formData.append(this.FORM_CUSTOM_FORM_PARAMS.actionExternal, JSON.stringify({
-			value: element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.actionExternal),
+		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.actionExternal, JSON.stringify({
+			value: element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
 
 		// Add additional options for HubSpot only.
-		if (formType === 'hubspot' && !this.formIsAdmin) {
-			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotCookie, JSON.stringify({
+		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
+			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotCookie, JSON.stringify({
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
-			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotPageName, JSON.stringify({
+			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotPageName, JSON.stringify({
 				value: document.title,
 				type: 'hidden',
 			}));
 
-			formData.append(this.FORM_CUSTOM_FORM_PARAMS.hubspotPageUrl, JSON.stringify({
+			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotPageUrl, JSON.stringify({
 				value: window.location.href,
 				type: 'hidden',
 			}));
 		}
 
-		if (singleSubmit && this.formIsAdmin) {
-			formData.append(this.FORM_CUSTOM_FORM_PARAMS.singleSubmit, JSON.stringify({
+		if (singleSubmit && this.utils.formIsAdmin) {
+			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.singleSubmit, JSON.stringify({
 				value: 'true',
 				type: 'hidden',
 			}));
 		}
 
 		// Set localStorage to hidden field.
-	 const storage = this.getLocalStorage();
+	 const storage = this.utils.getLocalStorage();
 	 if (storage) {
-		formData.append(this.FORM_CUSTOM_FORM_PARAMS.storage, JSON.stringify({
+		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.storage, JSON.stringify({
 			value: storage,
 			type: 'hidden',
 		}));
@@ -592,231 +477,13 @@ export class Form {
 		return formData;
 	};
 
-	// Output all error for fields.
-	outputErrors = (element, fields) => {
-		// Set error classes and error text on fields which have validation errors.
-		for (const [key] of Object.entries(fields)) {
-			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
-
-			item?.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
-
-			if (item !== null) {
-				item.innerHTML = fields[key];
-			}
-		}
-
-		// Scroll to element if the condition is right.
-		if (typeof fields !== 'undefined' && this.formDisableScrollToFieldOnError !== '1') {
-			const firstItem = Object.keys(fields)[0];
-
-			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
-		}
-	};
-
-	// Reset form values if the condition is right.
-	resetForm = (element) => {
-		if (this.formResetOnSuccess) {
-			element.reset();
-
-			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
-
-			// Unset the choices in the submitted form.
-			if (this.customSelects[formId]) {
-				this.customSelects[formId].forEach((item) => {
-					item.setChoiceByValue('');
-				});
-			}
-
-			// Unset the choices in the submitted form.
-			if (this.customFiles[formId]) {
-				this.customFiles[formId].forEach((item) => {
-					item.removeAllFiles();
-				});
-			}
-
-			const fields = element.querySelectorAll(this.fieldSelector);
-
-			[...fields].forEach((item) => {
-				item.classList.remove(FORM_SELECTORS.CLASS_FILLED);
-				item.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-				item.classList.remove(FORM_SELECTORS.CLASS_HAS_ERROR);
-			});
-
-			// Remove focus from last input.
-			document.activeElement.blur();
-
-			// Dispatch event.
-			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_RESET);
-		}
-	};
-
-	// Show loader.
-	showLoader = (element) => {
-		const loader = element.querySelector(this.loaderSelector);
-
-		element?.classList?.add(FORM_SELECTORS.CLASS_LOADING);
-
-		if (!loader) {
-			return;
-		}
-
-		loader.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
-	};
-
-	// Hide loader.
-	hideLoader = (element) => {
-		const loader = element.querySelector(this.loaderSelector);
-
-		setTimeout(() => {
-			element?.classList?.remove(FORM_SELECTORS.CLASS_LOADING);
-
-			if (!loader) {
-				return;
-			}
-
-			loader.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-		}, parseInt(this.hideLoadingStateTimeout, 10));
-	};
-
-	// Set global message.
-	setGlobalMsg = (element, msg, status) => {
-		if(element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) && status === 'success') {
-			return;
-		}
-
-		const messageContainer = element.querySelector(this.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
-		messageContainer.dataset.status = status;
-		messageContainer.innerHTML = `<span>${msg}</span>`;
-
-		// Scroll to msg if the condition is right.
-		if (status === 'success' && this.formDisableScrollToGlobalMessageOnSuccess !== '1') {
-			this.scrollToElement(messageContainer);
-		}
-	};
-
-	// Hide global message.
-	hideGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-	}
-
-	// Submit GTM event.
-	gtmSubmit(element) {
-		const eventName = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingEventName);
-
-		if (eventName) {
-			const gtmData = this.getGtmData(element, eventName);
-
-			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(element, FORM_EVENTS.BEFORE_GTM_DATA_PUSH);
-				window.dataLayer.push(gtmData);
-			}
-		}
-	}
-
-	// Build GTM data for the data layer.
-	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking}]`);
-		const dataTemp = {};
-
-		if (!items.length) {
-			return {};
-		}
-
-		[...items].forEach((item) => {
-			const tracking = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking);
-
-			if (tracking) {
-				const {type, checked} = item;
-
-				if (typeof dataTemp[tracking] === 'undefined') {
-					if (type === 'checkbox') {
-						dataTemp[tracking] = [];
-					} else {
-						dataTemp[tracking] = '';
-					}
-				}
-
-				if ((type === 'checkbox' || type === 'radio') && !checked) {
-					return;
-				}
-
-				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingSelectLabel)) {
-					dataTemp[tracking] = item.selectedOptions[0].label;
-					return;
-				}
-
-				if (type === 'checkbox') {
-					dataTemp[tracking].push(item.value);
-					return;
-				}
-
-				dataTemp[tracking] = item.value;
-			}
-		});
-
-		const data = {};
-
-		for (const [key, value] of Object.entries(dataTemp)) {
-			if (Array.isArray(value)) {
-				switch (value.length) {
-					case 0:
-						data[key] = false;
-						break;
-					case 1:
-						if (value[0] === 'on') {
-							data[key] = true;
-						} else {
-							data[key] = value;
-						}
-						break;
-					default:
-						data[key] = value;
-						break;
-				}
-			} else {
-				data[key] = value;
-			}
-		}
-
-		return Object.assign({}, { event: eventName, ...data });
-	}
-
-	// Scroll to specific element.
-	scrollToElement = (element) => {
-		if (element !== null) {
-			element.scrollIntoView({block: 'start', behavior: 'smooth'});
-		}
-	};
-
-	// Dispatch custom event.
-	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(name, {
-			bubbles: true
-		});
-
-		element.dispatchEvent(event);
-	}
-
 	// Setup Regular field.
 	setupInputField = (input) => {
-		this.preFillOnInit(input, input.type);
+		this.utils.preFillOnInit(input, input.type);
 
-		input.addEventListener('keydown', this.onFocusEvent);
-		input.addEventListener('focus', this.onFocusEvent);
-		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('keydown', this.utils.onFocusEvent);
+		input.addEventListener('focus', this.utils.onFocusEvent);
+		input.addEventListener('blur', this.utils.onBlurEvent);
 	};
 
 	// Setup Select field.
@@ -832,28 +499,28 @@ export class Form {
 					allowHTML: true,
 				});
 
-				this.preFillOnInit(choices, 'select-custom');
+				this.utils.preFillOnInit(choices, 'select-custom');
 
-				this.customSelects[formId].push(choices);
+				this.utils.customSelects[formId].push(choices);
 
-				select.closest('.choices').addEventListener('focus', this.onFocusEvent);
-				select.closest('.choices').addEventListener('blur', this.onBlurEvent);
+				select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
+				select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
 			});
 		} else {
-			this.preFillOnInit(option, 'select');
+			this.utils.preFillOnInit(option, 'select');
 
-			select.addEventListener('focus', this.onFocusEvent);
-			select.addEventListener('blur', this.onBlurEvent);
+			select.addEventListener('focus', this.utils.onFocusEvent);
+			select.addEventListener('blur', this.utils.onBlurEvent);
 		}
 	};
 
 	// Setup Textarea field.
 	setupTextareaField = (textarea, formId) => {
-		this.preFillOnInit(textarea, 'textarea');
+		this.utils.preFillOnInit(textarea, 'textarea');
 
-		textarea.addEventListener('keydown', this.onFocusEvent);
-		textarea.addEventListener('focus', this.onFocusEvent);
-		textarea.addEventListener('blur', this.onBlurEvent);
+		textarea.addEventListener('keydown', this.utils.onFocusEvent);
+		textarea.addEventListener('focus', this.utils.onFocusEvent);
+		textarea.addEventListener('blur', this.utils.onBlurEvent);
 
 		if (this.utils.isCustom(textarea)) {
 			import('autosize').then((autosize) => {
@@ -862,7 +529,7 @@ export class Form {
 
 				autosize.default(textarea);
 
-				this.customTextareas[formId].push(autosize.default);
+				this.utils.customTextareas[formId].push(autosize.default);
 			});
 		}
 	};
@@ -873,41 +540,41 @@ export class Form {
 
 			const fileId = file?.id;
 
-			if (typeof this.files[formId] === 'undefined') {
-				this.files[formId] = {};
+			if (typeof this.utils.files[formId] === 'undefined') {
+				this.utils.files[formId] = {};
 			}
 
-			if (typeof this.files[formId][fileId] === 'undefined') {
-				this.files[formId][fileId] = [];
+			if (typeof this.utils.files[formId][fileId] === 'undefined') {
+				this.utils.files[formId][fileId] = [];
 			}
 
 			import('dropzone').then((Dropzone) => {
 				// Init dropzone.
 				const myDropzone = new Dropzone.default(
-					file.closest(this.fieldSelector),
+					file.closest(this.utils.fieldSelector),
 					{
 						url: "/",
 						addRemoveLinks: true,
 						autoProcessQueue: false,
 						autoDiscover: false,
 						maxFiles: !file.multiple ? 1 : null,
-						dictRemoveFile: this.fileCustomRemoveLabel,
+						dictRemoveFile: this.utils.fileCustomRemoveLabel,
 					}
 				);
 
-				this.customFiles[formId].push(myDropzone);
+				this.utils.customFiles[formId].push(myDropzone);
 
 				// On add one file.
 				myDropzone.on("addedfile", (file) => {
 					setTimeout(() => {
-						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_ACTIVE);
+						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
 					}, 200);
 
 					setTimeout(() => {
-						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_FILLED);
+						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
 					}, 1200);
 
-					this.files[formId][fileId].push(file);
+					this.utils.files[formId][fileId].push(file);
 				});
 
 				// On max file size reached.
@@ -918,19 +585,19 @@ export class Form {
 				// On error while upload.
 				myDropzone.on("error", (file) => {
 					setTimeout(() => {
-						file.previewTemplate.classList.add(FORM_SELECTORS.CLASS_HAS_ERROR);
+						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
 					}, 1500);
 
-					const itemsLeft = this.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+					const itemsLeft = this.utils.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
 
-					this.files[formId][fileId] = [...itemsLeft];
+					this.utils.files[formId][fileId] = [...itemsLeft];
 				});
 
 				// On remove files.
 				myDropzone.on("removedfile", (file) => {
-					const itemsLeft = this.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+					const itemsLeft = this.utils.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
 
-					this.files[formId][fileId] = [...itemsLeft];
+					this.utils.files[formId][fileId] = [...itemsLeft];
 
 					myDropzone.setupEventListeners();
 				});
@@ -943,8 +610,8 @@ export class Form {
 				// Button inside wrap element.
 				const button = file.parentNode.querySelector('a');
 
-				button.addEventListener('focus', this.onFocusEvent);
-				button.addEventListener('blur', this.onBlurEvent);
+				button.addEventListener('focus', this.utils.onFocusEvent);
+				button.addEventListener('blur', this.utils.onBlurEvent);
 			});
 		}
 	};
@@ -957,255 +624,72 @@ export class Form {
 		const index = event.currentTarget.getAttribute('dropzone-index');
 		const formId = event.currentTarget.getAttribute('dropzone-form-id');
 
-		this.customFiles[formId][index].hiddenFileInput.click();
+		this.utils.customFiles[formId][index].hiddenFileInput.click();
 	};
 
-	// Prefill inputs active/filled on init.
-	preFillOnInit = (input, type) => {
-		switch (type) {
-			case 'checkbox':
-			case 'radio':
-				if (input.checked) {
-					input.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
-				}
-				break;
-			case 'select-custom': {
-				const customSelect = input.config.choices;
-
-				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
-					input.passedElement.element.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
-				}
-				break;
-			}
-			default:
-				if (input.value && input.value.length) {
-					input.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_FILLED);
-				}
-				break;
-		}
-	};
-
-	// On Focus event for regular fields.
-	onFocusEvent = (event) => {
-		event.target.closest(this.fieldSelector).classList.add(FORM_SELECTORS.CLASS_ACTIVE);
-	};
-
-	// On Blur generic method. Check for length of value.
-	onBlurEvent = (event) => {
-		const element = event.target;
-		const field = element.closest(this.fieldSelector);
-
-		let toCheck = element;
-		let condition = false;
-		let type = element.type;
-
-		if (element.classList.contains('choices')) {
-			type = 'choices';
-		}
-
-		switch (type) {
-			case 'radio':
-				condition = element.checked;
-				break;
-			case 'checkbox':
-				condition = field.querySelectorAll('input:checked').length;
-				break;
-			case 'select':
-				toCheck = element.options[element.options.selectedIndex];
-
-				condition = toCheck.value && toCheck.value.length;
-				break;
-			case 'choices':
-				toCheck = element.querySelector('option');
-
-				condition = toCheck.value && toCheck.value.length;
-				break;
-			default:
-				condition = element.value && element.value.length;
-				break;
-		}
-
-		if (condition) {
-			field.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-			field.classList.add(FORM_SELECTORS.CLASS_FILLED);
-		} else {
-			field.classList.remove(FORM_SELECTORS.CLASS_ACTIVE, FORM_SELECTORS.CLASS_FILLED);
-		}
-	};
-
+	// Remove all event listeners from elements.
 	removeEvents() {
-		const elements = document.querySelectorAll(this.formSelector);
+		const elements = document.querySelectorAll(this.utils.formSelector);
 
 		[...elements].forEach((element) => {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmit);
 
-			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
 
-			const inputs = element.querySelectorAll(this.inputSelector);
-			const textareas = element.querySelectorAll(this.textareaSelector);
-			const selects = element.querySelectorAll(this.selectSelector);
-			const files = element.querySelectorAll(this.fileSelector);
+			const inputs = element.querySelectorAll(this.utils.inputSelector);
+			const textareas = element.querySelectorAll(this.utils.textareaSelector);
+			const selects = element.querySelectorAll(this.utils.selectSelector);
+			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			[...inputs].forEach((input) => {
-				input.removeEventListener('keydown', this.onFocusEvent);
-				input.removeEventListener('focus', this.onFocusEvent);
-				input.removeEventListener('blur', this.onBlurEvent);
+				input.removeEventListener('keydown', this.utils.onFocusEvent);
+				input.removeEventListener('focus', this.utils.onFocusEvent);
+				input.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
 			[...selects].forEach((select) => {
 				if (this.utils.isCustom(select)) {
-					if (typeof this.customSelects?.[formId] !== 'undefined') {
-						this.customSelects[formId].destroy();
-						delete this.customSelects[formId];
+					if (typeof this.utils.customSelects?.[formId] !== 'undefined') {
+						this.utils.customSelects[formId].destroy();
+						delete this.utils.customSelects[formId];
 					}
 				} else {
-					select.removeEventListener('focus', this.onFocusEvent);
-					select.removeEventListener('blur', this.onBlurEvent);
+					select.removeEventListener('focus', this.utils.onFocusEvent);
+					select.removeEventListener('blur', this.utils.onBlurEvent);
 				}
 			});
 
 			// Setup textarea inputs.
 			[...textareas].forEach((textarea) => {
-				textarea.removeEventListener('keydown', this.onFocusEvent);
-				textarea.removeEventListener('focus', this.onFocusEvent);
-				textarea.removeEventListener('blur', this.onBlurEvent);
+				textarea.removeEventListener('keydown', this.utils.onFocusEvent);
+				textarea.removeEventListener('focus', this.utils.onFocusEvent);
+				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
 				if (this.utils.isCustom(textarea)) {
-					if (typeof this.customTextareas?.[formId] !== 'undefined') {
-						this.customTextareas[formId].destroy();
-						delete this.customTextareas[formId];
+					if (typeof this.utils.customTextareas?.[formId] !== 'undefined') {
+						this.utils.customTextareas[formId].destroy();
+						delete this.utils.customTextareas[formId];
 					}
 				}
 			});
 
 			// Setup file single inputs.
 			[...files].forEach((file) => {
-				if (typeof this.customFiles?.[formId] !== 'undefined') {
-					this.customFiles[formId].destroy();
-					delete this.customFiles[formId];
+				if (typeof this.utils.customFiles?.[formId] !== 'undefined') {
+					this.utils.customFiles[formId].destroy();
+					delete this.utils.customFiles[formId];
 				}
 
 				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
 
 				const button = file.parentNode.querySelector('a');
 
-				button.removeEventListener('focus', this.onFocusEvent);
-				button.removeEventListener('blur', this.onBlurEvent);
+				button.removeEventListener('focus', this.utils.onFocusEvent);
+				button.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
-			this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_EVENTS_CLEAR);
+			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_this.utils.EVENTS_CLEAR);
 		});
-	}
-
-	setLocalStorage() {
-		// If storage is not set in the backend bailout.
-		// Backend provides the ability to limit what tags are allowed to store in local storage.
-		if (this.storageConfig === '') {
-			return;
-		}
-
-		const storageConfig = JSON.parse(this.storageConfig);
-
-		const allowedTags = storageConfig?.allowed;
-		const expiration = storageConfig?.expiration ?? '30';
-
-		// Missing data from backend, bailout.
-		if (!allowedTags) {
-			return;
-		}
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
-		console.log(searchParams.entries());
-
-		// Get storage from backend this is considered new by the page request.
-		const newStorage = {};
-
-		// Loop entries and get new storage values.
-		for (const [key, value] of searchParams.entries()) {
-			// Bailout if not allowed or empty
-			if (!allowedTags.includes(key) || value === '') {
-				continue;
-			}
-
-			// Add valid tag.
-			newStorage[key] = value;
-		}
-
-		// Bailout if nothing is set from allowed tags or everything is empty.
-		if (Object.keys(newStorage).length === 0) {
-			return;
-		}
-
-		// Add current timestamp to new storage.
-		newStorage.timestamp = Date.now();
-
-		// Store in a new variable for later usage.
-		const newStorageFinal = {...newStorage};
-		delete newStorageFinal.timestamp;
-
-		// current storage is got from local storage.
-		const currentStorage = JSON.parse(this.getLocalStorage());
-
-		// Store in a new variable for later usage.
-		const currentStorageFinal = {...currentStorage};
-		delete currentStorageFinal.timestamp;
-
-		// If storage exists check if it is expired.
-		if (this.getLocalStorage() !== null) {
-			// Update expiration date by number of days from the current
-			let expirationDate = new Date(currentStorage.timestamp);
-			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
-
-			// Remove expired storage if it exists.
-			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.STORAGE_NAME);
-			}
-		}
-
-		// Create new storage if this is the first visit or it was expired.
-		if (this.getLocalStorage() === null) {
-			localStorage.setItem(
-				this.STORAGE_NAME,
-				JSON.stringify(newStorage)
-			);
-			return;
-		}
-
-		// Prepare new output.
-		const output = {
-			...currentStorageFinal,
-			...newStorageFinal,
-		};
-
-		// If output is empty something was wrong here and just bailout.
-		if (Object.keys(output).length === 0) {
-			return;
-		}
-
-		// If nothing has changed bailout.
-		if (JSON.stringify(currentStorageFinal) === JSON.stringify(output)) {
-			return;
-		}
-
-		// Add timestamp to the new output.
-		const finalOutput = {
-			...output,
-			timestamp: newStorage.timestamp,
-		};
-
-		// Update localStorage with the new item.
-		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-	}
-
-	getLocalStorage() {
-		return localStorage.getItem(this.STORAGE_NAME);
 	}
 }

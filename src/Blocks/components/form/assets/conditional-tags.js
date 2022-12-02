@@ -1,22 +1,17 @@
 import { debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import {
-	FORM_SELECTORS,
-	CONDITIONAL_TAGS_CONSTANTS,
-	utilIsCustom,
-} from './utilities';
+import { Utils } from './utilities';
 
+/**
+ * Main conditon tags class.
+ */
 export class ConditionalTags {
 	constructor(options) {
-		// Detect if form is used in admin for settings or on the frontend.
-		this.formIsAdmin = options.formIsAdmin || false;
-
-		// Selectors.
-		this.formSelector = options.formSelector;
-		this.fieldSelector = options.fieldSelector;
-		this.customSelector = options.customSelector;
+		console.log(options);
+		/** @type Utils */
+		this.utils = options ?? new Utils();
 
 		// Data
-		this.data = options.data;
+		this.data = options.data ?? '';
 
 		// Internal Data Constants.
 		this.DATA_FIELDS = 'fields';
@@ -32,15 +27,15 @@ export class ConditionalTags {
 
 		// Map all conditional logic as ca object.
 		this.conditionalLogic = {
-			[CONDITIONAL_TAGS_CONSTANTS.IS]: (input, value) => value === input,
-			[CONDITIONAL_TAGS_CONSTANTS.ISN]: (input, value) => value !== input,
-			[CONDITIONAL_TAGS_CONSTANTS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
-			[CONDITIONAL_TAGS_CONSTANTS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
-			[CONDITIONAL_TAGS_CONSTANTS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
-			[CONDITIONAL_TAGS_CONSTANTS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
-			[CONDITIONAL_TAGS_CONSTANTS.C]: (input, value) => input.includes(value),
-			[CONDITIONAL_TAGS_CONSTANTS.SW]: (input, value) => input.startsWith(value),
-			[CONDITIONAL_TAGS_CONSTANTS.EW]: (input, value) => input.endsWith(value),
+			[this.utils.CONDITIONAL_TAGS.IS]: (input, value) => value === input,
+			[this.utils.CONDITIONAL_TAGS.ISN]: (input, value) => value !== input,
+			[this.utils.CONDITIONAL_TAGS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS.C]: (input, value) => input.includes(value),
+			[this.utils.CONDITIONAL_TAGS.SW]: (input, value) => input.startsWith(value),
+			[this.utils.CONDITIONAL_TAGS.EW]: (input, value) => input.endsWith(value),
 		};
 	}
 
@@ -83,21 +78,21 @@ export class ConditionalTags {
 	// Set init state of fields on page load.
 	setInit() {
 		for (const [key, value] of Object.entries(this.internalData[this.DATA_FIELDS])) {
-			const item = document.querySelector(`${this.formSelector} [name="${key}"]`);
+			const item = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
 
 			if (!item) {
 				continue;
 			}
 
-			const field = item.closest(this.fieldSelector);
+			const field = item.closest(this.utils.fieldSelector);
 
 			const {
 				action,
 			} = value;
 
-			if (action === CONDITIONAL_TAGS_CONSTANTS.SHOW) {
+			if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
 				// If action is to show the initial state is hide.
-				field.classList.add(FORM_SELECTORS.CLASS_HIDDEN);
+				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
 		}
 	}
@@ -107,7 +102,7 @@ export class ConditionalTags {
 		// Loop items from all rules mapped earlier.
 		Object.entries(this.internalData[this.DATA_EVENT_ITEMS]).forEach(([key]) => {
 			// Find that item by ID.
-			const item = document.querySelector(`${this.formSelector} [name="${key}"]`);
+			const item = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
 
 			// Bailout if non existing.
 			if (!item) {
@@ -115,7 +110,7 @@ export class ConditionalTags {
 			}
 
 			// Add event.
-			if (this.isCustom(item) && item.localName === 'select') {
+			if (this.utils.isCustom(item) && item.localName === 'select') {
 				item.addEventListener('change', this.onCustomSelectChange);
 			} else {
 				item.addEventListener('input', debounce(this.onFieldChange, 250));
@@ -147,7 +142,7 @@ export class ConditionalTags {
 			const tags = this.internalData[this.DATA_FIELDS][item];
 
 			// Find that input item but ID.
-			const input = document.querySelector(`${this.formSelector} [name="${item}"]`);
+			const input = document.querySelector(`${this.utils.formSelector} [name="${item}"]`);
 
 			// Bailout if non existing.
 			if (!input) {
@@ -172,24 +167,24 @@ export class ConditionalTags {
 				}
 
 				// Find input field selector.
-				const field = input.closest(this.fieldSelector);
+				const field = input.closest(this.utils.fieldSelector);
 
 				this.isRuleValid(rule, inputValue, item, index);
 
 				// Validate rule by checking input value.
 				if (this.areAllRulesValid(logic, item)) {
 					// If rule is valid do action.
-					if (action === CONDITIONAL_TAGS_CONSTANTS.SHOW) {
-						field.classList.remove(FORM_SELECTORS.CLASS_HIDDEN);
+					if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
+						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 					} else {
-						field.classList.add(FORM_SELECTORS.CLASS_HIDDEN);
+						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 					}
 				} else {
 					// If rule is not valid do action by resting the field to the original state.
-					if (action === CONDITIONAL_TAGS_CONSTANTS.SHOW) {
-						field.classList.add(FORM_SELECTORS.CLASS_HIDDEN);
+					if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
+						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 					} else {
-						field.classList.remove(FORM_SELECTORS.CLASS_HIDDEN);
+						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 					}
 				}
 			});
@@ -200,7 +195,7 @@ export class ConditionalTags {
 	areAllRulesValid(logic, item) {
 		const ref = this.internalData[this.DATA_REFERENCE][item];
 
-		if (logic === CONDITIONAL_TAGS_CONSTANTS.ANY) {
+		if (logic === this.utils.CONDITIONAL_TAGS.ANY) {
 			if (ref.includes(true)) {
 				return true;
 			}
@@ -227,10 +222,5 @@ export class ConditionalTags {
 		this.internalData[this.DATA_REFERENCE][item][index] = output;
 
 		return output;
-	}
-
-	// Determine if field is custom type or normal.
-	isCustom(element) {
-		return utilIsCustom(element, this.fieldSelector, this.customSelector.substring(1), this.formIsAdmin);
 	}
 }
