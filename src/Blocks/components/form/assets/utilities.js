@@ -78,11 +78,79 @@ export const utilIsCustom = (element, fieldSelector, customSelector, isAdmin) =>
 	return element.closest(fieldSelector).classList.contains(customSelector) && !isAdmin;
 };
 
+export const utils = (
+	formSelector,
+	formIsAdmin,
+) => {
+
+	const submitSingleSelector =  `${formSelector}-single-submit`;
+	const errorSelector =  `${formSelector}-error`;
+	const loaderSelector =  `${formSelector}-loader`;
+	const globalMsgSelector =  `${formSelector}-global-msg`;
+	const groupSelector =  `${formSelector}-group`;
+	const groupInnerSelector =  `${formSelector}-group-inner`;
+	const customSelector =  `${formSelector}-custom`;
+	const fieldSelector =  `${formSelector}-field`;
+	const inputSelector =  `${fieldSelector} input`;
+	const textareaSelector =  `${fieldSelector} textarea`;
+	const selectSelector =  `${fieldSelector} select`;
+	const fileSelector =  `${fieldSelector} input[type='file']`;
+	const conditionalTagsSelector =  `${fieldSelector} input[id='conditional-tags']`;
+
+	return {
+		submitSingleSelector,
+		errorSelector,
+		loaderSelector,
+		globalMsgSelector,
+		groupSelector,
+		groupInnerSelector,
+		customSelector,
+		fieldSelector,
+		inputSelector,
+		textareaSelector,
+		selectSelector,
+		fileSelector,
+		conditionalTagsSelector,
+
+		// Reset for in general.
+		reset: (element) => {
+			const items = element.querySelectorAll(errorSelector);
+			[...items].forEach((item) => {
+				item.innerHTML = '';
+			});
+		
+			// Reset all error classes on fields.
+			element.querySelectorAll(`.${FORM_SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(FORM_SELECTORS.CLASS_HAS_ERROR));
+
+			this.unsetGlobalMsg(element);
+		},
+
+		// Unset global message.
+		unsetGlobalMsg: (element) => {
+			console.log(element);
+			const messageContainer = element.querySelector(globalMsgSelector);
+		
+			if (!messageContainer) {
+				return;
+			}
+		
+			messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
+			messageContainer.dataset.status = '';
+			messageContainer.innerHTML = '';
+		},
+
+		// Determine if field is custom type or normal.
+		isCustom: (element) => {
+			return element.closest(fieldSelector).classList.contains(customSelector.substring(1)) && !formIsAdmin;
+		},
+	}
+};
+
 /**
  * List all utility methods exported in the window object.
  */
 export const windowUtilities = {
 	utilIsCustom: (element, fieldSelector, customSelector, isAdmin) => {
 		utilIsCustom(element, fieldSelector, customSelector, isAdmin);
-	}
+	},
 };

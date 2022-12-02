@@ -5,7 +5,7 @@ import {
 	FORM_EVENTS,
 	FORM_SELECTORS,
 	CONDITIONAL_TAGS_CONSTANTS,
-	utilIsCustom,
+	utils,
 } from './utilities';
 
 export class Form {
@@ -18,6 +18,12 @@ export class Form {
 
 		// Selectors.
 		this.formSelector = options.formSelector;
+
+		this.utils = utils(
+			this.formSelector,
+			this.formIsAdmin
+		);
+
 		this.submitSingleSelector = `${this.formSelector}-single-submit`;
 		this.errorSelector = `${this.formSelector}-error`;
 		this.loaderSelector = `${this.formSelector}-loader`;
@@ -233,7 +239,7 @@ export class Form {
 			// Normal errors.
 			if (response.status === 'error') {
 				// Clear all errors.
-				this.reset(element);
+				this.util.reset(element);
 
 				// Remove loader.
 				this.hideLoader(element);
@@ -291,7 +297,7 @@ export class Form {
 				this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT);
 
 				// Clear all errors.
-				this.reset(element);
+				this.util.reset(element);
 
 				// Remove loader.
 				this.hideLoader(element);
@@ -353,7 +359,7 @@ export class Form {
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					this.dispatchFormEvent(elemen<t, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR);
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -507,7 +513,7 @@ export class Form {
 				let fileList = files;
 
 				// If custom file use files got from the global object of files uploaded.
-				if (this.isCustom(item)) {
+				if (this.utils.isCustom(item)) {
 					fileList = this.files[formId][id] ?? [];
 				}
 
@@ -644,19 +650,6 @@ export class Form {
 		}
 	};
 
-	// Reset for in general.
-	reset = (element) => {
-		const items = element.querySelectorAll(this.errorSelector);
-		[...items].forEach((item) => {
-			item.innerHTML = '';
-		});
-
-		// Reset all error classes on fields.
-		element.querySelectorAll(`.${FORM_SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(FORM_SELECTORS.CLASS_HAS_ERROR));
-
-		this.unsetGlobalMsg(element);
-	};
-
 	// Show loader.
 	showLoader = (element) => {
 		const loader = element.querySelector(this.loaderSelector);
@@ -706,19 +699,6 @@ export class Form {
 			this.scrollToElement(messageContainer);
 		}
 	};
-
-	// Unset global message.
-	unsetGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.remove(FORM_SELECTORS.CLASS_ACTIVE);
-		messageContainer.dataset.status = '';
-		messageContainer.innerHTML = '';
-	}
 
 	// Hide global message.
 	hideGlobalMsg(element) {
@@ -843,7 +823,7 @@ export class Form {
 	setupSelectField = (select, formId) => {
 		const option = select.querySelector('option');
 
-		if (this.isCustom(select)) {
+		if (this.utils.isCustom(select)) {
 			import('choices.js').then((Choices) => {
 				const choices = new Choices.default(select, {
 					searchEnabled: false,
@@ -875,7 +855,7 @@ export class Form {
 		textarea.addEventListener('focus', this.onFocusEvent);
 		textarea.addEventListener('blur', this.onBlurEvent);
 
-		if (this.isCustom(textarea)) {
+		if (this.utils.isCustom(textarea)) {
 			import('autosize').then((autosize) => {
 				textarea.setAttribute('rows', '1');
 				textarea.setAttribute('cols', '');
@@ -889,7 +869,7 @@ export class Form {
 
 	// Setup file single field.
 	setupFileField = (file, formId, index) => {
-		if (this.isCustom(file)) {
+		if (this.utils.isCustom(file)) {
 
 			const fileId = file?.id;
 
@@ -1053,11 +1033,6 @@ export class Form {
 		}
 	};
 
-	// Determine if field is custom type or normal.
-	isCustom(item) {
-		return utilIsCustom(item, this.fieldSelector, this.customSelector.substring(1), this.formIsAdmin);
-	}
-
 	removeEvents() {
 		const elements = document.querySelectorAll(this.formSelector);
 
@@ -1079,7 +1054,7 @@ export class Form {
 			});
 
 			[...selects].forEach((select) => {
-				if (this.isCustom(select)) {
+				if (this.utils.isCustom(select)) {
 					if (typeof this.customSelects?.[formId] !== 'undefined') {
 						this.customSelects[formId].destroy();
 						delete this.customSelects[formId];
@@ -1096,7 +1071,7 @@ export class Form {
 				textarea.removeEventListener('focus', this.onFocusEvent);
 				textarea.removeEventListener('blur', this.onBlurEvent);
 
-				if (this.isCustom(textarea)) {
+				if (this.utils.isCustom(textarea)) {
 					if (typeof this.customTextareas?.[formId] !== 'undefined') {
 						this.customTextareas[formId].destroy();
 						delete this.customTextareas[formId];
