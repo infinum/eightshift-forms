@@ -37,14 +37,14 @@ export class Form {
 			}
 
 			// Get form ID.
-			const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
 			// All fields selectors.
 			const inputs = element.querySelectorAll(this.utils.inputSelector);
 			const textareas = element.querySelectorAll(this.utils.textareaSelector);
 			const selects = element.querySelectorAll(this.utils.selectSelector);
 			const files = element.querySelectorAll(this.utils.fileSelector);
-			const conditionalTagsData = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.conditionalTags);
+			const conditionalTagsData = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -82,16 +82,20 @@ export class Form {
 					// Populate window with necessary functions and prefix everything with "ct".
 					window['esForms'] = {
 						...window['esForms'],
-						conditionalTags: {
-							...cTagsClass
-						},
+						conditionalTags: cTagsClass,
 					};
 				});
 			}
+
+			// Triger event that form is fully loaded.
+			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
 		});
 
 		// Set localStorage data from global variable.
 		this.utils.setLocalStorage();
+
+		// Triger event that forms are fully loaded.
+		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
 	};
 
 	// Handle form submit and all logic.
@@ -133,7 +137,7 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId),
+				formId: element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId),
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -145,7 +149,6 @@ export class Form {
 			return response.json();
 		})
 		.then((response) => {
-			console.log(response);
 			// On success state.
 			if (response.code >= 200 && response.code <= 299) {
 				this.formSubmit(element);
@@ -182,7 +185,7 @@ export class Form {
 
 		const formData = this.getFormData(element, singleSubmit);
 
-		const formType = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
+		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
 
 		// Populate body data.
 		const body = {
@@ -217,7 +220,7 @@ export class Form {
 					this.utils.gtmSubmit(element);
 
 					// Redirect on success.
-					if (element.hasAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
+					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 						// Dispatch event.
 						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
@@ -298,12 +301,12 @@ export class Form {
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
 
-		const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
 		// Check if we are saving group items in one key.
 		if (groups.length && !singleSubmit) {
 			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldId);
+				const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
 				const groupInner = group.querySelectorAll(`
 					${this.utils.groupInnerSelector} input,
 					${this.utils.groupInnerSelector} select,
@@ -341,7 +344,7 @@ export class Form {
 			textarea:not(${this.utils.groupInnerSelector} textarea)
 		`);
 
-		const formType = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formType);
+		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -380,7 +383,7 @@ export class Form {
 			};
 
 			// Adde internal type for additional logic in some integrations.
-			data.internalType = item.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldTypeInternal);
+			data.internalType = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldTypeInternal);
 
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
@@ -389,7 +392,7 @@ export class Form {
 			// If checkbox/radio on empty change to empty value.
 			if ((type === 'checkbox' || type === 'radio') && !checked) {
 				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+				data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
 			// Append files field.
@@ -417,49 +420,49 @@ export class Form {
 		}
 
 		// Add form ID field.
-		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.postId, JSON.stringify({
+		formData.append(this.utils.FORM_PARAMS.postId, JSON.stringify({
 			value: formId,
 			type: 'hidden',
 		}));
 
 		// Add form type field.
-		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.type, JSON.stringify({
+		formData.append(this.utils.FORM_PARAMS.type, JSON.stringify({
 			value: formType,
 			type: 'hidden',
 		}));
 
 		// Add form action field.
-		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.action, JSON.stringify({
+		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
 			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add action external field.
-		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.actionExternal, JSON.stringify({
-			value: element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.actionExternal),
+		formData.append(this.utils.FORM_PARAMS.actionExternal, JSON.stringify({
+			value: element.getAttribute(this.utils.DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
 
 		// Add additional options for HubSpot only.
 		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotCookie, JSON.stringify({
+			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
-			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotPageName, JSON.stringify({
+			formData.append(this.utils.FORM_PARAMS.hubspotPageName, JSON.stringify({
 				value: document.title,
 				type: 'hidden',
 			}));
 
-			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.hubspotPageUrl, JSON.stringify({
+			formData.append(this.utils.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
 				value: window.location.href,
 				type: 'hidden',
 			}));
 		}
 
 		if (singleSubmit && this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.singleSubmit, JSON.stringify({
+			formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
 				value: 'true',
 				type: 'hidden',
 			}));
@@ -468,7 +471,7 @@ export class Form {
 		// Set localStorage to hidden field.
 	 const storage = this.utils.getLocalStorage();
 	 if (storage) {
-		formData.append(this.utils.FORM_CUSTOM_FORM_PARAMS.storage, JSON.stringify({
+		formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
 			value: storage,
 			type: 'hidden',
 		}));
@@ -628,14 +631,14 @@ export class Form {
 	};
 
 	// Remove all event listeners from elements.
-	removeEvents() {
+	removeEvents = () => {
 		const elements = document.querySelectorAll(this.utils.formSelector);
 
 		[...elements].forEach((element) => {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmit);
 
-			const formId = element.getAttribute(this.utils.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
 			const inputs = element.querySelectorAll(this.utils.inputSelector);
 			const textareas = element.querySelectorAll(this.utils.textareaSelector);
@@ -651,7 +654,6 @@ export class Form {
 			[...selects].forEach((select) => {
 				if (this.utils.isCustom(select)) {
 					if (typeof this.utils.customSelects?.[formId] !== 'undefined') {
-						this.utils.customSelects[formId].destroy();
 						delete this.utils.customSelects[formId];
 					}
 				} else {
@@ -668,7 +670,6 @@ export class Form {
 
 				if (this.utils.isCustom(textarea)) {
 					if (typeof this.utils.customTextareas?.[formId] !== 'undefined') {
-						this.utils.customTextareas[formId].destroy();
 						delete this.utils.customTextareas[formId];
 					}
 				}
@@ -677,7 +678,6 @@ export class Form {
 			// Setup file single inputs.
 			[...files].forEach((file) => {
 				if (typeof this.utils.customFiles?.[formId] !== 'undefined') {
-					this.utils.customFiles[formId].destroy();
 					delete this.utils.customFiles[formId];
 				}
 
@@ -689,7 +689,7 @@ export class Form {
 				button.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
-			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_this.utils.EVENTS_CLEAR);
+			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_EVENTS_CLEAR);
 		});
-	}
+	};
 }

@@ -6,7 +6,6 @@ import { Utils } from './utilities';
  */
 export class ConditionalTags {
 	constructor(options) {
-		console.log(options);
 		/** @type Utils */
 		this.utils = options ?? new Utils();
 
@@ -47,7 +46,7 @@ export class ConditionalTags {
 	};
 
 	// Prepare data.
-	setData() {
+	setData = () => {
 		Object.entries(JSON.parse(this.data)).forEach(([key, value]) => {
 			this.internalData[this.DATA_REFERENCE][key] = [];
 
@@ -73,10 +72,10 @@ export class ConditionalTags {
 				})
 			};
 		});
-	}
+	};
 
 	// Set init state of fields on page load.
-	setInit() {
+	setInit = () => {
 		for (const [key, value] of Object.entries(this.internalData[this.DATA_FIELDS])) {
 			const item = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
 
@@ -95,10 +94,10 @@ export class ConditionalTags {
 				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
 		}
-	}
+	};
 
 	// Add event listeners to all items that need it.
-	setListeners() {
+	setListeners = () => {
 		// Loop items from all rules mapped earlier.
 		Object.entries(this.internalData[this.DATA_EVENT_ITEMS]).forEach(([key]) => {
 			// Find that item by ID.
@@ -116,7 +115,7 @@ export class ConditionalTags {
 				item.addEventListener('input', debounce(this.onFieldChange, 250));
 			}
 		});
-	}
+	};
 
 	onCustomSelectChange = (event) => {
 		this.onFieldChange(event);
@@ -192,7 +191,7 @@ export class ConditionalTags {
 	};
 
 	// Test if one or all rules are valid.
-	areAllRulesValid(logic, item) {
+	areAllRulesValid = (logic, item) => {
 		const ref = this.internalData[this.DATA_REFERENCE][item];
 
 		if (logic === this.utils.CONDITIONAL_TAGS.ANY) {
@@ -206,10 +205,10 @@ export class ConditionalTags {
 		}
 
 		return false;
-	}
+	};
 
 	// Test if one rule is valid.
-	isRuleValid(rule, inputValue, item, index) {
+	isRuleValid = (rule, inputValue, item, index) => {
 		const {
 			operator,
 			value,
@@ -222,5 +221,5 @@ export class ConditionalTags {
 		this.internalData[this.DATA_REFERENCE][item][index] = output;
 
 		return output;
-	}
+	};
 }

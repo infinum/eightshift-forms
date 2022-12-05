@@ -11,7 +11,7 @@ if (typeof esFormsLocalization === 'undefined') {
 const utils = new Utils();
 
 window['esForms'] = {
-	...utils,
+	utils: utils,
 };
 
 // Load add data required for the forms to work.
@@ -25,7 +25,7 @@ function initAll() {
 		// Populate window object with the rest of the functions.
 		window['esForms'] = {
 			...window['esForms'],
-			...form,
+			form,
 		};
 	});
 }

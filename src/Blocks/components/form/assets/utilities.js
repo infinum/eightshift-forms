@@ -46,12 +46,10 @@ export class Utils {
 		this.storageName = this.STORAGE_NAME;
 
 		// Custom fields params.
-		this.FORM_CUSTOM_FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
-		this.customFormParams = this.FORM_CUSTOM_FORM_PARAMS;
+		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
 
 		// Custom data attributes.
-		this.FORM_CUSTOM_DATA_ATTRIBUTES = options.customFormDataAttributes ?? esFormsLocalization.customFormDataAttributes ?? {};
-		this.customFormDataAttributes = this.FORM_CUSTOM_DATA_ATTRIBUTES;
+		this.DATA_ATTRIBUTES = options.customFormDataAttributes ?? esFormsLocalization.customFormDataAttributes ?? {};
 
 		// Settings options.
 		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError ?? true;
@@ -75,12 +73,12 @@ export class Utils {
 			AFTER_FORM_SUBMIT_SUCCESS: `${this.ePrefix}AfterFormSubmitSuccess`,
 			AFTER_FORM_SUBMIT_RESET: `${this.ePrefix}AfterFormSubmitReset`,
 			AFTER_FORM_SUBMIT_ERROR: `${this.ePrefix}AfterFormSubmitError`,
-			AFTER_FORM_SUBMIT_ERROR_FATAL: `${this.ePrefix}AfterFormSubmitErrorFatal`,
 			AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${this.ePrefix}AfterFormSubmitErrorValidation`,
 			AFTER_FORM_SUBMIT_END: `${this.ePrefix}AfterFormSubmitEnd`,
-			AFTER_EVENTS_CLEAR: `${this.ePrefix}AfterFormEventsClear`,
+			AFTER_FORM_EVENTS_CLEAR: `${this.ePrefix}AfterFormEventsClear`,
 			BEFORE_GTM_DATA_PUSH: `${this.ePrefix}BeforeGtmDataPush`,
 			FORMS_JS_LOADED: `${this.ePrefix}JsLoaded`,
+			FORM_JS_LOADED: `${this.ePrefix}JsFormLoaded`,
 		};
 
 		/**
@@ -93,7 +91,6 @@ export class Utils {
 		CLASS_HIDDEN: 'is-hidden',
 		CLASS_HAS_ERROR: 'has-error',
 		};
-		this.selectors = this.SELECTORS;
 
 		/**
 		 * Data constants.
@@ -174,7 +171,8 @@ export class Utils {
 		});
 
 		element.dispatchEvent(event);
-	}
+	};
+
 	// Scroll to specific element.
 	scrollToElement = (element) => {
 		if (element !== null) {
@@ -233,7 +231,7 @@ export class Utils {
 
 	// Set global message.
 	setGlobalMsg = (element, msg, status) => {
-		if(element.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) && status === 'success') {
+		if(element.hasAttribute(this.DATA_ATTRIBUTES.successRedirect) && status === 'success') {
 			return;
 		}
 
@@ -262,11 +260,11 @@ export class Utils {
 		}
 
 		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-	}
+	};
 
 	// Build GTM data for the data layer.
 	getGtmData = (element, eventName) => {
-		const items = element.querySelectorAll(`[${this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking}]`);
+		const items = element.querySelectorAll(`[${this.DATA_ATTRIBUTES.tracking}]`);
 		const dataTemp = {};
 
 		if (!items.length) {
@@ -274,7 +272,7 @@ export class Utils {
 		}
 
 		[...items].forEach((item) => {
-			const tracking = item.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.tracking);
+			const tracking = item.getAttribute(this.DATA_ATTRIBUTES.tracking);
 
 			if (tracking) {
 				const {type, checked} = item;
@@ -292,7 +290,7 @@ export class Utils {
 				}
 
 				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingSelectLabel)) {
+				if (item.hasAttribute(this.DATA_ATTRIBUTES.trackingSelectLabel)) {
 					dataTemp[tracking] = item.selectedOptions[0].label;
 					return;
 				}
@@ -331,11 +329,11 @@ export class Utils {
 		}
 
 		return Object.assign({}, { event: eventName, ...data });
-	}
+	};
 
 	// Submit GTM event.
 	gtmSubmit = (element) => {
-		const eventName = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.trackingEventName);
+		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName);
@@ -345,7 +343,7 @@ export class Utils {
 				window.dataLayer.push(gtmData);
 			}
 		}
-	}
+	};
 
 	// Prefill inputs active/filled on init.
 	preFillOnInit = (input, type) => {
@@ -446,8 +444,6 @@ export class Utils {
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
 
-		console.log(searchParams.entries());
-
 		// Get storage from backend this is considered new by the page request.
 		const newStorage = {};
 
@@ -475,14 +471,14 @@ export class Utils {
 		delete newStorageFinal.timestamp;
 
 		// current storage is got from local storage.
-		const currentStorage = JSON.parse(getLocalStorage());
+		const currentStorage = JSON.parse(this.getLocalStorage());
 
 		// Store in a new variable for later usage.
 		const currentStorageFinal = {...currentStorage};
 		delete currentStorageFinal.timestamp;
 
 		// If storage exists check if it is expired.
-		if (getLocalStorage() !== null) {
+		if (this.getLocalStorage() !== null) {
 			// Update expiration date by number of days from the current
 			let expirationDate = new Date(currentStorage.timestamp);
 			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
@@ -494,7 +490,7 @@ export class Utils {
 		}
 
 		// Create new storage if this is the first visit or it was expired.
-		if (getLocalStorage() === null) {
+		if (this.getLocalStorage() === null) {
 			localStorage.setItem(
 				this.STORAGE_NAME,
 				JSON.stringify(newStorage)
@@ -526,19 +522,19 @@ export class Utils {
 
 		// Update localStorage with the new item.
 		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-	}
+	};
 
 	// Get local storage value.
 	getLocalStorage = () => {
 		return localStorage.getItem(this.STORAGE_NAME);
-	}
+	};
 
 	// Reset form values if the condition is right.
 	resetForm = (element) => {
 		if (this.formResetOnSuccess) {
 			element.reset();
 
-			const formId = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
 			if (this.customSelects[formId]) {
@@ -566,13 +562,13 @@ export class Utils {
 			document.activeElement.blur();
 
 			// Dispatch event.
-			dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_RESET);
+			this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_RESET);
 		}
 	};
 
 	// Redirect to url and update url params from from data.
 	redirectToUrl = (element, formData) => {
-		let redirectUrl = element.getAttribute(this.FORM_CUSTOM_DATA_ATTRIBUTES.successRedirect) ?? '';
+		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -586,5 +582,5 @@ export class Utils {
 		setTimeout(() => {
 			window.location.href = redirectUrl;
 		}, parseInt(this.redirectionTimeout, 10));
-	}
+	};
 }
