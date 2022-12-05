@@ -10,7 +10,7 @@ You can manually trigger and initialize all JavaScript functions needed for the 
 
 ## Re-init all forms JavaScript.
 ```js
-window.esForms.init();
+window.esForms.form.init();
 ```
 
 ### Code example for manual init:
@@ -23,12 +23,14 @@ function initForms() {
 	}
 
 	const {
-		formSelector,
-		events,
+		utils: {
+			formSelector,
+			EVENTS,
+		}
 	} = window.esForms;
 
 	window.addEventListener(
-		events.FORMS_JS_LOADED,
+		EVENTS.FORMS_JS_LOADED,
 		() => {
 			const forms = document.querySelectorAll(formSelector);
 
@@ -51,20 +53,21 @@ initForms();
 Here are events that you can trigger using JavaScript to hook you custom logic in the process.
 
 ### Here are all available events:
-* **esFormsBeforeFormSubmit** - Triggers after you submit a form, but before any logic is triggered.
-* **esFormsAfterFormSubmit** - Triggers after the form has done the ajax response but before any logic is triggered.
-* **esFormsAfterFormSubmitSuccessRedirect** - Triggers after the form has done the ajax response with redirect on success action.
-* **esFormsAfterFormSubmitSuccess** - Triggers after the form has done the ajax response with default on success action.
-* **esFormsAfterFormSubmitReset** - Triggers after the form has done and filed values are cleared.
-* **esFormsAfterFormSubmitError** - Triggers after the form has done the ajax response with general error.
-* **esFormsAfterFormSubmitErrorFatal** - Triggers after the form has done the ajax response with fatal error.
-* **esFormsAfterFormSubmitErrorValidation** - Triggers after the form has done the ajax response with validation error.
-* **esFormsAfterFormSubmitEnd** - Triggers after the form has done the ajax response and it is finished with the logic.
-* **esFormsAfterFormEventsClear** - Triggers after the form removes all event listeners.
-* **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed.
-* **esFormsJsLoaded** - Triggers after all JS is loaded and ready to be used in the forms script. This event can be used when manually triggering forms javascript from your project.
+* **esFormsBeforeFormSubmit** - Triggers after you submit a form, but before any logic is triggered. Hook: `Form element`. 
+* **esFormsAfterFormSubmit** - Triggers after the form has done the ajax response but before any logic is triggered. Hook: `Form element`.
+* **esFormsAfterFormSubmitSuccessRedirect** - Triggers after the form has done the ajax response with redirect on success action. Hook: `Form element`.
+* **esFormsAfterFormSubmitSuccess** - Triggers after the form has done the ajax response with default on success action. Hook: `Form element`.
+* **esFormsAfterFormSubmitReset** - Triggers after the form has done and filed values are cleared. Hook: `Form element`.
+* **esFormsAfterFormSubmitError** - Triggers after the form has done the ajax response with general error. Hook: `Form element`.
+* **esFormsAfterFormSubmitErrorFatal** - Triggers after the form has done the ajax response with fatal error. Hook: `Form element`.
+* **esFormsAfterFormSubmitErrorValidation** - Triggers after the form has done the ajax response with validation error. Hook: `Form element`.
+* **esFormsAfterFormSubmitEnd** - Triggers after the form has done the ajax response and it is finished with the logic. Hook: `Form element`.
+* **esFormsAfterFormEventsClear** - Triggers after the form removes all event listeners. Hook: `Form element`.
+* **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed. Hook: `Form element`.
+* **esFormsJsLoaded** - Triggers after all JS is loaded and ready to be used in the forms script. This event can be used when manually triggering forms javascript from your project. Hook: `window`.
+* **esFormsJsFormLoaded** - Triggers after each JS is loaded and ready to be used in the forms script. This event can be used when manually triggering form javascript from your project. Hook: `Form element`.
 
-### Code example one form:
+### Code example one form: 
 ```js
 function initForms() {
 	if (!window?.esForms) {
@@ -72,12 +75,14 @@ function initForms() {
 	}
 
 	const {
-		formSelector,
-		events,
+		utils: {
+			formSelector,
+			EVENTS,
+		},
 	} = window.esForms;
 
 	window.addEventListener(
-		events.FORMS_JS_LOADED,
+		EVENTS.FORMS_JS_LOADED,
 		() => {
 			const form = document.querySelector(formSelector);
 
@@ -102,12 +107,14 @@ function initForms() {
 	}
 
 	const {
-		formSelector,
-		events,
+		utils: {
+			formSelector,
+			EVENTS,
+		},
 	} = window.esForms;
 
 	window.addEventListener(
-		events.FORMS_JS_LOADED,
+		EVENTS.FORMS_JS_LOADED,
 		() => {
 			const forms = document.querySelectorAll(formSelector);
 
