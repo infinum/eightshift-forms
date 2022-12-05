@@ -17,6 +17,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Settings\SettingsLocalStorage;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Tracking\TrackingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -244,11 +245,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			}
 
 			// Localstorage allowed tags.
-			$allowedTrackingTags = $this->tracking->getAllowedTags();
+			$isLocalStorageSettingsGlobalValid = \apply_filters(SettingsLocalStorage::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
-			if ($allowedTrackingTags) {
+			if ($isLocalStorageSettingsGlobalValid) {
 				$output['storageConfig'] = \wp_json_encode([
-					'allowed' => $allowedTrackingTags,
+					'allowed' => $this->tracking->getAllowedTags(),
 					'expiration' => $this->tracking->getTrackingExpiration(),
 				]);
 			}

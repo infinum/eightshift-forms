@@ -41,6 +41,7 @@ use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Settings\SettingsLocalStorage;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -93,6 +94,12 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="18.625" rx="2.5" ry=".625" fill="currentColor" fill-opacity=".12"/><path d="m10 18-.53.53a.75.75 0 0 0 1.06 0L10 18zm4.75-10.5c0 2.261-1.26 4.726-2.618 6.7a27.012 27.012 0 0 1-2.442 3.04 14.893 14.893 0 0 1-.208.218l-.01.01-.002.002.53.53.53.53h.001l.001-.002a2.19 2.19 0 0 0 .018-.018l.05-.05.183-.193a28.473 28.473 0 0 0 2.585-3.217c1.393-2.026 2.882-4.811 2.882-7.55h-1.5zM10 18l.53-.53-.002-.002-.01-.01a8.665 8.665 0 0 1-.208-.217 27 27 0 0 1-2.442-3.04C6.511 12.225 5.25 9.76 5.25 7.5h-1.5c0 2.739 1.49 5.524 2.882 7.55a28.494 28.494 0 0 0 2.585 3.217 16.44 16.44 0 0 0 .233.244l.014.013.004.004v.002h.001L10 18zM5.25 7.5A4.75 4.75 0 0 1 10 2.75v-1.5A6.25 6.25 0 0 0 3.75 7.5h1.5zM10 2.75a4.75 4.75 0 0 1 4.75 4.75h1.5A6.25 6.25 0 0 0 10 1.25v1.5z" fill="currentColor"/><circle cx="10" cy="7.5" r="1.5" fill="currentColor" fill-opacity=".3"/></svg>',
 			'use' => SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
+		],
+		SettingsLocalStorage::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsLocalStorage::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="18.625" rx="2.5" ry=".625" fill="currentColor" fill-opacity=".12"/><path d="m10 18-.53.53a.75.75 0 0 0 1.06 0L10 18zm4.75-10.5c0 2.261-1.26 4.726-2.618 6.7a27.012 27.012 0 0 1-2.442 3.04 14.893 14.893 0 0 1-.208.218l-.01.01-.002.002.53.53.53.53h.001l.001-.002a2.19 2.19 0 0 0 .018-.018l.05-.05.183-.193a28.473 28.473 0 0 0 2.585-3.217c1.393-2.026 2.882-4.811 2.882-7.55h-1.5zM10 18l.53-.53-.002-.002-.01-.01a8.665 8.665 0 0 1-.208-.217 27 27 0 0 1-2.442-3.04C6.511 12.225 5.25 9.76 5.25 7.5h-1.5c0 2.739 1.49 5.524 2.882 7.55a28.494 28.494 0 0 0 2.585 3.217 16.44 16.44 0 0 0 .233.244l.014.013.004.004v.002h.001L10 18zM5.25 7.5A4.75 4.75 0 0 1 10 2.75v-1.5A6.25 6.25 0 0 0 3.75 7.5h1.5zM10 2.75a4.75 4.75 0 0 1 4.75 4.75h1.5A6.25 6.25 0 0 0 10 1.25v1.5z" fill="currentColor"/><circle cx="10" cy="7.5" r="1.5" fill="currentColor" fill-opacity=".3"/></svg>',
+			'use' => SettingsLocalStorage::SETTINGS_LOCAL_STORAGE_USE_KEY,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -406,6 +413,10 @@ class Filters
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Geolocation', 'eightshift-forms'),
 				'desc' => \__('In these settings, you can change all options regarding geolocation. Geolocation allows you to render different forms based on the user\'s location conditionally, using an internal geolocation API.', 'eightshift-forms'),
+			],
+			SettingsLocalStorage::SETTINGS_TYPE_KEY => [
+				'title' => \__('LocalStorage', 'eightshift-forms'),
+				'desc' => \__('In these settings, you can change all options regarding localStorage. We use local storage to cache data from the url paramaters and pass them to the external resources.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

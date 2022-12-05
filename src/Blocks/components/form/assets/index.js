@@ -23,10 +23,7 @@ function initAll() {
 		form.init();
 
 		// Populate window object with the rest of the functions.
-		window['esForms'] = {
-			...window['esForms'],
-			form,
-		};
+		window['esForms'].form = form;
 	});
 }
 

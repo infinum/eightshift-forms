@@ -41,10 +41,6 @@ export class Utils {
 		this.fileSelector =  `${this.fieldSelector} input[type='file']`;
 		this.conditionalTagsSelector =  `${this.fieldSelector} input[id='conditional-tags']`;
 
-		// LocalStorage.
-		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
-		this.storageName = this.STORAGE_NAME;
-
 		// Custom fields params.
 		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
 
@@ -81,15 +77,13 @@ export class Utils {
 			FORM_JS_LOADED: `${this.ePrefix}JsFormLoaded`,
 		};
 
-		/**
-		* All form custom state selectors.
-		*/
+		// All form custom state selectors.
 		this.SELECTORS = {
-		CLASS_ACTIVE: 'is-active',
-		CLASS_FILLED: 'is-filled',
-		CLASS_LOADING: 'is-loading',
-		CLASS_HIDDEN: 'is-hidden',
-		CLASS_HAS_ERROR: 'has-error',
+			CLASS_ACTIVE: 'is-active',
+			CLASS_FILLED: 'is-filled',
+			CLASS_LOADING: 'is-loading',
+			CLASS_HIDDEN: 'is-hidden',
+			CLASS_HAS_ERROR: 'has-error',
 		};
 
 		/**
@@ -150,9 +144,9 @@ export class Utils {
 	// Reset for in general.
 	reset = (element) => {
 		const items = element.querySelectorAll(this.errorSelector);
-		[...items].forEach((item) => {
-			item.innerHTML = '';
-		});
+
+		Array.from(items, item => item.innerHTML = '');
+
 		// Reset all error classes on fields.
 		element.querySelectorAll(`.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.SELECTORS.CLASS_HAS_ERROR));
 
@@ -418,117 +412,6 @@ export class Utils {
 		}
 	};
 
-	// Set local storage value.
-	setLocalStorage = () => {
-		// If storage is not set in the backend bailout.
-		// Backend provides the ability to limit what tags are allowed to store in local storage.
-		if (this.storageConfig === '') {
-			return;
-		}
-
-		const storageConfig = JSON.parse(this.storageConfig);
-
-		const allowedTags = storageConfig?.allowed;
-		const expiration = storageConfig?.expiration ?? '30';
-
-		// Missing data from backend, bailout.
-		if (!allowedTags) {
-			return;
-		}
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
-		// Get storage from backend this is considered new by the page request.
-		const newStorage = {};
-
-		// Loop entries and get new storage values.
-		for (const [key, value] of searchParams.entries()) {
-			// Bailout if not allowed or empty
-			if (!allowedTags.includes(key) || value === '') {
-				continue;
-			}
-
-			// Add valid tag.
-			newStorage[key] = value;
-		}
-
-		// Bailout if nothing is set from allowed tags or everything is empty.
-		if (Object.keys(newStorage).length === 0) {
-			return;
-		}
-
-		// Add current timestamp to new storage.
-		newStorage.timestamp = Date.now();
-
-		// Store in a new variable for later usage.
-		const newStorageFinal = {...newStorage};
-		delete newStorageFinal.timestamp;
-
-		// current storage is got from local storage.
-		const currentStorage = JSON.parse(this.getLocalStorage());
-
-		// Store in a new variable for later usage.
-		const currentStorageFinal = {...currentStorage};
-		delete currentStorageFinal.timestamp;
-
-		// If storage exists check if it is expired.
-		if (this.getLocalStorage() !== null) {
-			// Update expiration date by number of days from the current
-			let expirationDate = new Date(currentStorage.timestamp);
-			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
-
-			// Remove expired storage if it exists.
-			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.STORAGE_NAME);
-			}
-		}
-
-		// Create new storage if this is the first visit or it was expired.
-		if (this.getLocalStorage() === null) {
-			localStorage.setItem(
-				this.STORAGE_NAME,
-				JSON.stringify(newStorage)
-			);
-			return;
-		}
-
-		// Prepare new output.
-		const output = {
-			...currentStorageFinal,
-			...newStorageFinal,
-		};
-
-		// If output is empty something was wrong here and just bailout.
-		if (Object.keys(output).length === 0) {
-			return;
-		}
-
-		// If nothing has changed bailout.
-		if (JSON.stringify(currentStorageFinal) === JSON.stringify(output)) {
-			return;
-		}
-
-		// Add timestamp to the new output.
-		const finalOutput = {
-			...output,
-			timestamp: newStorage.timestamp,
-		};
-
-		// Update localStorage with the new item.
-		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-	};
-
-	// Get local storage value.
-	getLocalStorage = () => {
-		return localStorage.getItem(this.STORAGE_NAME);
-	};
-
 	// Reset form values if the condition is right.
 	resetForm = (element) => {
 		if (this.formResetOnSuccess) {
@@ -583,4 +466,22 @@ export class Utils {
 			window.location.href = redirectUrl;
 		}, parseInt(this.redirectionTimeout, 10));
 	};
+
+	// Check if local storage is used.
+	isLocalStorageUsed() {
+		if (this.storageConfig !== '') {
+			return true;
+		}
+
+		return false;
+	}
+
+	// Check if captcha is used.
+	isCaptchaUsed() {
+		if (this.captcha) {
+			return true;
+		}
+
+		return false;
+	}
 }

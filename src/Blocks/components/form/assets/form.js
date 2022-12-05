@@ -10,6 +10,9 @@ export class Form {
 	constructor(options) {
 		/** @type Utils */
 		this.utils = options ?? new Utils();
+
+		/** @type LocalStorageUtils */
+		this.localStorage = {};
 	}
 
 	// Init all actions.
@@ -72,18 +75,15 @@ export class Form {
 			// Load conditional data class if used.
 			if (conditionalTagsData) {
 				import('./conditional-tags').then(({ ConditionalTags }) => {
-					const cTagsClass = new ConditionalTags({
+					const conditionalTagsClass = new ConditionalTags({
 						...this.utils,
 						data: conditionalTagsData,
 					});
 
-					cTagsClass.init();
+					conditionalTagsClass.init();
 
 					// Populate window with necessary functions and prefix everything with "ct".
-					window['esForms'] = {
-						...window['esForms'],
-						conditionalTags: cTagsClass,
-					};
+					window['esForms'].conditionalTags = conditionalTagsClass;
 				});
 			}
 
@@ -91,8 +91,18 @@ export class Form {
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
 		});
 
-		// Set localStorage data from global variable.
-		this.utils.setLocalStorage();
+		// If storage is not set in the backend bailout.
+		// Backend provides the ability to limit what tags are allowed to store in local storage.
+		if (this.utils.isLocalStorageUsed()) {
+			import('./localstorage-utils').then(({ LocalStorageUtils }) => {
+				this.localStorage = new LocalStorageUtils(this.utils);
+
+				this.localStorage.setLocalStorage();
+
+				// Populate window with necessary functions and prefix everything with "ct".
+				window['esForms'].localStorage = this.localStorage;
+			});
+		}
 
 		// Triger event that forms are fully loaded.
 		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
@@ -104,7 +114,7 @@ export class Form {
 
 		const element = event.target;
 
-		if (this.utils.captcha) {
+		if (this.utils.isCaptchaUsed) {
 			grecaptcha.ready(() => {
 				grecaptcha.execute(this.utils.captcha, {action: 'submit'}).then((token) => {
 					this.formSubmitCaptcha(element, token);
@@ -469,13 +479,15 @@ export class Form {
 		}
 
 		// Set localStorage to hidden field.
-	 const storage = this.utils.getLocalStorage();
-	 if (storage) {
-		formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
-			value: storage,
-			type: 'hidden',
-		}));
-	 }
+		if (this.utils.isLocalStorageUsed()) {
+			const storage = this.localStorage.getLocalStorage();
+			if (storage) {
+			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
+				 value: storage,
+				 type: 'hidden',
+			 }));
+			}
+		}
 
 		return formData;
 	};
