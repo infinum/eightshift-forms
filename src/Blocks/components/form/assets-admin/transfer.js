@@ -1,19 +1,17 @@
-import {
-	setGlobalMsg,
-	hideGlobalMsg,
-} from './utilities';
+import { Utils } from "../assets/utilities";
 
 export class Transfer {
 	constructor(options) {
+		/** @type Utils */
+		this.utils = options ?? new Utils();
+
 		this.selector = options.selector;
-		this.formSelector = options.formSelector;
 		this.itemSelector = options.itemSelector;
 		this.uploadSelector = options.uploadSelector;
 		this.overrideExistingSelector = options.overrideExistingSelector;
 		this.uploadConfirmMsg = options.uploadConfirmMsg;
 
 		this.transferRestUrl = options.transferRestUrl;
-		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 	}
 
 	init = () => {
@@ -73,7 +71,9 @@ export class Transfer {
 				return response.json();
 			})
 			.then((response) => {
-				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
+				const formElement = element.closest(this.utils.formSelector);
+
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
 				if (response.code >= 200 && response.code <= 299) {
 
@@ -87,7 +87,7 @@ export class Transfer {
 				}
 
 				setTimeout(() => {
-					hideGlobalMsg(this.globalMsgSelector);
+					this.utils.hideGlobalMsg(formElement);
 				}, 6000);
 			});
 	};

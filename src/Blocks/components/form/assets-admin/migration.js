@@ -1,15 +1,13 @@
-import {
-	setGlobalMsg,
-	hideGlobalMsg,
-} from './utilities';
+import { Utils } from "../assets/utilities";
 
 export class Migration {
 	constructor(options) {
+		/** @type Utils */
+		this.utils = options ?? new Utils();
+
 		this.selector = options.selector;
-		this.formSelector = options.formSelector;
 
 		this.migrationRestUrl = options.migrationRestUrl;
-		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 	}
 
 	init = () => {
@@ -48,10 +46,12 @@ export class Migration {
 				return response.json();
 			})
 			.then((response) => {
-				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
+				const formElement = element.closest(this.utils.formSelector);
+
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
 				setTimeout(() => {
-					hideGlobalMsg(this.globalMsgSelector);
+					this.utils.hideGlobalMsg(formElement);
 				}, 6000);
 			});
 	};
