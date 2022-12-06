@@ -8,22 +8,21 @@ if (typeof esFormsLocalization === 'undefined') {
 	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
 }
 
+// Run initial utils.
 const utils = new Utils();
+utils.init();
 
-window['esForms'] = {
-	utils: utils,
-};
-
-// Load add data required for the forms to work.
+/**
+ * Init all functionality with one function.
+ *
+ * @public
+ */
 function initAll() {
 	import('./form').then(({ Form }) => {
 		const form = new Form(utils);
 
 		// Run forms.
 		form.init();
-
-		// Populate window object with the rest of the functions.
-		window['esForms'].form = form;
 	});
 }
 
@@ -45,9 +44,9 @@ if (!disableAutoInit) {
 	});
 } else {
 	// Load initAll method in window object for manual trigger.
-	window['esForms'] = {
-		...window['esForms'],
-		initAll: () => {
+	window[utils.prefix] = {
+		...window[utils.prefix],
+		initAll() {
 			initAll();
 		},
 	};

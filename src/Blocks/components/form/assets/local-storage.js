@@ -1,27 +1,59 @@
 import { Utils } from "./utilities";
 
-if (typeof esFormsLocalization === 'undefined') {
-	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
-}
-
 /**
- * Local Storage Utilities class.
+ * LocalStorage class.
  */
-export class LocalStorageUtils {
+export class LocalStorage {
 	constructor(options = {}) {
 		/** @type Utils */
 		this.utils = options ?? new Utils();
 
-		// LocalStorage.
+		// LocalStorage name.
 		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
 	}
 
-	// Set local storage value.
-	setLocalStorage = () => {
-		const storageConfig = JSON.parse(this.utils.storageConfig);
+	////////////////////////////////////////////////////////////////
+	// Public methods
+	////////////////////////////////////////////////////////////////
 
-		const allowedTags = storageConfig?.allowed;
-		const expiration = storageConfig?.expiration ?? '30';
+	/**
+	 * Init all actions.
+	 * 
+	 * @public
+	 */
+	init() {
+		// Set all public methods.
+		this.publicMethods();
+
+		// Check if local storage is used.
+		if (this.isLocalStorageUsed()) {
+			this.setLocalStorage();
+		}
+	}
+
+	/**
+	 * Check if local storage is used.
+	 * 
+	 * @public
+	 */
+	isLocalStorageUsed() {
+		if (this.utils.SETTINGS.STORAGE_CONFIG !== '') {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Set local storage value.
+	 * 
+	 * @public
+	 */
+	setLocalStorage() {
+		const config = JSON.parse(this.utils.SETTINGS.STORAGE_CONFIG);
+
+		const allowedTags = config?.allowed;
+		const expiration = config?.expiration ?? '30';
 
 		// Missing data from backend, bailout.
 		if (!allowedTags) {
@@ -114,10 +146,41 @@ export class LocalStorageUtils {
 
 		// Update localStorage with the new item.
 		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-	};
+	}
 
-	// Get local storage value.
-	getLocalStorage = () => {
+	/**
+	 * Get local storage value.
+	 * 
+	 * @public
+	 */
+	getLocalStorage() {
 		return localStorage.getItem(this.STORAGE_NAME);
-	};
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Private methods - not shared to the public window object.
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set all public methods.
+	 * 
+	 * @private
+	 */
+	publicMethods() {
+		window[this.utils.prefix].localStorage = {
+			STORAGE_NAME: this.STORAGE_NAME,
+			init() {
+				this.init();
+			},
+			isLocalStorageUsed() {
+				this.isLocalStorageUsed();
+			},
+			setLocalStorage() {
+				this.setLocalStorage();
+			},
+			getLocalStorage() {
+				this.getLocalStorage();
+			},
+		};
+	}
 }
