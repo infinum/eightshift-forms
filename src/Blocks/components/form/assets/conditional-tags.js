@@ -7,7 +7,7 @@ import { Utils } from './utilities';
 export class ConditionalTags {
 	constructor(options) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
 
 		// Internal data constants.
 		this.DATA_FIELDS = 'fields';
@@ -317,42 +317,44 @@ export class ConditionalTags {
 	 * @private
 	 */
 	publicMethods() {
-		window[this.utils.prefix].conditionalTags = {
-			DATA_FIELDS: this.DATA_FIELDS,
-			DATA_EVENT_ITEMS: this.DATA_EVENT_ITEMS,
-			DATA_REFERENCE: this.DATA_REFERENCE,
-			INTERNAL_DATA: this.INTERNAL_DATA,
-			CONDITIONAL_LOGIC: this.CONDITIONAL_LOGIC,
-			init() {
-				this.init();
-			},
-			initOnlyForms() {
-				this.initOnlyForms();
-			},
-			initOne(element) {
-				this.initOne(element);
-			},
-			setData(data) {
-				this.setData(data);
-			},
-			setInit() {
-				this.setInit();
-			},
-			setListeners() {
-				this.setListeners();
-			},
-			onCustomSelectChangeEvent(event) {
-				this.onCustomSelectChangeEvent(event);
-			},
-			onFieldChangeEvent(event) {
-				this.onFieldChangeEvent(event);
-			},
-			areAllRulesValid(logic, item) {
-				this.areAllRulesValid(logic, item);
-			},
-			isRuleValid(rule, inputValue, item, index) {
-				this.isRuleValid(rule, inputValue, item, index);
-			},
-		};
+		if (typeof window[this.prefix]?.conditionalTags === 'undefined') {
+			window[this.utils.prefix].conditionalTags = {
+				DATA_FIELDS: this.DATA_FIELDS,
+				DATA_EVENT_ITEMS: this.DATA_EVENT_ITEMS,
+				DATA_REFERENCE: this.DATA_REFERENCE,
+				INTERNAL_DATA: this.INTERNAL_DATA,
+				CONDITIONAL_LOGIC: this.CONDITIONAL_LOGIC,
+				init() {
+					this.init();
+				},
+				initOnlyForms() {
+					this.initOnlyForms();
+				},
+				initOne(element) {
+					this.initOne(element);
+				},
+				setData(data) {
+					this.setData(data);
+				},
+				setInit() {
+					this.setInit();
+				},
+				setListeners() {
+					this.setListeners();
+				},
+				onCustomSelectChangeEvent(event) {
+					this.onCustomSelectChangeEvent(event);
+				},
+				onFieldChangeEvent(event) {
+					this.onFieldChangeEvent(event);
+				},
+				areAllRulesValid(logic, item) {
+					this.areAllRulesValid(logic, item);
+				},
+				isRuleValid(rule, inputValue, item, index) {
+					this.isRuleValid(rule, inputValue, item, index);
+				},
+			};
+		}
 	}
 }

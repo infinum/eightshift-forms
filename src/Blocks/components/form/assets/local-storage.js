@@ -6,7 +6,7 @@ import { Utils } from "./utilities";
 export class LocalStorage {
 	constructor(options = {}) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
 
 		// LocalStorage name.
 		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
@@ -167,20 +167,22 @@ export class LocalStorage {
 	 * @private
 	 */
 	publicMethods() {
-		window[this.utils.prefix].localStorage = {
-			STORAGE_NAME: this.STORAGE_NAME,
-			init() {
-				this.init();
-			},
-			isLocalStorageUsed() {
-				this.isLocalStorageUsed();
-			},
-			setLocalStorage() {
-				this.setLocalStorage();
-			},
-			getLocalStorage() {
-				this.getLocalStorage();
-			},
-		};
+		if (typeof window[this.prefix]?.localStorage === 'undefined') {
+			window[this.utils.prefix].localStorage = {
+				STORAGE_NAME: this.STORAGE_NAME,
+				init() {
+					this.init();
+				},
+				isLocalStorageUsed() {
+					this.isLocalStorageUsed();
+				},
+				setLocalStorage() {
+					this.setLocalStorage();
+				},
+				getLocalStorage() {
+					this.getLocalStorage();
+				},
+			};
+		}
 	}
 }

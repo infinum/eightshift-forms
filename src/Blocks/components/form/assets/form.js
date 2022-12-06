@@ -11,7 +11,7 @@ import { Utils } from './utilities';
 export class Form {
 	constructor(options = {}) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
 
 		/** @type LocalStorage */
 		this.localStorage = new LocalStorage(this.utils);
@@ -750,8 +750,9 @@ export class Form {
 		event.preventDefault();
 
 		const element = event.target;
+		
 
-		if (this.utils.isCaptchaUsed) {
+		if (this.utils.isCaptchaUsed()) {
 			grecaptcha.ready(() => {
 				grecaptcha.execute(this.utils.SETTINGS.CAPTCHA, {action: 'submit'}).then((token) => {
 					this.formSubmitCaptcha(element, token);
@@ -803,46 +804,48 @@ export class Form {
 	 * @private
 	 */
 	publicMethods() {
-		window[this.utils.prefix].form = {
-			init() {
-				this.init();
-			},
-			initOnlyForms() {
-				this.initOnlyForms();
-			},
-			initOne(element) {
-				this.initOne(element);
-			},
-			onFormSubmitEvent(event) {
-				this.onFormSubmitEvent(event);
-			},
-			formSubmitCaptcha(element, token) {
-				this.formSubmitCaptcha(element, token);
-			},
-			formSubmit(element) {
-				this.formSubmit(element);
-			},
-			getFormData(element) {
-				this.getFormData(element);
-			},
-			setupInputField(input) {
-				this.setupInputField(input);
-			},
-			setupSelectField(select, formId) {
-				this.setupSelectField(select, formId);
-			},
-			setupTextareaField(textarea, formId) {
-				this.setupTextareaField(textarea, formId);
-			},
-			setupFileField(file, formId, index) {
-				this.setupFileField(file, formId, index);
-			},
-			onCustomFileWrapClickEvent(event) {
-				this.onCustomFileWrapClickEvent(event);
-			},
-			removeEvents() {
-				this.removeEvents();
-			},
-		};
+		if (typeof window[this.prefix]?.form === 'undefined') {
+			window[this.utils.prefix].form = {
+				init() {
+					this.init();
+				},
+				initOnlyForms() {
+					this.initOnlyForms();
+				},
+				initOne(element) {
+					this.initOne(element);
+				},
+				onFormSubmitEvent(event) {
+					this.onFormSubmitEvent(event);
+				},
+				formSubmitCaptcha(element, token) {
+					this.formSubmitCaptcha(element, token);
+				},
+				formSubmit(element) {
+					this.formSubmit(element);
+				},
+				getFormData(element) {
+					this.getFormData(element);
+				},
+				setupInputField(input) {
+					this.setupInputField(input);
+				},
+				setupSelectField(select, formId) {
+					this.setupSelectField(select, formId);
+				},
+				setupTextareaField(textarea, formId) {
+					this.setupTextareaField(textarea, formId);
+				},
+				setupFileField(file, formId, index) {
+					this.setupFileField(file, formId, index);
+				},
+				onCustomFileWrapClickEvent(event) {
+					this.onCustomFileWrapClickEvent(event);
+				},
+				removeEvents() {
+					this.removeEvents();
+				},
+			};
+		}
 	}
 }

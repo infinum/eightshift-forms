@@ -3,20 +3,20 @@ import { Utils } from "../assets/utilities";
 export class Migration {
 	constructor(options) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
 
 		this.selector = options.selector;
 
 		this.migrationRestUrl = options.migrationRestUrl;
 	}
 
-	init = () => {
+	init() {
 		const elements = document.querySelectorAll(this.selector);
 
 		[...elements].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
-	};
+	}
 
 	// Handle form submit and all logic.
 	onClick = (event) => {

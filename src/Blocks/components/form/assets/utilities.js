@@ -2,10 +2,6 @@
 
 import manifest from './../manifest.json';
 
-if (typeof esFormsLocalization === 'undefined') {
-	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
-}
-
 const {
 	componentJsClass,
 } = manifest;
@@ -27,6 +23,7 @@ export class Utils {
 		// Selectors.
 		this.formSelector = options.formSelector ?? `.${componentJsClass}`;
 
+		// Specific selectors.
 		this.submitSingleSelector =  `${this.formSelector}-single-submit`;
 		this.errorSelector =  `${this.formSelector}-error`;
 		this.loaderSelector =  `${this.formSelector}-loader`;
@@ -60,9 +57,7 @@ export class Utils {
 			STORAGE_CONFIG: options.storageConfig ?? esFormsLocalization.storageConfig ?? '',
 		};
 
-		/**
-		 * All custom events.
-		 */
+		// All custom events.
 		this.EVENTS = {
 			BEFORE_FORM_SUBMIT: `${this.prefix}BeforeFormSubmit`,
 			AFTER_FORM_SUBMIT: `${this.prefix}AfterFormSubmit`,
@@ -127,21 +122,14 @@ export class Utils {
 		this.CUSTOM_TEXTAREAS = [];
 		this.CUSTOM_SELECTS = [];
 		this.CUSTOM_FILES = [];
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
 	// Public methods
 	////////////////////////////////////////////////////////////////
-
-	/**
-	 * Init all actions.
-	 * 
-	 * @public
-	 */
-	init() {
-		// Set all public methods.
-		this.publicMethods();
-	}
 
 	// Unset global message.
 	unsetGlobalMsg(element) {
@@ -505,8 +493,96 @@ export class Utils {
 	 * @private
 	 */
 	 publicMethods() {
-		window[this.prefix] = {
-			utils: this,
-		};
+		if (typeof window[this.prefix] === 'undefined') {
+			window[this.prefix] = {};
+		}
+
+		if (typeof window[this.prefix]?.utils === 'undefined') {
+			window[this.prefix].utils = {
+				prefix: this.prefix,
+				formIsAdmin: this.formIsAdmin,
+				formSubmitRestApiUrl: this.formSubmitRestApiUrl,
+				formSelector: this.formSelector,
+
+				submitSingleSelector: this.submitSingleSelector,
+				errorSelector: this.errorSelector,
+				loaderSelector: this.loaderSelector,
+				globalMsgSelector: this.globalMsgSelector,
+				groupSelector: this.groupSelector,
+				groupInnerSelector: this.groupInnerSelector,
+				customSelector: this.customSelector,
+				fieldSelector: this.fieldSelector,
+				inputSelector: this.inputSelector,
+				textareaSelector: this.textareaSelector,
+				selectSelector: this.selectSelector,
+				fileSelector: this.fileSelector,
+
+				FORM_PARAMS: this.FORM_PARAMS,
+				DATA_ATTRIBUTES: this.DATA_ATTRIBUTES,
+				SETTINGS: this.SETTINGS,
+				EVENTS: this.EVENTS,
+				SELECTORS: this.SELECTORS,
+				CONDITIONAL_TAGS: this.CONDITIONAL_TAGS,
+				FILES: this.FILES,
+				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
+				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
+				CUSTOM_FILES: this.CUSTOM_FILES,
+
+				unsetGlobalMsg(element) {
+					this.unsetGlobalMsg(element);
+				},
+				reset(element) {
+					this.reset(element);
+				},
+				isCustom(element) {
+					this.isCustom(element);
+				},
+				dispatchFormEvent(element, name) {
+					this.dispatchFormEvent(element, name);
+				},
+				scrollToElement(element) {
+					this.scrollToElement(element);
+				},
+				showLoader(element) {
+					this.showLoader(element);
+				},
+				outputErrors(element, fields) {
+					this.outputErrors(element, fields);
+				},
+				hideLoader(element) {
+					this.hideLoader(element);
+				},
+				setGlobalMsg(element, msg, status) {
+					this.setGlobalMsg(element, msg, status);
+				},
+				hideGlobalMsg(element) {
+					this.hideGlobalMsg(element);
+				},
+				getGtmData(element, eventName) {
+					this.getGtmData(element, eventName);
+				},
+				gtmSubmit(element) {
+					this.gtmSubmit(element);
+				},
+				preFillOnInit(input, type) {
+					this.preFillOnInit(input, type);
+				},
+				resetForm(element) {
+					this.resetForm(element);
+				},
+				redirectToUrl(element, formData) {
+					this.redirectToUrl(element, formData);
+				},
+				isCaptchaUsed() {
+					this.isCaptchaUsed();
+				},
+				onFocusEvent(event) {
+					this.onFocusEvent(event);
+				},
+				onBlurEvent(event) {
+					this.onBlurEvent(event);
+				},
+			};
+		}
 	 }
 }
