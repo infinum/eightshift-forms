@@ -91,7 +91,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				);
 			}
 
-			// Extract hidden params from local storage set on the frontend.
+			// Extract hidden params from localStorage set on the frontend.
 			$params = $this->extractStorageParams($params);
 
 			// Upload files to temp folder.

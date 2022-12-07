@@ -1,24 +1,22 @@
-import {
-	setGlobalMsg,
-	hideGlobalMsg,
-} from './utilities';
+import { Utils } from "../assets/utilities";
 
 export class Cache {
 	constructor(options) {
+		/** @type Utils */
+		this.utils = options.utils ?? new Utils();
+
 		this.selector = options.selector;
-		this.formSelector = options.formSelector;
 
 		this.clearCacheRestUrl = options.clearCacheRestUrl;
-		this.globalMsgSelector = `${this.formSelector}-global-msg`;
 	}
 
-	init = () => {
+	init() {
 		const elements = document.querySelectorAll(this.selector);
 
 		[...elements].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
-	};
+	}
 
 	// Handle form submit and all logic.
 	onClick = (event) => {
@@ -48,11 +46,18 @@ export class Cache {
 				return response.json();
 			})
 			.then((response) => {
-				setGlobalMsg(this.globalMsgSelector, response.message, response.status);
+				const formElement = element.closest(this.utils.formSelector);
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
-				setTimeout(() => {
-					hideGlobalMsg(this.globalMsgSelector);
-				}, 6000);
+				if (element.getAttribute('data-reload') === 'true') {
+					setTimeout(() => {
+						location.reload();
+					}, 1000);
+				} else {
+					setTimeout(() => {
+						this.utils.hideGlobalMsg(formElement);
+					}, 6000);
+				}
 			});
 	};
 }

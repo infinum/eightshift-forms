@@ -41,6 +41,7 @@ use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -93,6 +94,12 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="18.625" rx="2.5" ry=".625" fill="currentColor" fill-opacity=".12"/><path d="m10 18-.53.53a.75.75 0 0 0 1.06 0L10 18zm4.75-10.5c0 2.261-1.26 4.726-2.618 6.7a27.012 27.012 0 0 1-2.442 3.04 14.893 14.893 0 0 1-.208.218l-.01.01-.002.002.53.53.53.53h.001l.001-.002a2.19 2.19 0 0 0 .018-.018l.05-.05.183-.193a28.473 28.473 0 0 0 2.585-3.217c1.393-2.026 2.882-4.811 2.882-7.55h-1.5zM10 18l.53-.53-.002-.002-.01-.01a8.665 8.665 0 0 1-.208-.217 27 27 0 0 1-2.442-3.04C6.511 12.225 5.25 9.76 5.25 7.5h-1.5c0 2.739 1.49 5.524 2.882 7.55a28.494 28.494 0 0 0 2.585 3.217 16.44 16.44 0 0 0 .233.244l.014.013.004.004v.002h.001L10 18zM5.25 7.5A4.75 4.75 0 0 1 10 2.75v-1.5A6.25 6.25 0 0 0 3.75 7.5h1.5zM10 2.75a4.75 4.75 0 0 1 4.75 4.75h1.5A6.25 6.25 0 0 0 10 1.25v1.5z" fill="currentColor"/><circle cx="10" cy="7.5" r="1.5" fill="currentColor" fill-opacity=".3"/></svg>',
 			'use' => SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
+		],
+		SettingsEnrichment::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsEnrichment::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1 10h18M1 10v4.5A1.5 1.5 0 0 0 2.5 16h15a1.5 1.5 0 0 0 1.5-1.5V10M1 10l2.13-5.538a1.5 1.5 0 0 1 1.4-.962h11.362a1.5 1.5 0 0 1 1.434 1.059L19 10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M13 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="4.25" cy="13" r="0.75" fill="currentColor" fill-opacity="0.3"/></svg>',
+			'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -299,10 +306,6 @@ class Filters
 				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
-		'tracking' => [
-			'allowedTags' => 'allowed_tags',
-			'expiration' => 'expiration',
-		],
 		'geolocation' => [
 			'countries' => 'countries_list',
 			'disable' => 'disable',
@@ -406,6 +409,10 @@ class Filters
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Geolocation', 'eightshift-forms'),
 				'desc' => \__('In these settings, you can change all options regarding geolocation. Geolocation allows you to render different forms based on the user\'s location conditionally, using an internal geolocation API.', 'eightshift-forms'),
+			],
+			SettingsEnrichment::SETTINGS_TYPE_KEY => [
+				'title' => \__('Enrichment', 'eightshift-forms'),
+				'desc' => \__('In these settings, you can change all options regarding enrichment roles. We use browser storage to cache data from the URL parameters and pass them to external resources. This way, you can follow the users even if they leave your website.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),
@@ -575,28 +582,6 @@ class Filters
 		}
 
 		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}";
-	}
-
-	/**
-	 * Get Tracking filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_tracking_allowed_tags
-	 */
-	public static function getTrackingFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['tracking'][$name] ?? '';
-
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('tracking', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_tracking_{$filter}";
 	}
 
 	/**

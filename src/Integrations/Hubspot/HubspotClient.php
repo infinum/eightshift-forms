@@ -17,6 +17,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -48,6 +49,23 @@ class HubspotClient implements HubspotClientInterface
 	 * Filemanager default folder.
 	 */
 	public const HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY = 'esforms';
+
+	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -725,7 +743,8 @@ class HubspotClient implements HubspotClientInterface
 				$filterName,
 				$output,
 				$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
-				$params
+				$params,
+				$this->enrichment->getEnrichmentConfig()
 			) ?? [];
 		}
 
