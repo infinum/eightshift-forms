@@ -18,7 +18,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Tracking\TrackingInterface;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -43,27 +43,27 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected $validator;
 
 	/**
-	 * Instance variable of tracking data.
+	 * Instance variable of enrichment data.
 	 *
-	 * @var TrackingInterface
+	 * @var EnrichmentInterface
 	 */
-	protected TrackingInterface $tracking;
+	protected EnrichmentInterface $enrichment;
 
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
-	 * @param TrackingInterface $tracking Inject tracking which holds data about for storing to localstorage.
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
 		ManifestInterface $manifest,
 		ValidatorInterface $validator,
-		TrackingInterface $tracking
+		EnrichmentInterface $enrichment
 	) {
 		$this->manifest = $manifest;
 		$this->validator = $validator;
-		$this->tracking = $tracking;
+		$this->enrichment = $enrichment;
 	}
 
 	/**
@@ -233,24 +233,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
+			// Enrichment config.
+			$output['enrichmentConfig'] = \wp_json_encode($this->enrichment->getEnrichmentConfig());
+
 			$output['captcha'] = '';
-			$output['storageConfig'] = '';
 
 			// Check if Captcha data is set and valid.
 			$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 			if ($isCaptchaSettingsGlobalValid) {
 				$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-			}
-
-			// Localstorage allowed tags.
-			$allowedTrackingTags = $this->tracking->getAllowedTags();
-
-			if ($allowedTrackingTags) {
-				$output['storageConfig'] = \wp_json_encode([
-					'allowed' => $allowedTrackingTags,
-					'expiration' => $this->tracking->getTrackingExpiration(),
-				]);
 			}
 		}
 

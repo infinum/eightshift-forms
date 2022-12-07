@@ -2,10 +2,6 @@
 
 import manifest from './../manifest.json';
 
-if (typeof esFormsLocalization === 'undefined') {
-	throw 'Your project is missing global variable esFormsLocalization called from the enqueue script in the forms.';
-}
-
 const {
 	componentJsClass,
 } = manifest;
@@ -16,7 +12,7 @@ const {
 export class Utils {
 	constructor(options = {}) {
 		// Prefix.
-		this.ePrefix = options.ePrefix ?? 'esForms';
+		this.prefix = options.prefix ?? 'esForms';
 
 		// Detect if form is used in admin for settings or on the frontend.
 		this.formIsAdmin = options.formIsAdmin ?? false;
@@ -27,6 +23,7 @@ export class Utils {
 		// Selectors.
 		this.formSelector = options.formSelector ?? `.${componentJsClass}`;
 
+		// Specific selectors.
 		this.submitSingleSelector =  `${this.formSelector}-single-submit`;
 		this.errorSelector =  `${this.formSelector}-error`;
 		this.loaderSelector =  `${this.formSelector}-loader`;
@@ -39,11 +36,6 @@ export class Utils {
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
 		this.selectSelector =  `${this.fieldSelector} select`;
 		this.fileSelector =  `${this.fieldSelector} input[type='file']`;
-		this.conditionalTagsSelector =  `${this.fieldSelector} input[id='conditional-tags']`;
-
-		// LocalStorage.
-		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
-		this.storageName = this.STORAGE_NAME;
 
 		// Custom fields params.
 		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
@@ -51,45 +43,43 @@ export class Utils {
 		// Custom data attributes.
 		this.DATA_ATTRIBUTES = options.customFormDataAttributes ?? esFormsLocalization.customFormDataAttributes ?? {};
 
-		// Settings options.
-		this.formDisableScrollToFieldOnError = options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError ?? true;
-		this.formDisableScrollToGlobalMessageOnSuccess = options.formDisableScrollToGlobalMessageOnSuccess ?? true;
-		this.formResetOnSuccess = Boolean(options.formResetOnSuccess ?? esFormsLocalization.formResetOnSuccess ?? false);
-		this.redirectionTimeout = options.redirectionTimeout ?? esFormsLocalization.redirectionTimeout ?? 600;
-		this.hideGlobalMessageTimeout = options.hideGlobalMessageTimeout ?? esFormsLocalization.hideGlobalMessageTimeout ?? 6000;
-		this.hideLoadingStateTimeout = options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600;
-		this.fileCustomRemoveLabel = options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '';
-		this.formServerErrorMsg = options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '';
-		this.captcha = options.captcha ?? esFormsLocalization.captcha ?? '';
-		this.storageConfig = options.storageConfig ?? esFormsLocalization.storageConfig ?? '';
-
-		/**
-		 * All custom events.
-		 */
-		this.EVENTS = {
-			BEFORE_FORM_SUBMIT: `${this.ePrefix}BeforeFormSubmit`,
-			AFTER_FORM_SUBMIT: `${this.ePrefix}AfterFormSubmit`,
-			AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${this.ePrefix}AfterFormSubmitSuccessRedirect`,
-			AFTER_FORM_SUBMIT_SUCCESS: `${this.ePrefix}AfterFormSubmitSuccess`,
-			AFTER_FORM_SUBMIT_RESET: `${this.ePrefix}AfterFormSubmitReset`,
-			AFTER_FORM_SUBMIT_ERROR: `${this.ePrefix}AfterFormSubmitError`,
-			AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${this.ePrefix}AfterFormSubmitErrorValidation`,
-			AFTER_FORM_SUBMIT_END: `${this.ePrefix}AfterFormSubmitEnd`,
-			AFTER_FORM_EVENTS_CLEAR: `${this.ePrefix}AfterFormEventsClear`,
-			BEFORE_GTM_DATA_PUSH: `${this.ePrefix}BeforeGtmDataPush`,
-			FORMS_JS_LOADED: `${this.ePrefix}JsLoaded`,
-			FORM_JS_LOADED: `${this.ePrefix}JsFormLoaded`,
+		// Settings options from the backend.
+		this.SETTINGS = {
+			FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR: options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError ?? true,
+			FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS: options.formDisableScrollToGlobalMessageOnSuccess ?? true,
+			FORM_RESET_ON_SUCCESS: Boolean(options.formResetOnSuccess ?? esFormsLocalization.formResetOnSuccess ?? false),
+			REDIRECTION_TIMEOUT: options.redirectionTimeout ?? esFormsLocalization.redirectionTimeout ?? 600,
+			HIDE_GLOBAL_MESSAGE_TIMEOUT: options.hideGlobalMessageTimeout ?? esFormsLocalization.hideGlobalMessageTimeout ?? 6000,
+			HIDE_LOADING_STATE_TIMEOUT: options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600,
+			FILE_CUSTOM_REMOVE_LABEL: options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '',
+			FORM_SERVER_ERROR_MSG: options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '',
+			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? '',
+			ENRICHMENT_CONFIG: options.enrichmentConfig ?? esFormsLocalization.enrichmentConfig ?? '[]',
 		};
 
-		/**
-		* All form custom state selectors.
-		*/
+		// All custom events.
+		this.EVENTS = {
+			BEFORE_FORM_SUBMIT: `${this.prefix}BeforeFormSubmit`,
+			AFTER_FORM_SUBMIT: `${this.prefix}AfterFormSubmit`,
+			AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${this.prefix}AfterFormSubmitSuccessRedirect`,
+			AFTER_FORM_SUBMIT_SUCCESS: `${this.prefix}AfterFormSubmitSuccess`,
+			AFTER_FORM_SUBMIT_RESET: `${this.prefix}AfterFormSubmitReset`,
+			AFTER_FORM_SUBMIT_ERROR: `${this.prefix}AfterFormSubmitError`,
+			AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${this.prefix}AfterFormSubmitErrorValidation`,
+			AFTER_FORM_SUBMIT_END: `${this.prefix}AfterFormSubmitEnd`,
+			AFTER_FORM_EVENTS_CLEAR: `${this.prefix}AfterFormEventsClear`,
+			BEFORE_GTM_DATA_PUSH: `${this.prefix}BeforeGtmDataPush`,
+			FORMS_JS_LOADED: `${this.prefix}JsLoaded`,
+			FORM_JS_LOADED: `${this.prefix}JsFormLoaded`,
+		};
+
+		// All form custom state selectors.
 		this.SELECTORS = {
-		CLASS_ACTIVE: 'is-active',
-		CLASS_FILLED: 'is-filled',
-		CLASS_LOADING: 'is-loading',
-		CLASS_HIDDEN: 'is-hidden',
-		CLASS_HAS_ERROR: 'has-error',
+			CLASS_ACTIVE: 'is-active',
+			CLASS_FILLED: 'is-filled',
+			CLASS_LOADING: 'is-loading',
+			CLASS_HIDDEN: 'is-hidden',
+			CLASS_HAS_ERROR: 'has-error',
 		};
 
 		/**
@@ -128,14 +118,21 @@ export class Utils {
 		};
 
 		// Internal state.
-		this.files = {};
-		this.customTextareas = [];
-		this.customSelects = [];
-		this.customFiles = [];
+		this.FILES = {};
+		this.CUSTOM_TEXTAREAS = [];
+		this.CUSTOM_SELECTS = [];
+		this.CUSTOM_FILES = [];
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
+	////////////////////////////////////////////////////////////////
+	// Public methods
+	////////////////////////////////////////////////////////////////
+
 	// Unset global message.
-	unsetGlobalMsg = (element) => {
+	unsetGlobalMsg(element) {
 		const messageContainer = element.querySelector(this.globalMsgSelector);
 	
 		if (!messageContainer) {
@@ -145,43 +142,43 @@ export class Utils {
 		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
-	};
+	}
 
 	// Reset for in general.
-	reset = (element) => {
+	reset(element) {
 		const items = element.querySelectorAll(this.errorSelector);
-		[...items].forEach((item) => {
-			item.innerHTML = '';
-		});
+
+		Array.from(items, item => item.innerHTML = '');
+
 		// Reset all error classes on fields.
 		element.querySelectorAll(`.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.SELECTORS.CLASS_HAS_ERROR));
 
 		this.unsetGlobalMsg(element);
-	};
+	}
 
 	// Determine if field is custom type or normal.
-	isCustom = (element) => {
+	isCustom(element) {
 		return element.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
-	};
+	}
 
 	// Dispatch custom event.
-	dispatchFormEvent = (element, name) => {
+	dispatchFormEvent(element, name) {
 		const event = new CustomEvent(name, {
 			bubbles: true
 		});
 
 		element.dispatchEvent(event);
-	};
+	}
 
 	// Scroll to specific element.
-	scrollToElement = (element) => {
+	scrollToElement(element) {
 		if (element !== null) {
 			element.scrollIntoView({block: 'start', behavior: 'smooth'});
 		}
-	};
+	}
 
 	// Show loader.
-	showLoader = (element) => {
+	showLoader(element) {
 		const loader = element.querySelector(this.loaderSelector);
 
 		element?.classList?.add(this.SELECTORS.CLASS_LOADING);
@@ -191,10 +188,10 @@ export class Utils {
 		}
 
 		loader.classList.add(this.SELECTORS.CLASS_ACTIVE);
-	};
+	}
 
 	// Output all error for fields.
-	outputErrors = (element, fields) => {
+	outputErrors(element, fields) {
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
@@ -207,15 +204,15 @@ export class Utils {
 		}
 
 		// Scroll to element if the condition is right.
-		if (typeof fields !== 'undefined' && this.formDisableScrollToFieldOnError !== '1') {
+		if (typeof fields !== 'undefined' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
 		}
-	};
+	}
 
 	// Hide loader.
-	hideLoader = (element) => {
+	hideLoader(element) {
 		const loader = element.querySelector(this.loaderSelector);
 
 		setTimeout(() => {
@@ -226,11 +223,11 @@ export class Utils {
 			}
 
 			loader.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-		}, parseInt(this.hideLoadingStateTimeout, 10));
-	};
+		}, parseInt(this.SETTINGS.HIDE_LOADING_STATE_TIMEOUT, 10));
+	}
 
 	// Set global message.
-	setGlobalMsg = (element, msg, status) => {
+	setGlobalMsg(element, msg, status) {
 		if(element.hasAttribute(this.DATA_ATTRIBUTES.successRedirect) && status === 'success') {
 			return;
 		}
@@ -246,13 +243,13 @@ export class Utils {
 		messageContainer.innerHTML = `<span>${msg}</span>`;
 
 		// Scroll to msg if the condition is right.
-		if (status === 'success' && this.formDisableScrollToGlobalMessageOnSuccess !== '1') {
+		if (status === 'success' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
 			this.scrollToElement(messageContainer);
 		}
-	};
+	}
 
 	// Hide global message.
-	hideGlobalMsg = (element) => {
+	hideGlobalMsg(element) {
 		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {
@@ -260,10 +257,10 @@ export class Utils {
 		}
 
 		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-	};
+	}
 
 	// Build GTM data for the data layer.
-	getGtmData = (element, eventName) => {
+	getGtmData(element, eventName) {
 		const items = element.querySelectorAll(`[${this.DATA_ATTRIBUTES.tracking}]`);
 		const dataTemp = {};
 
@@ -329,10 +326,10 @@ export class Utils {
 		}
 
 		return Object.assign({}, { event: eventName, ...data });
-	};
+	}
 
 	// Submit GTM event.
-	gtmSubmit = (element) => {
+	gtmSubmit(element) {
 		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
@@ -343,10 +340,10 @@ export class Utils {
 				window.dataLayer.push(gtmData);
 			}
 		}
-	};
+	}
 
 	// Prefill inputs active/filled on init.
-	preFillOnInit = (input, type) => {
+	preFillOnInit(input, type) {
 		switch (type) {
 			case 'checkbox':
 			case 'radio':
@@ -368,7 +365,75 @@ export class Utils {
 				}
 				break;
 		}
-	};
+	}
+
+	// Reset form values if the condition is right.
+	resetForm(element) {
+		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
+			element.reset();
+
+			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
+
+			// Unset the choices in the submitted form.
+			if (this.CUSTOM_SELECTS[formId]) {
+				this.CUSTOM_SELECTS[formId].forEach((item) => {
+					item.setChoiceByValue('');
+				});
+			}
+
+			// Unset the choices in the submitted form.
+			if (this.CUSTOM_FILES[formId]) {
+				this.CUSTOM_FILES[formId].forEach((item) => {
+					item.removeAllFiles();
+				});
+			}
+
+			const fields = element.querySelectorAll(this.fieldSelector);
+
+			[...fields].forEach((item) => {
+				item.classList.remove(this.SELECTORS.CLASS_FILLED);
+				item.classList.remove(this.SELECTORS.CLASS_ACTIVE);
+				item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+			});
+
+			// Remove focus from last input.
+			document.activeElement.blur();
+
+			// Dispatch event.
+			this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_RESET);
+		}
+	}
+
+	// Redirect to url and update url params from from data.
+	redirectToUrl(element, formData) {
+		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
+
+		// Replace string templates used for passing data via url.
+		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
+			if (typeof val === 'string') {
+				const { value, name } = JSON.parse(val);
+				redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
+			}
+		}
+
+		// Do the actual redirect after some time.
+		setTimeout(() => {
+			window.location.href = redirectUrl;
+		}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
+	}
+
+	// Check if captcha is used.
+	isCaptchaUsed() {
+		if (this.SETTINGS.CAPTCHA) {
+			return true;
+		}
+
+		return false;
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
 
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
@@ -418,169 +483,106 @@ export class Utils {
 		}
 	};
 
-	// Set local storage value.
-	setLocalStorage = () => {
-		// If storage is not set in the backend bailout.
-		// Backend provides the ability to limit what tags are allowed to store in local storage.
-		if (this.storageConfig === '') {
-			return;
+	////////////////////////////////////////////////////////////////
+	// Private methods - not shared to the public window object.
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set all public methods.
+	 * 
+	 * @private
+	 */
+	 publicMethods() {
+		if (typeof window[this.prefix] === 'undefined') {
+			window[this.prefix] = {};
 		}
 
-		const storageConfig = JSON.parse(this.storageConfig);
+		if (typeof window[this.prefix]?.utils === 'undefined') {
+			window[this.prefix].utils = {
+				prefix: this.prefix,
+				formIsAdmin: this.formIsAdmin,
+				formSubmitRestApiUrl: this.formSubmitRestApiUrl,
+				formSelector: this.formSelector,
 
-		const allowedTags = storageConfig?.allowed;
-		const expiration = storageConfig?.expiration ?? '30';
+				submitSingleSelector: this.submitSingleSelector,
+				errorSelector: this.errorSelector,
+				loaderSelector: this.loaderSelector,
+				globalMsgSelector: this.globalMsgSelector,
+				groupSelector: this.groupSelector,
+				groupInnerSelector: this.groupInnerSelector,
+				customSelector: this.customSelector,
+				fieldSelector: this.fieldSelector,
+				inputSelector: this.inputSelector,
+				textareaSelector: this.textareaSelector,
+				selectSelector: this.selectSelector,
+				fileSelector: this.fileSelector,
 
-		// Missing data from backend, bailout.
-		if (!allowedTags) {
-			return;
+				FORM_PARAMS: this.FORM_PARAMS,
+				DATA_ATTRIBUTES: this.DATA_ATTRIBUTES,
+				SETTINGS: this.SETTINGS,
+				EVENTS: this.EVENTS,
+				SELECTORS: this.SELECTORS,
+				CONDITIONAL_TAGS: this.CONDITIONAL_TAGS,
+				FILES: this.FILES,
+				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
+				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
+				CUSTOM_FILES: this.CUSTOM_FILES,
+
+				unsetGlobalMsg(element) {
+					this.unsetGlobalMsg(element);
+				},
+				reset(element) {
+					this.reset(element);
+				},
+				isCustom(element) {
+					this.isCustom(element);
+				},
+				dispatchFormEvent(element, name) {
+					this.dispatchFormEvent(element, name);
+				},
+				scrollToElement(element) {
+					this.scrollToElement(element);
+				},
+				showLoader(element) {
+					this.showLoader(element);
+				},
+				outputErrors(element, fields) {
+					this.outputErrors(element, fields);
+				},
+				hideLoader(element) {
+					this.hideLoader(element);
+				},
+				setGlobalMsg(element, msg, status) {
+					this.setGlobalMsg(element, msg, status);
+				},
+				hideGlobalMsg(element) {
+					this.hideGlobalMsg(element);
+				},
+				getGtmData(element, eventName) {
+					this.getGtmData(element, eventName);
+				},
+				gtmSubmit(element) {
+					this.gtmSubmit(element);
+				},
+				preFillOnInit(input, type) {
+					this.preFillOnInit(input, type);
+				},
+				resetForm(element) {
+					this.resetForm(element);
+				},
+				redirectToUrl(element, formData) {
+					this.redirectToUrl(element, formData);
+				},
+				isCaptchaUsed() {
+					this.isCaptchaUsed();
+				},
+				onFocusEvent(event) {
+					this.onFocusEvent(event);
+				},
+				onBlurEvent(event) {
+					this.onBlurEvent(event);
+				},
+			};
 		}
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
-		// Get storage from backend this is considered new by the page request.
-		const newStorage = {};
-
-		// Loop entries and get new storage values.
-		for (const [key, value] of searchParams.entries()) {
-			// Bailout if not allowed or empty
-			if (!allowedTags.includes(key) || value === '') {
-				continue;
-			}
-
-			// Add valid tag.
-			newStorage[key] = value;
-		}
-
-		// Bailout if nothing is set from allowed tags or everything is empty.
-		if (Object.keys(newStorage).length === 0) {
-			return;
-		}
-
-		// Add current timestamp to new storage.
-		newStorage.timestamp = Date.now();
-
-		// Store in a new variable for later usage.
-		const newStorageFinal = {...newStorage};
-		delete newStorageFinal.timestamp;
-
-		// current storage is got from local storage.
-		const currentStorage = JSON.parse(this.getLocalStorage());
-
-		// Store in a new variable for later usage.
-		const currentStorageFinal = {...currentStorage};
-		delete currentStorageFinal.timestamp;
-
-		// If storage exists check if it is expired.
-		if (this.getLocalStorage() !== null) {
-			// Update expiration date by number of days from the current
-			let expirationDate = new Date(currentStorage.timestamp);
-			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
-
-			// Remove expired storage if it exists.
-			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.STORAGE_NAME);
-			}
-		}
-
-		// Create new storage if this is the first visit or it was expired.
-		if (this.getLocalStorage() === null) {
-			localStorage.setItem(
-				this.STORAGE_NAME,
-				JSON.stringify(newStorage)
-			);
-			return;
-		}
-
-		// Prepare new output.
-		const output = {
-			...currentStorageFinal,
-			...newStorageFinal,
-		};
-
-		// If output is empty something was wrong here and just bailout.
-		if (Object.keys(output).length === 0) {
-			return;
-		}
-
-		// If nothing has changed bailout.
-		if (JSON.stringify(currentStorageFinal) === JSON.stringify(output)) {
-			return;
-		}
-
-		// Add timestamp to the new output.
-		const finalOutput = {
-			...output,
-			timestamp: newStorage.timestamp,
-		};
-
-		// Update localStorage with the new item.
-		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
-	};
-
-	// Get local storage value.
-	getLocalStorage = () => {
-		return localStorage.getItem(this.STORAGE_NAME);
-	};
-
-	// Reset form values if the condition is right.
-	resetForm = (element) => {
-		if (this.formResetOnSuccess) {
-			element.reset();
-
-			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
-
-			// Unset the choices in the submitted form.
-			if (this.customSelects[formId]) {
-				this.customSelects[formId].forEach((item) => {
-					item.setChoiceByValue('');
-				});
-			}
-
-			// Unset the choices in the submitted form.
-			if (this.customFiles[formId]) {
-				this.customFiles[formId].forEach((item) => {
-					item.removeAllFiles();
-				});
-			}
-
-			const fields = element.querySelectorAll(this.fieldSelector);
-
-			[...fields].forEach((item) => {
-				item.classList.remove(this.SELECTORS.CLASS_FILLED);
-				item.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-				item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
-			});
-
-			// Remove focus from last input.
-			document.activeElement.blur();
-
-			// Dispatch event.
-			this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_RESET);
-		}
-	};
-
-	// Redirect to url and update url params from from data.
-	redirectToUrl = (element, formData) => {
-		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
-
-		// Replace string templates used for passing data via url.
-		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
-			if (typeof val === 'string') {
-				const { value, name } = JSON.parse(val);
-				redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
-			}
-		}
-
-		// Do the actual redirect after some time.
-		setTimeout(() => {
-			window.location.href = redirectUrl;
-		}, parseInt(this.redirectionTimeout, 10));
-	};
+	 }
 }

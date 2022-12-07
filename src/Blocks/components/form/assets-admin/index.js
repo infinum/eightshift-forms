@@ -6,7 +6,7 @@ import { Utils } from './../assets/utilities';
 
 domReady(() => {
 	if (typeof esFormsLocalization === 'undefined') {
-		throw 'Your project is missing the global "esFormsLocalization" variable called from the enqueue script.';
+		console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
 	}
 
 	const {
@@ -21,10 +21,12 @@ domReady(() => {
 
 	if (elements.length) {
 		import('./../assets/form').then(({ Form }) => {
-			const form = new Form(new Utils({
-				formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
-				formIsAdmin: true,
-			}));
+			const form = new Form({
+				utils: new Utils({
+					formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
+					formIsAdmin: true,
+				}),
+			});
 
 			form.init();
 		});
@@ -36,7 +38,7 @@ domReady(() => {
 	if (elementsCache.length) {
 		import('./cache').then(({ Cache }) => {
 			const cache = new Cache({
-				...new Utils(),
+				utils: new Utils(),
 				selector: selectorCache,
 				clearCacheRestUrl: esFormsLocalization.clearCacheRestUrl,
 			});
@@ -51,7 +53,7 @@ domReady(() => {
 	if (elementsMigration.length) {
 		import('./migration').then(({ Migration }) => {
 			const migration = new Migration({
-				...new Utils(),
+				utils: new Utils(),
 				selector: selectorMigration,
 				migrationRestUrl: esFormsLocalization.migrationRestUrl,
 			});
@@ -66,7 +68,7 @@ domReady(() => {
 	if (elementsTransfer.length) {
 		import('./transfer').then(({ Transfer }) => {
 			const transfer = new Transfer({
-				...new Utils(),
+				utils: new Utils(),
 				selector: selectorTransfer,
 				itemSelector: `.${componentTransferJsClass}-item`,
 				uploadSelector: `.${componentTransferJsClass}-upload`,

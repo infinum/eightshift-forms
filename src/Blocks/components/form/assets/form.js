@@ -1,26 +1,75 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { ConditionalTags } from './conditional-tags';
+import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 
 /**
  * Main Forms class.
  */
 export class Form {
-	constructor(options) {
+	constructor(options = {}) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
+
+		/** @type Enrichment */
+		this.enrichment = new Enrichment(this.utils);
+
+		/** @type ConditionalTags */
+		this.conditionalTags = new ConditionalTags(this.utils);
 	}
 
-	// Init all actions.
-	init = () => {
+	////////////////////////////////////////////////////////////////
+	// Public methods
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Init all actions.
+	 * 
+	 * @public
+	 */
+	init() {
+		// Set all public methods.
+		this.publicMethods();
+
+		// Init all forms.
+		this.initOnlyForms();
+
+		// Init conditional tags.
+		this.conditionalTags.init();
+
+		// Init enrichment.
+		this.enrichment.init();
+
+		// Triger event that forms are fully loaded.
+		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
+	}
+
+	/**
+	 * Init all forms.
+	 * 
+	 * @public
+	 */
+	initOnlyForms() {
 		const elements = document.querySelectorAll(this.utils.formSelector);
 
 		// Loop all forms on the page.
 		[...elements].forEach((element) => {
+			this.initOne(element);
+		});
+	}
 
+	/**
+	 * Init one form by element.
+	 * 
+	 * @param {object} element Form element.
+	 *
+	 * @public
+	 */
+	initOne(element) {
 			// Regular submit.
-			element.addEventListener('submit', this.onFormSubmit);
+			element.addEventListener('submit', this.onFormSubmitEvent);
 
 			// Single submit for admin settings.
 			if (this.utils.formIsAdmin) {
@@ -29,9 +78,9 @@ export class Form {
 				// Look all internal items for single submit option.
 				[...items].forEach((item) => {
 					if (item.type === 'submit') {
-						item.addEventListener('click', this.onFormSubmitSingle);
+						item.addEventListener('click', this.onFormSubmitSingleEvent);
 					} else {
-						item.addEventListener('change', this.onFormSubmitSingle);
+						item.addEventListener('change', this.onFormSubmitSingleEvent);
 					}
 				});
 			}
@@ -44,7 +93,6 @@ export class Form {
 			const textareas = element.querySelectorAll(this.utils.textareaSelector);
 			const selects = element.querySelectorAll(this.utils.selectSelector);
 			const files = element.querySelectorAll(this.utils.fileSelector);
-			const conditionalTagsData = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
 
 			// Setup regular inputs.
 			[...inputs].forEach((input) => {
@@ -52,79 +100,36 @@ export class Form {
 			});
 
 			// Setup select inputs.
-			this.utils.customSelects[formId] = [];
+			this.utils.CUSTOM_SELECTS[formId] = [];
 			[...selects].forEach((select) => {
 				this.setupSelectField(select, formId);
 			});
 
 			// Setup textarea inputs.
-			this.utils.customTextareas[formId] = [];
+			this.utils.CUSTOM_TEXTAREAS[formId] = [];
 			[...textareas].forEach((textarea) => {
 				this.setupTextareaField(textarea, formId);
 			});
 
 			// Setup file single inputs.
-			this.utils.customFiles[formId] = [];
+			this.utils.CUSTOM_FILES[formId] = [];
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
 
-			// Load conditional data class if used.
-			if (conditionalTagsData) {
-				import('./conditional-tags').then(({ ConditionalTags }) => {
-					const cTagsClass = new ConditionalTags({
-						...this.utils,
-						data: conditionalTagsData,
-					});
-
-					cTagsClass.init();
-
-					// Populate window with necessary functions and prefix everything with "ct".
-					window['esForms'] = {
-						...window['esForms'],
-						conditionalTags: cTagsClass,
-					};
-				});
-			}
-
 			// Triger event that form is fully loaded.
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
-		});
+	}
 
-		// Set localStorage data from global variable.
-		this.utils.setLocalStorage();
-
-		// Triger event that forms are fully loaded.
-		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
-	};
-
-	// Handle form submit and all logic.
-	onFormSubmit = (event) => {
-		event.preventDefault();
-
-		const element = event.target;
-
-		if (this.utils.captcha) {
-			grecaptcha.ready(() => {
-				grecaptcha.execute(this.utils.captcha, {action: 'submit'}).then((token) => {
-					this.formSubmitCaptcha(element, token);
-				});
-			});
-		} else {
-			this.formSubmit(element);
-		}
-	};
-
-	// Handle form submit and all logic for only one field click.
-	onFormSubmitSingle = (event) => {
-		event.preventDefault();
-		const {target} = event;
-
-		this.formSubmit(target.closest(this.utils.formSelector), target);
-	};
-
-	// Handle form submit and all logic in case we have captcha in place.
-	formSubmitCaptcha = (element, token) => {
+	/**
+	 *  Handle form submit and all logic in case we have captcha in place.
+	 * 
+	 * @param {object} element Form element.
+	 * @param {string} token Captcha token from api.
+	 *
+	 * @public
+	 */
+	formSubmitCaptcha(element, token) {
 		// Loader show.
 		this.utils.showLoader(element);
 
@@ -168,18 +173,25 @@ export class Form {
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
+				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 			}
 		});
-	};
+	}
 
-	// Handle form submit and all logic.
-	formSubmit = (element, singleSubmit = false) => {
+	/**
+	 * Handle form submit and all logic.
+	 * 
+	 * @param {object} element Form element.
+	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 *
+	 * @public
+	 */
+	formSubmit(element, singleSubmit = false) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
-		if (!this.utils.captcha) {
+		if (!this.utils.SETTINGS.CAPTCHA) {
 			this.utils.showLoader(element);
 		}
 
@@ -253,7 +265,7 @@ export class Form {
 					// Do the actual redirect after some time.
 					setTimeout(() => {
 						element.submit();
-					}, parseInt(this.utils.redirectionTimeout, 10));
+					}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
 				}
 
 				// Normal errors.
@@ -277,13 +289,13 @@ export class Form {
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
+				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 
 				// Dispatch event.
 				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
 			})
 			.catch(() => {
-				this.utils.setGlobalMsg(element, this.utils.formServerErrorMsg, 'error');
+				this.utils.setGlobalMsg(element, this.utils.SETTINGS.FORM_SERVER_ERROR_MSG, 'error');
 
 				// Remove loader.
 				this.utils.hideLoader(element);
@@ -291,12 +303,19 @@ export class Form {
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.hideGlobalMessageTimeout, 10));
+				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 			});
-	};
+	}
 
-	// Build form data object.
-	getFormData = (element, singleSubmit = false) => {
+	/**
+	 * Build form data object.
+	 * 
+	 * @param {object} element Form element.
+	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 *
+	 * @public
+	 */
+	getFormData(element, singleSubmit = false) {
 		const formData = new FormData();
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
@@ -402,7 +421,7 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.utils.isCustom(item)) {
-					fileList = this.utils.files[formId][id] ?? [];
+					fileList = this.utils.FILES[formId][id] ?? [];
 				}
 
 				// Loop files and append.
@@ -469,28 +488,43 @@ export class Form {
 		}
 
 		// Set localStorage to hidden field.
-	 const storage = this.utils.getLocalStorage();
-	 if (storage) {
-		formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
-			value: storage,
-			type: 'hidden',
-		}));
-	 }
+		if (this.enrichment.isEnrichmentUsed()) {
+			const storage = this.enrichment.getLocalStorage();
+			if (storage) {
+			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
+				 value: storage,
+				 type: 'hidden',
+			 }));
+			}
+		}
 
 		return formData;
-	};
+	}
 
-	// Setup Regular field.
-	setupInputField = (input) => {
+	/**
+	 * Setup Regular field.
+	 *
+	 * @param {object} input Input element.
+	 *
+	 * @public
+	 */
+	setupInputField(input) {
 		this.utils.preFillOnInit(input, input.type);
 
 		input.addEventListener('keydown', this.utils.onFocusEvent);
 		input.addEventListener('focus', this.utils.onFocusEvent);
 		input.addEventListener('blur', this.utils.onBlurEvent);
-	};
+	}
 
-	// Setup Select field.
-	setupSelectField = (select, formId) => {
+	/**
+	 * Setup Select field.
+	 * 
+	 * @param {object} select Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupSelectField(select, formId) {
 		const option = select.querySelector('option');
 
 		if (this.utils.isCustom(select)) {
@@ -504,7 +538,7 @@ export class Form {
 
 				this.utils.preFillOnInit(choices, 'select-custom');
 
-				this.utils.customSelects[formId].push(choices);
+				this.utils.CUSTOM_SELECTS[formId].push(choices);
 
 				select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
 				select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
@@ -515,10 +549,17 @@ export class Form {
 			select.addEventListener('focus', this.utils.onFocusEvent);
 			select.addEventListener('blur', this.utils.onBlurEvent);
 		}
-	};
+	}
 
-	// Setup Textarea field.
-	setupTextareaField = (textarea, formId) => {
+	/**
+	 * Setup Textarea field.
+	 * 
+	 * @param {object} textarea Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupTextareaField(textarea, formId) {
 		this.utils.preFillOnInit(textarea, 'textarea');
 
 		textarea.addEventListener('keydown', this.utils.onFocusEvent);
@@ -532,23 +573,31 @@ export class Form {
 
 				autosize.default(textarea);
 
-				this.utils.customTextareas[formId].push(autosize.default);
+				this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
 			});
 		}
-	};
+	}
 
-	// Setup file single field.
-	setupFileField = (file, formId, index) => {
+	/**
+	 * Setup file single field.
+	 * 
+	 * @param {object} file Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 * @param {number} index Loop index.
+	 *
+	 * @public
+	 */
+	setupFileField(file, formId, index) {
 		if (this.utils.isCustom(file)) {
 
 			const fileId = file?.id;
 
-			if (typeof this.utils.files[formId] === 'undefined') {
-				this.utils.files[formId] = {};
+			if (typeof this.utils.FILES[formId] === 'undefined') {
+				this.utils.FILES[formId] = {};
 			}
 
-			if (typeof this.utils.files[formId][fileId] === 'undefined') {
-				this.utils.files[formId][fileId] = [];
+			if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
+				this.utils.FILES[formId][fileId] = [];
 			}
 
 			import('dropzone').then((Dropzone) => {
@@ -561,11 +610,11 @@ export class Form {
 						autoProcessQueue: false,
 						autoDiscover: false,
 						maxFiles: !file.multiple ? 1 : null,
-						dictRemoveFile: this.utils.fileCustomRemoveLabel,
+						dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
 					}
 				);
 
-				this.utils.customFiles[formId].push(myDropzone);
+				this.utils.CUSTOM_FILES[formId].push(myDropzone);
 
 				// On add one file.
 				myDropzone.on("addedfile", (file) => {
@@ -577,7 +626,7 @@ export class Form {
 						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
 					}, 1200);
 
-					this.utils.files[formId][fileId].push(file);
+					this.utils.FILES[formId][fileId].push(file);
 				});
 
 				// On max file size reached.
@@ -591,16 +640,16 @@ export class Form {
 						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
 					}, 1500);
 
-					const itemsLeft = this.utils.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
 
-					this.utils.files[formId][fileId] = [...itemsLeft];
+					this.utils.FILES[formId][fileId] = [...itemsLeft];
 				});
 
 				// On remove files.
 				myDropzone.on("removedfile", (file) => {
-					const itemsLeft = this.utils.files[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
 
-					this.utils.files[formId][fileId] = [...itemsLeft];
+					this.utils.FILES[formId][fileId] = [...itemsLeft];
 
 					myDropzone.setupEventListeners();
 				});
@@ -617,26 +666,19 @@ export class Form {
 				button.addEventListener('blur', this.utils.onBlurEvent);
 			});
 		}
-	};
+	}
 
-	// On custom file wrapper click event callback.
-	onCustomFileWrapClickEvent = (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		const index = event.currentTarget.getAttribute('dropzone-index');
-		const formId = event.currentTarget.getAttribute('dropzone-form-id');
-
-		this.utils.customFiles[formId][index].hiddenFileInput.click();
-	};
-
-	// Remove all event listeners from elements.
-	removeEvents = () => {
+	/**
+	 * Remove all event listeners from elements.
+	 * 
+	 * @public
+	 */
+	removeEvents() {
 		const elements = document.querySelectorAll(this.utils.formSelector);
 
 		[...elements].forEach((element) => {
 			// Regular submit.
-			element.removeEventListener('submit', this.onFormSubmit);
+			element.removeEventListener('submit', this.onFormSubmitEvent);
 
 			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
@@ -653,8 +695,8 @@ export class Form {
 
 			[...selects].forEach((select) => {
 				if (this.utils.isCustom(select)) {
-					if (typeof this.utils.customSelects?.[formId] !== 'undefined') {
-						delete this.utils.customSelects[formId];
+					if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
+						delete this.utils.CUSTOM_SELECTS[formId];
 					}
 				} else {
 					select.removeEventListener('focus', this.utils.onFocusEvent);
@@ -669,16 +711,16 @@ export class Form {
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
 				if (this.utils.isCustom(textarea)) {
-					if (typeof this.utils.customTextareas?.[formId] !== 'undefined') {
-						delete this.utils.customTextareas[formId];
+					if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
+						delete this.utils.CUSTOM_TEXTAREAS[formId];
 					}
 				}
 			});
 
 			// Setup file single inputs.
 			[...files].forEach((file) => {
-				if (typeof this.utils.customFiles?.[formId] !== 'undefined') {
-					delete this.utils.customFiles[formId];
+				if (typeof this.utils.CUSTOM_FILES?.[formId] !== 'undefined') {
+					delete this.utils.CUSTOM_FILES[formId];
 				}
 
 				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
@@ -691,5 +733,119 @@ export class Form {
 
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_EVENTS_CLEAR);
 		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Handle form submit and all logic.
+	 * 
+	 * @param {object} event Event callback.
+	 *
+	 * @public
+	 */
+	onFormSubmitEvent = (event) => {
+		event.preventDefault();
+
+		const element = event.target;
+		
+
+		if (this.utils.isCaptchaUsed()) {
+			grecaptcha.ready(() => {
+				grecaptcha.execute(this.utils.SETTINGS.CAPTCHA, {action: 'submit'}).then((token) => {
+					this.formSubmitCaptcha(element, token);
+				});
+			});
+		} else {
+			this.formSubmit(element);
+		}
 	};
+
+	/**
+	 * On custom file wrapper click event callback.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @public
+	 */
+	onCustomFileWrapClickEvent = (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const index = event.currentTarget.getAttribute('dropzone-index');
+		const formId = event.currentTarget.getAttribute('dropzone-form-id');
+
+		this.utils.CUSTOM_FILES[formId][index].hiddenFileInput.click();
+	};
+
+	/**
+	 * Handle form submit and all logic for only one field click.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @private
+	 */
+	onFormSubmitSingleEvent = (event) => {
+		event.preventDefault();
+		const {target} = event;
+
+		this.formSubmit(target.closest(this.utils.formSelector), target);
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Private methods - not shared to the public window object.
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set all public methods.
+	 * 
+	 * @private
+	 */
+	publicMethods() {
+		if (typeof window[this.prefix]?.form === 'undefined') {
+			window[this.utils.prefix].form = {
+				init() {
+					this.init();
+				},
+				initOnlyForms() {
+					this.initOnlyForms();
+				},
+				initOne(element) {
+					this.initOne(element);
+				},
+				onFormSubmitEvent(event) {
+					this.onFormSubmitEvent(event);
+				},
+				formSubmitCaptcha(element, token) {
+					this.formSubmitCaptcha(element, token);
+				},
+				formSubmit(element) {
+					this.formSubmit(element);
+				},
+				getFormData(element) {
+					this.getFormData(element);
+				},
+				setupInputField(input) {
+					this.setupInputField(input);
+				},
+				setupSelectField(select, formId) {
+					this.setupSelectField(select, formId);
+				},
+				setupTextareaField(textarea, formId) {
+					this.setupTextareaField(textarea, formId);
+				},
+				setupFileField(file, formId, index) {
+					this.setupFileField(file, formId, index);
+				},
+				onCustomFileWrapClickEvent(event) {
+					this.onCustomFileWrapClickEvent(event);
+				},
+				removeEvents() {
+					this.removeEvents();
+				},
+			};
+		}
+	}
 }

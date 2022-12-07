@@ -3,7 +3,7 @@ import { Utils } from "../assets/utilities";
 export class Transfer {
 	constructor(options) {
 		/** @type Utils */
-		this.utils = options ?? new Utils();
+		this.utils = options.utils ?? new Utils();
 
 		this.selector = options.selector;
 		this.itemSelector = options.itemSelector;
@@ -14,7 +14,7 @@ export class Transfer {
 		this.transferRestUrl = options.transferRestUrl;
 	}
 
-	init = () => {
+	init () {
 		const elements = document.querySelectorAll(this.selector);
 
 		if (elements.length) {
@@ -29,7 +29,7 @@ export class Transfer {
 				element.addEventListener('click', this.onClickItem, true);
 			});
 		}
-	};
+	}
 
 	// Handle form submit and all logic.
 	onClick = (event) => {
