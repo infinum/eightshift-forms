@@ -115,7 +115,7 @@ export class ConditionalTags {
 				})
 			};
 		});
-	};
+	}
 
 	/**
 	 * Set init state of fields on page load.
@@ -141,7 +141,7 @@ export class ConditionalTags {
 				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
 		}
-	};
+	}
 
 	/**
 	 * Add event listeners to all items that need it.
@@ -166,7 +166,7 @@ export class ConditionalTags {
 				item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
 			}
 		});
-	};
+	}
 
 	/**
 	 * Test if one or all rules are valid.
