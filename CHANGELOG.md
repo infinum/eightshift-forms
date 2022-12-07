@@ -109,7 +109,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - options in forms block to define action.
 - option to send form submit to external url if form action is set.
 - new tracking class for storing url tags and detecting tags from get param.
-- new option to store url tracking tags to local storage for later usage.
+- new option to store url tracking tags to localStorage for later usage.
 - new filters for tracking.
 - local and global file upload allowed types.
 

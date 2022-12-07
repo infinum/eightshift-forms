@@ -47,8 +47,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function register(): void
 	{
-		if (!function_exists('is_plugin_active')) {
-			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		if (!\function_exists('is_plugin_active')) {
+			include_once(\ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
 		if (!\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocketAdvancedCache()) {

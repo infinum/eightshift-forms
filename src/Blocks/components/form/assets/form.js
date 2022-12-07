@@ -2,7 +2,7 @@
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './conditional-tags';
-import { LocalStorage } from './local-storage';
+import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 
 /**
@@ -13,8 +13,8 @@ export class Form {
 		/** @type Utils */
 		this.utils = options.utils ?? new Utils();
 
-		/** @type LocalStorage */
-		this.localStorage = new LocalStorage(this.utils);
+		/** @type Enrichment */
+		this.enrichment = new Enrichment(this.utils);
 
 		/** @type ConditionalTags */
 		this.conditionalTags = new ConditionalTags(this.utils);
@@ -39,8 +39,8 @@ export class Form {
 		// Init conditional tags.
 		this.conditionalTags.init();
 
-		// Init local storage.
-		this.localStorage.init();
+		// Init enrichment.
+		this.enrichment.init();
 
 		// Triger event that forms are fully loaded.
 		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
@@ -488,8 +488,8 @@ export class Form {
 		}
 
 		// Set localStorage to hidden field.
-		if (this.localStorage.isLocalStorageUsed()) {
-			const storage = this.localStorage.getLocalStorage();
+		if (this.enrichment.isEnrichmentUsed()) {
+			const storage = this.enrichment.getLocalStorage();
 			if (storage) {
 			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
 				 value: storage,

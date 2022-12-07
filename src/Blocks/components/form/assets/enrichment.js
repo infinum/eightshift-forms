@@ -1,9 +1,9 @@
 import { Utils } from "./utilities";
 
 /**
- * LocalStorage class.
+ * Enrichment class.
  */
-export class LocalStorage {
+export class Enrichment {
 	constructor(options = {}) {
 		/** @type Utils */
 		this.utils = options.utils ?? new Utils();
@@ -25,19 +25,19 @@ export class LocalStorage {
 		// Set all public methods.
 		this.publicMethods();
 
-		// Check if local storage is used.
-		if (this.isLocalStorageUsed()) {
+		// Check if enrichment is used.
+		if (this.isEnrichmentUsed()) {
 			this.setLocalStorage();
 		}
 	}
 
 	/**
-	 * Check if local storage is used.
+	 * Check if enrichment is used.
 	 * 
 	 * @public
 	 */
-	isLocalStorageUsed() {
-		if (this.utils.SETTINGS.STORAGE_CONFIG !== '') {
+	isEnrichmentUsed() {
+		if (this.utils.SETTINGS.ENRICHMENT_CONFIG !== '[]') {
 			return true;
 		}
 
@@ -45,12 +45,12 @@ export class LocalStorage {
 	}
 
 	/**
-	 * Set local storage value.
+	 * Set localStorage value.
 	 * 
 	 * @public
 	 */
 	setLocalStorage() {
-		const config = JSON.parse(this.utils.SETTINGS.STORAGE_CONFIG);
+		const config = JSON.parse(this.utils.SETTINGS.ENRICHMENT_CONFIG);
 
 		const allowedTags = config?.allowed;
 		const expiration = config?.expiration ?? '30';
@@ -94,7 +94,7 @@ export class LocalStorage {
 		const newStorageFinal = {...newStorage};
 		delete newStorageFinal.timestamp;
 
-		// current storage is got from local storage.
+		// Current storage is got from localStorage.
 		const currentStorage = JSON.parse(this.getLocalStorage());
 
 		// Store in a new variable for later usage.
@@ -149,7 +149,7 @@ export class LocalStorage {
 	}
 
 	/**
-	 * Get local storage value.
+	 * Get localStorage value.
 	 * 
 	 * @public
 	 */
@@ -167,14 +167,14 @@ export class LocalStorage {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.localStorage === 'undefined') {
-			window[this.utils.prefix].localStorage = {
+		if (typeof window[this.prefix]?.enrichment === 'undefined') {
+			window[this.utils.prefix].enrichment = {
 				STORAGE_NAME: this.STORAGE_NAME,
 				init() {
 					this.init();
 				},
-				isLocalStorageUsed() {
-					this.isLocalStorageUsed();
+				isEnrichmentUsed() {
+					this.isEnrichmentUsed();
 				},
 				setLocalStorage() {
 					this.setLocalStorage();

@@ -54,7 +54,7 @@ export class Utils {
 			FILE_CUSTOM_REMOVE_LABEL: options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '',
 			FORM_SERVER_ERROR_MSG: options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '',
 			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? '',
-			STORAGE_CONFIG: options.storageConfig ?? esFormsLocalization.storageConfig ?? '',
+			ENRICHMENT_CONFIG: options.enrichmentConfig ?? esFormsLocalization.enrichmentConfig ?? '[]',
 		};
 
 		// All custom events.
