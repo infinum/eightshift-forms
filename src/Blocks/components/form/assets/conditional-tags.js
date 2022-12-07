@@ -324,34 +324,34 @@ export class ConditionalTags {
 				DATA_REFERENCE: this.DATA_REFERENCE,
 				INTERNAL_DATA: this.INTERNAL_DATA,
 				CONDITIONAL_LOGIC: this.CONDITIONAL_LOGIC,
-				init() {
+				init: () => {
 					this.init();
 				},
-				initOnlyForms() {
+				initOnlyForms: () => {
 					this.initOnlyForms();
 				},
-				initOne(element) {
+				initOne: (element) => {
 					this.initOne(element);
 				},
-				setData(data) {
+				setData: (data) => {
 					this.setData(data);
 				},
-				setInit() {
+				setInit: () => {
 					this.setInit();
 				},
-				setListeners() {
+				setListeners: () => {
 					this.setListeners();
 				},
-				onCustomSelectChangeEvent(event) {
+				onCustomSelectChangeEvent: (event) => {
 					this.onCustomSelectChangeEvent(event);
 				},
-				onFieldChangeEvent(event) {
+				onFieldChangeEvent: (event) => {
 					this.onFieldChangeEvent(event);
 				},
-				areAllRulesValid(logic, item) {
+				areAllRulesValid: (logic, item) => {
 					this.areAllRulesValid(logic, item);
 				},
-				isRuleValid(rule, inputValue, item, index) {
+				isRuleValid: (rule, inputValue, item, index) => {
 					this.isRuleValid(rule, inputValue, item, index);
 				},
 			};

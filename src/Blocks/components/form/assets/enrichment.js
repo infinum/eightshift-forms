@@ -170,16 +170,16 @@ export class Enrichment {
 		if (typeof window[this.prefix]?.enrichment === 'undefined') {
 			window[this.utils.prefix].enrichment = {
 				STORAGE_NAME: this.STORAGE_NAME,
-				init() {
+				init: () => {
 					this.init();
 				},
-				isEnrichmentUsed() {
+				isEnrichmentUsed: () => {
 					this.isEnrichmentUsed();
 				},
-				setLocalStorage() {
+				setLocalStorage: () => {
 					this.setLocalStorage();
 				},
-				getLocalStorage() {
+				getLocalStorage: () => {
 					this.getLocalStorage();
 				},
 			};
