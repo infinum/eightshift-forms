@@ -1,4 +1,5 @@
-# Filters Integrations
+# Integrations filters
+
 This document will provide you with the code examples for forms filters used in integrations.
 
 ## Change form fields data before output.

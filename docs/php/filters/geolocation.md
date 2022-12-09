@@ -1,4 +1,5 @@
-# Filters Geolocation
+# Geolocation filters
+
 This document will provide you with the code examples for forms filters used in geolocation.
 
 > If the filter has global variable equivalent and the constant is active, filter will not be used.

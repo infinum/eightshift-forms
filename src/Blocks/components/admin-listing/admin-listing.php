@@ -126,7 +126,7 @@ $layoutClass = Components::classnames([
 						<li
 							class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>"
 							data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>"
-							data-integration-is-active="<?php echo esc_attr(!$activeIntegrationIsActive); ?>"
+							data-integration-is-active="<?php echo !$activeIntegrationIsActive; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>"
 						>
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($slug); ?>" class="<?php echo esc_attr("{$componentClass}__label"); ?>">

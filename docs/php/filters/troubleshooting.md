@@ -1,4 +1,5 @@
-# Filters Troubleshooting
+# Troubleshooting filters
+
 This document will provide you with the code examples for forms filters used in troubleshooting.
 
 ## Output debug logs to external source

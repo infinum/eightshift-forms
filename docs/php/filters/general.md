@@ -1,4 +1,5 @@
-# Filters General
+# General filters
+
 This document will provide you with the code examples for forms filters used in general.
 
 ## Change http request timeout

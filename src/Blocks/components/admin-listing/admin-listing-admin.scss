@@ -43,7 +43,7 @@
 			display: none;
 		}
 
-		&[data-integration-is-active="1"] {
+		&[data-integration-is-active='1'] {
 			background: linear-gradient(to right, var(--global-colors-es-pome-10) 0%, transparent 85%);
 		}
 	}

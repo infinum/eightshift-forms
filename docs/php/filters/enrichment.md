@@ -1,4 +1,5 @@
-# Filters Enrichment
+# Enrichment filters
+
 This document will provide you with the code examples for forms filters used in tracking.
 
 ## Map localStorage tags to Hubspot field

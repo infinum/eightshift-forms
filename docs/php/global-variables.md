@@ -1,4 +1,4 @@
-# Variables
+# WordPress Global variables
 
 This document will provide you with the code examples for forms global variables that you usually put in the `wp-config.php` file.
 
