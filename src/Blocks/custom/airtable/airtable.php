@@ -47,11 +47,13 @@ if (!$isSettingsValid && $airtableFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Airtable::FILTER_MAPPER_NAME,
-	$airtableFormPostId,
-	[
-		'formDataTypeSelector' => $airtableFormDataTypeSelector,
-		'ssr' => $airtableFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Airtable::FILTER_MAPPER_NAME,
+		$airtableFormPostId,
+		[
+			'formDataTypeSelector' => $airtableFormDataTypeSelector,
+			'ssr' => $airtableFormServerSideRender,
+		]
+	);
+}

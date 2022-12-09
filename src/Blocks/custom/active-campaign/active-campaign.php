@@ -50,11 +50,13 @@ if (!$isSettingsValid && $activeCampaignFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	ActiveCampaign::FILTER_MAPPER_NAME,
-	$activeCampaignFormPostId,
-	[
-		'formDataTypeSelector' => $activeCampaignFormDataTypeSelector,
-		'ssr' => $activeCampaignFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		ActiveCampaign::FILTER_MAPPER_NAME,
+		$activeCampaignFormPostId,
+		[
+			'formDataTypeSelector' => $activeCampaignFormDataTypeSelector,
+			'ssr' => $activeCampaignFormServerSideRender,
+		]
+	);
+}

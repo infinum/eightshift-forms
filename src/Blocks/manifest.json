@@ -93,6 +93,11 @@
 				"color": "#E84E4E"
 			},
 			{
+				"name": "Pome 10%",
+				"slug": "es-pome-10",
+				"color": "#E84E4E1A"
+			},
+			{
 				"name": "Reef",
 				"slug": "es-reef",
 				"color": "#44AEDE"

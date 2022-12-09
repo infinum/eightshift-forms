@@ -50,11 +50,13 @@ if (!$isSettingsValid && $momentsFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Moments::FILTER_MAPPER_NAME,
-	$momentsFormPostId,
-	[
-		'formDataTypeSelector' => $momentsFormDataTypeSelector,
-		'ssr' => $momentsFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Moments::FILTER_MAPPER_NAME,
+		$momentsFormPostId,
+		[
+			'formDataTypeSelector' => $momentsFormDataTypeSelector,
+			'ssr' => $momentsFormServerSideRender,
+		]
+	);
+}

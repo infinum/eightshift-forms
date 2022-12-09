@@ -50,11 +50,13 @@ if (!$isSettingsValid && $mailchimpFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Mailchimp::FILTER_MAPPER_NAME,
-	$mailchimpFormPostId,
-	[
-		'formDataTypeSelector' => $mailchimpFormDataTypeSelector,
-		'ssr' => $mailchimpFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Mailchimp::FILTER_MAPPER_NAME,
+		$mailchimpFormPostId,
+		[
+			'formDataTypeSelector' => $mailchimpFormDataTypeSelector,
+			'ssr' => $mailchimpFormServerSideRender,
+		]
+	);
+}

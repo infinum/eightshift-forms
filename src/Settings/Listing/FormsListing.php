@@ -14,6 +14,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Settings\SettingsHelper;
 use WP_Query;
 
 /**
@@ -21,6 +22,11 @@ use WP_Query;
  */
 class FormsListing implements FormListingInterface
 {
+	/**
+	 * Use dashboard helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Get Forms List.
 	 *
@@ -84,6 +90,7 @@ class FormsListing implements FormListingInterface
 			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
 			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
 			'value' => $integrationTypeUsed,
+			'isActive' => $this->isCheckboxOptionChecked(Filters::ALL[$integrationTypeUsed]['use'], Filters::ALL[$integrationTypeUsed]['use']),
 		];
 	}
 }

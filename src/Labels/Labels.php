@@ -142,7 +142,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying validation pattern to the user.
 			'validationPattern' => \__('This field value should be in this format: %s.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
-			'validationAccept' => \__('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
+			'validationAccept' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAcceptMime' => \__('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.

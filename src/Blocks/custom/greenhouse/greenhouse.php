@@ -47,11 +47,13 @@ if (!$isSettingsValid && $greenhouseFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Greenhouse::FILTER_MAPPER_NAME,
-	$greenhouseFormPostId,
-	[
-		'formDataTypeSelector' => $greenhouseFormDataTypeSelector,
-		'ssr' => $greenhouseFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Greenhouse::FILTER_MAPPER_NAME,
+		$greenhouseFormPostId,
+		[
+			'formDataTypeSelector' => $greenhouseFormDataTypeSelector,
+			'ssr' => $greenhouseFormServerSideRender,
+		]
+	);
+}

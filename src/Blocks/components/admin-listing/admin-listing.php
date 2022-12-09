@@ -116,12 +116,18 @@ $layoutClass = Components::classnames([
 						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						$activeIntegration = $form['activeIntegration'] ?? [];
 
+						$activeIntegrationIsActive = $activeIntegration['isActive'] ?? false;
+
 						$slug = $editLink;
 						if (!$editLink) {
 							$slug = '#';
 						}
 						?>
-						<li class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>" data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>">
+						<li
+							class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>"
+							data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>"
+							data-integration-is-active="<?php echo esc_attr(!$activeIntegrationIsActive); ?>"
+						>
 							<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
 								<a href="<?php echo esc_url($slug); ?>" class="<?php echo esc_attr("{$componentClass}__label"); ?>">
 									<?php if ($postType === 'post') { ?>
@@ -147,6 +153,12 @@ $layoutClass = Components::classnames([
 											<span title="<?php echo esc_attr($activeIntegration['label'] ?? ''); ?>">
 												<?php echo wp_kses_post($activeIntegration['icon'] ?? '');?>
 											</span>
+											<?php if (!$activeIntegrationIsActive) { ?>
+												<span class="<?php echo esc_attr("{$componentClass}__integration-inactive"); ?>">
+													<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.157 16.801 8.673 2.522c.562-1.068 2.092-1.068 2.654 0l7.516 14.28A1.5 1.5 0 0 1 17.515 19H2.486a1.5 1.5 0 0 1-1.328-2.199z" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M10 7.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"></path><circle cx="10" cy="15.25" r="1" fill="currentColor"></circle></svg>
+													<?php echo esc_html__('Inactive integration', 'eightshift-forms'); ?>
+												</span>
+											<?php }?>
 										</div>
 									<?php } ?>
 

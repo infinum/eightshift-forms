@@ -47,11 +47,13 @@ if (!$isSettingsValid && $hubspotFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Hubspot::FILTER_MAPPER_NAME,
-	$hubspotFormPostId,
-	[
-		'formDataTypeSelector' => $hubspotFormDataTypeSelector,
-		'ssr' => $hubspotFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Hubspot::FILTER_MAPPER_NAME,
+		$hubspotFormPostId,
+		[
+			'formDataTypeSelector' => $hubspotFormDataTypeSelector,
+			'ssr' => $hubspotFormServerSideRender,
+		]
+	);
+}

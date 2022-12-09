@@ -137,7 +137,7 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Build components from arrya of items.
+	 * Build components from array of items.
 	 *
 	 * @param array<string, mixed> $attributes Array of form components.
 	 *

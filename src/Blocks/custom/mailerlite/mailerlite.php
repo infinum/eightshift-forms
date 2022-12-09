@@ -50,11 +50,13 @@ if (!$isSettingsValid && $mailerliteFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Mailerlite::FILTER_MAPPER_NAME,
-	$mailerliteFormPostId,
-	[
-		'formDataTypeSelector' => $mailerliteFormDataTypeSelector,
-		'ssr' => $mailerliteFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Mailerlite::FILTER_MAPPER_NAME,
+		$mailerliteFormPostId,
+		[
+			'formDataTypeSelector' => $mailerliteFormDataTypeSelector,
+			'ssr' => $mailerliteFormServerSideRender,
+		]
+	);
+}

@@ -30,7 +30,6 @@ $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attribu
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
 $fileUseCustom = Components::checkAttr('fileUseCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
-$fileAccept = Components::checkAttr('fileAccept', $attributes, $manifest);
 
 $isCustomFile = !apply_filters(
 	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
@@ -84,10 +83,6 @@ if ($fileAttrs) {
 	}
 }
 
-if ($fileAccept) {
-	$fileAccept = " accept='" . $fileAccept . "'";
-}
-
 // Additional content filter.
 $additionalContent = '';
 $filterName = Filters::getBlockFilterName('file', 'additionalContent');
@@ -101,7 +96,6 @@ $file = '
 		name="' . esc_attr($fileName) . '"
 		id="' . esc_attr($fileId) . '"
 		type="file"
-		' . $fileAccept . '
 		' . $fileIsMultiple . '
 		' . $fileAttrsOutput . '
 	/>

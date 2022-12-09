@@ -50,11 +50,13 @@ if (!$isSettingsValid && $goodbitsFormServerSideRender) {
 }
 
 // Output form.
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	Goodbits::FILTER_MAPPER_NAME,
-	$goodbitsFormPostId,
-	[
-		'formDataTypeSelector' => $goodbitsFormDataTypeSelector,
-		'ssr' => $goodbitsFormServerSideRender,
-	]
-);
+if ($isSettingsValid) {
+	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		Goodbits::FILTER_MAPPER_NAME,
+		$goodbitsFormPostId,
+		[
+			'formDataTypeSelector' => $goodbitsFormDataTypeSelector,
+			'ssr' => $goodbitsFormServerSideRender,
+		]
+	);
+}
