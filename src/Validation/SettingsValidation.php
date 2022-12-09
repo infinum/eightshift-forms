@@ -164,7 +164,7 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Success', 'eightshift-forms'),
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
 						'tabContent' => $output,
 					],
 				],

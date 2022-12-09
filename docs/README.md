@@ -19,3 +19,5 @@ Eightshift forms plugins is a complete form builder tool that utilizes modern Bl
 	* [Manual Initialization](js/manual.md)
 	* [Events](js/events.md)
 * Testing
+	* Integrations
+		* [Users](testing/integrations/users.md)
