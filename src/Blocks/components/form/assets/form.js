@@ -806,43 +806,43 @@ export class Form {
 	publicMethods() {
 		if (typeof window[this.prefix]?.form === 'undefined') {
 			window[this.utils.prefix].form = {
-				init() {
+				init: () => {
 					this.init();
 				},
-				initOnlyForms() {
+				initOnlyForms: () => {
 					this.initOnlyForms();
 				},
-				initOne(element) {
+				initOne: (element) => {
 					this.initOne(element);
 				},
-				onFormSubmitEvent(event) {
+				onFormSubmitEvent: (event) => {
 					this.onFormSubmitEvent(event);
 				},
-				formSubmitCaptcha(element, token) {
+				formSubmitCaptcha: (element, token) => {
 					this.formSubmitCaptcha(element, token);
 				},
-				formSubmit(element) {
+				formSubmit: (element) => {
 					this.formSubmit(element);
 				},
-				getFormData(element) {
+				getFormData: (element) => {
 					this.getFormData(element);
 				},
-				setupInputField(input) {
+				setupInputField: (input) => {
 					this.setupInputField(input);
 				},
-				setupSelectField(select, formId) {
+				setupSelectField: (select, formId) => {
 					this.setupSelectField(select, formId);
 				},
-				setupTextareaField(textarea, formId) {
+				setupTextareaField: (textarea, formId) => {
 					this.setupTextareaField(textarea, formId);
 				},
-				setupFileField(file, formId, index) {
+				setupFileField: (file, formId, index) => {
 					this.setupFileField(file, formId, index);
 				},
-				onCustomFileWrapClickEvent(event) {
+				onCustomFileWrapClickEvent: (event) => {
 					this.onCustomFileWrapClickEvent(event);
 				},
-				removeEvents() {
+				removeEvents: () => {
 					this.removeEvents();
 				},
 			};

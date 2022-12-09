@@ -18,7 +18,7 @@ This filter provides you with the ability to map you localStorage tags got from 
  * @param array<int, mixed> $params Params from Hubspot integration prepared for output.
  * @param array<int, mixed> $storage Data form storage.
  * @param array<int, mixed> $originalParams Original params with all custom fields.
- * @param array<int, string> $enrichmentConfig Enrichment config passed to JavaScript.
+ * @param array<string, string> $enrichmentConfig Enrichment config passed to JavaScript.
  *
  * @return array<int, mixed>
  */
@@ -35,7 +35,7 @@ public function getIntegrationHubspotLocalStorageMap(array $params, array $stora
 		return $params;
 	}
 
-	$allowedTags = array_flip($allowedTags);
+	$allowedTags = \array_flip($allowedTags);
 
 	// Filter allowed storage params.
 	$storage = \array_filter(

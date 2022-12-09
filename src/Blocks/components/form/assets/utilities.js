@@ -528,58 +528,58 @@ export class Utils {
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
 				CUSTOM_FILES: this.CUSTOM_FILES,
 
-				unsetGlobalMsg(element) {
+				unsetGlobalMsg: (element) => {
 					this.unsetGlobalMsg(element);
 				},
-				reset(element) {
+				reset: (element) => {
 					this.reset(element);
 				},
-				isCustom(element) {
+				isCustom: (element) => {
 					this.isCustom(element);
 				},
-				dispatchFormEvent(element, name) {
+				dispatchFormEvent: (element, name) => {
 					this.dispatchFormEvent(element, name);
 				},
-				scrollToElement(element) {
+				scrollToElement: (element) => {
 					this.scrollToElement(element);
 				},
-				showLoader(element) {
+				showLoader: (element) => {
 					this.showLoader(element);
 				},
-				outputErrors(element, fields) {
+				outputErrors: (element, fields) => {
 					this.outputErrors(element, fields);
 				},
-				hideLoader(element) {
+				hideLoader: (element) => {
 					this.hideLoader(element);
 				},
-				setGlobalMsg(element, msg, status) {
+				setGlobalMsg: (element, msg, status) => {
 					this.setGlobalMsg(element, msg, status);
 				},
-				hideGlobalMsg(element) {
+				hideGlobalMsg: (element) => {
 					this.hideGlobalMsg(element);
 				},
-				getGtmData(element, eventName) {
+				getGtmData: (element, eventName) => {
 					this.getGtmData(element, eventName);
 				},
-				gtmSubmit(element) {
+				gtmSubmit: (element) => {
 					this.gtmSubmit(element);
 				},
-				preFillOnInit(input, type) {
+				preFillOnInit: (input, type) => {
 					this.preFillOnInit(input, type);
 				},
-				resetForm(element) {
+				resetForm: (element) => {
 					this.resetForm(element);
 				},
-				redirectToUrl(element, formData) {
+				redirectToUrl: (element, formData) => {
 					this.redirectToUrl(element, formData);
 				},
-				isCaptchaUsed() {
+				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
 				},
-				onFocusEvent(event) {
+				onFocusEvent: (event) => {
 					this.onFocusEvent(event);
 				},
-				onBlurEvent(event) {
+				onBlurEvent: (event) => {
 					this.onBlurEvent(event);
 				},
 			};
