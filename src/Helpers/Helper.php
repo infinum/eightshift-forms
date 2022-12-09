@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Trait that holds all generic helpers.
+ * Class that holds all generic helpers.
  *
  * @package EightshiftForms\Helpers
  */
