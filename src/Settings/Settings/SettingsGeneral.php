@@ -151,7 +151,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
 								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
-								// translators: %s will be replaced with th filter output copy.
 								'inputFieldHelp' => \__('Provide your form with a custom, maybe unique, name that your developer can reference using filters and apply changes only to this form. If you want to provide modifications to multiple forms, you can use the same name on various forms.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
