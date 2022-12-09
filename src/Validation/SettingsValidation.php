@@ -41,6 +41,11 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			'label' => 'DD/MM',
 			'output' => 'DD/MM',
 		],
+		[
+			'value' => '^[^@]+@[^@]{2,}\.[^@]{2,}$',
+			'label' => 'simpleEmail',
+			'output' => 'info@example.com',
+		],
 	];
 
 	/**
