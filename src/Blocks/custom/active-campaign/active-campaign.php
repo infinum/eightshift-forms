@@ -49,14 +49,9 @@ if (!$isSettingsValid && $activeCampaignFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		ActiveCampaign::FILTER_MAPPER_NAME,
-		$activeCampaignFormPostId,
-		[
-			'formDataTypeSelector' => $activeCampaignFormDataTypeSelector,
-			'ssr' => $activeCampaignFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

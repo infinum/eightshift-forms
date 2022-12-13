@@ -169,9 +169,9 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		// \add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		// \add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -183,16 +183,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 */
 	public function isSettingsValid(string $formId): bool
 	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$itemId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-
-		if (empty($itemId)) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -229,61 +219,22 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 			return $this->getNoValidGlobalConfigOutput($type);
 		}
 
-		// Get forms from the API.
-		$items = $this->hubspotClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the list.
-		if ($selectedFormId) {
-			$formFields = $this->hubspot->getFormFields($formId);
-
-			// Output additonal tabs for config.
-			$output = [
+		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			[
 				'component' => 'tabs',
 				'tabsContent' => [
-					$this->getOutputIntegrationFields(
-						$formId,
-						$formFields,
-						$type,
-						self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
-					),
-					$this->getOutputConditionalTags(
-						$formId,
-						$formFields,
-						self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY
-					),
 					$this->getOutputFilemanager($formId),
 					$this->settingsClearbit->getOutputClearbit(
 						$formId,
-						$formFields,
+						$this->hubspot->getFormFields($formId),
 						[
 							'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
 							'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
 						]
 					),
 				],
-			];
-		}
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_HUBSPOT_ITEM_ID_KEY
-			),
-			$output,
+			],
 		];
 	}
 

@@ -214,20 +214,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 			$output = [
 				'component' => 'tabs',
 				'tabsContent' => [
-					$this->getOutputIntegrationFields(
-						$formId,
-						$formFields,
-						$type,
-						self::SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY,
-						[
-							AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags']
-						]
-					),
-					$this->getOutputConditionalTags(
-						$formId,
-						$formFields,
-						self::SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY
-					),
 					$this->getOutputTags(
 						$formId,
 						$selectedFormId
@@ -238,13 +224,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_MAILCHIMP_LIST_KEY
-			),
 			$output,
 		];
 	}

@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Form\Form;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
@@ -46,14 +47,9 @@ if (!$isSettingsValid && $hubspotFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		Hubspot::FILTER_MAPPER_NAME,
-		$hubspotFormPostId,
-		[
-			'formDataTypeSelector' => $hubspotFormDataTypeSelector,
-			'ssr' => $hubspotFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

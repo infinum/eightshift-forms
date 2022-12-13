@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"hubspotIntegrationId": {
+			"type": "string"
+		},
 		"hubspotFormPostId": {
 			"type": "string"
 		},
@@ -21,6 +28,13 @@
 		},
 		"hubspotFormDataTypeSelector": {
 			"type": "string"
+		},
+		"hubspotAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
 		}
 	},
 	"parent": [

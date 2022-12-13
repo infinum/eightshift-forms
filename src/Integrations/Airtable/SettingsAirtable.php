@@ -216,17 +216,17 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 					$formFields ? [
 						'component' => 'tabs',
 						'tabsContent' => [
-							$this->getOutputIntegrationFields(
-								$formId,
-								$formFields,
-								$type,
-								self::SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY,
-							),
-							$this->getOutputConditionalTags(
-								$formId,
-								$formFields,
-								self::SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY
-							),
+							// $this->getOutputIntegrationFields(
+							// 	$formId,
+							// 	$formFields,
+							// 	$type,
+							// 	self::SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY,
+							// ),
+							// $this->getOutputConditionalTags(
+							// 	$formId,
+							// 	$formFields,
+							// 	self::SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY
+							// ),
 						],
 					] : [],
 				];
@@ -235,13 +235,13 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_AIRTABLE_LIST_KEY
-			),
+			// ...$this->getOutputFormSelection(
+			// 	$formId,
+			// 	$items,
+			// 	$selectedFormId,
+			// 	self::SETTINGS_TYPE_KEY,
+			// 	self::SETTINGS_AIRTABLE_LIST_KEY
+			// ),
 			...$output,
 		];
 	}

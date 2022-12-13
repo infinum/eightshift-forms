@@ -46,14 +46,9 @@ if (!$isSettingsValid && $airtableFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		Airtable::FILTER_MAPPER_NAME,
-		$airtableFormPostId,
-		[
-			'formDataTypeSelector' => $airtableFormDataTypeSelector,
-			'ssr' => $airtableFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

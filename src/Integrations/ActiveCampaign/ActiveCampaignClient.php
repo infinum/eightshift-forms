@@ -38,11 +38,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	public const CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME = 'es_active_campaign_items_cache';
 
 	/**
-	 * Transient cache name for item.
-	 */
-	public const CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME = 'es_active_campaign_item_cache';
-
-	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -64,6 +59,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					$output[$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
+						'fields' => [],
 					];
 				}
 
@@ -92,16 +88,16 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$fields = $this->getActiveCampaignListFields($itemId);
 
-			if ($itemId && $fields) {
-				$output[$itemId] = $fields;
+			if ($fields) {
+				$output[$itemId]['fields'] = $fields;
 
-				\set_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 

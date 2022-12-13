@@ -28,13 +28,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	use SettingsHelper;
 
 	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_greenhouse_mapper_filter';
-
-	/**
 	 * Filter form fields.
 	 *
 	 * @var string
@@ -66,39 +59,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = (string) $formId;
-
-		// Get form type.
-		$type = SettingsGreenhouse::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = $formAdditionalProps['ssr'] ?? false;
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		// Return form to the frontend.
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
 	}
 
 	/**
@@ -281,10 +242,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsGreenhouse::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

@@ -46,14 +46,9 @@ if (!$isSettingsValid && $greenhouseFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		Greenhouse::FILTER_MAPPER_NAME,
-		$greenhouseFormPostId,
-		[
-			'formDataTypeSelector' => $greenhouseFormDataTypeSelector,
-			'ssr' => $greenhouseFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

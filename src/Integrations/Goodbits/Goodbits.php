@@ -29,13 +29,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	use SettingsHelper;
 
 	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_goodbits_mapper_filter';
-
-	/**
 	 * Filter form fields.
 	 *
 	 * @var string
@@ -78,38 +71,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
-
-		// Get form type.
-		$type = SettingsGoodbits::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGoodbits::SETTINGS_GOODBITS_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
 	}
 
 	/**
@@ -188,10 +150,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsGoodbits::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsGoodbits::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

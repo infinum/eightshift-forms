@@ -1,27 +1,28 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Greenhouse
+ * The class register route for public form submiting endpoint - Goodbits
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations\Goodbits
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitGreenhouseRoute
+ * Class FormSubmitGoodbitsRoute
  */
-class FormSubmitGreenhouseRoute extends AbstractFormSubmit
+class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use trait Upload_Helper inside class.
@@ -48,11 +49,11 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
-	 * Instance variable of ClientInterface data.
+	 * Instance variable for Goodbits data.
 	 *
 	 * @var ClientInterface
 	 */
-	protected $greenhouseClient;
+	protected $goodbitsClient;
 
 	/**
 	 * Instance variable of MailerInterface data.
@@ -66,18 +67,18 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
+	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $greenhouseClient,
+		ClientInterface $goodbitsClient,
 		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->greenhouseClient = $greenhouseClient;
+		$this->goodbitsClient = $goodbitsClient;
 		$this->mailer = $mailer;
 	}
 
@@ -88,7 +89,7 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-greenhouse';
+		return '/form-submit-goodbits';
 	}
 
 	/**
@@ -103,34 +104,29 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
 
-		// Check if Greenhouse data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+		// Check if Goodbits data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel('greenhouseErrorSettingsMissing', $formId),
+				'message' => $this->labels->getLabel('goodbitsErrorSettingsMissing', $formId),
 			]);
 		}
 
-		// Send application to Greenhouse.
-		$response = $this->greenhouseClient->postApplication(
-			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
+		// Send application to Goodbits.
+		$response = $this->goodbitsClient->postApplication(
+			$this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId),
 			$params,
-			$files,
+			[],
 			$formId
 		);
 
 		if ($response['status'] === 'error') {
 			// Send fallback email.
 			$this->mailer->fallbackEmail($response['data'] ?? []);
-		}
-
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
 		}
 
 		// Finish.

@@ -49,14 +49,9 @@ if (!$isSettingsValid && $momentsFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		Moments::FILTER_MAPPER_NAME,
-		$momentsFormPostId,
-		[
-			'formDataTypeSelector' => $momentsFormDataTypeSelector,
-			'ssr' => $momentsFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

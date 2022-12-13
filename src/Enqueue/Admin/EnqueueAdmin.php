@@ -12,10 +12,10 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\FormSettingsSubmitRoute;
-use EightshiftForms\Rest\Routes\MigrationRoute;
-use EightshiftForms\Rest\Routes\TransferRoute;
+use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
+use EightshiftForms\Rest\Routes\Settings\TransferRoute;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 

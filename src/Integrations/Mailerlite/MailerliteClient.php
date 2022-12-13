@@ -45,11 +45,6 @@ class MailerliteClient implements ClientInterface
 	public const CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME = 'es_mailerlite_items_cache';
 
 	/**
-	 * Transient cache name for item.
-	 */
-	public const CACHE_MAILERLITE_ITEM_TRANSIENT_NAME = 'es_mailerlite_item_cache';
-
-	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -71,6 +66,7 @@ class MailerliteClient implements ClientInterface
 					$output[$id] = [
 						'id' => (string) $id,
 						'title' => $item['name'] ?? '',
+						'fields' => [],
 					];
 				}
 
@@ -99,20 +95,20 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$fields = $this->getMailerliteListFields();
 
-			if ($itemId && $fields) {
-				$output = $fields;
+			if ($fields) {
+				$output[$itemId]['fields'] = $fields;
 
-				\set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output;
+		return $output[$itemId] ?? [];
 	}
 
 	/**

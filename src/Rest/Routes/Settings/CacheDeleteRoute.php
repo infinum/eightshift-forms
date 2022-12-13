@@ -3,15 +3,16 @@
 /**
  * The class register route for deleting transient cache endpoint
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Settings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;
 
@@ -41,7 +42,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/cache-delete';
+	public const ROUTE_SLUG = '/settings-cache';
 
 	/**
 	 * Get the base url of the route

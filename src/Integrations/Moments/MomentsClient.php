@@ -93,14 +93,7 @@ class MomentsClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$output = $this->getItems();
-		}
-
-		return $output[$itemId] ?? [];
+		return $this->getItems()[$itemId] ?? [];
 	}
 
 	/**

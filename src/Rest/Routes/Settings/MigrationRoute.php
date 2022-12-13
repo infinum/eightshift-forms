@@ -3,16 +3,17 @@
 /**
  * The class register route for versions migration endpoint
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Settings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Migration\SettingsMigration;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -50,7 +51,7 @@ class MigrationRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/migration';
+	public const ROUTE_SLUG = '/settings-migration';
 
 	/**
 	 * Get the base url of the route

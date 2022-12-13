@@ -117,9 +117,9 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		// \add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		// \add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -131,16 +131,6 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 	 */
 	public function isSettingsValid(string $formId): bool
 	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$list = $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId);
-
-		if (empty($list)) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -170,59 +160,7 @@ class SettingsGoodbits implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$type = self::SETTINGS_TYPE_KEY;
-
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
-		}
-
-		// Get forms from the API.
-		$items = $this->goodbitsClient->getItems();
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_GOODBITS_LIST_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the list.
-		if ($selectedFormId) {
-			$formFields = $this->goodbits->getFormFields($formId);
-
-			$output = [
-				'component' => 'tabs',
-				'tabsContent' => [
-					$this->getOutputIntegrationFields(
-						$formId,
-						$formFields,
-						$type,
-						self::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY,
-					),
-					$this->getOutputConditionalTags(
-						$formId,
-						$formFields,
-						self::SETTINGS_GOODBITS_CONDITIONAL_TAGS_KEY
-					),
-				],
-			];
-		}
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_GOODBITS_LIST_KEY
-			),
-			$output,
-		];
+		return [];
 	}
 
 	/**

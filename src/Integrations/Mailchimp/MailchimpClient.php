@@ -38,16 +38,6 @@ class MailchimpClient implements MailchimpClientInterface
 	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
 
 	/**
-	 * Transient cache name for item.
-	 */
-	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
-
-	/**
-	 * Transient cache name for item tags.
-	 */
-	public const CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME = 'es_mailchimp_item_tags_cache';
-
-	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -69,6 +59,8 @@ class MailchimpClient implements MailchimpClientInterface
 					$output[$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
+						'fields' => [],
+						'tags' => [],
 					];
 				}
 
@@ -97,16 +89,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$fields = $this->getMailchimpListFields($itemId);
 
-			if ($itemId && $fields) {
-				$output[$itemId] = $fields;
+			if ($fields) {
+				$output[$itemId]['fields'] = $fields;
 
-				\set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
@@ -122,14 +114,14 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getTags(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$tags = $this->getMailchimpTags($itemId);
 
 			if ($tags) {
-				$output[$itemId] = \array_map(
+				$output[$itemId]['tags'] = \array_map(
 					static function ($item) {
 						return [
 							'id' => (string) $item['id'],
@@ -139,11 +131,11 @@ class MailchimpClient implements MailchimpClientInterface
 					$tags
 				);
 
-				\set_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 
-		return $output[$itemId] ?? [];
+		return $output[$itemId]['tags'] ?? [];
 	}
 
 	/**

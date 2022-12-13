@@ -49,14 +49,9 @@ if (!$isSettingsValid && $goodbitsFormServerSideRender) {
 	return;
 }
 
-// Output form.
-if ($isSettingsValid) {
-	echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		Goodbits::FILTER_MAPPER_NAME,
-		$goodbitsFormPostId,
-		[
-			'formDataTypeSelector' => $goodbitsFormDataTypeSelector,
-			'ssr' => $goodbitsFormServerSideRender,
-		]
-	);
-}
+echo Components::render(
+	'form',
+	Components::props('form', $attributes, [
+		'formContent' => $innerBlockContent,
+	])
+);

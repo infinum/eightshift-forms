@@ -1,27 +1,28 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Moments
+ * The class register route for public form submiting endpoint - Mailerlite
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations\Mailerlite
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\Moments\SettingsMoments;
+use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitMomentsRoute
+ * Class FormSubmitMailerliteRoute
  */
-class FormSubmitMomentsRoute extends AbstractFormSubmit
+class FormSubmitMailerliteRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use trait Upload_Helper inside class.
@@ -48,11 +49,11 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
-	 * Instance variable for Moments data.
+	 * Instance variable for Mailerlite data.
 	 *
 	 * @var ClientInterface
 	 */
-	protected $momentsClient;
+	protected $mailerliteClient;
 
 	/**
 	 * Instance variable of MailerInterface data.
@@ -66,18 +67,18 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
+	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $momentsClient,
+		ClientInterface $mailerliteClient,
 		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->momentsClient = $momentsClient;
+		$this->mailerliteClient = $mailerliteClient;
 		$this->mailer = $mailer;
 	}
 
@@ -88,7 +89,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-moments';
+		return '/form-submit-mailerlite';
 	}
 
 	/**
@@ -103,21 +104,21 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
 
-		// Check if Moments data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+		// Check if Mailerlite data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel('momentsErrorSettingsMissing', $formId),
+				'message' => $this->labels->getLabel('mailerliteErrorSettingsMissing', $formId),
 			]);
 		}
 
-		// Send application to Moments.
-		$response = $this->momentsClient->postApplication(
-			$this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, $formId),
+		// Send application to Mailerlite.
+		$response = $this->mailerliteClient->postApplication(
+			$this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
 			$params,
 			[],
 			$formId

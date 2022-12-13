@@ -3,15 +3,16 @@
 /**
  * The class register route for transfer endpoint
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Settings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -58,7 +59,7 @@ class TransferRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/transfer';
+	public const ROUTE_SLUG = '/settings-transfer';
 
 	/**
 	 * Get the base url of the route

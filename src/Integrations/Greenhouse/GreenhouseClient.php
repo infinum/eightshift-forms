@@ -48,11 +48,6 @@ class GreenhouseClient implements ClientInterface
 	public const CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME = 'es_greenhouse_items_cache';
 
 	/**
-	 * Transient cache name for item.
-	 */
-	public const CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME = 'es_greenhouse_item_cache';
-
-	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -79,6 +74,7 @@ class GreenhouseClient implements ClientInterface
 						'id' => (string) $jobId,
 						'title' => $job['title'] ?? '',
 						'locations' => \explode(', ', $job['location']['name']),
+						'fields' => [],
 						'updatedAt' => $job['updated_at'],
 					];
 				}
@@ -108,7 +104,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
@@ -116,10 +112,10 @@ class GreenhouseClient implements ClientInterface
 
 			$questions = $job['questions'] ?? [];
 
-			if ($itemId && $questions) {
-				$output[$itemId] = $questions;
+			if ($questions) {
+				$output[$itemId]['fields'] = $questions;
 
-				\set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
 		}
 

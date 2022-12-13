@@ -1,26 +1,39 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - mailchimp
+ * The class register route for public form submiting endpoint - Airtable
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations\Airtable
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
-use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitMailchimpRoute
+ * Class FormSubmitAirtableRoute
  */
-class FormSubmitMailchimpRoute extends AbstractFormSubmit
+class FormSubmitAirtableRoute extends AbstractFormSubmit
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -36,11 +49,11 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
-	 * Instance variable for Mailchimp data.
+	 * Instance variable for Airtable data.
 	 *
-	 * @var MailchimpClientInterface
+	 * @var ClientInterface
 	 */
-	protected $mailchimpClient;
+	protected $airtableClient;
 
 	/**
 	 * Instance variable of MailerInterface data.
@@ -54,18 +67,18 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
+	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		MailchimpClientInterface $mailchimpClient,
+		ClientInterface $airtableClient,
 		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->mailchimpClient = $mailchimpClient;
+		$this->airtableClient = $airtableClient;
 		$this->mailer = $mailer;
 	}
 
@@ -76,7 +89,7 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-mailchimp';
+		return '/form-submit-airtable';
 	}
 
 	/**
@@ -90,21 +103,26 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-		// Check if Mailchimp data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Check if Airtable data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel('mailchimpErrorSettingsMissing', $formId),
+				'message' => $this->labels->getLabel('airtableErrorSettingsMissing', $formId),
 			]);
 		}
 
-		// Send application to Mailchimp.
-		$response = $this->mailchimpClient->postApplication(
-			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
+		$listKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, $formId);
+		$fieldKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
+
+
+		// Send application to Airtable.
+		$response = $this->airtableClient->postApplication(
+			"{$listKey}---{$fieldKey}",
 			$params,
 			[],
 			$formId

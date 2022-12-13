@@ -3,12 +3,12 @@
 /**
  * The class register route for public form submiting endpoint - HubSpot
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations\Hubspot
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
@@ -19,6 +19,7 @@ use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**

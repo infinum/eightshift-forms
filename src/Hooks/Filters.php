@@ -123,13 +123,10 @@ class Filters
 			'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
 			'cache' => [
 				MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
-				MailchimpClient::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME,
-				MailchimpClient::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME,
 			],
 		],
 		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsGreenhouse::FILTER_SETTINGS_NAME,
 			'fields' => Greenhouse::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="currentColor"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
@@ -137,12 +134,10 @@ class Filters
 			'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
 			'cache' => [
 				GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
-				GreenhouseClient::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME,
 			],
 		],
 		SettingsHubspot::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 			'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="currentColor" r="1.75"/><circle cx="14.25" cy="2.75" fill="currentColor" r="1.75"/><circle cx="7.75" cy="17.75" fill="currentColor" r="1.75"/></svg>',
@@ -155,7 +150,6 @@ class Filters
 		],
 		SettingsMailerlite::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsMailerlite::FILTER_SETTINGS_NAME,
 			'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25 11.25v-5m2.5 5v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="m11.25 11.2-.304.06a1 1 0 0 1-1.196-.98V6.25l-1 1h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="6.75" cy="6.5" r=".75" fill="currentColor"/><path d="M13 9h3.25v-.725c0-.897-.727-1.625-1.625-1.625v0c-.898 0-1.625.728-1.625 1.625V9zm0 0v.4c0 2 1.5 2.1 3.25 1.668" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M3.676 14.703 1 17.5V4a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 19 4v9.203a1.5 1.5 0 0 1-1.5 1.5H3.676z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
@@ -163,12 +157,10 @@ class Filters
 			'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
 			'cache' => [
 				MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
-				MailerliteClient::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME,
 			],
 		],
 		SettingsGoodbits::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsGoodbits::FILTER_SETTINGS_NAME,
 			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6.5 13.5 2.358-7.074m.249 7.074 2.358-7.074m.25 7.074 2.358-7.074" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',
@@ -191,7 +183,6 @@ class Filters
 		],
 		SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsActiveCampaign::FILTER_SETTINGS_NAME,
 			'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m4 1.5 10.272 7.276a1.5 1.5 0 0 1 0 2.448L4 18.5m0-12L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
@@ -199,12 +190,10 @@ class Filters
 			'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
 			'cache' => [
 				ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
-				ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
 			],
 		],
 		SettingsAirtable::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsAirtable::FILTER_SETTINGS_NAME,
 			'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1.5 13.595V7.88c0-.18.184-.3.348-.23l6.157 2.639a.25.25 0 0 1 .013.453L1.862 13.82a.25.25 0 0 1-.362-.224ZM9.91 2.783 3.087 5.285a.25.25 0 0 0-.013.464l6.83 2.96a.25.25 0 0 0 .193.002l6.823-2.729a.25.25 0 0 0 0-.464l-6.831-2.732a.25.25 0 0 0-.179-.003Zm8.59 11.546V8.115a.25.25 0 0 0-.34-.233l-7.25 2.806a.25.25 0 0 0-.16.233v6.214a.25.25 0 0 0 .34.233l7.25-2.806a.25.25 0 0 0 .16-.233Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>',
@@ -216,7 +205,6 @@ class Filters
 		],
 		SettingsMoments::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsMoments::FILTER_SETTINGS_NAME,
 			'fields' => Moments::FILTER_FORM_FIELDS_NAME,
 			'valid' => SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="8.5" y="8.5" width="3" height="3" rx="0.5" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="1.5"/><rect x="5" y="5" width="10" height="10" rx="2.75" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="5.25" y="5.25" width="9.5" height="9.5" rx="3.25" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1" y="1" width="18" height="18" rx="9" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1.75" y="1.75" width="16.5" height="16.5" rx="6.75" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',

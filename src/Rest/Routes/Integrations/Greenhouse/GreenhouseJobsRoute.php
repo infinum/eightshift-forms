@@ -3,15 +3,16 @@
 /**
  * The class register route for getting Greenhouse Jobs endpoint
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations\Greenhouse
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**

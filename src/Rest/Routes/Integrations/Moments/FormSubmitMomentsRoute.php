@@ -1,27 +1,28 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Airtable
+ * The class register route for public form submiting endpoint - Moments
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Rout\Integrations\Momentses
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitAirtableRoute
+ * Class FormSubmitMomentsRoute
  */
-class FormSubmitAirtableRoute extends AbstractFormSubmit
+class FormSubmitMomentsRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use trait Upload_Helper inside class.
@@ -48,11 +49,11 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
-	 * Instance variable for Airtable data.
+	 * Instance variable for Moments data.
 	 *
 	 * @var ClientInterface
 	 */
-	protected $airtableClient;
+	protected $momentsClient;
 
 	/**
 	 * Instance variable of MailerInterface data.
@@ -66,18 +67,18 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
+	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $airtableClient,
+		ClientInterface $momentsClient,
 		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->airtableClient = $airtableClient;
+		$this->momentsClient = $momentsClient;
 		$this->mailer = $mailer;
 	}
 
@@ -88,7 +89,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-airtable';
+		return '/form-submit-moments';
 	}
 
 	/**
@@ -103,25 +104,21 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
 
-		// Check if Airtable data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+		// Check if Moments data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return \rest_ensure_response([
 				'status' => 'error',
 				'code' => 400,
-				'message' => $this->labels->getLabel('airtableErrorSettingsMissing', $formId),
+				'message' => $this->labels->getLabel('momentsErrorSettingsMissing', $formId),
 			]);
 		}
 
-		$listKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-		$fieldKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-
-		// Send application to Airtable.
-		$response = $this->airtableClient->postApplication(
-			"{$listKey}---{$fieldKey}",
+		// Send application to Moments.
+		$response = $this->momentsClient->postApplication(
+			$this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, $formId),
 			$params,
 			[],
 			$formId

@@ -27,19 +27,6 @@ abstract class AbstractFormBuilder
 	use SettingsHelper;
 
 	/**
-	 * Build public facing form.
-	 *
-	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, bool|string> $formAdditionalProps Additional attributes for form component.
-	 *
-	 * @return string
-	 */
-	public function buildForm(array $formItems, array $formAdditionalProps = []): string
-	{
-		return $this->getForm($formItems, $formAdditionalProps);
-	}
-
-	/**
 	 * Build settings form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
@@ -72,7 +59,7 @@ abstract class AbstractFormBuilder
 		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = true;
 
 		// Build form.
-		return $this->getForm($formItems, $formAdditionalProps, $formContent);
+		return $this->getFormBuilder($formItems, $formAdditionalProps, $formContent);
 	}
 
 	/**
@@ -88,52 +75,34 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Get the actual form for the components.
+	 * Return Integration form additional props
 	 *
-	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
-	 * @param string $formContent For adding additional form components after every form.
+	 * @param string $formId Form ID.
+	 * @param string $type Form Type.
 	 *
-	 * @return string
+	 * @return array<string, mixed>
 	 */
-	private function getForm(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
+	protected function getFormAdditionalProps(string $formId, string $type): array
 	{
-		$form = '';
+		$formAdditionalProps = [];
 
-		// Build all top-level component.
-		foreach ($formItems as $item) {
-			$form .= $this->buildComponent($item);
-		}
-
-		// Append additional form components.
-		if (!empty($formContent)) {
-			$form .= $formContent;
-		}
-
-		// Populate form props.
-		$formProps = [
-			'formContent' => $form,
-		];
-
-		// Check if it is loaded on the front or the backend.
-		if (isset($formAdditionalProps['ssr'])) {
-			$formProps['formServerSideRender'] = $formAdditionalProps['ssr'];
-
-			unset($formAdditionalProps['ssr']);
-		}
-
-		// Add additional form props.
-		if ($formAdditionalProps) {
-			$formProps = \array_merge($formProps, $formAdditionalProps);
-		}
-
-		// Build form component.
-		return Components::render(
-			'form',
-			Components::props('form', [], $formProps),
-			'',
-			true
+		// Tracking event name.
+		$formAdditionalProps['formTrackingEventName'] = $this->getAdditionalPropsItem(
+			$formId,
+			$type,
+			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
+			'trackingEventName'
 		);
+
+		// Success redirect url.
+		$formAdditionalProps['formSuccessRedirect'] = $this->getAdditionalPropsItem(
+			$formId,
+			$type,
+			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
+			'successRedirectUrl'
+		);
+
+		return $formAdditionalProps;
 	}
 
 	/**
@@ -143,7 +112,7 @@ abstract class AbstractFormBuilder
 	 *
 	 * @return string
 	 */
-	public function buildComponent(array $attributes): string
+	protected function buildComponent(array $attributes): string
 	{
 		if (!$attributes) {
 			return '';
@@ -235,34 +204,52 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Return Integration form additional props
+	 * Get the actual form for the components.
 	 *
-	 * @param string $formId Form ID.
-	 * @param string $type Form Type.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
+	 * @param string $formContent For adding additional form components after every form.
 	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	protected function getFormAdditionalProps(string $formId, string $type): array
+	private function getFormBuilder(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
 	{
-		$formAdditionalProps = [];
+		$form = '';
 
-		// Tracking event name.
-		$formAdditionalProps['formTrackingEventName'] = $this->getAdditionalPropsItem(
-			$formId,
-			$type,
-			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			'trackingEventName'
+		// Build all top-level component.
+		foreach ($formItems as $item) {
+			$form .= $this->buildComponent($item);
+		}
+
+		// Append additional form components.
+		if (!empty($formContent)) {
+			$form .= $formContent;
+		}
+
+		// Populate form props.
+		$formProps = [
+			'formContent' => $form,
+		];
+
+		// Check if it is loaded on the front or the backend.
+		if (isset($formAdditionalProps['ssr'])) {
+			$formProps['formServerSideRender'] = $formAdditionalProps['ssr'];
+
+			unset($formAdditionalProps['ssr']);
+		}
+
+		// Add additional form props.
+		if ($formAdditionalProps) {
+			$formProps = \array_merge($formProps, $formAdditionalProps);
+		}
+
+		// Build form component.
+		return Components::render(
+			'form',
+			Components::props('form', [], $formProps),
+			'',
+			true
 		);
-
-		// Success redirect url.
-		$formAdditionalProps['formSuccessRedirect'] = $this->getAdditionalPropsItem(
-			$formId,
-			$type,
-			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			'successRedirectUrl'
-		);
-
-		return $formAdditionalProps;
 	}
 
 	/**
