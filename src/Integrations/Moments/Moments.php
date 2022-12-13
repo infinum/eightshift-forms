@@ -74,6 +74,11 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
+	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string
+	{
+		return '';
+	}
+
 	/**
 	 * Get mapped form fields.
 	 *

@@ -15,12 +15,12 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Hubspot integration class.
  */
-class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInterface
+class Hubspot extends AbstractFormBuilder implements MapperInterface
 {
 	/**
 	 * Use general helper trait.
@@ -62,55 +62,35 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$this->validator = $validator;
 	}
 
-	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	/**
-	 * Get Hubspot mapped form fields.
-	 *
-	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
 	public function getFormFields(string $formId, bool $ssr = false): array
 	{
 		return [];
-		// // Get item Id.
-		// $itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, (string) $formId);
-		// if (empty($itemId)) {
-		// 	return [];
-		// }
-
-		// return $this->getFormFieldsByItem($itemId, $formId, $ssr);
 	}
 
 	/**
-	 * Get Hubspot mapped form fields.
+	 * Get Hubspot mapped form fields for block editor grammar.
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $itemId Integration item id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $type Integration type.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return string
 	 */
-	public function getFormFieldsByItem(string $itemId, string $formId, bool $ssr = false): array
+	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string
 	{
 		// Get fields.
 		$item = $this->hubspotClient->getItem($itemId);
 		if (empty($item)) {
-			return [];
+			return '';
 		}
 
-		return $this->getFields($item, $formId, $ssr);
+		$fields = $this->getFields($item, $formId, false);
+
+		if (!$fields) {
+			return '';
+		}
+
+		return $this->getFormBlock($type, $fields, $itemId);
 	}
 
 	/**

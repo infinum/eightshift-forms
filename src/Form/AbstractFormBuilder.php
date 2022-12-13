@@ -204,6 +204,126 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
+	 * Get full form block created from integration components.
+	 *
+	 * @param string $type Integration type, used as a parent block.
+	 * @param array $fields Fields pre created from the integration.
+	 * @param string $itemId Item id from the integration.
+	 *
+	 * @return string
+	 */
+	protected function getFormBlock(string $type, array $fields, string $itemId): string
+	{
+		$namespace = Components::getSettingsNamespace();
+
+		$integrationBlocks = $this->getFormBlockInnerFields($fields);
+
+		$integration = [
+			[
+				'blockName' => "{$namespace}/{$type}",
+				'attrs' => [
+					"{$type}IntegrationId" => $itemId,
+				],
+				'innerContent' => $integrationBlocks,
+				'innerHTML' => '',
+				'innerBlocks' => $integrationBlocks,
+			],
+		];
+
+		return serialize_blocks([
+			[
+				'blockName' => "{$namespace}/form-selector",
+				'attrs' => [],
+				'innerContent' => $integration,
+				'innerHTML' => '',
+				'innerBlocks' => $integration,
+			],
+		]) ?? '';
+	}
+
+	/**
+	 * Convert form block inner fileds from integration components.
+	 *
+	 * @param array $components Integration components.
+	 *
+	 * @return array
+	 */
+	private function getFormBlockInnerFields(array $components): array
+	{
+		$output = [];
+
+		$namespace = Components::getSettingsNamespace();
+
+		foreach($components as $component) {
+
+			$componentName = $component['component'] ?? '';
+
+			if (!$componentName) {
+				continue;
+			}
+
+			$fieldsBlock = $this->getFormBlockInnerField($component);
+
+			$output[] = [
+				'blockName' => "{$namespace}/{$componentName}",
+				'attrs' => $fieldsBlock['attrs'] ?? [],
+				'innerContent' => $fieldsBlock['innerBlocks'] ?? [],
+				'innerHTML' => '',
+				'innerBlocks' => $fieldsBlock['innerBlocks'] ?? [],
+			];
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Convert one block inner field from integration component.
+	 *
+	 * @param array $attributes Integration field attributes.
+	 *
+	 * @return array
+	 */
+	private function getFormBlockInnerField(array $attributes): array
+	{
+		$output = [
+			'attrs' => [],
+			'innerContent' => [],
+			'innerHTML' => '',
+			'innerBlocks' => [],
+		];
+
+		$componentName = $attributes['component'] ?? '';
+
+		if (!$componentName) {
+			return [];
+		}
+
+		$prefix = Components::kebabToCamelCase($componentName, '-');
+
+		foreach ($attributes as $key => $value) {
+			if ($key === 'component') {
+				continue;
+			}
+
+			if ($key === 'blockSsr') {
+				continue;
+			}
+
+			if (is_array($value)) {
+				$innerBlocks = $this->getFormBlockInnerFields($value);
+				$output['innerBlocks'] = $innerBlocks;
+				$output['innerContent'] = $innerBlocks;
+			} else {
+				$newName = ucfirst($key);
+
+				$output['attrs']["{$prefix}{$newName}"] = $value;
+			}
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Get the actual form for the components.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.

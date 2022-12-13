@@ -29,7 +29,7 @@ export const HubspotOptions = ({ attributes, setAttributes, postId }) => {
 	const [formData, setFormData] = useState([]);
 
 	useEffect( () => {
-		apiFetch( { path: 'eightshift-forms/v1/editor-hubspot' } ).then( ( response ) => {
+		apiFetch({ path: 'eightshift-forms/v1/integration-items-hubspot' }).then((response) => {
 			if (response.code === 200) {
 				console.log(response);
 				
@@ -37,8 +37,6 @@ export const HubspotOptions = ({ attributes, setAttributes, postId }) => {
 			}
 		});
 	}, []);
-
-	console.log(formData);
 
 	return (
 		<PanelBody title={__('HubSpot', 'eightshift-forms')}>

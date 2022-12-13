@@ -21,7 +21,18 @@ interface MapperInterface
 	 * @param string $formId Form Id.
 	 * @param bool $ssr Does form load using ssr.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return string<int, array<string, mixed>>
 	 */
 	public function getFormFields(string $formId, bool $ssr = false): array;
+
+	/**
+	 * Get Hubspot mapped form fields for block editor grammar.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $itemId Integration item id.
+	 * @param string $type Integration type.
+	 *
+	 * @return string
+	 */
+	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string;
 }

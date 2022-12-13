@@ -75,6 +75,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
+	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string
+	{
+		return '';
+	}
+
 	/**
 	 * Get mapped form fields.
 	 *
@@ -99,6 +104,8 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 
 		return $this->getFields($fields, $formId, $ssr);
 	}
+
+	
 
 	/**
 	 * Map ActiveCampaign fields to our components.

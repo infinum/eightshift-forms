@@ -11,20 +11,37 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
- * Class EditorFormBuilderRoute
+ * Class IntegrationEditorRoute
  */
-class EditorFormBuilderRoute extends AbstractBaseRoute
+class IntegrationEditorRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/editor-form-builder/(?P<id>\d+)';
+	public const ROUTE_SLUG = '/integration-editor';
+
+	/**
+	 * Instance variable for HubSpot form data.
+	 *
+	 * @var MapperInterface
+	 */
+	protected $hubspot;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param MapperInterface $hubspot Inject Hubspot which holds Hubspot form data.
+	 */
+	public function __construct(
+		MapperInterface $hubspot
+	) {
+		$this->hubspot = $hubspot;
+	}
 
 	/**
 	 * Get the base url of the route
@@ -89,56 +106,53 @@ class EditorFormBuilderRoute extends AbstractBaseRoute
 			]);
 		}
 
-		// Find form ID from url request.
-		$formId = $request->get_url_params()['id'];
-
-		// Detect form type based on the provided form ID.
-		$type = Helper::getUsedFormTypeById($formId);
-
-		// Find the correct form type filters.
-		$integration = Filters::ALL[$type] ?? [];
-
-		// Bailout if integration filters are missing.
-		if (!$integration) {
+		$formId = $request->get_params()['id'] ?? '';
+		if (!$formId) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Provided form ID has no valid integration.', 'eightshift-forms'),
+				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
 			]);
 		}
 
-		// Bailout if integration is not in use.
-		$use = $integration['use'] ?? '';
-		if (!$use) {
+		$itemId = $request->get_params()['itemId'] ?? '';
+		if (!$itemId) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Provided form ID has no active integration.', 'eightshift-forms'),
+				'message' => \esc_html__('Missing form integration item ID.', 'eightshift-forms'),
 			]);
 		}
 
-		// Bailout if integration fileds map is not provided.
-		$fields = $integration['fields'] ?? '';
+		$type = $request->get_params()['type'] ?? '';
+		if (!$type) {
+			return \rest_ensure_response([
+				'code' => 400,
+				'status' => 'error',
+				'message' => \esc_html__('Missing form integration type.', 'eightshift-forms'),
+			]);
+		}
+
+		$fields = $this->hubspot->getFormBlockGrammar($formId, $itemId, $type);
+
 		if (!$fields) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Provided form ID is missing integration fields map.', 'eightshift-forms'),
+				'message' => \esc_html__('Missing integration fields.', 'eightshift-forms'),
 			]);
 		}
 
-		// Find integration file map.
-		$formFields =  apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-			$fields,
-			$formId
-		);
+		$update = wp_update_post([
+			'ID' => $formId,
+			'post_content' => $fields,
+		]);
 
-		// Bailout if integration fileds map is empty.
-		if (!$formFields) {
+		if ($update < 0 || \is_wp_error($update)) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
-				'message' => \esc_html__('Provided form ID integration fields map is empty.', 'eightshift-forms'),
+				'message' => \esc_html__('Something went wrong in updating form.', 'eightshift-forms'),
 			]);
 		}
 
@@ -146,7 +160,7 @@ class EditorFormBuilderRoute extends AbstractBaseRoute
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			'data' => $formFields,
+			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
 		]);
 	}
 }

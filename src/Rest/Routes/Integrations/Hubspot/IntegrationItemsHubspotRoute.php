@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class to provide integration details from cache.
+ * The class to provide integration items from cache.
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Hubspot
  */
@@ -11,16 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
- * Class EditorHubspotRoute
+ * Class IntegrationItemsHubspotRoute
  */
-class EditorHubspotRoute extends AbstractBaseRoute
+class IntegrationItemsHubspotRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable for Hubspot data.
@@ -32,7 +31,7 @@ class EditorHubspotRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/editor-hubspot';
+	public const ROUTE_SLUG = '/integration-items-hubspot';
 
 	/**
 	 * Get the base url of the route
