@@ -27,6 +27,24 @@ abstract class AbstractFormBuilder
 	use SettingsHelper;
 
 	/**
+	 * Nested keys for inner blocks
+	 *
+	 * @var array
+	 */
+	private const NESTED_KEYS = [
+		'checkboxesContent',
+		'radiosContent',
+		'selectOptions',
+		'groupContent',
+		'tabsContent',
+		'tabContent',
+		'layout',
+		'layoutItems',
+		'card',
+		'cardContent',
+	];
+
+	/**
 	 * Build settings form.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
@@ -60,18 +78,6 @@ abstract class AbstractFormBuilder
 
 		// Build form.
 		return $this->getFormBuilder($formItems, $formAdditionalProps, $formContent);
-	}
-
-	/**
-	 * Returns the current admin page url for refresh.
-	 *
-	 * @return string
-	 */
-	protected function getAdminRefreshUrl(): string
-	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return \admin_url(\sprintf(\basename($request)));
 	}
 
 	/**
@@ -132,18 +138,7 @@ abstract class AbstractFormBuilder
 		) {
 			$output = '';
 
-			$nestedKeys = [
-				'checkboxesContent' => 0,
-				'radiosContent' => 1,
-				'selectOptions' => 2,
-				'groupContent' => 3,
-				'tabsContent' => 4,
-				'tabContent' => 5,
-				'layout' => 6,
-				'layoutItems' => 7,
-				'card' => 8,
-				'cardContent' => 9,
-			];
+			$nestedKeys = array_flip(self::NESTED_KEYS);
 
 			foreach ($nestedKeys as $nestedKey => $value) {
 				if (isset($attributes[$nestedKey])) {
@@ -204,15 +199,38 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
+	 * Prepare disabled options and remove empty items.
+	 *
+	 * @param string $component Component name.
+	 * @param array $options Options to check.
+	 * @param bool $useDefault Append default options.
+	 *
+	 * @return array
+	 */
+	protected function prepareDisabledOptions(string $component, array $options, bool $useDefault = true): array {
+		$component = Components::kebabToCamelCase($component);
+
+		$default = [
+			"{$component}Id",
+			"{$component}Name",
+		];
+
+		return [
+			...($useDefault ? $default : []),
+			...array_filter($options),
+		];
+	}
+
+	/**
 	 * Get full form block created from integration components.
 	 *
 	 * @param string $type Integration type, used as a parent block.
 	 * @param array $fields Fields pre created from the integration.
 	 * @param string $itemId Item id from the integration.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	protected function getFormBlock(string $type, array $fields, string $itemId): string
+	protected function getFormBlock(string $type, array $fields, string $itemId): array
 	{
 		$namespace = Components::getSettingsNamespace();
 
@@ -230,15 +248,13 @@ abstract class AbstractFormBuilder
 			],
 		];
 
-		return serialize_blocks([
-			[
-				'blockName' => "{$namespace}/form-selector",
-				'attrs' => [],
-				'innerContent' => $integration,
-				'innerHTML' => '',
-				'innerBlocks' => $integration,
-			],
-		]) ?? '';
+		return [
+			'blockName' => "{$namespace}/form-selector",
+			'attrs' => [],
+			'innerContent' => $integration,
+			'innerHTML' => '',
+			'innerBlocks' => $integration,
+		] ?? [];
 	}
 
 	/**
@@ -300,21 +316,30 @@ abstract class AbstractFormBuilder
 
 		$prefix = Components::kebabToCamelCase($componentName, '-');
 
+		$nestedKeys = array_flip(self::NESTED_KEYS);
+
 		foreach ($attributes as $key => $value) {
 			if ($key === 'component') {
 				continue;
 			}
 
-			if ($key === 'blockSsr') {
-				continue;
-			}
-
-			if (is_array($value)) {
+			if (isset($nestedKeys[$key])) {
 				$innerBlocks = $this->getFormBlockInnerFields($value);
 				$output['innerBlocks'] = $innerBlocks;
 				$output['innerContent'] = $innerBlocks;
 			} else {
 				$newName = ucfirst($key);
+
+				if ($key === 'disabledOptions') {
+					$value = array_values(array_map(
+						static function($item) use ($prefix) {
+							return "{$prefix}" . ucfirst($item);
+						},
+						$value
+					));
+
+					$newName = ucfirst($prefix) . "DisabledOptions";
+				}
 
 				$output['attrs']["{$prefix}{$newName}"] = $value;
 			}
@@ -400,5 +425,17 @@ abstract class AbstractFormBuilder
 		}
 
 		return $output ? $output : '';
+	}
+
+	/**
+	 * Returns the current admin page url for refresh.
+	 *
+	 * @return string
+	 */
+	private function getAdminRefreshUrl(): string
+	{
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return \admin_url(\sprintf(\basename($request)));
 	}
 }

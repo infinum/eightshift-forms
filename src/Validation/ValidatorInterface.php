@@ -27,11 +27,11 @@ interface ValidatorInterface
 	public function validate(array $params = [], array $files = [], string $formId = ''): array;
 
 	/**
-	 * Prepare validation patterns
+	 * Prepare validation patterns for editor select output.
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	public function getValidationPatterns(): array;
+	public function getValidationPatternsEditor(): array;
 
 	/**
 	 * Get validation pattern - pattern from name.

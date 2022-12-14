@@ -29,6 +29,9 @@
 		},
 		"checkboxesMeta": {
 			"type": "string"
+		},
+		"checkboxesDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"options": {

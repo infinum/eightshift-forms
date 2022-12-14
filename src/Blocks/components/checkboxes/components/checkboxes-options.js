@@ -14,6 +14,7 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
 
 export const CheckboxesOptions = (attributes) => {
 	const {
@@ -28,6 +29,7 @@ export const CheckboxesOptions = (attributes) => {
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 	const checkboxesIsRequired = checkAttr('checkboxesIsRequired', attributes, manifest);
 	const checkboxesIsRequiredCount = checkAttr('checkboxesIsRequiredCount', attributes, manifest);
+	const checkboxesDisabledOptions = checkAttr('checkboxesDisabledOptions', attributes, manifest);
 
 	const [countInnerBlocks, setCountInnerBlocks] = useState(0);
 
@@ -64,6 +66,7 @@ export const CheckboxesOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
 						}
 					}}
+					disabled={isOptionDisabled(getAttrKey('checkboxesIsRequired', attributes, manifest), checkboxesDisabledOptions)}
 				>
 					{__('Required', 'eightshift-forms')}
 				</Button>
@@ -79,6 +82,7 @@ export const CheckboxesOptions = (attributes) => {
 								max={countInnerBlocks}
 								type='number'
 								className='es-no-field-spacing'
+								disabled={isOptionDisabled(getAttrKey('checkboxesIsRequiredCount', attributes, manifest), checkboxesDisabledOptions)}
 							/>
 							<span>{checkboxesIsRequiredCount > 1 ? __('items need to be selected', 'eightshift-forms') : __('item needs to be checked', 'eightshift-forms')}</span>
 						</div>
@@ -92,6 +96,7 @@ export const CheckboxesOptions = (attributes) => {
 					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={checkboxesName}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
 				/>
 			</PanelBody>
 

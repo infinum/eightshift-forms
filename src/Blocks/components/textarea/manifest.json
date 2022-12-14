@@ -60,6 +60,9 @@
 		},
 		"textareaAttrs": {
 			"type": "array"
+		},
+		"textareaDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

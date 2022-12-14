@@ -20,6 +20,7 @@ import {
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
+import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
 
 export const InputOptions = (attributes) => {
 	const {
@@ -65,6 +66,7 @@ export const InputOptions = (attributes) => {
 	const inputMin = checkAttr('inputMin', attributes, manifest);
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
+	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
 
 	const [showValidation, setShowValidation] = useState(false);
 
@@ -87,6 +89,7 @@ export const InputOptions = (attributes) => {
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={inputPlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
 					/>
 				}
 
@@ -95,6 +98,7 @@ export const InputOptions = (attributes) => {
 						label={<IconLabel icon={icons.fieldType} label={__('Input value kind', 'eightshift-forms')} />}
 						value={inputType}
 						options={getOption('inputType', attributes, manifest)}
+						disabled={isOptionDisabled(getAttrKey('inputType', attributes, manifest), inputDisabledOptions)}
 						onChange={(value) => {
 							setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value });
 
@@ -130,6 +134,7 @@ export const InputOptions = (attributes) => {
 								help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 								value={inputName}
 								onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 
@@ -138,6 +143,7 @@ export const InputOptions = (attributes) => {
 								label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
 								value={inputValue}
 								onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputValue', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 
@@ -147,6 +153,7 @@ export const InputOptions = (attributes) => {
 									icon={icons.fieldReadonly}
 									isPressed={inputIsReadOnly}
 									onClick={() => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: !inputIsReadOnly })}
+									disabled={isOptionDisabled(getAttrKey('inputIsReadOnly', attributes, manifest), inputDisabledOptions)}
 								>
 									{__('Read-only', 'eightshift-forms')}
 								</Button>
@@ -158,6 +165,7 @@ export const InputOptions = (attributes) => {
 									icon={icons.fieldDisabled}
 									isPressed={inputIsDisabled}
 									onClick={() => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: !inputIsDisabled })}
+									disabled={isOptionDisabled(getAttrKey('inputIsDisabled', attributes, manifest), inputDisabledOptions)}
 								>
 									{__('Disabled', 'eightshift-forms')}
 								</Button>
@@ -176,6 +184,7 @@ export const InputOptions = (attributes) => {
 									icon={icons.fieldRequired}
 									isPressed={inputIsRequired}
 									onClick={() => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: !inputIsRequired })}
+									disabled={isOptionDisabled(getAttrKey('inputIsRequired', attributes, manifest), inputDisabledOptions)}
 								>
 									{__('Required', 'eightshift-forms')}
 								</Button>
@@ -199,6 +208,7 @@ export const InputOptions = (attributes) => {
 														label: label,
 														isActive: inputValidationPattern === value,
 													}))}
+													disabled={isOptionDisabled(getAttrKey('inputValidationPattern', attributes, manifest), inputDisabledOptions)}
 												/>
 											</div>
 										</Popover>
@@ -230,6 +240,7 @@ export const InputOptions = (attributes) => {
 										/>
 									}
 									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMinLength ? parseInt(inputMinLength) : '--'}</span>)}
+									disabled={isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions)}
 								/>
 							</>
 						}
@@ -252,6 +263,7 @@ export const InputOptions = (attributes) => {
 									/>
 								}
 								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMaxLength ? parseInt(inputMaxLength) : '--'}</span>)}
+								disabled={isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 
@@ -278,6 +290,7 @@ export const InputOptions = (attributes) => {
 										/>
 									}
 									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMin ? parseInt(inputMin) : '--'}</span>)}
+									disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
 								/>
 							</>
 						}
@@ -300,6 +313,7 @@ export const InputOptions = (attributes) => {
 									/>
 								}
 								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMax ? parseInt(inputMax) : '--'}</span>)}
+								disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 
@@ -321,6 +335,7 @@ export const InputOptions = (attributes) => {
 									/>
 								}
 								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputStep ? parseInt(inputStep) : '--'}</span>)}
+								disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 					</>
@@ -335,6 +350,7 @@ export const InputOptions = (attributes) => {
 								label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
 								value={inputTracking}
 								onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputTracking', attributes, manifest), inputDisabledOptions)}
 							/>
 						}
 					</>

@@ -49,6 +49,9 @@
 		},
 		"selectAttrs": {
 			"type": "array"
+		},
+		"selectDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

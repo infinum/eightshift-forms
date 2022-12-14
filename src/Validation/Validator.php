@@ -102,11 +102,56 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * Get validation pattern - pattern from name.
+	 *
+	 * @param string $name Name to serach.
+	 *
+	 * @return string
+	 */
+	public function getValidationPattern(string $name): string
+	{
+		$patterns = \array_filter(
+			$this->getValidationPatterns(),
+			static function ($item) use ($name) {
+				return $item['label'] === $name;
+			}
+		);
+
+		if ($patterns) {
+			return \reset($patterns)['value'] ?? $name;
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Prepare validation patterns for editor select output.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public function getValidationPatternsEditor(): array
+	{
+		return array_map(
+			static function($item) {
+				$label = $item['label'] ?? '';
+				$value = $item['value'] ?? '';
+
+				// Output label as value for enum.
+				return [
+					'label' => $label,
+					'value' => $value === '---' ? '' : $label,
+				];
+			},
+			$this->getValidationPatterns()
+		);
+	}
+
+	/**
 	 * Prepare validation patterns
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	public function getValidationPatterns(): array
+	private function getValidationPatterns(): array
 	{
 		$output = [
 			[
@@ -140,36 +185,13 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Get validation pattern - pattern from name.
-	 *
-	 * @param string $name Name to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPattern(string $name): string
-	{
-		$patterns = \array_filter(
-			$this->getValidationPatterns(),
-			static function ($item) use ($name) {
-				return $item['label'] === $name;
-			}
-		);
-
-		if ($patterns) {
-			return \reset($patterns)['value'] ?? $name;
-		}
-
-		return $name;
-	}
-
-	/**
 	 * Get validation pattern - output from pattern.
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
 	 * @return string
 	 */
-	public function getValidationPatternOutput(string $pattern): string
+	private function getValidationPatternOutput(string $pattern): string
 	{
 		$patterns = \array_filter(
 			$this->getValidationPatterns(),

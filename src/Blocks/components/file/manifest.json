@@ -60,6 +60,9 @@
 		},
 		"fileAttrs": {
 			"type": "array"
+		},
+		"fileDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

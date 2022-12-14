@@ -13,6 +13,8 @@ namespace EightshiftForms\Rest\Routes\Editor;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
 /**
@@ -20,6 +22,11 @@ use WP_REST_Request;
  */
 class IntegrationEditorRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Route slug.
 	 */
@@ -133,7 +140,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$fields = $this->hubspot->getFormBlockGrammar($formId, $itemId, $type);
+		$fields = $this->hubspot->getFormBlockGrammarArray($formId, $itemId, $type);
 
 		if (!$fields) {
 			return \rest_ensure_response([
@@ -143,24 +150,110 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$update = wp_update_post([
-			'ID' => $formId,
-			'post_content' => $fields,
-		]);
+		// $this->diffChanges($formId, $fields);
 
-		if ($update < 0 || \is_wp_error($update)) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Something went wrong in updating form.', 'eightshift-forms'),
-			]);
-		}
+		// $update = wp_update_post([
+		// 	'ID' => $formId,
+		// 	'post_content' => serialize_blocks([$fields]),
+		// ]);
+
+		// if ($update < 0 || \is_wp_error($update)) {
+		// 	return \rest_ensure_response([
+		// 		'code' => 400,
+		// 		'status' => 'error',
+		// 		'message' => \esc_html__('Something went wrong in updating form.', 'eightshift-forms'),
+		// 	]);
+		// }
+
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		// Exit with success.
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
 			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
+			'data' => $isDeveloperMode ? $fields : [],
 		]);
+	}
+
+	private function diffChanges(string $formId, array $fields): array
+	{
+		if (!$fields) {
+			return [
+				'status' => 'new_content_missing',
+				'message' => esc_html__('New integration content is missing or empty.', 'eightshift-forms'),
+				'reload' => false,
+			];
+		}
+
+		$currentFormData = get_post_field('post_content', $formId);
+		if (!$currentFormData) {
+			return [
+				'status' => 'old_content_missing',
+				'message' => esc_html__('Old content is missing or empty.', 'eightshift-forms'),
+				'reload' => false,
+			];
+		}
+
+		$currentFormData = parse_blocks($currentFormData)[0] ?? [];
+		if (!$currentFormData) {
+			return [
+				'status' => 'old_content_parsed_missing_blocks',
+				'message' => esc_html__('Missing old content.', 'eightshift-forms'),
+				'reload' => false,
+			];
+		}
+
+		$blocksCurrent = $this->getBlockIntegration($currentFormData);
+		$blocksNew = $this->getBlockIntegration($fields);
+
+		// $result = $this->check_diff_multi($fields, $currentFormData);
+
+		error_log( print_r( ( $currentFormData ), true ) );
+		// error_log( print_r( ( $fields['blockName'] ), true ) );
+		// error_log( print_r( ( $result ), true ) );
+
+		return [
+			'status' => 'error',
+			'message' => esc_html__('Something went wrong.', 'eightshift-forms'),
+			'reload' => false,
+		];
+	}
+
+	private function getBlockIntegration($blocks): array
+	{
+		$blocks = $blocks['innerBlocks'] ?? [];
+
+		if (!$blocks) {
+			return [];
+		}
+
+		$block = $blocks[0] ?? [];
+
+		if (!$block) {
+			return [];
+		}
+
+		return $block;
+	}
+
+	private function checkBlockName($old, $new): array {
+		$blockNameOld = $old['blockName'] ?? '';
+		$blockNameNew = $new['blockName'] ?? '';
+
+		if ($blockNameOld === $blockNameNew) {
+			return [
+				'status' => 'old_content_parsed_missing_blocks',
+				'message' => esc_html__('Missing old content.', 'eightshift-forms'),
+			];
+		}
+
+		// if (!$blockNameOld && $blockNameNew) {
+		// 	ret
+		// }
+
+		// if (!$blockNameOld || $blockNameNew) {
+		// 	return 
+		// }
 	}
 }

@@ -12,6 +12,7 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
 
 export const RadiosOptions = (attributes) => {
 	const {
@@ -20,6 +21,7 @@ export const RadiosOptions = (attributes) => {
 
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
+	const radiosDisabledOptions = checkAttr('radiosDisabledOptions', attributes, manifest);
 
 	return (
 		<>
@@ -34,6 +36,7 @@ export const RadiosOptions = (attributes) => {
 					icon={icons.fieldRequired}
 					isPressed={radiosIsRequired}
 					onClick={() => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: !radiosIsRequired })}
+					disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
 				>
 					{__('Required', 'eightshift-forms')}
 				</Button>
@@ -45,6 +48,7 @@ export const RadiosOptions = (attributes) => {
 					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={radiosName}
 					onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
 				/>
 
 			</PanelBody>

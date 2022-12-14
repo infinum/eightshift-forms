@@ -55,6 +55,9 @@
 		},
 		"submitIcon": {
 			"type": "string"
+		},
+		"submitDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"icons": {

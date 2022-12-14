@@ -25,6 +25,9 @@
 		},
 		"radiosMeta": {
 			"type": "string"
+		},
+		"radiosDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

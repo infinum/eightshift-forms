@@ -84,6 +84,9 @@
 		},
 		"inputAttrs": {
 			"type": "array"
+		},
+		"inputDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"options": {

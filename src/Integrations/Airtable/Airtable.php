@@ -75,7 +75,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
-	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $type): array
 	{
 		return '';
 	}

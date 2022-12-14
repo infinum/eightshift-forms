@@ -193,7 +193,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['radiosBlockAdditionalContent'] = \apply_filters($radiosAdditionalContentFilterName, []);
 			$output['submitBlockAdditionalContent'] = \apply_filters($submitAdditionalContentFilterName, []);
 			$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
-			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
+			$output['validationPatternsOptions'] = $this->validator->getValidationPatternsEditor();
 			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 

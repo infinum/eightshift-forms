@@ -12,6 +12,7 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
 
 export const FileOptions = (attributes) => {
 	const {
@@ -28,6 +29,7 @@ export const FileOptions = (attributes) => {
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
 	const fileCustomInfoTextUse = checkAttr('fileCustomInfoTextUse', attributes, manifest);
 	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
+	const fileDisabledOptions = checkAttr('fileDisabledOptions', attributes, manifest);
 
 	return (
 		<>
@@ -40,6 +42,7 @@ export const FileOptions = (attributes) => {
 					icon={icons.files}
 					isPressed={fileIsMultiple}
 					onClick={() => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: !fileIsMultiple })}
+					disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
 				>
 					{__('Allow uploading multiple files', 'eightshift-forms')}
 				</Button>
@@ -51,6 +54,7 @@ export const FileOptions = (attributes) => {
 						icon={icons.fieldRequired}
 						isPressed={fileIsRequired}
 						onClick={() => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: !fileIsRequired })}
+						disabled={isOptionDisabled(getAttrKey('fileIsRequired', attributes, manifest), fileDisabledOptions)}
 					>
 						{__('Required', 'eightshift-forms')}
 					</Button>
@@ -62,6 +66,7 @@ export const FileOptions = (attributes) => {
 					help={__('Separate items with a comma.', 'eightshift-forms')}
 					placeholder='e.g. .jpg,.png,.pdf'
 					onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 				/>
 
 				<BaseControl label={<IconLabel icon={icons.fileSizeMin} label={__('Allowed file size', 'eightshift-forms')} />}>
@@ -72,6 +77,7 @@ export const FileOptions = (attributes) => {
 							type={'number'}
 							onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
 							className='es-no-field-spacing'
+							disabled={isOptionDisabled(getAttrKey('fileMinSize', attributes, manifest), fileDisabledOptions)}
 						/>
 
 						<TextControl
@@ -80,6 +86,7 @@ export const FileOptions = (attributes) => {
 							type={'number'}
 							onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
 							className='es-no-field-spacing'
+							disabled={isOptionDisabled(getAttrKey('fileMaxSize', attributes, manifest), fileDisabledOptions)}
 						/>
 					</div>
 				</BaseControl>
@@ -96,6 +103,7 @@ export const FileOptions = (attributes) => {
 								icon={icons.visible}
 								isPressed={fileCustomInfoTextUse}
 								onClick={() => setAttributes({ [getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: !fileCustomInfoTextUse })}
+								disabled={isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)}
 							/>
 						</div>
 					}
@@ -105,6 +113,7 @@ export const FileOptions = (attributes) => {
 							value={fileCustomInfoText}
 							placeholder={__('Drag and drop files here', 'eightshift-forms')}
 							onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoText', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions)}
 						/>
 					}
 				</BaseControl>
@@ -114,6 +123,7 @@ export const FileOptions = (attributes) => {
 					value={fileCustomInfoButtonText}
 					placeholder={__('Add files', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
 				/>
 
 				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
@@ -123,6 +133,7 @@ export const FileOptions = (attributes) => {
 					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={fileName}
 					onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
 				/>
 
 				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
@@ -131,6 +142,7 @@ export const FileOptions = (attributes) => {
 					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
 					value={fileTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}
 				/>
 			</PanelBody>
 

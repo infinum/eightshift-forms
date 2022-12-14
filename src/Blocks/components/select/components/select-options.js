@@ -12,6 +12,7 @@ import {
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
 
 export const SelectOptions = (attributes) => {
 	const {
@@ -22,6 +23,7 @@ export const SelectOptions = (attributes) => {
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
 	const selectTracking = checkAttr('selectTracking', attributes, manifest);
+	const selectDisabledOptions = checkAttr('selectDisabledOptions', attributes, manifest);
 
 	return (
 		<>
@@ -37,6 +39,7 @@ export const SelectOptions = (attributes) => {
 						icon={icons.fieldRequired}
 						isPressed={selectIsRequired}
 						onClick={() => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: !selectIsRequired })}
+						disabled={isOptionDisabled(getAttrKey('selectIsRequired', attributes, manifest), selectDisabledOptions)}
 					>
 						{__('Required', 'eightshift-forms')}
 					</Button>
@@ -49,6 +52,7 @@ export const SelectOptions = (attributes) => {
 					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={selectName}
 					onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
 				/>
 
 				<div className='es-h-spaced'>
@@ -56,6 +60,7 @@ export const SelectOptions = (attributes) => {
 						icon={icons.fieldDisabled}
 						isPressed={selectIsDisabled}
 						onClick={() => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: !selectIsDisabled })}
+						disabled={isOptionDisabled(getAttrKey('selectIsDisabled', attributes, manifest), selectDisabledOptions)}
 					>
 						{__('Disabled', 'eightshift-forms')}
 					</Button>
@@ -67,6 +72,7 @@ export const SelectOptions = (attributes) => {
 					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
 					value={selectTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}
 				/>
 			</PanelBody>
 

@@ -24,6 +24,9 @@
 		"selectOptionIsDisabled": {
 			"type": "boolean",
 			"default": false
+		},
+		"selectOptionDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

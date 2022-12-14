@@ -15,7 +15,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Hubspot integration class.
@@ -74,9 +73,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 	 * @param string $itemId Integration item id.
 	 * @param string $type Integration type.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getFormBlockGrammar(string $formId, string $itemId, string $type): string
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $type): array
 	{
 		// Get fields.
 		$item = $this->hubspotClient->getItem($itemId);
@@ -84,7 +83,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 			return '';
 		}
 
-		$fields = $this->getFields($item, $formId, false);
+		$fields = $this->getFields($item, $formId);
 
 		if (!$fields) {
 			return '';
@@ -98,11 +97,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 	 *
 	 * @param array<string, mixed> $data Item object.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -136,7 +134,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 					'richTextName' => "rich-text-{$key}",
 					'richTextFieldLabel' => \__('Rich text', 'eightshift-forms') . '-' . $key,
 					'richTextContent' => $richText,
-					'blockSsr' => $ssr,
 				];
 			}
 
@@ -185,7 +182,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('input', [
+								$required ? 'inputIsRequired' : '',
+								$min ? 'inputMinLength' : '',
+								$max ? 'inputMaxLength' : '',
+							]),
 						];
 
 						if ($min) {
@@ -197,7 +198,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 						}
 
 						if ($name === 'email') {
-							$item['inputValidationPattern'] = $this->validator->getValidationPattern('simpleEmail');
+							$item['inputValidationPattern'] = 'simpleEmail';
+							$item['inputType'] = $hidden ? 'hidden' : 'email';
 						}
 
 						$output[] = $item;
@@ -216,15 +218,19 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('input', [
+								$required ? 'inputIsRequired' : '',
+								$min ? 'inputMin' : '',
+								$max ? 'inputMax' : '',
+							]),
 						];
 
 						if ($min) {
-							$item['inputMinLength'] = $min;
+							$item['inputMin'] = $min;
 						}
 
 						if ($max) {
-							$item['inputMaxLength'] = $max;
+							$item['inputMax'] = $max;
 						}
 
 						$output[] = $item;
@@ -244,7 +250,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'textareaAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('textarea', [
+								$required ? 'textareaIsRequired' : '',
+							]),
 						];
 						break;
 					case 'file':
@@ -272,7 +280,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'fileAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('file', [
+								$required ? 'fileIsRequired' : '',
+								$allowedFileTypes ? 'fileAccept' : '',
+							]),
 						];
 
 						if ($allowedFileTypes) {
@@ -299,30 +310,24 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 								'data-object-type-id' => $objectTypeId,
 							],
 							'selectOptions' => \array_values(
-								\array_merge(
-									[
-										[
+								\array_map(
+									function ($selectOption) use ($selectedOption) {
+										return [
 											'component' => 'select-option',
-											'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
-											'selectOptionValue' => ' ',
-											'selectOptionIsSelected' => true,
-											'selectOptionIsDisabled' => true,
-										],
-									],
-									\array_map(
-										static function ($selectOption) use ($selectedOption) {
-											return [
-												'component' => 'select-option',
-												'selectOptionIsSelected' => !empty($selectedOption) && $selectOption['value'] === $selectedOption,
-												'selectOptionLabel' => $selectOption['label'],
-												'selectOptionValue' => $selectOption['value'],
-											];
-										},
-										$options
-									)
+											'selectOptionIsSelected' => !empty($selectedOption) && $selectOption['value'] === $selectedOption,
+											'selectOptionLabel' => $selectOption['label'],
+											'selectOptionValue' => $selectOption['value'],
+											'disabledOptions' => $this->prepareDisabledOptions('select-option', [
+												'selectOptionValue',
+											], false),
+										];
+									},
+									$options
 								)
 							),
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('select', [
+								$required ? 'selectIsRequired' : '',
+							]),
 						];
 						break;
 					case 'booleancheckbox':
@@ -345,7 +350,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 									],
 								]
 							],
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+								$required ? 'checkboxesIsRequired' : '',
+							]),
 						];
 						break;
 					case 'checkbox':
@@ -359,7 +366,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => \array_map(
-								static function ($checkbox) use ($name, $objectTypeId, $selectedOption) {
+								function ($checkbox) use ($name, $objectTypeId, $selectedOption) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
@@ -369,11 +376,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'checkboxAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
+										'disabledOptions' => $this->prepareDisabledOptions('checkbox', [
+											'checkboxValue',
+										], false),
 									];
 								},
 								$options
 							),
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+								$required ? 'checkboxesIsRequired' : '',
+							]),
 						];
 						break;
 					case 'radio':
@@ -387,7 +399,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $required,
 							'radiosContent' => \array_map(
-								static function ($radio) use ($name, $objectTypeId, $selectedOption) {
+								function ($radio) use ($name, $objectTypeId, $selectedOption) {
 									return [
 										'component' => 'radio',
 										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
@@ -397,11 +409,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'radioAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
+										'disabledOptions' => $this->prepareDisabledOptions('radio', [
+											'radioValue',
+										], false),
 									];
 								},
 								$options
 							),
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('radios', [
+								$required ? 'radiosIsRequired' : '',
+							]),
 						];
 						break;
 					case 'consent':
@@ -415,7 +432,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $required,
 							'checkboxesContent' => \array_map(
-								static function ($checkbox) use ($name, $objectTypeId) {
+								function ($checkbox) use ($name, $objectTypeId) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
@@ -424,11 +441,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'checkboxAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
+										'disabledOptions' => $this->prepareDisabledOptions('checkbox', [
+											'checkboxValue',
+										], false),
 									];
 								},
 								$options
 							),
-							'blockSsr' => $ssr,
+							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+								$required ? 'checkboxesIsRequired' : '',
+							]),
 						];
 						break;
 				}
@@ -441,9 +463,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 			'submitValue' => $data['submitButtonText'] ?? '',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
