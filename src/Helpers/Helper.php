@@ -16,6 +16,7 @@ use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Helper class.
@@ -342,5 +343,22 @@ class Helper
 		}
 
 		return $name;
+	}
+
+	/**
+	 * Get Block attribute prefix by full block name.
+	 *
+	 * @param string $blockName Block name to check.
+	 *
+	 * @return string
+	 */
+	public static function getBlockAttributePrefixByFullBlockName(string $blockName): string
+	{
+		$blockName = \explode('/', $blockName);
+		$blockName = \end($blockName);
+
+		$blockName = Components::kebabToCamelCase($blockName, '-');
+
+		return "{$blockName}" . ucfirst($blockName);
 	}
 }

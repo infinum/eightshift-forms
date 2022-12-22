@@ -80,13 +80,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 		// Get fields.
 		$item = $this->hubspotClient->getItem($itemId);
 		if (empty($item)) {
-			return '';
+			return [];
 		}
 
 		$fields = $this->getFields($item, $formId);
 
 		if (!$fields) {
-			return '';
+			return [];
 		}
 
 		return $this->getFormBlock($type, $fields, $itemId);

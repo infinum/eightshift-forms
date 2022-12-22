@@ -211,7 +211,6 @@ abstract class AbstractFormBuilder
 		$component = Components::kebabToCamelCase($component);
 
 		$default = [
-			"{$component}Id",
 			"{$component}Name",
 		];
 
