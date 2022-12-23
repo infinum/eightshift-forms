@@ -340,7 +340,11 @@ abstract class AbstractFormBuilder
 					$newName = ucfirst($prefix) . "DisabledOptions";
 				}
 
-				$output['attrs']["{$prefix}{$newName}"] = $value;
+				if (!$value) {
+					continue;
+				}
+
+				$output['attrs']["{$prefix}{$newName}"] = is_string($value) ? $this->prepareAttributes($value) : $value;
 			}
 		}
 
@@ -436,5 +440,24 @@ abstract class AbstractFormBuilder
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return \admin_url(\sprintf(\basename($request)));
+	}
+
+	/**
+	 * Convert all special characters in attributes.
+	 * Logic got from the core `serialize_block_attributes` function.
+	 *
+	 * @param string $attribute
+	 * @return string
+	 */
+	private function prepareAttributes(string $attribute): string
+	{
+		$attribute = preg_replace('\\u002d\\u002d', '/--/', $attribute);
+		$attribute = preg_replace('\\u003c', '/</', $attribute);
+		$attribute = preg_replace('\\u003e', '/>/', $attribute);
+		$attribute = preg_replace('\\u0026', '/&/', $attribute);
+		// Regex: /\\"/
+		$attribute = preg_replace('\\u0022', '/\\\\"/', $attribute);
+
+		return $attribute;
 	}
 }

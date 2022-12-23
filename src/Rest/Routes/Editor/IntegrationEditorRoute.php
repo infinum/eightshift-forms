@@ -197,8 +197,8 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		if ($isDeveloperMode) {
-			// $output['contentOld'] = $content;
-			// $output['integration'] = $integration;
+			$output['contentOld'] = $content;
+			$output['integration'] = $integration;
 		}
 
 		// Exit with success.
@@ -240,75 +240,23 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		$diff = $this->prepareDiffCheckOutput($integrationBlocks, $contentBlocks);
 
 		foreach ($diff as $key => $block) {
-			$content = $block['content'] ?? [];
-			$integration = $block['integration'] ?? [];
+			$changes = $this->diffInnerChanges($block['integration'] ?? [], $block['content'] ?? [], $key);
 
-			// Remove item if block is not present on integration, output nothing.
-			if (!$integration) {
-				$output['removed'][] = $key;
-				continue;
+			if ($changes['removed']) {
+				$output['removed'][] = $changes['removed'];
 			}
-
-			// If field exists on the integration but not on the content add it.
-			if (!$content) {
-				$output['added'][] = $key;
-				$output['output'][] = $integration;
-				continue;
+			if ($changes['added']) {
+				$output['added'][] = $changes['added'];
 			}
-
-			// If field type has changed on integration use the integration one.
-			if ($integration['blockName'] !== $content['blockName']) {
-				$output['replaced'][] = $key;
-				$output['output'][] = $integration;
-				continue;
+			if ($changes['replaced']) {
+				$output['replaced'][] = $changes['replaced'];
 			}
-
-			// Check if disabled attrs changed.
-			$innerOutput = $content;
-			$prefix = Helper::getBlockAttributePrefixByFullBlockName($integration['blockName']);
-			$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
-
-			error_log( print_r( ( $integration ), true ) );
-			
-
-			if ($disabledOptions) {
-				foreach ($disabledOptions as $disabledOption) {
-					$i = $integration['attrs'][$disabledOption] ?? '';
-					$c = $content['attrs'][$disabledOption] ?? '';
-
-					// If intregration is missing disabled or protected attribute. Thhere chould be and issue in the mapping of component attributes for integration.
-					if (!$i) {
-						$output['replaced'][] = $key;
-						$output['output'][] = $integration;
-						break;
-					}
-
-					// If content has missing disabled or protected attribute add it from integration.
-					if (!$c) {
-						$output['changed'][$key][] = $disabledOption;
-						$innerOutput['attrs'][$disabledOption] = $i;
-						break;
-					}
-
-					// If values of attribute in content and intregation are diffrerent do something.
-					if ($i !== $c) {
-						
-						// If protected attribute name has changed we need to update the whole block. This is an unlikely scenario but it can happen.
-						if ($i === "{$prefix}Name" && $c === "{$prefix}Name") {
-							$output['replaced'][] = $key;
-							$output['output'][] = $integration;
-							break;
-						}
-
-						// Output the changed value.
-						$output['changed'][$key][] = $disabledOption;
-						$innerOutput['attrs'][$disabledOption] = $i;
-						continue;
-					}
-				}
+			if ($changes['changed']) {
+				$output['changed'][] = $changes['changed'];
 			}
-
-			$output['output'][] = $content;
+			if ($changes['output']) {
+				$output['output'][] = $changes['output'];
+			}
 		}
 
 		$namespace = Components::getSettingsNamespace();
@@ -336,6 +284,82 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		return $output;
 	}
 
+	private function diffInnerChanges(array $integration, array $content, string $key): array
+	{
+		$output = [
+			'removed' => [],
+			'added' => [],
+			'replaced' => [],
+			'changed' => [],
+			'output' => [],
+		];
+
+		// Remove item if block is not present on integration, output nothing.
+		if (!$integration) {
+			$output['removed'] = $key;
+			return $output;
+		}
+
+		// If field exists on the integration but not on the content add it.
+		if (!$content) {
+			$output['added'] = $key;
+			$output['output'] = $integration;
+			return $output;
+		}
+
+		// If field type has changed on integration use the integration one.
+		if ($integration['blockName'] !== $content['blockName']) {
+			$output['replaced'] = $key;
+			$output['output'] = $integration;
+			return $output;
+		}
+
+		// Check if disabled attrs changed.
+		$innerOutput = $content;
+		$prefix = Helper::getBlockAttributePrefixByFullBlockName($integration['blockName']);
+		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
+
+		if ($disabledOptions) {
+			foreach ($disabledOptions as $disabledOption) {
+				$i = $integration['attrs'][$disabledOption] ?? '';
+				$c = $content['attrs'][$disabledOption] ?? '';
+
+				// If intregration is missing disabled or protected attribute. Thhere chould be and issue in the mapping of component attributes for integration.
+				if (!$i) {
+					$output['replaced'] = $key;
+					$output['output'] = $integration;
+					break;
+				}
+
+				// If content has missing disabled or protected attribute add it from integration.
+				if (!$c) {
+					$output['changed'][$key][] = $disabledOption;
+					$innerOutput['attrs'][$disabledOption] = $i;
+					break;
+				}
+
+				// If values of attribute in content and intregation are diffrerent do something.
+				if ($i !== $c) {
+					// If protected attribute name has changed we need to update the whole block. This is an unlikely scenario but it can happen.
+					if ($i === "{$prefix}Name" && $c === "{$prefix}Name") {
+						$output['replaced'] = $key;
+						$output['output'] = $integration;
+						break;
+					}
+
+					// Output the changed value.
+					$output['changed'][$key][] = $disabledOption;
+					$innerOutput['attrs'][$disabledOption] = $i;
+					continue;
+				}
+			}
+		}
+
+		$output['output'] = $content;
+
+		return $output;
+	}
+
 	/**
 	 * Undocumented function
 	 *
@@ -356,14 +380,27 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			foreach ($blocks as $block) {
 				$blockName = Helper::getBlockAttributePrefixByFullBlockName($block['blockName']);
 				$name = $block['attrs']["{$blockName}Name"] ?? '';
-	
+
 				if (!$name) {
 					continue;
 				}
-	
+
 				// Remove empty attributes.
 				$block['attrs'] = \array_filter($block['attrs']);
-	
+
+				if ($block['innerBlocks']) {
+					foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+						// Remove empty attributes.
+						$innerBlock['attrs'] = \array_filter($innerBlock['attrs']);
+						$innerBlock['innerBlocks'] = [];
+						$innerBlock['innerContent'] = [];
+						$block['innerBlocks'] = [];
+						$block['innerContent'] = [];
+
+						$output["{$name}---{$innerKey}"][$key] = $innerBlock;
+					}
+				}
+
 				$output[$name][$key] = $block;
 			}
 		}
