@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -71,25 +72,33 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $itemId Integration item id.
-	 * @param string $type Integration type.
 	 *
 	 * @return array
 	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $type): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
 	{
+		$output = [
+			'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
+
 		// Get fields.
 		$item = $this->hubspotClient->getItem($itemId);
 		if (empty($item)) {
-			return [];
+			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
 		if (!$fields) {
-			return [];
+			return $output;
 		}
 
-		return $this->getFormBlock($type, $fields, $itemId);
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -182,7 +191,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'disabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
 								$min ? 'inputMinLength' : '',
 								$max ? 'inputMaxLength' : '',
@@ -218,7 +227,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'disabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
 								$min ? 'inputMin' : '',
 								$max ? 'inputMax' : '',
@@ -250,7 +259,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'textareaAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'disabledOptions' => $this->prepareDisabledOptions('textarea', [
+							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
 							]),
 						];
@@ -280,7 +289,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 							'fileAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'disabledOptions' => $this->prepareDisabledOptions('file', [
+							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$required ? 'fileIsRequired' : '',
 								$allowedFileTypes ? 'fileAccept' : '',
 							]),
@@ -317,7 +326,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 											'selectOptionIsSelected' => !empty($selectedOption) && $selectOption['value'] === $selectedOption,
 											'selectOptionLabel' => $selectOption['label'],
 											'selectOptionValue' => $selectOption['value'],
-											'disabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
 												'selectOptionValue',
 											], false),
 										];
@@ -325,7 +334,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 									$options
 								)
 							),
-							'disabledOptions' => $this->prepareDisabledOptions('select', [
+							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 								$required ? 'selectIsRequired' : '',
 							]),
 						];
@@ -350,7 +359,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 									],
 								]
 							],
-							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$required ? 'checkboxesIsRequired' : '',
 							]),
 						];
@@ -376,14 +385,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'checkboxAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
-										'disabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 											'checkboxValue',
 										], false),
 									];
 								},
 								$options
 							),
-							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$required ? 'checkboxesIsRequired' : '',
 							]),
 						];
@@ -409,14 +418,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'radioAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
-										'disabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 											'radioValue',
 										], false),
 									];
 								},
 								$options
 							),
-							'disabledOptions' => $this->prepareDisabledOptions('radios', [
+							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 								$required ? 'radiosIsRequired' : '',
 							]),
 						];
@@ -441,14 +450,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 										'checkboxAttrs' => [
 											'data-object-type-id' => $objectTypeId,
 										],
-										'disabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 											'checkboxValue',
 										], false),
 									];
 								},
 								$options
 							),
-							'disabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$required ? 'checkboxesIsRequired' : '',
 							]),
 						];

@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -130,10 +131,9 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$content = $this->getFormContent($formId);
-		$formContent = $this->prepareBlocks($this->getFormContent($formId));
+		$content = $this->prepareContentBlocks($this->getFormContent($formId));
 
-		if (!$formContent) {
+		if (!$content) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
@@ -143,11 +143,11 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$type = $formContent['type'] ?? '';
-		$itemId = $formContent['itemId'] ?? '';
-		$fields = $formContent['fields'] ?? [];
+		$contentType = $content['type'] ?? '';
+		$contentItemId = $content['itemId'] ? Helper::unserializeAttributes($content['itemId']) : '';
+		$contentFields = $content['fields'] ?? [];
 
-		if (!$type) {
+		if (!$contentType) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
@@ -157,7 +157,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		if (!$itemId) {
+		if (!$contentItemId) {
 			return \rest_ensure_response([
 				'code' => 400,
 				'status' => 'error',
@@ -167,12 +167,10 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$integration = $this->hubspot->getFormBlockGrammarArray($formId, $itemId, $type);
-		$integrationBlocks = $this->prepareBlocks($integration);
+		$integration = $this->hubspot->getFormBlockGrammarArray($formId, $contentItemId);
+		$integrationFields = $integration['fields'] ?? [];
 
-		if (!$fields) {
-			$integrationFields = $integrationBlocks['fields'] ?? [];
-
+		if (!$contentFields) {
 			if (!$integrationFields) {
 				return \rest_ensure_response([
 					'code' => 400,
@@ -192,13 +190,33 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$output = $this->diffChanges($integrationBlocks, $formContent);
+		if ($integration['type'] !== $content['type']) {
+			return \rest_ensure_response([
+				'code' => 400,
+				'status' => 'error',
+				'message' => \esc_html__('Integration type is different than content type.', 'eightshift-forms'),
+				'update' => false,
+				'data' => [],
+			]);
+		}
 
-		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		if ($integration['itemId'] !== $content['itemId']) {
+			return \rest_ensure_response([
+				'code' => 400,
+				'status' => 'error',
+				'message' => \esc_html__('Integration item ID is different than content item ID.', 'eightshift-forms'),
+				'update' => false,
+				'data' => [],
+			]);
+		}
 
-		if ($isDeveloperMode) {
-			$output['contentOld'] = $content;
-			$output['integration'] = $integration;
+		$output = $this->diffChanges($integration, $content);
+
+		if ($output['output']) {
+			$a = $this->updateBlockContent($formId, $output['output']);
+
+			error_log( print_r( ( $a ), true ) );
+			
 		}
 
 		// Exit with success.
@@ -207,7 +225,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			'status' => 'success',
 			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
 			'update' => true,
-			'data' => $output,
+			'data' => $this->diffChanges($integration, $content),
 		]);
 	}
 
@@ -218,26 +236,19 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 	 * @param array $contentBlocks
 	 * @return array
 	 */
-	private function diffChanges(array $integrationBlocks, array $contentBlocks): array
+	private function diffChanges(array $integration, array $content): array
 	{
-		if ($integrationBlocks['type'] !== $contentBlocks['type']) {
-			return [];
-		}
-
-		if ($integrationBlocks['itemId'] !== $contentBlocks['itemId']) {
-			return [];
-		}
+		$diff = $this->prepareContentBlocksForCheck($content['fields']['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration['fields']));
 
 		$output = [
-			'type' => $integrationBlocks['type'],
-			'itemId' => $integrationBlocks['itemId'],
+			'type' => $integration['type'],
+			'itemId' => $integration['itemId'],
 			'removed' => [],
 			'added' => [],
 			'replaced' => [],
 			'changed' => [],
 			'output' => [],
 		];
-		$diff = $this->prepareDiffCheckOutput($integrationBlocks, $contentBlocks);
 
 		foreach ($diff as $key => $block) {
 			$changes = $this->diffInnerChanges($block['integration'] ?? [], $block['content'] ?? [], $key);
@@ -255,31 +266,19 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 				$output['changed'][] = $changes['changed'];
 			}
 			if ($changes['output']) {
-				$output['output'][] = $changes['output'];
+				$output['output'][$key] = $changes['output'];
 			}
 		}
 
-		$namespace = Components::getSettingsNamespace();
+		$blocksOutput = $this->reconstructFieldsOutput($output['output'], $output['type'], $output['itemId']);
+		$output['output'] = serialize_blocks($blocksOutput);
 
-		$integrationOutput = [
-			[
-				'blockName' => "{$namespace}/" . $output['type'],
-				'attrs' => [
-					$output['type'] . "IntegrationId" => $output['itemId'],
-				],
-				'innerContent' => $output['output'],
-				'innerHTML' => '',
-				// 'innerBlocks' => $output['output'],
-			],
-		];
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
-		$output['output'] = [
-			'blockName' => "{$namespace}/form-selector",
-			'attrs' => [],
-			'innerContent' => $integrationOutput,
-			'innerHTML' => '',
-			// 'innerBlocks' => $integrationOutput,
-		];
+		if ($isDeveloperMode) {
+			$output['outputPure'] = $blocksOutput;
+			$output['diff'] = $diff;
+		}
 
 		return $output;
 	}
@@ -308,7 +307,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		}
 
 		// If field type has changed on integration use the integration one.
-		if ($integration['blockName'] !== $content['blockName']) {
+		if ($integration['component'] !== $content['component']) {
 			$output['replaced'] = $key;
 			$output['output'] = $integration;
 			return $output;
@@ -316,7 +315,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 
 		// Check if disabled attrs changed.
 		$innerOutput = $content;
-		$prefix = Helper::getBlockAttributePrefixByFullBlockName($integration['blockName']);
+		$prefix = $integration['component'];
 		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
 
 		if ($disabledOptions) {
@@ -360,71 +359,180 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		return $output;
 	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @param array $integrationBlocks
-	 * @param array $contentBlocks
-	 * @return array
-	 */
-	private function prepareDiffCheckOutput(array $integrationBlocks, array $contentBlocks): array
+	private function prepareIntegrationBlocksForCheck(array $blocks): array
 	{
 		$output = [];
 
-		$checks = [
-			'integration' => $this->getFieldsFromBlocks($integrationBlocks),
-			'content' => $this->getFieldsFromBlocks($contentBlocks),
-		];
+		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
+		$namespace = Components::getSettingsNamespace();
 
-		foreach ($checks as $key => $blocks) {
-			foreach ($blocks as $block) {
-				$blockName = Helper::getBlockAttributePrefixByFullBlockName($block['blockName']);
-				$name = $block['attrs']["{$blockName}Name"] ?? '';
+		foreach ($blocks as $key => $block) {
+			$blockTypeOriginal = $block['component'] ?? '';
 
-				if (!$name) {
-					continue;
-				}
+			if (!$blockTypeOriginal) {
+				continue;
+			}
 
-				// Remove empty attributes.
-				$block['attrs'] = \array_filter($block['attrs']);
+			$blockType = Components::kebabToCamelCase($blockTypeOriginal, '-');
+			$blockName = "{$blockType}Name";
 
-				if ($block['innerBlocks']) {
-					foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-						// Remove empty attributes.
-						$innerBlock['attrs'] = \array_filter($innerBlock['attrs']);
-						$innerBlock['innerBlocks'] = [];
-						$innerBlock['innerContent'] = [];
-						$block['innerBlocks'] = [];
-						$block['innerContent'] = [];
+			$name = $block[$blockName] ?? '';
 
-						$output["{$name}---{$innerKey}"][$key] = $innerBlock;
+			if (!$name) {
+				continue;
+			}
+
+			$output[$name]['integration']  = [
+				'namespace' => $namespace,
+				'component' => $blockTypeOriginal,
+				'prefix' => $blockType . ucfirst($blockType),
+				'attrs' => $this->prepareBlockAttributes($block, $blockType),
+				'parent' => '',
+				'order' => $key,
+			];
+
+			$innerBlocks = \array_intersect_key($block, $nestedKeys);
+
+			if ($innerBlocks) {
+				foreach (\reset($innerBlocks) as $innerKey => $innerBlock) {
+					$blockInnerTypeOriginal = $innerBlock['component'] ?? '';
+
+					if (!$blockInnerTypeOriginal) {
+						continue;
 					}
-				}
 
-				$output[$name][$key] = $block;
+					$blockInnerType = Components::kebabToCamelCase($blockInnerTypeOriginal, '-');
+
+					$output["{$name}---{$innerKey}"]['integration']  = [
+						'namespace' => $namespace,
+						'component' => $blockInnerTypeOriginal,
+						'prefix' => $blockInnerType . ucfirst($blockInnerType),
+						'attrs' => $this->prepareBlockAttributes($innerBlock, $blockInnerType),
+						'parent' => $name,
+						'order' => $innerKey,
+					];
+				}
 			}
 		}
 
 		return $output;
 	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @param array $blocks
-	 * @return array
-	 */
-	private function getFieldsFromBlocks(array $blocks): array
+	private function prepareContentBlocksForCheck(array $blocks, $integration): array
 	{
-		return $blocks['fields']['innerBlocks'][0]['innerBlocks'] ?? [];
+		$output = $integration;
+
+		foreach ($blocks as $key => $block) {
+			$blockTypeOriginal = $block['blockName'] ?? '';
+
+			if (!$blockTypeOriginal) {
+				continue;
+			}
+
+			$blockType = $this->getBlockAttributePrefixByFullBlockName($blockTypeOriginal);
+			$blockName = $blockType['prefix']. "Name";
+
+			if (!$block['attrs']) {
+				continue;
+			}
+
+			$name = $block['attrs'][$blockName] ?? '';
+
+			if (!$name) {
+				continue;
+			}
+
+			$block['attrs'] = array_filter($block['attrs']);
+
+			$output[$name]['content']  = [
+				'namespace' => $blockType['namespace'],
+				'component' => $blockType['component'],
+				'prefix' => $blockType['prefix'],
+				'attrs' => $block['attrs'],
+				'parent' => '',
+				'order' => $key,
+			];
+
+			if (isset($block['innerBlocks'])) {
+				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+					$blockInnerType = $innerBlock['blockName'] ?? '';
+
+					if (!$blockInnerType) {
+						continue;
+					}
+
+					$blockInnerType = $this->getBlockAttributePrefixByFullBlockName($blockInnerType);
+
+					$output["{$name}---{$innerKey}"]['content'] = [
+						'namespace' => $blockInnerType['namespace'],
+						'component' => $blockInnerType['component'],
+						'prefix' => $blockInnerType['prefix'],
+						'attrs' => $innerBlock['attrs'],
+						'parent' => $name,
+						'order' => $innerKey,
+					];
+				}
+			}
+		}
+
+		return $output;
 	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @param string $formId
-	 * @return array
-	 */
+	private function reconstructFieldsOutput(array $data, string $type, string $itemId): array
+	{
+		$fieldsOutput = [];
+
+		foreach ($data as $key => $value) {
+			// TO DO: remove this.
+			if ($value['component'] === 'rich-text') {
+				continue;
+			}
+
+			if (!$value['parent']) {
+				$fieldsOutput[$key] = [
+					'blockName' => $value['namespace'] . '/' . $value['component'],
+					'attrs' => $value['attrs'],
+					'innerBlocks' => [],
+					'innerContent' => [],
+				];
+			} else {
+				$innerOutput = [
+					'blockName' => $value['namespace'] . '/' . $value['component'],
+					'attrs' => $value['attrs'],
+					'innerBlocks' => [],
+					'innerContent' => [],
+				];
+
+				$fieldsOutput[$value['parent']]['innerBlocks'][] = $innerOutput;
+				$fieldsOutput[$value['parent']]['innerContent'][] = $innerOutput;
+			}
+		}
+
+		$fieldsOutput = array_values($fieldsOutput);
+
+		$namespace = Components::getSettingsNamespace();
+
+		$innerBlock = [
+			[
+				'blockName' => "{$namespace}/" . $type,
+				'attrs' => [
+					$type . "IntegrationId" => $itemId,
+				],
+				'innerBlocks' => $fieldsOutput,
+				'innerContent' => $fieldsOutput,
+			],
+		];
+
+		return [
+			[
+				'blockName' => "{$namespace}/form-selector",
+				'attrs' => [],
+				'innerBlocks' => $innerBlock,
+				'innerContent' => $innerBlock,
+			],
+		];
+	}
+
 	private function getFormContent(string $formId): array
 	{
 		$theQuery = new WP_Query([
@@ -453,13 +561,15 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 		return isset($blocks[0]) ? $blocks[0] : [];
 	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @param array $blocks
-	 * @return array
-	 */
-	private function prepareBlocks(array $blocks): array
+	private function updateBlockContent(string $id, $content)
+	{
+		return wp_update_post([
+			'ID' => $id,
+			'post_content' => wp_slash($content),
+		 ]);
+	}
+
+	private function prepareContentBlocks(array $blocks): array
 	{
 		$output = [
 			'type' => '',
@@ -483,9 +593,63 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			return $output;
 		}
 
-		$output['itemId'] = \preg_replace('/\\u002d\\u002d/', '--', $itemId);
+		$output['itemId'] = $itemId;
 		$output['fields'] = $blocks;
 
 		return $output;
+	}
+
+	private function prepareBlockAttributes($attributes, $component) {
+		$output = [];
+
+		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
+
+		foreach ($attributes as $key => $value) {
+			if ($key === 'component') {
+				continue;
+			}
+
+			if (!$value) {
+				continue;
+			}
+
+			if (isset($nestedKeys[$key])) {
+				continue;
+			}
+
+			if ($key === "{$component}DisabledOptions") {
+				$value = array_values(array_map(
+					static function($item) use ($component) {
+						return "{$component}" . ucfirst($item);
+					},
+					$value
+				));
+			}
+
+			$output[$component . ucfirst($key)] = $value;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get Block attribute prefix by full block name.
+	 *
+	 * @param string $blockName Block name to check.
+	 *
+	 * @return string
+	 */
+	private function getBlockAttributePrefixByFullBlockName(string $name): array
+	{
+		$block = \explode('/', $name);
+		$blockName = \end($block);
+
+		$component = Components::kebabToCamelCase($blockName, '-');
+
+		return [
+			'namespace' => $block[0],
+			'component' => $blockName,
+			'prefix' => "{$component}" . ucfirst($component),
+		];
 	}
 }

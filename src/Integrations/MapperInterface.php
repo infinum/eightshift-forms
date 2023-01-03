@@ -30,9 +30,8 @@ interface MapperInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $itemId Integration item id.
-	 * @param string $type Integration type.
 	 *
 	 * @return array
 	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $type): array;
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array;
 }

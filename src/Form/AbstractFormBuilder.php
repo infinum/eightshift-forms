@@ -31,7 +31,7 @@ abstract class AbstractFormBuilder
 	 *
 	 * @var array
 	 */
-	private const NESTED_KEYS = [
+	public const NESTED_KEYS = [
 		'checkboxesContent',
 		'radiosContent',
 		'selectOptions',
@@ -221,137 +221,6 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Get full form block created from integration components.
-	 *
-	 * @param string $type Integration type, used as a parent block.
-	 * @param array $fields Fields pre created from the integration.
-	 * @param string $itemId Item id from the integration.
-	 *
-	 * @return array
-	 */
-	protected function getFormBlock(string $type, array $fields, string $itemId): array
-	{
-		$namespace = Components::getSettingsNamespace();
-
-		$integrationBlocks = $this->getFormBlockInnerFields($fields);
-
-		$integration = [
-			[
-				'blockName' => "{$namespace}/{$type}",
-				'attrs' => [
-					"{$type}IntegrationId" => $itemId,
-				],
-				'innerContent' => $integrationBlocks,
-				'innerHTML' => '',
-				'innerBlocks' => $integrationBlocks,
-			],
-		];
-
-		return [
-			'blockName' => "{$namespace}/form-selector",
-			'attrs' => [],
-			'innerContent' => $integration,
-			'innerHTML' => '',
-			'innerBlocks' => $integration,
-		] ?? [];
-	}
-
-	/**
-	 * Convert form block inner fileds from integration components.
-	 *
-	 * @param array $components Integration components.
-	 *
-	 * @return array
-	 */
-	private function getFormBlockInnerFields(array $components): array
-	{
-		$output = [];
-
-		$namespace = Components::getSettingsNamespace();
-
-		foreach($components as $component) {
-
-			$componentName = $component['component'] ?? '';
-
-			if (!$componentName) {
-				continue;
-			}
-
-			$fieldsBlock = $this->getFormBlockInnerField($component);
-
-			$output[] = [
-				'blockName' => "{$namespace}/{$componentName}",
-				'attrs' => $fieldsBlock['attrs'] ?? [],
-				'innerContent' => $fieldsBlock['innerBlocks'] ?? [],
-				'innerHTML' => '',
-				'innerBlocks' => $fieldsBlock['innerBlocks'] ?? [],
-			];
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Convert one block inner field from integration component.
-	 *
-	 * @param array $attributes Integration field attributes.
-	 *
-	 * @return array
-	 */
-	private function getFormBlockInnerField(array $attributes): array
-	{
-		$output = [
-			'attrs' => [],
-			'innerContent' => [],
-			'innerHTML' => '',
-			'innerBlocks' => [],
-		];
-
-		$componentName = $attributes['component'] ?? '';
-
-		if (!$componentName) {
-			return [];
-		}
-
-		$prefix = Components::kebabToCamelCase($componentName, '-');
-
-		$nestedKeys = array_flip(self::NESTED_KEYS);
-
-		foreach ($attributes as $key => $value) {
-			if ($key === 'component') {
-				continue;
-			}
-
-			if (isset($nestedKeys[$key])) {
-				$innerBlocks = $this->getFormBlockInnerFields($value);
-				$output['innerBlocks'] = $innerBlocks;
-				$output['innerContent'] = $innerBlocks;
-			} else {
-				$newName = ucfirst($key);
-
-				if ($key === 'disabledOptions') {
-					$value = array_values(array_map(
-						static function($item) use ($prefix) {
-							return "{$prefix}" . ucfirst($item);
-						},
-						$value
-					));
-
-					$newName = ucfirst($prefix) . "DisabledOptions";
-				}
-
-				if (!$value) {
-					continue;
-				}
-
-				$output['attrs']["{$prefix}{$newName}"] = is_string($value) ? $this->prepareAttributes($value) : $value;
-			}
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Get the actual form for the components.
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
@@ -440,24 +309,5 @@ abstract class AbstractFormBuilder
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return \admin_url(\sprintf(\basename($request)));
-	}
-
-	/**
-	 * Convert all special characters in attributes.
-	 * Logic got from the core `serialize_block_attributes` function.
-	 *
-	 * @param string $attribute
-	 * @return string
-	 */
-	private function prepareAttributes(string $attribute): string
-	{
-		$attribute = preg_replace('\\u002d\\u002d', '/--/', $attribute);
-		$attribute = preg_replace('\\u003c', '/</', $attribute);
-		$attribute = preg_replace('\\u003e', '/>/', $attribute);
-		$attribute = preg_replace('\\u0026', '/&/', $attribute);
-		// Regex: /\\"/
-		$attribute = preg_replace('\\u0022', '/\\\\"/', $attribute);
-
-		return $attribute;
 	}
 }

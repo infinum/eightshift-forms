@@ -64,8 +64,6 @@ function buildInnerOutputData(element) {
 };
 
 export const buildOutputData = (formData) => {
-	console.log(formData);
-
 	let output = [];
 	formData.forEach((element, index) => {
 		const {

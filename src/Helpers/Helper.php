@@ -16,7 +16,6 @@ use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Helper class.
@@ -346,19 +345,21 @@ class Helper
 	}
 
 	/**
-	 * Get Block attribute prefix by full block name.
+	 * Convert all special characters in attributes.
+	 * Logic got from the core `serialize_block_attributes` function.
 	 *
-	 * @param string $blockName Block name to check.
-	 *
+	 * @param string $attribute
 	 * @return string
 	 */
-	public static function getBlockAttributePrefixByFullBlockName(string $blockName): string
+	public static function unserializeAttributes(string $attribute): string
 	{
-		$blockName = \explode('/', $blockName);
-		$blockName = \end($blockName);
+		$attribute = preg_replace( '/\u002d\u002d/', '--', $attribute );
+		$attribute = preg_replace( '/\u003c/', '<', $attribute );
+		$attribute = preg_replace( '/\u003e/', '>', $attribute );
+		$attribute = preg_replace( '/\u0026/', '&', $attribute );
+		// Regex: /\\"/
+		$attribute = preg_replace( '/\u0022/', '"', $attribute );
 
-		$blockName = Components::kebabToCamelCase($blockName, '-');
-
-		return "{$blockName}" . ucfirst($blockName);
+		return $attribute;
 	}
 }

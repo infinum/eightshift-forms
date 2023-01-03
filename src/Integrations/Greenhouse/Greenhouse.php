@@ -62,9 +62,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $type): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
 	{
-		return '';
+		return [];
 	}
 
 	/**

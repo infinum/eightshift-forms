@@ -1,11 +1,39 @@
-import React from 'react';
-import { useSelect } from "@wordpress/data";
+import React, { useEffect } from 'react';
+import { useState } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
+import { select, dispatch } from "@wordpress/data";
+import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
 import { HubspotEditor } from './components/hubspot-editor';
 import { HubspotOptions } from './components/hubspot-options';
 
 export const Hubspot = (props) => {
-	const postId = useSelect((select) => select('core/editor').getCurrentPostId());
+	const {
+		clientId,
+	} = props;
+	const postId = select('core/editor').getCurrentPostId();
+
+	// const [formData, setFormData] = useState([]);
+
+	// useEffect( () => {
+	// 	apiFetch( { path: `eightshift-forms/v1/integration-editor/${postId}` } ).then( ( response ) => {
+	// 		if (response.code === 200) {
+
+	// 			setFormData(createBlocksFromInnerBlocksTemplate(response.data.output));
+	// 		}
+	// 	});
+	// }, []);
+
+	// if (formData.length) {
+	// 	console.log(formData, clientId);
+
+	// 	// dispatch('core/block-editor').resetBlocks([]);
+	// 	dispatch('core/block-editor').insertBlocks(
+	// 		formData[0],
+	// 		0,
+	// 		clientId,
+	// 	);
+	// }
 
 	return (
 		<>
@@ -18,6 +46,7 @@ export const Hubspot = (props) => {
 			<HubspotEditor
 				{...props}
 				postId={postId}
+				clientId={clientId}
 			/>
 		</>
 	);

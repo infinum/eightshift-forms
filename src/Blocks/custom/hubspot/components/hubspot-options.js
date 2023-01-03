@@ -31,8 +31,6 @@ export const HubspotOptions = ({ attributes, setAttributes, postId }) => {
 	useEffect( () => {
 		apiFetch({ path: 'eightshift-forms/v1/integration-items-hubspot' }).then((response) => {
 			if (response.code === 200) {
-				console.log(response);
-				
 				setFormData(response.data);
 			}
 		});
