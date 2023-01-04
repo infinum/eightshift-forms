@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -30,13 +31,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	use SettingsHelper;
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $hubspot;
-
-	/**
 	 * Developers mode check.
 	 *
 	 * @var bool
@@ -44,22 +38,11 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	protected $isDeveloperMode = false;
 
 	/**
-	 * Preview mode check.
+	 * Preview mode check, prevents updating the database.
 	 *
 	 * @var bool
 	 */
 	protected $isPreviewMode = false;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param MapperInterface $hubspot Inject Hubspot which holds Hubspot form data.
-	 */
-	public function __construct(
-		MapperInterface $hubspot
-	) {
-		$this->hubspot = $hubspot;
-	}
 
 	/**
 	 * Register all the hooks
@@ -68,25 +51,36 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	public function register(): void
 	{
-		\add_action('load-post.php', [$this, 'updateForm']);
+		\add_action('load-post.php', [$this, 'updateForm'], 10000, );
 	}
 
+	/**
+	 * Update form when the user opens a block editor.
+	 *
+	 * @return void
+	 */
 	public function updateForm(): void
 	{
 		global $typenow;
 
+		// Bailout if not forms editor page.
 		if ($typenow !== Forms::POST_TYPE_SLUG) {
 			return;
 		}
 
+		// Check if develop mode is on.
 		$this->isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
+		// Get Form ID.
 		$formId = isset($_GET['post']) ? \sanitize_text_field(\wp_unslash($_GET['post'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
+		// Run form sync.
 		$syncForm = $this->syncForm($formId);
 
+		// Find final status.
 		$status = $syncForm['status'] ?? '';
 
+		// If error output log.
 		if ($status === 'error') {
 			Helper::logger(array_merge(
 				[
@@ -97,122 +91,218 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 	}
 
+	/**
+	 * Sync content and integration form and update the database with the new version on success.
+	 *
+	 * @param string $formId Form Id.
+	 * @param boolean $isPreview Check if used as preview.
+	 *
+	 * @return array
+	 */
 	public function syncForm(string $formId, bool $isPreview = false): array
 	{
+		// Check if develop mode is on.
 		$this->isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
+		// Bailout if form ID is missing.
 		if (!$formId) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'before_missing_formId',
 				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
 			];
 		}
 
-		$content = $this->prepareContentBlocks($this->getFormContent($formId));
+		// Get content from DB.
+		$content = $this->getFormContent($formId);
 
+		// Bailout if content is empty.
 		if (!$content) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'content_missing_content',
 				'message' => \esc_html__('Missing form content.', 'eightshift-forms'),
 			];
 		}
 
+		// Prepare content variables.
 		$contentType = $content['type'] ?? '';
 		$contentItemId = $content['itemId'] ? Helper::unserializeAttributes($content['itemId']) : '';
 		$contentFields = $content['fields'] ?? [];
 
+		// Bailout if content type is missing.
 		if (!$contentType) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'content_missing_type',
 				'message' => \esc_html__('Missing form content integration type block.', 'eightshift-forms'),
 			];
 		}
 
+		// Bailout if content item ID is missing.
 		if (!$contentItemId) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'content_missing_itemId',
 				'message' => \esc_html__('Missing form content integration item Id.', 'eightshift-forms'),
 			];
 		}
 
-		$integration = $this->hubspot->getFormBlockGrammarArray($formId, $contentItemId);
+		// Check if integration filter exists.
+		$integrationFilterName = Filters::ALL[$contentType]['fields'] ?? '';
+		if (!\has_filter($integrationFilterName)) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_integration_filter',
+				'message' => \esc_html__('Provided integration name is not in our list of available integrations.', 'eightshift-forms'),
+			];
+		}
+
+		// Get integration fields.
+		$integration = \apply_filters($integrationFilterName, $formId, $contentItemId);
+
+		// Prepare integration variables.
+		$integrationType = $integration['type'] ?? '';
+		$integrationItemId = $integration['itemId'] ?? '';
 		$integrationFields = $integration['fields'] ?? [];
 
+		// Bailout if integration type is missing.
+		if (!$integrationType) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_type',
+				'message' => \esc_html__('Missing form integration type.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if integration item ID is missing.
+		if (!$integrationItemId) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_itemId',
+				'message' => \esc_html__('Missing form integration item Id.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout conditions if content fields are missing.
 		if (!$contentFields) {
+
+			// Bailout if integration fields are missing.
 			if (!$integrationFields) {
 				return [
 					'formId' => $formId,
 					'status' => 'error',
+					'debugType' => 'integration_missing_fields_existing_content',
 					'message' => \esc_html__('Missing form content fields and missing integration fields.', 'eightshift-forms'),
 				];
 			}
 
+			// Bailout if content fields are missing.
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'content_missing_fields',
 				'message' => \esc_html__('Missing form content integration fields.', 'eightshift-forms'),
 			];
 		}
 
-		if ($integration['type'] !== $content['type']) {
+		// Bailout if integration type is different than content type.
+		if ($integrationType !== $contentType) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'after_different_type',
 				'message' => \esc_html__('Integration type is different than content type.', 'eightshift-forms'),
 			];
 		}
 
-		if ($integration['itemId'] !== $content['itemId']) {
+		// Bailout if integration item ID is different than content item Id.
+		if ($integrationItemId !== $contentItemId) {
 			return [
 				'formId' => $formId,
 				'status' => 'error',
+				'debugType' => 'after_different_itemId',
 				'message' => \esc_html__('Integration item ID is different than content item ID.', 'eightshift-forms'),
 			];
 		}
 
+		// Run diff.
 		$output = $this->diffChanges($integration, $content);
 
+		// Bailout if update is not necesery.
+		if (!$output['update']) {
+			return [
+				'formId' => $formId,
+				'status' => 'success',
+				'debugType' => 'after_no_update',
+				'message' => \esc_html__('Integration and local form are the same, no update required.', 'eightshift-forms'),
+				'data' => $output,
+			];
+		}
+
+		// Bailout if we have output to show.
 		if ($output['output']) {
+			// If preview is used don't update database content.
 			if (!$isPreview) {
 				$update = $this->updateBlockContent($formId, $output['output']);
-	
+
+				// Bailout if db content update failed.
 				if (!$update) {
 					return [
 						'formId' => $formId,
 						'status' => 'error',
+						'debugType' => 'after_error_form_update',
 						'message' => \esc_html__('Something went wrong with form update.', 'eightshift-forms'),
 						'data' => $output,
 					];
 				}
 			}
 
+			// Bailout if db content update with success.
 			return [
 				'formId' => $formId,
 				'status' => 'success',
+				'debugType' => 'after_success',
 				'message' => $isPreview ? \esc_html__('Form preview mode.', 'eightshift-forms') : \esc_html__('Form updated.', 'eightshift-forms'),
 				'data' => $output,
 			];
 		}
 
+		// Bailout if some undefined error occurred.
 		return [
 			'formId' => $formId,
 			'status' => 'error',
+			'debugType' => 'after_undefined',
 			'message' => \esc_html__('Something went wrong.', 'eightshift-forms'),
 			'data' => $output,
 		];
 	}
 
+	/**
+	 * Compare content and integration form and outputs diff of a built block ready for import in the db.
+	 *
+	 * @param array $integration Form integration content.
+	 * @param array $content Form content.
+	 *
+	 * @return array
+	 */
 	private function diffChanges(array $integration, array $content): array
 	{
+		// Prepare arrays for diff.
 		$diff = $this->prepareContentBlocksForCheck($content['fields']['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration['fields']));
 
+		// Prepare standard output.
 		$output = [
 			'type' => $integration['type'],
 			'itemId' => $integration['itemId'],
+			'update' => false,
 			'removed' => [],
 			'added' => [],
 			'replaced' => [],
@@ -221,51 +311,76 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'diff' => $diff,
 		];
 
+		// Loop diff of content and integration.
 		foreach ($diff as $key => $block) {
-			$changes = $this->diffInnerChanges($block['integration'] ?? [], $block['content'] ?? [], $key);
+			// Do diff on one field.
+			$changes = $this->diffChange($block['integration'] ?? [], $block['content'] ?? [], $key);
 
-			if ($changes['removed']) {
-				$output['removed'][] = $changes['removed'];
-			}
-			if ($changes['added']) {
-				$output['added'][] = $changes['added'];
-			}
-			if ($changes['replaced']) {
-				$output['replaced'][] = $changes['replaced'];
-			}
-			if ($changes['changed']) {
-				$output['changed'][] = $changes['changed'];
-			}
-			if ($changes['output']) {
-				$output['output'][$key] = $changes['output'];
+			// Loop all outputs and prepare for the final output.
+			foreach ($changes as $changeKey => $changeValue) {
+				// No calue no output necesery.
+				if (!$changeValue) {
+					continue;
+				}
+
+				// Some output keys are array, some are strings and some require keys.
+				switch ($changeKey) {
+					case 'update':
+						$output[$changeKey] = $changeValue;
+						break;
+					case 'output':
+						$output[$changeKey][$key] = $changeValue;
+						break;
+					default:
+						$output[$changeKey][] = $changeValue;
+						break;
+				}
 			}
 		}
 
-		$blocksOutput = $this->reconstructFieldsOutput($output['output'], $output['type'], $output['itemId']);
+		// Recounstruct blocks output and build array for final serialization.
+		$blocksOutput = $this->reconstructBlocksOutput($output['output'], $output['type'], $output['itemId']);
+
+		// Create block grammar.
 		$output['output'] = serialize_blocks($blocksOutput);
+
+		// Output additional array from whom we built block grammar for debug.
 		$output['outputPure'] = $blocksOutput;
 
 		return $output;
 	}
 
-	private function diffInnerChanges(array $integration, array $content, string $key): array
+	/**
+	 * Compare integration and content of one field and outputs new field.
+	 *
+	 * @param array $integration Form integration content.
+	 * @param array $content Form content.
+	 * @param string $key Index key.
+	 *
+	 * @return array
+	 */
+	private function diffChange(array $integration, array $content, string $key): array
 	{
+		// Prepare output.
 		$output = [
 			'removed' => [],
 			'added' => [],
 			'replaced' => [],
 			'changed' => [],
 			'output' => [],
+			'update' => false,
 		];
 
 		// Remove item if block is not present on integration, output nothing.
 		if (!$integration) {
+			$output['update'] = true;
 			$output['removed'] = $key;
 			return $output;
 		}
 
 		// If field exists on the integration but not on the content add it.
 		if (!$content) {
+			$output['update'] = true;
 			$output['added'] = $key;
 			$output['output'] = $integration;
 			return $output;
@@ -273,6 +388,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// If field type has changed on integration use the integration one.
 		if ($integration['component'] !== $content['component']) {
+			$output['update'] = true;
 			$output['replaced'] = $key;
 			$output['output'] = $integration;
 			return $output;
@@ -280,24 +396,33 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Check if disabled attrs changed.
 		$innerOutput = $content;
-		$prefix = $integration['component'];
+
+		// Find prefix of the component.
+		$prefix = $integration['component'] . ucfirst($integration['component']);
+
+		// Find components disabled options.
 		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
 
+		// Check disabled options.
 		if ($disabledOptions) {
 			foreach ($disabledOptions as $disabledOption) {
+				// Find attributes in integration and content that match disabled options item.
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
 
-				// If intregration is missing disabled or protected attribute. Thhere chould be and issue in the mapping of component attributes for integration.
+				// If intregration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
 				if (!$i) {
+					$output['update'] = true;
 					$output['replaced'] = $key;
 					$output['output'] = $integration;
 					break;
 				}
 
-				// If content has missing disabled or protected attribute add it from integration.
+				// If content has missing, disabled or protected attribute add it from integration.
 				if (!$c) {
+					$output['update'] = true;
 					$output['changed'][$key][] = $disabledOption;
+					$innerOutput['attrs']["{$prefix}DisabledOptions"] = $integration['attrs']["{$prefix}DisabledOptions"];
 					$innerOutput['attrs'][$disabledOption] = $i;
 					break;
 				}
@@ -306,24 +431,34 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				if ($i !== $c) {
 					// If protected attribute name has changed we need to update the whole block. This is an unlikely scenario but it can happen.
 					if ($i === "{$prefix}Name" && $c === "{$prefix}Name") {
+						$output['update'] = true;
 						$output['replaced'] = $key;
 						$output['output'] = $integration;
 						break;
 					}
 
 					// Output the changed value.
+					$output['update'] = true;
 					$output['changed'][$key][] = $disabledOption;
+					$innerOutput['attrs']["{$prefix}DisabledOptions"] = $integration['attrs']["{$prefix}DisabledOptions"];
 					$innerOutput['attrs'][$disabledOption] = $i;
 					continue;
 				}
 			}
 		}
 
-		$output['output'] = $content;
+		$output['output'] = $innerOutput;
 
 		return $output;
 	}
 
+	/**
+	 * Prepare integration blocks for diff check.
+	 *
+	 * @param array $blocks Blocks from external integration.
+	 *
+	 * @return array
+	 */
 	private function prepareIntegrationBlocksForCheck(array $blocks): array
 	{
 		$output = [];
@@ -331,7 +466,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
 		$namespace = Components::getSettingsNamespace();
 
-		foreach ($blocks as $key => $block) {
+		foreach ($blocks as $block) {
 			$blockTypeOriginal = $block['component'] ?? '';
 
 			if (!$blockTypeOriginal) {
@@ -366,12 +501,14 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					}
 
 					$blockInnerType = Components::kebabToCamelCase($blockInnerTypeOriginal, '-');
+					$blockInnerAttributes = $this->prepareBlockAttributes($innerBlock, $blockInnerType);
+					$innerPrefix = $blockInnerType . ucfirst($blockInnerType);
 
-					$output["{$name}---{$innerKey}"]['integration']  = [
+					$output[$this->getInnerBlocksKeyName($innerPrefix, $blockInnerAttributes, $innerKey, $name)]['integration']  = [
 						'namespace' => $namespace,
 						'component' => $blockInnerTypeOriginal,
-						'prefix' => $blockInnerType . ucfirst($blockInnerType),
-						'attrs' => $this->prepareBlockAttributes($innerBlock, $blockInnerType),
+						'prefix' => $innerPrefix,
+						'attrs' => $blockInnerAttributes,
 						'parent' => $name,
 					];
 				}
@@ -381,7 +518,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		return $output;
 	}
 
-	private function prepareContentBlocksForCheck(array $blocks, $integration): array
+	/**
+	 * Prepare content blocks for diff check and combine with integration blocks.
+	 *
+	 * @param array $blocks Blocks from form content.
+	 * @param array $integration Prepared blocks external integration.
+	 *
+	 * @return array
+	 */
+	private function prepareContentBlocksForCheck(array $blocks, array $integration): array
 	{
 		$output = $integration;
 
@@ -423,14 +568,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					if (!$blockInnerType) {
 						continue;
 					}
-
+					
 					$blockInnerType = $this->getBlockAttributePrefixByFullBlockName($blockInnerType);
+					$blockInnerAttributes = $innerBlock['attrs'];
+					$innerPrefix = $blockInnerType['prefix'];
 
-					$output["{$name}---{$innerKey}"]['content'] = [
+					$output[$this->getInnerBlocksKeyName($innerPrefix, $blockInnerAttributes, $innerKey, $name)]['content'] = [
 						'namespace' => $blockInnerType['namespace'],
 						'component' => $blockInnerType['component'],
-						'prefix' => $blockInnerType['prefix'],
-						'attrs' => $innerBlock['attrs'],
+						'prefix' => $innerPrefix,
+						'attrs' => $blockInnerAttributes,
 						'parent' => $name,
 					];
 				}
@@ -440,7 +587,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		return $output;
 	}
 
-	private function reconstructFieldsOutput(array $data, string $type, string $itemId): array
+	/**
+	 * Rebuild for blocks output in block grammar format after diff check.
+	 *
+	 * @param array $data Diff prepared data.
+	 * @param string $type Integation type.
+	 * @param string $itemId Item ID from integration.
+	 *
+	 * @return array
+	 */
+	private function reconstructBlocksOutput(array $data, string $type, string $itemId): array
 	{
 		$fieldsOutput = [];
 
@@ -495,8 +651,21 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		];
 	}
 
+	/**
+	 * Get current form content from the database and do initial preparations for diff.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array
+	 */
 	private function getFormContent(string $formId): array
 	{
+		$output = [
+			'type' => '',
+			'itemId' => '',
+			'fields' => [],
+		];
+
 		$theQuery = new WP_Query([
 			'p' => $formId,
 			'post_type' => Forms::POST_TYPE_SLUG,
@@ -511,33 +680,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		wp_reset_postdata();
 
 		if (!$form) {
-			return [];
+			return $output;
 		}
 
 		$blocks = parse_blocks($form->post_content);
 
 		if (!$blocks) {
-			return [];
+			return $output;
 		}
 
-		return isset($blocks[0]) ? $blocks[0] : [];
-	}
-
-	private function updateBlockContent(string $id, $content)
-	{
-		return wp_update_post([
-			'ID' => $id,
-			'post_content' => wp_slash($content),
-		 ]);
-	}
-
-	private function prepareContentBlocks(array $blocks): array
-	{
-		$output = [
-			'type' => '',
-			'itemId' => '',
-			'fields' => [],
-		];
+		$blocks = $blocks[0];
 
 		$blockName = $blocks['innerBlocks'][0]['blockName'] ?? '';
 
@@ -561,7 +713,32 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		return $output;
 	}
 
-	private function prepareBlockAttributes($attributes, $component) {
+	/**
+	 * Update block content with the new version of the blocks.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $content Form Block grammar content.
+	 *
+	 * @return int
+	 */
+	private function updateBlockContent(string $formId, string $content): int
+	{
+		return wp_update_post([
+			'ID' => $formId,
+			'post_content' => wp_slash($content),
+		 ]);
+	}
+
+	/**
+	 * Prepare every attribute for later usage in diff.
+	 *
+	 * @param array $attributes Array of all component attributes.
+	 * @param string $component Component name for attributes.
+	 *
+	 * @return array
+	 */
+	private function prepareBlockAttributes(array $attributes, string $component): array
+	{
 		$output = [];
 
 		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
@@ -595,11 +772,11 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Get Block attribute prefix by full block name.
+	 * Get Block attribute prefix from full block name.
 	 *
-	 * @param string $blockName Block name to check.
+	 * @param string $name Block name to check.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	private function getBlockAttributePrefixByFullBlockName(string $name): array
 	{
@@ -613,5 +790,33 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'component' => $blockName,
 			'prefix' => "{$component}" . ucfirst($component),
 		];
+	}
+
+	/**
+	 * General inner blocks key name from component value atrribute.
+	 *
+	 * @param string $prefix Component prefix.
+	 * @param array $attributes Array of all component attributes.
+	 * @param integer $index Index in list of inner blocks.
+	 * @param string $parentName Parent block name.
+	 *
+	 * @return string
+	 */
+	private function getInnerBlocksKeyName(string $prefix, array $attributes, int $index, string $parentName): string
+	{
+		$value = $attributes["{$prefix}Value"] ?? '';
+		$label = $attributes["{$prefix}Label"] ?? '';
+
+		if (!$value) {
+			$value = $label;
+		}
+
+		if (!$value) {
+			return "{$parentName}-{$index}";
+		}
+
+		$value = crc32($value);
+
+		return "{$parentName}-{$value}";
 	}
 }

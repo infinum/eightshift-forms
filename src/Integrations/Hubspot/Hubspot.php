@@ -12,15 +12,14 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Hubspot integration class.
  */
-class Hubspot extends AbstractFormBuilder implements MapperInterface
+class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -42,24 +41,25 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 	protected $hubspotClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
 	public function __construct(
-		HubspotClientInterface $hubspotClient,
-		ValidatorInterface $validator
+		HubspotClientInterface $hubspotClient
 	) {
 		$this->hubspotClient = $hubspotClient;
-		$this->validator = $validator;
+	}
+
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		// Blocks string to value filter name constant.
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
 	public function getFormFields(string $formId, bool $ssr = false): array
@@ -77,6 +77,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface
 	 */
 	public function getFormBlockGrammarArray(string $formId, string $itemId): array
 	{
+		error_log( print_r( ( 'ivan' ), true ) );
+
 		$output = [
 			'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
