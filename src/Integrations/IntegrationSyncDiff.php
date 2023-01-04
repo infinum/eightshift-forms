@@ -601,11 +601,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$fieldsOutput = [];
 
 		foreach ($data as $key => $value) {
-			// TO DO: remove this.
-			if ($value['component'] === 'rich-text') {
-				continue;
-			}
-
 			if (!$value['parent']) {
 				$fieldsOutput[$key] = [
 					'blockName' => $value['namespace'] . '/' . $value['component'],

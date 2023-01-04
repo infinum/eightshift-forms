@@ -77,8 +77,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 */
 	public function getFormBlockGrammarArray(string $formId, string $itemId): array
 	{
-		error_log( print_r( ( 'ivan' ), true ) );
-
 		$output = [
 			'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
@@ -134,18 +132,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		foreach ($data['fields'] as $key => $item) {
 			if (empty($item)) {
 				continue;
-			}
-
-			$richText = $item['richText']['content'] ?? '';
-
-			if ($richText) {
-				$output[] = [
-					'component' => 'rich-text',
-					'richTextId' => "rich-text-{$key}",
-					'richTextName' => "rich-text-{$key}",
-					'richTextFieldLabel' => \__('Rich text', 'eightshift-forms') . '-' . $key,
-					'richTextContent' => $richText,
-				];
 			}
 
 			$fields = $item['fields'] ?? [];
