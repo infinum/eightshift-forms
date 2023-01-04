@@ -13,28 +13,6 @@ export const Hubspot = (props) => {
 	} = props;
 	const postId = select('core/editor').getCurrentPostId();
 
-	// const [formData, setFormData] = useState([]);
-
-	// useEffect( () => {
-	// 	apiFetch( { path: `eightshift-forms/v1/integration-editor/${postId}` } ).then( ( response ) => {
-	// 		if (response.code === 200) {
-
-	// 			setFormData(createBlocksFromInnerBlocksTemplate(response.data.output));
-	// 		}
-	// 	});
-	// }, []);
-
-	// if (formData.length) {
-	// 	console.log(formData, clientId);
-
-	// 	// dispatch('core/block-editor').resetBlocks([]);
-	// 	dispatch('core/block-editor').insertBlocks(
-	// 		formData[0],
-	// 		0,
-	// 		clientId,
-	// 	);
-	// }
-
 	return (
 		<>
 			<InspectorControls>

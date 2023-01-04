@@ -20,6 +20,9 @@
 		"submitId": {
 			"type": "string"
 		},
+		"submitName": {
+			"type": "string"
+		},
 		"submitValue": {
 			"type": "string",
 			"default": "Submit"

@@ -14,6 +14,10 @@ $submitName = $attributes['submitSubmitName'] ?? '';
 $submitId = $attributes['submitSubmitId'] ?? '';
 $props = [];
 
+if (empty($submitName)) {
+	$props['submitName'] = $submitId;
+}
+
 echo Components::render(
 	'submit',
 	Components::props('submit', $attributes, $props)

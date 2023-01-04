@@ -16,48 +16,6 @@ export const HubspotEditor = ({ attributes, setAttributes, postId, clientId }) =
 		blockClass,
 	} = attributes;
 
-	// const {
-	// 	clientId,
-	// } = props;
-	// const postId = select('core/editor').getCurrentPostId();
-
-	const [formData, setFormData] = useState([]);
-	const [isLoaded, setIsLoaded] = useState(false);
-
-	const a = apiFetch( { path: `eightshift-forms/v1/integration-editor/${postId}` } ).then( ( response ) => {
-		if (response.code === 200) {
-			return response.data.output;
-		}
-
-		return [];
-	});
-
-	useEffect( () => {
-		setFormData(a);
-	}, formData);
-
-	if (!isLoaded) {
-		// dispatch('core/block-editor').resetBlocks([]);
-
-		console.log('laded')
-		console.log(formData);
-		
-		
-
-		if (formData.length) {
-			const blocks = createBlocksFromInnerBlocksTemplate(formData);
-			console.log(blocks);
-			
-				// dispatch('core/block-editor').resetBlocks(blocks);
-				// dispatch('core/block-editor').insertBlocks(
-				// 	blocks,
-				// 	0,
-				// 	clientId
-				// );
-			}
-			setIsLoaded(true);
-		}
-
 	return (
 		<div className={blockClass}>
 			<FormEditor
