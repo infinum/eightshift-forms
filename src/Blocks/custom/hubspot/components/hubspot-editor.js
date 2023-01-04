@@ -1,17 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
-
-import { useState } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
-import { select, dispatch } from "@wordpress/data";
-import { createBlocksFromInnerBlocksTemplate, createBlock } from '@wordpress/blocks';
-
-import { buildOutputData, outputData } from './../../../assets/scripts/helpers/build-integration-form';
-import manifest from '../manifest.json';
+import { props } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from '../../../components/form/components/form-editor';
 
-export const HubspotEditor = ({ attributes, setAttributes, postId, clientId }) => {
+export const HubspotEditor = ({ attributes, setAttributes }) => {
 	const {
 		blockClass,
 	} = attributes;

@@ -8,9 +8,6 @@ import { HubspotEditor } from './components/hubspot-editor';
 import { HubspotOptions } from './components/hubspot-options';
 
 export const Hubspot = (props) => {
-	const {
-		clientId,
-	} = props;
 	const postId = select('core/editor').getCurrentPostId();
 
 	return (
@@ -23,8 +20,6 @@ export const Hubspot = (props) => {
 			</InspectorControls>
 			<HubspotEditor
 				{...props}
-				postId={postId}
-				clientId={clientId}
 			/>
 		</>
 	);
