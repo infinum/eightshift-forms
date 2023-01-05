@@ -23,10 +23,12 @@ export const AirtableOptions = ({ attributes, setAttributes, postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	const airtableIntegrationId = checkAttr('airtableIntegrationId', attributes, manifest);
+	const airtableIntegrationItemId = checkAttr('airtableIntegrationItemId', attributes, manifest);
 
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
 	const [formData, setFormData] = useState([]);
+	const [formDataItems, setFormDataItems] = useState([]);
 
 	useEffect( () => {
 		apiFetch({ path: 'eightshift-forms/v1/integration-items-airtable' }).then((response) => {
@@ -34,6 +36,14 @@ export const AirtableOptions = ({ attributes, setAttributes, postId }) => {
 				setFormData(response.data);
 			}
 		});
+
+		if (airtableIntegrationId) {
+			apiFetch({ path: `eightshift-forms/v1/integration-item-airtable/?id=${airtableIntegrationId}` }).then((response) => {
+				if (response.code === 200) {
+					setFormDataItems(response.data);
+				}
+			});
+		}
 	}, []);
 
 	return (
@@ -55,13 +65,31 @@ export const AirtableOptions = ({ attributes, setAttributes, postId }) => {
 				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
 				value={airtableIntegrationId}
 				options={formData}
-				onChange={(value) => setAttributes({ [getAttrKey('airtableIntegrationId', attributes, manifest)]: value.toString() })}
+				onChange={(value) => setAttributes({
+					[getAttrKey('airtableIntegrationId', attributes, manifest)]: value.toString(),
+					[getAttrKey('airtableIntegrationItemId', attributes, manifest)]: undefined,
+				})}
 				isClearable={false}
 				cacheOptions={false}
 				reFetchOnSearch={true}
 				multiple={false}
 				simpleValue
 			/>
+
+			{airtableIntegrationId &&
+				<CustomSelect
+					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
+					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+					value={airtableIntegrationItemId}
+					options={formDataItems}
+					onChange={(value) => setAttributes({ [getAttrKey('airtableIntegrationItemId', attributes, manifest)]: value.toString() })}
+					isClearable={false}
+					cacheOptions={false}
+					reFetchOnSearch={true}
+					multiple={false}
+					simpleValue
+				/>
+			}
 		</PanelBody>
 	);
 };

@@ -83,6 +83,9 @@ class AirtableClient implements ClientInterface
 			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
 		}
 
+		error_log( print_r( ( $output ), true ) );
+		
+
 		return $output;
 	}
 
@@ -119,7 +122,7 @@ class AirtableClient implements ClientInterface
 			}
 		}
 
-		return $output[$itemId] ?? [];
+		return $output[$itemId]['items'] ?? [];
 	}
 
 	/**

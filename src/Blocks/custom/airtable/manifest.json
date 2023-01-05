@@ -19,6 +19,9 @@
 		"airtableIntegrationId": {
 			"type": "string"
 		},
+		"airtableIntegrationItemId": {
+			"type": "string"
+		},
 		"airtableFormPostId": {
 			"type": "string"
 		},

@@ -91,8 +91,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 		$fields = $this->getFields($formId);
 
-		error_log( print_r( ( $fields ), true ) );
-
 		if (!$fields) {
 			return $output;
 		}
