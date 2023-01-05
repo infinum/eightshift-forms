@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"mailerliteIntegrationId": {
+			"type": "string"
+		},
 		"mailerliteFormPostId": {
 			"type": "string"
 		},

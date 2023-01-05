@@ -207,7 +207,7 @@ abstract class AbstractFormBuilder
 	 *
 	 * @return array
 	 */
-	protected function prepareDisabledOptions(string $component, array $options, bool $useDefault = true): array {
+	protected function prepareDisabledOptions(string $component, array $options = [], bool $useDefault = true): array {
 		$component = Components::kebabToCamelCase($component);
 
 		$default = [

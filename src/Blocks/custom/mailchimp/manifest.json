@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"mailchimpIntegrationId": {
+			"type": "string"
+		},
 		"mailchimpFormPostId": {
 			"type": "string"
 		},

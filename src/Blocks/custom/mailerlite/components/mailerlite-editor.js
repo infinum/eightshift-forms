@@ -1,23 +1,26 @@
 import React from 'react';
-import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
+import { InnerBlocks } from '@wordpress/block-editor';
+import { props } from '@eightshift/frontend-libs/scripts';
+import { FormEditor } from '../../../components/form/components/form-editor';
 
-export const MailerliteEditor = ({ attributes, postId }) => {
+export const MailerliteEditor = ({ attributes, setAttributes }) => {
 	const {
 		blockClass,
-		blockFullName
 	} = attributes;
 
 	return (
 		<div className={blockClass}>
-			<ServerSideRender
-				block={blockFullName}
-				attributes={
-					{
-						...attributes,
-						mailerliteFormServerSideRender: true,
-						mailerliteFormPostId: postId.toString(),
-					}
-				}
+			<FormEditor
+				{...props('form', attributes, {
+					setAttributes,
+					formContent: <InnerBlocks
+													// templateLock={'none'}
+													// template={
+													// 	formData.length ? [
+													// 	formData[0].name, formData[0].attributes, []
+													// ] : []}
+												/>
+				})}
 			/>
 		</div>
 	);

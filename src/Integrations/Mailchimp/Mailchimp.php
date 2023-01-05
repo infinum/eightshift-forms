@@ -71,37 +71,38 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormFields(string $formId, bool $ssr = false): array
 	{
 		return [];
 	}
 
-	/**
-	 * Get mapped form fields.
-	 *
-	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
+		$output = [
+			'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->mailchimpClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->mailchimpClient->getItem($itemId);
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -109,11 +110,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -129,7 +129,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'inputType' => 'text',
 			'inputIsEmail' => true,
 			'inputIsRequired' => true,
-			'blockSsr' => $ssr,
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputIsRequired',
+				'inputIsEmail',
+				'inputType',
+			]),
 		];
 
 		foreach ($data as $field) {
@@ -158,7 +162,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$dateFormat ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'address':
@@ -172,7 +179,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$dateFormat ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'number':
@@ -186,7 +196,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$dateFormat ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'phone':
@@ -200,7 +213,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$dateFormat ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'birthday':
@@ -214,7 +230,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
 						'inputValidationPattern' => $dateFormat,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$dateFormat ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'radio':
@@ -225,17 +244,22 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
 						'radiosContent' => \array_map(
-							static function ($radio) use ($name) {
+							function ($radio) use ($name) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio,
 									'radioValue' => $radio,
 									'radioTracking' => $name,
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
+							$required ? 'radiosIsRequired' : '',
+						]),
 					];
 					break;
 				case 'dropdown':
@@ -247,147 +271,147 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectTracking' => $name,
 						'selectIsRequired' => $required,
 						'selectOptions' => \array_map(
-							static function ($option) {
+							function ($option) {
 								return [
 									'component' => 'select-option',
 									'selectOptionLabel' => $option,
 									'selectOptionValue' => $option,
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+							$required ? 'selectIsRequired' : '',
+						]),
 					];
 					break;
 			}
 		}
 
-		$tagsItems = $this->mailchimpClient->getTags($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId));
+		// $tagsItems = $this->mailchimpClient->getTags($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId));
 
-		if ($tagsItems) {
-			$tagsSelected = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
-			$tagsLabels = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
-			$tagsShow = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
+		// if ($tagsItems) {
+		// 	$tagsSelected = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
+		// 	$tagsLabels = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
+		// 	$tagsShow = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
 
-			// Detect if some tags are selected to display on the frontend.
-			if (!empty($tagsSelected)) {
-				// Tags are stored like string so explode is necesery.
-				$selectedIds = \array_flip(\explode(', ', $tagsSelected));
+		// 	// Detect if some tags are selected to display on the frontend.
+		// 	if (!empty($tagsSelected)) {
+		// 		// Tags are stored like string so explode is necesery.
+		// 		$selectedIds = \array_flip(\explode(', ', $tagsSelected));
 
-				// Map selected items with provided ones.
-				$tagsItems = \array_filter(
-					$tagsItems,
-					static function ($item) use ($selectedIds) {
-						return isset($selectedIds[$item['id']]);
-					}
-				);
-			}
+		// 		// Map selected items with provided ones.
+		// 		$tagsItems = \array_filter(
+		// 			$tagsItems,
+		// 			static function ($item) use ($selectedIds) {
+		// 				return isset($selectedIds[$item['id']]);
+		// 			}
+		// 		);
+		// 	}
 
-			if ($tagsItems) {
-				$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
+		// 	if ($tagsItems) {
+		// 		$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
 
-				switch ($tagsShow) {
-					case 'select':
-						$output[] = [
-							'component' => 'select',
-							'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'selectId' => $customTagParamName,
-							'selectName' => $customTagParamName,
-							'selectTracking' => $customTagParamName,
-							'selectOptions' => \array_merge(
-								[
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => '',
-										'selectOptionValue' => '',
-									],
-								],
-								\array_map(
-									static function ($option) use ($tagsLabels) {
-										$name = $option['name'] ?? '';
-										$id = $option['id'] ?? '';
-										$nameOverride = $name;
+		// 		switch ($tagsShow) {
+		// 			case 'select':
+		// 				$output[] = [
+		// 					'component' => 'select',
+		// 					'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
+		// 					'selectId' => $customTagParamName,
+		// 					'selectName' => $customTagParamName,
+		// 					'selectTracking' => $customTagParamName,
+		// 					'selectOptions' => \array_merge(
+		// 						[
+		// 							[
+		// 								'component' => 'select-option',
+		// 								'selectOptionLabel' => '',
+		// 								'selectOptionValue' => '',
+		// 							],
+		// 						],
+		// 						\array_map(
+		// 							static function ($option) use ($tagsLabels) {
+		// 								$name = $option['name'] ?? '';
+		// 								$id = $option['id'] ?? '';
+		// 								$nameOverride = $name;
 
-										// Find tag label override.
-										if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-											$nameOverride = $tagsLabels[$id];
-										}
+		// 								// Find tag label override.
+		// 								if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
+		// 									$nameOverride = $tagsLabels[$id];
+		// 								}
 
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $nameOverride,
-											'selectOptionValue' => $name,
-										];
-									},
-									$tagsItems
-								)
-							),
-							'blockSsr' => $ssr,
-						];
-						break;
-					case 'checkboxes':
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-							'checkboxesId' => $customTagParamName,
-							'checkboxesName' => $customTagParamName,
-							'checkboxesContent' => \array_map(
-								static function ($option) use ($customTagParamName, $tagsLabels) {
-									$name = $option['name'] ?? '';
-									$id = $option['id'] ?? '';
-									$nameOverride = $name;
+		// 								return [
+		// 									'component' => 'select-option',
+		// 									'selectOptionLabel' => $nameOverride,
+		// 									'selectOptionValue' => $name,
+		// 								];
+		// 							},
+		// 							$tagsItems
+		// 						)
+		// 					),
+		// 				];
+		// 				break;
+		// 			case 'checkboxes':
+		// 				$output[] = [
+		// 					'component' => 'checkboxes',
+		// 					'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
+		// 					'checkboxesId' => $customTagParamName,
+		// 					'checkboxesName' => $customTagParamName,
+		// 					'checkboxesContent' => \array_map(
+		// 						static function ($option) use ($customTagParamName, $tagsLabels) {
+		// 							$name = $option['name'] ?? '';
+		// 							$id = $option['id'] ?? '';
+		// 							$nameOverride = $name;
 
-									// Find tag label override.
-									if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-										$nameOverride = $tagsLabels[$id];
-									}
+		// 							// Find tag label override.
+		// 							if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
+		// 								$nameOverride = $tagsLabels[$id];
+		// 							}
 
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $nameOverride,
-										'checkboxValue' => $name,
-										'checkboxTracking' => $customTagParamName,
-									];
-								},
-								$tagsItems
-							),
-							'blockSsr' => $ssr,
-						];
-						break;
-					default:
-						if (!empty($tagsSelected)) {
-							$tagsItems = \array_map(
-								static function ($item) {
-									return $item['name'];
-								},
-								$tagsItems
-							);
+		// 							return [
+		// 								'component' => 'checkbox',
+		// 								'checkboxLabel' => $nameOverride,
+		// 								'checkboxValue' => $name,
+		// 								'checkboxTracking' => $customTagParamName,
+		// 							];
+		// 						},
+		// 						$tagsItems
+		// 					),
+		// 				];
+		// 				break;
+		// 			default:
+		// 				if (!empty($tagsSelected)) {
+		// 					$tagsItems = \array_map(
+		// 						static function ($item) {
+		// 							return $item['name'];
+		// 						},
+		// 						$tagsItems
+		// 					);
 
-							$tagsItems = \implode(', ', $tagsItems);
+		// 					$tagsItems = \implode(', ', $tagsItems);
 
-							$output[] = [
-								'component' => 'input',
-								'inputType' => 'hidden',
-								'inputId' => $customTagParamName,
-								'inputName' => $customTagParamName,
-								'inputTracking' => $customTagParamName,
-								'inputValue' => $tagsItems,
-								'blockSsr' => $ssr,
-							];
-						};
-						break;
-				}
-			}
-		}
+		// 					$output[] = [
+		// 						'component' => 'input',
+		// 						'inputType' => 'hidden',
+		// 						'inputId' => $customTagParamName,
+		// 						'inputName' => $customTagParamName,
+		// 						'inputTracking' => $customTagParamName,
+		// 						'inputValue' => $tagsItems,
+		// 					];
+		// 				};
+		// 				break;
+		// 		}
+		// 	}
+		// }
 
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.

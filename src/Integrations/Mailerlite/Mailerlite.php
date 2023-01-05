@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,24 +42,12 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	protected $mailerliteClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $mailerliteClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ClientInterface $mailerliteClient) {
 		$this->mailerliteClient = $mailerliteClient;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -71,12 +58,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
-	{
-		return [];
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
 	/**
@@ -89,19 +71,34 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	public function getFormFields(string $formId, bool $ssr = false): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
+		return [];
+	}
+
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	{
+		$output = [
+			'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->mailerliteClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->mailerliteClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -109,11 +106,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -121,7 +117,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $field) {
+		foreach ($data['fields'] as $field) {
 			if (empty($field)) {
 				continue;
 			}
@@ -143,7 +139,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputType' => 'text',
 						'inputIsRequired' => $name === 'email',
 						'inputIsEmail' => $name === 'email',
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$name === 'email' ? 'inputIsRequired' : '',
+							$name === 'email' ? 'inputIsEmail' : '',
+						]),
 					];
 					break;
 				case 'number':
@@ -154,7 +153,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputFieldLabel' => $label,
 						'inputId' => $id,
 						'inputType' => 'number',
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 					];
 					break;
 			}
@@ -165,9 +164,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.

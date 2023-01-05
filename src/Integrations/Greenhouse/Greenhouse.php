@@ -59,12 +59,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
-	{
-		return [];
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
 	/**
@@ -77,31 +72,53 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	public function getFormFields(string $formId, bool $ssr = false): array
 	{
-		// Get Item Id.
-		$itemId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
+		return [];
+	}
+
+		/**
+	 * Get Hubspot mapped form fields for block editor grammar.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $itemId Integration item id.
+	 *
+	 * @return array
+	 */
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	{
+		$output = [
+			'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
+
+		// Get fields.
+		$item = $this->greenhouseClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		// Get Form.
-		$fields = $this->greenhouseClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
-	 * Map Greenhouse fields to our components.
+	 * Map fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -109,12 +126,12 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $item) {
-			if (empty($item)) {
+		foreach ($data['fields'] as $item) {
+			if (!$item) {
 				continue;
 			}
 
-			$fields = $item['fields'] ?? '';
+			$fields = $item['fields'] ?? [];
 			$label = $item['label'] ?? '';
 			$description = $item['description'] ?? '';
 			$required = $item['required'] ?? false;
@@ -138,7 +155,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'inputIsRequired' => $required,
 							'inputIsEmail' => $name === 'email' ? 'true' : '',
 							'inputIsNumber' => $name === 'phone' ? 'true' : '',
-							'blockSsr' => $ssr,
+							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+								$required ? 'inputIsRequired' : '',
+							]),
 						];
 						break;
 					case 'input_file':
@@ -153,9 +172,14 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileMeta' => $description,
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1,
-							'fileMaxSize' => (int) $maxFileSize * 1000,
-							'blockSsr' => $ssr,
+							'fileMinSize' => '1',
+							'fileMaxSize' => strval($maxFileSize * 1000),
+							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
+								$required ? 'fileIsRequired' : '',
+								'fileAccept',
+								'fileMinSize',
+								'fileMaxSize',
+							]),
 						];
 						break;
 					case 'textarea':
@@ -167,7 +191,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaId' => $name,
 							'textareaMeta' => $description,
 							'textareaIsRequired' => $required,
-							'blockSsr' => $ssr,
+							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+								$required ? 'textareaIsRequired' : '',
+							]),
 						];
 						break;
 					case 'multi_value_single_select':
@@ -185,9 +211,14 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										'checkboxValue' => 1,
 										'checkboxUncheckedValue' => 0,
 										'checkboxTracking' => $name,
+										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+											'checkboxValue',
+										], false),
 									],
 								],
-								'blockSsr' => $ssr,
+								'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+									$required ? 'checkboxesIsRequired' : '',
+								]),
 							];
 						} else {
 							$output[] = [
@@ -199,16 +230,21 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $required,
 								'selectOptions' => \array_map(
-									static function ($selectOption) {
+									function ($selectOption) {
 										return [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['label'],
 											'selectOptionValue' => $selectOption['value'],
+											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+												'selectOptionValue',
+											], false),
 										];
 									},
 									$values
 								),
-								'blockSsr' => $ssr,
+								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+									$required ? 'selectIsRequired' : '',
+								]),
 							];
 						}
 						break;
@@ -216,29 +252,29 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			}
 		}
 
-		if (!$ssr) {
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => 'longitude',
-				'inputName' => 'longitude',
-			];
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => 'latitude',
-				'inputName' => 'latitude',
-			];
-		}
+		$output[] = [
+			'component' => 'input',
+			'inputType' => 'hidden',
+			'inputFieldLabel' => 'longitude',
+			'inputId' => 'longitude',
+			'inputName' => 'longitude',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+		];
+		$output[] = [
+			'component' => 'input',
+			'inputType' => 'hidden',
+			'inputFieldLabel' => 'latitude',
+			'inputId' => 'latitude',
+			'inputName' => 'latitude',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+		];
 
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.

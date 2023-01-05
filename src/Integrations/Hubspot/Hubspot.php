@@ -68,7 +68,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	}
 
 	/**
-	 * Get Hubspot mapped form fields for block editor grammar.
+	 * Get mapped form fields for block editor grammar.
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $itemId Integration item id.
@@ -102,7 +102,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	}
 
 	/**
-	 * Map Hubspot fields to our components.
+	 * Map fields to our components.
 	 *
 	 * @param array<string, mixed> $data Item object.
 	 * @param string $formId Form ID.
@@ -129,7 +129,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			$allowedFileTypes = \str_replace(' ', '', $allowedFileTypes);
 		}
 
-		foreach ($data['fields'] as $key => $item) {
+		foreach ($data['fields'] as $item) {
 			if (empty($item)) {
 				continue;
 			}
@@ -460,6 +460,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitValue' => $data['submitButtonText'] ?? '',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.

@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"momentsIntegrationId": {
+			"type": "string"
+		},
 		"momentsFormPostId": {
 			"type": "string"
 		},

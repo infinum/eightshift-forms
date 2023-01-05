@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react';
-import { useState } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
-import { select, dispatch } from "@wordpress/data";
-import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
+import React  from 'react';
+import { select } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { HubspotEditor } from './components/hubspot-editor';
 import { HubspotOptions } from './components/hubspot-options';

@@ -59,23 +59,23 @@ class GreenhouseClient implements ClientInterface
 		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
-			$jobs = $this->getGreenhouseJobs();
+		if (!$output) {
+			$items = $this->getGreenhouseItems();
 
-			if ($jobs) {
-				foreach ($jobs as $job) {
-					$jobId = $job['id'] ?? '';
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
 
-					if (!$jobId) {
+					if (!$id) {
 						continue;
 					}
 
-					$output[$jobId] = [
-						'id' => (string) $jobId,
-						'title' => $job['title'] ?? '',
-						'locations' => \explode(', ', $job['location']['name']),
+					$output[$id] = [
+						'id' => (string) $id,
+						'title' => $item['title'] ?? '',
+						'locations' => \explode(', ', $item['location']['name']),
 						'fields' => [],
-						'updatedAt' => $job['updated_at'],
+						'updatedAt' => $item['updated_at'],
 					];
 				}
 
@@ -104,16 +104,16 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = $this->getItems();
+		$output = $this->getItems() ?? [];
+
+		$item = $output[$itemId]['fields'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$job = $this->getGreenhouseJob($itemId);
+		if (!$output || !$item) {
+			$items = $this->getGreenhouseItem($itemId)['questions'] ?? [];
 
-			$questions = $job['questions'] ?? [];
-
-			if ($questions) {
-				$output[$itemId]['fields'] = $questions;
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
 				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
@@ -255,7 +255,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getGreenhouseJobs()
+	private function getGreenhouseItems()
 	{
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs";
 
@@ -291,7 +291,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getGreenhouseJob(string $jobId)
+	private function getGreenhouseItem(string $jobId)
 	{
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true";
 

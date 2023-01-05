@@ -79,7 +79,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (!$output) {
 			$items = $this->getHubspotItems();
 
 			if ($items) {

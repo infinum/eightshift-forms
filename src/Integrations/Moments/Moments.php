@@ -71,12 +71,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
-	{
-		return [];
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
 	/**
@@ -89,19 +84,34 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 */
 	public function getFormFields(string $formId, bool $ssr = false): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
+		return [];
+	}
+
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	{
+		$output = [
+			'type' => SettingsMoments::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->momentsClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->momentsClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -109,11 +119,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -153,10 +162,14 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputType' => $isHidden ? 'hidden' : 'text',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+						]),
 					];
 					break;
 				case 'date':
+					$pattern = $this->validator->getValidationPattern('momentsDate');
+
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -166,11 +179,16 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputType' => $isHidden ? 'hidden' : 'date',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $this->validator->getValidationPattern('momentsDate'),
-						'blockSsr' => $ssr,
+						'inputValidationPattern' => $pattern,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+							$pattern ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'datetime':
+					$pattern = $this->validator->getValidationPattern('momentsDateTime');
+
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -180,11 +198,16 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputType' => $isHidden ? 'hidden' : 'datetime',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $this->validator->getValidationPattern('momentsDateTime'),
-						'blockSsr' => $ssr,
+						'inputValidationPattern' => $pattern,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+							$pattern ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'email':
+					$pattern = $this->validator->getValidationPattern('momentsEmail');
+
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -195,11 +218,16 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputType' => $isHidden ? 'hidden' : 'email',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $this->validator->getValidationPattern('momentsEmail'),
-						'blockSsr' => $ssr,
+						'inputValidationPattern' => $pattern,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+							$pattern ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'number':
+					$pattern = $this->validator->getValidationPattern('momentsNumber');
+
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -209,8 +237,11 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputFieldHidden' => $isHidden,
 						'inputType' => $isHidden ? 'hidden' : 'number',
 						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $this->validator->getValidationPattern('momentsNumber'),
-						'blockSsr' => $ssr,
+						'inputValidationPattern' => $pattern,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+							$pattern ? 'inputValidationPattern' : '',
+						]),
 					];
 					break;
 				case 'textarea':
@@ -224,7 +255,9 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'textareaType' => 'textarea',
 						'textareaIsRequired' => $isRequired,
 						'textareaPlaceholder' => $placeholder,
-						'blockSsr' => $ssr,
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+							$isRequired ? 'textareaIsRequired' : '',
+						]),
 					];
 					break;
 				case 'dropdown':
@@ -247,21 +280,27 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 										'selectOptionValue' => ' ',
 										'selectOptionIsSelected' => true,
 										'selectOptionIsDisabled' => true,
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [], false),
 									],
 								],
 								\array_map(
-									static function ($selectOption) {
+									function ($selectOption) {
 										return [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['name'],
 											'selectOptionValue' => $selectOption['value'],
+											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+												'selectOptionValue',
+											], false),
 										];
 									},
 									$options
 								)
 							)
 						),
-						'blockSsr' => $ssr,
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+							$isRequired ? 'selectIsRequired' : '',
+						]),
 					];
 					break;
 				case 'radiobutton':
@@ -273,17 +312,22 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $isRequired,
 						'radiosContent' => \array_map(
-							static function ($radio) use ($name) {
+							function ($radio) use ($name) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio['name'],
 									'radioValue' => $radio['value'],
 									'radioTracking' => $name,
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
+							$isRequired ? 'radiosIsRequired' : '',
+						]),
 					];
 					break;
 				case 'checkbox':
@@ -298,9 +342,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'checkboxLabel' => $label,
 								'checkboxValue' => false,
 								'checkboxTracking' => $name,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [], false),
 							],
 						],
-						'blockSsr' => $ssr,
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
 					];
 					break;
 				case 'checkbox_group':
@@ -312,17 +357,22 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'checkboxesFieldLabel' => $label,
 						'checkboxesIsRequired' => $isRequired,
 						'checkboxesContent' => \array_map(
-							static function ($radio) use ($name) {
+							function ($radio) use ($name) {
 								return [
 									'component' => 'checkbox',
 									'checkboxLabel' => $radio['name'],
 									'checkboxValue' => $radio['value'],
 									'checkboxTracking' => $name,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							$isRequired ? 'checkboxesIsRequired' : '',
+						]),
 					];
 					break;
 			}
@@ -333,9 +383,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitName' => 'submit',
 			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.

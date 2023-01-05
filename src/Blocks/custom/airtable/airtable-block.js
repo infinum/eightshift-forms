@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelect } from "@wordpress/data";
+import { select } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { AirtableEditor } from './components/airtable-editor';
 import { AirtableOptions } from './components/airtable-options';
 
 export const Airtable = (props) => {
-	const postId = useSelect((select) => select('core/editor').getCurrentPostId());
+	const postId = select('core/editor').getCurrentPostId();
 
 	return (
 		<>
@@ -17,7 +17,6 @@ export const Airtable = (props) => {
 			</InspectorControls>
 			<AirtableEditor
 				{...props}
-				postId={postId}
 			/>
 		</>
 	);

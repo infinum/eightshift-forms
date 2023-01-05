@@ -61,6 +61,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	public function updateForm(): void
 	{
+		// Prevent forms sync.
+		$skipFormsSync = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		if ($skipFormsSync) {
+			return;
+		}
+
 		global $typenow;
 
 		// Bailout if not forms editor page.
@@ -810,7 +816,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			return "{$parentName}-{$index}";
 		}
 
-		$value = crc32($value);
+		$value = crc32((string) $value);
 
 		return "{$parentName}-{$value}";
 	}

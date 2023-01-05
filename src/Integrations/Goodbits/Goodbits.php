@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -43,24 +42,12 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	protected $goodbitsClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $goodbitsClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ClientInterface $goodbitsClient) {
 		$this->goodbitsClient = $goodbitsClient;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -71,12 +58,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
-	{
-		return [];
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
 	}
 
 	/**
@@ -89,24 +71,46 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 */
 	public function getFormFields(string $formId, bool $ssr = false): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
+		return [];
+	}
+
+	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	{
+		$output = [
+			'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'fields' => [],
+		];
+
+		// Get fields.
+		$item = $this->goodbitsClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($formId, $ssr);
+		$fields = $this->getFields($formId);
+
+		error_log( print_r( ( $fields ), true ) );
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['itemId'] = $itemId;
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
 	 * Map Goodbits fields to our components.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(string $formId, bool $ssr): array
+	private function getFields(string $formId): array
 	{
 		$output = [
 			[
@@ -118,7 +122,9 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputType' => 'text',
 				'inputIsRequired' => true,
 				'inputIsEmail' => true,
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+					'inputIsRequired',
+				]),
 			],
 			[
 				'component' => 'input',
@@ -127,7 +133,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputFieldLabel' => \__('First Name', 'eightshift-forms'),
 				'inputId' => 'first_name',
 				'inputType' => 'text',
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 			],
 			[
 				'component' => 'input',
@@ -136,16 +142,14 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputFieldLabel' => \__('Last Name', 'eightshift-forms'),
 				'inputId' => 'last_name',
 				'inputType' => 'text',
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 			],
 			[
 				'component' => 'submit',
 				'submitName' => 'submit',
 				'submitId' => 'submit',
 				'submitFieldUseError' => false,
-				'submitFieldOrder' => 4,
-				'submitServerSideRender' => $ssr,
-				'blockSsr' => $ssr,
+				'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 			],
 		];
 

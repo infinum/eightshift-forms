@@ -1,17 +1,40 @@
 /* global esFormsLocalization */
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import { PanelBody, BaseControl, Button } from '@wordpress/components';
-import { IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import apiFetch from '@wordpress/api-fetch';
+import {
+	icons,
+	STORE_NAME,
+	CustomSelect,
+	checkAttr,
+	BlockIcon,
+	IconLabel,
+	getAttrKey,
+} from '@eightshift/frontend-libs/scripts';
+import manifest from '../manifest.json';
 
-export const MomentsOptions = ({ postId }) => {
+export const MomentsOptions = ({ attributes, setAttributes, postId }) => {
 	const {
 		settingsPageUrl,
 	} = select(STORE_NAME).getSettings();
 
+	const momentsIntegrationId = checkAttr('momentsIntegrationId', attributes, manifest);
+
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
+	const [formData, setFormData] = useState([]);
+
+	useEffect( () => {
+		apiFetch({ path: 'eightshift-forms/v1/integration-items-moments' }).then((response) => {
+			if (response.code === 200) {
+				setFormData(response.data);
+			}
+		});
+	}, []);
 
 	return (
 		<PanelBody title={__('Moments', 'eightshift-forms')}>
@@ -26,6 +49,19 @@ export const MomentsOptions = ({ postId }) => {
 					{__('Open Moments Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
+
+			<CustomSelect
+				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
+				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+				value={momentsIntegrationId}
+				options={formData}
+				onChange={(value) => setAttributes({ [getAttrKey('momentsIntegrationId', attributes, manifest)]: value.toString() })}
+				isClearable={false}
+				cacheOptions={false}
+				reFetchOnSearch={true}
+				multiple={false}
+				simpleValue
+			/>
 		</PanelBody>
 	);
 };

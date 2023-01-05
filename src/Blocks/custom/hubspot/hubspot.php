@@ -6,9 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Form\Form;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Integrations\Hubspot\Hubspot;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 
 $manifest = Components::getManifest(__DIR__);

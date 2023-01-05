@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"greenhouseIntegrationId": {
+			"type": "string"
+		},
 		"greenhouseFormPostId": {
 			"type": "string"
 		},

@@ -64,7 +64,7 @@ class GoodbitsClient implements ClientInterface
 			$output = [];
 
 			foreach ($key as $itemKey => $itemValue) {
-				$output[(string) $itemKey] = [
+				$output[(string) $itemValue] = [
 					'title' => $itemKey,
 					'id' => $itemValue,
 				];
@@ -90,7 +90,7 @@ class GoodbitsClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		return [];
+		return $this->getItems()[$itemId] ?? [];
 	}
 
 	/**

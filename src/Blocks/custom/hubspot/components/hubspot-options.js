@@ -49,6 +49,7 @@ export const HubspotOptions = ({ attributes, setAttributes, postId }) => {
 					{__('Open HubSpot Form Settings', 'eightshift-forms')}
 				</Button>
 			</BaseControl>
+
 			<CustomSelect
 				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
 				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}

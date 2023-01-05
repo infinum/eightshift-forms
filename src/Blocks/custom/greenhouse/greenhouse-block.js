@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelect } from "@wordpress/data";
+import { select } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { GreenhouseEditor } from './components/greenhouse-editor';
 import { GreenhouseOptions } from './components/greenhouse-options';
 
 export const Greenhouse = (props) => {
-	const postId = useSelect((select) => select('core/editor').getCurrentPostId());
+	const postId = select('core/editor').getCurrentPostId();
 
 	return (
 		<>
@@ -17,7 +17,6 @@ export const Greenhouse = (props) => {
 			</InspectorControls>
 			<GreenhouseEditor
 				{...props}
-				postId={postId}
 			/>
 		</>
 	);

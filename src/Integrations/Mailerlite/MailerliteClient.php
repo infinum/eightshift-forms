@@ -56,7 +56,7 @@ class MailerliteClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (!$output) {
 			$items = $this->getMailerliteLists();
 
 			if ($items) {
@@ -95,14 +95,16 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = $this->getItems();
+		$output = $this->getItems() ?? [];
+
+		$item = $output[$itemId]['fields'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$fields = $this->getMailerliteListFields();
+		if (!$output || !$item) {
+			$items = $this->getMailerliteListFields();
 
-			if ($fields) {
-				$output[$itemId]['fields'] = $fields;
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
 				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}

@@ -11,7 +11,14 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"airtableIntegrationId": {
+			"type": "string"
+		},
 		"airtableFormPostId": {
 			"type": "string"
 		},

@@ -28,13 +28,6 @@
 		},
 		"hubspotFormDataTypeSelector": {
 			"type": "string"
-		},
-		"hubspotAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": []
 		}
 	},
 	"parent": [
