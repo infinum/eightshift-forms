@@ -59,7 +59,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
 	}
 
 	/**
@@ -75,11 +75,12 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		return [];
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
+			'innerId' => $innerId,
 			'fields' => [],
 		];
 
@@ -90,13 +91,13 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return $output;
 		}
 
-		$fields = $this->getFields($fields['items'][$fieldId] ?? [], $formId);
+		$fields = $this->getFields($item[$innerId] ?? [], $formId);
+		
 
 		if (!$fields) {
 			return $output;
 		}
 
-		$output['itemId'] = $itemId;
 		$output['fields'] = $fields;
 
 		return $output;

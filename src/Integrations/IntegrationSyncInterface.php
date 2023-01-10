@@ -16,4 +16,6 @@ namespace EightshiftForms\Integrations;
 interface IntegrationSyncInterface
 {
 	public function syncForm(string $formId, bool $isPreview = false): array;
+
+	public function createForm(string $formId, string $type, string $itemId, string $innerId): array;
 }

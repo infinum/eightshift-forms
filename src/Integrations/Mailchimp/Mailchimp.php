@@ -71,7 +71,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
 	}
 
 	public function getFormFields(string $formId, bool $ssr = false): array
@@ -79,7 +79,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		return [];
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
@@ -99,7 +99,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
-		$output['itemId'] = $itemId;
 		$output['fields'] = $fields;
 
 		return $output;

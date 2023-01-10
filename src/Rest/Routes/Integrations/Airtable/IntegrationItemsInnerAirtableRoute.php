@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class to provide integration items from cache.
+ * The class to provide integration items inner from cache.
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Airtable
  */
@@ -17,9 +17,9 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
- * Class IntegrationItemAirtableRoute
+ * Class IntegrationItemsInnerAirtableRoute
  */
-class IntegrationItemAirtableRoute extends AbstractBaseRoute
+class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable for Airtable data.
@@ -31,7 +31,7 @@ class IntegrationItemAirtableRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-item-airtable/';
+	public const ROUTE_SLUG = '/integration-items-inner-airtable/';
 
 	/**
 	 * Get the base url of the route

@@ -1,22 +1,23 @@
-import React  from 'react';
-import { select } from "@wordpress/data";
+import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { HubspotEditor } from './components/hubspot-editor';
 import { HubspotOptions } from './components/hubspot-options';
 
 export const Hubspot = (props) => {
-	const postId = select('core/editor').getCurrentPostId();
+	const itemIdKey = 'hubspotIntegrationId';
 
 	return (
 		<>
 			<InspectorControls>
 				<HubspotOptions
 					{...props}
-					postId={postId}
+					clientId={props.clientId}
+					itemIdKey={itemIdKey}
 				/>
 			</InspectorControls>
 			<HubspotEditor
 				{...props}
+				itemIdKey={itemIdKey}
 			/>
 		</>
 	);

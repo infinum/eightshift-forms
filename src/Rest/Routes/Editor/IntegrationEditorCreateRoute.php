@@ -17,9 +17,9 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
 /**
- * Class IntegrationEditorRoute
+ * Class IntegrationEditorCreateRoute
  */
-class IntegrationEditorRoute extends AbstractBaseRoute
+class IntegrationEditorCreateRoute extends AbstractBaseRoute
 {
 	/**
 	 * Use general helper trait.
@@ -29,7 +29,7 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-editor/(?P<id>\d+)';
+	public const ROUTE_SLUG = '/integration-editor-create/';
 
 	/**
 	 * Instance variable for HubSpot form data.
@@ -104,16 +104,12 @@ class IntegrationEditorRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$formId = $request->get_url_params()['id'] ?? '';
-		if (!$formId) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
-			]);
-		}
+		$formId = $request->get_param('id') ?? '';
+		$type = $request->get_param('type') ?? '';
+		$itemId = $request->get_param('itemId') ?? '';
+		$innerId = $request->get_param('innerId') ?? '';
 
-		$syncForm = $this->integrationSyncDiff->syncForm($formId, true);
+		$syncForm = $this->integrationSyncDiff->createForm($formId, $type, $itemId, $innerId);
 
 		$status = $syncForm['status'] ?? '';
 

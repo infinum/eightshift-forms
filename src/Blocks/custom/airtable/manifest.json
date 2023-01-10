@@ -19,7 +19,7 @@
 		"airtableIntegrationId": {
 			"type": "string"
 		},
-		"airtableIntegrationItemId": {
+		"airtableIntegrationInnerId": {
 			"type": "string"
 		},
 		"airtableFormPostId": {

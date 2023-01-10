@@ -11,7 +11,17 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
+		"activeCampaignIntegrationId": {
+			"type": "string"
+		},
+		"activeCampaignIntegrationInnerId": {
+			"type": "string"
+		},
 		"activeCampaignFormPostId": {
 			"type": "string"
 		},

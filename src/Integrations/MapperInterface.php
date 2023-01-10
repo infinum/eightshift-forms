@@ -33,5 +33,5 @@ interface MapperInterface
 	 *
 	 * @return array
 	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array;
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array;
 }

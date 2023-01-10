@@ -9,7 +9,7 @@ import {
 	FancyDivider
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from './../../../assets/scripts/helpers/utils';
+import { isOptionDisabled } from './../../utils';
 
 export const SelectOptionOptions = (attributes) => {
 	const {

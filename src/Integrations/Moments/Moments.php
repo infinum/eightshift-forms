@@ -71,7 +71,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		return [];
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsMoments::SETTINGS_TYPE_KEY,
@@ -108,7 +108,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		$output['itemId'] = $itemId;
 		$output['fields'] = $fields;
 
 		return $output;

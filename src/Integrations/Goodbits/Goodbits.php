@@ -58,7 +58,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		return [];
 	}
 
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
@@ -95,7 +95,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return $output;
 		}
 
-		$output['itemId'] = $itemId;
 		$output['fields'] = $fields;
 
 		return $output;

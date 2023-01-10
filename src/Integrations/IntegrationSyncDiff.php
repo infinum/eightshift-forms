@@ -14,6 +14,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -51,7 +52,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	public function register(): void
 	{
-		\add_action('load-post.php', [$this, 'updateForm'], 10000, );
+		\add_action('load-post.php', [$this, 'updateForm']);
 	}
 
 	/**
@@ -74,9 +75,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			return;
 		}
 
-		// Check if develop mode is on.
-		$this->isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
 		// Get Form ID.
 		$formId = isset($_GET['post']) ? \sanitize_text_field(\wp_unslash($_GET['post'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
@@ -97,6 +95,111 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 	}
 
+	public function createForm(string $formId, string $type, string $itemId, string $innerId): array
+	{
+		// Bailout if form ID is missing.
+		if (!$formId) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'before_missing_formId',
+				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
+			];
+		}
+
+		// Check if integration filter exists.
+		$integrationFilterName = Filters::ALL[$type]['fields'] ?? '';
+		if (!\has_filter($integrationFilterName)) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_integration_filter',
+				'message' => \esc_html__('Provided integration name is not in our list of available integrations.', 'eightshift-forms'),
+			];
+		}
+
+		// Get integration fields.
+		$integration = \apply_filters($integrationFilterName, $formId, $itemId, $innerId);
+
+		// Prepare integration variables.
+		$integrationType = $integration['type'] ?? '';
+		$integrationItemId = $integration['itemId'] ?? '';
+		$integrationInnerId = $integration['innerId'] ?? '';
+		$integrationFields = $integration['fields'] ?? [];
+
+		// Bailout if integration type is missing.
+		if (!$integrationType) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_type',
+				'message' => \esc_html__('Missing form integration type.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if integration item ID is missing.
+		if (!$integrationItemId) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_itemId',
+				'message' => \esc_html__('Missing form integration item Id.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if integration inner ID is missing only on airtable.
+		if (!$integrationInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_innerId',
+				'message' => \esc_html__('Missing form integration inner Id.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if integration fields are missing.
+		if (!$integrationFields) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_fields',
+				'message' => \esc_html__('Missing form integration fields.', 'eightshift-forms'),
+			];
+		}
+
+		$fields = $this->reconstructBlocksOutput(
+			array_map(
+				static function ($item) {
+					return $item['integration'];
+				},
+				$this->prepareIntegrationBlocksForCheck($integrationFields)
+			),
+			true
+		);
+
+		// Bailout if integration fields are missing.
+		if (!$fields) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_fields_build_empty',
+				'message' => \esc_html__('Integration fields build has failed.', 'eightshift-forms'),
+			];
+		}
+
+		// Output additional array from whom we built block grammar for debug.
+		$output['output'] = $fields;
+
+		// Bailout if db content update with success.
+		return [
+			'formId' => $formId,
+			'status' => 'success',
+			'debugType' => 'after_success',
+			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
+			'data' => $output,
+		];
+	}
+
 	/**
 	 * Sync content and integration form and update the database with the new version on success.
 	 *
@@ -107,9 +210,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	public function syncForm(string $formId, bool $isPreview = false): array
 	{
-		// Check if develop mode is on.
-		$this->isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
 		// Bailout if form ID is missing.
 		if (!$formId) {
 			return [
@@ -136,6 +236,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Prepare content variables.
 		$contentType = $content['type'] ?? '';
 		$contentItemId = $content['itemId'] ? Helper::unserializeAttributes($content['itemId']) : '';
+		$contentInnerId = $content['innerId'] ? Helper::unserializeAttributes($content['innerId']) : '';
 		$contentFields = $content['fields'] ?? [];
 
 		// Bailout if content type is missing.
@@ -158,6 +259,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			];
 		}
 
+		// Bailout if content inner ID is missing only on airtable.
+		if (!$contentInnerId && $contentType === SettingsAirtable::SETTINGS_TYPE_KEY) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'content_missing_innerId',
+				'message' => \esc_html__('Missing form content integration inner Id.', 'eightshift-forms'),
+			];
+		}
+
 		// Check if integration filter exists.
 		$integrationFilterName = Filters::ALL[$contentType]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
@@ -170,11 +281,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Get integration fields.
-		$integration = \apply_filters($integrationFilterName, $formId, $contentItemId);
+		$integration = \apply_filters($integrationFilterName, $formId, $contentItemId, $contentInnerId);
 
 		// Prepare integration variables.
 		$integrationType = $integration['type'] ?? '';
 		$integrationItemId = $integration['itemId'] ?? '';
+		$integrationInnerId = $integration['innerId'] ?? '';
 		$integrationFields = $integration['fields'] ?? [];
 
 		// Bailout if integration type is missing.
@@ -197,7 +309,17 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			];
 		}
 
-		// Bailout conditions if content fields are missing.
+		// Bailout if integration inner ID is missing only on airtable.
+		if (!$integrationInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_innerId',
+				'message' => \esc_html__('Missing form integration inner Id.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if content fields are missing.
 		if (!$contentFields) {
 
 			// Bailout if integration fields are missing.
@@ -236,6 +358,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				'status' => 'error',
 				'debugType' => 'after_different_itemId',
 				'message' => \esc_html__('Integration item ID is different than content item ID.', 'eightshift-forms'),
+			];
+		}
+
+		// Bailout if integration inner ID is different than content inner Id. Only on airtable.
+		if ($integrationInnerId !== $contentInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'after_different_innerId',
+				'message' => \esc_html__('Integration inner ID is different than content inner ID.', 'eightshift-forms'),
 			];
 		}
 
@@ -306,8 +438,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Prepare standard output.
 		$output = [
-			'type' => $integration['type'],
-			'itemId' => $integration['itemId'],
+			'type' => $integration['type'] ?? '',
+			'itemId' => $integration['itemId'] ?? '',
+			'innerId' => $integration['innerId'] ?? '',
 			'update' => false,
 			'removed' => [],
 			'added' => [],
@@ -324,7 +457,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 			// Loop all outputs and prepare for the final output.
 			foreach ($changes as $changeKey => $changeValue) {
-				// No calue no output necesery.
+				// No value no output necesery.
 				if (!$changeValue) {
 					continue;
 				}
@@ -345,7 +478,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Recounstruct blocks output and build array for final serialization.
-		$blocksOutput = $this->reconstructBlocksOutput($output['output'], $output['type'], $output['itemId']);
+		$blocksOutput = $this->reconstructBlocksTopLevelOutput($output['output'], $output['type'], $output['itemId']);
 
 		// Create block grammar.
 		$output['output'] = serialize_blocks($blocksOutput);
@@ -594,7 +727,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Rebuild for blocks output in block grammar format after diff check.
+	 * Rebuild for blocks output in block grammar format after diff check. Top level with all blocks.
 	 *
 	 * @param array $data Diff prepared data.
 	 * @param string $type Integation type.
@@ -602,32 +735,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @return array
 	 */
-	private function reconstructBlocksOutput(array $data, string $type, string $itemId): array
+	private function reconstructBlocksTopLevelOutput(array $data, string $type, string $itemId): array
 	{
-		$fieldsOutput = [];
-
-		foreach ($data as $key => $value) {
-			if (!$value['parent']) {
-				$fieldsOutput[$key] = [
-					'blockName' => $value['namespace'] . '/' . $value['component'],
-					'attrs' => $value['attrs'],
-					'innerBlocks' => [],
-					'innerContent' => [],
-				];
-			} else {
-				$innerOutput = [
-					'blockName' => $value['namespace'] . '/' . $value['component'],
-					'attrs' => $value['attrs'],
-					'innerBlocks' => [],
-					'innerContent' => [],
-				];
-
-				$fieldsOutput[$value['parent']]['innerBlocks'][] = $innerOutput;
-				$fieldsOutput[$value['parent']]['innerContent'][] = $innerOutput;
-			}
-		}
-
-		$fieldsOutput = array_values($fieldsOutput);
+		$fieldsOutput = $this->reconstructBlocksOutput($data);
 
 		$namespace = Components::getSettingsNamespace();
 
@@ -653,6 +763,48 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
+	 * Rebuild for blocks output in block grammar format after diff check. Only inner blocks for integration
+	 *
+	 * @param array $data Diff prepared data.
+	 *
+	 * @return array
+	 */
+	private function reconstructBlocksOutput(array $data, $editorOutput = false): array
+	{
+		$fieldsOutput = [];
+
+		$blockNameKey = $editorOutput ? 'name' : 'blockName';
+		$attrsKey = $editorOutput ? 'attributes' : 'attrs';
+		$innerBlocksKey = 'innerBlocks';
+		$innerContentKey = 'innerContent';
+
+		foreach ($data as $key => $value) {
+			if (!$value['parent']) {
+				$fieldsOutput[$key] = [
+					$blockNameKey => $value['namespace'] . '/' . $value['component'],
+					$attrsKey => $value['attrs'],
+					$innerBlocksKey => [],
+					$innerContentKey => [],
+				];
+			} else {
+				$innerOutput = [
+					$blockNameKey => $value['namespace'] . '/' . $value['component'],
+					$attrsKey => $value['attrs'],
+					$innerBlocksKey => [],
+					$innerContentKey => [],
+				];
+
+				$fieldsOutput[$value['parent']][$innerBlocksKey][] = $innerOutput;
+				$fieldsOutput[$value['parent']][$innerContentKey][] = $innerOutput;
+			}
+		}
+
+		error_log( print_r( ( $fieldsOutput ), true ) );
+
+		return array_values($fieldsOutput);
+	}
+
+	/**
 	 * Get current form content from the database and do initial preparations for diff.
 	 *
 	 * @param string $formId Form Id.
@@ -664,6 +816,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$output = [
 			'type' => '',
 			'itemId' => '',
+			'innerId' => '',
 			'fields' => [],
 		];
 
@@ -703,12 +856,19 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$output['type'] = $type;
 
 		$itemId = $blocks['innerBlocks'][0]['attrs'][Components::kebabToCamelCase($type) . "IntegrationId"] ?? '';
+		$innerId = $blocks['innerBlocks'][0]['attrs'][Components::kebabToCamelCase($type) . "IntegrationInnerId"] ?? '';
 
 		if (!$itemId) {
 			return $output;
 		}
 
+		// Only Airtable has inner items.
+		if ($type === SettingsAirtable::SETTINGS_TYPE_KEY && !$innerId) {
+			return $output;
+		}
+
 		$output['itemId'] = $itemId;
+		$output['innerId'] = $innerId;
 		$output['fields'] = $blocks;
 
 		return $output;

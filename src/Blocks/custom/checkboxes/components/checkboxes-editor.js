@@ -23,7 +23,6 @@ export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 				clientId,
 				checkboxesContent: <InnerBlocks
 														allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
-														templateLock={false}
 														template={template}
 													/>
 			})}

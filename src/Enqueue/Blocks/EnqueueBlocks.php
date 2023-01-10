@@ -160,9 +160,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getLocalizations(): array
 	{
+		$restRoutesPrefix = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+
 		$output = [
 			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
+			'restPrefix' => $restRoutesPrefix,
 		];
 
 		// Admin part.
@@ -206,14 +209,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['wpAdminUrl'] = \get_admin_url();
 		} else {
 			// Frontend part.
-			$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
-
 			$hideGlobalMessageTimeout = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
 			$redirectionTimeout = Filters::getBlockFilterName('form', 'redirectionTimeout');
 			$hideLoadingStateTimeout = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
 			$fileCustomRemoveLabel = Filters::getBlockFilterName('file', 'previewRemoveLabel');
 
-			$output['formSubmitRestApiUrl'] = $restRoutesPath . '/form-submit';
+			$output['formSubmitRestApiUrl'] = \rest_url() . $restRoutesPrefix . '/form-submit';
 			$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 			$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 			$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);

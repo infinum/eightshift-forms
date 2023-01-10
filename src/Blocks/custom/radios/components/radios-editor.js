@@ -18,7 +18,6 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 				clientId,
 				radiosContent: <InnerBlocks
 												allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
-												templateLock={false}
 												template={template}
 											/>
 			})}

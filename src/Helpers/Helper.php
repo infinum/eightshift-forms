@@ -26,11 +26,11 @@ class Helper
 	 * Encript/Decrypt method.
 	 *
 	 * @param string $action Action used.
-	 * @param string $string String used.
+	 * @param string $value Value used.
 	 *
 	 * @return string|bool
 	 */
-	public static function encryptor(string $action, string $string)
+	public static function encryptor(string $action, string $value)
 	{
 		$encryptMethod = "AES-256-CBC";
 		$secretKey = \wp_salt(); // user define private key.
@@ -39,12 +39,12 @@ class Helper
 		$iv = \substr(\hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
 
 		if ($action === 'encrypt') {
-			$output = \openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
+			$output = \openssl_encrypt($value, $encryptMethod, $key, 0, $iv);
 
 			return \base64_encode((string) $output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
-		return \openssl_decrypt(\base64_decode($string), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		return \openssl_decrypt(\base64_decode($value), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 	}
 
 	/**

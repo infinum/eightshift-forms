@@ -35,6 +35,7 @@
 	"dependencies": {
 		"@eightshift/frontend-libs": "^7.2.0",
 		"@eightshift/web-components": "^1.2.0",
+		"@wordpress/block-serialization-spec-parser": "^4.24.0",
 		"air-datepicker": "^3.3.1",
 		"autosize": "^5.0.1",
 		"choices.js": "^10.1.0",

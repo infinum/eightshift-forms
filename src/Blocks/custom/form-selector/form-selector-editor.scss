@@ -4,7 +4,8 @@
 
 	.esf-form-type-picker-group {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
+		flex-wrap: wrap;
 		gap: 0.5rem;
 		margin-top: 0.5rem;
 	}
@@ -16,7 +17,7 @@
 		padding: 0 0.5rem !important;
 		margin: 0 !important;
 		width: 12rem !important;
-		height: 2.8rem !important;
+		height: 2.8rem !important	;
 		line-height: 1;
 		border-radius: 3px !important;
 		text-align: left;

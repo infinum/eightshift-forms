@@ -59,7 +59,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
 	}
 
 	/**
@@ -83,7 +83,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @return array
 	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId): array
+	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
@@ -104,7 +104,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		$output['itemId'] = $itemId;
 		$output['fields'] = $fields;
 
 		return $output;
