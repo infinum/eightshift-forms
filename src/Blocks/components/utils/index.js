@@ -4,7 +4,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
+import { createBlock, createBlocksFromInnerBlocksTemplate, replaceBlock } from '@wordpress/blocks';
 import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 
@@ -14,6 +14,18 @@ export const isOptionDisabled = (key, options) => {
 
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
 	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-create/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
+		if (response.code === 200) {
+			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
+
+			resetInnerBlocks(clientId);
+
+			updateInnerBlocks(clientId, builtBlocks);
+		}
+	});
+}
+
+export const syncIntegrationBlocks = (clientId, postId) => {
+	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-sync/?id=${postId}` }).then((response) => {
 		if (response.code === 200) {
 			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
 

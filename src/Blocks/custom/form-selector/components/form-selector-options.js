@@ -4,7 +4,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, Button, BaseControl } from '@wordpress/components';
 import { icons, FancyDivider } from '@eightshift/frontend-libs/scripts';
-import { resetInnerBlocks, getSettingsPageUrl } from '../../../components/utils';
+import { resetInnerBlocks, syncIntegrationBlocks } from '../../../components/utils';
 import { SettingsButton } from '../../../components/utils/components/settings-button';
 
 export const FormSelectorOptions = ({
@@ -32,6 +32,21 @@ export const FormSelectorOptions = ({
 							}}
 						>
 							{__('Reset form', 'eightshift-forms')} 
+						</Button>
+					</BaseControl>
+
+					<BaseControl
+						help={__('If you want to sync external integration form with your own click on this button, but make sure you save your current progress because all unsaved changes will be removed.', 'eightshift-forms')}
+					>
+						<Button
+							variant="secondary"
+							icon={icons.lineBreakAlt}
+							onClick={() => {
+								// Sync integration blocks.
+								syncIntegrationBlocks(clientId, postId);
+							}}
+						>
+							{__('Sync integration', 'eightshift-forms')} 
 						</Button>
 					</BaseControl>
 				</>

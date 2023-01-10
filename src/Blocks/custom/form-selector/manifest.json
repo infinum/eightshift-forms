@@ -24,10 +24,6 @@
 				"eightshift-forms/airtable",
 				"eightshift-forms/moments"
 			]
-		},
-		"formSelectorLock": {
-			"type": "string",
-			"default": "false"
 		}
 	},
 	"forms": [

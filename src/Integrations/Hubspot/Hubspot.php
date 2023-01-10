@@ -223,11 +223,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						];
 
 						if ($min) {
-							$item['inputMin'] = $min;
+							$item['inputMin'] = (int) $min;
 						}
 
 						if ($max) {
-							$item['inputMax'] = $max;
+							$item['inputMax'] = (int) $max;
 						}
 
 						$output[] = $item;

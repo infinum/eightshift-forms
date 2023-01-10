@@ -42,7 +42,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Update form when the user opens a block editor.
+	 * Sync and update form DB when the user opens a block editor.
 	 *
 	 * @return void
 	 */
@@ -78,9 +78,73 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				],
 				$syncForm
 			));
+
+			return;
 		}
+
+		$namespace = Components::getSettingsNamespace();
+
+		$keys = $this->getBlockKeysOutput();
+
+		$blockNameKey = $keys['blockName'];
+		$attrsKey = $keys['attrs'];
+		$innerBlocksKey = $keys['innerBlocks'];
+		$innerContentKey = $keys['innerContent'];
+
+		// Create block grammar from array.
+		$blocksGrammar = serialize_blocks([
+			[
+				$blockNameKey => "{$namespace}/form-selector",
+				$attrsKey => [],
+				$innerBlocksKey => $syncForm['data']['output'],
+				$innerContentKey => $syncForm['data']['output'],
+			],
+		]);
+
+		// Bailout if we have output to show.
+		if (!$blocksGrammar) {
+			return;
+		}
+
+		// Update block content.
+		$update = $this->updateBlockContent($formId, $blocksGrammar);
+
+		// Bailout if db content update failed.
+		if (!$update) {
+			Helper::logger(array_merge(
+				[
+					'type' => 'diff',
+					'status' => 'error',
+					'debugType' => 'after_error_form_update',
+					'message' => \esc_html__('Something went wrong with form update.', 'eightshift-forms'),
+					'outputGrammar' => $blocksGrammar,
+				],
+				$syncForm
+			));
+
+			return;
+		}
+
+		// Finish with success.
+		Helper::logger(array_merge(
+			[
+				'type' => 'diff',
+				'outputGrammar' => $blocksGrammar,
+			],
+			$syncForm
+		));
 	}
 
+	/**
+	 * Create new form block output, used for block editor route to populate new integrations after user selection.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $type Integration type.
+	 * @param string $itemId Item integration ID.
+	 * @param string $innerId Item integration inner ID.
+	 *
+	 * @return array
+	 */
 	public function createForm(string $formId, string $type, string $itemId, string $innerId): array
 	{
 		// Bailout if form ID is missing.
@@ -187,14 +251,14 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Sync content and integration form and update the database with the new version on success.
+	 * Sync content and integration form and provide the otuput for block editor route to manualy sync forms.
 	 *
 	 * @param string $formId Form Id.
-	 * @param boolean $isPreview Check if used as preview.
+	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
 	 * @return array
 	 */
-	public function syncForm(string $formId, bool $isPreview = false): array
+	public function syncForm(string $formId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
 		if (!$formId) {
@@ -358,7 +422,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Run diff.
-		$output = $this->diffChanges($integration, $content);
+		$output = $this->diffChanges($integration, $content, $editorOutput);
 
 		// Bailout if update is not necesery.
 		if (!$output['update']) {
@@ -373,28 +437,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Bailout if we have output to show.
 		if ($output['output']) {
-			// If preview is used don't update database content.
-			if (!$isPreview) {
-				$update = $this->updateBlockContent($formId, $output['output']);
-
-				// Bailout if db content update failed.
-				if (!$update) {
-					return [
-						'formId' => $formId,
-						'status' => 'error',
-						'debugType' => 'after_error_form_update',
-						'message' => \esc_html__('Something went wrong with form update.', 'eightshift-forms'),
-						'data' => $output,
-					];
-				}
-			}
-
 			// Bailout if db content update with success.
 			return [
 				'formId' => $formId,
 				'status' => 'success',
 				'debugType' => 'after_success',
-				'message' => $isPreview ? \esc_html__('Form preview mode.', 'eightshift-forms') : \esc_html__('Form updated.', 'eightshift-forms'),
+				'message' =>  \esc_html__('Form updated.', 'eightshift-forms'),
 				'data' => $output,
 			];
 		}
@@ -417,7 +465,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @return array
 	 */
-	private function diffChanges(array $integration, array $content): array
+	private function diffChanges(array $integration, array $content, bool $editorOutput = false): array
 	{
 		// Prepare arrays for diff.
 		$diff = $this->prepareContentBlocksForCheck($content['fields']['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration['fields']));
@@ -464,13 +512,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Recounstruct blocks output and build array for final serialization.
-		$blocksOutput = $this->reconstructBlocksTopLevelOutput($output['output'], $output['type'], $output['itemId']);
-
-		// Create block grammar.
-		$output['output'] = serialize_blocks($blocksOutput);
-
-		// Output additional array from whom we built block grammar for debug.
-		$output['outputPure'] = $blocksOutput;
+		$output['output'] = $this->reconstructBlocksTopLevelOutput($output['output'], $output['type'], $output['itemId'], $editorOutput);
 
 		return $output;
 	}
@@ -718,32 +760,31 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * @param array $data Diff prepared data.
 	 * @param string $type Integation type.
 	 * @param string $itemId Item ID from integration.
+	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
 	 * @return array
 	 */
-	private function reconstructBlocksTopLevelOutput(array $data, string $type, string $itemId): array
+	private function reconstructBlocksTopLevelOutput(array $data, string $type, string $itemId, bool $editorOutput = false): array
 	{
-		$fieldsOutput = $this->reconstructBlocksOutput($data);
+		$fieldsOutput = $this->reconstructBlocksOutput($data, $editorOutput);
 
 		$namespace = Components::getSettingsNamespace();
 
-		$innerBlock = [
-			[
-				'blockName' => "{$namespace}/" . $type,
-				'attrs' => [
-					$type . "IntegrationId" => $itemId,
-				],
-				'innerBlocks' => $fieldsOutput,
-				'innerContent' => $fieldsOutput,
-			],
-		];
+		$keys = $this->getBlockKeysOutput($editorOutput);
+
+		$blockNameKey = $keys['blockName'];
+		$attrsKey = $keys['attrs'];
+		$innerBlocksKey = $keys['innerBlocks'];
+		$innerContentKey = $keys['innerContent'];
 
 		return [
 			[
-				'blockName' => "{$namespace}/form-selector",
-				'attrs' => [],
-				'innerBlocks' => $innerBlock,
-				'innerContent' => $innerBlock,
+				$blockNameKey => "{$namespace}/" . $type,
+				$attrsKey => [
+					$type . "IntegrationId" => $itemId,
+				],
+				$innerBlocksKey => $fieldsOutput,
+				$innerContentKey => $fieldsOutput,
 			],
 		];
 	}
@@ -752,17 +793,20 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * Rebuild for blocks output in block grammar format after diff check. Only inner blocks for integration
 	 *
 	 * @param array $data Diff prepared data.
+	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
 	 * @return array
 	 */
-	private function reconstructBlocksOutput(array $data, $editorOutput = false): array
+	private function reconstructBlocksOutput(array $data, bool $editorOutput = false): array
 	{
 		$fieldsOutput = [];
 
-		$blockNameKey = $editorOutput ? 'name' : 'blockName';
-		$attrsKey = $editorOutput ? 'attributes' : 'attrs';
-		$innerBlocksKey = 'innerBlocks';
-		$innerContentKey = 'innerContent';
+		$keys = $this->getBlockKeysOutput($editorOutput);
+
+		$blockNameKey = $keys['blockName'];
+		$attrsKey = $keys['attrs'];
+		$innerBlocksKey = $keys['innerBlocks'];
+		$innerContentKey = $keys['innerContent'];
 
 		foreach ($data as $key => $value) {
 			if (!$value['parent']) {
@@ -963,5 +1007,22 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$value = crc32((string) $value);
 
 		return "{$parentName}-{$value}";
+	}
+
+	/**
+	 * Get correct block output keys depending on the usage.
+	 *
+	 * @param bool $editorOutput Change output keys depending on the output type.
+	 *
+	 * @return array
+	 */
+	private function getBlockKeysOutput(bool $editorOutput = false): array
+	{
+		return [
+			'blockName' => $editorOutput ? 'name' : 'blockName',
+			'attrs' => $editorOutput ? 'attributes' : 'attrs',
+			'innerBlocks' => 'innerBlocks',
+			'innerContent' => 'innerContent',
+		];
 	}
 }
