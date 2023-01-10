@@ -21,12 +21,11 @@ interface SettingsClearbitDataInterface extends SettingInterface
 	 * Output array settings for form.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
 	 * @param array<string, string> $keys Array of keys to get data from.
 	 *
 	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */
-	public function getOutputClearbit(string $formId, array $formFields, array $keys): array;
+	public function getOutputClearbit(string $formId, string $key): array;
 
 	/**
 	 * Output array settings for form - global.

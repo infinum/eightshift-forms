@@ -90,11 +90,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_USE_CLEARBIT_KEY = 'hubspot-use-clearbit';
 
 	/**
-	 * Use Clearbit email field Key.
-	 */
-	public const SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY = 'hubspot-clearbit-email-field';
-
-	/**
 	 * Use Clearbit map keys Key.
 	 */
 	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
@@ -169,9 +164,9 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		// \add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		// \add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -212,11 +207,9 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$type = self::SETTINGS_TYPE_KEY;
-
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
+			return $this->getNoValidGlobalConfigOutput(self::SETTINGS_TYPE_KEY);
 		}
 
 		return [
@@ -227,11 +220,7 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 					$this->getOutputFilemanager($formId),
 					$this->settingsClearbit->getOutputClearbit(
 						$formId,
-						$this->hubspot->getFormFields($formId),
-						[
-							'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
-							'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
-						]
+						self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY
 					),
 				],
 			],

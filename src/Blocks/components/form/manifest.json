@@ -60,10 +60,6 @@
 		"formDataTypeSelector": {
 			"type": "string"
 		},
-		"formServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"formMeta": {
 			"type": "string"
 		},

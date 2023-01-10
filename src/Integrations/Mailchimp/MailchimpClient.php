@@ -91,12 +91,14 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = $this->getItems();
 
-		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$fields = $this->getMailchimpListFields($itemId);
+		$item = $output[$itemId]['fields'] ?? [];
 
-			if ($fields) {
-				$output[$itemId]['fields'] = $fields;
+		// Check if form exists in cache.
+		if (!$output || !$item) {
+			$items = $this->getMailchimpListFields($itemId);
+
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
 				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
 			}
@@ -116,11 +118,13 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = $this->getItems();
 
-		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$tags = $this->getMailchimpTags($itemId);
+		$item = $output[$itemId]['tags'] ?? [];
 
-			if ($tags) {
+		// Check if form exists in cache.
+		if (!$output || !$item) {
+			$items = $this->getMailchimpTags($itemId);
+
+			if ($items) {
 				$output[$itemId]['tags'] = \array_map(
 					static function ($item) {
 						return [
@@ -128,7 +132,7 @@ class MailchimpClient implements MailchimpClientInterface
 							'name' => (string) $item['name'],
 						];
 					},
-					$tags
+					$items
 				);
 
 				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);

@@ -24,7 +24,7 @@ export const IntegrationsEditor = ({
 					<path d="M13 13V16C13 17.3807 14.1193 18.5 15.5 18.5V18.5C16.8807 18.5 18 17.3807 18 16V13M13 13V10.5H14M13 13H18M18 13V10.5H17M14 10.5V5.5L13.5 3.5L14 1.5H17L17.5 3.5L17 5.5V10.5M14 10.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 				<br />
-				<b>{__('Your form is missing something.', 'eightshift-forms')}</b>
+				<b>{__('You need to select the form from the dropdown.', 'eightshift-forms')}</b>
 				<br />
 				{__('Check the forms sidebar and select the integration form your want to use.', 'eightshift-forms')}
 			</div>

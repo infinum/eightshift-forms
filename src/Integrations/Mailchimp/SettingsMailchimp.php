@@ -141,19 +141,11 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 	/**
 	 * Determine if settings are valid.
 	 *
-	 * @param string $formId Form ID.
-	 *
 	 * @return boolean
 	 */
-	public function isSettingsValid(string $formId): bool
+	public function isSettingsValid(): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$list = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
-
-		if (empty($list)) {
 			return false;
 		}
 
@@ -193,34 +185,62 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 			return $this->getNoValidGlobalConfigOutput($type);
 		}
 
-		// Get forms from the API.
-		$items = $this->mailchimpClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_MAILCHIMP_LIST_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the form id populate additional config.
-		if ($selectedFormId) {
-			$formFields = $this->mailchimp->getFormFields($formId);
-
-			// Output additonal tabs for config.
-			$output = [
-				'component' => 'tabs',
-				'tabsContent' => [
-					$this->getOutputTags(
-						$formId,
-						$selectedFormId
-					),
+		// Output additonal tabs for config.
+		$output = [
+			'component' => 'tabs',
+			'tabsContent' => [
+				[
+					'component' => 'tab',
+					'tabLabel' => \__('Audience tags', 'eightshift-forms'),
+					'tabContent' => [
+						[
+							'component' => 'intro',
+							'introSubtitle' => \__('In these settings, you can control the work and feel of audience tags.', 'eightshift-forms'),
+						],
+						[
+							'component' => 'select',
+							'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+							'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
+							'selectFieldHelp' => \__('Select the way you want to show/use tags in your form.', 'eightshift-forms'),
+							'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+							'selectSingleSubmit' => true,
+							'selectOptions' => [
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Don\'t use tags', 'eightshift-forms'),
+									'selectOptionValue' => 'none',
+									'selectOptionIsSelected' => $this->isCheckedSettings('none', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Use as hidden field', 'eightshift-forms'),
+									'selectOptionValue' => 'hidden',
+									'selectOptionIsSelected' => $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Use as a select field', 'eightshift-forms'),
+									'selectOptionValue' => 'select',
+									'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Use as checkbox field', 'eightshift-forms'),
+									'selectOptionValue' => 'checkboxes',
+									'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Use as radio field', 'eightshift-forms'),
+									'selectOptionValue' => 'radios',
+									'selectOptionIsSelected' => $this->isCheckedSettings('radios', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+								],
+							]
+						],
+					],
 				],
-			];
-		}
+			],
+		];
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -282,119 +302,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 								],
 							],
 						],
-					],
-				],
-			],
-		];
-	}
-
-	/**
-	 * Output array - tags.
-	 *
-	 * @param string $formId Form ID.
-	 * @param string $selectedFormId Selected form id.
-	 *
-	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|bool|string>>|string>
-	 */
-	private function getOutputTags(string $formId, string $selectedFormId): array
-	{
-		$tags = $this->mailchimpClient->getTags($selectedFormId);
-
-		if (!$tags) {
-			return [];
-		}
-
-		$isTagsShowHidden = $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
-
-		return [
-			'component' => 'tab',
-			'tabLabel' => \__('Audience tags', 'eightshift-forms'),
-			'tabContent' => [
-				[
-					'component' => 'intro',
-					'introSubtitle' => \__('In these settings, you can control which tags will show up on the frontend and set up how will they look and work.', 'eightshift-forms'),
-				],
-				[
-					'component' => 'select',
-					'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
-					'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
-					'selectFieldHelp' => $isTagsShowHidden ? \__('Tags you select bellow will be added to you form as a hidden field.', 'eightshift-forms') : \__('Tags you select bellow will be displayed in the form.', 'eightshift-forms'),
-					'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
-					'selectSingleSubmit' => true,
-					'selectOptions' => [
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => \__('Don\'t show tags', 'eightshift-forms'),
-							'selectOptionValue' => 'hidden',
-							'selectOptionIsSelected' => $isTagsShowHidden,
-						],
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => \__('Show as a select menu', 'eightshift-forms'),
-							'selectOptionValue' => 'select',
-							'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-						],
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => \__('Show as checkboxes', 'eightshift-forms'),
-							'selectOptionValue' => 'checkboxes',
-							'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-						],
-					]
-				],
-				[
-					'component' => 'group',
-					'groupId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY),
-					'groupLabel' => \__('Tags list', 'eightshift-forms'),
-					'groupStyle' => 'tags',
-					'groupContent' => [
-						[
-							'component' => 'group',
-							'groupName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
-							'groupHelp' => $isTagsShowHidden ? \__('Select tags that will be added to you form as a hidden field. If nothing is selected nothing will be sent.', 'eightshift-forms') : \__('Select tags that will be displayed in the form field. If nothing is selected everything will be displayed.', 'eightshift-forms'),
-							'groupStyle' => !$isTagsShowHidden ? 'tags-inner-checkbox' : '',
-							'groupContent' => [
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
-									'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY),
-									'checkboxesContent' => \array_map(
-										function ($tag) use ($formId) {
-											return [
-												'component' => 'checkbox',
-												'checkboxLabel' => $tag['name'],
-												'checkboxIsChecked' => $this->isCheckboxSettingsChecked($tag['id'], self::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId),
-												'checkboxValue' => $tag['id'],
-											];
-										},
-										$tags
-									),
-								],
-							],
-						],
-						!$isTagsShowHidden ? [
-							'component' => 'group',
-							'groupHelp' => \__('Provide override label that will be displayed on the frontend.', 'eightshift-forms'),
-							'groupStyle' => 'tags-inner-input',
-							'groupSaveOneField' => true,
-							'groupContent' => \array_map(
-								function ($tag) use ($formId) {
-									$value = $this->getSettingsValueGroup(self::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
-									$id = $tag['id'] ?? '';
-
-									return [
-										'component' => 'input',
-										'inputFieldLabel' => '',
-										'inputName' => $id,
-										'inputId' => $id,
-										'inputPlaceholder' => $tag['name'],
-										'inputValue' => $value[$id] ?? '',
-									];
-								},
-								$tags,
-							),
-						] : [],
 					],
 				],
 			],

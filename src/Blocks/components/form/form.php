@@ -37,7 +37,6 @@ $formDataTypeSelector = apply_filters(
 	$attributes
 );
 
-$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 
 $formClass = Components::classnames([
@@ -97,15 +96,9 @@ if ($formAttrs) {
 	}
 }
 
-$formTag = 'form';
-
-if ($formServerSideRender) {
-	$formTag = 'div';
-}
-
 ?>
 
-<<?php echo esc_attr($formTag); ?>
+<form
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
@@ -126,4 +119,4 @@ if ($formServerSideRender) {
 		Components::props('loader', $attributes)
 	);
 	?>
-</<?php echo esc_attr($formTag); ?>>
+</form>

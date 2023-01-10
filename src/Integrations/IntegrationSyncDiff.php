@@ -32,20 +32,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	use SettingsHelper;
 
 	/**
-	 * Developers mode check.
-	 *
-	 * @var bool
-	 */
-	protected $isDeveloperMode = false;
-
-	/**
-	 * Preview mode check, prevents updating the database.
-	 *
-	 * @var bool
-	 */
-	protected $isPreviewMode = false;
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -798,8 +784,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				$fieldsOutput[$value['parent']][$innerContentKey][] = $innerOutput;
 			}
 		}
-
-		error_log( print_r( ( $fieldsOutput ), true ) );
 
 		return array_values($fieldsOutput);
 	}

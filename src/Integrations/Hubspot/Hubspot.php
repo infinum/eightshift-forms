@@ -182,6 +182,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$required ? 'inputIsRequired' : '',
 								$min ? 'inputMinLength' : '',
 								$max ? 'inputMaxLength' : '',
+								$name === 'email' ? 'inputType' : '',
 							]),
 						];
 

@@ -22,10 +22,6 @@
 		"goodbitsFormPostId": {
 			"type": "string"
 		},
-		"goodbitsFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"goodbitsFormDataTypeSelector": {
 			"type": "string"
 		}

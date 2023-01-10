@@ -248,13 +248,6 @@ abstract class AbstractFormBuilder
 			'formContent' => $form,
 		];
 
-		// Check if it is loaded on the front or the backend.
-		if (isset($formAdditionalProps['ssr'])) {
-			$formProps['formServerSideRender'] = $formAdditionalProps['ssr'];
-
-			unset($formAdditionalProps['ssr']);
-		}
-
 		// Add additional form props.
 		if ($formAdditionalProps) {
 			$formProps = \array_merge($formProps, $formAdditionalProps);

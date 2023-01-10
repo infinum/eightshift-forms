@@ -25,10 +25,6 @@
 		"activeCampaignFormPostId": {
 			"type": "string"
 		},
-		"activeCampaignFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"activeCampaignFormDataTypeSelector": {
 			"type": "string"
 		}

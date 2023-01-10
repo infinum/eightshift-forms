@@ -19,6 +19,7 @@ export const CheckboxEditor = (attributes) => {
 	} = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
+	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 
 	const checkboxClass = classnames([
 		selector(componentClass, componentClass),
@@ -46,6 +47,7 @@ export const CheckboxEditor = (attributes) => {
 					className={`${componentClass}__input`}
 					type={'checkbox'}
 					readOnly
+					checked={checkboxIsChecked}
 				/>
 				<Label />
 			</div>

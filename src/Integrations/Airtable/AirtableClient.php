@@ -83,9 +83,6 @@ class AirtableClient implements ClientInterface
 			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
 		}
 
-		error_log( print_r( ( $output ), true ) );
-		
-
 		return $output;
 	}
 

@@ -93,7 +93,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return $output;
 		}
 
-		$fields = $this->getFields($item, $formId);
+		$fields = $this->getFields($item, $formId, $itemId);
 
 		if (!$fields) {
 			return $output;
@@ -112,7 +112,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId): array
+	private function getFields(array $data, string $formId, string $itemId): array
 	{
 		$output = [];
 
@@ -135,7 +135,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			]),
 		];
 
-		foreach ($data as $field) {
+		foreach ($data['fields'] as $field) {
 			if (empty($field)) {
 				continue;
 			}
@@ -290,120 +290,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			}
 		}
 
-		// $tagsItems = $this->mailchimpClient->getTags($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId));
+		$tagsItems = $this->mailchimpClient->getTags($itemId);
 
-		// if ($tagsItems) {
-		// 	$tagsSelected = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_KEY, $formId);
-		// 	$tagsLabels = $this->getSettingsValueGroup(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY, $formId);
-		// 	$tagsShow = $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId);
-
-		// 	// Detect if some tags are selected to display on the frontend.
-		// 	if (!empty($tagsSelected)) {
-		// 		// Tags are stored like string so explode is necesery.
-		// 		$selectedIds = \array_flip(\explode(', ', $tagsSelected));
-
-		// 		// Map selected items with provided ones.
-		// 		$tagsItems = \array_filter(
-		// 			$tagsItems,
-		// 			static function ($item) use ($selectedIds) {
-		// 				return isset($selectedIds[$item['id']]);
-		// 			}
-		// 		);
-		// 	}
-
-		// 	if ($tagsItems) {
-		// 		$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
-
-		// 		switch ($tagsShow) {
-		// 			case 'select':
-		// 				$output[] = [
-		// 					'component' => 'select',
-		// 					'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-		// 					'selectId' => $customTagParamName,
-		// 					'selectName' => $customTagParamName,
-		// 					'selectTracking' => $customTagParamName,
-		// 					'selectOptions' => \array_merge(
-		// 						[
-		// 							[
-		// 								'component' => 'select-option',
-		// 								'selectOptionLabel' => '',
-		// 								'selectOptionValue' => '',
-		// 							],
-		// 						],
-		// 						\array_map(
-		// 							static function ($option) use ($tagsLabels) {
-		// 								$name = $option['name'] ?? '';
-		// 								$id = $option['id'] ?? '';
-		// 								$nameOverride = $name;
-
-		// 								// Find tag label override.
-		// 								if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-		// 									$nameOverride = $tagsLabels[$id];
-		// 								}
-
-		// 								return [
-		// 									'component' => 'select-option',
-		// 									'selectOptionLabel' => $nameOverride,
-		// 									'selectOptionValue' => $name,
-		// 								];
-		// 							},
-		// 							$tagsItems
-		// 						)
-		// 					),
-		// 				];
-		// 				break;
-		// 			case 'checkboxes':
-		// 				$output[] = [
-		// 					'component' => 'checkboxes',
-		// 					'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-		// 					'checkboxesId' => $customTagParamName,
-		// 					'checkboxesName' => $customTagParamName,
-		// 					'checkboxesContent' => \array_map(
-		// 						static function ($option) use ($customTagParamName, $tagsLabels) {
-		// 							$name = $option['name'] ?? '';
-		// 							$id = $option['id'] ?? '';
-		// 							$nameOverride = $name;
-
-		// 							// Find tag label override.
-		// 							if (isset($tagsLabels[$id]) && !empty($tagsLabels[$id])) {
-		// 								$nameOverride = $tagsLabels[$id];
-		// 							}
-
-		// 							return [
-		// 								'component' => 'checkbox',
-		// 								'checkboxLabel' => $nameOverride,
-		// 								'checkboxValue' => $name,
-		// 								'checkboxTracking' => $customTagParamName,
-		// 							];
-		// 						},
-		// 						$tagsItems
-		// 					),
-		// 				];
-		// 				break;
-		// 			default:
-		// 				if (!empty($tagsSelected)) {
-		// 					$tagsItems = \array_map(
-		// 						static function ($item) {
-		// 							return $item['name'];
-		// 						},
-		// 						$tagsItems
-		// 					);
-
-		// 					$tagsItems = \implode(', ', $tagsItems);
-
-		// 					$output[] = [
-		// 						'component' => 'input',
-		// 						'inputType' => 'hidden',
-		// 						'inputId' => $customTagParamName,
-		// 						'inputName' => $customTagParamName,
-		// 						'inputTracking' => $customTagParamName,
-		// 						'inputValue' => $tagsItems,
-		// 					];
-		// 				};
-		// 				break;
-		// 		}
-		// 	}
-		// }
+		if ($tagsItems) {
+			$output = [
+				...$output,
+				...$this->getTagsFields($formId, $tagsItems),
+			];
+		}
 
 		$output[] = [
 			'component' => 'submit',
@@ -420,5 +314,133 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		}
 
 		return $output;
+	}
+
+	private function getTagsFields(string $formId, array $items): array
+	{
+		if (!$items) {
+			return [];
+		}
+
+		$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
+
+		switch ($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId)) {
+			case 'select':
+				return [
+					[
+						'component' => 'select',
+						'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
+						'selectId' => $customTagParamName,
+						'selectName' => $customTagParamName,
+						'selectTracking' => $customTagParamName,
+						'selectOptions' => [
+							[
+								'component' => 'select-option',
+								'selectOptionLabel' => '',
+								'selectOptionValue' => '',
+							],
+							...\array_map(
+								function ($option) {
+									$name = $option['name'] ?? '';
+
+									return [
+										'component' => 'select-option',
+										'selectOptionLabel' => $name,
+										'selectOptionValue' => $name,
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionValue',
+										], false),
+									];
+								},
+								$items
+							),
+						],
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select'),
+					],
+				];
+			case 'checkboxes':
+				return [
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
+						'checkboxesId' => $customTagParamName,
+						'checkboxesName' => $customTagParamName,
+						'checkboxesContent' => \array_map(
+							function ($option) use ($customTagParamName) {
+								$name = $option['name'] ?? '';
+
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $name,
+									'checkboxValue' => $name,
+									'checkboxTracking' => $customTagParamName,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue',
+									], false),
+								];
+							},
+							$items
+						),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
+					]
+				];
+			case 'radios':
+				return [
+					[
+						'component' => 'radios',
+						'radiosFieldLabel' => \__('Tags', 'eightshift-forms'),
+						'radiosId' => $customTagParamName,
+						'radiosName' => $customTagParamName,
+						'radiosContent' => \array_map(
+							function ($option) use ($customTagParamName) {
+								$name = $option['name'] ?? '';
+
+								return [
+									'component' => 'radio',
+									'radioLabel' => $name,
+									'radioValue' => $name,
+									'radioTracking' => $customTagParamName,
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
+								];
+							},
+							$items
+						),
+						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios'),
+					],
+				];
+			case 'hidden':
+				return [
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
+						'checkboxesFieldHidden' => true,
+						'checkboxesId' => $customTagParamName,
+						'checkboxesName' => $customTagParamName,
+						'checkboxesContent' => \array_map(
+							function ($option) use ($customTagParamName) {
+								$name = $option['name'] ?? '';
+
+								return [
+									'component' => 'checkbox',
+									'checkboxLabel' => $name,
+									'checkboxValue' => $name,
+									'checkboxTracking' => $customTagParamName,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue',
+									], false),
+								];
+							},
+							$items
+						),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesIsRequired'
+						]),
+					],
+				];
+			default:
+				return [];
+		}
 	}
 }

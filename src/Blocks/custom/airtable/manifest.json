@@ -25,10 +25,6 @@
 		"airtableFormPostId": {
 			"type": "string"
 		},
-		"airtableFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"airtableFormDataTypeSelector": {
 			"type": "string"
 		}

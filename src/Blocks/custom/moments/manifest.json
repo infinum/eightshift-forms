@@ -22,10 +22,6 @@
 		"momentsFormPostId": {
 			"type": "string"
 		},
-		"momentsFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"momentsFormDataTypeSelector": {
 			"type": "string"
 		}

@@ -22,10 +22,6 @@
 		"mailerliteFormPostId": {
 			"type": "string"
 		},
-		"mailerliteFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"mailerliteFormDataTypeSelector": {
 			"type": "string"
 		}

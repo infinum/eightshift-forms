@@ -22,10 +22,6 @@
 		"hubspotFormPostId": {
 			"type": "string"
 		},
-		"hubspotFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"hubspotFormDataTypeSelector": {
 			"type": "string"
 		}

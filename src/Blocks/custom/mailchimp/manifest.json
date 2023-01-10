@@ -22,10 +22,6 @@
 		"mailchimpFormPostId": {
 			"type": "string"
 		},
-		"mailchimpFormServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"mailchimpFormDataTypeSelector": {
 			"type": "string"
 		}
