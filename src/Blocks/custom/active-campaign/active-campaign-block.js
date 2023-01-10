@@ -1,22 +1,23 @@
 import React from 'react';
-import { select } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { ActiveCampaignEditor } from './components/active-campaign-editor';
 import { ActiveCampaignOptions } from './components/active-campaign-options';
 
 export const ActiveCampaign = (props) => {
-	const postId = select('core/editor').getCurrentPostId();
+	const itemIdKey = 'activeCampaignIntegrationId';
 
 	return (
 		<>
 			<InspectorControls>
 				<ActiveCampaignOptions
 					{...props}
-					postId={postId}
+					clientId={props.clientId}
+					itemIdKey={itemIdKey}
 				/>
 			</InspectorControls>
 			<ActiveCampaignEditor
 				{...props}
+				itemIdKey={itemIdKey}
 			/>
 		</>
 	);

@@ -1,22 +1,23 @@
 import React from 'react';
-import { select } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { MomentsEditor } from './components/moments-editor';
 import { MomentsOptions } from './components/moments-options';
 
 export const Moments = (props) => {
-	const postId = select('core/editor').getCurrentPostId();
+	const itemIdKey = 'momentsIntegrationId';
 
 	return (
 		<>
 			<InspectorControls>
 				<MomentsOptions
 					{...props}
-					postId={postId}
+					clientId={props.clientId}
+					itemIdKey={itemIdKey}
 				/>
 			</InspectorControls>
 			<MomentsEditor
 				{...props}
+				itemIdKey={itemIdKey}
 			/>
 		</>
 	);
