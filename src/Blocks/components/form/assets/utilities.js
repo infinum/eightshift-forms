@@ -7,6 +7,59 @@ const {
 } = manifest;
 
 /**
+ * Conditional tags operators constants.
+ *
+ * show - show item it conditions is set, hidden by default.
+ * hide - hide item it conditions is set, visible by default.
+ *
+ * all - activate condition if all conditions in rules array are met.
+ * any - activate condition if at least one condition in rules array is met.
+ *
+ * is  - is                  - if value is exact match.
+ * isn - is not              - if value is not exact match.
+ * gt  - greater than        - if value is greater than.
+ * gte  - greater/equal than - if value is greater/equal than.
+ * lt  - less than           - if value is less than.
+ * lte  - less/equal than    - if value is less/equal than.
+ * c   - contains            - if value contains value.
+ * sw  - starts with         - if value starts with value.
+ * ew  - ends with           - if value starts with value.
+ */
+export const CONDITIONAL_TAGS_OPERATORS = {
+	IS: 'is',
+	ISN: 'isn',
+	GT: 'gt',
+	GTE: 'gte',
+	LT: 'lt',
+	LTE: 'lte',
+	C: 'c',
+	SW: 'sw',
+	EW: 'ew',
+}
+
+/**
+ * Conditional tags actions constants.
+ *
+ * show - show item it conditions is set, hidden by default.
+ * hide - hide item it conditions is set, visible by default.
+ */
+export const CONDITIONAL_TAGS_ACTIONS = {
+	SHOW: 'show',
+	HIDE: 'hide',
+}
+
+/**
+ * Conditional tags logic constants.
+ *
+ * all - activate condition if all conditions in rules array are met.
+ * any - activate condition if at least one condition in rules array is met.
+ */
+export const CONDITIONAL_TAGS_LOGIC = {
+	ALL: 'all',
+	ANY: 'any',
+}
+
+/**
  * Main Utilities class.
  */
 export class Utils {
@@ -82,40 +135,10 @@ export class Utils {
 			CLASS_HAS_ERROR: 'has-error',
 		};
 
-		/**
-		 * Data constants.
-		 *
-		 * show - show item it conditions is set, hidden by default.
-		 * hide - hide item it conditions is set, visible by default.
-		 *
-		 * all - activate condition if all conditions in rules array are met.
-		 * any - activate condition if at least one condition in rules array is met.
-		 *
-		 * is  - is                  - if value is exact match.
-		 * isn - is not              - if value is not exact match.
-		 * gt  - greater than        - if value is greater than.
-		 * gte  - greater/equal than - if value is greater/equal than.
-		 * lt  - less than           - if value is less than.
-		 * lte  - less/equal than    - if value is less/equal than.
-		 * c   - contains            - if value contains value.
-		 * sw  - starts with         - if value starts with value.
-		 * ew  - ends with           - if value starts with value.
-		 */
-		this.CONDITIONAL_TAGS = {
-			IS: 'is',
-			ISN: 'isn',
-			GT: 'gt',
-			GTE: 'gte',
-			LT: 'lt',
-			LTE: 'lte',
-			C: 'c',
-			SW: 'sw',
-			EW: 'ew',
-			SHOW: 'show',
-			HIDE: 'hide',
-			ALL: 'all',
-			ANY: 'any',
-		};
+		// Conditional tags
+		this.CONDITIONAL_TAGS_OPERATORS = CONDITIONAL_TAGS_OPERATORS;
+		this.CONDITIONAL_TAGS_ACTIONS = CONDITIONAL_TAGS_ACTIONS;
+		this.CONDITIONAL_TAGS_LOGIC = CONDITIONAL_TAGS_LOGIC;
 
 		// Internal state.
 		this.FILES = {};
@@ -522,7 +545,9 @@ export class Utils {
 				SETTINGS: this.SETTINGS,
 				EVENTS: this.EVENTS,
 				SELECTORS: this.SELECTORS,
-				CONDITIONAL_TAGS: this.CONDITIONAL_TAGS,
+				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
+				CONDITIONAL_TAGS_ACTIONS: this.CONDITIONAL_TAGS_ACTIONS,
+				CONDITIONAL_TAGS_LOGIC: this.CONDITIONAL_TAGS_LOGIC,
 				FILES: this.FILES,
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,

@@ -23,15 +23,15 @@ export class ConditionalTags {
 
 		// Map all conditional logic as a object.
 		this.CONDITIONAL_LOGIC = {
-			[this.utils.CONDITIONAL_TAGS.IS]: (input, value) => value === input,
-			[this.utils.CONDITIONAL_TAGS.ISN]: (input, value) => value !== input,
-			[this.utils.CONDITIONAL_TAGS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
-			[this.utils.CONDITIONAL_TAGS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
-			[this.utils.CONDITIONAL_TAGS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
-			[this.utils.CONDITIONAL_TAGS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
-			[this.utils.CONDITIONAL_TAGS.C]: (input, value) => input.includes(value),
-			[this.utils.CONDITIONAL_TAGS.SW]: (input, value) => input.startsWith(value),
-			[this.utils.CONDITIONAL_TAGS.EW]: (input, value) => input.endsWith(value),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
+			[this.utils.CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
 		};
 	}
 
@@ -136,7 +136,7 @@ export class ConditionalTags {
 				action,
 			} = value;
 
-			if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
+			if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
 				// If action is to show the initial state is hide.
 				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
@@ -179,7 +179,7 @@ export class ConditionalTags {
 	areAllRulesValid(logic, item) {
 		const ref = this.INTERNAL_DATA[this.DATA_REFERENCE][item];
 
-		if (logic === this.utils.CONDITIONAL_TAGS.ANY) {
+		if (logic === this.utils.CONDITIONAL_TAGS_LOGIC.ANY) {
 			if (ref.includes(true)) {
 				return true;
 			}
@@ -290,14 +290,14 @@ export class ConditionalTags {
 				// Validate rule by checking input value.
 				if (this.areAllRulesValid(logic, item)) {
 					// If rule is valid do action.
-					if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
+					if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
 						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 					} else {
 						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 					}
 				} else {
 					// If rule is not valid do action by resting the field to the original state.
-					if (action === this.utils.CONDITIONAL_TAGS.SHOW) {
+					if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
 						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 					} else {
 						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);

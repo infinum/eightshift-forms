@@ -4,8 +4,8 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { createBlock, createBlocksFromInnerBlocksTemplate, replaceBlock } from '@wordpress/blocks';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
+import { camelize, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 
 export const isOptionDisabled = (key, options) => {
@@ -77,4 +77,45 @@ export const getAdditionalContent = (key) => {
 	}
 
 	return '';
+}
+
+export const getFormFields = () => {
+	const blocks = select('core/block-editor').getBlocks();
+
+	const fields = blocks?.[0]?.innerBlocks?.[0]?.innerBlocks ?? [];
+
+	if (!fields) {
+		return [];
+	}
+
+	return [
+		{
+			value: '',
+			label: '',
+		},
+		...fields.map((item, index) => {
+			const {
+				attributes,
+				attributes: {
+					blockName,
+				}
+			} = item;
+
+			const value = attributes[camelize(`${blockName}-${blockName}-name`)];
+			let label = attributes[camelize(`${blockName}-${blockName}-field-label`)];
+
+			if (value === 'submit') {
+				return;
+			}
+
+			if (label === 'Label') {
+				label = value;
+			}
+
+			return {
+				'label': label,
+				'value': value,
+			};
+		}).filter((elm) => elm),
+	];
 }

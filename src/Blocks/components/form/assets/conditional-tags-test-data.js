@@ -1,21 +1,21 @@
-import { CONDITIONAL_TAGS } from './utilities';
+import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_LOGIC } from './utilities';
 
 /**
  * Data set used for testing.
  */
 const data = {
 	"first_name": [
-		CONDITIONAL_TAGS.HIDE,
-		CONDITIONAL_TAGS.ALL,
+		CONDITIONAL_TAGS_ACTIONS.HIDE,
+		CONDITIONAL_TAGS_LOGIC.ALL,
 		[
 			[
 				"email",
-				CONDITIONAL_TAGS.IS,
+				CONDITIONAL_TAGS_OPERATORS.IS,
 				"ivan@gmail.com"
 			],
 			[
 				"last_name",
-				CONDITIONAL_TAGS.IS,
+				CONDITIONAL_TAGS_OPERATORS.IS,
 				"ivan"
 			],
 		]
@@ -23,12 +23,12 @@ const data = {
 
 	// Checkbox test.
 	"question_29244283": [ // education.
-		CONDITIONAL_TAGS.HIDE,
-		CONDITIONAL_TAGS.ANY,
+		CONDITIONAL_TAGS_ACTIONS.HIDE,
+		CONDITIONAL_TAGS_LOGIC.ANY,
 		[
 			[
 				"question_29244288", // gdpr - checkbox.
-				CONDITIONAL_TAGS.IS,
+				CONDITIONAL_TAGS_OPERATORS.IS,
 				"true"
 			],
 		]
@@ -36,12 +36,12 @@ const data = {
 
 	// Select test.
 	"question_29244285": [ // links.
-		CONDITIONAL_TAGS.HIDE,
-		CONDITIONAL_TAGS.ANY,
+		CONDITIONAL_TAGS_ACTIONS.HIDE,
+		CONDITIONAL_TAGS_LOGIC.ANY,
 		[
 			[
 				"question_29244287", // how did you hear.
-				CONDITIONAL_TAGS.IS,
+				CONDITIONAL_TAGS_OPERATORS.IS,
 				"101721610"
 			],
 		]

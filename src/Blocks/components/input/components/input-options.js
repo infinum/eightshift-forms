@@ -21,6 +21,7 @@ import { FieldOptions } from '../../../components/field/components/field-options
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
 import { isOptionDisabled } from './../../utils';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const InputOptions = (attributes) => {
 	const {
@@ -78,6 +79,9 @@ export const InputOptions = (attributes) => {
 
 	return (
 		<>
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
+			/>
 			<PanelBody title={title}>
 				<FieldOptions
 					{...props('field', attributes)}

@@ -97,6 +97,13 @@
 		"fieldSkip": {
 			"type": "boolean",
 			"default": false
+		},
+		"fieldConditionalTagsUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"fieldConditionalTags": {
+			"type": "array"
 		}
 	},
 	"responsiveAttributes": {
