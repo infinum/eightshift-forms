@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
@@ -103,22 +102,11 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-
-		// Check if Greenhouse data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('greenhouseErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postApplication(
-			$this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
+			// $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
+			'',
+			// TODO
 			$params,
 			$files,
 			$formId

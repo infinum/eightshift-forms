@@ -12,9 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
@@ -41,11 +39,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
 
 	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_hubspot';
-
-	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'hubspot';
@@ -59,16 +52,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	 * API Key.
 	 */
 	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspot-api-key';
-
-	/**
-	 * Item ID Key.
-	 */
-	public const SETTINGS_HUBSPOT_ITEM_ID_KEY = 'hubspot-item-id';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY = 'hubspot-integration-fields';
 
 	/**
 	 * Filemanager folder Key.
@@ -96,18 +79,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
 
 	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY = 'hubspot-conditional-tags';
-
-	/**
-	 * Instance variable for Clearbit data.
-	 *
-	 * @var ClearbitClientInterface
-	 */
-	protected $clearbitClient;
-
-	/**
 	 * Instance variable for Clearbit settings.
 	 *
 	 * @var SettingsClearbitDataInterface
@@ -122,13 +93,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	protected $hubspotClient;
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $hubspot;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -138,23 +102,17 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
 	 * @param SettingsClearbitDataInterface $settingsClearbit Inject Clearbit which holds Clearbit settings data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
-	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
-		ClearbitClientInterface $clearbitClient,
 		SettingsClearbitDataInterface $settingsClearbit,
 		HubspotClientInterface $hubspotClient,
-		MapperInterface $hubspot,
 		SettingsFallbackDataInterface $settingsFallback
 	) {
-		$this->clearbitClient = $clearbitClient;
 		$this->settingsClearbit = $settingsClearbit;
 		$this->hubspotClient = $hubspotClient;
-		$this->hubspot = $hubspot;
 		$this->settingsFallback = $settingsFallback;
 	}
 

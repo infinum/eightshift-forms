@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -103,22 +102,11 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-
-		// Check if Goodbits data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('goodbitsErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to Goodbits.
 		$response = $this->goodbitsClient->postApplication(
-			$this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId),
+			// $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId),
+			'',
+			// TODO
 			$params,
 			[],
 			$formId

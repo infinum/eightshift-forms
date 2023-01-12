@@ -29,19 +29,9 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_moments';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_moments';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_moments';
 
 	/**
 	 * Settings key.
@@ -74,35 +64,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_MOMENTS_API_PASSWORD_KEY = 'moments-api-password';
 
 	/**
-	 * List ID Key.
-	 */
-	public const SETTINGS_MOMENTS_LIST_KEY = 'moments-list';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_MOMENTS_INTEGRATION_FIELDS_KEY = 'moments-integration-fields';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_MOMENTS_CONDITIONAL_TAGS_KEY = 'moments-conditional-tags';
-
-	/**
-	 * Instance variable for moments data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $momentsClient;
-
-	/**
-	 * Instance variable for Moments form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $moments;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -112,17 +73,10 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
-	 * @param MapperInterface $moments Inject Moments which holds Moments form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $momentsClient,
-		MapperInterface $moments,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->momentsClient = $momentsClient;
-		$this->moments = $moments;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 	/**

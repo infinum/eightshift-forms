@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
@@ -39,11 +38,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_mailchimp';
 
 	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_mailchimp';
-
-	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'mailchimp';
@@ -59,48 +53,9 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	public const SETTINGS_MAILCHIMP_API_KEY_KEY = 'mailchimp-api-key';
 
 	/**
-	 * List ID Key.
-	 */
-	public const SETTINGS_MAILCHIMP_LIST_KEY = 'mailchimp-list';
-
-	/**
-	 * List Tags Key.
-	 */
-	public const SETTINGS_MAILCHIMP_LIST_TAGS_KEY = 'mailchimp-list-tags';
-
-	/**
-	 * List Tags Labels Key.
-	 */
-	public const SETTINGS_MAILCHIMP_LIST_TAGS_LABELS_KEY = 'mailchimp-list-tags-labels';
-
-	/**
 	 * List Tags Show Key.
 	 */
 	public const SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY = 'mailchimp-list-tags-show';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_MAILCHIMP_INTEGRATION_FIELDS_KEY = 'mailchimp-integration-fields';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_MAILCHIMP_CONDITIONAL_TAGS_KEY = 'mailchimp-conditional-tags';
-
-	/**
-	 * Instance variable for Mailchimp data.
-	 *
-	 * @var MailchimpClientInterface
-	 */
-	protected $mailchimpClient;
-
-	/**
-	 * Instance variable for Mailchimp form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $mailchimp;
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -112,17 +67,10 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	/**
 	 * Create a new instance.
 	 *
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
-	 * @param MapperInterface $mailchimp Inject Mailchimp which holds Mailchimp form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		MailchimpClientInterface $mailchimpClient,
-		MapperInterface $mailchimp,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->mailchimpClient = $mailchimpClient;
-		$this->mailchimp = $mailchimp;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 

@@ -12,8 +12,6 @@ namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -29,19 +27,9 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_goodbits';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_goodbits';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_goodbits';
 
 	/**
 	 * Settings key.
@@ -59,35 +47,6 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GOODBITS_API_KEY_KEY = 'goodbits-api-key';
 
 	/**
-	 * List ID Key.
-	 */
-	public const SETTINGS_GOODBITS_LIST_KEY = 'goodbits-list';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY = 'goodbits-integration-fields';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_GOODBITS_CONDITIONAL_TAGS_KEY = 'goodbits-conditional-tags';
-
-	/**
-	 * Instance variable for Goodbits data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $goodbitsClient;
-
-	/**
-	 * Instance variable for Goodbits form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $goodbits;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -97,17 +56,10 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
-	 * @param MapperInterface $goodbits Inject Goodbits which holds Goodbits form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $goodbitsClient,
-		MapperInterface $goodbits,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->goodbitsClient = $goodbitsClient;
-		$this->goodbits = $goodbits;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 	/**

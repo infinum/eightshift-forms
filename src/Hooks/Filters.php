@@ -117,7 +117,6 @@ class Filters
 			'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsMailchimp::FILTER_SETTINGS_NAME,
 			'fields' => Mailchimp::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.927 11.43c-.615-.488-1.661-1.85-.923-3.408.923-1.947 3.23-5.354 5.076-6.328 2.662-1.404 2.768-.973 4.152 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4.772 9.969c0-1.947 1.043-5.94 8.306-9.005 2.307-.973 4.614 1.541 1.845 4.137" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14.924 5.101c-2.153-.649-6.736-1.752-9.69 2.92m9.69-2.92c.308.65.923 2.19.923 4.138.923.243 2.492 1.022 1.384 2.19.77.487 1.846 2.142 0 4.868-1.846 2.725-5.075 3.082-6.46 2.92-1.23-.162-3.968-1.265-5.075-4.38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.616 7.535c-.154-.487-1.061-1.655-2.538-.487-1.697 1.343-3.23-1.46-3.691 1.947 0 .325.185 1.266.923 2.434-.77.974-1.486 2.761-.462 4.38.923 1.461 3.23 2.921 7.383.488" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M17.231 11.43c-.461.486-1.846 1.46-3.691 1.46-1.846 0-2.307.648-2.307.973.153 1.136 1.245 3.115 5.306 0m-5.063-4.031c.175-.2.65-.5 1.149-.1m1.376-1.223.23.73" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="14.117" cy="11.064" rx=".577" ry=".608" fill="currentColor"/><ellipse cx="14.809" cy="10.821" rx=".577" ry=".608" fill="currentColor"/><path d="M2.927 11.43c.566-1.088 1.385-1.461 1.846-1.461.462 0 1.846.487 1.846 2.92 0 2.613-3.158 1.835-3.62.861-.499-1-.499-1.5-.072-2.32z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5.695 14.35c-.307-.812-.825-2.49-1.195-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
@@ -128,7 +127,6 @@ class Filters
 		SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => Greenhouse::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsGreenhouse::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="currentColor"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
@@ -140,7 +138,6 @@ class Filters
 			'settingsGlobal' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 			'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m8.5 17 2.5-2m3.25-11v3.5M3.5 3 11 8.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="14.25" cy="11.75" r="4.25" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="2.75" cy="2.25" fill="currentColor" r="1.75"/><circle cx="14.25" cy="2.75" fill="currentColor" r="1.75"/><circle cx="7.75" cy="17.75" fill="currentColor" r="1.75"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
@@ -152,7 +149,6 @@ class Filters
 		SettingsMailerlite::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25 11.25v-5m2.5 5v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="m11.25 11.2-.304.06a1 1 0 0 1-1.196-.98V6.25l-1 1h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="6.75" cy="6.5" r=".75" fill="currentColor"/><path d="M13 9h3.25v-.725c0-.897-.727-1.625-1.625-1.625v0c-.898 0-1.625.728-1.625 1.625V9zm0 0v.4c0 2 1.5 2.1 3.25 1.668" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M3.676 14.703 1 17.5V4a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 19 4v9.203a1.5 1.5 0 0 1-1.5 1.5H3.676z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
@@ -163,7 +159,6 @@ class Filters
 		SettingsGoodbits::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsGoodbits::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6.5 13.5 2.358-7.074m.249 7.074 2.358-7.074m.25 7.074 2.358-7.074" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
@@ -184,7 +179,6 @@ class Filters
 		SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m4 1.5 10.272 7.276a1.5 1.5 0 0 1 0 2.448L4 18.5m0-12L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
@@ -195,7 +189,6 @@ class Filters
 		SettingsAirtable::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1.5 13.595V7.88c0-.18.184-.3.348-.23l6.157 2.639a.25.25 0 0 1 .013.453L1.862 13.82a.25.25 0 0 1-.362-.224ZM9.91 2.783 3.087 5.285a.25.25 0 0 0-.013.464l6.83 2.96a.25.25 0 0 0 .193.002l6.823-2.729a.25.25 0 0 0 0-.464l-6.831-2.732a.25.25 0 0 0-.179-.003Zm8.59 11.546V8.115a.25.25 0 0 0-.34-.233l-7.25 2.806a.25.25 0 0 0-.16.233v6.214a.25.25 0 0 0 .34.233l7.25-2.806a.25.25 0 0 0 .16-.233Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
@@ -206,7 +199,6 @@ class Filters
 		SettingsMoments::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
 			'fields' => Moments::FILTER_FORM_FIELDS_NAME,
-			'valid' => SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="8.5" y="8.5" width="3" height="3" rx="0.5" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="1.5"/><rect x="5" y="5" width="10" height="10" rx="2.75" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="5.25" y="5.25" width="9.5" height="9.5" rx="3.25" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1" y="1" width="18" height="18" rx="9" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1.75" y="1.75" width="16.5" height="16.5" rx="6.75" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
@@ -263,57 +255,33 @@ class Filters
 	public const ALL_PUBLIC = [
 		'integrations' => [
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 				'filesOptions' => 'files_options',
 				'localStorageMap' => 'local_storage_map',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 			SettingsMoments::SETTINGS_TYPE_KEY => [
-				'fieldsSettings' => 'fields_settings',
-				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
-				'adminFieldsSettings' => 'admin_field_settings_additional_content',
 			],
 		],
 		'geolocation' => [

@@ -91,21 +91,11 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-		// Check if Mailchimp data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('mailchimpErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to Mailchimp.
 		$response = $this->mailchimpClient->postApplication(
-			$this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
+			// $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
+			'',
+			// TODO.
 			$params,
 			[],
 			$formId

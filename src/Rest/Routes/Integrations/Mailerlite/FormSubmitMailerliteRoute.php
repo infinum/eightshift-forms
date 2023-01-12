@@ -103,22 +103,11 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-
-		// Check if Mailerlite data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMailerlite::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('mailerliteErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to Mailerlite.
 		$response = $this->mailerliteClient->postApplication(
-			$this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
+			// $this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
+			'',
+			// TODO
 			$params,
 			[],
 			$formId

@@ -115,19 +115,9 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-		// Check if Hubspot data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsHubspot::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('hubspotErrorSettingsMissing', $formId),
-			]);
-		}
-
-		$itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+		// $itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
+		$itemId = '';
+		// TODO
 
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(

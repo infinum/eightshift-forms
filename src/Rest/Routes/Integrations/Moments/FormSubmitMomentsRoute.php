@@ -103,22 +103,11 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-
-		// Check if Moments data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMoments::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('momentsErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to Moments.
 		$response = $this->momentsClient->postApplication(
-			$this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, $formId),
+			// $this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, $formId),
+			'',
+			// TODO
 			$params,
 			[],
 			$formId

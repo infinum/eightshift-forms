@@ -91,21 +91,11 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-		// Check if ActiveCampaign data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('activeCampaignErrorSettingsMissing', $formId),
-			]);
-		}
-
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(
-			$this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY, $formId),
+			'',
+			// TODO.
+			// $this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY, $formId),
 			$params,
 			[],
 			$formId

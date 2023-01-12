@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -103,26 +102,11 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	public function submitAction(string $formId, array $params = [], $files = [])
 	{
-
-		// Check if Airtable data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsAirtable::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('airtableErrorSettingsMissing', $formId),
-			]);
-		}
-
-		$listKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-		$fieldKey = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-
 		// Send application to Airtable.
 		$response = $this->airtableClient->postApplication(
-			"{$listKey}---{$fieldKey}",
+			//TODO
+			// "{$listKey}---{$fieldKey}",
+			'',
 			$params,
 			[],
 			$formId

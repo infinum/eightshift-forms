@@ -12,8 +12,6 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -29,19 +27,9 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_greenhouse';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_greenhouse';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_greenhouse';
 
 	/**
 	 * Settings key.
@@ -64,16 +52,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY = 'greenhouse-board-token';
 
 	/**
-	 * Job ID Key.
-	 */
-	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouse-job-id';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY = 'greenhouse-integration-fields';
-
-	/**
 	 * File upload limit Key.
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY = 'greenhouse-file-upload-limit';
@@ -82,25 +60,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	 * File upload limit default. Defined in MB.
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY = 'greenhouse-conditional-tags';
-
-	/**
-	 * Instance variable for Greenhouse data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
-	 * Instance variable for Greenhouse form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $greenhouse;
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -112,17 +71,10 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
-	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $greenhouseClient,
-		MapperInterface $greenhouse,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->greenhouseClient = $greenhouseClient;
-		$this->greenhouse = $greenhouse;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 

@@ -27,19 +27,9 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_active_campaign';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_active_campaign';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_active_campaign';
 
 	/**
 	 * Settings key.
@@ -60,21 +50,6 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	 * API Url.
 	 */
 	public const SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY = 'active-campaign-api-url';
-
-	/**
-	 * List ID Key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY = 'active-campaign-list';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_INTEGRATION_FIELDS_KEY = 'active-campaign-integration-fields';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY = 'active-campaign-conditional-tags';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -101,18 +76,6 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(string $formId): bool
-	{
-		return true;
 	}
 
 	/**
