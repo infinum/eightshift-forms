@@ -67,9 +67,9 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			$type = $value['type'];
 
 			// Skip integration forms if they are not used in the Block editor.
-			// if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
-			// 	continue;
-			// }
+			if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
+				continue;
+			}
 
 			$isUsedKey = $value['use'] ?? '';
 

@@ -100,7 +100,7 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		return \array_map(
-			static function ($item) use ($isDeveloperMode) {
+			function ($item) use ($isDeveloperMode) {
 				$id = $item->ID;
 				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 				$title = $isDeveloperMode ? "{$id} - {$title}" : $title;
@@ -112,6 +112,7 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 					'editLink' => Helper::getFormEditPageUrl((string) $id),
 					'viewLink' => \get_permalink($id),
+					'activeIntegration' => $this->getActiveIntegrationIcons((string) $id),
 				];
 			},
 			$items

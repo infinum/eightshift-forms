@@ -326,22 +326,7 @@ class Helper
 
 		$blockName = \explode('/', $blockName);
 
-		$name = \end($blockName);
-
-		// Block name can be different from the settings name due to legacy reasons.
-		foreach (Filters::ALL as $key => $value) {
-			if (!isset($value['formBlockName'])) {
-				continue;
-			}
-
-			if ($value['formBlockName'] !== $name) {
-				continue;
-			}
-
-			$name = $key;
-		}
-
-		return $name;
+		return \end($blockName);
 	}
 
 	/**

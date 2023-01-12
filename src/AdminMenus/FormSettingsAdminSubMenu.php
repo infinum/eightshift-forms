@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsInterface;
@@ -69,6 +70,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
+		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearnaceMenu'], 32);
 	}
 
 	/**
@@ -249,5 +251,21 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		return $adminTitle;
+	}
+
+	/**
+	 * Add additional links to sidebar menu.
+	 *
+	 * @return void
+	 */
+	public function addCustomLinkIntoAppearnaceMenu(): void
+	{
+		global $submenu;
+
+		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [ // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			\esc_html__('Add new form', 'eightshift-forms'),
+			FormAdminMenu::ADMIN_MENU_CAPABILITY,
+			\get_admin_url(null, 'post-new.php?post_type=' . Forms::URL_SLUG)
+		];
 	}
 }

@@ -70,27 +70,4 @@ class FormsListing implements FormListingInterface
 
 		return $output;
 	}
-
-	/**
-	 * Get all active integration on specific form.
-	 *
-	 * @param string $id Form Id.
-	 *
-	 * @return array<string, string>
-	 */
-	private function getActiveIntegrationIcons(string $id): array
-	{
-		$integrationTypeUsed = Helper::getUsedFormTypeById($id);
-
-		if (!$integrationTypeUsed) {
-			return [];
-		}
-
-		return [
-			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
-			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
-			'value' => $integrationTypeUsed,
-			'isActive' => $this->isCheckboxOptionChecked(Filters::ALL[$integrationTypeUsed]['use'], Filters::ALL[$integrationTypeUsed]['use']),
-		];
-	}
 }

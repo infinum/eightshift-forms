@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Settings\Settings\SettingInterface;
-
 /**
  * Interface for SettingsClearbitDataInterface.
  */

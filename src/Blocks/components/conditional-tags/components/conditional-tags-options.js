@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { Fragment } from "@wordpress/element";
 import { TextControl, SelectControl, PanelBody, Button, Modal } from '@wordpress/components';
 import {
 	icons,
@@ -149,10 +148,8 @@ export const ConditionalTagsOptions = (attributes) => {
 
 							{conditionalTagsRules?.map((_, index) => {
 								return (
-									<Fragment key={index}>
-										<ConditionalTagsItem
-											index={index}
-										/>
+									<div key={index}>
+										<ConditionalTagsItem index={index} />
 										<Button
 											isLarge
 											icon={icons.trash}
@@ -163,7 +160,7 @@ export const ConditionalTagsOptions = (attributes) => {
 											label={__('Remove', 'eightshift-forms')}
 											style={{ marginTop: '0.2rem' }}
 										/>
-									</Fragment>
+									</div>
 								);
 							})}
 
@@ -176,9 +173,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							</Button>
 
 							<div className='es-h-end es-has-wp-field-t-space'>
-								<Button onClick={() => {
-									setIsModalOpen(false);
-								}}>
+								<Button onClick={() => setIsModalOpen(false)}>
 									{__('Close', 'eightshift-forms')}
 								</Button>
 							</div>

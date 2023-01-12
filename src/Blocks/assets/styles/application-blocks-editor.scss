@@ -13,3 +13,8 @@
 
 // Find all blocks and require block_name-editor.scss inside it.
 @import './../../custom/*/*-editor.scss';
+
+// Hack for geo modal for select dropdown to work.
+.es-geolocation-modal {
+	z-index: 1;
+}

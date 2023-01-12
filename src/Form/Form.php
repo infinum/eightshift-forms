@@ -36,27 +36,32 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_FORM_SETTINGS_OPTIONS_NAME, [$this, 'getFormSettingsOptions']);
+		\add_filter(self::FILTER_FORM_SETTINGS_OPTIONS_NAME, [$this, 'updateFormAttributesBeforeOutput']);
 	}
 
 	/**
-	 * Create array of additonal form options
+	 * Modify original attributes before final output in form.
 	 *
-	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $attributes Attributes to update.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getFormSettingsOptions(string $formId): array
+	public function updateFormAttributesBeforeOutput(array $attributes): array
 	{
-		$output = [];
+		$prefix = $attributes['prefix'] ?? '';
+		$blockName = $attributes['blockName'] ?? '';
+		$postId = $attributes["{$prefix}PostId"] ?? '';
 
-		// Get post ID prop.
-		$output['formPostId'] = $formId;
+		if (!$prefix || !$blockName || !$postId) {
+			return $attributes;
+		}
 
-		// Get form type.
-		$type = SettingsMailer::SETTINGS_TYPE_KEY;
-		$output['formType'] = $type;
+		// Change form type depending if it is mailer empty.
+		if ($blockName === SettingsMailer::SETTINGS_TYPE_KEY && isset($attributes["{$prefix}Action"])) {
+			$attributes["{$prefix}Type"] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
+		}
 
-		return \array_merge($output, $this->getFormAdditionalProps($formId, $type));
+		// Additional props from settings.
+		return \array_merge($attributes, $this->getFormAdditionalPropsFromSettings($postId, $blockName, $prefix));
 	}
 }

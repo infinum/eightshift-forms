@@ -1,7 +1,7 @@
 {
-	"blockName": "form",
-	"title": "Custom form",
-	"description" : "A form with customizable fields",
+	"blockName": "mailer",
+	"title": "Mailer form",
+	"description" : "A form with mailer",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form"
@@ -17,7 +17,7 @@
 		"eightshift-forms/form-selector"
 	],
 	"attributes": {
-		"formAllowedBlocks": {
+		"mailerAllowedBlocks": {
 			"type": "array",
 			"default": [
 				"eightshift-forms/file",
@@ -29,13 +29,13 @@
 				"eightshift-forms/checkboxes"
 			]
 		},
-		"formFormPostId": {
+		"mailerFormPostId": {
 			"type": "string"
 		},
-		"formDataTypeSelector": {
+		"mailerDataTypeSelector": {
 			"type": "string"
 		},
-		"formFormAction": {
+		"mailerFormAction": {
 			"type": "string"
 		}
 	}

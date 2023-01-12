@@ -34,5 +34,9 @@
 			"default": false
 		}
 	},
-	"postType": "eightshift-forms"
+	"postType": "eightshift-forms",
+	"attributesSsr": [
+		"formsFormPostId",
+		"formsStyle"
+	]
 }

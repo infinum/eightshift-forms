@@ -4,11 +4,16 @@ import {
 	checkAttr,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import { getFilteredAttributes } from '../../../components/utils';
 
 export const FormsEditor = ({ attributes, preview }) => {
 	const {
 		blockFullName
 	} = attributes;
+
+	const {
+		attributesSsr,
+	} = manifest;
 
 	const {
 		isGeoPreview,
@@ -21,10 +26,13 @@ export const FormsEditor = ({ attributes, preview }) => {
 			<ServerSideRender
 				block={blockFullName}
 				attributes={
-					{
-						...attributes,
-						formsServerSideRender: true,
-					}
+					getFilteredAttributes(
+						attributes,
+						attributesSsr,
+						{
+							formsServerSideRender: true
+						}
+					)
 				}
 			/>
 
@@ -36,11 +44,18 @@ export const FormsEditor = ({ attributes, preview }) => {
 								key={index}
 								block={blockFullName}
 								attributes={
-									{
-										...attributes,
-										formsFormPostId: item.formId,
-										formsServerSideRender: true,
-									}
+									getFilteredAttributes(
+										attributes,
+										[
+											...attributesSsr,
+											'formsFormGeolocation',
+											'formsFormGeolocationAlternatives',
+										],
+										{
+											formsFormPostId: item.formId,
+											formsServerSideRender: true
+										}
+									)
 								}
 							/>
 						);

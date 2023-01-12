@@ -31,13 +31,13 @@
 			"label": "Empty",
 			"slug": "empty",
 			"icon": "esf-form-custom",
-			"blockName": "eightshift-forms/form"
+			"blockName": "eightshift-forms/mailer"
 		},
 		{
 			"label": "Simple contact",
 			"slug": "contact",
 			"icon": "esf-sender-email",
-			"blockName": "eightshift-forms/form",
+			"blockName": "eightshift-forms/mailer",
 			"innerBlocks": [
 				[
 					"eightshift-forms/sender-email",

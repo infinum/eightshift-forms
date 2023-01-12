@@ -47,6 +47,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public const SETTINGS_TYPE_KEY = 'mailer';
 
 	/**
+	 * Settings type custom key.
+	 */
+	public const SETTINGS_TYPE_CUSTOM_KEY = 'custom';
+
+	/**
 	 * Mailer Use key.
 	 */
 	public const SETTINGS_MAILER_USE_KEY = 'mailer-use';

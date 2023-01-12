@@ -326,4 +326,27 @@ trait SettingsHelper
 		// translators: %s replaces global variable name.
 		return \sprintf(\__('Global variable "%s" is active.', 'eightshift-forms'), $name);
 	}
+
+	/**
+	 * Get all active integration on specific form.
+	 *
+	 * @param string $id Form Id.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getActiveIntegrationIcons(string $id): array
+	{
+		$integrationTypeUsed = Helper::getUsedFormTypeById($id);
+
+		if (!$integrationTypeUsed) {
+			return [];
+		}
+
+		return [
+			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
+			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
+			'value' => $integrationTypeUsed,
+			'isActive' => $this->isCheckboxOptionChecked(Filters::ALL[$integrationTypeUsed]['use'], Filters::ALL[$integrationTypeUsed]['use']),
+		];
+	}
 }

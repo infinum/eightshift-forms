@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailchimp;
 
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;

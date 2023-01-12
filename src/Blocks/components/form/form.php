@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Form\Form;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -17,6 +18,11 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
+
+$attributes = apply_filters(
+	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
+	$attributes
+);
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);

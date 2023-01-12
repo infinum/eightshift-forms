@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;

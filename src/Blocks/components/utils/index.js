@@ -7,11 +7,29 @@ import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { camelize, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
-
+/**
+ * check if block options is disabled by integration or other component.
+ *
+ * @param {string} key Key to check.
+ * @param {array} options Options array to check.
+ *
+ * @returns {boolean}
+ */
 export const isOptionDisabled = (key, options) => {
 	return options.includes(key);
 }
 
+/**
+ * Update/create new integration blocks by getting the update from rest api.
+ *
+ * @param {int} clientId Client ID from block editor.
+ * @param {string} postId Post ID to get data from.
+ * @param {*} type Integration type.
+ * @param {*} itemId Integration internal ID.
+ * @param {*} innerId Integration internal alternative ID.
+ *
+ * @returns {void}
+ */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
 	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-create/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
 		if (response.code === 200) {
@@ -24,6 +42,14 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 	});
 }
 
+/**
+ * Sync integration blocks by getting the update from rest api.
+ *
+ * @param {int} clientId Client ID from block editor.
+ * @param {string} postId Post ID to get data from.
+ *
+ * @returns {void}
+ */
 export const syncIntegrationBlocks = (clientId, postId) => {
 	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-sync/?id=${postId}` }).then((response) => {
 		if (response.code === 200) {
@@ -36,6 +62,13 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 	});
 }
 
+/**
+ * Get settings page url.
+ *
+ * @param {string} postId Post ID to get data from.
+ *
+ * @returns {string}
+ */
 export const getSettingsPageUrl = (postId) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
@@ -46,6 +79,15 @@ export const getSettingsPageUrl = (postId) => {
 	return `${wpAdminUrl}${settingsPageUrl}&formId=${postId}`;
 }
 
+/**
+ * Create new inner blocks from provided template.
+ *
+ * @param {int} clientId Client ID from block editor.
+ * @param {string} name Block name tamplete is set to.
+ * @param {array} templates Templates of blocks to build.
+ *
+ * @returns {void}
+ */
 export const createBlockFromTemplate = (clientId, name, templates) => {
 	const {
 		blockName,
@@ -63,14 +105,36 @@ export const createBlockFromTemplate = (clientId, name, templates) => {
 	dispatch('core/block-editor').insertBlock(block, 0, clientId);
 }
 
+/**
+ * Update inner blocks state by id.
+ *
+ * @param {int} clientId Client ID from block editor.
+ * @param {array} blocks Blocks to append.
+ *
+ * @returns {void}
+ */
 export const updateInnerBlocks = (clientId, blocks) => {
 	dispatch( 'core/block-editor' ).replaceInnerBlocks( clientId, blocks);
 }
 
+/**
+ * Reset current inner blocks by id.
+ *
+ * @param {int} clientId Client ID from block editor
+ *
+ * @returns {void}
+ */
 export const resetInnerBlocks = (clientId) => {
 	updateInnerBlocks(clientId, []);
 }
 
+/**
+ * Get additional content filte values.
+ *
+ * @param {string} key Key to find in global constant.
+ *
+ * @returns {string}
+ */
 export const getAdditionalContent = (key) => {
 	if (typeof esFormsLocalization !== 'undefined' && (esFormsLocalization?.[key]) !== '') {
 		return esFormsLocalization[key];
@@ -79,6 +143,11 @@ export const getAdditionalContent = (key) => {
 	return '';
 }
 
+/**
+ * Get forms fields blocks by checking the current block editor state.
+ *
+ * @returns {object}
+ */
 export const getFormFields = () => {
 	const blocks = select('core/block-editor').getBlocks();
 
@@ -93,7 +162,7 @@ export const getFormFields = () => {
 			value: '',
 			label: '',
 		},
-		...fields.map((item, index) => {
+		...fields.map((item) => {
 			const {
 				attributes,
 				attributes: {
@@ -118,4 +187,28 @@ export const getFormFields = () => {
 			};
 		}).filter((elm) => elm),
 	];
+}
+
+/**
+ * Filter attributes by array of keys. Used to provide alternative attributes to server side render component to prevent unecesery rerender.
+ *
+ * @param {object} attributes Attributes data source.
+ * @param {array} filterAttributes Array of attributes to filter.
+ * @param {object} appendItems Append additional attributes.
+ *
+ * @returns {object}
+ */
+export const getFilteredAttributes = (attributes, filterAttributes, appendItems = {}) => {
+	const output = {}
+
+	for (const [key, value] of Object.entries(attributes)) {
+		if (filterAttributes.includes(key)) {
+			output[key] = value;
+		}
+	}
+
+	return {
+		...output,
+		...appendItems,
+	}
 }

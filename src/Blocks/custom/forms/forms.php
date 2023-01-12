@@ -11,6 +11,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
@@ -24,7 +25,6 @@ if (!$checkEnqueue) {
 }
 
 $blockClass = $attributes['blockClass'] ?? '';
-$invalidClass = $manifestInvalid['componentClass'] ?? '';
 
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -54,7 +54,7 @@ if (!$formsServerSideRender && (!$formsFormPostId || get_post_status($formsFormP
 if ($formsServerSideRender) {
 	// Missing form ID.
 	if (!$formsFormPostId) {
-		$formsClassNotSet = Components::selector($blockClass, $blockClass, '', 'not-set');
+		$formsClassNotSet = Components::selector($blockClass, $blockClass, 'not-set');
 		?>
 			<div class="<?php echo esc_attr($formsClass); ?> <?php echo esc_attr($formsClassNotSet); ?>">
 				<img class="<?php echo esc_attr("{$blockClass}__image") ?>" src="<?php echo esc_url(apply_filters(Manifest::MANIFEST_ITEM, 'cover.png')); ?>" />
@@ -67,7 +67,7 @@ if ($formsServerSideRender) {
 
 	// Not published or removed at somepoint.
 	if (get_post_status($formsFormPostId) !== 'publish') {
-		$formsClassNotPublished = Components::selector($blockClass, $invalidClass);
+		$formsClassNotPublished = Components::selector($blockClass, $blockClass, 'invalid');
 		?>
 			<div class="<?php echo esc_attr($formsClass); ?> <?php echo esc_attr($formsClassNotPublished); ?>">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,6 +124,8 @@ if ($formsServerSideRender) {
 			if (isset($block['innerBlocks'])) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
+
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;

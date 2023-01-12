@@ -81,19 +81,20 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Return Integration form additional props
+	 * Return Integration form additional props from settings.
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Form Type.
+	 * @param string $prefix Attribute prefix key.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getFormAdditionalProps(string $formId, string $type): array
+	protected function getFormAdditionalPropsFromSettings(string $formId, string $type, string $prefix): array
 	{
 		$formAdditionalProps = [];
 
 		// Tracking event name.
-		$formAdditionalProps['formTrackingEventName'] = $this->getAdditionalPropsItem(
+		$formAdditionalProps["{$prefix}TrackingEventName"] = $this->getAdditionalPropsItem(
 			$formId,
 			$type,
 			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
@@ -101,7 +102,7 @@ abstract class AbstractFormBuilder
 		);
 
 		// Success redirect url.
-		$formAdditionalProps['formSuccessRedirect'] = $this->getAdditionalPropsItem(
+		$formAdditionalProps["{$prefix}SuccessRedirect"] = $this->getAdditionalPropsItem(
 			$formId,
 			$type,
 			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
-use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
