@@ -111,6 +111,10 @@ echo Components::render(
 			'fieldId' => $fileId,
 			'fieldName' => $fileName,
 			'fieldIsRequired' => $fileIsRequired,
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,

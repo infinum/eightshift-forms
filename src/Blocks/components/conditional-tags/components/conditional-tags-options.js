@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
 import { Fragment } from "@wordpress/element";
-import { TextControl, SelectControl, PanelBody, Button, BaseControl, Modal } from '@wordpress/components';
+import { TextControl, SelectControl, PanelBody, Button, Modal } from '@wordpress/components';
 import {
-	CustomSelect,
-	IconLabel,
 	icons,
 	getAttrKey,
 	checkAttr,
-	getFetchWpApi,
-	unescapeHTML,
-	BlockIcon,
-	FancyDivider,
-	STORE_NAME,
-	camelize,
 	IconToggle,
-	CollapsableComponentUseToggle,
 } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_LOGIC } from './../../form/assets/utilities';
 import { getFormFields } from '../../utils';
@@ -32,15 +22,44 @@ export const ConditionalTagsOptions = (attributes) => {
 	const conditionalTagsLogic = checkAttr('conditionalTagsLogic', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
 
+	const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
+		[CONDITIONAL_TAGS_OPERATORS.IS]: __('is', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.ISN]: __('is not', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.GT]: __('greater than', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.GTE]: __('greater/equal than', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.LT]: __('less than', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.LTE]: __('less/equal than', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.C]: __('contains', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.SW]: __('starts with', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_OPERATORS.EW]: __('ends with', 'eightshift-forms'),
+	};
+
+	const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
+		[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('show', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hide', 'eightshift-forms'),
+	}
+
+	const CONDITIONAL_TAGS_LOGIC_INTERNAL = {
+		[CONDITIONAL_TAGS_LOGIC.ALL]: __('all', 'eightshift-forms'),
+		[CONDITIONAL_TAGS_LOGIC.ANY]: __('any', 'eightshift-forms'),
+	}
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const getConstantsOptions = (options, useEmpty = false) => {
-		const items = Object.values(options).map((item) => ({'value': item, 'label': item}));
 		const empty = {
 			value: '',
 			label: '',
 		};
-		
+
+		const items = [];
+		for (const [key, value] of Object.entries(options)) {
+			items.push({
+				'value': key,
+				'label': value
+			});
+		}
+
 		return useEmpty ? [empty, ...items] : items;
 	}
 
@@ -59,7 +78,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 					<SelectControl
 						value={conditionalTagsRules?.[index]?.[1]}
-						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS, true)}
+						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL, true)}
 						onChange={(value) => {
 							conditionalTagsRules[index][1] = value;
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: conditionalTagsRules });
@@ -91,6 +110,8 @@ export const ConditionalTagsOptions = (attributes) => {
 						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined })
 						setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: undefined })
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined })
+					} else {
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [] })
 					}
 				}}
 			/>
@@ -116,25 +137,17 @@ export const ConditionalTagsOptions = (attributes) => {
 						>
 							<SelectControl
 								value={conditionalTagsAction}
-								options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS)}
+								options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
 								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: value })}
 							/>
 		
 							<SelectControl
 								value={conditionalTagsLogic}
-								options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC)}
+								options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
 								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: value })}
 							/>
-		
-							<Button
-								isSecondary
-								icon={icons.add}
-								onClick={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [] ]})}
-							>
-								{__('Add rule', 'eightshift-forms')}
-							</Button>
-		
-							{conditionalTagsRules.map((_, index) => {
+
+							{conditionalTagsRules?.map((_, index) => {
 								return (
 									<Fragment key={index}>
 										<ConditionalTagsItem
@@ -153,6 +166,14 @@ export const ConditionalTagsOptions = (attributes) => {
 									</Fragment>
 								);
 							})}
+
+							<Button
+								isSecondary
+								icon={icons.add}
+								onClick={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [] ]})}
+							>
+								{__('Add rule', 'eightshift-forms')}
+							</Button>
 
 							<div className='es-h-end es-has-wp-field-t-space'>
 								<Button onClick={() => {

@@ -94,6 +94,10 @@ echo Components::render(
 			'fieldName' => $selectName,
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,

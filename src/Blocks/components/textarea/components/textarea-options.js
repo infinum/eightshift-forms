@@ -17,6 +17,7 @@ import { FieldOptions } from '../../../components/field/components/field-options
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const TextareaOptions = (attributes) => {
 	const {
@@ -142,6 +143,10 @@ export const TextareaOptions = (attributes) => {
 
 			<FieldOptionsAdvanced
 				{...props('field', attributes)}
+			/>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

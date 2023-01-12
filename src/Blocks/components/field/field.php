@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -63,6 +64,7 @@ $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
 $fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manifest);
+$fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -93,6 +95,16 @@ if ($fieldAttrs) {
 	foreach ($fieldAttrs as $key => $value) {
 		$fieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
+}
+
+if ($fieldConditionalTags) {
+	$conditionalTagsAttrKey = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags'];
+	$fieldAttrsOutput .= " {$conditionalTagsAttrKey}='" . $fieldConditionalTags . "'";
+}
+
+if ($fieldName) {
+	$fieldNameAttrKey = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName'];
+	$fieldAttrsOutput .= " {$fieldNameAttrKey}='" . $fieldName . "'";
 }
 
 // Additional content filter.

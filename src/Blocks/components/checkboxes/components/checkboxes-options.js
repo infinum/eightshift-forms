@@ -15,6 +15,7 @@ import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxesOptions = (attributes) => {
 	const {
@@ -102,6 +103,10 @@ export const CheckboxesOptions = (attributes) => {
 
 			<FieldOptionsAdvanced
 				{...props('field', attributes)}
+			/>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

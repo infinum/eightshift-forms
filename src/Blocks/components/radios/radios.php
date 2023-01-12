@@ -53,6 +53,10 @@ echo Components::render(
 			'fieldName' => $radiosName,
 			'fieldIsRequired' => $radiosIsRequired,
 			'fieldId' => $radiosId,
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

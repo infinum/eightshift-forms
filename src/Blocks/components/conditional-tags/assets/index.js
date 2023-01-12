@@ -1,5 +1,5 @@
 import { debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { Utils } from './utilities';
+import { Utils } from './../../form/assets/utilities';
 
 /**
  * Main conditon tags class.
@@ -74,7 +74,19 @@ export class ConditionalTags {
 	 * @public
 	 */
 	initOne(element) {
-		const data = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+		const elements = element.querySelectorAll(this.utils.fieldSelector);
+
+		const data = {};
+
+		[...elements].forEach((element) => {
+			const name = element.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
+			const tags = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+
+			if (tags && name) {
+				data[name] = JSON.parse(tags);
+			}
+		});
+
 		if (data) {
 			this.setData(data);
 			this.setInit();
@@ -85,20 +97,18 @@ export class ConditionalTags {
 	/**
 	 * Prepare data for later usage.
 	 * 
-	 * @param {string} data Tags data from json string.
+	 * @param {string} data Tags data array from each field.
 	 *
 	 * @public
 	 */
 	setData(data) {
-		Object.entries(JSON.parse(data)).forEach(([key, value]) => {
+		Object.entries(data).forEach(([key, value]) => {
 			this.INTERNAL_DATA[this.DATA_REFERENCE][key] = [];
 
-			const internalValue = JSON.parse(value);
-
 			this.INTERNAL_DATA[this.DATA_FIELDS][key] = {
-				'action': internalValue[0],
-				'logic': internalValue[1],
-				'rules': internalValue[2].map((innerItem) => {
+				'action': value[0],
+				'logic': value[1],
+				'rules': value[2].map((innerItem) => {
 
 					if (!(innerItem[0] in this.INTERNAL_DATA[this.DATA_EVENT_ITEMS])) {
 						this.INTERNAL_DATA[this.DATA_EVENT_ITEMS][innerItem[0]] = [];

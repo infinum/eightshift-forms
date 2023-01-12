@@ -14,7 +14,8 @@
 		}
 	},
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
 		"textareaId": {

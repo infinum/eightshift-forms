@@ -96,6 +96,10 @@ echo Components::render(
 			'fieldName' => $textareaName,
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]),
 		[
 			'additionalFieldClass' => $additionalFieldClass,

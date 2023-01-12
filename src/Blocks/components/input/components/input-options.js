@@ -79,9 +79,6 @@ export const InputOptions = (attributes) => {
 
 	return (
 		<>
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
-			/>
 			<PanelBody title={title}>
 				<FieldOptions
 					{...props('field', attributes)}
@@ -363,6 +360,10 @@ export const InputOptions = (attributes) => {
 
 			<FieldOptionsAdvanced
 				{...props('field', attributes)}
+			/>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

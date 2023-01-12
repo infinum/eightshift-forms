@@ -3,7 +3,8 @@
 	"title": "radios",
 	"componentClass": "es-radios",
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
 		"radiosId": {

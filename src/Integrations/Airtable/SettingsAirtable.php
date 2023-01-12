@@ -140,13 +140,6 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 			return false;
 		}
 
-		$list = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-		$field = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-		if (empty($list) || empty($field)) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -176,74 +169,7 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$type = self::SETTINGS_TYPE_KEY;
-
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
-		}
-
-		// Get forms from the API.
-		$items = $this->airtableClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the form id populate additional config.
-		if ($selectedFormId) {
-			$item = $this->airtableClient->getItem($selectedFormId);
-
-			$formFields = $this->airtable->getFormFields($formId);
-
-			if ($item) {
-				$selectedFormFieldId = $this->getSettingsValue(self::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-				// Output additonal tabs for config.
-				$output = [
-					...$this->getOutputFormSelectionAdditional(
-						$formId,
-						$item['items'],
-						$selectedFormFieldId,
-						self::SETTINGS_AIRTABLE_FIELD_KEY
-					),
-					$formFields ? [
-						'component' => 'tabs',
-						'tabsContent' => [
-							// $this->getOutputIntegrationFields(
-							// 	$formId,
-							// 	$formFields,
-							// 	$type,
-							// 	self::SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY,
-							// ),
-							// $this->getOutputConditionalTags(
-							// 	$formId,
-							// 	$formFields,
-							// 	self::SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY
-							// ),
-						],
-					] : [],
-				];
-			}
-		}
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			// ...$this->getOutputFormSelection(
-			// 	$formId,
-			// 	$items,
-			// 	$selectedFormId,
-			// 	self::SETTINGS_TYPE_KEY,
-			// 	self::SETTINGS_AIRTABLE_LIST_KEY
-			// ),
-			...$output,
-		];
+		return [];
 	}
 
 	/**

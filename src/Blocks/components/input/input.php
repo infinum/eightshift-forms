@@ -106,6 +106,10 @@ echo Components::render(
 			'fieldHidden' => $inputType === 'hidden',
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 			'fieldAttrs' => [
 				'data-input-type' => $inputType,
 			],

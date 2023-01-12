@@ -52,6 +52,10 @@ echo Components::render(
 			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesId,
 			'fieldIsRequired' => $checkboxesIsRequired,
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

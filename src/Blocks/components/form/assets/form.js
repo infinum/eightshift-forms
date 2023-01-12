@@ -1,7 +1,7 @@
 /* global grecaptcha */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import { ConditionalTags } from './conditional-tags';
+import { ConditionalTags } from './../../conditional-tags/assets';
 import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 

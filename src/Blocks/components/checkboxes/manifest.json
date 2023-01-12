@@ -3,7 +3,8 @@
 	"title": "checkboxes",
 	"componentClass": "es-checkboxes",
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
 		"checkboxesId": {
