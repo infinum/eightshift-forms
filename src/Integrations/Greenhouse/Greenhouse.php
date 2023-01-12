@@ -59,35 +59,24 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
-	{
-		return [];
-	}
-
-		/**
-	 * Get Hubspot mapped form fields for block editor grammar.
-	 *
-	 * @param string $formId Form Id.
-	 * @param string $itemId Integration item id.
-	 *
-	 * @return array
-	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
+			'innerId' => $innerId,
 			'fields' => [],
 		];
 
@@ -172,7 +161,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileIsRequired' => $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => '1',
-							'fileMaxSize' => strval($maxFileSize * 1000),
+							'fileMaxSize' => \strval($maxFileSize * 1000),
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$required ? 'fileIsRequired' : '',
 								'fileAccept',

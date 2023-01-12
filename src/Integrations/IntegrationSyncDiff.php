@@ -72,7 +72,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// If error output log.
 		if ($status === 'error') {
-			Helper::logger(array_merge(
+			Helper::logger(\array_merge(
 				[
 					'type' => 'diff',
 				],
@@ -92,14 +92,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerContentKey = $keys['innerContent'];
 
 		// Create block grammar from array.
-		$blocksGrammar = serialize_blocks([
-			[
-				$blockNameKey => "{$namespace}/form-selector",
-				$attrsKey => [],
-				$innerBlocksKey => $syncForm['data']['output'],
-				$innerContentKey => $syncForm['data']['output'],
-			],
-		]);
+		$blocksGrammar = \serialize_blocks(
+			[ // @phpstan-ignore-line
+				[
+					$blockNameKey => "{$namespace}/form-selector",
+					$attrsKey => [],
+					$innerBlocksKey => $syncForm['data']['output'],
+					$innerContentKey => $syncForm['data']['output'],
+				]
+			]
+		);
 
 		// Bailout if we have output to show.
 		if (!$blocksGrammar) {
@@ -111,7 +113,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Bailout if db content update failed.
 		if (!$update) {
-			Helper::logger(array_merge(
+			Helper::logger(\array_merge(
 				[
 					'type' => 'diff',
 					'status' => 'error',
@@ -126,7 +128,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Finish with success.
-		Helper::logger(array_merge(
+		Helper::logger(\array_merge(
 			[
 				'type' => 'diff',
 				'outputGrammar' => $blocksGrammar,
@@ -143,7 +145,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * @param string $itemId Item integration ID.
 	 * @param string $innerId Item integration inner ID.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function createForm(string $formId, string $type, string $itemId, string $innerId): array
 	{
@@ -218,7 +220,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		$fields = $this->reconstructBlocksOutput(
-			array_map(
+			\array_map(
 				static function ($item) {
 					return $item['integration'];
 				},
@@ -256,7 +258,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * @param string $formId Form Id.
 	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function syncForm(string $formId, bool $editorOutput = false): array
 	{
@@ -371,7 +373,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Bailout if content fields are missing.
 		if (!$contentFields) {
-
 			// Bailout if integration fields are missing.
 			if (!$integrationFields) {
 				return [
@@ -460,10 +461,11 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Compare content and integration form and outputs diff of a built block ready for import in the db.
 	 *
-	 * @param array $integration Form integration content.
-	 * @param array $content Form content.
+	 * @param array<string, mixed> $integration Form integration content.
+	 * @param array<string, mixed> $content Form content.
+	 * @param boolean $editorOutput Change block output format depending on the usage.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function diffChanges(array $integration, array $content, bool $editorOutput = false): array
 	{
@@ -520,11 +522,11 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Compare integration and content of one field and outputs new field.
 	 *
-	 * @param array $integration Form integration content.
-	 * @param array $content Form content.
+	 * @param array<string, mixed> $integration Form integration content.
+	 * @param array<string, mixed> $content Form content.
 	 * @param string $key Index key.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function diffChange(array $integration, array $content, string $key): array
 	{
@@ -565,7 +567,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerOutput = $content;
 
 		// Find prefix of the component.
-		$prefix = $integration['component'] . ucfirst($integration['component']);
+		$prefix = $integration['component'] . \ucfirst($integration['component']);
 
 		// Find components disabled options.
 		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
@@ -622,15 +624,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Prepare integration blocks for diff check.
 	 *
-	 * @param array $blocks Blocks from external integration.
+	 * @param array<string, mixed> $blocks Blocks from external integration.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function prepareIntegrationBlocksForCheck(array $blocks): array
 	{
 		$output = [];
 
-		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
+		$nestedKeys = \array_flip(AbstractFormBuilder::NESTED_KEYS);
 		$namespace = Components::getSettingsNamespace();
 
 		foreach ($blocks as $block) {
@@ -652,7 +654,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$output[$name]['integration']  = [
 				'namespace' => $namespace,
 				'component' => $blockTypeOriginal,
-				'prefix' => $blockType . ucfirst($blockType),
+				'prefix' => $blockType . \ucfirst($blockType),
 				'attrs' => $this->prepareBlockAttributes($block, $blockType),
 				'parent' => '',
 			];
@@ -669,7 +671,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 					$blockInnerType = Components::kebabToCamelCase($blockInnerTypeOriginal, '-');
 					$blockInnerAttributes = $this->prepareBlockAttributes($innerBlock, $blockInnerType);
-					$innerPrefix = $blockInnerType . ucfirst($blockInnerType);
+					$innerPrefix = $blockInnerType . \ucfirst($blockInnerType);
 
 					$output[$this->getInnerBlocksKeyName($innerPrefix, $blockInnerAttributes, $innerKey, $name)]['integration']  = [
 						'namespace' => $namespace,
@@ -688,17 +690,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Prepare content blocks for diff check and combine with integration blocks.
 	 *
-	 * @param array $blocks Blocks from form content.
-	 * @param array $integration Prepared blocks external integration.
+	 * @param array<string, mixed> $blocks Blocks from form content.
+	 * @param array<string, mixed> $integration Prepared blocks external integration.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function prepareContentBlocksForCheck(array $blocks, array $integration): array
 	{
 		$output = $integration;
 
 		foreach ($blocks as $block) {
-
 			$blockTypeOriginal = $block['blockName'] ?? '';
 
 			if (!$blockTypeOriginal) {
@@ -706,7 +707,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 
 			$blockType = $this->getBlockAttributePrefixByFullBlockName($blockTypeOriginal);
-			$blockName = $blockType['prefix']. "Name";
+			$blockName = $blockType['prefix'] . "Name";
 
 			if (!$block['attrs']) {
 				continue;
@@ -718,7 +719,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			$block['attrs'] = array_filter($block['attrs']);
+			$block['attrs'] = \array_filter($block['attrs']);
 
 			$output[$name]['content']  = [
 				'namespace' => $blockType['namespace'],
@@ -735,7 +736,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					if (!$blockInnerType) {
 						continue;
 					}
-					
+
 					$blockInnerType = $this->getBlockAttributePrefixByFullBlockName($blockInnerType);
 					$blockInnerAttributes = $innerBlock['attrs'];
 					$innerPrefix = $blockInnerType['prefix'];
@@ -757,12 +758,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Rebuild for blocks output in block grammar format after diff check. Top level with all blocks.
 	 *
-	 * @param array $data Diff prepared data.
+	 * @param array<string, mixed> $data Diff prepared data.
 	 * @param string $type Integation type.
 	 * @param string $itemId Item ID from integration.
 	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
-	 * @return array
+	 * @return array<int, array<string, array<int|string, array<string, mixed>|string>|string>>
 	 */
 	private function reconstructBlocksTopLevelOutput(array $data, string $type, string $itemId, bool $editorOutput = false): array
 	{
@@ -792,10 +793,10 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	/**
 	 * Rebuild for blocks output in block grammar format after diff check. Only inner blocks for integration
 	 *
-	 * @param array $data Diff prepared data.
+	 * @param array<string, mixed> $data Diff prepared data.
 	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	private function reconstructBlocksOutput(array $data, bool $editorOutput = false): array
 	{
@@ -829,7 +830,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 		}
 
-		return array_values($fieldsOutput);
+		return \array_values($fieldsOutput);
 	}
 
 	/**
@@ -837,7 +838,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getFormContent(string $formId): array
 	{
@@ -859,13 +860,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		$form = $theQuery->post;
 
-		wp_reset_postdata();
+		\wp_reset_postdata();
 
 		if (!$form) {
 			return $output;
 		}
 
-		$blocks = parse_blocks($form->post_content);
+		$blocks = \parse_blocks($form->post_content); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
 		if (!$blocks) {
 			return $output;
@@ -912,25 +913,25 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function updateBlockContent(string $formId, string $content): int
 	{
-		return wp_update_post([
-			'ID' => $formId,
-			'post_content' => wp_slash($content),
+		return \wp_update_post([
+			'ID' => (int) $formId,
+			'post_content' => \wp_slash($content),
 		 ]);
 	}
 
 	/**
 	 * Prepare every attribute for later usage in diff.
 	 *
-	 * @param array $attributes Array of all component attributes.
+	 * @param array<string, mixed> $attributes Array of all component attributes.
 	 * @param string $component Component name for attributes.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function prepareBlockAttributes(array $attributes, string $component): array
 	{
 		$output = [];
 
-		$nestedKeys = array_flip(AbstractFormBuilder::NESTED_KEYS);
+		$nestedKeys = \array_flip(AbstractFormBuilder::NESTED_KEYS);
 
 		foreach ($attributes as $key => $value) {
 			if ($key === 'component') {
@@ -946,15 +947,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 
 			if ($key === "{$component}DisabledOptions") {
-				$value = array_values(array_map(
-					static function($item) use ($component) {
-						return "{$component}" . ucfirst($item);
+				$value = \array_values(\array_map(
+					static function ($item) use ($component) {
+						return $component . \ucfirst($item);
 					},
 					$value
 				));
 			}
 
-			$output[$component . ucfirst($key)] = $value;
+			$output[$component . \ucfirst($key)] = $value;
 		}
 
 		return $output;
@@ -965,7 +966,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @param string $name Block name to check.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getBlockAttributePrefixByFullBlockName(string $name): array
 	{
@@ -977,7 +978,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		return [
 			'namespace' => $block[0],
 			'component' => $blockName,
-			'prefix' => "{$component}" . ucfirst($component),
+			'prefix' => "{$component}" . \ucfirst($component),
 		];
 	}
 
@@ -985,7 +986,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * General inner blocks key name from component value atrribute.
 	 *
 	 * @param string $prefix Component prefix.
-	 * @param array $attributes Array of all component attributes.
+	 * @param array<string, mixed> $attributes Array of all component attributes.
 	 * @param integer $index Index in list of inner blocks.
 	 * @param string $parentName Parent block name.
 	 *
@@ -1004,7 +1005,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			return "{$parentName}-{$index}";
 		}
 
-		$value = crc32((string) $value);
+		$value = \crc32((string) $value);
 
 		return "{$parentName}-{$value}";
 	}
@@ -1014,7 +1015,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @param bool $editorOutput Change output keys depending on the output type.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function getBlockKeysOutput(bool $editorOutput = false): array
 	{

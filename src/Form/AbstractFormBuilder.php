@@ -29,7 +29,7 @@ abstract class AbstractFormBuilder
 	/**
 	 * Nested keys for inner blocks
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	public const NESTED_KEYS = [
 		'checkboxesContent',
@@ -138,7 +138,7 @@ abstract class AbstractFormBuilder
 		) {
 			$output = '';
 
-			$nestedKeys = array_flip(self::NESTED_KEYS);
+			$nestedKeys = \array_flip(self::NESTED_KEYS);
 
 			foreach ($nestedKeys as $nestedKey => $value) {
 				if (isset($attributes[$nestedKey])) {
@@ -202,12 +202,13 @@ abstract class AbstractFormBuilder
 	 * Prepare disabled options and remove empty items.
 	 *
 	 * @param string $component Component name.
-	 * @param array $options Options to check.
+	 * @param array<int, string> $options Options to check.
 	 * @param bool $useDefault Append default options.
 	 *
-	 * @return array
+	 * @return array<int, string>
 	 */
-	protected function prepareDisabledOptions(string $component, array $options = [], bool $useDefault = true): array {
+	protected function prepareDisabledOptions(string $component, array $options = [], bool $useDefault = true): array
+	{
 		$component = Components::kebabToCamelCase($component);
 
 		$default = [
@@ -216,7 +217,7 @@ abstract class AbstractFormBuilder
 
 		return [
 			...($useDefault ? $default : []),
-			...array_filter($options),
+			...\array_filter($options),
 		];
 	}
 

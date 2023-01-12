@@ -13,15 +13,15 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailchimp class.
  */
-class SettingsMailchimp implements SettingInterface, ServiceInterface
+class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -135,21 +135,6 @@ class SettingsMailchimp implements SettingInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(): bool
-	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**

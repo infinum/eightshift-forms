@@ -59,27 +59,24 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
-	}
-
-	public function getFormFields(string $formId, bool $ssr = false): array
-	{
-		return [];
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Get mapped form fields for block editor grammar.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param string $itemId Integration item id.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
+			'innerId' => $innerId,
 			'fields' => [],
 		];
 

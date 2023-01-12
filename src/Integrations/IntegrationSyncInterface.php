@@ -15,7 +15,25 @@ namespace EightshiftForms\Integrations;
  */
 interface IntegrationSyncInterface
 {
-	public function syncForm(string $formId, bool $isPreview = false): array;
+	/**
+	 * Sync content and integration form and provide the otuput for block editor route to manualy sync forms.
+	 *
+	 * @param string $formId Form Id.
+	 * @param boolean $editorOutput Change output keys depending on the output type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function syncForm(string $formId, bool $editorOutput = false): array;
 
+	/**
+	 * Create new form block output, used for block editor route to populate new integrations after user selection.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $type Integration type.
+	 * @param string $itemId Item integration ID.
+	 * @param string $innerId Item integration inner ID.
+	 *
+	 * @return array<string, mixed>
+	 */
 	public function createForm(string $formId, string $type, string $itemId, string $innerId): array;
 }

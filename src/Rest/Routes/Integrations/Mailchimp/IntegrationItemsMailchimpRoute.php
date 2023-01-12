@@ -48,7 +48,8 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject HubSpot which holds HubSpot connect data.
 	 */
-	public function __construct(MailchimpClientInterface $mailchimpClient) {
+	public function __construct(MailchimpClientInterface $mailchimpClient)
+	{
 		$this->mailchimpClient = $mailchimpClient;
 	}
 
@@ -65,16 +66,6 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 			'permission_callback' => [$this, 'permissionCallback'],
 		];
 	}
-
-	/**
-	 * By default allow public access to route.
-	 *
-	 * @return bool
-	 */
-	// public function permissionCallback(): bool
-	// {
-	// 	return true;
-	// }
 
 	/**
 	 * Returns allowed methods for this route.
@@ -126,8 +117,8 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$items = array_values(array_map(
-			static function($item) {
+		$items = \array_values(\array_map(
+			static function ($item) {
 				return [
 					'label' => $item['title'],
 					'value' => $item['id'],

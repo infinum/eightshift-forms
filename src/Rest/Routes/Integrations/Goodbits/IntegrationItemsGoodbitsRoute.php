@@ -48,7 +48,8 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 	 *
 	 * @param ClientInterface $goodbitsClient Inject HubSpot which holds HubSpot connect data.
 	 */
-	public function __construct(ClientInterface $goodbitsClient) {
+	public function __construct(ClientInterface $goodbitsClient)
+	{
 		$this->goodbitsClient = $goodbitsClient;
 	}
 
@@ -65,16 +66,6 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 			'permission_callback' => [$this, 'permissionCallback'],
 		];
 	}
-
-	/**
-	 * By default allow public access to route.
-	 *
-	 * @return bool
-	 */
-	// public function permissionCallback(): bool
-	// {
-	// 	return true;
-	// }
 
 	/**
 	 * Returns allowed methods for this route.
@@ -108,7 +99,6 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 		// Check if Goodbits global settings is valid.
 		$isGlobalSettingsValid = \apply_filters(SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME, false);
 
-		
 		if (!$isGlobalSettingsValid) {
 			\rest_ensure_response([
 				'code' => 400,
@@ -127,8 +117,8 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$items = array_values(array_map(
-			static function($item) {
+		$items = \array_values(\array_map(
+			static function ($item) {
 				return [
 					'label' => $item['title'],
 					'value' => $item['id'],

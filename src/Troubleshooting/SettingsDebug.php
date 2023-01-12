@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsDebug class.
  */
-class SettingsDebug implements ServiceInterface, SettingInterface
+class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 {
 	/**
 	 * Use general helper trait.

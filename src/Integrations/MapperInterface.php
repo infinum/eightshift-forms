@@ -16,22 +16,13 @@ namespace EightshiftForms\Integrations;
 interface MapperInterface
 {
 	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return string<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array;
-
-	/**
-	 * Get Hubspot mapped form fields for block editor grammar.
-	 *
-	 * @param string $formId Form Id.
-	 * @param string $itemId Integration item id.
-	 *
-	 * @return array
-	 */
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array;
+	public function getFormFields(string $formId, string $itemId, string $innerId): array;
 }

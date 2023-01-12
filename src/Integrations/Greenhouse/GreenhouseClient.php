@@ -104,7 +104,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = $this->getItems() ?? [];
+		$output = $this->getItems();
 
 		$item = $output[$itemId]['fields'] ?? [];
 

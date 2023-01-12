@@ -10,13 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsFallback class.
  */
-class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface
+class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, SettingGlobalInterface
 {
 	/**
 	 * Use general helper trait.
@@ -74,18 +75,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**

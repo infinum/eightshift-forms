@@ -71,19 +71,24 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
-	public function getFormFields(string $formId, bool $ssr = false): array
-	{
-		return [];
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
+	/**
+	 * Get mapped form fields from integration.
+	 *
+	 * @param string $formId Form Id.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
+	 *
+	 * @return array<string, array<int, array<string, mixed>>|string>
+	 */
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
 			'itemId' => $itemId,
+			'innerId' => $innerId,
 			'fields' => [],
 		];
 
@@ -109,6 +114,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
+	 * @param string $itemId Integration item id.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
@@ -316,6 +322,14 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		return $output;
 	}
 
+	/**
+	 * Get tags field output depending on the settings type.
+	 *
+	 * @param string $formId Form Id.
+	 * @param array<mixed> $items Items from the original build.
+	 *
+	 * @return array<mixed>
+	 */
 	private function getTagsFields(string $formId, array $items): array
 	{
 		if (!$items) {

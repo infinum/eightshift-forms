@@ -48,7 +48,8 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 	 *
 	 * @param ClientInterface $airtableClient Inject HubSpot which holds HubSpot connect data.
 	 */
-	public function __construct(ClientInterface $airtableClient) {
+	public function __construct(ClientInterface $airtableClient)
+	{
 		$this->airtableClient = $airtableClient;
 	}
 
@@ -65,16 +66,6 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 			'permission_callback' => [$this, 'permissionCallback'],
 		];
 	}
-
-	/**
-	 * By default allow public access to route.
-	 *
-	 * @return bool
-	 */
-	// public function permissionCallback(): bool
-	// {
-	// 	return true;
-	// }
 
 	/**
 	 * Returns allowed methods for this route.
@@ -136,8 +127,8 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 			]);
 		}
 
-		$items = array_values(array_map(
-			static function($item) {
+		$items = \array_values(\array_map(
+			static function ($item) {
 				return [
 					'label' => $item['title'],
 					'value' => $item['id'],

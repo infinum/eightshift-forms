@@ -15,13 +15,13 @@ use EightshiftForms\Settings\Settings\SettingInterface;
 /**
  * Interface for SettingsClearbitDataInterface.
  */
-interface SettingsClearbitDataInterface extends SettingInterface
+interface SettingsClearbitDataInterface
 {
 	/**
 	 * Output array settings for form.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array<string, string> $keys Array of keys to get data from.
+	 * @param string $key Key for use toggle.
 	 *
 	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */

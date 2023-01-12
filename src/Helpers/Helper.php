@@ -348,17 +348,18 @@ class Helper
 	 * Convert all special characters in attributes.
 	 * Logic got from the core `serialize_block_attributes` function.
 	 *
-	 * @param string $attribute
+	 * @param string $attribute Attribute value to check.
+	 *
 	 * @return string
 	 */
 	public static function unserializeAttributes(string $attribute): string
 	{
-		$attribute = preg_replace( '/\u002d\u002d/', '--', $attribute );
-		$attribute = preg_replace( '/\u003c/', '<', $attribute );
-		$attribute = preg_replace( '/\u003e/', '>', $attribute );
-		$attribute = preg_replace( '/\u0026/', '&', $attribute );
-		// Regex: /\\"/
-		$attribute = preg_replace( '/\u0022/', '"', $attribute );
+		$attribute = \preg_replace('/\u002d\u002d/', '--', $attribute);
+		$attribute = \preg_replace('/\u003c/', '<', $attribute);
+		$attribute = \preg_replace('/\u003e/', '>', $attribute);
+		$attribute = \preg_replace('/\u0026/', '&', $attribute);
+		// Regex: /\\"/.
+		$attribute = \preg_replace('/\u0022/', '"', $attribute);
 
 		return $attribute;
 	}

@@ -131,8 +131,8 @@ class Validator extends AbstractValidation
 	 */
 	public function getValidationPatternsEditor(): array
 	{
-		return array_map(
-			static function($item) {
+		return \array_map(
+			static function ($item) {
 				$label = $item['label'] ?? '';
 				$value = $item['value'] ?? '';
 

@@ -13,12 +13,13 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsClearbit class.
  */
-class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface
+class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, SettingGlobalInterface
 {
 	/**
 	 * Use general helper trait.
@@ -115,13 +116,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
-		$emailSet = $this->getSettingsValue($typeItems[$type]['email'], $formId);
-
-		if (empty($emailSet)) {
-			return false;
-		}
-
-
 		$mapSet = $this->getOptionValueGroup($typeItems[$type]['map']);
 
 		if (empty($mapSet)) {
@@ -146,18 +140,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**
@@ -246,6 +228,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 * Output array settings for form.
 	 *
 	 * @param string $formId Form ID.
+	 * @param string $key Key for use toggle.
 	 *
 	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */

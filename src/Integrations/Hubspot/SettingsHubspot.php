@@ -16,13 +16,14 @@ use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsHubspot class.
  */
-class SettingsHubspot implements SettingInterface, ServiceInterface
+class SettingsHubspot implements SettingInterface, SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -166,19 +167,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(string $formId): bool
-	{
-		return true;
 	}
 
 	/**

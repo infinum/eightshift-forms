@@ -13,12 +13,13 @@ namespace EightshiftForms\Mailer;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements SettingInterface, ServiceInterface
+class SettingsMailer implements SettingInterface, SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

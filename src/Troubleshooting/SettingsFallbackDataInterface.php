@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftForms\Settings\Settings\SettingInterface;
-
 /**
  * Interface for SettingsFallbackDataInterface.
  */
-interface SettingsFallbackDataInterface extends SettingInterface
+interface SettingsFallbackDataInterface
 {
 	/**
 	 * Output array settings for form.

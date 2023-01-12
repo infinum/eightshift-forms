@@ -71,16 +71,6 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 	}
 
 	/**
-	 * Get global settings array for building settings page.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsGlobalData(): array
-	{
-		return [];
-	}
-
-	/**
 	 * Return all posts where form is assigned.
 	 *
 	 * @param string $formId Form Id.

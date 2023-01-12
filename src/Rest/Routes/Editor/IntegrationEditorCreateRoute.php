@@ -41,11 +41,10 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance.
 	 *
-	 * @param IntegrationSyncInterface $hubspot Inject Hubspot which holds Hubspot form data.
+	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
-	public function __construct(
-		IntegrationSyncInterface $integrationSyncDiff
-	) {
+	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
+	{
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -114,7 +113,7 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 		$status = $syncForm['status'] ?? '';
 
 		return \rest_ensure_response(
-			array_merge(
+			\array_merge(
 				[
 					'code' => $status === 'error' ? 400 : 200,
 				],

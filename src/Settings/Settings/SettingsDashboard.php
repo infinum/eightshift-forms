@@ -20,7 +20,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsDashboard class.
  */
-class SettingsDashboard implements SettingInterface, ServiceInterface
+class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use dashboard helper trait.
@@ -49,20 +49,7 @@ class SettingsDashboard implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**

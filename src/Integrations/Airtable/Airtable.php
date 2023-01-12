@@ -47,7 +47,8 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(ClientInterface $airtableClient) {
+	public function __construct(ClientInterface $airtableClient)
+	{
 		$this->airtableClient = $airtableClient;
 	}
 
@@ -59,23 +60,19 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormBlockGrammarArray'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
-	{
-		return [];
-	}
-
-	public function getFormBlockGrammarArray(string $formId, string $itemId, string $innerId): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
 		$output = [
 			'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
@@ -92,7 +89,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		}
 
 		$fields = $this->getFields($item[$innerId] ?? [], $formId);
-		
 
 		if (!$fields) {
 			return $output;

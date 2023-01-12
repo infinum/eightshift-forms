@@ -12,16 +12,14 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsActiveCampaign class.
  */
-class SettingsActiveCampaign implements SettingInterface, ServiceInterface
+class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -79,20 +77,6 @@ class SettingsActiveCampaign implements SettingInterface, ServiceInterface
 	public const SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY = 'active-campaign-conditional-tags';
 
 	/**
-	 * Instance variable for ActiveCampaign data.
-	 *
-	 * @var ActiveCampaignClientInterface
-	 */
-	private $activeCampaignClient;
-
-	/**
-	 * Instance variable for ActiveCampaign form data.
-	 *
-	 * @var MapperInterface
-	 */
-	private $activeCampaign;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -102,17 +86,10 @@ class SettingsActiveCampaign implements SettingInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
-	 * @param MapperInterface $activeCampaign Inject ActiveCampaign which holds ActiveCampaign form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds fallback settings data.
 	 */
-	public function __construct(
-		ActiveCampaignClientInterface $activeCampaignClient,
-		MapperInterface $activeCampaign,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->activeCampaignClient = $activeCampaignClient;
-		$this->activeCampaign = $activeCampaign;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 
@@ -123,9 +100,7 @@ class SettingsActiveCampaign implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		// \add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		// \add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 	}
 
 	/**
@@ -156,18 +131,6 @@ class SettingsActiveCampaign implements SettingInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**
