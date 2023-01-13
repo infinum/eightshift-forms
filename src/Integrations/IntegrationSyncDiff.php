@@ -144,10 +144,11 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * @param string $type Integration type.
 	 * @param string $itemId Item integration ID.
 	 * @param string $innerId Item integration inner ID.
+	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function createForm(string $formId, string $type, string $itemId, string $innerId): array
+	public function createForm(string $formId, string $type, string $itemId, string $innerId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
 		if (!$formId) {
@@ -226,7 +227,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				},
 				$this->prepareIntegrationBlocksForCheck($integrationFields)
 			),
-			true
+			$editorOutput
 		);
 
 		// Bailout if integration fields are missing.

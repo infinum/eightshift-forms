@@ -108,7 +108,7 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 		$itemId = $request->get_param('itemId') ?? '';
 		$innerId = $request->get_param('innerId') ?? '';
 
-		$syncForm = $this->integrationSyncDiff->createForm($formId, $type, $itemId, $innerId);
+		$syncForm = $this->integrationSyncDiff->createForm($formId, $type, $itemId, $innerId, true);
 
 		$status = $syncForm['status'] ?? '';
 

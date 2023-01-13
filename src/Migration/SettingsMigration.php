@@ -41,6 +41,11 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const VERSION_2_3 = '2-3';
 
 	/**
+	 * Version 3-4 key.
+	 */
+	public const VERSION_3_4 = '3-4';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -85,8 +90,30 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
 						],
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 3 to 4'),
+						'cardSubTitle' => \__('In this version we have changed everything, the way we configure integration forms, all integration settings and much more.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::VERSION_3_4,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
 					]
 				]
+			],
+			[
+				'component' => 'textarea',
+				'textareaFieldLabel' => \__('Migration output log', 'eightshift-forms'),
+				'textareaIsReadOnly' => true,
+				'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
 			],
 		];
 	}

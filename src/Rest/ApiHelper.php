@@ -115,7 +115,7 @@ trait ApiHelper
 	}
 
 	/**
-	 * Return API success response array.
+	 * Return API success response array - integration.
 	 *
 	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
@@ -135,5 +135,23 @@ trait ApiHelper
 			],
 			$additional
 		);
+	}
+
+	/**
+	 * Return API success response array - Generic.
+	 *
+	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
+	 * @param string $msg Msg for the user.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getApiSuccessGenericOutput(array $details, string $msg): array
+	{
+		return [
+			'status' => 'success',
+			'code' => $details['code'] ?? 200,
+			'message' => $msg,
+			'data' => $details,
+		];
 	}
 }

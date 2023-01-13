@@ -55,6 +55,7 @@ domReady(() => {
 			const migration = new Migration({
 				utils: new Utils(),
 				selector: selectorMigration,
+				outputSelector: `.${componentMigrationJsClass}-output`,
 				migrationRestUrl: esFormsLocalization.migrationRestUrl,
 			});
 
