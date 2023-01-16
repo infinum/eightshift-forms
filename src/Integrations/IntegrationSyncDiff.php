@@ -19,7 +19,6 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
-use WP_Query;
 
 /**
  * IntegrationSyncDiff class.
@@ -274,7 +273,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Get content from DB.
-		$content = $this->getFormContent($formId);
+		$content = Helper::getFormDetailsById($formId);
 
 		// Bailout if content is empty.
 		if (!$content) {
@@ -832,76 +831,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		return \array_values($fieldsOutput);
-	}
-
-	/**
-	 * Get current form content from the database and do initial preparations for diff.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getFormContent(string $formId): array
-	{
-		$output = [
-			'type' => '',
-			'itemId' => '',
-			'innerId' => '',
-			'fields' => [],
-		];
-
-		$theQuery = new WP_Query([
-			'p' => $formId,
-			'post_type' => Forms::POST_TYPE_SLUG,
-			'no_found_rows' => true,
-			'update_post_term_cache' => false,
-			'update_post_meta_cache' => false,
-			'post_status' => 'any',
-		]);
-
-		$form = $theQuery->post;
-
-		\wp_reset_postdata();
-
-		if (!$form) {
-			return $output;
-		}
-
-		$blocks = \parse_blocks($form->post_content); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-
-		if (!$blocks) {
-			return $output;
-		}
-
-		$blocks = $blocks[0];
-
-		$blockName = $blocks['innerBlocks'][0]['blockName'] ?? '';
-
-		if (!$blockName) {
-			return $output;
-		}
-
-		$type = \explode('/', $blockName);
-		$type = \end($type);
-		$output['type'] = $type;
-
-		$itemId = $blocks['innerBlocks'][0]['attrs'][Components::kebabToCamelCase($type) . "IntegrationId"] ?? '';
-		$innerId = $blocks['innerBlocks'][0]['attrs'][Components::kebabToCamelCase($type) . "IntegrationInnerId"] ?? '';
-
-		if (!$itemId) {
-			return $output;
-		}
-
-		// Only Airtable has inner items.
-		if ($type === SettingsAirtable::SETTINGS_TYPE_KEY && !$innerId) {
-			return $output;
-		}
-
-		$output['itemId'] = $itemId;
-		$output['innerId'] = $innerId;
-		$output['fields'] = $blocks;
-
-		return $output;
 	}
 
 	/**

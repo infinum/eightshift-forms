@@ -65,7 +65,7 @@
 			"default": false
 		},
 		"checkboxAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"checkboxAsToggle": {
 			"type": "boolean",

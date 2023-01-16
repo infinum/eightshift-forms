@@ -100,7 +100,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(string $formId, array $params = [], $files = [])
+	public function submitAction(array $formDataRefrerence)
 	{
 		// Send application to Airtable.
 		$response = $this->airtableClient->postApplication(

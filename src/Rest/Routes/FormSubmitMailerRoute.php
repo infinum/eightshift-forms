@@ -89,7 +89,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(string $formId, array $params = [], $files = [])
+	public function submitAction(array $formDataRefrerence)
 	{
 		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 

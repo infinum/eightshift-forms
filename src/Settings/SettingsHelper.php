@@ -336,7 +336,7 @@ trait SettingsHelper
 	 */
 	private function getActiveIntegrationIcons(string $id): array
 	{
-		$integrationTypeUsed = Helper::getUsedFormTypeById($id);
+		$integrationTypeUsed = Helper::getFormTypeById($id);
 
 		if (!$integrationTypeUsed) {
 			return [];

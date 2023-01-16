@@ -18,13 +18,11 @@ interface ValidatorInterface
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array<string, mixed> $params Get params.
-	 * @param array<string, mixed> $files Get files.
-	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $validationReference Reference of form data to check by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validate(array $params = [], array $files = [], string $formId = ''): array;
+	public function validate(array $validationReference): array;
 
 	/**
 	 * Prepare validation patterns for editor select output.

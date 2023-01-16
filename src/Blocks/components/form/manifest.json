@@ -61,7 +61,7 @@
 			"type": "string"
 		},
 		"formAttrs": {
-			"type": "array"
+			"type": "object"
 		}
 	},
 	"options": {

@@ -100,7 +100,7 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(string $formId, array $params = [], $files = [])
+	public function submitAction(array $formDataRefrerence)
 	{
 		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postApplication(

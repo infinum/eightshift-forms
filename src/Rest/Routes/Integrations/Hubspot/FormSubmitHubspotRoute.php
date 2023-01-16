@@ -113,35 +113,31 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(string $formId, array $params = [], $files = [])
+	public function submitAction(array $formDataRefrerence)
 	{
-		// $itemId = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-		$itemId = '';
-		// TODO
-
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
-			$itemId,
-			$params,
-			$files,
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		// Check if Hubspot is using Clearbit.
-		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
+		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formDataRefrerence['formId'], SettingsHubspot::SETTINGS_TYPE_KEY);
 
 		if ($useClearbit) {
-			$emailKey = $this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formId);
+			$emailKey = $this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formDataRefrerence['formId']);
 			$email = isset($params[$emailKey]['value']) ? $params[$emailKey]['value'] : '';
 
 			if ($email) {
 				// Get Clearbit data.
 				$clearbitResponse = $this->clearbitClient->getApplication(
 					$email,
-					$params,
+					$formDataRefrerence['params'],
 					$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map']),
-					$itemId,
-					$formId
+					$formDataRefrerence['itemId'],
+					$formDataRefrerence['formId']
 				);
 
 				// If Clearbit data is ok send data to Hubspot.
@@ -159,19 +155,19 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 
 		if ($response['status'] === 'error') {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response['data'] ?? []);
+			// $this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
 		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
+		if ($formDataRefrerence['files']) {
+			$this->deleteFiles($formDataRefrerence['files']);
 		}
 
 		// Finish.
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

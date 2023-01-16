@@ -15,7 +15,9 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Helper class.
@@ -304,7 +306,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getUsedFormTypeById(string $formId): string
+	public static function getFormTypeById(string $formId): string
 	{
 		$content = \get_post_field('post_content', (int) $formId);
 
@@ -327,6 +329,56 @@ class Helper
 		$blockName = \explode('/', $blockName);
 
 		return \end($blockName);
+	}
+
+	/**
+	 * Get current form content from the database and do prepare output.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function getFormDetailsById(string $formId): array
+	{
+		$output = [
+			'formId' => $formId,
+			'type' => '',
+			'itemId' => '',
+			'innerId' => '',
+			'fields' => [],
+			'fieldsOnly' => [],
+		];
+
+		$form = \get_post_field('post_content', (int) $formId);
+
+		if (!$form) {
+			return $output;
+		}
+
+		$blocks = \parse_blocks($form); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
+		if (!$blocks) {
+			return $output;
+		}
+
+		$blocks = $blocks[0];
+
+		$blockName = $blocks['innerBlocks'][0]['blockName'] ?? '';
+
+		if (!$blockName) {
+			return $output;
+		}
+
+		$type = \explode('/', $blockName);
+		$type = Components::kebabToCamelCase(\end($type));
+
+		$output['type'] = $type;
+		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
+		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
+		$output['fields'] = $blocks;
+		$output['fieldsOnly'] = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
+
+		return $output;
 	}
 
 	/**

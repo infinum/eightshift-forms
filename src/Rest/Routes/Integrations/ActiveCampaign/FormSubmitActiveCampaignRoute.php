@@ -88,7 +88,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(string $formId, array $params = [], $files = [])
+	public function submitAction(array $formDataRefrerence)
 	{
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(

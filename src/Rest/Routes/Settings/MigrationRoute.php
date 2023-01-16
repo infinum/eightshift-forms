@@ -217,7 +217,7 @@ class MigrationRoute extends AbstractBaseRoute
 				$title = $id;
 			}
 
-			$type = Helper::getUsedFormTypeById($id);
+			$type = Helper::getFormTypeById($id);
 
 			switch ($type) {
 				case SettingsHubspot::SETTINGS_TYPE_KEY:

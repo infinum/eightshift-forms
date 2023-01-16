@@ -39,7 +39,7 @@
 			"type": "string"
 		},
 		"submitAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"submitFieldHideLabel": {
 			"type": "boolean",

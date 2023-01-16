@@ -60,7 +60,7 @@
 			"type": "string"
 		},
 		"textareaAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"textareaDisabledOptions": {
 			"type": "array"

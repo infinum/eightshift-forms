@@ -100,33 +100,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Sanitizes all received fields recursively. If a field is something we don't need to
-	 * sanitize then we don't touch it.
-	 *
-	 * @param array<string|int, mixed> $params Array of params.
-	 *
-	 * @return array<string|int, mixed>
-	 */
-	protected function sanitizeFields(array $params)
-	{
-		foreach ($params as $key => $param) {
-			$type = $param['type'] ?? '';
-
-			if (\array_values($param) === $param) {
-				$params[$key] = $this->sanitizeFields($param);
-			} else {
-				if ($type === 'textarea') {
-					$params[$key]['value'] = \sanitize_textarea_field($param['value']);
-				} else {
-					$params[$key]['value'] = \sanitize_text_field($param['value']);
-				}
-			}
-		}
-
-		return $params;
-	}
-
-	/**
 	 * Toggle if this route requires nonce verification.
 	 *
 	 * @return bool
@@ -134,46 +107,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function requiresNonceVerification(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Verifies everything is ok with request.
-	 *
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<string, bool|string>> $files Files array.
-	 * @param string $formId Form Id.
-	 * @param array<string, mixed> $formData Form data to validate.
-	 *
-	 * @throws UnverifiedRequestException When we should abort the request for some reason.
-	 *
-	 * @return void
-	 */
-	protected function verifyRequest(array $params, array $files = [], string $formId = '', array $formData = []): void
-	{
-		// Sanitize Fields.
-		$params = $this->sanitizeFields($params);
-
-		// Verify nonce if submitted.
-		if ($this->requiresNonceVerification()) {
-			if (
-				! isset($params['nonce']) ||
-				! isset($params['form-unique-id']) ||
-				! \wp_verify_nonce($params['nonce'], $params['form-unique-id'])
-			) {
-				throw new UnverifiedRequestException(
-					\esc_html__('Invalid nonce.', 'eightshift-forms')
-				);
-			}
-		}
-
-		// Validate Params.
-		$validate = $this->validator->validate($params, $files, $formId, $formData);
-		if (!empty($validate)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-				$validate
-			);
-		}
 	}
 
 	/**
@@ -193,7 +126,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					// Loop all items and decode.
 					$inner = \array_map(
 						static function ($item) {
-							return \json_decode($item, true);
+							return \json_decode(sanitize_text_field($item), true);
 						},
 						$item
 					);
@@ -210,7 +143,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 					// Fallback if everything is empty.
 					if (!$innerNotEmpty) {
-						return $inner[0];
+						return [];
 					}
 
 					// If multiple values this is checkbox or select multiple.
@@ -235,7 +168,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				// Just decode value.
-				return \json_decode($item, true);
+				return \json_decode(sanitize_text_field($item), true);
 			},
 			$params
 		);
@@ -288,35 +221,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Return form ID from form params and determins if ID needs decrypting.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 * @param bool $throwError Throw error if missing post Id.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormId(array $params, bool $throwError = true): string
-	{
-		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
-
-		if (!$formId) {
-			return '';
-		}
-
-		$formId = $formId['value'] ?? '';
-
-		if (!$formId && $throwError) {
-			throw new UnverifiedRequestException(
-				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
-			);
-		}
-
-		return $formId;
 	}
 
 	/**

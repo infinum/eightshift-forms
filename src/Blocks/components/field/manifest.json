@@ -92,7 +92,7 @@
 			"type": "string"
 		},
 		"fieldAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"fieldSkip": {
 			"type": "boolean",

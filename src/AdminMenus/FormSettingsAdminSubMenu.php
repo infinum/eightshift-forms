@@ -202,7 +202,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$integrationTypeUsed = Helper::getUsedFormTypeById($formId);
+		$integrationTypeUsed = Helper::getFormTypeById($formId);
 		$formEditLink = Helper::getFormEditPageUrl($formId);
 
 		return [

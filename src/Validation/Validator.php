@@ -12,7 +12,6 @@ namespace EightshiftForms\Validation;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
@@ -71,33 +70,17 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array<int|string, mixed> $params Get params.
-	 * @param array<string, mixed> $files Get files.
-	 * @param string $formId Form Id.
-	 * @param array<string, mixed> $formData Form data to validate.
+	 * @param array<string, mixed> $validationReference Reference of form data to check by.
 	 *
 	 * @return array<int|string, mixed>
 	 */
-	public function validate(array $params = [], array $files = [], string $formId = '', array $formData = []): array
+	public function validate(array $data): array
 	{
-		// If single submit skip all validations.
-		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['singleSubmit']])) {
-			return [];
-		}
+		$validationReference = $this->getValidationReference($data['fieldsOnly']);
 
-		// Find out forms original data and check for valition options.
-		if ($formData) {
-			$validationReference = $this->getValidationReferenceManual($formData);
-		} else {
-			$blocks = \parse_blocks(\get_the_content(null, false, (int) $formId));
-
-			$validationReference = $this->getValidationReference($blocks[0]['innerBlocks'][0]['innerBlocks']);
-		}
-
-		// Merge params and files validations.
 		return \array_merge(
-			$this->validateParams($params, $validationReference, $formId),
-			$this->validateFiles($files, $validationReference, $formId)
+			$this->validateParams($data['params'], $validationReference, $data['formId']),
+			$this->validateFiles($data['files'], $validationReference, $data['formId']),
 		);
 	}
 

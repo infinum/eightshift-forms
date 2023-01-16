@@ -60,7 +60,7 @@
 			"type": "string"
 		},
 		"fileAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"fileDisabledOptions": {
 			"type": "array"

@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
@@ -67,38 +67,38 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$files = $request->get_file_params();
 
 			// Get form ID.
-			$formId = $this->getFormId($params);
+			$formId = $params[self::CUSTOM_FORM_PARAMS['postId']]['value'] ?? '';
 
 			if (!$formId) {
 				throw new UnverifiedRequestException(
-					\esc_html__('Invalid nonce.', 'eightshift-forms')
+					\esc_html__('Invalid form ID.', 'eightshift-forms')
 				);
 			}
 
-			// Determine form type.
-			$formType = $this->getFormType($params);
-
-			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType]['fields']) ? \apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
+			$formDataRefrerence = Helper::getFormDetailsById($formId);
+			$formDataRefrerence['params'] = $params;
+			$formDataRefrerence['files'] = $files;
 
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				$this->verifyRequest(
-					$params,
-					$files,
-					$formId,
-					$formData
-				);
+				$validate = $this->validator->validate($formDataRefrerence);
+
+				if ($validate) {
+					throw new UnverifiedRequestException(
+						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+						$validate
+					);
+				}
 			}
 
 			// Extract hidden params from localStorage set on the frontend.
-			$params = $this->extractStorageParams($params);
+			$params = $this->extractStorageParams($formDataRefrerence['params']);
 
 			// Upload files to temp folder.
-			$files = $this->uploadFiles($files);
+			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);
 
 			// Do Action.
-			return $this->submitAction($formId, $params, $files);
+			return $this->submitAction($formDataRefrerence);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
@@ -115,11 +115,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Implement submit action.
 	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param array<string, mixed> $formDataRefrerence From data with all details.
 	 *
 	 * @return mixed
 	 */
-	abstract public function submitAction(string $formId, array $params = [], $files = []);
+	abstract public function submitAction(array $formDataRefrerence);
 }

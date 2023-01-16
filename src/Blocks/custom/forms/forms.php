@@ -11,7 +11,6 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 

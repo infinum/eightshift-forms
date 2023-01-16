@@ -92,6 +92,7 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
+			$files = $request->get_file_params();
 
 			// Get encrypted form ID and decrypt it.
 			$formId = $this->getFormId($params, false);
@@ -99,23 +100,16 @@ class FormSettingsSubmitRoute extends AbstractBaseRoute
 			// Determine form type.
 			$formType = $this->getFormType($params);
 
-			// Check if form settings or global settings.
-			$formInternalType = 'settings';
-			if (!$formId) {
-				$formInternalType = 'settingsGlobal';
-			}
-
-			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType][$formInternalType]) ? \apply_filters(Filters::ALL[$formType][$formInternalType], $formId) : [];
-
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				$this->verifyRequest(
-					$params,
-					$request->get_file_params(),
-					$formId,
-					$formData
-				);
+				$validate = $this->validator->validate($params, $files, $formId, $formUsage);
+
+				if (!empty($validate)) {
+					throw new UnverifiedRequestException(
+						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+						$validate
+					);
+				}
 			}
 
 			// Remove unnecessary internal params before continue.
