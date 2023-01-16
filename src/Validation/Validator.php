@@ -12,7 +12,6 @@ namespace EightshiftForms\Validation;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -28,7 +27,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Use general helper trait.
 	 */
-	use SettingsHelper;
+	// use SettingsHelper;
 
 	/**
 	 * Instance variable for labels data.
@@ -36,6 +35,13 @@ class Validator extends AbstractValidation
 	 * @var LabelsInterface
 	 */
 	protected $labels;
+
+	/**
+	 * Instance variable of ValidationPatternsInterface data.
+	 *
+	 * @var ValidationPatternsInterface
+	 */
+	protected $validationPatterns;
 
 	/**
 	 * Validation Fields to check.
@@ -58,13 +64,36 @@ class Validator extends AbstractValidation
 	];
 
 	/**
+	 * Validation components to check.
+	 *
+	 * @var array<int, string>
+	 */
+	private const VALIDATION_MANUAL_COMPONENTS = [
+		'input',
+		'textarea',
+		'select',
+		'checkboxes',
+		'radios',
+		'file',
+	];
+
+	/**
+	 * Transient cache name for validatior labels.
+	 */
+	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 */
-	public function __construct(LabelsInterface $labels)
-	{
+	public function __construct(
+		LabelsInterface $labels,
+		ValidationPatternsInterface $validationPatterns
+	) {
 		$this->labels = $labels;
+		$this->validationPatterns = $validationPatterns;
 	}
 
 	/**
@@ -76,7 +105,13 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $data): array
 	{
-		$validationReference = $this->getValidationReference($data['fieldsOnly']);
+		if ($data['type'] === 'settings' || $data['type'] === 'globalSettings') {
+			$validationReference = $this->getValidationReferenceManual($data['fieldsOnly']);
+			error_log( print_r( ( $validationReference ), true ) );
+			
+		} else {
+			$validationReference = $this->getValidationReference($data['fieldsOnly']);
+		}
 
 		return \array_merge(
 			$this->validateParams($data['params'], $validationReference, $data['formId']),
@@ -85,123 +120,24 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Get validation pattern - pattern from name.
+	 * Get validation label from cache or db.
 	 *
-	 * @param string $name Name to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPattern(string $name): string
-	{
-		$patterns = \array_filter(
-			$this->getValidationPatterns(),
-			static function ($item) use ($name) {
-				return $item['label'] === $name;
-			}
-		);
-
-		if ($patterns) {
-			return \reset($patterns)['value'] ?? $name;
-		}
-
-		return $name;
-	}
-
-	/**
-	 * Prepare validation patterns for editor select output.
-	 *
-	 * @return array<int, array<string, string>>
-	 */
-	public function getValidationPatternsEditor(): array
-	{
-		return \array_map(
-			static function ($item) {
-				$label = $item['label'] ?? '';
-				$value = $item['value'] ?? '';
-
-				// Output label as value for enum.
-				return [
-					'label' => $label,
-					'value' => $value === '---' ? '' : $label,
-				];
-			},
-			$this->getValidationPatterns()
-		);
-	}
-
-	/**
-	 * Prepare validation patterns
-	 *
-	 * @return array<int, array<string, string>>
-	 */
-	private function getValidationPatterns(): array
-	{
-		$output = [
-			[
-				'value' => '',
-				'label' => '---',
-				'name' => '',
-			],
-			...SettingsValidation::VALIDATION_PATTERNS,
-			...SettingsValidation::VALIDATION_PATTERNS_PRIVATE,
-		];
-
-		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
-
-		if ($userPatterns) {
-			foreach ($userPatterns as $pattern) {
-				$pattern = \explode(' : ', $pattern);
-
-				if (!isset($pattern[0]) || !isset($pattern[1])) {
-						continue;
-				};
-
-				$output[] = [
-					'value' => $pattern[1],
-					'label' => $pattern[0],
-					'output' => $pattern[2],
-				];
-			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Get validation pattern - output from pattern.
-	 *
-	 * @param string $pattern Pattern to serach.
+	 * @param string $key Key to get data from.
+	 * @param string $formId Form ID.
 	 *
 	 * @return string
 	 */
-	private function getValidationPatternOutput(string $pattern): string
+	private function getValidationLabel(string $key, string $formId): string
 	{
-		$patterns = \array_filter(
-			$this->getValidationPatterns(),
-			static function ($item) use ($pattern) {
-				return $item['value'] === $pattern;
-			}
-		);
+		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
-		$patterns = \reset($patterns);
+		if (!$output) {
+			$output = $this->labels->getValidationLabelsOutput($formId);
 
-		if (!$patterns) {
-			return $pattern;
+			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, 180); // 3 min.
 		}
 
-		$output = $patterns['output'] ?? '';
-
-		if ($output) {
-			return $output;
-		}
-
-		$label = $patterns['label'] ?? '';
-
-		if ($label) {
-			return $label;
-		}
-
-		return $pattern;
+		return $output[$key] ?? '';
 	}
 
 	/**
@@ -241,42 +177,42 @@ class Validator extends AbstractValidation
 					// Check validation for required params.
 					case 'isRequired':
 						if ($dataValue && empty($inputValue)) {
-							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
+							$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
 						}
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
 						if ($dataValue && \count(\explode(", ", $inputValue)) < $dataValue && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for email params.
 					case 'isEmail':
 						if ($dataValue && !$this->isEmail($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
+							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						}
 						break;
 					case 'isNumber':
 						if ($dataValue && !\is_numeric($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->labels->getLabel('validationNumber', $formId);
+							$output[$paramKey] = $this->getValidationLabel('validationNumber', $formId);
 						}
 						break;
 					// Check validation for url params.
 					case 'isUrl':
 						if ($dataValue && !$this->isUrl($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
+							$output[$paramKey] = $this->getValidationLabel('validationUrl', $formId);
 						}
 						break;
 					// Check validation for min characters length.
 					case 'minLength':
 						if ($dataValue && $dataValue > \strlen($inputValue)) {
-							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMinLength', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinLength', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max characters length.
 					case 'maxLength':
 						if ($dataValue && $dataValue < \strlen($inputValue)) {
-							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMaxLength', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxLength', $formId), $dataValue);
 						}
 						break;
 					case 'validationPattern':
@@ -285,7 +221,7 @@ class Validator extends AbstractValidation
 						$key = $matches[0] ?? '';
 
 						if ($dataValue && (empty($key) || $key[0] !== $inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->labels->getLabel('validationPattern', $formId), $this->getValidationPatternOutput($dataValue));
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $this->validationPatterns->getValidationPatternOutput($dataValue));
 						}
 						break;
 				}
@@ -334,13 +270,13 @@ class Validator extends AbstractValidation
 
 					foreach ($individualFiles as $file) {
 						if (!$this->isMimeTypeValid($file)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationAcceptMime', $formId), $dataValue);
+							$output[$fileKey] = \sprintf($this->getValidationLabel('validationAcceptMime', $formId), $dataValue);
 						}
 					}
 
 					foreach ($fileValue['name'] as $file) {
 						if (!empty($dataValue) && !$this->isFileTypeValid($file, $dataValue)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
+							$output[$fileKey] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
 							continue;
 						}
 					}
@@ -351,7 +287,7 @@ class Validator extends AbstractValidation
 					// Check validation for min size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'minSize') {
 						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue / 1000);
+							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMinSize', $formId), $dataValue / 1000);
 							continue;
 						}
 					}
@@ -359,7 +295,7 @@ class Validator extends AbstractValidation
 					// Check validation for max size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'maxSize') {
 						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue / 1000);
+							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMaxSize', $formId), $dataValue / 1000);
 							continue;
 						}
 					}
@@ -456,7 +392,7 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Output validation reference fields for manual form (integrations, settings).
+	 * Output validation reference fields for manual form settings.
 	 *
 	 * @param array<int|string, mixed> $blocks Blocks array of data.
 	 *
@@ -465,31 +401,47 @@ class Validator extends AbstractValidation
 	private function getValidationReferenceManual(array $blocks): array
 	{
 		$output = [];
+		
+		$blocksPrepare = [];
+		$allowed = array_flip(self::VALIDATION_MANUAL_COMPONENTS);
 
-		// Loop multiple levels form-selector > form.
-		foreach ($blocks as $block) {
-			if (!$block) {
-				continue;
+		\array_walk_recursive(
+			$blocks,
+			function ($a) use (&$blocksPrepare, $allowed) {
+				error_log( print_r( ( $a ), true ) );
+				
+				if (isset($allowed)) {
+					$blocksPrepare[] = $a;
+				}
 			}
+		);
 
-			$name = $block['component'];
+		// error_log( print_r( ( $blocksPrepare ), true ) );
 
-			if (!$name) {
-				continue;
-			}
+		// // Loop multiple levels form-selector > form.
+		// foreach ($blocks as $block) {
+		// 	if (!$block) {
+		// 		continue;
+		// 	}
 
-			$innerOptions = $this->getValidationReferenceManualInner($block, $name);
+		// 	$name = $block['component'];
 
-			if ($innerOptions) {
-				$output = \array_merge($output, $innerOptions);
-			}
-		}
+		// 	if (!$name) {
+		// 		continue;
+		// 	}
+
+		// 	$innerOptions = $this->getValidationReferenceManualInner($block, $name);
+
+		// 	if ($innerOptions) {
+		// 		$output = \array_merge($output, $innerOptions);
+		// 	}
+		// }
 
 		return $output;
 	}
 
 	/**
-	 * Output validation reference inner blocks fields for manual form (integrations, settings).
+	 * Output validation reference inner blocks fields for manual form settings.
 	 *
 	 * @param array<string, mixed> $attributes Component attributes.
 	 * @param string $name Component name.
@@ -513,7 +465,15 @@ class Validator extends AbstractValidation
 			);
 
 			// Get Block Id.
-			$id = $attributes["{$name}Id"] ?? '';
+			$id = $attributes["{$name}Name"] ?? '';
+
+			// error_log( print_r( ( $name ), true ) );
+			// error_log( print_r( ( $id ), true ) );
+			// error_log( print_r( ( $attributeKey ), true ) );
+			// error_log( print_r( ( $attributes ), true ) );
+			// error_log( print_r( ( '-------------------------' ), true ) );
+			
+			
 
 			// Output validation items with correct value for the matching ID.
 			if (isset($valid[$attributeKey]) && !empty($id)) {

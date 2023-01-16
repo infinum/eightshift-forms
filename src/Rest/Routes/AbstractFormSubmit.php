@@ -14,6 +14,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
@@ -67,21 +68,31 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$files = $request->get_file_params();
 
 			// Get form ID.
-			$formId = $params[self::CUSTOM_FORM_PARAMS['postId']]['value'] ?? '';
+			$formId = $this->getFormId($params);
+			$formType = $this->getFormType($params);
+			$formSettingsType = $this->getFormSettingsType($params);
 
-			if (!$formId) {
-				throw new UnverifiedRequestException(
-					\esc_html__('Invalid form ID.', 'eightshift-forms')
-				);
+			if ($formType === 'settings' || $formType === 'globalSettings') {
+				$formDataRefrerence = [
+					'formId' => $formId,
+					'type' => $formType,
+					'itemId' => '',
+					'innerId' => '',
+					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
+				];
+			} else {
+				$formDataRefrerence = Helper::getFormDetailsById($formId);
 			}
 
-			$formDataRefrerence = Helper::getFormDetailsById($formId);
 			$formDataRefrerence['params'] = $params;
 			$formDataRefrerence['files'] = $files;
 
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				$validate = $this->validator->validate($formDataRefrerence);
+				$validate = $this->getValidator()->validate($formDataRefrerence);
+
+				error_log( print_r( ( $validate ), true ) );
+				
 
 				if ($validate) {
 					throw new UnverifiedRequestException(
@@ -113,11 +124,32 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
+	 * Returns validator class.
+	 *
+	 * @return ValidatorInterface
+	 */
+	abstract protected function getValidator();
+
+	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return ValidationPatternsInterface
+	 */
+	abstract protected function getValidatorPatterns();
+
+	/**
+	 * Returns validator labels class.
+	 *
+	 * @return LabelsInterface
+	 */
+	abstract protected function getValidatorLabels();
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDataRefrerence From data with all details.
 	 *
 	 * @return mixed
 	 */
-	abstract public function submitAction(array $formDataRefrerence);
+	abstract protected function submitAction(array $formDataRefrerence);
 }

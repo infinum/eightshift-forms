@@ -13,6 +13,7 @@ namespace EightshiftForms\Settings\Settings;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Settings class.
@@ -120,15 +121,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		// Get filter data.
 		$data = \apply_filters($filter, $formId);
 
-		// Add additional props to form component.
-		$formAdditionalProps['formType'] = $type;
-
-		if ($formId) {
-			$formAdditionalProps['formPostId'] = $formId;
-		}
-
 		$formAdditionalProps['formAttrs'] = [
-			'data-settings-type' => $internalType,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId'] => $formId,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType'] => $internalType,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['settingsType'] => $type,
 		];
 
 		// Populate and build form.

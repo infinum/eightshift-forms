@@ -15,7 +15,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,24 +43,24 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	protected $momentsClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
+	 * Instance variable of ValidationPatternsInterface data.
 	 *
-	 * @var ValidatorInterface
+	 * @var ValidationPatternsInterface
 	 */
-	protected $validator;
+	protected $validationPatterns;
 
 	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 */
 	public function __construct(
 		ClientInterface $momentsClient,
-		ValidatorInterface $validator
+		ValidationPatternsInterface $validationPatterns
 	) {
 		$this->momentsClient = $momentsClient;
-		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 	}
 
 	/**
@@ -164,7 +164,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					];
 					break;
 				case 'date':
-					$pattern = $this->validator->getValidationPattern('momentsDate');
+					$pattern = $this->validationPatterns->getValidationPattern('momentsDate');
 
 					$output[] = [
 						'component' => 'input',
@@ -183,7 +183,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					];
 					break;
 				case 'datetime':
-					$pattern = $this->validator->getValidationPattern('momentsDateTime');
+					$pattern = $this->validationPatterns->getValidationPattern('momentsDateTime');
 
 					$output[] = [
 						'component' => 'input',
@@ -202,7 +202,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					];
 					break;
 				case 'email':
-					$pattern = $this->validator->getValidationPattern('momentsEmail');
+					$pattern = $this->validationPatterns->getValidationPattern('momentsEmail');
 
 					$output[] = [
 						'component' => 'input',
@@ -222,7 +222,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					];
 					break;
 				case 'number':
-					$pattern = $this->validator->getValidationPattern('momentsNumber');
+					$pattern = $this->validationPatterns->getValidationPattern('momentsNumber');
 
 					$output[] = [
 						'component' => 'input',

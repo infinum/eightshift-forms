@@ -110,6 +110,55 @@ class Labels implements LabelsInterface
 	}
 
 	/**
+	 * Return one label by key
+	 *
+	 * @param string $key Label key.
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public function getLabel(string $key, string $formId = ''): string
+	{
+		// If form ID is not missing check form settings for the overrides.
+		if (!empty($formId)) {
+			$local = \array_flip(self::ALL_LOCAL_LABELS);
+
+			if (isset($local[$key])) {
+				$dbLabel = $this->getSettingsValue($key, $formId);
+			} else {
+				$dbLabel = $this->getOptionValue($key);
+			}
+
+			// If there is an override in the DB use that.
+			if (!empty($dbLabel)) {
+				return $dbLabel;
+			}
+		}
+
+		$labels = $this->getLabels();
+
+		return $labels[$key] ?? '';
+	}
+
+	/**
+	 * Output all validation labels from cache for fater validation.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getValidationLabelsOutput(string $formId = ''): array
+	{
+		$output = [];
+
+		foreach ($this->getValidationLabels() as $key => $value) {
+			$output[$key] = $this->getLabel($key, $formId);
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Return labels - Generic
 	 *
 	 * @return array<string, string>
@@ -368,36 +417,5 @@ class Labels implements LabelsInterface
 			'momentsEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
 			'momentsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
-	}
-
-	/**
-	 * Return one label by key
-	 *
-	 * @param string $key Label key.
-	 * @param string $formId Form ID.
-	 *
-	 * @return string
-	 */
-	public function getLabel(string $key, string $formId = ''): string
-	{
-		// If form ID is not missing check form settings for the overrides.
-		if (!empty($formId)) {
-			$local = \array_flip(self::ALL_LOCAL_LABELS);
-
-			if (isset($local[$key])) {
-				$dbLabel = $this->getSettingsValue($key, $formId);
-			} else {
-				$dbLabel = $this->getOptionValue($key);
-			}
-
-			// If there is an override in the DB use that.
-			if (!empty($dbLabel)) {
-				return $dbLabel;
-			}
-		}
-
-		$labels = $this->getLabels();
-
-		return $labels[$key] ?? '';
 	}
 }

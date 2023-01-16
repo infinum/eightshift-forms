@@ -15,7 +15,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,24 +43,24 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	protected $mailchimpClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
+	 * Instance variable of ValidationPatternsInterface data.
 	 *
-	 * @var ValidatorInterface
+	 * @var ValidationPatternsInterface
 	 */
-	protected $validator;
+	protected $validationPatterns;
 
 	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 */
 	public function __construct(
 		MailchimpClientInterface $mailchimpClient,
-		ValidatorInterface $validator
+		ValidationPatternsInterface $validationPatterns
 	) {
 		$this->mailchimpClient = $mailchimpClient;
-		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$label = $field['name'] ?? '';
 			$required = $field['required'] ?? false;
 			$value = $field['default_value'] ?? '';
-			$dateFormat = isset($field['options']['date_format']) ? $this->validator->getValidationPattern($field['options']['date_format']) : '';
+			$dateFormat = isset($field['options']['date_format']) ? $this->validationPatterns->getValidationPattern($field['options']['date_format']) : '';
 			$options = $field['options']['choices'] ?? [];
 			$id = $name;
 

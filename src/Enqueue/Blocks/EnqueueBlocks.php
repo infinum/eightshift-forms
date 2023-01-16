@@ -21,7 +21,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
-use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
@@ -36,11 +36,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	use SettingsHelper;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
+	 * Instance variable of ValidationPatternsInterface data.
 	 *
-	 * @var ValidatorInterface
+	 * @var ValidationPatternsInterface
 	 */
-	protected $validator;
+	protected $validationPatterns;
 
 	/**
 	 * Instance variable of enrichment data.
@@ -53,16 +53,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
 		ManifestInterface $manifest,
-		ValidatorInterface $validator,
+		ValidationPatternsInterface $validationPatterns,
 		EnrichmentInterface $enrichment
 	) {
 		$this->manifest = $manifest;
-		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 		$this->enrichment = $enrichment;
 	}
 
@@ -196,7 +196,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['radiosBlockAdditionalContent'] = \apply_filters($radiosAdditionalContentFilterName, []);
 			$output['submitBlockAdditionalContent'] = \apply_filters($submitAdditionalContentFilterName, []);
 			$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
-			$output['validationPatternsOptions'] = $this->validator->getValidationPatternsEditor();
+			$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 

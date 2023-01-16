@@ -14,12 +14,9 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftForms\Validation\Validator; // phpcs:ignore
 
 /**
- * Class FormSubmitRoute
- *
- * @property Validator $validator
+ * Class AbstractBaseRoute
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
@@ -29,6 +26,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const CUSTOM_FORM_PARAMS = [
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
+		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
 		'action' => 'es-form-action',
@@ -57,6 +55,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'actionExternal' => 'data-action-external',
 		'fieldTypeInternal' => 'data-type-internal',
 		'fieldUncheckedValue' => 'data-unchecked-value',
+		'settingsType' => 'data-settings-type',
 	];
 
 	/**
@@ -194,6 +193,42 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $formType['value'] ?? '';
+	}
+
+	/**
+	 * Return form settings type from form params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @throws UnverifiedRequestException Wrong request response.
+	 *
+	 * @return string
+	 */
+	protected function getFormSettingsType(array $params): string
+	{
+		return $params[self::CUSTOM_FORM_PARAMS['settingsType']]['value'] ?? '';
+	}
+
+	/**
+	 * Return form ID from form params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @throws UnverifiedRequestException Wrong request response.
+	 *
+	 * @return string
+	 */
+	protected function getFormId(array $params): string
+	{
+		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
+
+		if (!$formId) {
+			throw new UnverifiedRequestException(
+				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
+			);
+		}
+
+		return $formId['value'] ?? '';
 	}
 
 	/**

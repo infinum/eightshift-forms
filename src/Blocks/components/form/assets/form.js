@@ -284,6 +284,11 @@ export class Form {
 
 					// Output field errors.
 					this.utils.outputErrors(element, response.validation);
+					
+					console.log(response);
+
+					// Set global msg.
+					this.utils.setGlobalMsg(element, response.message, 'error');
 				}
 
 				// Hide global msg in any case after some time.
@@ -480,11 +485,19 @@ export class Form {
 			}));
 		}
 
-		if (singleSubmit && this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
-				value: 'true',
+		if (this.utils.formIsAdmin) {
+			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
+				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
 				type: 'hidden',
 			}));
+
+			if (singleSubmit) {
+				formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
+					value: 'true',
+					type: 'hidden',
+				}));
+			}
+	
 		}
 
 		// Set localStorage to hidden field.

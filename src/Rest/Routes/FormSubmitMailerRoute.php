@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -40,6 +41,13 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected $validator;
 
 	/**
+	 * Instance variable of ValidationPatternsInterface data.
+	 *
+	 * @var ValidationPatternsInterface
+	 */
+	protected $validationPatterns;
+
+	/**
 	 * Instance variable of MailerInterface data.
 	 *
 	 * @var MailerInterface
@@ -57,15 +65,18 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
+		ValidationPatternsInterface $validationPatterns,
 		MailerInterface $mailer,
 		LabelsInterface $labels
 	) {
 		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 		$this->mailer = $mailer;
 		$this->labels = $labels;
 	}
@@ -81,6 +92,36 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns validator class.
+	 *
+	 * @return ValidatorInterface
+	 */
+	protected function getValidator()
+	{
+		return $this->validator;
+	}
+
+	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return ValidationPatternsInterface
+	 */
+	protected function getValidatorPatterns()
+	{
+		return $this->validationPatterns;
+	}
+
+	/**
+	 * Returns validator labels class.
+	 *
+	 * @return LabelsInterface
+	 */
+	protected function getValidatorLabels()
+	{
+		return $this->labels;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param string $formId Form ID.
@@ -89,7 +130,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataRefrerence)
 	{
 		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 

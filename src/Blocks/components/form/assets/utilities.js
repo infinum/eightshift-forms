@@ -227,7 +227,7 @@ export class Utils {
 		}
 
 		// Scroll to element if the condition is right.
-		if (typeof fields !== 'undefined' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
+		if (fields.length > 0 && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);

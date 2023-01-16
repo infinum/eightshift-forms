@@ -20,6 +20,7 @@ use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -43,6 +44,13 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @var ValidatorInterface
 	 */
 	protected $validator;
+
+	/**
+	 * Instance variable of ValidationPatternsInterface data.
+	 *
+	 * @var ValidationPatternsInterface
+	 */
+	protected $validationPatterns;
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -76,6 +84,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
@@ -83,12 +92,14 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
+		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient,
 		MailerInterface $mailer
 	) {
 		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
@@ -104,6 +115,37 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	{
 		return '/form-submit-hubspot';
 	}
+
+	/**
+	 * Returns validator class.
+	 *
+	 * @return ValidatorInterface
+	 */
+	protected function getValidator()
+	{
+		return $this->validator;
+	}
+
+	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return ValidationPatternsInterface
+	 */
+	protected function getValidatorPatterns()
+	{
+		return $this->validationPatterns;
+	}
+
+	/**
+	 * Returns validator labels class.
+	 *
+	 * @return LabelsInterface
+	 */
+	protected function getValidatorLabels()
+	{
+		return $this->labels;
+	}
+
 	/**
 	 * Implement submit action.
 	 *
@@ -113,7 +155,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 *
 	 * @return mixed
 	 */
-	public function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataRefrerence)
 	{
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
@@ -154,8 +196,10 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		}
 
 		if ($response['status'] === 'error') {
+			error_log( print_r( ( $response['data'] ), true ) );
+			
 			// Send fallback email.
-			// $this->mailer->fallbackEmail($response['data'] ?? []);
+			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
 		// Always delete the files from the disk.
