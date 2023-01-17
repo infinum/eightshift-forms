@@ -7,9 +7,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"radiosId": {
-			"type": "string"
-		},
 		"radiosContent": {
 			"type": "string"
 		},

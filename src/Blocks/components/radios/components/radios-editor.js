@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
 	checkAttr,
 	props,
@@ -24,11 +24,6 @@ export const RadiosEditor = (attributes) => {
 	} = attributes;
 
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('radiosId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
 
 	// Additional content filter.
 	let additionalContent = '';

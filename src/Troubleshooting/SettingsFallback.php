@@ -104,7 +104,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -138,7 +137,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
-					'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 					'inputType' => 'text',

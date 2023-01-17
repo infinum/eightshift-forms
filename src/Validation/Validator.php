@@ -103,9 +103,6 @@ class Validator extends AbstractValidation
 
 		$validationReference = $this->getValidationReference($data['fieldsOnly']);
 
-		error_log( print_r( ( $validationReference ), true ) );
-		
-
 		return \array_merge(
 			$this->validateParams($data['params'], $validationReference, $data['formId']),
 			$this->validateFiles($data['files'], $validationReference, $data['formId']),
@@ -145,6 +142,9 @@ class Validator extends AbstractValidation
 	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
 		$output = [];
+
+		error_log( print_r( (  $validationReference), true ) );
+		
 
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
@@ -220,6 +220,9 @@ class Validator extends AbstractValidation
 				}
 			}
 		}
+
+		error_log( print_r( ( $output ), true ) );
+		
 
 		return $output;
 	}

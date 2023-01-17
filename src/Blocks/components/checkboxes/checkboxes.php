@@ -11,7 +11,6 @@ use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
-$checkboxesId = Components::checkAttr('checkboxesId', $attributes, $manifest);
 $checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesName = Components::checkAttr('checkboxesName', $attributes, $manifest);
 $checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
@@ -23,14 +22,14 @@ $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use
 
 // Add internal counter id key.
 $indexId = 0;
-$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId) {
-	return 'id="' . $checkboxesId . '[' . $indexId++ . ']"';
+$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesName) {
+	return 'id="' . $checkboxesName . '[' . $indexId++ . ']"';
 }, $checkboxesContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId) {
-	return 'for="' . $checkboxesId . '[' . $indexLabel++ . ']"';
+$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesName) {
+	return 'for="' . $checkboxesName . '[' . $indexLabel++ . ']"';
 }, $checkboxesContent);
 
 // Additional content filter.
@@ -50,7 +49,8 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $checkboxes,
-			'fieldId' => $checkboxesId,
+			'fieldId' => $checkboxesName,
+			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',

@@ -124,7 +124,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxesId' => $this->getSettingsName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',

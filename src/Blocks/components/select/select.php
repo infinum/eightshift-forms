@@ -22,7 +22,6 @@ $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 $componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
-$selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
@@ -76,7 +75,7 @@ $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
 		name="' . esc_attr($selectName) . '"
-		id="' . esc_attr($selectId) . '"
+		id="' . esc_attr($selectName) . '"
 		' . disabled($selectIsDisabled, true, false) . '
 		' . $selectAttrsOutput . '
 	>
@@ -90,7 +89,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $select,
-			'fieldId' => $selectId,
+			'fieldId' => $selectName,
 			'fieldName' => $selectName,
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),

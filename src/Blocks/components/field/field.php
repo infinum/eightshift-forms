@@ -177,7 +177,7 @@ if (has_filter($filterName)) {
 			echo Components::render(
 				'error',
 				Components::props('error', $attributes, [
-					'errorId' => $fieldName,
+					'errorId' => $fieldId,
 					'selectorClass' => $componentClass
 				])
 			);

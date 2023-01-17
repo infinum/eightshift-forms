@@ -8,14 +8,11 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$unique = Components::getUnique();
-
 $fileName = $attributes['fileFileName'] ?? '';
-$fileId = $attributes['fileFileId'] ?? '';
 $props = [];
 
 if (empty($fileName)) {
-	$props['fileName'] = $fileId;
+	$props['fileName'] = Components::getUnique();
 }
 
 echo Components::render(

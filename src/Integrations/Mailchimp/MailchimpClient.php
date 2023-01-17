@@ -154,6 +154,8 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		error_log( print_r( ( $params ), true ) );
+		
 		$email = $params['email_address']['value'];
 		$emailHash = \md5(\strtolower($email));
 		$prepareParams = $this->prepareParams($params);
@@ -380,17 +382,25 @@ class MailchimpClient implements MailchimpClientInterface
 
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $param) {
+		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
 
 			// Remove email.
-			if ($key === 'email_address') {
+			if ($name === 'email_address') {
 				continue;
 			}
 
 			// Check for custom address.
-			if ($key === 'ADDRESS' && $value) {
-				$output[$key] = [
+			if ($name === 'ADDRESS' && $value) {
+				$output[$name] = [
 					'addr1' => $value,
 					'addr2' => '',
 					'city' => '&sbsp;',
@@ -403,11 +413,11 @@ class MailchimpClient implements MailchimpClientInterface
 			}
 
 			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+			if (isset($customFields[$name])) {
 				continue;
 			}
 
-			$output[$key] = $value;
+			$output[$name] = $value;
 		}
 
 		return $output;

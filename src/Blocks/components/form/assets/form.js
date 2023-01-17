@@ -284,8 +284,6 @@ export class Form {
 
 					// Output field errors.
 					this.utils.outputErrors(element, response.validation);
-					
-					console.log(response);
 
 					// Set global msg.
 					this.utils.setGlobalMsg(element, response.message, 'error');
@@ -351,7 +349,7 @@ export class Form {
 
 						for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
 							const {
-								name,
+								id,
 								value,
 								disabled,
 							} = groupInnerItem;
@@ -360,7 +358,7 @@ export class Form {
 								continue;
 							}
 
-							groupInnerItems[name] = value;
+							groupInnerItems[id] = value;
 						}
 
 						const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
@@ -385,6 +383,7 @@ export class Form {
 				type,
 				name,
 				files,
+				id,
 				disabled,
 				checked,
 				dataset: {
@@ -427,43 +426,47 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.utils.isCustom(item)) {
-					fileList = this.utils.FILES[formId][name] ?? [];
+					fileList = this.utils.FILES[formId][id] ?? [];
 				}
 
 				// Loop files and append.
 				if (fileList.length) {
 					for (const [key, file] of Object.entries(fileList)) {
-						formData.append(`${name}[${key}]`, file);
+						formData.append(`${id}[${key}]`, file);
 					}
 				} else {
-					formData.append(`${name}[0]`, JSON.stringify({}));
+					formData.append(`${id}[0]`, JSON.stringify({}));
 				}
 			} else {
 				// Output/append all fields.
-				formData.append(name, JSON.stringify(data));
+				formData.append(id, JSON.stringify(data));
 			}
 		}
 
 		// Add form ID field.
 		formData.append(this.utils.FORM_PARAMS.postId, JSON.stringify({
+			name: this.utils.FORM_PARAMS.postId,
 			value: formId,
 			type: 'hidden',
 		}));
 
 		// Add form type field.
 		formData.append(this.utils.FORM_PARAMS.type, JSON.stringify({
+			name: this.utils.FORM_PARAMS.type,
 			value: formType,
 			type: 'hidden',
 		}));
 
 		// Add form action field.
 		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
+			name: this.utils.FORM_PARAMS.action,
 			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add action external field.
 		formData.append(this.utils.FORM_PARAMS.actionExternal, JSON.stringify({
+			name: this.utils.FORM_PARAMS.actionExternal,
 			value: element.getAttribute(this.utils.DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
@@ -471,16 +474,19 @@ export class Form {
 		// Add additional options for HubSpot only.
 		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
 			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotCookie,
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
 			formData.append(this.utils.FORM_PARAMS.hubspotPageName, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotPageName,
 				value: document.title,
 				type: 'hidden',
 			}));
 
 			formData.append(this.utils.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotPageUrl,
 				value: window.location.href,
 				type: 'hidden',
 			}));
@@ -488,12 +494,14 @@ export class Form {
 
 		if (this.utils.formIsAdmin) {
 			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
+				name: this.utils.FORM_PARAMS.settingsType,
 				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
 				type: 'hidden',
 			}));
 
 			if (singleSubmit) {
 				formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
+					name: this.utils.FORM_PARAMS.singleSubmit,
 					value: 'true',
 					type: 'hidden',
 				}));
@@ -506,6 +514,7 @@ export class Form {
 			const storage = this.enrichment.getLocalStorage();
 			if (storage) {
 			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
+					name: this.utils.FORM_PARAMS.storage,
 				 value: storage,
 				 type: 'hidden',
 			 }));
@@ -604,7 +613,7 @@ export class Form {
 	setupFileField(file, formId, index) {
 		if (this.utils.isCustom(file)) {
 
-			const fileId = file?.name;
+			const fileId = file?.id;
 
 			if (typeof this.utils.FILES[formId] === 'undefined') {
 				this.utils.FILES[formId] = {};

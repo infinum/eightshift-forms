@@ -16,7 +16,6 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
-$radioId = Components::checkAttr('radioId', $attributes, $manifest);
 $radioName = Components::checkAttr('radioName', $attributes, $manifest);
 $radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
 $radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
@@ -63,13 +62,13 @@ if ($radioAttrs) {
 			class="<?php echo esc_attr($radioInputClass); ?>"
 			type="radio"
 			name="<?php echo esc_attr($radioName); ?>"
-			id="<?php echo esc_attr($radioId); ?>"
+			id="<?php echo esc_attr($radioName); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
 			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		/>
 		<label
-			for="<?php echo esc_attr($radioId); ?>"
+			for="<?php echo esc_attr($radioName); ?>"
 			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 		>
 			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">

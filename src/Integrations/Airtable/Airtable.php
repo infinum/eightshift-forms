@@ -134,7 +134,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 					];
@@ -145,7 +144,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsEmail' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -159,7 +157,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsUrl' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -173,7 +170,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsNumber' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -187,7 +183,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputAttrs' => [
 							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'number',
@@ -201,7 +196,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaId' => $id,
 						'textareatDisabledOptions' => $this->prepareDisabledOptions('textareat'),
 					];
 					break;
@@ -210,7 +204,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'component' => 'select',
 						'selectName' => $name,
 						'selectTracking' => $name,
-						'selectId' => $id,
 						'selectFieldLabel' => $label,
 						'selectContent' => \array_map(
 							function ($selectOption) {
@@ -231,7 +224,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'component' => 'checkboxes',
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
-						'checkboxesId' => $id,
 						'checkboxesFieldLabel' => $label,
 						'checkboxesContent' => \array_map(
 							function ($checkbox) {
@@ -256,7 +248,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesId' => $id,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -277,7 +268,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 		];
 

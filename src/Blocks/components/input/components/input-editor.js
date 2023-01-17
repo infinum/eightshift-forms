@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import {
 	selector,
@@ -34,11 +34,6 @@ export const InputEditor = (attributes) => {
 	if (inputType === 'email' || inputType === 'url') {
 		inputType = 'text';
 	}
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('inputId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),

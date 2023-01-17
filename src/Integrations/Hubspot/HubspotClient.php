@@ -698,11 +698,16 @@ class HubspotClient implements HubspotClientInterface
 
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $param) {
+		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
-			$value = $param['value'] ?? '';
 
+			$value = $param['value'] ?? '';
 			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
@@ -719,12 +724,12 @@ class HubspotClient implements HubspotClientInterface
 			}
 
 			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+			if (isset($customFields[$name])) {
 				continue;
 			}
 
 			$output[] = [
-				'name' => $param['name'] ?? '',
+				'name' => $name ?? '',
 				'value' => $value,
 				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];

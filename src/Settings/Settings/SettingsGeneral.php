@@ -106,7 +106,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -129,7 +128,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Tracking event name', 'eightshift-forms'),
 								// translators: %s will be replaced with th filter output copy.
 								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'trackingEventName'))),
@@ -167,7 +165,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									<strong>Disable default styles</strong> will disable all the frontend and block editor styles.<br />
 									<strong>Disable default scripts</strong> will remove all the frontend logic, including validation and form submission.<br />
 									<strong>Don\'t auto-initialize scripts</strong> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.', 'eightshift-forms'),
-								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 								'checkboxesContent' => [
 									[
@@ -202,7 +199,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('Custom fields', 'eightshift-forms'),
-								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
 								'checkboxesFieldHelp' => \__('If checked, fields will use the default browser implementation.', 'eightshift-forms'),
 								'checkboxesContent' => [
@@ -245,7 +241,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('After submitting the form', 'eightshift-forms'),
-								'checkboxesId' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 								'checkboxesFieldHelp' => \__('If checked, forms will not use these features.', 'eightshift-forms'),
 								'checkboxesContent' => [

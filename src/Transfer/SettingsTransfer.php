@@ -179,7 +179,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 							],
 							[
 								'component' => 'checkboxes',
-								'checkboxesId' => 'override',
 								'checkboxesName' => 'override',
 								'checkboxesFieldLabel' => '',
 								'checkboxesContent' => [
@@ -252,7 +251,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 
 		return [
 			'component' => 'checkboxes',
-			'checkboxesId' => 'form',
 			'checkboxesName' => 'form',
 			'checkboxesFieldLabel' => \__('Forms', 'eightshift-forms'),
 			'checkboxesContent' => $output,

@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import {
 	selector,
@@ -32,12 +32,6 @@ export const SelectEditor = (attributes) => {
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
 	]);
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('selectId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
 
 	// Additional content filter.
 	let additionalContent = '';

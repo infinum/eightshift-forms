@@ -7,9 +7,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"checkboxesId": {
-			"type": "string"
-		},
 		"checkboxesContent": {
 			"type": "string"
 		},

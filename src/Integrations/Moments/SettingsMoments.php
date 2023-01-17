@@ -138,7 +138,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_URL_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_URL_KEY),
 								'inputFieldLabel' => \__('API url', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -149,7 +148,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -160,7 +158,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
 								'inputFieldLabel' => \__('API username', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -171,7 +168,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
 								'inputFieldLabel' => \__('API password', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',

@@ -18,9 +18,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"textareaId": {
-			"type": "string"
-		},
 		"textareaName": {
 			"type": "string"
 		},

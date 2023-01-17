@@ -151,7 +151,6 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 			$output[] = [
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
-				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getSettingsValue($key, $formId),
@@ -202,7 +201,6 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 			$messagesOutput[] = [
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
-				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getOptionValue($key),
@@ -220,7 +218,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.

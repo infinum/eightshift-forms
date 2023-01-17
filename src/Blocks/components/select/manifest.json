@@ -17,9 +17,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"selectId": {
-			"type": "string"
-		},
 		"selectContent": {
 			"type": "string"
 		},

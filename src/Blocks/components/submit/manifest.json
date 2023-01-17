@@ -17,9 +17,6 @@
 		"submitUniqueId": {
 			"type": "string"
 		},
-		"submitId": {
-			"type": "string"
-		},
 		"submitName": {
 			"type": "string"
 		},

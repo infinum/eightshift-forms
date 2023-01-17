@@ -11,7 +11,6 @@ use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 
-$radiosId = Components::checkAttr('radiosId', $attributes, $manifest);
 $radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
 $radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
@@ -23,14 +22,14 @@ $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($r
 
 // Add internal counter id key.
 $indexId = 0;
-$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId) {
-	return 'id="' . $radiosId . '[' . $indexId++ . ']"';
+$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosName) {
+	return 'id="' . $radiosName . '[' . $indexId++ . ']"';
 }, $radiosContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId) {
-	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
+$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosName) {
+	return 'for="' . $radiosName . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 
 // Additional content filter.
@@ -52,7 +51,7 @@ echo Components::render(
 			'fieldContent' => $radios,
 			'fieldName' => $radiosName,
 			'fieldIsRequired' => $radiosIsRequired,
-			'fieldId' => $radiosId,
+			'fieldId' => $radiosName,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

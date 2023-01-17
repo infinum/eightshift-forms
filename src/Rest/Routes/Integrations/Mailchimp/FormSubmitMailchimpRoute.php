@@ -133,12 +133,10 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	{
 		// Send application to Mailchimp.
 		$response = $this->mailchimpClient->postApplication(
-			// $this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_KEY, $formId),
-			'',
-			// TODO.
-			$params,
-			[],
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -146,11 +144,16 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
+		// Always delete the files from the disk.
+		if ($formDataRefrerence['files']) {
+			$this->deleteFiles($formDataRefrerence['files']);
+		}
+
 		// Finish.
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

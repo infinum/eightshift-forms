@@ -20,7 +20,6 @@ $componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
-$fileId = Components::checkAttr('fileId', $attributes, $manifest);
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
@@ -94,7 +93,7 @@ $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
-		id="' . esc_attr($fileId) . '"
+		id="' . esc_attr($fileName) . '"
 		type="file"
 		' . $fileIsMultiple . '
 		' . $fileAttrsOutput . '
@@ -108,7 +107,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $file,
-			'fieldId' => $fileId,
+			'fieldId' => $fileName,
 			'fieldName' => $fileName,
 			'fieldIsRequired' => $fileIsRequired,
 			'fieldConditionalTags' => Components::render(

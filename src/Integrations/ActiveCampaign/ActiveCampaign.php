@@ -166,7 +166,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'firstName',
 						'inputTracking' => 'firstName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'firstName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -180,7 +179,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'lastName',
 						'inputTracking' => 'lastName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'lastName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -194,7 +192,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'fullName',
 						'inputTracking' => 'fullName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'fullName',
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -207,7 +204,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
-						'inputId' => $id,
 						'inputType' => 'hidden',
 						'inputFieldHidden' => 'hidden',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
@@ -219,7 +215,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaId' => $id,
 						'textareaIsRequired' => $required,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 							$required ? 'textareaIsRequired' : '',
@@ -231,7 +226,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'input',
 						'inputName' => 'email',
 						'inputFieldLabel' => $header,
-						'inputId' => 'email',
 						'inputType' => 'text',
 						'inputIsEmail' => true,
 						'inputIsRequired' => 1,
@@ -247,7 +241,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'tel',
 						'inputIsRequired' => $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -258,7 +251,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				case 'checkbox':
 					$output[] = [
 						'component' => 'checkboxes',
-						'checkboxesId' => $id,
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
 						'checkboxesIsRequired' => $required,
@@ -282,7 +274,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				case 'radio':
 					$output[] = [
 						'component' => 'radios',
-						'radiosId' => $id,
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
@@ -308,7 +299,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				case 'dropdown':
 					$output[] = [
 						'component' => 'select',
-						'selectId' => $id,
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
@@ -351,7 +341,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 					'component' => 'input',
 					'inputFieldLabel' => $action,
 					'inputName' => 'action',
-					'inputId' => "action{$action}[$key]",
 					'inputType' => 'hidden',
 					'inputValue' => $actionValue,
 					'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
@@ -362,7 +351,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];

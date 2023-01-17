@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
 	checkAttr,
 	props,
@@ -24,11 +24,6 @@ export const CheckboxesEditor = (attributes) => {
 	} = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('checkboxesId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
 
 	// Additional content filter.
 	let additionalContent = '';

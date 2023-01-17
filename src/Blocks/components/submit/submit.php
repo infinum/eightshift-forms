@@ -18,7 +18,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
-$submitId = Components::checkAttr('submitId', $attributes, $manifest);
+$submitName = Components::checkAttr('submitName', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
@@ -39,10 +39,6 @@ $submitClass = Components::classnames([
 
 if ($submitTracking) {
 	$submitAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($submitTracking);
-}
-
-if ($submitId) {
-	$submitAttrs['id'] = esc_attr($submitId);
 }
 
 $submitAttrsOutput = '';
@@ -102,7 +98,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $button,
-			'fieldId' => $submitId,
+			'fieldId' => $submitName,
 			'fieldUseError' => false,
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldUniqueId' => $submitUniqueId,

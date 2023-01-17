@@ -15,7 +15,6 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$inputId = Components::checkAttr('inputId', $attributes, $manifest);
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
@@ -85,7 +84,7 @@ $input = '
 	<input
 		class="' . esc_attr($inputClass) . '"
 		name="' . esc_attr($inputName) . '"
-		id="' . esc_attr($inputId) . '"
+		id="' . esc_attr($inputName) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . ($isWpFiveNine ? wp_readonly($inputIsReadOnly, true, false) : readonly($inputIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
@@ -99,7 +98,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $input,
-			'fieldId' => $inputId,
+			'fieldId' => $inputName,
 			'fieldName' => $inputName,
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),

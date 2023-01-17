@@ -20,7 +20,6 @@ $componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
-$textareaId = Components::checkAttr('textareaId', $attributes, $manifest);
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
@@ -79,7 +78,7 @@ $isWpFiveNine = is_wp_version_compatible('5.9');
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
-		id="' . esc_attr($textareaId) . '"
+		id="' . esc_attr($textareaName) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . ($isWpFiveNine ? wp_readonly($textareaIsReadOnly, true, false) : readonly($textareaIsReadOnly, true, false)) . /* @phpstan-ignore-line */ ' 
 		' . $textareaAttrsOutput . '
@@ -92,7 +91,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $textarea,
-			'fieldId' => $textareaId,
+			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),

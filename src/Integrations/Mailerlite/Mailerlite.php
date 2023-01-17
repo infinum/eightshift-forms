@@ -132,7 +132,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => $name === 'email',
 						'inputIsEmail' => $name === 'email',
@@ -148,7 +147,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'number',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 					];
@@ -159,7 +157,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];

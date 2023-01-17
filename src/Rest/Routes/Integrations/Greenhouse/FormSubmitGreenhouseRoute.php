@@ -145,12 +145,10 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	{
 		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postApplication(
-			// $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId),
-			'',
-			// TODO
-			$params,
-			$files,
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -159,15 +157,15 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 		}
 
 		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
+		if ($formDataRefrerence['files']) {
+			$this->deleteFiles($formDataRefrerence['files']);
 		}
 
 		// Finish.
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

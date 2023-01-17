@@ -354,27 +354,29 @@ class GreenhouseClient implements ClientInterface
 
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
-		foreach ($params as $key => $param) {
-			if (!isset($param['value'])) {
+		foreach ($params as $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
 			// Get gh_src from url and map it.
-			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage'] && isset($param['value']['gh_src'])) {
-				$output['mapped_url_token'] = $param['value']['gh_src'];
+			if ($name === AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage'] && isset($value['gh_src'])) {
+				$output['mapped_url_token'] = $value['gh_src'];
 				continue;
 			}
 
 			// Remove unecesery fields.
-			if (isset($customFields[$key])) {
+			if (isset($customFields[$name])) {
 				continue;
 			}
 
-			if (empty($param['value'])) {
-				continue;
-			}
-
-			$output[$key] = $param['value'] ?? '';
+			$output[$name] = $value;
 		}
 
 		return $output;

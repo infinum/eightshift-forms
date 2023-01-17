@@ -130,7 +130,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'component' => 'input',
 			'inputName' => 'email_address',
 			'inputFieldLabel' => \__('Email address', 'eightshift-forms'),
-			'inputId' => 'email_address',
 			'inputType' => 'text',
 			'inputIsEmail' => true,
 			'inputIsRequired' => true,
@@ -162,7 +161,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
@@ -179,7 +177,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => 'address',
 						'inputTracking' => 'address',
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
@@ -196,7 +193,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'number',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
@@ -213,7 +209,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'tel',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
@@ -230,7 +225,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
 						'inputValue' => $value,
@@ -244,7 +238,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 				case 'radio':
 					$output[] = [
 						'component' => 'radios',
-						'radiosId' => $id,
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
@@ -270,7 +263,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 				case 'dropdown':
 					$output[] = [
 						'component' => 'select',
-						'selectId' => $id,
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
@@ -308,7 +300,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
@@ -344,7 +335,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					[
 						'component' => 'select',
 						'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'selectId' => $customTagParamName,
 						'selectName' => $customTagParamName,
 						'selectTracking' => $customTagParamName,
 						'selectContent' => [
@@ -377,7 +367,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'checkboxesId' => $customTagParamName,
 						'checkboxesName' => $customTagParamName,
 						'checkboxesContent' => \array_map(
 							function ($option) use ($customTagParamName) {
@@ -403,7 +392,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 					[
 						'component' => 'radios',
 						'radiosFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'radiosId' => $customTagParamName,
 						'radiosName' => $customTagParamName,
 						'radiosContent' => \array_map(
 							function ($option) use ($customTagParamName) {
@@ -430,7 +418,6 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
 						'checkboxesFieldHidden' => true,
-						'checkboxesId' => $customTagParamName,
 						'checkboxesName' => $customTagParamName,
 						'checkboxesContent' => \array_map(
 							function ($option) use ($customTagParamName) {

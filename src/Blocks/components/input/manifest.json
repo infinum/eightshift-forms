@@ -6,7 +6,6 @@
 		"attributes": {
 			"inputName": "Name",
 			"inputValue": "Value",
-			"inputId": "Id",
 			"inputPlaceholder": "Placeholder",
 			"inputType": "text",
 			"inputIsDisabled": false,
@@ -19,9 +18,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"inputId": {
-			"type": "string"
-		},
 		"inputName": {
 			"type": "string"
 		},

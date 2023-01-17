@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useSelect } from "@wordpress/data";
 import { getAttrKey, getUnique } from '@eightshift/frontend-libs/scripts';
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
@@ -13,11 +13,6 @@ export const CustomDataEditor = ({ attributes, setAttributes, clientId }) => {
 	} = attributes;
 
 	const formPostId = useSelect((select) => select('core/editor').getCurrentPostId());
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('customDataId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
 
 	return (
 		<div className={blockClass}>

@@ -8,14 +8,11 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$unique = Components::getUnique();
-
 $inputName = $attributes['inputInputName'] ?? '';
-$inputId = $attributes['inputInputId'] ?? '';
 $props = [];
 
 if (empty($inputName)) {
-	$props['inputName'] = $inputId;
+	$props['inputName'] = Components::getUnique();
 }
 
 echo Components::render(

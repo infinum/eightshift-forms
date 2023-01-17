@@ -69,7 +69,6 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
-						'checkboxesId' => $attributes['customDataId'] ?? '',
 						'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
 						'checkboxesContent' => \array_map(
 							static function ($option) {
@@ -95,7 +94,6 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 					[
 						'component' => 'radios',
 						'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
-						'radiosId' => $attributes['customDataId'] ?? '',
 						'radiosName' => $attributes['customDataRadiosName'] ?? '',
 						'radiosContent' => \array_map(
 							static function ($option) {
@@ -120,7 +118,6 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 				$output = \array_merge(
 					[
 						'component' => 'select',
-						'selectId' => $attributes['customDataId'] ?? '',
 						'selectName' => $attributes['customDataSelectName'] ?? '',
 						'selectContent' => \array_map(
 							static function ($option) {

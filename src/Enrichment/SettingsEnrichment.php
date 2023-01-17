@@ -109,7 +109,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 								'inputFieldLabel' => \__('Expiration time', 'eightshift-forms'),
 								// translators: %s will be replaced with expiration number default.
 								'inputFieldHelp' => \sprintf(\__('Set the storage expiration time in days. Default: %s', 'eightshift-forms'), Enrichment::ENRICHMENT_EXPIRATION),
@@ -122,7 +121,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaId' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
+								'textareaName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaFieldLabel' => \__('Allowed url parameters', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.

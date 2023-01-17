@@ -93,7 +93,6 @@ This events will trigger **only** if your form has tracking event attribute set 
 $data[] = [
 	'component' => 'input',
 	'inputType' => 'hidden',
-	'inputId' => 'inputId',
 	'inputName' => 'inputName',
 	'inputValue' => '<your-key-value>',
 	'inputAttrs' => [
@@ -107,7 +106,6 @@ by default tracking js will search for the field value but in the case of select
 ```php
 $data[] = [
 	'component' => 'select',
-	'selectId' => 'selectId',
 	'selectName' => 'selectName',
 	'selectValue' => '<your-key-value>',
 	'selectAttrs' => [

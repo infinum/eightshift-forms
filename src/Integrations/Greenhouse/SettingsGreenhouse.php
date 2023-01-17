@@ -133,7 +133,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -144,7 +143,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 								'inputFieldLabel' => \__('Job Board name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -161,7 +159,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
 								'inputType' => 'number',

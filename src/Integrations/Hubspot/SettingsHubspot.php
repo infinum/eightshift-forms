@@ -199,7 +199,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -216,7 +215,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
 								// translators: %s will be replaced with the link.
 								'inputFieldHelp' => \sprintf(\__('
@@ -277,7 +275,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
 					'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
 					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder in your HubSpot file manager.', 'eightshift-forms'),
@@ -287,7 +284,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					// translators: %s will be replaced with the link.
 					'inputFieldHelp' => \sprintf(\__('

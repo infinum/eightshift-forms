@@ -34,11 +34,6 @@ export const TextareaEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
 	// Additional content filter.
 	let additionalContent = '';
 

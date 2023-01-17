@@ -173,7 +173,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
-				'checkboxesId' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
@@ -196,7 +195,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 								'inputFieldLabel' => \__('Sender name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Most e-mail clients show the sender name instead of the e-mail address in the list of e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -206,7 +204,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 								'inputFieldLabel' => \__('Sender e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Shows in the e-mail client as <strong>From:</strong>', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -227,7 +224,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
 								'inputFieldLabel' => \__('E-mail destination', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'inputFieldHelp' => \sprintf(\__('
@@ -241,7 +237,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
 								'inputFieldLabel' => \__('E-mail subject', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'inputFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).', 'eightshift-forms'), $formNames),
@@ -252,7 +247,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'textarea',
 								'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
-								'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 								'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'textareaFieldHelp' => \sprintf(\__('
@@ -278,7 +272,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
 								'inputFieldLabel' => \__('E-mail subject', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'inputFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).', 'eightshift-forms'), $formNames),
@@ -289,7 +282,6 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'textarea',
 								'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
-								'textareaId' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 								'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name.
 								'textareaFieldHelp' => \sprintf(\__('

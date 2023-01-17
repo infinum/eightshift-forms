@@ -154,7 +154,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => $isHidden ? 'hidden' : 'text',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
@@ -171,7 +170,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => $isHidden ? 'hidden' : 'date',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
@@ -190,7 +188,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => $isHidden ? 'hidden' : 'datetime',
 						'inputIsRequired' => $isRequired,
 						'inputPlaceholder' => $placeholder,
@@ -209,7 +206,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputFieldHidden' => $isHidden,
 						'inputType' => $isHidden ? 'hidden' : 'email',
 						'inputIsRequired' => $isRequired,
@@ -229,7 +225,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputFieldHidden' => $isHidden,
 						'inputType' => $isHidden ? 'hidden' : 'number',
 						'inputPlaceholder' => $placeholder,
@@ -245,7 +240,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'textarea',
 						'textareaFieldHidden' => $isHidden,
 						'textareaFieldLabel' => $label,
-						'textareaId' => $id,
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaType' => 'textarea',
@@ -261,7 +255,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'select',
 						'selectFieldHidden' => $isHidden,
 						'selectFieldLabel' => $label,
-						'selectId' => $id,
 						'selectName' => $name,
 						'selectTracking' => $name,
 						'selectType' => 'select',
@@ -303,7 +296,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = [
 						'component' => 'radios',
 						'radiosFieldHidden' => $isHidden,
-						'radiosId' => $id,
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $isRequired,
@@ -330,7 +322,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = [
 						'component' => 'checkboxes',
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesId' => $id,
 						'checkboxesName' => $name,
 						'checkboxesContent' => [
 							[
@@ -348,7 +339,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = [
 						'component' => 'checkboxes',
 						'checkboxesFieldHidden' => $isHidden,
-						'checkboxesId' => $id,
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
 						'checkboxesIsRequired' => $isRequired,
@@ -377,7 +367,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];

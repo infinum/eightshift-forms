@@ -16,9 +16,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"fileId": {
-			"type": "string"
-		},
 		"fileName": {
 			"type": "string"
 		},

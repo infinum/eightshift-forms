@@ -168,7 +168,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -187,7 +186,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 								'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
 								'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-								'checkboxesId' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 								'checkboxesIsRequired' => true,
 								'checkboxesContent' => \array_map(
 									function ($item) {
@@ -247,7 +245,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
 				'checkboxesName' => $this->getSettingsName($key),
-				'checkboxesId' => $this->getSettingsName($key),
 				'checkboxesIsRequired' => false,
 				'checkboxesContent' => [
 					[
@@ -315,7 +312,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 								return [
 									'component' => 'select',
 									'selectName' => $item,
-									'selectId' => $item,
 									'selectFieldLabel' => $item,
 									'selectContent' => \array_merge(
 										[

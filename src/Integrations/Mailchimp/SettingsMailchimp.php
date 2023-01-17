@@ -132,7 +132,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 						],
 						[
 							'component' => 'select',
-							'selectId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+							'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 							'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
 							'selectFieldHelp' => \__('Select the way you want to show/use tags in your form.', 'eightshift-forms'),
 							'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
@@ -207,7 +207,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',

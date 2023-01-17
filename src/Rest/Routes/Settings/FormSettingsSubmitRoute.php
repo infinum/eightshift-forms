@@ -135,31 +135,23 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 			}
 		}
 
-		// Determine form type to use.
-		switch ($formDataRefrerence['type']) {
-			case SettingsCache::SETTINGS_TYPE_KEY:
-				return $this->cache($formDataRefrerence['params']);
-			default:
-				// If form ID is not set this is considered an global setting.
-				// Save all fields in the settings.
-				foreach ($formDataRefrerence['params'] as $key => $value) {
-					// Check if key needs updating or deleting.
-
-					if ($value['value']) {
-						if (!$formDataRefrerence['formId']) {
-							\update_option($key, $value['value']);
-						} else {
-							\update_post_meta((int) $formDataRefrerence['formId'], $key, $value['value']);
-						}
-					} else {
-						if (!$formDataRefrerence['formId']) {
-							\delete_option($key);
-						} else {
-							\delete_post_meta((int) $formDataRefrerence['formId'], $key);
-						}
-					}
+		// If form ID is not set this is considered an global setting.
+		// Save all fields in the settings.
+		foreach ($formDataRefrerence['params'] as $key => $value) {
+			// Check if key needs updating or deleting.
+			if ($value['value']) {
+				if (!$formDataRefrerence['formId']) {
+					\update_option($key, $value['value']);
+				} else {
+					\update_post_meta((int) $formDataRefrerence['formId'], $key, $value['value']);
 				}
-				break;
+			} else {
+				if (!$formDataRefrerence['formId']) {
+					\delete_option($key);
+				} else {
+					\delete_post_meta((int) $formDataRefrerence['formId'], $key);
+				}
+			}
 		}
 
 		// Finish.
@@ -167,40 +159,6 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 			'code' => 200,
 			'status' => 'success',
 			'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
-		]);
-	}
-
-	/**
-	 * Delete transient cache from the DB.
-	 *
-	 * @param array<int|string, mixed> $params Keys to delete.
-	 *
-	 * @return mixed
-	 */
-	private function cache(array $params)
-	{
-		if (! \current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
-			]);
-		}
-
-		foreach ($params as $key => $items) {
-			if (!isset(Filters::ALL[$key]['cache'])) {
-				continue;
-			}
-
-			foreach (Filters::ALL[$key]['cache'] as $item) {
-				\delete_transient($item);
-			}
-		}
-
-		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'message' => \esc_html__('Selected cache successfully deleted!', 'eightshift-forms'),
 		]);
 	}
 }
