@@ -26,7 +26,7 @@ export const SelectEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const selectOptions = checkAttr('selectOptions', attributes, manifest);
+	const selectContent = checkAttr('selectContent', attributes, manifest);
 
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
@@ -52,7 +52,7 @@ export const SelectEditor = (attributes) => {
 	const select = (
 		<>
 			<div className={selectClass}>
-				{selectOptions}
+				{selectContent}
 			</div>
 
 			<div dangerouslySetInnerHTML={{__html: additionalContent}} />

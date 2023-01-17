@@ -132,7 +132,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 			];
 			$output[] = [
 				'component' => 'layout',
-				'layoutItems' => $value,
+				'layoutContent' => $value,
 			];
 		}
 

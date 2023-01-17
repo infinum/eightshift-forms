@@ -196,8 +196,6 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		}
 
 		if ($response['status'] === 'error') {
-			error_log( print_r( ( $response['data'] ), true ) );
-			
 			// Send fallback email.
 			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}

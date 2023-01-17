@@ -287,6 +287,24 @@ class Helper
 	}
 
 	/**
+	 * Return block details depending on the full block name.
+	 *
+	 * @param string $blockName Block name.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function getBlockNameDetails(string $blockName): array
+	{
+		$block = \explode('/', $blockName);
+		$blockName = \end($block);
+
+		return [
+			'namespace' => $block[0] ?? '',
+			'name' => $blockName ?? '',
+		];
+	}
+
+	/**
 	 * Convert camel to snake case
 	 *
 	 * @param string $input Name to change.

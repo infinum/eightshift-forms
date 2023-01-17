@@ -74,7 +74,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutItems' => [
+				'layoutContent' => [
 					[
 						'component' => 'card',
 						'cardTitle' => \__('Version 2 to 3'),

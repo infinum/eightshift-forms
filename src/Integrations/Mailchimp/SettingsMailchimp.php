@@ -137,7 +137,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 							'selectFieldHelp' => \__('Select the way you want to show/use tags in your form.', 'eightshift-forms'),
 							'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 							'selectSingleSubmit' => true,
-							'selectOptions' => [
+							'selectContent' => [
 								[
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Don\'t use tags', 'eightshift-forms'),

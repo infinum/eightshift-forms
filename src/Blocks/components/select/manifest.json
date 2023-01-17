@@ -6,7 +6,7 @@
 	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
 	"example": {
 		"attributes": {
-			"selectOptions": "",
+			"selectContent": "",
 			"selectName": "Name",
 			"selectIsDisabled": false,
 			"selectIsRequired": false
@@ -20,7 +20,7 @@
 		"selectId": {
 			"type": "string"
 		},
-		"selectOptions": {
+		"selectContent": {
 			"type": "string"
 		},
 		"selectName": {

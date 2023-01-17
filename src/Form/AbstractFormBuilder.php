@@ -34,14 +34,39 @@ abstract class AbstractFormBuilder
 	public const NESTED_KEYS = [
 		'checkboxesContent',
 		'radiosContent',
-		'selectOptions',
+		'selectContent',
 		'groupContent',
 		'tabsContent',
 		'tabContent',
 		'layout',
-		'layoutItems',
+		'layoutContent',
 		'card',
 		'cardContent',
+	];
+
+	/**
+	 * Nested keys for inner blocks
+	 *
+	 * @var array<int, string>
+	 */
+	public const LAYOUT_KEYS = [
+		'group',
+		'tabs',
+		'tab',
+		'layout',
+		'card',
+	];
+
+	/**
+	 * Nested keys for inner blocks
+	 *
+	 * @var array<int, string>
+	 */
+	public const NESTED_KEYS_NEW = [
+		'checkboxes',
+		'radios',
+		'select',
+		...self::LAYOUT_KEYS,
 	];
 
 	/**

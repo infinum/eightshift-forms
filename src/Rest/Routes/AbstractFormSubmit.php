@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
@@ -72,7 +73,10 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formType = $this->getFormType($params);
 			$formSettingsType = $this->getFormSettingsType($params);
 
-			if ($formType === 'settings' || $formType === 'globalSettings') {
+			error_log( print_r( ( $formType ), true ) );
+			
+
+			if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
 				$formDataRefrerence = [
 					'formId' => $formId,
 					'type' => $formType,
@@ -80,6 +84,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					'innerId' => '',
 					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
 				];
+
+				error_log( print_r( ( $formDataRefrerence ), true ) );
 			} else {
 				$formDataRefrerence = Helper::getFormDetailsById($formId);
 			}
@@ -90,9 +96,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				$validate = $this->getValidator()->validate($formDataRefrerence);
-
-				error_log( print_r( ( $validate ), true ) );
-				
 
 				if ($validate) {
 					throw new UnverifiedRequestException(

@@ -122,7 +122,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 						'component' => 'select',
 						'selectId' => $attributes['customDataId'] ?? '',
 						'selectName' => $attributes['customDataSelectName'] ?? '',
-						'selectOptions' => \array_map(
+						'selectContent' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'select-option',

@@ -26,7 +26,7 @@ $selectId = Components::checkAttr('selectId', $attributes, $manifest);
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
-$selectOptions = Components::checkAttr('selectOptions', $attributes, $manifest);
+$selectContent = Components::checkAttr('selectContent', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
 $selectUseCustom = Components::checkAttr('selectUseCustom', $attributes, $manifest);
@@ -68,7 +68,7 @@ if ($selectAttrs) {
 $additionalContent = '';
 $filterName = Filters::getBlockFilterName('select', 'additionalContent');
 if (has_filter($filterName)) {
-	$attributes['selectOptions'] = Helper::convertInnerBlocksToArray($attributes['selectOptions'] ?? '', $componentName);
+	$attributes['selectContent'] = Helper::convertInnerBlocksToArray($attributes['selectContent'] ?? '', $componentName);
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
@@ -80,7 +80,7 @@ $select = '
 		' . disabled($selectIsDisabled, true, false) . '
 		' . $selectAttrsOutput . '
 	>
-		' . $selectOptions . '
+		' . $selectContent . '
 	</select>
 	' . $additionalContent . '
 ';

@@ -317,7 +317,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
-							'selectOptions' => \array_values(
+							'selectContent' => \array_values(
 								\array_map(
 									function ($selectOption) use ($selectedOption) {
 										return [

@@ -313,7 +313,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
 						'selectIsRequired' => $required,
-						'selectOptions' => \array_map(
+						'selectContent' => \array_map(
 							function ($option) {
 								return [
 									'component' => 'select-option',

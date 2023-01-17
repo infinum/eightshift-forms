@@ -41,6 +41,9 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
 
+	public const SETTINGS_TYPE_NAME = 'settings';
+	public const SETTINGS_GLOBAL_TYPE_NAME = 'settingsGlobal';
+
 	/**
 	 * Get sidebar settings array for building settings page.
 	 *
@@ -51,10 +54,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array
 	{
-		$internalType = 'settingsGlobal';
+		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = 'settings';
+			$internalType = self::SETTINGS_TYPE_NAME;
 		}
 
 		$output = [];
@@ -104,10 +107,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsForm(string $type, string $formId = ''): string
 	{
-		$internalType = 'settingsGlobal';
+		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = 'settings';
+			$internalType = self::SETTINGS_TYPE_NAME;
 		}
 
 		// Find settings page.

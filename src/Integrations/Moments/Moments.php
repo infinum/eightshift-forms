@@ -267,7 +267,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'selectType' => 'select',
 						'selectPlaceholder' => $placeholder,
 						'selectIsRequired' => $isRequired,
-						'selectOptions' => \array_values(
+						'selectContent' => \array_values(
 							\array_merge(
 								[
 									[

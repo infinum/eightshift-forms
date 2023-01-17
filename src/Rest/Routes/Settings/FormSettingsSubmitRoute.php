@@ -141,6 +141,8 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 			case SettingsCache::SETTINGS_TYPE_KEY:
 				return $this->cache($formDataRefrerence['params']);
 			default:
+			// error_log( print_r( ( $formDataRefrerence ), true ) );
+			
 				// If form ID is not set this is considered an global setting.
 				// Save all fields in the settings.
 				foreach ($formDataRefrerence['params'] as $key => $value) {

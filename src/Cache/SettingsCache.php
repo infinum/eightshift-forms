@@ -59,7 +59,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutItems' => \array_values(\array_filter(\array_map(
+				'layoutContent' => \array_values(\array_filter(\array_map(
 					static function ($key, $value) use ($manifestForm) {
 						$icon = $value['icon'];
 						$cache = $value['cache'] ?? [];

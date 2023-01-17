@@ -240,7 +240,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'select',
 			[
 				'fieldSkip' => true,
-				'selectOptions' => $filterOptions,
+				'selectContent' => $filterOptions,
 			]
 		);
 

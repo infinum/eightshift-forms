@@ -275,7 +275,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
 						'selectIsRequired' => $required,
-						'selectOptions' => \array_map(
+						'selectContent' => \array_map(
 							function ($option) {
 								return [
 									'component' => 'select-option',
@@ -347,7 +347,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectId' => $customTagParamName,
 						'selectName' => $customTagParamName,
 						'selectTracking' => $customTagParamName,
-						'selectOptions' => [
+						'selectContent' => [
 							[
 								'component' => 'select-option',
 								'selectOptionLabel' => '',

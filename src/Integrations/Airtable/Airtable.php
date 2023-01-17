@@ -212,7 +212,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectTracking' => $name,
 						'selectId' => $id,
 						'selectFieldLabel' => $label,
-						'selectOptions' => \array_map(
+						'selectContent' => \array_map(
 							function ($selectOption) {
 								return [
 									'component' => 'select-option',

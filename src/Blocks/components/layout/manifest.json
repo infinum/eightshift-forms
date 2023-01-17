@@ -10,7 +10,7 @@
 		}
 	},
 	"attributes": {
-		"layoutItems": {
+		"layoutContent": {
 			"type": "string"
 		},
 		"layoutType": {

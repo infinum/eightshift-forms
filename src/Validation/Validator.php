@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -22,12 +24,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Use Object Helper
 	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use general helper trait.
-	 */
-	// use SettingsHelper;
+	// use ObjectHelperTrait;
 
 	/**
 	 * Instance variable for labels data.
@@ -78,7 +75,7 @@ class Validator extends AbstractValidation
 	];
 
 	/**
-	 * Transient cache name for validatior labels.
+	 * Transient cache name for validatior labels. No need to flush it because it is short live.
 	 */
 	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
 
@@ -105,13 +102,12 @@ class Validator extends AbstractValidation
 	 */
 	public function validate(array $data): array
 	{
-		if ($data['type'] === 'settings' || $data['type'] === 'globalSettings') {
-			$validationReference = $this->getValidationReferenceManual($data['fieldsOnly']);
-			error_log( print_r( ( $validationReference ), true ) );
-			
-		} else {
-			$validationReference = $this->getValidationReference($data['fieldsOnly']);
+		// Manualy build fields from settings components.
+		if ($data['type'] === Settings::SETTINGS_TYPE_NAME || $data['type'] === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+			$data['fieldsOnly'] = $this->getValidationReferenceManual($data['fieldsOnly']);
 		}
+
+		$validationReference = $this->getValidationReference($data['fieldsOnly']);
 
 		return \array_merge(
 			$this->validateParams($data['params'], $validationReference, $data['formId']),
@@ -319,13 +315,7 @@ class Validator extends AbstractValidation
 
 		// Loop multiple levels form-selector > form.
 		foreach ($blocks as $block) {
-			$name = Components::kebabToCamelCase(\explode('/', $block['blockName'])[1]);
-
-			if (!$name) {
-				continue;
-			}
-
-			$innerOptions = $this->getValidationReferenceInner($block, $name);
+			$innerOptions = $this->getValidationReferenceInner($block);
 
 			if ($innerOptions) {
 				$output = \array_merge($output, $innerOptions);
@@ -339,13 +329,21 @@ class Validator extends AbstractValidation
 	 * Output validation reference inner blocks fields for block form.
 	 *
 	 * @param array<string, mixed> $block Block inner content.
-	 * @param string $name Block name.
 	 *
 	 * @return array<int|string, array<string, mixed>>
 	 */
-	private function getValidationReferenceInner($block, $name): array
+	private function getValidationReferenceInner($block): array
 	{
 		$output = [];
+
+		$blockDetails = Helper::getBlockNameDetails($block['blockName']);
+
+		$name = $blockDetails['name'];
+		$namespace = $blockDetails['namespace'];
+
+		if (!$name || !$namespace) {
+			return $output;
+		}
 
 		// Append attributes defined in the manifest as defaults.
 		if ($name === 'senderEmail') {
@@ -359,16 +357,16 @@ class Validator extends AbstractValidation
 				// If something custom add corrections.
 				case 'senderEmail':
 					$attrName = "{$name}Input";
-					$id = $block['attrs']["{$attrName}Id"] ?? '';
+					$id = $block['attrs']["{$attrName}Name"] ?? '';
 					break;
 				case 'customData':
 					$type = $block['attrs']['customDataFieldType'] ?? '';
 					$attrName = $name . \ucfirst($type);
-					$id = $block['attrs']["{$name}Id"] ?? '';
+					$id = $block['attrs']["{$name}Name"] ?? '';
 					break;
 				default:
-					$attrName = $name . \ucfirst($name);
-					$id = $block['attrs']["{$attrName}Id"] ?? '';
+					$attrName = $namespace === 'internal-settings' ? $name : $name . \ucfirst($name);
+					$id = $block['attrs']["{$attrName}Name"] ?? '';
 					break;
 			}
 
@@ -392,7 +390,43 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * Flatten all settings components to only relevant ones for the validation.
+	 *
+	 * @param array<string, mixed> $blocks Block to flatten.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function flattenValidationReferenceManual(array $blocks): array
+	{
+		$output = [];
+
+		$allowed = array_flip(self::VALIDATION_MANUAL_COMPONENTS);
+		$nestedKeys = \array_flip(AbstractFormBuilder::LAYOUT_KEYS);
+
+		foreach ($blocks as $block) {
+			$name = $block['component'];
+
+			// If nested key exists do a recursive loop.
+			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {
+				// Do recursive loop.
+				$output = array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
+			} else {
+				// Only output arrays of components not the actual components attribute.
+				if (is_array($block)) {
+					// Output only allowed fields that are relevant for the validation.
+					if (isset($allowed[$name])) {
+						$output[] = $block;
+					}
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Output validation reference fields for manual form settings.
+	 * Create block style array for settings.
 	 *
 	 * @param array<int|string, mixed> $blocks Blocks array of data.
 	 *
@@ -401,84 +435,38 @@ class Validator extends AbstractValidation
 	private function getValidationReferenceManual(array $blocks): array
 	{
 		$output = [];
-		
-		$blocksPrepare = [];
-		$allowed = array_flip(self::VALIDATION_MANUAL_COMPONENTS);
 
-		\array_walk_recursive(
-			$blocks,
-			function ($a) use (&$blocksPrepare, $allowed) {
-				error_log( print_r( ( $a ), true ) );
-				
-				if (isset($allowed)) {
-					$blocksPrepare[] = $a;
+		$items = $this->flattenValidationReferenceManual($blocks);
+		if (!$items) {
+			return $output;
+		}
+
+		$namespace = 'internal-settings';
+
+		$nestedKeys = \array_flip(AbstractFormBuilder::NESTED_KEYS_NEW);
+
+		foreach ($items as $block) {
+			$name = $block['component'];
+			$innerBlocks = [];
+
+			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {
+				foreach ($block["{$name}Content"] as $inner) {
+					$innerBlocks[] = [
+						'blockName' => "{$namespace}/{$inner['component']}",
+						'attrs' => $inner,
+						'innerBlocks' => [],
+					];
 				}
+				unset($block["{$name}Content"]);
 			}
-		);
 
-		// error_log( print_r( ( $blocksPrepare ), true ) );
+			unset($block['component']);
 
-		// // Loop multiple levels form-selector > form.
-		// foreach ($blocks as $block) {
-		// 	if (!$block) {
-		// 		continue;
-		// 	}
-
-		// 	$name = $block['component'];
-
-		// 	if (!$name) {
-		// 		continue;
-		// 	}
-
-		// 	$innerOptions = $this->getValidationReferenceManualInner($block, $name);
-
-		// 	if ($innerOptions) {
-		// 		$output = \array_merge($output, $innerOptions);
-		// 	}
-		// }
-
-		return $output;
-	}
-
-	/**
-	 * Output validation reference inner blocks fields for manual form settings.
-	 *
-	 * @param array<string, mixed> $attributes Component attributes.
-	 * @param string $name Component name.
-	 *
-	 * @return array<int|string, array<string, mixed>>
-	 */
-	private function getValidationReferenceManualInner($attributes, $name): array
-	{
-		$output = [];
-
-		// Check all attributes.
-		foreach ($attributes as $attributeKey => $attributeValue) {
-			// Get all validation fields with the correct prefix.
-			$valid = \array_flip(
-				\array_map(
-					static function ($item) use ($name) {
-						return "{$name}{$item}";
-					},
-					self::VALIDATION_FIELDS
-				)
-			);
-
-			// Get Block Id.
-			$id = $attributes["{$name}Name"] ?? '';
-
-			// error_log( print_r( ( $name ), true ) );
-			// error_log( print_r( ( $id ), true ) );
-			// error_log( print_r( ( $attributeKey ), true ) );
-			// error_log( print_r( ( $attributes ), true ) );
-			// error_log( print_r( ( '-------------------------' ), true ) );
-			
-			
-
-			// Output validation items with correct value for the matching ID.
-			if (isset($valid[$attributeKey]) && !empty($id)) {
-				$output[$id][\lcfirst(\str_replace($name, '', $attributeKey))] = $attributeValue;
-			}
+			$output[] = [
+				'blockName' => "{$namespace}/{$name}",
+				'attrs' => $block,
+				'innerBlocks' => $innerBlocks,
+			];
 		}
 
 		return $output;

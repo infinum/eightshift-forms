@@ -320,7 +320,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 											'selectName' => $item,
 											'selectId' => $item,
 											'selectFieldLabel' => $item,
-											'selectOptions' => \array_merge(
+											'selectContent' => \array_merge(
 												[
 													[
 														'component' => 'select-option',

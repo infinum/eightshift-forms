@@ -182,7 +182,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'layout',
 								'layoutType' => 'layout-grid-2',
-								'layoutItems' => [
+								'layoutContent' => [
 									[
 										'component' => 'steps',
 										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),

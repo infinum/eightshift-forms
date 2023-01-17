@@ -18,7 +18,7 @@ if (empty($selectName)) {
 	$props['selectName'] = $selectId;
 }
 
-$props['selectOptions'] = $innerBlockContent;
+$props['selectContent'] = $innerBlockContent;
 
 echo Components::render(
 	'select',

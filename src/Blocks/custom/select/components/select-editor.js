@@ -16,7 +16,7 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('select', attributes, {
 				setAttributes,
 				clientId,
-				selectOptions: <InnerBlocks
+				selectContent: <InnerBlocks
 												allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
 												template={template}
 											/>
