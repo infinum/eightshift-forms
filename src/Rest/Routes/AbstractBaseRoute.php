@@ -56,6 +56,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'fieldTypeInternal' => 'data-type-internal',
 		'fieldUncheckedValue' => 'data-unchecked-value',
 		'settingsType' => 'data-settings-type',
+		'groupSaveAsOneField' => 'data-group-save-as-one-field',
 	];
 
 	/**
@@ -125,7 +126,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					// Loop all items and decode.
 					$inner = \array_map(
 						static function ($item) {
-							return \json_decode(sanitize_text_field($item), true);
+							return \json_decode(($item), true);
 						},
 						$item
 					);
@@ -142,7 +143,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 					// Fallback if everything is empty.
 					if (!$innerNotEmpty) {
-						return [];
+						return $inner[0];
 					}
 
 					// If multiple values this is checkbox or select multiple.
@@ -167,7 +168,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				// Just decode value.
-				return \json_decode(sanitize_text_field($item), true);
+				return \json_decode(($item), true);
 			},
 			$params
 		);

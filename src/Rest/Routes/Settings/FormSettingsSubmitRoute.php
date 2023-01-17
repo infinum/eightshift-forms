@@ -20,7 +20,6 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use WP_REST_Request;
 
 /**
  * Class FormSettingsSubmitRoute
@@ -141,12 +140,11 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 			case SettingsCache::SETTINGS_TYPE_KEY:
 				return $this->cache($formDataRefrerence['params']);
 			default:
-			// error_log( print_r( ( $formDataRefrerence ), true ) );
-			
 				// If form ID is not set this is considered an global setting.
 				// Save all fields in the settings.
 				foreach ($formDataRefrerence['params'] as $key => $value) {
 					// Check if key needs updating or deleting.
+
 					if ($value['value']) {
 						if (!$formDataRefrerence['formId']) {
 							\update_option($key, $value['value']);
@@ -171,75 +169,6 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 			'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
 		]);
 	}
-
-	/**
-	 * Method that returns rest response
-	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
-	 */
-	// public function routeCallback(WP_REST_Request $request)
-	// {
-	// 		// Remove unnecessary internal params before continue.
-	// 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-
-	// 		// Remove unnecessary params.
-	// 		foreach ($params as $key => $value) {
-	// 			if (isset($customFields[$key])) {
-	// 				unset($params[$key]);
-	// 			}
-	// 		}
-
-	// 		// Determine form type to use.
-	// 		switch ($formType) {
-	// 			case SettingsCache::SETTINGS_TYPE_KEY:
-	// 				return $this->cache($params);
-	// 			default:
-	// 				// If form ID is not set this is considered an global setting.
-	// 				if (!$formId) {
-	// 					// Save all fields in the settings.
-	// 					foreach ($params as $key => $value) {
-	// 						// Check if key needs updating or deleting.
-	// 						if ($value['value']) {
-	// 							\update_option($key, $value['value']);
-	// 						} else {
-	// 							\delete_option($key);
-	// 						}
-	// 					}
-	// 				} else {
-	// 					// Save all fields in the settings.
-	// 					foreach ($params as $key => $value) {
-	// 						// Check if key needs updating or deleting.
-	// 						if ($value['value']) {
-	// 							\update_post_meta((int) $formId, $key, $value['value']);
-	// 						} else {
-	// 							\delete_post_meta((int) $formId, $key);
-	// 						}
-	// 					}
-	// 				}
-	// 				break;
-	// 		}
-
-	// 		return \rest_ensure_response([
-	// 			'code' => 200,
-	// 			'status' => 'success',
-	// 			'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
-	// 		]);
-	// 	} catch (UnverifiedRequestException $e) {
-	// 		// Die if any of the validation fails.
-	// 		return \rest_ensure_response(
-	// 			[
-	// 				'code' => 400,
-	// 				'status' => 'error_validation',
-	// 				'message' => $e->getMessage(),
-	// 				'validation' => $e->getData(),
-	// 			]
-	// 		);
-	// 	}
-	// }
 
 	/**
 	 * Delete transient cache from the DB.

@@ -322,59 +322,61 @@ export class Form {
 	 */
 	getFormData(element, singleSubmit = false) {
 		const formData = new FormData();
+		const selectors = 'input, select, textarea';
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
-
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-
-		// Check if we are saving group items in one key.
-		if (groups.length && !singleSubmit) {
-			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
-				const groupInner = group.querySelectorAll(`
-					${this.utils.groupInnerSelector} input,
-					${this.utils.groupInnerSelector} select,
-					${this.utils.groupInnerSelector} textarea
-				`);
-
-				if (groupInner.length) {
-					const groupInnerItems = {};
-
-					for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
-						const {
-							id,
-							value,
-							disabled,
-						} = groupInnerItem;
-
-						if (disabled) {
-							continue;
-						}
-
-						groupInnerItems[id] = value;
-					}
-
-					formData.append(groupId, JSON.stringify({
-						value: groupInnerItems,
-						type: 'group',
-					}));
-				}
-			}
-		}
-
-		let items = element.querySelectorAll(`
-			input:not(${this.utils.groupInnerSelector} input),
-			select:not(${this.utils.groupInnerSelector} select),
-			textarea:not(${this.utils.groupInnerSelector} textarea)
-		`);
-
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+		let items = element.querySelectorAll(selectors);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
 			items = [
 				singleSubmit
 			];
+		} else {
+			// Check if we are saving group items in one key.
+			if (groups.length) {
+				for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
+					const groupSaveAsOneField = Boolean(group.getAttribute(this.utils.DATA_ATTRIBUTES.groupSaveAsOneField));
+
+					if (!groupSaveAsOneField) {
+						continue;
+					}
+
+					const groupInner = group.querySelectorAll(selectors);
+
+					if (groupInner.length) {
+						const groupInnerItems = {};
+
+						for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
+							const {
+								name,
+								value,
+								disabled,
+							} = groupInnerItem;
+
+							if (disabled) {
+								continue;
+							}
+
+							groupInnerItems[name] = value;
+						}
+
+						const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
+
+						if (groupId) {
+							formData.append(groupId, JSON.stringify({
+								value: groupInnerItems,
+								type: 'group',
+							}));
+						}
+					}
+
+					// Remove group items from the original items.
+					items = Array.prototype.slice.call(items).filter((item) => Array.prototype.slice.call(groupInner).indexOf(item) == -1);
+				}
+			}
 		}
 
 		// Iterate all form items.
@@ -382,7 +384,6 @@ export class Form {
 			const {
 				type,
 				name,
-				id,
 				files,
 				disabled,
 				checked,
@@ -426,20 +427,20 @@ export class Form {
 
 				// If custom file use files got from the global object of files uploaded.
 				if (this.utils.isCustom(item)) {
-					fileList = this.utils.FILES[formId][id] ?? [];
+					fileList = this.utils.FILES[formId][name] ?? [];
 				}
 
 				// Loop files and append.
 				if (fileList.length) {
 					for (const [key, file] of Object.entries(fileList)) {
-						formData.append(`${id}[${key}]`, file);
+						formData.append(`${name}[${key}]`, file);
 					}
 				} else {
-					formData.append(`${id}[0]`, JSON.stringify({}));
+					formData.append(`${name}[0]`, JSON.stringify({}));
 				}
 			} else {
 				// Output/append all fields.
-				formData.append(id, JSON.stringify(data));
+				formData.append(name, JSON.stringify(data));
 			}
 		}
 
@@ -603,7 +604,7 @@ export class Form {
 	setupFileField(file, formId, index) {
 		if (this.utils.isCustom(file)) {
 
-			const fileId = file?.id;
+			const fileId = file?.name;
 
 			if (typeof this.utils.FILES[formId] === 'undefined') {
 				this.utils.FILES[formId] = {};

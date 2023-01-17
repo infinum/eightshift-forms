@@ -73,9 +73,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formType = $this->getFormType($params);
 			$formSettingsType = $this->getFormSettingsType($params);
 
-			error_log( print_r( ( $formType ), true ) );
-			
-
 			if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
 				$formDataRefrerence = [
 					'formId' => $formId,
@@ -84,8 +81,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					'innerId' => '',
 					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
 				];
-
-				error_log( print_r( ( $formDataRefrerence ), true ) );
 			} else {
 				$formDataRefrerence = Helper::getFormDetailsById($formId);
 			}
@@ -96,7 +91,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				$validate = $this->getValidator()->validate($formDataRefrerence);
-
 				if ($validate) {
 					throw new UnverifiedRequestException(
 						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
@@ -106,7 +100,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			}
 
 			// Extract hidden params from localStorage set on the frontend.
-			$params = $this->extractStorageParams($formDataRefrerence['params']);
+			$formDataRefrerence['params'] = $this->extractStorageParams($formDataRefrerence['params']);
 
 			// Upload files to temp folder.
 			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);

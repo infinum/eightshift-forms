@@ -306,46 +306,41 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					],
 					$clearbitAvailableKeys ? [
 						'component' => 'group',
-						'groupId' => $this->getSettingsName($mapKey),
-						'groupContent' => [
-							[
-								'component' => 'group',
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
-								'groupContent' => \array_map(
-									static function ($item) use ($clearbitMapValue, $properties) {
-										$selectedValue = $clearbitMapValue[$item] ?? '';
-										return [
-											'component' => 'select',
-											'selectName' => $item,
-											'selectId' => $item,
-											'selectFieldLabel' => $item,
-											'selectContent' => \array_merge(
-												[
-													[
-														'component' => 'select-option',
-														'selectOptionLabel' => '',
-														'selectOptionValue' => '',
-													],
-												],
-												\array_map(
-													static function ($option) use ($selectedValue) {
-														return [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $selectedValue === $option,
-														];
-													},
-													$properties
-												)
-											),
-										];
-									},
-									$clearbitAvailableKeys
-								),
-							],
-						],
+						'groupName' => $this->getSettingsName($mapKey),
+						'groupSaveOneField' => true,
+						'groupStyle' => 'default-listing',
+						'groupContent' => \array_map(
+							static function ($item) use ($clearbitMapValue, $properties) {
+								$selectedValue = $clearbitMapValue[$item] ?? '';
+								return [
+									'component' => 'select',
+									'selectName' => $item,
+									'selectId' => $item,
+									'selectFieldLabel' => $item,
+									'selectContent' => \array_merge(
+										[
+											[
+												'component' => 'select-option',
+												'selectOptionLabel' => '',
+												'selectOptionValue' => '',
+											],
+										],
+										\array_map(
+											static function ($option) use ($selectedValue) {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $option,
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $selectedValue === $option,
+												];
+											},
+											$properties
+										)
+									),
+								];
+							},
+							$clearbitAvailableKeys
+						),
 					] : [],
 				],
 		];

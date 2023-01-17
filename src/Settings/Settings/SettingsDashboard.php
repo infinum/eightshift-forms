@@ -101,7 +101,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 						'checkboxesFieldSkip' => true,
 						'checkboxesName' => $this->getSettingsName($use),
 						'checkboxesId' => $this->getSettingsName($use),
-						'checkboxesIsRequired' => true,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',

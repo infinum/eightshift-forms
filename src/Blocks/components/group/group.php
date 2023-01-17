@@ -13,12 +13,11 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
-$componentJsClassInner = $manifest['componentJsClassInner'] ?? '';
 
 $groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
 $groupSublabel = Components::checkAttr('groupSublabel', $attributes, $manifest);
 $groupContent = Components::checkAttr('groupContent', $attributes, $manifest);
-$groupId = Components::checkAttr('groupId', $attributes, $manifest);
+$groupName = Components::checkAttr('groupName', $attributes, $manifest);
 $groupSaveOneField = Components::checkAttr('groupSaveOneField', $attributes, $manifest);
 $groupStyle = Components::checkAttr('groupStyle', $attributes, $manifest);
 $groupBeforeContent = Components::checkAttr('groupBeforeContent', $attributes, $manifest);
@@ -28,15 +27,15 @@ $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalGroupClass, $additionalGroupClass),
 	Components::selector($groupStyle, $componentClass, '', $groupStyle),
-	Components::selector(!$groupSaveOneField && $componentJsClass, $componentJsClass),
-	Components::selector($groupSaveOneField && $componentJsClassInner, $componentJsClassInner),
+	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
 ?>
 
 <div
 	class="<?php echo esc_attr($groupClass); ?>"
-	data-field-id="<?php echo esc_attr($groupId); ?>"
+	data-field-id="<?php echo esc_attr($groupName); ?>"
+	data-group-save-as-one-field="<?php echo esc_attr($groupSaveOneField); ?>"
 >
 
 	<?php if ($groupLabel) { ?>

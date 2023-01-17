@@ -82,7 +82,6 @@ export class Utils {
 		this.loaderSelector =  `${this.formSelector}-loader`;
 		this.globalMsgSelector =  `${this.formSelector}-global-msg`;
 		this.groupSelector =  `${this.formSelector}-group`;
-		this.groupInnerSelector =  `${this.formSelector}-group-inner`;
 		this.customSelector =  `${this.formSelector}-custom`;
 		this.fieldSelector =  `${this.formSelector}-field`;
 		this.inputSelector =  `${this.fieldSelector} input`;
@@ -532,7 +531,6 @@ export class Utils {
 				loaderSelector: this.loaderSelector,
 				globalMsgSelector: this.globalMsgSelector,
 				groupSelector: this.groupSelector,
-				groupInnerSelector: this.groupInnerSelector,
 				customSelector: this.customSelector,
 				fieldSelector: this.fieldSelector,
 				inputSelector: this.inputSelector,

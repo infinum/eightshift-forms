@@ -14,18 +14,12 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * Class Validator
  */
 class Validator extends AbstractValidation
 {
-	/**
-	 * Use Object Helper
-	 */
-	// use ObjectHelperTrait;
-
 	/**
 	 * Instance variable for labels data.
 	 *
@@ -108,6 +102,9 @@ class Validator extends AbstractValidation
 		}
 
 		$validationReference = $this->getValidationReference($data['fieldsOnly']);
+
+		error_log( print_r( ( $validationReference ), true ) );
+		
 
 		return \array_merge(
 			$this->validateParams($data['params'], $validationReference, $data['formId']),
