@@ -60,7 +60,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 				// Output label as value for enum.
 				return [
 					'label' => $label,
-					'value' => $value === '---' ? '' : $label,
+					'value' => $value === '-' ? '' : $label,
 				];
 			},
 			$this->getValidationPatterns()
@@ -114,7 +114,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 		$output = [
 			[
 				'value' => '',
-				'label' => '---',
+				'label' => '-',
 				'name' => '',
 			],
 			...SettingsValidation::VALIDATION_PATTERNS,

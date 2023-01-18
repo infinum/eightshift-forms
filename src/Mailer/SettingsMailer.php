@@ -165,7 +165,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 
 		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY, $formId);
 
-		$formNames = Helper::getFormNames($formId);
+		$formNames = Helper::getFormFieldNames($formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),

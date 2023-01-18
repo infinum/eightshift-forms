@@ -92,7 +92,7 @@ class Mailer implements MailerInterface
 		$body = $data['body'] ? \wp_json_encode($data['body']) : '';
 
 		if (\is_array($listId)) {
-			$listId = \implode(', ', $listId);
+			$listId = \implode(AbstractBaseRoute::DELIMITER, $listId);
 		}
 
 		$paramsOutput = "

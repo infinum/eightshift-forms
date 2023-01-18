@@ -13,6 +13,7 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 
 /**
@@ -175,7 +176,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if ($dataValue && \count(\explode(", ", $inputValue)) < $dataValue && !empty($inputValue)) {
+						if ($dataValue && \count(\explode(AbstractBaseRoute::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;

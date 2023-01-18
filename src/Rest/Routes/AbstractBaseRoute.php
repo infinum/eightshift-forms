@@ -60,6 +60,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	];
 
 	/**
+	 * Delimiter used in checkboxes and multiple items.
+	 *
+	 * @var string
+	 */
+	public const DELIMITER = '---';
+
+	/**
 	 * Method that returns project Route namespace.
 	 *
 	 * @return string Project namespace EightshiftFormsVendor\for REST route.
@@ -158,7 +165,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 						);
 
 						// Append values to the first value.
-						$innerNotEmpty[0]['value'] = \implode(", ", $multiple);
+						$innerNotEmpty[0]['value'] = \implode(AbstractBaseRoute::DELIMITER, $multiple);
 
 						return $innerNotEmpty[0];
 					}

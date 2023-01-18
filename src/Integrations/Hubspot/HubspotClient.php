@@ -100,7 +100,8 @@ class HubspotClient implements HubspotClientInterface
 					}
 
 					$portalId = $item['portalId'] ?? '';
-					$value = "{$id}---{$portalId}";
+					$delimiter = AbstractBaseRoute::DELIMITER;
+					$value = "{$id}{$delimiter}{$portalId}";
 
 					$output[$value] = [
 						'id' => $value,
@@ -196,7 +197,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemId = \explode('---', $itemId);
+		$itemId = \explode(AbstractBaseRoute::DELIMITER, $itemId);
 
 		$consent = \array_filter(
 			$params,
@@ -271,7 +272,7 @@ class HubspotClient implements HubspotClientInterface
 			$url,
 			$paramsPrepared,
 			$paramsFiles,
-			\implode(', ', $itemId),
+			\implode(AbstractBaseRoute::DELIMITER, $itemId),
 			$formId
 		);
 

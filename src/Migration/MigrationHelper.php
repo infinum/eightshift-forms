@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -152,7 +154,8 @@ trait MigrationHelper
 		}
 
 		foreach ($syncFormOutput as $key => $block) {
-			$blockName = \explode('/', $block['blockName'])[1];
+
+			$blockName = Helper::getBlockNameDetails($block['blockName'])['name'];
 			$prefix = Components::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
@@ -231,7 +234,7 @@ trait MigrationHelper
 		}
 
 		foreach ($integrationFields as $key => $value) {
-			$key = \explode('---', $key);
+			$key = \explode(AbstractBaseRoute::DELIMITER, $key);
 			$name = $key[0] ?? '';
 			$innerKey = $key[1] ?? '';
 

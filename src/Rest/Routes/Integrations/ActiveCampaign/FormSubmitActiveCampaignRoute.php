@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -147,7 +148,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			$actionTags = $params['actionTags']['value'] ?? '';
 
 			if ($actionTags) {
-				$actionTags = \explode(', ', $actionTags);
+				$actionTags = \explode(AbstractBaseRoute::DELIMITER, $actionTags);
 
 				// Create API req for each tag.
 				foreach ($actionTags as $tag) {
@@ -162,7 +163,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			$actionLists = $params['actionLists']['value'] ?? '';
 
 			if ($actionLists) {
-				$actionLists = \explode(', ', $actionLists);
+				$actionLists = \explode(AbstractBaseRoute::DELIMITER, $actionLists);
 
 				// Create API req for each list.
 				foreach ($actionLists as $list) {

@@ -165,7 +165,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getFormNames(string $formId): string
+	public static function getFormFieldNames(string $formId): string
 	{
 		$content = \get_the_content(null, false, (int) $formId);
 
@@ -301,6 +301,7 @@ class Helper
 		return [
 			'namespace' => $block[0] ?? '',
 			'name' => $blockName ?? '',
+			'nameAttr' => Components::kebabToCamelCase($blockName ?? ''),
 		];
 	}
 
@@ -343,9 +344,7 @@ class Helper
 			return '';
 		}
 
-		$blockName = \explode('/', $blockName);
-
-		return \end($blockName);
+		return self::getBlockNameDetails($blockName)['name'];
 	}
 
 	/**
@@ -386,8 +385,7 @@ class Helper
 			return $output;
 		}
 
-		$type = \explode('/', $blockName);
-		$type = Components::kebabToCamelCase(\end($type));
+		$type = self::getBlockNameDetails($blockName)['nameAttr'];
 
 		$output['type'] = $type;
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';

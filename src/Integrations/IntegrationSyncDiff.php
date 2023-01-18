@@ -900,14 +900,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function getBlockAttributePrefixByFullBlockName(string $name): array
 	{
-		$block = \explode('/', $name);
-		$blockName = \end($block);
+		$blockName = Helper::getBlockNameDetails($name);
 
-		$component = Components::kebabToCamelCase($blockName, '-');
+		$component = $blockName['nameAttr'];
 
 		return [
-			'namespace' => $block[0],
-			'component' => $blockName,
+			'namespace' => $blockName['namespace'],
+			'component' => $blockName['name'],
 			'prefix' => "{$component}" . \ucfirst($component),
 		];
 	}

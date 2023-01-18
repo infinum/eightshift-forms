@@ -444,7 +444,7 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		return \explode(', ', $params[$key]['value']);
+		return \explode(AbstractBaseRoute::DELIMITER, $params[$key]['value']);
 	}
 
 	/**

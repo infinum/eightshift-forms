@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 
 /**
@@ -130,7 +131,7 @@ trait SettingsHelper
 			return [];
 		};
 
-		return \explode(', ', $value);
+		return \explode(AbstractBaseRoute::DELIMITER, $value);
 	}
 
 	/**
@@ -171,7 +172,7 @@ trait SettingsHelper
 	 */
 	public function isCheckboxSettingsChecked(string $key, string $id, string $formId): bool
 	{
-		return \in_array($key, \explode(', ', $this->getSettingsValue($id, $formId)), true);
+		return \in_array($key, \explode(AbstractBaseRoute::DELIMITER, $this->getSettingsValue($id, $formId)), true);
 	}
 
 	/**
@@ -184,7 +185,7 @@ trait SettingsHelper
 	 */
 	public function isCheckboxOptionChecked(string $key, string $id): bool
 	{
-		return \in_array($key, \explode(', ', $this->getOptionValue($id)), true);
+		return \in_array($key, \explode(AbstractBaseRoute::DELIMITER, $this->getOptionValue($id)), true);
 	}
 
 	/**

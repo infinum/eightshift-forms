@@ -134,7 +134,7 @@ class AirtableClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemIdExploded = \explode('---', $itemId);
+		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
 
 		$body = [
 			'fields' => $this->prepareParams($params),
@@ -320,7 +320,7 @@ class AirtableClient implements ClientInterface
 					break;
 				case 'multiCheckbox':
 					if ($param['value']) {
-						$value = \explode(', ', $param['value']);
+						$value = \explode(AbstractBaseRoute::DELIMITER, $param['value']);
 					} else {
 						$value = [];
 					}
