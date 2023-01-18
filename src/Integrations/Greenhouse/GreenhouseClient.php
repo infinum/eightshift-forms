@@ -12,13 +12,13 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
 use EightshiftForms\General\General;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * GreenhouseClient integration class.
@@ -352,7 +352,12 @@ class GreenhouseClient implements ClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Get gh_src from url and map it.
+		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']['gh_src'])) {
+			$output['mapped_url_token'] = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']['gh_src'];
+		}
+
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
@@ -362,17 +367,6 @@ class GreenhouseClient implements ClientInterface
 
 			$name = $param['name'] ?? '';
 			if (!$name) {
-				continue;
-			}
-
-			// Get gh_src from url and map it.
-			if ($name === AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage'] && isset($value['gh_src'])) {
-				$output['mapped_url_token'] = $value['gh_src'];
-				continue;
-			}
-
-			// Remove unecesery fields.
-			if (isset($customFields[$name])) {
 				continue;
 			}
 

@@ -10,12 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MailerliteClient integration class.
@@ -288,20 +287,20 @@ class MailerliteClient implements ClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params, ['email']);
 
 		foreach ($params as $key => $param) {
-			// Remove email.
-			if ($key === 'email') {
+			$value = $param['value'] ?? '';
+			if (!$value) {
 				continue;
 			}
 
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
-			$output[$key] = $param['value'] ?? '';
+			$output[$name] = $value;
 		}
 
 		return $output;

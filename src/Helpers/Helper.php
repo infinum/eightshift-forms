@@ -15,6 +15,7 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -414,5 +415,63 @@ class Helper
 		$attribute = \preg_replace('/\u0022/', '"', $attribute);
 
 		return $attribute;
+	}
+
+
+	/**
+	 * Find email field from params sent by form.
+	 *
+	 * @param array<string, mixed> $params Params to check
+	 *
+	 * @return string
+	 */
+	public static function getEmailParamsField(array $params): string
+	{
+		$allowed = [
+			'email' => 0,
+			'e-mail' => 1,
+			'mail' => 2,
+			'email_address' => 3,
+		];
+
+		$field = \array_filter(
+			$params,
+			static function ($item) use ($allowed) {
+				if (isset($allowed[$item['name'] ?? ''])) {
+					return true;
+				}
+			}
+		);
+
+		return \reset($field)['value'] ?? '';
+	}
+
+	/**
+	 * Remove unecesery custom params.
+	 *
+	 * @param array<string, mixed> $params Params to check
+	 * @param array<int, string> $additional Additional keys to remove.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function removeUneceseryParamFields(array $params, array $additional = []): array
+	{
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$additional = \array_flip($additional);
+
+		return array_filter(
+			$params,
+			static function ($item) use ($customFields, $additional) {
+				if (isset($customFields[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				if ($additional && isset($additional[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				return true;
+			}
+		);
 	}
 }

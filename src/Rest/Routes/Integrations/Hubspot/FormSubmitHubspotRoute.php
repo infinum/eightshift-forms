@@ -10,8 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
@@ -28,16 +27,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitHubspotRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -169,8 +158,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formDataRefrerence['formId'], SettingsHubspot::SETTINGS_TYPE_KEY);
 
 		if ($useClearbit) {
-			$emailKey = $this->getSettingsValue(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['email'], $formDataRefrerence['formId']);
-			$email = isset($params[$emailKey]['value']) ? $params[$emailKey]['value'] : '';
+			$email = Helper::getEmailParamsField($formDataRefrerence['params']);
 
 			if ($email) {
 				// Get Clearbit data.

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -565,40 +566,43 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params);
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 
 		// Map params.
-		foreach ($params as $key => $param) {
+		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
-
-			if ($key === 'actionTags') {
+			if (!$value) {
 				continue;
 			}
 
-			if ($key === 'actionLists') {
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
-			// Remove unecesery fields.
-			if (isset($customFields[$key])) {
+			if ($name === 'actionTags') {
+				continue;
+			}
+
+			if ($name === 'actionLists') {
 				continue;
 			}
 
 			// If standard key use different logic.
-			if (isset($standardFields[$key])) {
+			if (isset($standardFields[$name])) {
 				// On full name explode first space and output it as first and last name.
-				if ($key === 'fullName') {
+				if ($name === 'fullName') {
 					$value = \explode(' ', $value, 2);
 					$output['firstName'] = $value[0] ?? '';
 					$output['lastName'] = $value[1] ?? '';
 				} else {
-					$output[$key] = $value;
+					$output[$name] = $value;
 				}
 			} else {
 				// Mape custom fields.
 				$output['fieldValues'][] = [
-					'field' => $key,
+					'field' => $name,
 					'value' => $value,
 				];
 			}

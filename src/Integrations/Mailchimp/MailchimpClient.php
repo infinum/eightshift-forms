@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -154,22 +155,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		error_log( print_r( ( $params ), true ) );
-		
-		$email = $params['email_address']['value'];
+		$email = Helper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
-		$prepareParams = $this->prepareParams($params);
 
 		$body = [
 			'email_address' => $email,
 			'status_if_new' => 'subscribed',
 			'status' => 'subscribed',
 			'tags' => $this->prepareTags($params),
+			'merge_fields' => $this->prepareParams($params),
 		];
-
-		if (!empty($prepareParams)) {
-			$body['merge_fields'] = $prepareParams;
-		}
 
 		$url = "{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}";
 
@@ -380,7 +375,7 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
@@ -390,11 +385,6 @@ class MailchimpClient implements MailchimpClientInterface
 
 			$name = $param['name'] ?? '';
 			if (!$name) {
-				continue;
-			}
-
-			// Remove email.
-			if ($name === 'email_address') {
 				continue;
 			}
 
@@ -409,11 +399,6 @@ class MailchimpClient implements MailchimpClientInterface
 					'country' => '',
 				];
 
-				continue;
-			}
-
-			// Remove unnecessary fields.
-			if (isset($customFields[$name])) {
 				continue;
 			}
 
@@ -438,9 +423,9 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		$value = $params[$key]['value'];
+		$value = $params[$key]['value'] ?? '';
 
-		if (empty($value)) {
+		if (!$value) {
 			return [];
 		}
 

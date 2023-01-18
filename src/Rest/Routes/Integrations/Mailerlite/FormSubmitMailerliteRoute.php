@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
@@ -24,16 +22,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitMailerliteRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -145,12 +133,10 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	{
 		// Send application to Mailerlite.
 		$response = $this->mailerliteClient->postApplication(
-			// $this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, $formId),
-			'',
-			// TODO
-			$params,
-			[],
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -162,7 +148,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),a
 		]);
 	}
 }

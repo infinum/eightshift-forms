@@ -144,9 +144,6 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		error_log( print_r( (  $validationReference), true ) );
-		
-
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
 			$inputValue = $paramValue['value'] ?? '';
@@ -221,9 +218,6 @@ class Validator extends AbstractValidation
 				}
 			}
 		}
-
-		error_log( print_r( ( $output ), true ) );
-		
 
 		return $output;
 	}

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Airtable;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -299,38 +300,43 @@ class AirtableClient implements ClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params);
 
-		foreach ($params as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+		foreach ($params as $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
 				continue;
 			}
 
-			switch ($param['internalType']) {
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
+
+			switch ($param['internalType'] ?? '') {
 				case 'singleCheckbox':
-					$value = \filter_var($param['value'], \FILTER_VALIDATE_BOOLEAN);
+					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
 					break;
 				case 'number':
-					if ($param['value']) {
-						$value = \filter_var($param['value'], \FILTER_VALIDATE_FLOAT);
+					if ($value) {
+						$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
 					} else {
 						$value = 0;
 					}
 					break;
 				case 'multiCheckbox':
-					if ($param['value']) {
-						$value = \explode(AbstractBaseRoute::DELIMITER, $param['value']);
+					if ($value) {
+						$value = \explode(AbstractBaseRoute::DELIMITER, $value);
 					} else {
 						$value = [];
 					}
 					break;
 				default:
-					$value = $param['value'];
+					$value = $value;
 					break;
 			}
 
-			$output[$key] = $value;
+			$output[$name] = $value;
 		}
 
 		return $output;

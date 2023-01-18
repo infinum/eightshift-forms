@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -697,7 +698,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
@@ -717,16 +718,7 @@ class HubspotClient implements HubspotClientInterface
 					$value = 'true';
 				}
 
-				if (empty($value)) {
-					continue;
-				}
-
-				$value = \str_replace(', ', ';', $value);
-			}
-
-			// Remove unnecessary fields.
-			if (isset($customFields[$name])) {
-				continue;
+				$value = \str_replace(AbstractBaseRoute::DELIMITER, ';', $value);
 			}
 
 			$output[] = [
@@ -736,16 +728,17 @@ class HubspotClient implements HubspotClientInterface
 			];
 		}
 
-		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
-		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']) && \has_filter($filterName)) {
-			return \apply_filters(
-				$filterName,
-				$output,
-				$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
-				$params,
-				$this->enrichment->getEnrichmentConfig()
-			) ?? [];
-		}
+		// TODO
+		// $filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
+		// if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']) && \has_filter($filterName)) {
+		// 	return \apply_filters(
+		// 		$filterName,
+		// 		$output,
+		// 		$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
+		// 		$params,
+		// 		$this->enrichment->getEnrichmentConfig()
+		// 	) ?? [];
+		// }
 
 		return $output;
 	}

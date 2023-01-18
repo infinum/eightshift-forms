@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
@@ -24,16 +22,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitMomentsRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *

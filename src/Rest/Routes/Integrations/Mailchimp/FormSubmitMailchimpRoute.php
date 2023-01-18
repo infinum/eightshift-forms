@@ -144,11 +144,6 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 			$this->mailer->fallbackEmail($response['data'] ?? []);
 		}
 
-		// Always delete the files from the disk.
-		if ($formDataRefrerence['files']) {
-			$this->deleteFiles($formDataRefrerence['files']);
-		}
-
 		// Finish.
 		return \rest_ensure_response([
 			'code' => $response['code'],

@@ -10,12 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Moments;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MomentsClient integration class.
@@ -294,15 +293,20 @@ class MomentsClient implements ClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$params = Helper::removeUneceseryParamFields($params);
 
-		foreach ($params as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+		foreach ($params as $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
 				continue;
 			}
 
-			$output[$key] = $param['value'] ?? '';
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
+
+			$output[$name] = $value;
 		}
 
 		return $output;
