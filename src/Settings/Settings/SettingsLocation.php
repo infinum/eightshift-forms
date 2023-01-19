@@ -112,7 +112,11 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 					'editLink' => Helper::getFormEditPageUrl((string) $id),
 					'viewLink' => \get_permalink($id),
-					'activeIntegration' => $this->getActiveIntegrationIcons((string) $id),
+					'activeIntegration' => [
+						'isActive' => true,
+						'isValid' => true,
+						'isApiValid' => true,
+					]
 				];
 			},
 			$items

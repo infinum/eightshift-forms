@@ -17,9 +17,9 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
 /**
- * Class IntegrationEditorSyncRoute
+ * Class IntegrationEditorSyncDirectRoute
  */
-class IntegrationEditorSyncRoute extends AbstractBaseRoute
+class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 {
 	/**
 	 * Use general helper trait.
@@ -29,7 +29,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-editor-sync';
+	public const ROUTE_SLUG = '/integration-editor-sync-direct';
 
 	/**
 	 * Instance variable for HubSpot form data.
@@ -79,7 +79,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 	 */
 	protected function getMethods(): string
 	{
-		return static::READABLE;
+		return static::CREATABLE;
 	}
 
 	/**
@@ -106,7 +106,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 
 		$formId = $request->get_param('id') ?? '';
 
-		$syncForm = $this->integrationSyncDiff->syncFormEditor($formId, true);
+		$syncForm = $this->integrationSyncDiff->syncFormDirect($formId, true);
 
 		$status = $syncForm['status'] ?? '';
 

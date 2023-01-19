@@ -12,6 +12,7 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncDirectRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\Settings\FormSettingsSubmitRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
@@ -85,6 +86,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
 				'migrationRestUrl' => $restRoutesPath . MigrationRoute::ROUTE_SLUG,
 				'transferRestUrl' => $restRoutesPath . TransferRoute::ROUTE_SLUG,
+				'syncDirectRestUrl' => $restRoutesPath . IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
 				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms')
 			]
 		];

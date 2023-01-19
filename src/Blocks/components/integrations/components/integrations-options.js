@@ -5,7 +5,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { select } from "@wordpress/data";
-import { BaseControl, Button, Modal } from '@wordpress/components';
+import { BaseControl, Button } from '@wordpress/components';
 import { icons, CustomSelect, BlockIcon, IconLabel, FancyDivider } from '@eightshift/frontend-libs/scripts';
 import { updateIntegrationBlocks, getSettingsPageUrl, resetInnerBlocks } from '../../utils';
 

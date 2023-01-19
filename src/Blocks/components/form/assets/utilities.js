@@ -250,10 +250,6 @@ export class Utils {
 
 	// Set global message.
 	setGlobalMsg(element, msg, status) {
-		if(element.hasAttribute(this.DATA_ATTRIBUTES.successRedirect) && status === 'success') {
-			return;
-		}
-
 		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {

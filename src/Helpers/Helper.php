@@ -15,6 +15,8 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -349,6 +351,36 @@ class Helper
 	}
 
 	/**
+	 * Output the form type used by checking the post_content and extracting the block used for the integration.
+	 *
+	 * @param string $formId Form ID to check.
+	 *
+	 * @return string
+	 */
+	public static function isFormValid(string $formId): string
+	{
+		$content = \get_post_field('post_content', (int) $formId);
+
+		if (!$content) {
+			return '';
+		}
+
+		$blocks = \parse_blocks($content);
+
+		if (!$blocks) {
+			return '';
+		}
+
+		$blockName = $blocks[0]['innerBlocks'][0]['blockName'] ?? '';
+
+		if (!$blockName) {
+			return '';
+		}
+
+		return self::getBlockNameDetails($blockName)['name'];
+	}
+
+	/**
 	 * Get current form content from the database and do prepare output.
 	 *
 	 * @param string $formId Form Id.
@@ -359,7 +391,12 @@ class Helper
 	{
 		$output = [
 			'formId' => $formId,
+			'isValid' => false,
+			'isApiValid' => false,
+			'label' => '',
+			'icon' => '',
 			'type' => '',
+			'typeFilter' => '',
 			'itemId' => '',
 			'innerId' => '',
 			'fields' => [],
@@ -386,13 +423,47 @@ class Helper
 			return $output;
 		}
 
-		$type = self::getBlockNameDetails($blockName)['nameAttr'];
+		$blockName = self::getBlockNameDetails($blockName);
+		$type = $blockName['nameAttr'];
 
 		$output['type'] = $type;
+		$output['typeFilter'] = $blockName['name'];;
+		$output['label'] = Filters::getSettingsLabels($type, 'title');
+		$output['icon'] = Filters::ALL[$type]['icon'] ?? '';
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
 		$output['fields'] = $blocks;
 		$output['fieldsOnly'] = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
+
+		switch ($output['typeFilter']) {
+			case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
+				if ($output['itemId'] && $output['type'] && $output['innerId']) {
+					$output['isValid'] = true;
+
+					if ($output['fieldsOnly']) {
+						$output['isApiValid'] = true;
+					}
+				}
+				break;
+			case SettingsMailer::SETTINGS_TYPE_KEY:
+				if ($output['type']) {
+					$output['isValid'] = true;
+
+					if ($output['fieldsOnly']) {
+						$output['isApiValid'] = true;
+					}
+				}
+				break;
+			default:
+				if ($output['itemId'] && $output['type']) {
+					$output['isValid'] = true;
+
+					if ($output['fieldsOnly']) {
+						$output['isApiValid'] = true;
+					}
+				}
+				break;
+		}
 
 		return $output;
 	}

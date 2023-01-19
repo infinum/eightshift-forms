@@ -37,7 +37,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	public function register(): void
 	{
-		\add_action('load-post.php', [$this, 'updateForm']);
+		\add_action('load-post.php', [$this, 'updateFormOnBlockEditorLoad']);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @return void
 	 */
-	public function updateForm(): void
+	public function updateFormOnBlockEditorLoad(): void
 	{
 		// Prevent forms sync.
 		$skipFormsSync = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
@@ -64,7 +64,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$formId = isset($_GET['post']) ? \sanitize_text_field(\wp_unslash($_GET['post'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Run form sync.
-		$syncForm = $this->syncForm($formId);
+		$syncForm = $this->syncFormDirect($formId);
 
 		// Find final status.
 		$status = $syncForm['status'] ?? '';
@@ -79,6 +79,35 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			));
 
 			return;
+		}
+
+		// Finish with success.
+		Helper::logger(\array_merge(
+			[
+				'type' => 'diff',
+			],
+			$syncForm
+		));
+	}
+
+	/**
+	 * Sync and update form DB.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function syncFormDirect(string $formId): array
+	{
+		// Run form sync.
+		$syncForm = $this->syncFormEditor($formId);
+
+		// Find final status.
+		$status = $syncForm['status'] ?? '';
+
+		// If error output log.
+		if ($status === 'error') {
+			return $syncForm;
 		}
 
 		$namespace = Components::getSettingsNamespace();
@@ -104,7 +133,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Bailout if we have output to show.
 		if (!$blocksGrammar) {
-			return;
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_itemId',
+				'message' => \esc_html__('Block grammer build failed.', 'eightshift-forms'),
+			];
 		}
 
 		// Update block content.
@@ -112,28 +146,20 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Bailout if db content update failed.
 		if (!$update) {
-			Helper::logger(\array_merge(
-				[
-					'type' => 'diff',
-					'status' => 'error',
-					'debugType' => 'after_error_form_update',
-					'message' => \esc_html__('Something went wrong with form update.', 'eightshift-forms'),
-					'outputGrammar' => $blocksGrammar,
-				],
-				$syncForm
-			));
-
-			return;
+			return [
+				'formId' => $formId,
+				'status' => 'error',
+				'debugType' => 'integration_missing_itemId',
+				'message' => \esc_html__('DB update failed.', 'eightshift-forms'),
+			];
 		}
 
-		// Finish with success.
-		Helper::logger(\array_merge(
-			[
-				'type' => 'diff',
-				'outputGrammar' => $blocksGrammar,
-			],
-			$syncForm
-		));
+		return [
+			'formId' => $formId,
+			'status' => 'success',
+			'debugType' => 'after_success',
+			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
+		];
 	}
 
 	/**
@@ -147,7 +173,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function createForm(string $formId, string $type, string $itemId, string $innerId, bool $editorOutput = false): array
+	public function createFormEditor(string $formId, string $type, string $itemId, string $innerId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
 		if (!$formId) {
@@ -260,7 +286,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function syncForm(string $formId, bool $editorOutput = false): array
+	public function syncFormEditor(string $formId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
 		if (!$formId) {

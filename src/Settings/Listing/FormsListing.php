@@ -65,6 +65,7 @@ class FormsListing implements FormListingInterface
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
 				'activeIntegration' =>  $this->getActiveIntegrationIcons((string) $id),
+				'useSync' => true,
 			];
 		}
 

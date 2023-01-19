@@ -337,17 +337,22 @@ trait SettingsHelper
 	 */
 	private function getActiveIntegrationIcons(string $id): array
 	{
-		$integrationTypeUsed = Helper::getFormTypeById($id);
+		$integrationDetails = Helper::getFormDetailsById($id);
 
-		if (!$integrationTypeUsed) {
+		if (!$integrationDetails) {
 			return [];
 		}
 
+		$type = $integrationDetails['typeFilter'];
+		$useFilter = Filters::ALL[$type]['use'] ?? '';
+
 		return [
-			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
-			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
-			'value' => $integrationTypeUsed,
-			'isActive' => $this->isCheckboxOptionChecked(Filters::ALL[$integrationTypeUsed]['use'], Filters::ALL[$integrationTypeUsed]['use']),
+			'label' => $integrationDetails['label'],
+			'icon' => $integrationDetails['icon'],
+			'value' => $type,
+			'isActive' => $useFilter ? $this->isCheckboxOptionChecked($useFilter, $useFilter) : false,
+			'isValid' => $integrationDetails['isValid'],
+			'isApiValid' => $integrationDetails['isApiValid'],
 		];
 	}
 }

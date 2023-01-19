@@ -114,7 +114,7 @@ trait MigrationHelper
 			}
 		}
 
-		$syncForm = $this->integrationSyncDiff->createForm($id, $type, $itemId, $innerId);
+		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
 		$syncFormStatus = $syncForm['status'] ?? 'error';
 		$syncFormDebugType = $syncForm['debugType'] ?? '';

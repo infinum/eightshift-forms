@@ -114,8 +114,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
-		error_log( print_r( ( $data ), true ) );
-
 		$fields = $data['fields'] ?? [];
 
 		if (!$fields) {

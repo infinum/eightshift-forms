@@ -134,12 +134,10 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	{
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(
-			'',
-			// TODO.
-			// $this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY, $formId),
-			$params,
-			[],
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		// Make an additional requests to the API.
@@ -184,7 +182,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }
