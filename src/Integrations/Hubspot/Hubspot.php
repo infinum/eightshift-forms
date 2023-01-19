@@ -14,7 +14,6 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -42,24 +41,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	protected $hubspotClient;
 
 	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 */
-	public function __construct(
-		HubspotClientInterface $hubspotClient,
-		ValidationPatternsInterface $validationPatterns
-	) {
+	public function __construct(HubspotClientInterface $hubspotClient)
+	{
 		$this->hubspotClient = $hubspotClient;
-		$this->validationPatterns = $validationPatterns;
 	}
 
 	/**
@@ -203,9 +191,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						}
 
 						if ($name === 'email') {
-							$pattern = $this->validationPatterns->getValidationPattern('simpleEmail');
-
-							$item['inputValidationPattern'] = $pattern;
+							$item['inputValidationPattern'] = 'simpleEmail';
 							$item['inputType'] = $hidden ? 'hidden' : 'email';
 						}
 

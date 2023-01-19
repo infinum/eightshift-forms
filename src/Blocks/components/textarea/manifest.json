@@ -39,6 +39,12 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaMinLength": {
+			"type": "integer"
+		},
+		"textareaMaxLength": {
+			"type": "integer"
+		},
 		"textareaIsMonospace": {
 			"type": "boolean",
 			"default": false
@@ -61,6 +67,16 @@
 		},
 		"textareaDisabledOptions": {
 			"type": "array"
+		}
+	},
+	"options": {
+		"textareaMinLength": {
+			"min":  0,
+			"step": 1
+		},
+		"textareaMaxLength": {
+			"min":  1,
+			"step": 1
 		}
 	}
 }

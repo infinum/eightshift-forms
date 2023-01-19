@@ -23,20 +23,11 @@ interface ValidationPatternsInterface
 	public function getValidationPatternsEditor(): array;
 
 	/**
-	 * Get validation pattern - pattern from name.
-	 *
-	 * @param string $name Name to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPattern(string $name): string;
-
-	/**
 	 * Get validation pattern - output from pattern.
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
-	 * @return string
+	 * @return array<int, array<string, string>>
 	 */
-	public function getValidationPatternOutput(string $pattern): string;
+	public function getValidationPatternOutput(string $pattern): array;
 }

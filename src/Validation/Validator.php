@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Class Validator
@@ -42,17 +43,17 @@ class Validator extends AbstractValidation
 	 * @var array<int, string>
 	 */
 	private const VALIDATION_FIELDS = [
-		'IsRequired',
-		'IsRequiredCount',
-		'IsEmail',
-		'IsNumber',
-		'IsUrl',
-		'Accept',
-		'MinSize',
-		'MaxSize',
-		'ValidationPattern',
-		'MinLength',
-		'MaxLength'
+		'validationPattern',
+		'isRequiredCount',
+		'isEmail',
+		'isNumber',
+		'isUrl',
+		'accept',
+		'minSize',
+		'maxSize',
+		'minLength',
+		'maxLength',
+		'isRequired',
 	];
 
 	/**
@@ -144,6 +145,8 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
+		$order = self::VALIDATION_FIELDS;
+
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
 			$inputValue = $paramValue['value'] ?? '';
@@ -162,58 +165,91 @@ class Validator extends AbstractValidation
 				continue;
 			}
 
+			// Sort order or validation by the keys.
+			uksort($reference, function($key1, $key2) use ($order) {
+				return (array_search($key1, $order) > array_search($key2, $order));
+			});
+
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
+				if (!$dataValue) {
+					continue;
+				}
+
 				switch ($dataKey) {
 					// Check validation for required params.
 					case 'isRequired':
-						if ($dataValue && empty($inputValue)) {
+						if (empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
 						}
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if ($dataValue && \count(\explode(AbstractBaseRoute::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
+						if (\count(\explode(AbstractBaseRoute::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for email params.
 					case 'isEmail':
-						if ($dataValue && !$this->isEmail($inputValue) && !empty($inputValue)) {
+						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
+
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
+
+						} else {
+							$path = dirname(__FILE__) . '/manifest.json';
+
+							if (\file_exists($path)) {
+								$data = \json_decode(\implode(' ', (array)\file($path)), true);
+
+								if (!$this->isEmailTlValid($inputValue, $data)) {
+									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
+								}
+							}
 						}
 						break;
 					case 'isNumber':
-						if ($dataValue && !\is_numeric($inputValue) && !empty($inputValue)) {
+						if (!\is_numeric($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationNumber', $formId);
 						}
 						break;
 					// Check validation for url params.
 					case 'isUrl':
-						if ($dataValue && !$this->isUrl($inputValue) && !empty($inputValue)) {
+						if (!$this->isUrl($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationUrl', $formId);
 						}
 						break;
 					// Check validation for min characters length.
 					case 'minLength':
-						if ($dataValue && $dataValue > \strlen($inputValue)) {
+						if ($dataValue > \strlen($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinLength', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max characters length.
 					case 'maxLength':
-						if ($dataValue && $dataValue < \strlen($inputValue)) {
+						if ($dataValue < \strlen($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxLength', $formId), $dataValue);
 						}
 						break;
 					case 'validationPattern':
-						\preg_match("/$dataValue/", $inputValue, $matches, \PREG_OFFSET_CAPTURE, 0);
+						$pattern = $this->validationPatterns->getValidationPatternOutput($dataValue);
+						$patternValue = $pattern['value'] ?? '';
 
-						$key = $matches[0] ?? '';
+						if ($patternValue) {
+							\preg_match_all("/$patternValue/", $inputValue, $matches, PREG_SET_ORDER, 0);
 
-						if ($dataValue && (empty($key) || $key[0] !== $inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $this->validationPatterns->getValidationPatternOutput($dataValue));
+							$isMatch = isset($matches[0][0]) ? $matches[0][0] === $inputValue : false;
+
+							if (!$isMatch && !empty($inputValue)) {
+								$patternOutput = $pattern['output'] ?? '';
+
+								if (!$patternOutput) {
+									$patternOutput = $pattern['label'] ?? '';
+								}
+
+								$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $patternOutput);
+							}
 						}
+
 						break;
 				}
 			}
@@ -247,6 +283,10 @@ class Validator extends AbstractValidation
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
+				if (!$dataValue) {
+					continue;
+				}
+
 				// Check validation for accepted file types.
 				if ($dataKey === 'accept') {
 					$individualFiles = [];
@@ -266,7 +306,7 @@ class Validator extends AbstractValidation
 					}
 
 					foreach ($fileValue['name'] as $file) {
-						if (!empty($dataValue) && !$this->isFileTypeValid($file, $dataValue)) {
+						if (!$this->isFileTypeValid($file, $dataValue)) {
 							$output[$fileKey] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
 							continue;
 						}
@@ -277,7 +317,7 @@ class Validator extends AbstractValidation
 				foreach ($fileValue['size'] as $fileSize) {
 					// Check validation for min size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'minSize') {
-						if (!empty($dataValue) && !$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+						if (!$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
 							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMinSize', $formId), $dataValue / 1000);
 							continue;
 						}
@@ -285,7 +325,7 @@ class Validator extends AbstractValidation
 
 					// Check validation for max size. Calculations are in kB but outputted to MB.
 					if ($dataKey === 'maxSize') {
-						if (!empty($dataValue) && !$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+						if (!$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
 							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMaxSize', $formId), $dataValue / 1000);
 							continue;
 						}
@@ -356,11 +396,11 @@ class Validator extends AbstractValidation
 					break;
 				case 'customData':
 					$type = $block['attrs']['customDataFieldType'] ?? '';
-					$attrName = $name . \ucfirst($type);
+					$attrName = Components::kebabToCamelCase("{$name}-{$type}");
 					$id = $block['attrs']["{$name}Name"] ?? '';
 					break;
 				default:
-					$attrName = $namespace === 'internal-settings' ? $name : $name . \ucfirst($name);
+					$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
 					$id = $block['attrs']["{$attrName}Name"] ?? '';
 					break;
 			}
@@ -369,7 +409,7 @@ class Validator extends AbstractValidation
 			$valid = \array_flip(
 				\array_map(
 					static function ($item) use ($attrName) {
-						return "{$attrName}{$item}";
+						return Components::kebabToCamelCase("{$attrName}-{$item}");
 					},
 					self::VALIDATION_FIELDS
 				)

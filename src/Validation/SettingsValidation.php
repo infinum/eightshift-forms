@@ -29,53 +29,6 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 	use SettingsHelper;
 
 	/**
-	 * Custom validation patterns - public.
-	 */
-	public const VALIDATION_PATTERNS = [
-		[
-			'value' => '^(1[0-2]|0[1-9])\/(3[01]|[12][0-9]|0[1-9])$',
-			'label' => 'MM/DD',
-			'output' => 'MM/DD',
-		],
-		[
-			'value' => '^(3[01]|[12][0-9]|0[1-9])\/(1[0-2]|0[1-9])$',
-			'label' => 'DD/MM',
-			'output' => 'DD/MM',
-		],
-		[
-			'value' => '^[^@]+@[^@]{2,}\.[^@]{2,}$',
-			'label' => 'simpleEmail',
-			'output' => 'info@example.com',
-		],
-	];
-
-	/**
-	 * Custom validation patterns - private.
-	 */
-	public const VALIDATION_PATTERNS_PRIVATE = [
-		[
-			'value' => "(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$",
-			'label' => 'momentsEmail',
-			'output' => 'info@example.com',
-		],
-		[
-			'value' => '^0$|^[-]?[1-9]\d*$|^\.\d+$|^[-]?0\.\d*$|^[-]?[1-9]\d*\.\d*$',
-			'label' => 'momentsNumber',
-			'output' => '123456789',
-		],
-		[
-			'value' => '^[0-9]{4}-((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(0[469]|11)-(0[1-9]|[12][0-9]|30)|(02)-(0[1-9]|[12][0-9]))$',
-			'label' => 'momentsDate',
-			'output' => 'YYYY-MM-DD',
-		],
-		[
-			'value' => '^[0-9]{4}-((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(0[469]|11)-(0[1-9]|[12][0-9]|30)|(02)-(0[1-9]|[12][0-9]))T(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9]):(0[0-9]|[1-5][0-9])\.[0-9]{3}Z$',
-			'label' => 'momentsDateTime',
-			'output' => 'momentsDateTime',
-		],
-	];
-
-	/**
 	 * Filter settings key.
 	 */
 	public const FILTER_SETTINGS_NAME = 'es_forms_settings_validation';
@@ -180,7 +133,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 	public function getSettingsGlobalData(): array
 	{
 		$validationPatterns = '';
-		foreach (self::VALIDATION_PATTERNS as $pattern) {
+		foreach (ValidationPatterns::VALIDATION_PATTERNS as $pattern) {
 			$validationPatterns .= "<li><code>{$pattern['label']} : {$pattern['value']} : {$pattern['output']}</code></li>";
 		}
 

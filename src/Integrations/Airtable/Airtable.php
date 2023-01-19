@@ -144,11 +144,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => 'text',
+						'inputType' => 'email',
 						'inputIsEmail' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsEmail',
 						]),
+						'inputAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'email',
+						],
 					];
 					break;
 				case 'url':
@@ -157,11 +160,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => 'text',
+						'inputType' => 'url',
 						'inputIsUrl' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsUrl',
 						]),
+						'inputAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'url',
+						],
 					];
 					break;
 				case 'phoneNumber':
@@ -170,11 +176,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => 'text',
+						'inputType' => 'tel',
 						'inputIsNumber' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsNumber',
 						]),
+						'inputAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'phone',
+						],
 					];
 					break;
 				case 'number':
@@ -183,11 +192,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => 'text',
+						'inputType' => 'number',
+						'inputIsNumber' => true,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputIsNumber',
+						]),
 						'inputAttrs' => [
 							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'number',
 						],
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 					];
 					break;
 				case 'multilineText':
@@ -252,7 +264,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $label,
-								'checkboxValue' => true,
+								'checkboxValue' => '1',
 								'checkboxAttrs' => [
 									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'singleCheckbox',
 								],

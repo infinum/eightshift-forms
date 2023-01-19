@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
@@ -132,6 +133,8 @@ class MomentsClient implements ClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		error_log( print_r( ( $details ), true ) );
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -296,6 +299,8 @@ class MomentsClient implements ClientInterface
 		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
+			$type = $param['type'] ?? '';
+
 			$value = $param['value'] ?? '';
 			if (!$value) {
 				continue;
@@ -305,6 +310,11 @@ class MomentsClient implements ClientInterface
 			if (!$name) {
 				continue;
 			}
+
+			if ($type === 'checkbox') {
+				$value = explode(AbstractBaseRoute::DELIMITER, $value);
+			}
+
 
 			$output[$name] = $value;
 		}

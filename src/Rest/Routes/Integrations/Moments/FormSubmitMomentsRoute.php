@@ -133,12 +133,10 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	{
 		// Send application to Moments.
 		$response = $this->momentsClient->postApplication(
-			// $this->getSettingsValue(SettingsMoments::SETTINGS_MOMENTS_LIST_KEY, $formId),
-			'',
-			// TODO
-			$params,
-			[],
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -150,7 +148,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

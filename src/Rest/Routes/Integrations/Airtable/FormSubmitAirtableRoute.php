@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -132,13 +133,13 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	protected function submitAction(array $formDataRefrerence)
 	{
 		// Send application to Airtable.
+		$delimiter = AbstractBaseRoute::DELIMITER;
+
 		$response = $this->airtableClient->postApplication(
-			//TODO
-			// "{$listKey}---{$fieldKey}",
-			'',
-			$params,
-			[],
-			$formId
+			"{$formDataRefrerence['itemId']}{$delimiter}{$formDataRefrerence['innerId']}",
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -150,7 +151,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

@@ -8,6 +8,7 @@ export const AirtableEditor = ({
 	setAttributes,
 	itemIdKey,
 	innerIdKey,
+	clientId,
 }) => {
 
 	const {
@@ -17,6 +18,7 @@ export const AirtableEditor = ({
 	return (
 		<div className={blockClass}>
 			<IntegrationsEditor
+				clientId={clientId}
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				innerId={checkAttr(innerIdKey, attributes, manifest)}
 				useInnerId={true}

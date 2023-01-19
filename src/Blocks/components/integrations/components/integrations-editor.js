@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelect, select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { props } from '@eightshift/frontend-libs/scripts';
@@ -10,11 +11,19 @@ export const IntegrationsEditor = ({
 	setAttributes,
 	itemId,
 	innerId,
+	clientId,
 	useInnerId = false,
 }) => {
 	const {
 		componentClass,
 	} = manifest;
+
+	// Check if form selector has inner blocks.
+	const hasInnerBlocks = useSelect((select) => {
+		const blocks = select('core/block-editor').getBlock(clientId);
+
+		return blocks?.innerBlocks.length !== 0;
+	});
 
 	const InvalidPlaceholder = () => {
 		return (
@@ -66,10 +75,16 @@ export const IntegrationsEditor = ({
 
 	return (
 		<>
-			{useInnerId ?
-				<OutputWithInner /> :
-				<OutputDefault />
+			{hasInnerBlocks ? 
+				<>
+					{useInnerId ?
+						<OutputWithInner /> :
+						<OutputDefault />
+					}
+				</> :
+				<InvalidPlaceholder />
 			}
+			
 		</>
 	);
 }

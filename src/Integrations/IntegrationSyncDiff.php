@@ -514,7 +514,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Recounstruct blocks output and build array for final serialization.
-		$output['output'] = $this->reconstructBlocksTopLevelOutput($output['output'], $output['type'], $output['itemId'], $editorOutput);
+		$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
 
 		return $output;
 	}
@@ -759,15 +759,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * Rebuild for blocks output in block grammar format after diff check. Top level with all blocks.
 	 *
 	 * @param array<string, mixed> $data Diff prepared data.
-	 * @param string $type Integation type.
-	 * @param string $itemId Item ID from integration.
 	 * @param boolean $editorOutput Change output keys depending on the output type.
 	 *
 	 * @return array<int, array<string, array<int|string, array<string, mixed>|string>|string>>
 	 */
-	private function reconstructBlocksTopLevelOutput(array $data, string $type, string $itemId, bool $editorOutput = false): array
+	private function reconstructBlocksTopLevelOutput(array $data, bool $editorOutput = false): array
 	{
-		$fieldsOutput = $this->reconstructBlocksOutput($data, $editorOutput);
+		$fieldsOutput = $this->reconstructBlocksOutput($data['output'], $editorOutput);
 
 		$namespace = Components::getSettingsNamespace();
 
@@ -780,10 +778,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		return [
 			[
-				$blockNameKey => "{$namespace}/" . $type,
-				$attrsKey => [
-					$type . "IntegrationId" => $itemId,
-				],
+				$blockNameKey => "{$namespace}/" . $data['type'],
+				$attrsKey => array_merge(
+					[
+						$data['type'] . "IntegrationId" => $data['itemId'],
+					],
+					$data['innerId'] ? [
+						$data['type'] . "IntegrationInnerId" => $data['innerId'],
+					] : []
+				),
 				$innerBlocksKey => $fieldsOutput,
 				$innerContentKey => $fieldsOutput,
 			],
@@ -868,9 +871,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			if (!$value) {
-				continue;
-			}
+			// if (!$value) {
+			// 	continue;
+			// }
 
 			if (isset($nestedKeys[$key])) {
 				continue;

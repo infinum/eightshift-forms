@@ -32,10 +32,10 @@ export const isOptionDisabled = (key, options) => {
  */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
 	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-create/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
+		resetInnerBlocks(clientId);
+
 		if (response.code === 200) {
 			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
-
-			resetInnerBlocks(clientId);
 
 			updateInnerBlocks(clientId, builtBlocks);
 		}
@@ -51,13 +51,21 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
  * @returns {void}
  */
 export const syncIntegrationBlocks = (clientId, postId) => {
-	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-sync/?id=${postId}` }).then((response) => {
+	return apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-sync/?id=${postId}` }).then((response) => {
+		resetInnerBlocks(clientId);
+
 		if (response.code === 200) {
 			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
 
-			resetInnerBlocks(clientId);
-
 			updateInnerBlocks(clientId, builtBlocks);
+
+			return {
+				update: response?.data?.update,
+				removed: response?.data?.removed,
+				added: response?.data?.added,
+				replaced: response?.data?.replaced,
+				changed: response?.data?.changed,
+			}
 		}
 	});
 }

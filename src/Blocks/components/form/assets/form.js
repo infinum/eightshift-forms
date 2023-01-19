@@ -390,7 +390,6 @@ export class Form {
 					objectTypeId, // Used for HubSpot only
 				}
 			} = item;
-
 			if (disabled) {
 				continue;
 			}

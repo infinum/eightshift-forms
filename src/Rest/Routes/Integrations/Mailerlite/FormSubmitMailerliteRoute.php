@@ -148,7 +148,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),a
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }

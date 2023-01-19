@@ -95,13 +95,14 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	{
 		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
-		if (!$isDeveloperMode) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permission to preview this route.', 'eightshift-forms'),
-			]);
-		}
+		// TODO
+		// if (!$isDeveloperMode) {
+		// 	return \rest_ensure_response([
+		// 		'code' => 400,
+		// 		'status' => 'error',
+		// 		'message' => \esc_html__('You don\'t have enough permission to preview this route.', 'eightshift-forms'),
+		// 	]);
+		// }
 
 		$formId = $request->get_param('id') ?? '';
 		$type = $request->get_param('type') ?? '';

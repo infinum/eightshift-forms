@@ -12,6 +12,7 @@ import {
 	props,
 	SimpleVerticalSingleSelect,
 	FancyDivider,
+	CustomSlider,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -21,7 +22,14 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 
 export const TextareaOptions = (attributes) => {
 	const {
+		options,
+	} = manifest;
+
+	const {
 		setAttributes,
+
+		showTextareaMinLength = true,
+		showTextareaMaxLength = true,
 	} = attributes;
 
 	const textareaName = checkAttr('textareaName', attributes, manifest);
@@ -33,6 +41,8 @@ export const TextareaOptions = (attributes) => {
 	const textareaTracking = checkAttr('textareaTracking', attributes, manifest);
 	const textareaValidationPattern = checkAttr('textareaValidationPattern', attributes, manifest);
 	const textareaDisabledOptions = checkAttr('textareaDisabledOptions', attributes, manifest);
+	const textareaMinLength = checkAttr('textareaMinLength', attributes, manifest);
+	const textareaMaxLength = checkAttr('textareaMaxLength', attributes, manifest);
 
 	let textareaValidationPatternOptions = [];
 
@@ -130,6 +140,56 @@ export const TextareaOptions = (attributes) => {
 						{__('Disabled', 'eightshift-forms')}
 					</Button>
 				</div>
+
+				{(showTextareaMinLength || showTextareaMaxLength) &&
+					<FancyDivider label={__('Entry length', 'eightshift-forms')} />
+				}
+
+				{showTextareaMinLength &&
+					<>
+						<CustomSlider
+							label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed length', 'eightshift-forms')} />}
+							value={textareaMinLength ?? 0}
+							onChange={(value) => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: value })}
+							min={options.textareaMinLength.min}
+							step={options.textareaMinLength.step}
+							hasValueDisplay
+							rightAddition={
+								<Button
+									label={__('Reset', 'eightshift-forms')}
+									icon={icons.rotateLeft}
+									onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
+									isSmall
+									className='es-small-square-icon-button'
+								/>
+							}
+							valueDisplayElement={(<span className='es-custom-slider-current-value'>{textareaMinLength ? parseInt(textareaMinLength) : '--'}</span>)}
+							disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
+						/>
+					</>
+				}
+
+				{showTextareaMaxLength &&
+					<CustomSlider
+						label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed length', 'eightshift-forms')} />}
+						value={textareaMaxLength ?? 0}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: value })}
+						min={options.textareaMaxLength.min}
+						step={options.textareaMaxLength.step}
+						hasValueDisplay
+						rightAddition={
+							<Button
+								label={__('Reset', 'eightshift-forms')}
+								icon={icons.rotateLeft}
+								onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
+								isSmall
+								className='es-small-square-icon-button'
+							/>
+						}
+						valueDisplayElement={(<span className='es-custom-slider-current-value'>{textareaMaxLength ? parseInt(textareaMaxLength) : '--'}</span>)}
+						disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
+					/>
+				}
 
 				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 

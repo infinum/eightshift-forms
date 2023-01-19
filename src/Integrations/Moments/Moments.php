@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -43,24 +42,13 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	protected $momentsClient;
 
 	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $momentsClient,
-		ValidationPatternsInterface $validationPatterns
-	) {
+	public function __construct(ClientInterface $momentsClient)
+	{
 		$this->momentsClient = $momentsClient;
-		$this->validationPatterns = $validationPatterns;
 	}
 
 	/**
@@ -126,6 +114,8 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
+		error_log( print_r( ( $data ), true ) );
+
 		$fields = $data['fields'] ?? [];
 
 		if (!$fields) {
@@ -140,125 +130,158 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			$type = $field['component'] ? \strtolower($field['component']) : '';
 			$name = $field['fieldId'] ?? '';
 			$label = $field['label'] ?? '';
-			$placeholder = $field['placeholder'] ?? '';
-			$id = $name;
 			$options = $field['options'] ?? [];
 			$isRequired = $field['isRequired'] ?? false;
-			$isHidden = $field['isHidden'] ?? false;
+			$validationRules = $field['validationRules'] ?? [];
+			$validationMaxLength = $validationRules['maxLength'] ?? '';
+			$validationPattern = $validationRules['pattern'] ?? '';
 
 			switch ($type) {
 				case 'text':
-				case 'msisdn':
-					$output[] = [
+					$input = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => $isHidden ? 'hidden' : 'text',
+						'inputType' => 'text',
 						'inputIsRequired' => $isRequired,
-						'inputPlaceholder' => $placeholder,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
+							$validationMaxLength ? 'inputMaxLength' : '',
 						]),
 					];
+
+					if ($validationMaxLength) {
+						$input['inputMaxLength'] = (int) $validationMaxLength;
+					}
+
+					$output[] = $input;
+					break;
+				case 'msisdn':
+					$phone = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputType' => 'tel',
+						'inputIsNumber' => true,
+						'inputIsRequired' => $isRequired,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+							$validationMaxLength ? 'inputMaxLength' : '',
+							'inputType',
+							'inputIsNumber',
+						]),
+					];
+
+					if ($validationMaxLength) {
+						$phone['inputMaxLength'] = (int) $validationMaxLength;
+					}
+
+					$output[] = $phone;
 					break;
 				case 'date':
-					$pattern = $this->validationPatterns->getValidationPattern('momentsDate');
-
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => $isHidden ? 'hidden' : 'date',
+						'inputType' => 'date',
 						'inputIsRequired' => $isRequired,
-						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $pattern,
+						'inputValidationPattern' => $validationPattern ? 'momentsDate' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
-							$pattern ? 'inputValidationPattern' : '',
+							$validationPattern ? 'inputValidationPattern' : '',
+							'inputType'
 						]),
 					];
 					break;
 				case 'datetime':
-					$pattern = $this->validationPatterns->getValidationPattern('momentsDateTime');
-
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputType' => $isHidden ? 'hidden' : 'datetime',
+						'inputType' => 'datetime-local',
 						'inputIsRequired' => $isRequired,
-						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $pattern,
+						'inputValidationPattern' => $validationPattern ? 'momentsDateTime' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
-							$pattern ? 'inputValidationPattern' : '',
+							$validationPattern ? 'inputValidationPattern' : '',
+							'inputType'
 						]),
 					];
 					break;
 				case 'email':
-					$pattern = $this->validationPatterns->getValidationPattern('momentsEmail');
-
-					$output[] = [
+					$email = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputFieldHidden' => $isHidden,
-						'inputType' => $isHidden ? 'hidden' : 'email',
+						'inputType' => 'email',
+						'inputIsEmail' => true,
 						'inputIsRequired' => $isRequired,
-						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $pattern,
+						'inputValidationPattern' => $validationPattern ? 'momentsEmail' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
-							$pattern ? 'inputValidationPattern' : '',
+							$validationMaxLength ? 'inputMaxLength' : '',
+							$validationPattern ? 'inputValidationPattern' : '',
+							'inputIsEmail',
+							'inputType',
 						]),
 					];
+
+					if ($validationMaxLength) {
+						$email['inputMaxLength'] = (int) $validationMaxLength;
+					}
+
+					$output[] = $email;
 					break;
 				case 'number':
-					$pattern = $this->validationPatterns->getValidationPattern('momentsNumber');
-
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputFieldHidden' => $isHidden,
-						'inputType' => $isHidden ? 'hidden' : 'number',
-						'inputPlaceholder' => $placeholder,
-						'inputValidationPattern' => $pattern,
+						'inputType' => 'number',
+						'inputIsNumber' => true,
+						'inputIsRequired' => $isRequired,
+						'inputValidationPattern' => $validationPattern ? 'momentsNumber' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
-							$pattern ? 'inputValidationPattern' : '',
+							$validationPattern ? 'inputValidationPattern' : '',
+							'inputIsNumber',
+							'inputType',
 						]),
 					];
 					break;
 				case 'textarea':
-					$output[] = [
+					$textarea = [
 						'component' => 'textarea',
-						'textareaFieldHidden' => $isHidden,
 						'textareaFieldLabel' => $label,
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaType' => 'textarea',
 						'textareaIsRequired' => $isRequired,
-						'textareaPlaceholder' => $placeholder,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 							$isRequired ? 'textareaIsRequired' : '',
+							$validationMaxLength ? 'textareaMaxLength' : '',
 						]),
 					];
+
+					if ($validationMaxLength) {
+						$textarea['textareaMaxLength'] = (int) $validationMaxLength;
+					}
+
+					$output[] = $textarea;
 					break;
 				case 'dropdown':
 					$output[] = [
 						'component' => 'select',
-						'selectFieldHidden' => $isHidden,
 						'selectFieldLabel' => $label,
 						'selectName' => $name,
 						'selectTracking' => $name,
 						'selectType' => 'select',
-						'selectPlaceholder' => $placeholder,
 						'selectIsRequired' => $isRequired,
 						'selectContent' => \array_values(
 							\array_merge(
@@ -295,7 +318,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				case 'radiobutton':
 					$output[] = [
 						'component' => 'radios',
-						'radiosFieldHidden' => $isHidden,
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $isRequired,
@@ -323,31 +345,35 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesFieldHideLabel' => true,
 						'checkboxesName' => $name,
+						'checkboxesIsRequired' => $isRequired,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $label,
-								'checkboxValue' => false,
+								'checkboxValue' => 'true',
 								'checkboxTracking' => $name,
-								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [], false),
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue',
+								], false),
 							],
 						],
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							$isRequired ? 'checkboxesIsRequired' : '',
+						]),
 					];
 					break;
 				case 'checkbox_group':
 					$output[] = [
 						'component' => 'checkboxes',
-						'checkboxesFieldHidden' => $isHidden,
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
 						'checkboxesIsRequired' => $isRequired,
 						'checkboxesContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($checkbox) use ($name) {
 								return [
 									'component' => 'checkbox',
-									'checkboxLabel' => $radio['name'],
-									'checkboxValue' => $radio['value'],
+									'checkboxLabel' => $checkbox['name'],
+									'checkboxValue' => $checkbox['value'],
 									'checkboxTracking' => $name,
 									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 										'checkboxValue',

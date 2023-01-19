@@ -141,7 +141,13 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 		return \rest_ensure_response([
 			'code' => 200,
 			'status' => 'success',
-			'data' => $items,
+			'data' => [
+				[
+					'label' => '',
+					'value' => '',
+				],
+				...$items,
+			],
 		]);
 	}
 }

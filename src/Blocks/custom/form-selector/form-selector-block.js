@@ -13,9 +13,9 @@ export const FormSelector = (props) => {
 
 	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
-		const { innerBlocks } = select('core/block-editor').getBlock(clientId);
+		const blocks = select('core/block-editor').getBlock(clientId);
 
-		return innerBlocks.length !== 0;
+		return blocks?.innerBlocks.length !== 0;
 	});
 
 	return (

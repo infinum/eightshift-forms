@@ -182,6 +182,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying required number.
 			'validationRequiredCount' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
 			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
+			'validationEmailTld' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
 			// translators: %s used for displaying length min number to the user.
 			'validationMinLength' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
@@ -415,7 +416,7 @@ class Labels implements LabelsInterface
 			'momentsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'momentsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'momentsEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
-			'momentsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
+			'momentsSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

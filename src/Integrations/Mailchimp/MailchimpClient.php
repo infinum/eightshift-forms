@@ -16,7 +16,6 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MailchimpClient integration class.

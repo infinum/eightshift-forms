@@ -133,12 +133,10 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	{
 		// Send application to Goodbits.
 		$response = $this->goodbitsClient->postApplication(
-			// $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, $formId),
-			'',
-			// TODO
-			$params,
-			[],
-			$formId
+			$formDataRefrerence['itemId'],
+			$formDataRefrerence['params'],
+			$formDataRefrerence['files'],
+			$formDataRefrerence['formId']
 		);
 
 		if ($response['status'] === 'error') {
@@ -150,7 +148,7 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 		return \rest_ensure_response([
 			'code' => $response['code'],
 			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formId),
+			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
 		]);
 	}
 }
