@@ -132,16 +132,23 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$itemId = $formDataRefrerence['itemId'];
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$files = $formDataRefrerence['files'];
+
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(
-			$formDataRefrerence['itemId'],
-			$formDataRefrerence['params'],
-			$formDataRefrerence['files'],
-			$formDataRefrerence['formId']
+			$itemId,
+			$params,
+			$files,
+			$formId
 		);
 
+		$contactId = $response['contactId'] ?? '';
+
 		// Make an additional requests to the API.
-		if ($response['status'] === 'success' && !empty($response['contactId'])) {
+		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
 			$actionTags = $params['actionTags']['value'] ?? '';
 
@@ -152,7 +159,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 				foreach ($actionTags as $tag) {
 					$this->activeCampaignClient->postTag(
 						$tag,
-						$response['contactId']
+						$contactId
 					);
 				}
 			}
@@ -167,22 +174,22 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 				foreach ($actionLists as $list) {
 					$this->activeCampaignClient->postList(
 						$list,
-						$response['contactId']
+						$contactId
 					);
 				}
 			}
 		}
 
-		if ($response['status'] === 'error') {
+		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response['data'] ?? []);
+			$this->mailer->fallbackEmail($response);
 		}
 
-		// Finish.
-		return \rest_ensure_response([
-			'code' => $response['code'],
-			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
-		]);
+		return \rest_ensure_response(
+			$this->getIntegrationApiOutput(
+				$response,
+				$this->labels->getLabel($response['message'], $formId)
+			)
+		);
 	}
 }

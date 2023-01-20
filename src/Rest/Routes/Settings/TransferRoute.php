@@ -96,12 +96,9 @@ class TransferRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		if (! \current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
-			]);
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
 		}
 
 		$params = $request->get_body_params();
@@ -109,11 +106,12 @@ class TransferRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 
 		if (!$type) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
+				)
+			);
+
 		}
 
 		$output = [
@@ -130,11 +128,11 @@ class TransferRoute extends AbstractBaseRoute
 				$items = $params['items'] ?? [];
 
 				if (!$items) {
-					return \rest_ensure_response([
-						'code' => 400,
-						'status' => 'error',
-						'message' => \esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
-					]);
+					return \rest_ensure_response(
+						$this->getApiErrorOutput(
+							\esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
+						)
+					);
 				}
 
 				$items = \explode(',', $items);
@@ -151,11 +149,11 @@ class TransferRoute extends AbstractBaseRoute
 				$files = $request->get_file_params();
 
 				if (!$files) {
-					return \rest_ensure_response([
-						'code' => 400,
-						'status' => 'error',
-						'message' => \esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
-					]);
+					return \rest_ensure_response(
+						$this->getApiErrorOutput(
+							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
+						)
+					);
 				}
 
 				$override = isset($params['override']) ? \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN) : false;
@@ -163,11 +161,11 @@ class TransferRoute extends AbstractBaseRoute
 				$uploadStatus = $this->getImport($files['upload'] ?? [], $override) ;
 
 				if (!$uploadStatus) {
-					return \rest_ensure_response([
-						'code' => 400,
-						'status' => 'error',
-						'message' => \esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
-					]);
+					return \rest_ensure_response(
+						$this->getApiErrorOutput(
+							\esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
+						)
+					);
 				}
 
 				$internalType = 'import';
@@ -181,16 +179,17 @@ class TransferRoute extends AbstractBaseRoute
 
 		$date = \current_datetime()->format('Y-m-d-H-i-s-u');
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			// translators: %s will be replaced with the transfer internal type.
-			'message' => \sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
-			'data' => [
-				'name' => "eightshift-forms-{$type}-{$date}",
-				'content' => $output,
-			],
-		]);
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				// translators: %s will be replaced with the transfer internal type.
+				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
+				[
+					'name' => "eightshift-forms-{$type}-{$date}",
+					'content' => $output,
+				]
+			)
+		);
 	}
 
 	/**

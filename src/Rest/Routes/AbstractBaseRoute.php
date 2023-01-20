@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Rest\ApiHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
@@ -20,6 +22,11 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
+
 	/**
 	 * List of all custom form params used.
 	 */
@@ -58,6 +65,20 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'settingsType' => 'data-settings-type',
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
 	];
+
+	/**
+	 * Status error const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_ERROR = 'error';
+
+	/**
+	 * Status success const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_SUCCESS = 'success';
 
 	/**
 	 * Delimiter used in checkboxes and multiple items.
@@ -290,5 +311,21 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$params[self::CUSTOM_FORM_PARAMS['storage']]['value'] = $storage;
 
 		return $params;
+	}
+
+	/**
+	 * Check user permission for route action.
+	 *
+	 * @param string $permission Permission to check.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function checkUserPermission(string $permission = FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY): array
+	{
+		if (\current_user_can($permission)) {
+			return [];
+		}
+
+		return $this->getApiPermissionsErrorOutput();
 	}
 }

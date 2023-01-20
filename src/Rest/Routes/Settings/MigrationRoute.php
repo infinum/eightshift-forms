@@ -121,10 +121,15 @@ class MigrationRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
+		}
+
 		$params = $request->get_body_params();
 
 		if (!isset($params['type'])) {
-			return $this->getApiErrorOutput([], \__('Migration version type key was not provided.', 'eightshift-forms'));
+			return $this->getApiErrorOutput(\__('Migration version type key was not provided.', 'eightshift-forms'));
 		}
 
 		switch ($params['type']) {
@@ -133,7 +138,7 @@ class MigrationRoute extends AbstractBaseRoute
 			case SettingsMigration::VERSION_3_4:
 				return $this->getMigration3To4();
 			default:
-				return $this->getApiErrorOutput([], \__('Version type key is not valid.', 'eightshift-forms'));
+				return $this->getApiErrorOutput(\__('Version type key is not valid.', 'eightshift-forms'));
 		}
 	}
 
@@ -176,7 +181,7 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 
-		return $this->getApiSuccessGenericOutput([], \__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
+		return $this->getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
 	}
 
 	/**
@@ -199,7 +204,7 @@ class MigrationRoute extends AbstractBaseRoute
 		]);
 
 		if (!$theQuery->have_posts()) {
-			return $this->getApiErrorOutput([], \__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
+			return $this->getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 
 		while ($theQuery->have_posts()) {
@@ -338,9 +343,17 @@ class MigrationRoute extends AbstractBaseRoute
 		$outputFinal['fatal'] = $outputFatal;
 
 		if (!$outputFinal['items']) {
-			return $this->getApiErrorOutput($outputFinal, \__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'));
+			return $this->getApiErrorOutput(
+				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
+				400,
+				$outputFinal,
+			);
 		}
 
-		return $this->getApiSuccessGenericOutput($outputFinal, \__('Migration version 3 to 4 finished with success.', 'eightshift-forms'));
+		return $this->getApiSuccessOutput(
+			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
+			200,
+			$outputFinal
+		);
 	}
 }

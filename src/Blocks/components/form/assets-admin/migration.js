@@ -37,6 +37,7 @@ export class Migration {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
+				'X-WP-Nonce': esFormsLocalization.nonce,
 			},
 			body: formData,
 			credentials: 'same-origin',

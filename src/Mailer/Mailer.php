@@ -86,20 +86,20 @@ class Mailer implements MailerInterface
 		$files = $data['files'] ?? [];
 		$response = $data['response'] ? \wp_json_encode($data['response']) : '';
 		$formId = $data['formId'] ?? '';
-		$listId = $data['listId'] ?? '';
+		$itemId = $data['itemId'] ?? '';
 		$params = $data['params'] ?? [];
 		$code = $data['code'] ?? 400;
 		$body = $data['body'] ? \wp_json_encode($data['body']) : '';
 
-		if (\is_array($listId)) {
-			$listId = \implode(AbstractBaseRoute::DELIMITER, $listId);
+		if (\is_array($itemId)) {
+			$itemId = \implode(AbstractBaseRoute::DELIMITER, $itemId);
 		}
 
 		$paramsOutput = "
 			<p><strong>Form Details:</strong></p>
 			<ul>
 				<li>formId: {$formId}</li>
-				<li>listId: {$listId}</li>
+				<li>itemId: {$itemId}</li>
 				<li>integration: {$integration}</li>
 				<li>response code: {$code}</li>
 				<li>url: {$url}</li>

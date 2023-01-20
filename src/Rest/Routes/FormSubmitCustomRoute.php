@@ -22,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 class FormSubmitCustomRoute extends AbstractFormSubmit
 {
 	/**
-	 * Use api helper trait.
-	 */
-	use ApiHelper;
-
-	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -117,24 +112,28 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	{
 		$body = [];
 
+		// TODO.
 		$formAction = $params[self::CUSTOM_FORM_PARAMS['action']]['value'];
 		$formActionExternal = $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'];
 
 		// If form action is not set or empty.
 		if (!$formAction) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('customNoAction', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('customNoAction', $formId),
+				)
+			);
 		}
 
 		if ($formActionExternal) {
-			return \rest_ensure_response([
-				'status' => 'redirect',
-				'code' => 301,
-				'message' => $this->labels->getLabel('customSuccessRedirect', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiSuccessOutput(
+					$this->labels->getLabel('customSuccessRedirect', $formId),
+					[
+						'redirect' => true,
+					]
+				)
+			);
 		}
 
 		// Remove unnecessary internal params before continue.
@@ -171,18 +170,18 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		// If custom action request fails we'll return the generic error message.
 		if ($customResponseCode > 399) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => $customResponseCode,
-				'message' => $this->labels->getLabel('customError', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('customError', $formId),
+				)
+			);
 		}
 
-		// If form action is valid we'll return the generic success message.
-		return \rest_ensure_response([
-			'status' => 'success',
-			'code' => 200,
-			'message' => $this->labels->getLabel('customSuccess', $formId),
-		]);
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				$this->labels->getLabel('customSuccess', $formId),
+			)
+		);
 	}
 }

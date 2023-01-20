@@ -88,33 +88,30 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		if (! \current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
-			]);
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
 		}
 
 		// Check if Mailchimp global settings is valid.
 		$isGlobalSettingsValid = \apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME, false);
 
 		if (!$isGlobalSettingsValid) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Global not configured', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('Global not configured', 'eightshift-forms'),
+				)
+			);
 		}
 
 		$items = $this->mailchimpClient->getItems();
 
 		if (!$items) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Items missing', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('Items missing', 'eightshift-forms'),
+				)
+			);
 		}
 
 		$items = \array_values(\array_map(
@@ -127,17 +124,18 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 			$items
 		));
 
-		// Exit with success.
-		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'data' => [
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				\esc_html__('Success', 'eightshift-forms'),
 				[
-					'label' => '',
-					'value' => '',
-				],
-				...$items,
-			],
-		]);
+					[
+						'label' => '',
+						'value' => '',
+					],
+					...$items,
+				]
+			)
+		);
 	}
 }

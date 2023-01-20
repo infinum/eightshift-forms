@@ -132,26 +132,33 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$itemId = $formDataRefrerence['itemId'];
+		$innerId = $formDataRefrerence['innerId'];
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$files = $formDataRefrerence['files'];
+
 		// Send application to Airtable.
 		$delimiter = AbstractBaseRoute::DELIMITER;
 
 		$response = $this->airtableClient->postApplication(
-			"{$formDataRefrerence['itemId']}{$delimiter}{$formDataRefrerence['innerId']}",
-			$formDataRefrerence['params'],
-			$formDataRefrerence['files'],
-			$formDataRefrerence['formId']
+			"{$itemId}{$delimiter}{$innerId}",
+			$params,
+			$files,
+			$formId
 		);
 
-		if ($response['status'] === 'error') {
+		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response['data'] ?? []);
+			$this->mailer->fallbackEmail($response);
 		}
 
 		// Finish.
-		return \rest_ensure_response([
-			'code' => $response['code'],
-			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
-		]);
+		return \rest_ensure_response(
+			$this->getIntegrationApiOutput(
+				$response,
+				$this->labels->getLabel($response['message'], $formId)
+			)
+		);
 	}
 }

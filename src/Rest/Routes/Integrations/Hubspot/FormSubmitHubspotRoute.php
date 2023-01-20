@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -146,58 +147,64 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$itemId = $formDataRefrerence['itemId'];
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$files = $formDataRefrerence['files'];
+
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
-			$formDataRefrerence['itemId'],
-			$formDataRefrerence['params'],
-			$formDataRefrerence['files'],
-			$formDataRefrerence['formId']
+			$itemId,
+			$params,
+			$files,
+			$formId
 		);
 
 		// Check if Hubspot is using Clearbit.
-		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formDataRefrerence['formId'], SettingsHubspot::SETTINGS_TYPE_KEY);
+		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
 
 		if ($useClearbit) {
-			$email = Helper::getEmailParamsField($formDataRefrerence['params']);
+			$email = Helper::getEmailParamsField($params);
 
 			if ($email) {
 				// Get Clearbit data.
 				$clearbitResponse = $this->clearbitClient->getApplication(
 					$email,
-					$formDataRefrerence['params'],
+					$params,
 					$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map']),
-					$formDataRefrerence['itemId'],
-					$formDataRefrerence['formId']
+					$itemId,
+					$formId
 				);
 
 				// If Clearbit data is ok send data to Hubspot.
 				if ($clearbitResponse['code'] >= 200 && $clearbitResponse['code'] <= 299) {
 					$this->hubspotClient->postContactProperty(
-						$clearbitResponse['email'] ?? '',
-						$clearbitResponse['data'] ?? []
+						$clearbitResponse['data']['email'] ?? '',
+						$clearbitResponse['data']['data'] ?? []
 					);
 				} else {
 					// Send fallback email.
-					$this->mailer->fallbackEmail($clearbitResponse['data'] ?? []);
+					$this->mailer->fallbackEmail($clearbitResponse['data']['data'] ?? []);
 				}
 			}
 		}
 
-		if ($response['status'] === 'error') {
+		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response['data'] ?? []);
+			$this->mailer->fallbackEmail($response);
 		}
 
 		// Always delete the files from the disk.
-		if ($formDataRefrerence['files']) {
-			$this->deleteFiles($formDataRefrerence['files']);
+		if ($files) {
+			$this->deleteFiles($files);
 		}
 
 		// Finish.
-		return \rest_ensure_response([
-			'code' => $response['code'],
-			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
-		]);
+		return \rest_ensure_response(
+			$this->getIntegrationApiOutput(
+				$response,
+				$this->labels->getLabel($response['message'], $formId)
+			)
+		);
 	}
 }

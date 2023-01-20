@@ -82,6 +82,11 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
+		}
+
 		// Try catch request.
 		try {
 			$output = [];
@@ -96,12 +101,9 @@ class GreenhouseJobsRoute extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				[
-					'code' => 400,
-					'status' => 'error_validation',
-					'message' => $e->getMessage(),
-					'validation' => $e->getData(),
-				]
+				$this->getApiErrorOutput(
+					$e->getMessage(),
+				)
 			);
 		}
 	}

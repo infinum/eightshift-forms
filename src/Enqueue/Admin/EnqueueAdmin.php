@@ -80,6 +80,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		return [
 			'esFormsLocalization' => [
+				'nonce' => \wp_create_nonce('wp_rest'),
 				'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
 				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,

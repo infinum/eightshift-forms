@@ -125,40 +125,43 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+
 		// Remove unnecessary internal params before continue.
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 
 		// Remove unnecessary params.
-		foreach ($formDataRefrerence['params'] as $key => $value) {
+		foreach ($params as $key => $value) {
 			if (isset($customFields[$key])) {
-				unset($formDataRefrerence['params'][$key]);
+				unset($params[$key]);
 			}
 		}
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
-		foreach ($formDataRefrerence['params'] as $key => $value) {
+		foreach ($params as $key => $value) {
 			// Check if key needs updating or deleting.
 			if ($value['value']) {
-				if (!$formDataRefrerence['formId']) {
+				if (!$formId) {
 					\update_option($key, $value['value']);
 				} else {
-					\update_post_meta((int) $formDataRefrerence['formId'], $key, $value['value']);
+					\update_post_meta((int) $formId, $key, $value['value']);
 				}
 			} else {
-				if (!$formDataRefrerence['formId']) {
+				if (!$formId) {
 					\delete_option($key);
 				} else {
-					\delete_post_meta((int) $formDataRefrerence['formId'], $key);
+					\delete_post_meta((int) $formId, $key);
 				}
 			}
 		}
 
 		// Finish.
-		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			'message' => \esc_html__('Changes saved!', 'eightshift-forms'),
-		]);
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				\esc_html__('Changes saved!', 'eightshift-forms')
+			)
+		);
 	}
 }

@@ -70,7 +70,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -93,7 +93,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return $this->getApiSuccessOutput(
+			return $this->getIntegrationApiSuccessOutput(
 				$details,
 				[
 					'email' => $email,
@@ -103,14 +103,12 @@ class ClearbitClient implements ClearbitClientInterface
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
-			\array_merge(
-				$details,
-				[
-					'email' => $email,
-				]
-			),
+		return $this->getIntegrationApiErrorOutput(
+			$details,
 			$this->getErrorMsg($body),
+			[
+				'email' => $email,
+			]
 		);
 	}
 

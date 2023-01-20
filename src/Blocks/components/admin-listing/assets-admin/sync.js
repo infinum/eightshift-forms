@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import { Utils } from './../../form/assets/utilities';
 
 export class Sync {
@@ -34,6 +36,7 @@ export class Sync {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
+				'X-WP-Nonce': esFormsLocalization.nonce,
 			},
 			body: formData,
 			credentials: 'same-origin',

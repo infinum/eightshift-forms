@@ -17,6 +17,7 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
 
 /**
@@ -110,12 +111,12 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				[
-					'code' => 400,
-					'status' => 'error_validation',
-					'message' => $e->getMessage(),
-					'validation' => $e->getData(),
-				]
+				$this->getApiErrorOutput(
+					$e->getMessage(),
+					[
+						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
+					]
+				)
 			);
 		}
 	}

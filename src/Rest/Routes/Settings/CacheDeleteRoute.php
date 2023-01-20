@@ -79,32 +79,29 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		if (! \current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {
-			\rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
-			]);
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
 		}
 
 		$params = $request->get_body_params();
 
 		if (!isset($params['type'])) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Type key was not provided.', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('Type key was not provided.', 'eightshift-forms'),
+				)
+			);
 		}
 
 		$type = $params['type'];
 
 		if (!isset(Filters::ALL[$type]['cache'])) {
-			return \rest_ensure_response([
-				'code' => 400,
-				'status' => 'error',
-				'message' => \esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
+				)
+			);
 		}
 
 		foreach (Filters::ALL[$type]['cache'] as $item) {
@@ -116,11 +113,11 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			\rocket_clean_domain();
 		}
 
-		return \rest_ensure_response([
-			'code' => 200,
-			'status' => 'success',
-			// translators: %s will be replaced with the cache type.
-			'message' => \sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type)),
-		]);
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type))
+			)
+		);
 	}
 }

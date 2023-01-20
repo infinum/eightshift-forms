@@ -13,8 +13,10 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -131,24 +133,35 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$itemId = $formDataRefrerence['itemId'];
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$files = $formDataRefrerence['files'];
+
 		// Send application to Moments.
 		$response = $this->momentsClient->postApplication(
-			$formDataRefrerence['itemId'],
-			$formDataRefrerence['params'],
-			$formDataRefrerence['files'],
-			$formDataRefrerence['formId']
+			$itemId,
+			$params,
+			$files,
+			$formId
 		);
+		error_log( print_r( ( $response ), true ) );
+		
 
-		if ($response['status'] === 'error') {
+		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response['data'] ?? []);
+			$this->mailer->fallbackEmail($response);
 		}
 
 		// Finish.
-		return \rest_ensure_response([
-			'code' => $response['code'],
-			'status' => $response['status'],
-			'message' => $this->labels->getLabel($response['message'], $formDataRefrerence['formId']),
-		]);
+		return \rest_ensure_response(
+			$this->getIntegrationApiOutput(
+				$response,
+				$this->labels->getLabel($response['message'], $formId),
+				[
+					Validator::VALIDATOR_OUTPUT_KEY
+				]
+			)
+		);
 	}
 }

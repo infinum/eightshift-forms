@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use WP_Error;
 use WP_REST_Request;
 
 /**
@@ -93,28 +94,33 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
-		// TODO
-		// if (!$isDeveloperMode) {
-		// 	return \rest_ensure_response([
-		// 		'code' => 400,
-		// 		'status' => 'error',
-		// 		'message' => \esc_html__('You don\'t have enough permission to preview this route.', 'eightshift-forms'),
-		// 	]);
-		// }
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
+		}
 
 		$formId = $request->get_param('id') ?? '';
 
 		$syncForm = $this->integrationSyncDiff->syncFormDirect($formId, true);
 
 		$status = $syncForm['status'] ?? '';
+		$message = $syncForm['message'] ?? '';
+
+		unset($syncForm['message']);
+		unset($syncForm['status']);
+
+		if ($status === AbstractBaseRoute::STATUS_ERROR) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$message,
+					$syncForm
+				)
+			);
+		}
 
 		return \rest_ensure_response(
-			\array_merge(
-				[
-					'code' => $status === 'error' ? 400 : 200,
-				],
+			$this->getApiSuccessOutput(
+				$message,
 				$syncForm
 			)
 		);

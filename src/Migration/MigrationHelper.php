@@ -116,7 +116,7 @@ trait MigrationHelper
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
-		$syncFormStatus = $syncForm['status'] ?? 'error';
+		$syncFormStatus = $syncForm['status'] ?? AbstractBaseRoute::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
 		if (!$itemId) {
@@ -137,7 +137,7 @@ trait MigrationHelper
 			return $output;
 		}
 
-		if ($syncFormStatus === 'error') {
+		if ($syncFormStatus === AbstractBaseRoute::STATUS_ERROR) {
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
 			return $output;

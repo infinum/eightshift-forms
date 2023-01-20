@@ -35,7 +35,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
-			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
+			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
 
 			updateInnerBlocks(clientId, builtBlocks);
 		}
@@ -55,16 +55,16 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
-			const builtBlocks = createBlocksFromInnerBlocksTemplate(response.data.output);
+			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
 
 			updateInnerBlocks(clientId, builtBlocks);
 
 			return {
-				update: response?.data?.update,
-				removed: response?.data?.removed,
-				added: response?.data?.added,
-				replaced: response?.data?.replaced,
-				changed: response?.data?.changed,
+				update: response?.data?.data?.update,
+				removed: response?.data?.data?.removed,
+				added: response?.data?.data?.added,
+				replaced: response?.data?.data?.replaced,
+				changed: response?.data?.data?.changed,
 			}
 		}
 	});

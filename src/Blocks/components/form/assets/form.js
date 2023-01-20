@@ -1,4 +1,5 @@
-/* global grecaptcha */
+/* global grecaptcha, esFormsLocalization */
+
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets';
@@ -155,12 +156,9 @@ export class Form {
 		})
 		.then((response) => {
 			// On success state.
-			if (response.code >= 200 && response.code <= 299) {
+			if (response.status === 'success') {
 				this.formSubmit(element);
-			}
-
-			// Normal errors.
-			if (response.status === 'error') {
+			} else {
 				// Clear all errors.
 				this.utils.reset(element);
 
@@ -212,7 +210,16 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(!this.utils.formIsAdmin ? `${this.utils.formSubmitRestApiUrl}-${formType}` : this.utils.formSubmitRestApiUrl, body)
+		// Url for frontend forms.
+		let url = `${this.utils.formSubmitRestApiUrl}-${formType}`;
+
+		// For admin settings use different url and add nonce.
+		if (this.utils.formIsAdmin) {
+			url = this.utils.formSubmitRestApiUrl;
+			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
+		};
+
+		fetch(url, body)
 			.then((response) => {
 				return response.json();
 			})
@@ -227,7 +234,7 @@ export class Form {
 				this.utils.hideLoader(element);
 
 				// On success state.
-				if (response.code >= 200 && response.code <= 299) {
+				if (response.status === 'success') {
 					// Send GTM.
 					this.utils.gtmSubmit(element);
 
@@ -252,42 +259,38 @@ export class Form {
 						// Clear form values.
 						this.utils.resetForm(element);
 					}
+				} else {
+					console.log(response);
+					const isValidationError = response?.data?.validation !== undefined;
+
+					console.log(isValidationError);
+					// Dispatch event.
+					if (isValidationError) {
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
+					} else {
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					}
+
+					this.utils.outputErrors(element, response?.data?.validation);
+
+					// Set global msg.
+					this.utils.setGlobalMsg(element, response.message, 'error');
 				}
 
+				// TODO.
 				// On redirect with custom action state.
-				if (response.code >= 300 && response.code <= 399) {
-					// Send GTM.
-					this.utils.gtmSubmit(element);
+				// if (response.code >= 300 && response.code <= 399) {
+				// 	// Send GTM.
+				// 	this.utils.gtmSubmit(element);
 
-					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'success');
+				// 	// Set global msg.
+				// 	this.utils.setGlobalMsg(element, response.message, 'success');
 
-					// Do the actual redirect after some time.
-					setTimeout(() => {
-						element.submit();
-					}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
-				}
-
-				// Normal errors.
-				if (response.status === 'error') {
-					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
-
-					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'error');
-				}
-
-				// Validate fields error.
-				if (response.status === 'error_validation') {
-					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
-
-					// Output field errors.
-					this.utils.outputErrors(element, response.validation);
-
-					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'error');
-				}
+				// 	// Do the actual redirect after some time.
+				// 	setTimeout(() => {
+				// 		element.submit();
+				// 	}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+				// }
 
 				// Hide global msg in any case after some time.
 				setTimeout(() => {

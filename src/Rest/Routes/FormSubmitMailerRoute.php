@@ -132,15 +132,19 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$files = $formDataRefrerence['files'];
+
 		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
 
 		// If Mailer system is not used just respond with success.
 		if (!$isUsed) {
-			return \rest_ensure_response([
-				'status' => 'success',
-				'code' => 200,
-				'message' => $this->labels->getLabel('mailerSuccessNoSend', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiSuccessOutput(
+					$this->labels->getLabel('mailerSuccessNoSend', $formId),
+				)
+			);
 		}
 
 		// Check if Mailer data is set and valid.
@@ -148,11 +152,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
+				)
+			);
 		}
 
 		// Send email.
@@ -172,11 +176,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 				$this->deleteFiles($files);
 			}
 
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('mailerErrorEmailSend', $formId),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('mailerErrorEmailSend', $formId),
+				)
+			);
 		}
 
 		// Find Sender Details.
@@ -202,11 +206,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 					$this->deleteFiles($files);
 				}
 
-				return \rest_ensure_response([
-					'status' => 'error',
-					'code' => 400,
-					'message' => $this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
-				]);
+				return \rest_ensure_response(
+					$this->getApiErrorOutput(
+						$this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
+					)
+				);
 			}
 		}
 
@@ -215,11 +219,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			$this->deleteFiles($files);
 		}
 
-		// If email success.
-		return \rest_ensure_response([
-			'status' => 'success',
-			'code' => 200,
-			'message' => $this->labels->getLabel('mailerSuccess', $formId),
-		]);
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				$this->labels->getLabel('mailerSuccess', $formId),
+			)
+		);
 	}
 }

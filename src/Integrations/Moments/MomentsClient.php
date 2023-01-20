@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\Validator;
 
 /**
  * MomentsClient integration class.
@@ -121,7 +122,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -134,17 +135,18 @@ class MomentsClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		error_log( print_r( ( $details ), true ) );
-
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -157,18 +159,41 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getErrorMsg(array $body): string
 	{
-		$msg = $body['error']['message'] ?? '';
+		$msg = $body['requestError']['serviceException']['messageId'] ?? '';
 
 		switch ($msg) {
-			case 'Bad Request':
+			case 'BAD_REQUEST':
 				return 'momentsBadRequestError';
-			case 'Invalid email address':
-				return 'momentsInvalidEmailError';
-			case 'Email temporarily blocked':
-				return 'momentsEmailTemporarilyBlockedError';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['requestError']['serviceException']['text'] ?? '';
+
+		if (!$msg) {
+			return [];
+		}
+
+		preg_match_all("/No data was submitted for a mandatory field: (\w*)/", $msg, $matches, PREG_SET_ORDER, 0);
+
+		// error_log( print_r( ( $msg ), true ) );
+		// error_log( print_r( ( $matches ), true ) );
+
+		$a = explode('No data was submitted for a mandatory field: ', $msg);
+		// error_log( print_r( ( $a ), true ) );
+		
+
+		return [];
 	}
 
 	/**
@@ -216,7 +241,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -261,7 +286,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
