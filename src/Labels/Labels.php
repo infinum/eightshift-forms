@@ -200,6 +200,8 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
 			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix.', 'eightshift-forms'),
+			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
+			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
 		];
 	}
 

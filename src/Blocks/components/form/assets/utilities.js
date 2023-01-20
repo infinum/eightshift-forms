@@ -143,6 +143,7 @@ export class Utils {
 		this.CUSTOM_TEXTAREAS = [];
 		this.CUSTOM_SELECTS = [];
 		this.CUSTOM_PHONES = [];
+		this.CUSTOM_DATES = [];
 		this.CUSTOM_FILES = [];
 
 		// Set all public methods.
@@ -542,6 +543,7 @@ export class Utils {
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
 				CUSTOM_PHONES: this.CUSTOM_PHONES,
+				CUSTOM_DATES: this.CUSTOM_DATES,
 				CUSTOM_FILES: this.CUSTOM_FILES,
 
 				unsetGlobalMsg: (element) => {

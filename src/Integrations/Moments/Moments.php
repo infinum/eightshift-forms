@@ -178,33 +178,38 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					break;
 				case 'date':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'date',
-						'inputIsRequired' => $isRequired,
-						'inputValidationPattern' => $validationPattern ? 'momentsDate' : '',
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$isRequired ? 'inputIsRequired' : '',
-							$validationPattern ? 'inputValidationPattern' : '',
-							'inputType'
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'date',
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => 'Z',
+						'dateIsRequired' => $isRequired,
+						'dateValidationPattern' => $validationPattern ? 'momentsDate' : '',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							$isRequired ? 'dateIsRequired' : '',
+							$validationPattern ? 'dateValidationPattern' : '',
+							'dateType',
+							'dateOutputFormat',
 						]),
 					];
 					break;
 				case 'datetime':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'datetime-local',
-						'inputIsRequired' => $isRequired,
-						'inputValidationPattern' => $validationPattern ? 'momentsDateTime' : '',
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$isRequired ? 'inputIsRequired' : '',
-							$validationPattern ? 'inputValidationPattern' : '',
-							'inputType'
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'datetime-local',
+						'dateOutputFormat' => 'Z',
+						'dateIsRequired' => $isRequired,
+						'dateValidationPattern' => $validationPattern ? 'momentsDateTime' : '',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							$isRequired ? 'dateIsRequired' : '',
+							$validationPattern ? 'dateValidationPattern' : '',
+							'dateType',
+							'dateOutputFormat',
 						]),
 					];
 					break;

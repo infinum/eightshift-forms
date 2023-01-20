@@ -38,10 +38,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"selectUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"selectMeta": {
 			"type": "string"
 		},

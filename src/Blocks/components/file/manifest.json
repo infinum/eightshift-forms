@@ -49,10 +49,6 @@
 		"fileCustomInfoButtonText": {
 			"type": "string"
 		},
-		"fileUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"fileMeta": {
 			"type": "string"
 		},

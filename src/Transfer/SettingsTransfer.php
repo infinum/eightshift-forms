@@ -174,7 +174,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'fileIsRequired' => true,
 								'fileFieldLabel' =>  \__('Upload json file', 'eightshift-forms'),
 								'fileAccept' => 'json',
-								'fileUseCustom' => false,
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
 							],
 							[

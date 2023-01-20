@@ -49,10 +49,6 @@
 		"phoneValidationPattern": {
 			"type": "string"
 		},
-		"phoneUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"phoneMeta": {
 			"type": "string"
 		},

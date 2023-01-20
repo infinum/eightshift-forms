@@ -208,6 +208,30 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid datetime field.
+		preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, PREG_SET_ORDER, 0);
+
+		if ($matchesDate) {
+			$key = $matchesDate[0][1] ?? '';
+			$value = $matchesDate[0][2] ?? '';
+
+			if ($key && $value === 'should be an ISO datetime, but there is') {
+				$output[$key] = 'validationDateTime';
+			}
+		}
+
+		// Validate invalid date field.
+		preg_match_all("/(\w*) (should be an ISO date, but there is)/", $msg, $matchesDate, PREG_SET_ORDER, 0);
+
+		if ($matchesDate) {
+			$key = $matchesDate[0][1] ?? '';
+			$value = $matchesDate[0][2] ?? '';
+
+			if ($key && $value === 'should be an ISO date, but there is') {
+				$output[$key] = 'validationDate';
+			}
+		}
+
 		return $output;
 	}
 

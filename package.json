@@ -37,6 +37,7 @@
 		"autosize": "^5.0.1",
 		"choices.js": "^10.1.0",
 		"dropzone": "^6.0.0-beta.1",
+		"flatpickr": "^4.6.13",
 		"intl-tel-input": "^17.0.19"
 	},
 	"husky": {

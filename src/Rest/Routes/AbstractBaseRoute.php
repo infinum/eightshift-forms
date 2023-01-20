@@ -64,6 +64,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'fieldUncheckedValue' => 'data-unchecked-value',
 		'settingsType' => 'data-settings-type',
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
+		'datePreviewFormat' => 'data-preview-format',
+		'dateOutputFormat' => 'data-output-format',
 	];
 
 	/**

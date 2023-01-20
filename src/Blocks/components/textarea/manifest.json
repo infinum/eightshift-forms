@@ -55,10 +55,6 @@
 		"textareaValidationPattern": {
 			"type": "string"
 		},
-		"textareaUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"textareaMeta": {
 			"type": "string"
 		},

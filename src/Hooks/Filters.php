@@ -336,6 +336,9 @@ class Filters
 			'phone' => [
 				'additionalContent' => 'additional_content',
 			],
+			'date' => [
+				'additionalContent' => 'additional_content',
+			],
 			'customData' => [
 				'options' => 'options',
 				'data' => 'options_data',

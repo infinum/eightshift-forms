@@ -97,9 +97,16 @@ export class Form {
 
 			// Setup regular inputs.
 			this.utils.CUSTOM_PHONES[formId] = [];
+			this.utils.CUSTOM_DATES[formId] = [];
 			[...inputs].forEach((input) => {
-				if (input.type === 'tel') {
-					this.setupPhoneField(input, formId);
+				switch (input.type) {
+					case 'tel':
+						this.setupPhoneField(input, formId);
+						break;
+					case 'date':
+					case 'datetime-local':
+						this.setupDateField(input, formId);
+						break;
 				}
 
 				this.setupInputField(input);
@@ -438,21 +445,22 @@ export class Form {
 						formData.append(`${id}[0]`, JSON.stringify({}));
 					}
 					break;
-					case 'tel':
-						if (type === 'tel') {
-							this.utils.CUSTOM_PHONES[formId].map((inner) => {
-								const countryCode = inner?.getSelectedCountryData()?.dialCode;
-								if (countryCode && value) {
-									data.value = inner.getSelectedCountryData().dialCode.concat(value);
-								}
-							});
+				case 'tel':
+					this.utils.CUSTOM_PHONES[formId].map((inner) => {
+						const countryCode = inner?.getSelectedCountryData()?.dialCode;
+						if (countryCode && value) {
+							data.value = inner.getSelectedCountryData().dialCode.concat(value);
 						}
+					});
 
-						formData.append(id, JSON.stringify(data));
+					formData.append(id, JSON.stringify(data));
+
 					break;
+
 				default:
 					// Output/append all fields.
 					formData.append(id, JSON.stringify(data));
+
 					break;
 			}
 		}
@@ -570,6 +578,32 @@ export class Form {
 			});
 
 			this.utils.CUSTOM_PHONES[formId].push(telInput);
+		});
+	}
+
+	/**
+	 * Setup Date time field.
+	 * 
+	 * @param {object} date Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupDateField(date, formId) {
+		import('flatpickr').then((flatpickr) => {
+			const {type} = date;
+
+			const previewFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.datePreviewFormat);
+			const outputFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.dateOutputFormat);
+
+			const datePicker = flatpickr.default(date, {
+				enableTime: type === 'datetime-local',
+				dateFormat: outputFormat,
+				altFormat: previewFormat,
+				altInput: true,
+			});
+
+			this.utils.CUSTOM_DATES[formId].push(datePicker);
 		});
 	}
 
@@ -731,11 +765,20 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			[...inputs].forEach((input) => {
-				if (input.type === 'tel') {
-					if (typeof this.utils.CUSTOM_PHONES?.[formId] !== 'undefined') {
-						delete this.utils.CUSTOM_PHONES[formId];
-					}
+				switch (input.type) {
+					case 'tel':
+						if (typeof this.utils.CUSTOM_PHONES?.[formId] !== 'undefined') {
+							delete this.utils.CUSTOM_PHONES[formId];
+						}
+						break;
+					case 'date':
+					case 'datetime-local':
+						if (typeof this.utils.CUSTOM_DATES?.[formId] !== 'undefined') {
+							delete this.utils.CUSTOM_DATES[formId];
+						}
+						break;
 				}
+
 				input.removeEventListener('keydown', this.utils.onFocusEvent);
 				input.removeEventListener('focus', this.utils.onFocusEvent);
 				input.removeEventListener('blur', this.utils.onBlurEvent);
