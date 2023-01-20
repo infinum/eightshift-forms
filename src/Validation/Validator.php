@@ -119,6 +119,24 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * Get validation label from cache or db on multiple items.
+	 *
+	 * @param array<string, string> $items Array of items to get label.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getValidationLabelItems(array $items, string $formId): array
+	{
+		return array_map(
+			function($item) use ($formId) {
+				return $this->getValidationLabel($item, $formId);
+			},
+			$items
+		);
+	}
+
+	/**
 	 * Get validation label from cache or db.
 	 *
 	 * @param string $key Key to get data from.

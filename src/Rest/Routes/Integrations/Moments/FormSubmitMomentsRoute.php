@@ -145,8 +145,11 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 			$files,
 			$formId
 		);
-		error_log( print_r( ( $response ), true ) );
-		
+
+		// Output integrations validation issues.
+		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		}
 
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.

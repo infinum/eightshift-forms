@@ -179,21 +179,36 @@ class MomentsClient implements ClientInterface
 	private function getFieldsErrors(array $body): array
 	{
 		$msg = $body['requestError']['serviceException']['text'] ?? '';
+		$output = [];
 
 		if (!$msg) {
 			return [];
 		}
 
-		preg_match_all("/No data was submitted for a mandatory field: (\w*)/", $msg, $matches, PREG_SET_ORDER, 0);
+		// Validate req fields.
+		preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, PREG_SET_ORDER, 0);
 
-		// error_log( print_r( ( $msg ), true ) );
-		// error_log( print_r( ( $matches ), true ) );
+		if ($matchesReq) {
+			$value = $matchesReq[0][1] ?? '';
+			$key = $matchesReq[0][2] ?? '';
+			if ($key && $value === 'No data was submitted for a mandatory field: ') {
+				$output[$key] = 'validationRequired';
+			}
+		}
 
-		$a = explode('No data was submitted for a mandatory field: ', $msg);
-		// error_log( print_r( ( $a ), true ) );
-		
+		// Validate invalid phone field.
+		preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, PREG_SET_ORDER, 0);
 
-		return [];
+		if ($matchesPhone) {
+			$key = $matchesPhone[0][1] ?? '';
+			$value = $matchesPhone[0][2] ?? '';
+
+			if ($key && $value === 'is not a valid phone number') {
+				$output[$key] = 'validationPhone';
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -336,8 +351,14 @@ class MomentsClient implements ClientInterface
 				continue;
 			}
 
-			if ($type === 'checkbox') {
-				$value = explode(AbstractBaseRoute::DELIMITER, $value);
+			switch ($type) {
+				case 'checkbox':
+					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
+					break;
+				case 'tel':
+					$value = \filter_var($value, \FILTER_SANITIZE_NUMBER_INT);
+					$value = \ltrim($value, '0'); 
+					break;
 			}
 
 

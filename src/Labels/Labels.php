@@ -199,6 +199,7 @@ class Labels implements LabelsInterface
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
+			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix.', 'eightshift-forms'),
 		];
 	}
 
