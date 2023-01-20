@@ -1,0 +1,27 @@
+{
+	"blockName": "phone",
+	"title": "Phone",
+	"description" : "A simple data phone field",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-phone"
+	},
+	"keywords": [
+		"phone",
+		"text",
+		"email",
+		"e-mail",
+		"number",
+		"numbers",
+		"url",
+		"urls",
+		"link",
+		"links"
+	],
+	"components": {
+		"phone": "phone"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	]
+}

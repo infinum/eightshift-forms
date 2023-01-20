@@ -96,7 +96,12 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			// Setup regular inputs.
+			this.utils.CUSTOM_PHONES[formId] = [];
 			[...inputs].forEach((input) => {
+				if (input.type === 'tel') {
+					this.setupPhoneField(input, formId);
+				}
+
 				this.setupInputField(input);
 			});
 
@@ -260,10 +265,8 @@ export class Form {
 						this.utils.resetForm(element);
 					}
 				} else {
-					console.log(response);
 					const isValidationError = response?.data?.validation !== undefined;
 
-					console.log(isValidationError);
 					// Dispatch event.
 					if (isValidationError) {
 						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
@@ -421,27 +424,36 @@ export class Form {
 				data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
-			// Append files field.
-			if (type === 'file') {
-				// Default use normal files form input.
-				let fileList = files;
-
-				// If custom file use files got from the global object of files uploaded.
-				if (this.utils.isCustom(item)) {
+			switch (type) {
+				case 'file':
+					// If custom file use files got from the global object of files uploaded.
 					fileList = this.utils.FILES[formId][id] ?? [];
-				}
 
-				// Loop files and append.
-				if (fileList.length) {
-					for (const [key, file] of Object.entries(fileList)) {
-						formData.append(`${id}[${key}]`, file);
+					// Loop files and append.
+					if (fileList.length) {
+						for (const [key, file] of Object.entries(fileList)) {
+							formData.append(`${id}[${key}]`, file);
+						}
+					} else {
+						formData.append(`${id}[0]`, JSON.stringify({}));
 					}
-				} else {
-					formData.append(`${id}[0]`, JSON.stringify({}));
-				}
-			} else {
-				// Output/append all fields.
-				formData.append(id, JSON.stringify(data));
+					break;
+					case 'tel':
+						if (type === 'tel') {
+							this.utils.CUSTOM_PHONES[formId].map((inner) => {
+								const countryCode = inner?.getSelectedCountryData()?.dialCode;
+								if (countryCode && value) {
+									data.value = inner.getSelectedCountryData().dialCode.concat(value);
+								}
+							});
+						}
+
+						formData.append(id, JSON.stringify(data));
+					break;
+				default:
+					// Output/append all fields.
+					formData.append(id, JSON.stringify(data));
+					break;
 			}
 		}
 
@@ -542,6 +554,26 @@ export class Form {
 	}
 
 	/**
+	 * Setup Phone field.
+	 * 
+	 * @param {object} phone Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupPhoneField(phone, formId) {
+		import('intl-tel-input').then((intlTelInput) => {
+			const initialCountry = cookies.getCookie('esForms-country');
+
+			const telInput = intlTelInput.default(phone, {
+				initialCountry: initialCountry === 'localhost' || !initialCountry ? '' : initialCountry.toLowerCase(),
+			});
+
+			this.utils.CUSTOM_PHONES[formId].push(telInput);
+		});
+	}
+
+	/**
 	 * Setup Select field.
 	 * 
 	 * @param {object} select Input element.
@@ -550,30 +582,21 @@ export class Form {
 	 * @public
 	 */
 	setupSelectField(select, formId) {
-		const option = select.querySelector('option');
-
-		if (this.utils.isCustom(select)) {
-			import('choices.js').then((Choices) => {
-				const choices = new Choices.default(select, {
-					searchEnabled: false,
-					shouldSort: false,
-					position: 'bottom',
-					allowHTML: true,
-				});
-
-				this.utils.preFillOnInit(choices, 'select-custom');
-
-				this.utils.CUSTOM_SELECTS[formId].push(choices);
-
-				select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
-				select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+		import('choices.js').then((Choices) => {
+			const choices = new Choices.default(select, {
+				searchEnabled: false,
+				shouldSort: false,
+				position: 'bottom',
+				allowHTML: true,
 			});
-		} else {
-			this.utils.preFillOnInit(option, 'select');
 
-			select.addEventListener('focus', this.utils.onFocusEvent);
-			select.addEventListener('blur', this.utils.onBlurEvent);
-		}
+			this.utils.preFillOnInit(choices, 'select-custom');
+
+			this.utils.CUSTOM_SELECTS[formId].push(choices);
+
+			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
+			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+		});
 	}
 
 	/**
@@ -591,16 +614,14 @@ export class Form {
 		textarea.addEventListener('focus', this.utils.onFocusEvent);
 		textarea.addEventListener('blur', this.utils.onBlurEvent);
 
-		if (this.utils.isCustom(textarea)) {
-			import('autosize').then((autosize) => {
-				textarea.setAttribute('rows', '1');
-				textarea.setAttribute('cols', '');
+		import('autosize').then((autosize) => {
+			textarea.setAttribute('rows', '1');
+			textarea.setAttribute('cols', '');
 
-				autosize.default(textarea);
+			autosize.default(textarea);
 
-				this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
-			});
-		}
+			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
+		});
 	}
 
 	/**
@@ -613,84 +634,81 @@ export class Form {
 	 * @public
 	 */
 	setupFileField(file, formId, index) {
-		if (this.utils.isCustom(file)) {
+		const fileId = file?.id;
 
-			const fileId = file?.id;
-
-			if (typeof this.utils.FILES[formId] === 'undefined') {
-				this.utils.FILES[formId] = {};
-			}
-
-			if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
-				this.utils.FILES[formId][fileId] = [];
-			}
-
-			import('dropzone').then((Dropzone) => {
-				// Init dropzone.
-				const myDropzone = new Dropzone.default(
-					file.closest(this.utils.fieldSelector),
-					{
-						url: "/",
-						addRemoveLinks: true,
-						autoProcessQueue: false,
-						autoDiscover: false,
-						maxFiles: !file.multiple ? 1 : null,
-						dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
-					}
-				);
-
-				this.utils.CUSTOM_FILES[formId].push(myDropzone);
-
-				// On add one file.
-				myDropzone.on("addedfile", (file) => {
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
-					}, 200);
-
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
-					}, 1200);
-
-					this.utils.FILES[formId][fileId].push(file);
-				});
-
-				// On max file size reached.
-				myDropzone.on('maxfilesreached', () => {
-					myDropzone.removeEventListeners();
-				});
-
-				// On error while upload.
-				myDropzone.on("error", (file) => {
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
-					}, 1500);
-
-					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-					this.utils.FILES[formId][fileId] = [...itemsLeft];
-				});
-
-				// On remove files.
-				myDropzone.on("removedfile", (file) => {
-					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-					this.utils.FILES[formId][fileId] = [...itemsLeft];
-
-					myDropzone.setupEventListeners();
-				});
-
-				// Trigger on wrap click.
-				file.nextElementSibling.setAttribute('dropzone-index', index);
-				file.nextElementSibling.setAttribute('dropzone-form-id', formId);
-				file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
-
-				// Button inside wrap element.
-				const button = file.parentNode.querySelector('a');
-
-				button.addEventListener('focus', this.utils.onFocusEvent);
-				button.addEventListener('blur', this.utils.onBlurEvent);
-			});
+		if (typeof this.utils.FILES[formId] === 'undefined') {
+			this.utils.FILES[formId] = {};
 		}
+
+		if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
+			this.utils.FILES[formId][fileId] = [];
+		}
+
+		import('dropzone').then((Dropzone) => {
+			// Init dropzone.
+			const myDropzone = new Dropzone.default(
+				file.closest(this.utils.fieldSelector),
+				{
+					url: "/",
+					addRemoveLinks: true,
+					autoProcessQueue: false,
+					autoDiscover: false,
+					maxFiles: !file.multiple ? 1 : null,
+					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
+				}
+			);
+
+			this.utils.CUSTOM_FILES[formId].push(myDropzone);
+
+			// On add one file.
+			myDropzone.on("addedfile", (file) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+				}, 200);
+
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
+				}, 1200);
+
+				this.utils.FILES[formId][fileId].push(file);
+			});
+
+			// On max file size reached.
+			myDropzone.on('maxfilesreached', () => {
+				myDropzone.removeEventListeners();
+			});
+
+			// On error while upload.
+			myDropzone.on("error", (file) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
+				}, 1500);
+
+				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+				this.utils.FILES[formId][fileId] = [...itemsLeft];
+			});
+
+			// On remove files.
+			myDropzone.on("removedfile", (file) => {
+				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+				this.utils.FILES[formId][fileId] = [...itemsLeft];
+
+				myDropzone.setupEventListeners();
+			});
+
+			// Trigger on wrap click.
+			file.nextElementSibling.setAttribute('dropzone-index', index);
+			file.nextElementSibling.setAttribute('dropzone-form-id', formId);
+			file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
+
+			// Button inside wrap element.
+			const button = file.parentNode.querySelector('a');
+
+			button.addEventListener('focus', this.utils.onFocusEvent);
+			button.addEventListener('blur', this.utils.onBlurEvent);
+		});
 	}
 
 	/**
@@ -713,19 +731,19 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			[...inputs].forEach((input) => {
+				if (input.type === 'tel') {
+					if (typeof this.utils.CUSTOM_PHONES?.[formId] !== 'undefined') {
+						delete this.utils.CUSTOM_PHONES[formId];
+					}
+				}
 				input.removeEventListener('keydown', this.utils.onFocusEvent);
 				input.removeEventListener('focus', this.utils.onFocusEvent);
 				input.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
 			[...selects].forEach((select) => {
-				if (this.utils.isCustom(select)) {
-					if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
-						delete this.utils.CUSTOM_SELECTS[formId];
-					}
-				} else {
-					select.removeEventListener('focus', this.utils.onFocusEvent);
-					select.removeEventListener('blur', this.utils.onBlurEvent);
+				if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
+					delete this.utils.CUSTOM_SELECTS[formId];
 				}
 			});
 
@@ -735,10 +753,8 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				if (this.utils.isCustom(textarea)) {
-					if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
-						delete this.utils.CUSTOM_TEXTAREAS[formId];
-					}
+				if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
+					delete this.utils.CUSTOM_TEXTAREAS[formId];
 				}
 			});
 

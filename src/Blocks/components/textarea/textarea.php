@@ -6,19 +6,15 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
@@ -27,15 +23,8 @@ $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $
 $textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $manifest);
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
-$textareaUseCustom = Components::checkAttr('textareaUseCustom', $attributes, $manifest);
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
-
-$isCustomTextarea = !apply_filters(
-	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
-	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
-	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
-);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -43,14 +32,8 @@ $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $
 $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($isCustomTextarea && $textareaUseCustom, $componentClass, '', 'custom'),
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 ]);
-
-if ($isCustomTextarea && $textareaUseCustom) {
-	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
-	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
-}
 
 if ($textareaTracking) {
 	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($textareaTracking);
@@ -101,7 +84,7 @@ echo Components::render(
 			),
 		]),
 		[
-			'additionalFieldClass' => $additionalFieldClass,
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)

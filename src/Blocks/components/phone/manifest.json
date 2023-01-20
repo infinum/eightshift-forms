@@ -1,0 +1,66 @@
+{
+	"componentName": "phone",
+	"title": "Phone",
+	"componentClass": "es-phone",
+	"componentCustomJsClass": "js-es-block-form-custom",
+	"example": {
+		"attributes": {
+			"phoneName": "Name",
+			"phoneValue": "Value",
+			"phonePlaceholder": "Placeholder",
+			"phoneIsDisabled": false,
+			"phoneIsReadOnly": false,
+			"phoneIsRequired": false
+		}
+	},
+	"components": {
+		"field": "field",
+		"conditionalTags": "conditionalTags"
+	},
+	"attributes": {
+		"phoneName": {
+			"type": "string"
+		},
+		"phoneValue": {
+			"type": "string"
+		},
+		"phonePlaceholder": {
+			"type": "string"
+		},
+		"phoneIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneIsNumber": {
+			"type": "boolean",
+			"default": true
+		},
+		"phoneIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneTracking": {
+			"type": "string"
+		},
+		"phoneValidationPattern": {
+			"type": "string"
+		},
+		"phoneUseCustom": {
+			"type": "boolean",
+			"default": true
+		},
+		"phoneMeta": {
+			"type": "string"
+		},
+		"phoneAttrs": {
+			"type": "object"
+		},
+		"phoneDisabledOptions": {
+			"type": "array"
+		}
+	}
+}

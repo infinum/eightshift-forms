@@ -6,19 +6,15 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Blocks\Blocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentCustomJsClass = $manifest['componentCustomJsClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
@@ -27,14 +23,7 @@ $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
 $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
-$fileUseCustom = Components::checkAttr('fileUseCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
-
-$isCustomFile = !apply_filters(
-	Blocks::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME,
-	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
-	SettingsGeneral::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY
-);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
@@ -42,34 +31,28 @@ $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attribut
 $fileClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($isCustomFile && $fileUseCustom, $componentClass, '', 'custom'),
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $customFile = '';
 
-if ($isCustomFile && $fileUseCustom) {
-	$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
-	$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
+$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
+$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
 
-	$infoTextContent = '<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_html($infoText) . '</div>';
-	if (!$fileCustomInfoTextUse) {
-		$infoTextContent = '';
-	}
-
-	$infoButtonContent = '<a href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
-
-	$customFile = '
-		<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
-			' . $infoTextContent . '
-			' . $infoButtonContent . '
-		</div>
-	';
-
-	$additionalFieldClass .= Components::selector($componentClass, "{$componentClass}-is-custom");
-	$additionalFieldClass .= ' ' . Components::selector($componentCustomJsClass, $componentCustomJsClass);
+$infoTextContent = '<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_html($infoText) . '</div>';
+if (!$fileCustomInfoTextUse) {
+	$infoTextContent = '';
 }
+
+$infoButtonContent = '<a href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
+
+$customFile = '
+	<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
+		' . $infoTextContent . '
+		' . $infoButtonContent . '
+	</div>
+';
 
 if ($fileTracking) {
 	$fileAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($fileTracking);
@@ -116,7 +99,7 @@ echo Components::render(
 			),
 		]),
 		[
-			'additionalFieldClass' => $additionalFieldClass,
+			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)

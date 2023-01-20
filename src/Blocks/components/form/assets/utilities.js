@@ -82,7 +82,6 @@ export class Utils {
 		this.loaderSelector =  `${this.formSelector}-loader`;
 		this.globalMsgSelector =  `${this.formSelector}-global-msg`;
 		this.groupSelector =  `${this.formSelector}-group`;
-		this.customSelector =  `${this.formSelector}-custom`;
 		this.fieldSelector =  `${this.formSelector}-field`;
 		this.inputSelector =  `${this.fieldSelector} input`;
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
@@ -143,6 +142,7 @@ export class Utils {
 		this.FILES = {};
 		this.CUSTOM_TEXTAREAS = [];
 		this.CUSTOM_SELECTS = [];
+		this.CUSTOM_PHONES = [];
 		this.CUSTOM_FILES = [];
 
 		// Set all public methods.
@@ -176,11 +176,6 @@ export class Utils {
 		element.querySelectorAll(`.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.SELECTORS.CLASS_HAS_ERROR));
 
 		this.unsetGlobalMsg(element);
-	}
-
-	// Determine if field is custom type or normal.
-	isCustom(element) {
-		return element.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
 	}
 
 	// Dispatch custom event.
@@ -392,6 +387,8 @@ export class Utils {
 
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
+			//TODO - check if reset needs to happen.
+
 			// Unset the choices in the submitted form.
 			if (this.CUSTOM_SELECTS[formId]) {
 				this.CUSTOM_SELECTS[formId].forEach((item) => {
@@ -527,7 +524,6 @@ export class Utils {
 				loaderSelector: this.loaderSelector,
 				globalMsgSelector: this.globalMsgSelector,
 				groupSelector: this.groupSelector,
-				customSelector: this.customSelector,
 				fieldSelector: this.fieldSelector,
 				inputSelector: this.inputSelector,
 				textareaSelector: this.textareaSelector,
@@ -545,6 +541,7 @@ export class Utils {
 				FILES: this.FILES,
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
+				CUSTOM_PHONES: this.CUSTOM_PHONES,
 				CUSTOM_FILES: this.CUSTOM_FILES,
 
 				unsetGlobalMsg: (element) => {
@@ -552,9 +549,6 @@ export class Utils {
 				},
 				reset: (element) => {
 					this.reset(element);
-				},
-				isCustom: (element) => {
-					this.isCustom(element);
 				},
 				dispatchFormEvent: (element, name) => {
 					this.dispatchFormEvent(element, name);

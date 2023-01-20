@@ -157,23 +157,21 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					break;
 				case 'msisdn':
 					$phone = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'tel',
-						'inputIsNumber' => true,
-						'inputIsRequired' => $isRequired,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$isRequired ? 'inputIsRequired' : '',
-							$validationMaxLength ? 'inputMaxLength' : '',
-							'inputType',
-							'inputIsNumber',
+						'component' => 'phone',
+						'phoneName' => $name,
+						'phoneTracking' => $name,
+						'phoneFieldLabel' => $label,
+						'phoneIsNumber' => true,
+						'phoneIsRequired' => $isRequired,
+						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+							$isRequired ? 'phoneIsRequired' : '',
+							$validationMaxLength ? 'phoneMaxLength' : '',
+							'phoneIsNumber',
 						]),
 					];
 
 					if ($validationMaxLength) {
-						$phone['inputMaxLength'] = (int) $validationMaxLength;
+						$phone['phoneMaxLength'] = (int) $validationMaxLength;
 					}
 
 					$output[] = $phone;

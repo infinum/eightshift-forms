@@ -333,6 +333,9 @@ class Filters
 			'radios' => [
 				'additionalContent' => 'additional_content',
 			],
+			'phone' => [
+				'additionalContent' => 'additional_content',
+			],
 			'customData' => [
 				'options' => 'options',
 				'data' => 'options_data',

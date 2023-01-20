@@ -66,15 +66,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
 
 	/**
-	 * Disable custom options on fields key.
-	 */
-	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY = 'general-custom-options';
-	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT = 'select';
-	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA = 'textarea';
-	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE = 'file';
-	public const SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE = 'date';
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -186,48 +177,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 										'checkboxLabel' => \__('Don\'t auto-initialize scripts', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-										'checkboxAsToggle' => true,
-									],
-								],
-							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Fields', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('Custom fields', 'eightshift-forms'),
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-								'checkboxesFieldHelp' => \__('If checked, fields will use the default browser implementation.', 'eightshift-forms'),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable custom selection dropdown', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_SELECT,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable custom textarea', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_TEXTAREA,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable custom file picker', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_FILE,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable custom date/time picker', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE, self::SETTINGS_GENERAL_CUSTOM_OPTIONS_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_CUSTOM_OPTIONS_DATE,
 										'checkboxAsToggle' => true,
 									],
 								],

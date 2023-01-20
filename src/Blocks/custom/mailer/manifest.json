@@ -26,7 +26,8 @@
 				"eightshift-forms/select",
 				"eightshift-forms/submit",
 				"eightshift-forms/textarea",
-				"eightshift-forms/checkboxes"
+				"eightshift-forms/checkboxes",
+				"eightshift-forms/phone"
 			]
 		},
 		"mailerFormPostId": {
