@@ -55,6 +55,8 @@ if ($dateOutputFormat) {
 	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['dateOutputFormat']] = esc_attr($dateOutputFormat);
 }
 
+$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal']] = esc_attr($dateType);
+
 $dateAttrsOutput = '';
 if ($dateAttrs) {
 	foreach ($dateAttrs as $key => $value) {

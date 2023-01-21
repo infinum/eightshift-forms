@@ -643,7 +643,25 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 		}
 
+		// Populate output data.
 		$output['output'] = $innerOutput;
+
+		// Add missing content attributes from integration.
+		$missingAttributes = array_diff_key($integration['attrs'], $content['attrs']);
+		if ($missingAttributes) {
+			foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
+
+				// No need to add default values
+				if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
+					continue;
+				}
+
+				// Add missing attributes to the otput.
+				$output['update'] = true;
+				$output['added'] = $missingAttributesKey;
+				$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
+			}
+		}
 
 		return $output;
 	}
@@ -898,9 +916,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			// if (!$value) {
-			// 	continue;
-			// }
+			if (!$value) {
+				continue;
+			}
 
 			if (isset($nestedKeys[$key])) {
 				continue;

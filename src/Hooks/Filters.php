@@ -262,7 +262,6 @@ class Filters
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
 				'filesOptions' => 'files_options',
-				'localStorageMap' => 'local_storage_map',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'data' => 'data',

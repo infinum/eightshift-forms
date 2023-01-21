@@ -698,6 +698,10 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
@@ -721,24 +725,17 @@ class HubspotClient implements HubspotClientInterface
 				$value = \str_replace(AbstractBaseRoute::DELIMITER, ';', $value);
 			}
 
+			// Must be in UTC timestamp with milliseconds.
+			if ($type === 'date') {
+				$value = strtotime($value) * 1000;
+			}
+
 			$output[] = [
 				'name' => $name ?? '',
 				'value' => $value,
 				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];
 		}
-
-		// TODO
-		// $filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
-		// if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']) && \has_filter($filterName)) {
-		// 	return \apply_filters(
-		// 		$filterName,
-		// 		$output,
-		// 		$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
-		// 		$params,
-		// 		$this->enrichment->getEnrichmentConfig()
-		// 	) ?? [];
-		// }
 
 		return $output;
 	}

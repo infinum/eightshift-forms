@@ -142,7 +142,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => $isRequired,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
 							$validationMaxLength ? 'inputMaxLength' : '',
@@ -162,7 +162,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
 						'phoneIsNumber' => true,
-						'phoneIsRequired' => $isRequired,
+						'phoneIsRequired' => (bool) $isRequired,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							$isRequired ? 'phoneIsRequired' : '',
 							$validationMaxLength ? 'phoneMaxLength' : '',
@@ -185,7 +185,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'dateType' => 'date',
 						'datePreviewFormat' => 'F j, Y',
 						'dateOutputFormat' => 'Z',
-						'dateIsRequired' => $isRequired,
+						'dateIsRequired' => (bool) $isRequired,
 						'dateValidationPattern' => $validationPattern ? 'momentsDate' : '',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
@@ -203,7 +203,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'dateFieldLabel' => $label,
 						'dateType' => 'datetime-local',
 						'dateOutputFormat' => 'Z',
-						'dateIsRequired' => $isRequired,
+						'dateIsRequired' => (bool) $isRequired,
 						'dateValidationPattern' => $validationPattern ? 'momentsDateTime' : '',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
@@ -221,7 +221,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputFieldLabel' => $label,
 						'inputType' => 'email',
 						'inputIsEmail' => true,
-						'inputIsRequired' => $isRequired,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputValidationPattern' => $validationPattern ? 'momentsEmail' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -246,7 +246,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
 						'inputIsNumber' => true,
-						'inputIsRequired' => $isRequired,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputValidationPattern' => $validationPattern ? 'momentsNumber' : '',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -263,7 +263,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaType' => 'textarea',
-						'textareaIsRequired' => $isRequired,
+						'textareaIsRequired' => (bool) $isRequired,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 							$isRequired ? 'textareaIsRequired' : '',
 							$validationMaxLength ? 'textareaMaxLength' : '',
@@ -283,7 +283,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'selectName' => $name,
 						'selectTracking' => $name,
 						'selectType' => 'select',
-						'selectIsRequired' => $isRequired,
+						'selectIsRequired' => (bool) $isRequired,
 						'selectContent' => \array_values(
 							\array_merge(
 								[
@@ -321,7 +321,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'radios',
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
-						'radiosIsRequired' => $isRequired,
+						'radiosIsRequired' => (bool) $isRequired,
 						'radiosContent' => \array_map(
 							function ($radio) use ($name) {
 								return [
@@ -346,7 +346,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesFieldHideLabel' => true,
 						'checkboxesName' => $name,
-						'checkboxesIsRequired' => $isRequired,
+						'checkboxesIsRequired' => (bool) $isRequired,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -368,7 +368,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
-						'checkboxesIsRequired' => $isRequired,
+						'checkboxesIsRequired' => (bool) $isRequired,
 						'checkboxesContent' => \array_map(
 							function ($checkbox) use ($name) {
 								return [

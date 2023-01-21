@@ -132,20 +132,51 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						$output[] = [
-							'component' => 'input',
-							'inputName' => $name,
-							'inputTracking' => $name,
-							'inputFieldLabel' => $label,
-							'inputMeta' => $description,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputIsEmail' => $name === 'email' ? 'true' : '',
-							'inputIsNumber' => $name === 'phone' ? 'true' : '',
-							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-								$required ? 'inputIsRequired' : '',
-							]),
-						];
+						switch ($name) {
+							case 'phone':
+								$output[] = [
+									'component' => 'phone',
+									'phoneName' => $name,
+									'phoneTracking' => $name,
+									'phoneFieldLabel' => $label,
+									'phoneMeta' => $description,
+									'phoneIsRequired' => (bool) $required,
+									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+										$required ? 'phoneIsRequired' : '',
+									]),
+								];
+								break;
+							case 'email':
+								$output[] = [
+									'component' => 'input',
+									'inputName' => $name,
+									'inputTracking' => $name,
+									'inputFieldLabel' => $label,
+									'inputMeta' => $description,
+									'inputType' => 'email',
+									'inputIsRequired' => (bool) $required,
+									'inputIsEmail' => true,
+									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+										$required ? 'inputIsRequired' : '',
+										'inputType',
+									]),
+								];
+								break;
+							default:
+								$output[] = [
+									'component' => 'input',
+									'inputName' => $name,
+									'inputTracking' => $name,
+									'inputFieldLabel' => $label,
+									'inputMeta' => $description,
+									'inputType' => 'text',
+									'inputIsRequired' => (bool) $required,
+									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+										$required ? 'inputIsRequired' : '',
+									]),
+								];
+								break;
+						}
 						break;
 					case 'input_file':
 						$maxFileSize = $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
@@ -156,7 +187,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileTracking' => $name,
 							'fileFieldLabel' => $label,
 							'fileMeta' => $description,
-							'fileIsRequired' => $required,
+							'fileIsRequired' => (bool) $required,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => '1',
 							'fileMaxSize' => \strval($maxFileSize * 1000),
@@ -169,13 +200,20 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						];
 						break;
 					case 'textarea':
+						$disableResume = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableCoverLetter = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+
+						if ($disableResume || $disableCoverLetter) {
+							continue;
+						}
+
 						$output[] = [
 							'component' => 'textarea',
 							'textareaName' => $name,
 							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaMeta' => $description,
-							'textareaIsRequired' => $required,
+							'textareaIsRequired' => (bool) $required,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
 							]),
@@ -187,7 +225,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'checkboxes',
 								'checkboxesName' => $name,
 								'checkboxesMeta' => $description,
-								'checkboxesIsRequired' => $required,
+								'checkboxesIsRequired' => (bool) $required,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -211,7 +249,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectTracking' => $name,
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
-								'selectIsRequired' => $required,
+								'selectIsRequired' => (bool) $required,
 								'selectContent' => \array_map(
 									function ($selectOption) {
 										return [
@@ -238,16 +276,35 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		$output[] = [
 			'component' => 'input',
 			'inputType' => 'hidden',
+			'inputFieldLabel' => 'mapped_url_token',
+			'inputName' => 'mapped_url_token',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldLabel',
+			]),
+		];
+		$output[] = [
+			'component' => 'input',
+			'inputType' => 'hidden',
 			'inputFieldLabel' => 'longitude',
 			'inputName' => 'longitude',
-			'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldLabel',
+			]),
 		];
 		$output[] = [
 			'component' => 'input',
 			'inputType' => 'hidden',
 			'inputFieldLabel' => 'latitude',
 			'inputName' => 'latitude',
-			'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldLabel',
+			]),
 		];
 
 		$output[] = [

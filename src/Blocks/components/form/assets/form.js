@@ -431,10 +431,14 @@ export class Form {
 				data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 			}
 
+			if (data.internalType === 'date' || data.internalType === 'datetime-local') {
+				data.type = data.internalType;
+			}
+
 			switch (type) {
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
-					fileList = this.utils.FILES[formId][id] ?? [];
+					const fileList = this.utils.FILES[formId][id] ?? [];
 
 					// Loop files and append.
 					if (fileList.length) {

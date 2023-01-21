@@ -105,18 +105,6 @@
 				"value": "number"
 			},
 			{
-				"label": "Phone number",
-				"value": "tel"
-			},
-			{
-				"label": "Date",
-				"value": "date"
-			},
-			{
-				"label": "Date & time",
-				"value": "datetime-local"
-			},
-			{
 				"label": "No user input (hidden field)",
 				"value": "hidden"
 			}

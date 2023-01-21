@@ -167,7 +167,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'firstName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
+						'inputIsRequired' => (bool) $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 						]),
@@ -180,7 +180,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'lastName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
+						'inputIsRequired' => (bool) $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 						]),
@@ -193,7 +193,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'fullName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
+						'inputIsRequired' => (bool) $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 						]),
@@ -215,7 +215,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaIsRequired' => $required,
+						'textareaIsRequired' => (bool) $required,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 							$required ? 'textareaIsRequired' : '',
 						]),
@@ -242,7 +242,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'tel',
-						'inputIsRequired' => $required,
+						'inputIsRequired' => (bool) $required,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'textareaIsRequired' : '',
 						]),
@@ -253,7 +253,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'checkboxes',
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
-						'checkboxesIsRequired' => $required,
+						'checkboxesIsRequired' => (bool) $required,
 						'checkboxesContent' => \array_map(
 							function ($checkbox) use ($name) {
 								return [
@@ -276,7 +276,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'radios',
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
-						'radiosIsRequired' => $required,
+						'radiosIsRequired' => (bool) $required,
 						'radiosContent' => \array_map(
 							function ($radio) use ($name) {
 								return [
@@ -302,7 +302,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
-						'selectIsRequired' => $required,
+						'selectIsRequired' => (bool) $required,
 						'selectContent' => \array_map(
 							function ($option) {
 								return [

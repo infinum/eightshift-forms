@@ -179,12 +179,12 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 				// If Clearbit data is ok send data to Hubspot.
 				if ($clearbitResponse['code'] >= 200 && $clearbitResponse['code'] <= 299) {
 					$this->hubspotClient->postContactProperty(
-						$clearbitResponse['data']['email'] ?? '',
-						$clearbitResponse['data']['data'] ?? []
+						$clearbitResponse['email'] ?? '',
+						$clearbitResponse['data'] ?? []
 					);
 				} else {
 					// Send fallback email.
-					$this->mailer->fallbackEmail($clearbitResponse['data']['data'] ?? []);
+					$this->mailer->fallbackEmail($clearbitResponse ?? []);
 				}
 			}
 		}

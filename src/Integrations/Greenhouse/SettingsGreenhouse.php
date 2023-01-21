@@ -56,6 +56,13 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY = 'greenhouse-file-upload-limit';
 
+		/**
+	 * Disable default fields key.
+	 */
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY = 'greenhouse-disable-default-fields';
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER = 'disable-cover-letter';
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME = 'disable-resume';
+
 	/**
 	 * File upload limit default. Defined in MB.
 	 */
@@ -168,6 +175,28 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Disable default fields', 'eightshift-forms'),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+								'checkboxesFieldHelp' => \__('Disable Greenhouse fields on all forms.', 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable cover letter textarea', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable resume textarea', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,
+										'checkboxAsToggle' => true,
+									],
+								],
 							],
 						],
 					],
