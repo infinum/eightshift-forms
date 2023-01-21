@@ -405,8 +405,6 @@ class Helper
 
 		$form = \get_post_field('post_content', (int) $formId);
 
-		error_log( print_r( ( $form ), true ) );
-
 		if (!$form) {
 			return $output;
 		}

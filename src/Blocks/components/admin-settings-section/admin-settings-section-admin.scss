@@ -163,6 +163,10 @@
 				color: var(--global-colors-es-white);
 			}
 		}
+
+		> * {
+			pointer-events: none;
+		}
 	}
 
 	&__link-icon {
