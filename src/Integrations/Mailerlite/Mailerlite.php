@@ -122,11 +122,9 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			$type = $field['type'] ? \strtolower($field['type']) : '';
 			$name = $field['key'] ?? '';
 			$label = $field['title'] ?? '';
-			$id = $name;
 
 			switch ($type) {
 				case 'text':
-				case 'date':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -141,6 +139,18 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						]),
 					];
 					break;
+				case 'date':
+					$output[] = [
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'date',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							'dateType',
+						]),
+					];
+					break;
 				case 'number':
 					$output[] = [
 						'component' => 'input',
@@ -148,7 +158,9 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputType'
+						]),
 					];
 					break;
 			}

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
@@ -37,6 +38,23 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME = 'es_active_campaign_items_cache';
+
+	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -566,7 +584,12 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
+
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 
 		// Map params.

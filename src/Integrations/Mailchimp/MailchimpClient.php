@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -36,6 +37,23 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
+
+	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -374,6 +392,10 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = [];
 
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
 
 		foreach ($params as $param) {

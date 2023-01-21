@@ -372,6 +372,7 @@ class GreenhouseClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
+		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {

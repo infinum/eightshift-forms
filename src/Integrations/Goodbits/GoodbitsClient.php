@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Goodbits;
 
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -43,6 +44,23 @@ class GoodbitsClient implements ClientInterface
 	 * @var string
 	 */
 	private const BASE_URL = 'https://app.goodbits.io/api/v1/';
+
+	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -209,6 +227,10 @@ class GoodbitsClient implements ClientInterface
 	{
 		$output = [];
 
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
