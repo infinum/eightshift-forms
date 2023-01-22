@@ -208,10 +208,6 @@ class MailerliteClient implements ClientInterface
 				return 'mailerliteBadRequestError';
 			case 'Unauthorized':
 				return 'mailerliteErrorSettingsMissing';
-			case 'Invalid email address':
-				return 'mailerliteInvalidEmailError';
-			case 'Email temporarily blocked':
-				return 'mailerliteEmailTemporarilyBlockedError';
 			default:
 				return 'submitWpError';
 		}

@@ -240,12 +240,6 @@ class MailchimpClient implements MailchimpClientInterface
 				return 'mailchimpBadRequestError';
 			case 'Your request did not include an API key.':
 				return 'mailchimpErrorSettingsMissing';
-			case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
-				return 'mailchimpInvalidResourceError';
-			case 'Please provide a valid email address.':
-				return 'mailchimpInvalidEmailError';
-			case 'Your merge fields were invalid.':
-				return 'mailchimpMissingFieldsError';
 			default:
 				return 'submitWpError';
 		}

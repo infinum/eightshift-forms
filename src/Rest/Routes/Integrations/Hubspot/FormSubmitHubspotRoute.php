@@ -21,6 +21,7 @@ use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -160,6 +161,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		// Output integrations validation issues.
+		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		}
+
 		// Check if Hubspot is using Clearbit.
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
 
@@ -203,7 +209,10 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
 				$response,
-				$this->labels->getLabel($response['message'], $formId)
+				$this->labels->getLabel($response['message'], $formId),
+				[
+					Validator::VALIDATOR_OUTPUT_KEY
+				]
 			)
 		);
 	}

@@ -3,16 +3,16 @@
 /**
  * The class register route for public form submiting endpoint - custom
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Integrations
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations;
 
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 

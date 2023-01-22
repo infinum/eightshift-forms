@@ -186,8 +186,6 @@ class GoodbitsClient implements ClientInterface
 				return 'goodbitsBadRequestError';
 			case 'Invalid API Key has been submitted, please refer to your API key under your settings':
 				return 'goodbitsErrorSettingsMissing';
-			case 'INVALID_EMAIL':
-				return 'goodbitsInvalidEmailError';
 			default:
 				return 'submitWpError';
 		}

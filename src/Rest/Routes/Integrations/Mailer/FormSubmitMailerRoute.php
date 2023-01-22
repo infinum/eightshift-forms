@@ -3,18 +3,19 @@
 /**
  * The class register route for public form submiting endpoint - Mailer
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Route\Integrationss
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Integrations;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 

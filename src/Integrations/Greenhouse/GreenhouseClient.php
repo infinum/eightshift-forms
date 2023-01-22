@@ -19,6 +19,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Validation\Validator;
 
 /**
  * GreenhouseClient integration class.
@@ -214,7 +215,10 @@ class GreenhouseClient implements ClientInterface
 		// Output error.
 		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -232,39 +236,49 @@ class GreenhouseClient implements ClientInterface
 		switch ($msg) {
 			case 'Bad Request':
 				return 'greenhouseBadRequestError';
-			case 'Uploaded resume has an unsupported file type.':
-				return 'greenhouseUnsupportedFileTypeError';
-			case 'Invalid attributes: first_name':
-				return 'greenhouseInvalidFirstNameError';
-			case 'Invalid attributes: last_name':
-				return 'greenhouseInvalidLastNameError';
-			case 'Invalid attributes: email':
-				return 'greenhouseInvalidEmailError';
-			case 'Invalid attributes: first_name,last_name,email':
-				return 'greenhouseInvalidFirstNameLastNameEmailError';
-			case 'Invalid attributes: first_name,last_name':
-				return 'greenhouseInvalidFirstNameLastNameError';
-			case 'Invalid attributes: first_name,email':
-				return 'greenhouseInvalidFirstNameEmailError';
-			case 'Invalid attributes: last_name,email':
-				return 'greenhouseInvalidLastNameEmailError';
-			case 'Invalid attributes: first_name,phone':
-				return 'greenhouseInvalidFirstNamePhoneError';
-			case 'Invalid attributes: last_name,phone':
-				return 'greenhouseInvalidLastNamePhoneError';
-			case 'Invalid attributes: email,phone':
-				return 'greenhouseInvalidEmailPhoneError';
-			case 'Invalid attributes: first_name,last_name,email,phone':
-				return 'greenhouseInvalidFirstNameLastNameEmailPhoneError';
-			case 'Invalid attributes: first_name,last_name,phone':
-				return 'greenhouseInvalidFirstNameLastNamePhoneError';
-			case 'Invalid attributes: first_name,email,phone':
-				return 'greenhouseInvalidFirstNameEmailPhoneError';
-			case 'Invalid attributes: last_name,email,phone':
-				return 'greenhouseInvalidLastNameEmailPhoneError';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['error'] ?? '';
+		$output = [];
+
+		// Validate req fields.
+		preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, PREG_SET_ORDER, 0);
+
+		if ($matchesReq) {
+			$key = $matchesReq[0][2] ?? '';
+			if ($key) {
+				$keys = explode(',', $key);
+
+				if ($keys) {
+					foreach ($keys as $inner) {
+						$output[$inner] = 'validationRequired';
+					}
+				}
+			}
+		}
+
+		if (strpos($msg, 'Uploaded resume has an unsupported file type.') !== false) {
+			$output['resume'] = 'validationGreenhouseAcceptMime';
+		}
+
+		if (strpos($msg, 'Uploaded cover letter has an unsupported file type') !== false) {
+			$output['cover_letter'] = 'validationGreenhouseAcceptMime';
+		}
+
+		return $output;
 	}
 
 	/**

@@ -209,9 +209,8 @@ class MomentsClient implements ClientInterface
 		preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
-			$value = $matchesReq[0][1] ?? '';
 			$key = $matchesReq[0][2] ?? '';
-			if ($key && $value === 'No data was submitted for a mandatory field: ') {
+			if ($key) {
 				$output[$key] = 'validationRequired';
 			}
 		}
@@ -221,9 +220,8 @@ class MomentsClient implements ClientInterface
 
 		if ($matchesPhone) {
 			$key = $matchesPhone[0][1] ?? '';
-			$value = $matchesPhone[0][2] ?? '';
 
-			if ($key && $value === 'is not a valid phone number') {
+			if ($key) {
 				$output[$key] = 'validationPhone';
 			}
 		}
@@ -233,9 +231,8 @@ class MomentsClient implements ClientInterface
 
 		if ($matchesDate) {
 			$key = $matchesDate[0][1] ?? '';
-			$value = $matchesDate[0][2] ?? '';
 
-			if ($key && $value === 'should be an ISO datetime, but there is') {
+			if ($key) {
 				$output[$key] = 'validationDateTime';
 			}
 		}
@@ -245,9 +242,8 @@ class MomentsClient implements ClientInterface
 
 		if ($matchesDate) {
 			$key = $matchesDate[0][1] ?? '';
-			$value = $matchesDate[0][2] ?? '';
 
-			if ($key && $value === 'should be an ISO date, but there is') {
+			if ($key) {
 				$output[$key] = 'validationDate';
 			}
 		}

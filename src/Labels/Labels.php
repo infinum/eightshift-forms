@@ -194,7 +194,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying file type value.
 			'validationAccept' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
-			'validationAcceptMime' => \__('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
+			'validationAcceptMime' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
@@ -203,6 +203,7 @@ class Labels implements LabelsInterface
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
+			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
 		];
 	}
 
@@ -247,21 +248,6 @@ class Labels implements LabelsInterface
 		return [
 			'greenhouseErrorSettingsMissing' => \__('Greenhouse integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'greenhouseBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'greenhouseUnsupportedFileTypeError' => \__('An unsupported file type was uploaded. Please try again.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameError' => \__('"First name" is in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameError' => \__('"Last name" is in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailError' => \__('"First name", "Last name", and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameError' => \__('"First name" and "Last name" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailError' => \__('"First name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailError' => \__('"Last name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNamePhoneError' => \__('"First name" and "Phone" are an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNamePhoneError' => \__('"First name" and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidEmailPhoneError' => \__('"E-mail" and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailPhoneError' => \__('"First name", "Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNamePhoneError' => \__('"First name", "Last name", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailPhoneError' => \__('"First name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailPhoneError' => \__('"Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
 			'greenhouseSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -276,9 +262,6 @@ class Labels implements LabelsInterface
 		return [
 			'mailchimpErrorSettingsMissing' => \__('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailchimpBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidResourceError' => \__('Something is not right with your fields. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'mailchimpMissingFieldsError' => \__('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -301,7 +284,6 @@ class Labels implements LabelsInterface
 			'hubspotMaxNumberOfSubmittedValuesExceededError' => \__('More than 1000 fields were included in the response. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'hubspotBlockedEmailError' => \__('We are sorry but you email was blocked in our blacklist.', 'eightshift-forms'),
-			'hubspotRequiredFieldError' => \__('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
 			'hubspotInvalidNumberError' => \__('Some of number fields are not a valid number value.', 'eightshift-forms'),
 			'hubspotInputTooLargeError' => \__('The value in the field is too large for the type of field.', 'eightshift-forms'),
 			'hubspotFieldNotInFormDefinitionError' => \__('The field was included in the form submission but is not in the form definition.', 'eightshift-forms'),
@@ -333,8 +315,6 @@ class Labels implements LabelsInterface
 		return [
 			'mailerliteErrorSettingsMissing' => \__('MailerLite integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailerliteInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'mailerliteEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
 			'mailerliteSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -349,7 +329,6 @@ class Labels implements LabelsInterface
 		return [
 			'goodbitsErrorSettingsMissing' => \__('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'goodbitsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'goodbitsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}

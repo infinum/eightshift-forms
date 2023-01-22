@@ -204,7 +204,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						$disableCoverLetter = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
 
 						if ($disableResume || $disableCoverLetter) {
-							continue;
+							break;
 						}
 
 						$output[] = [

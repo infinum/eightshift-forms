@@ -19,6 +19,7 @@ use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -288,7 +289,10 @@ class HubspotClient implements HubspotClientInterface
 		// Output error.
 		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -460,8 +464,6 @@ class HubspotClient implements HubspotClientInterface
 				return 'hubspotInvalidEmailError';
 			case 'BLOCKED_EMAIL':
 				return 'hubspotBlockedEmailError';
-			case 'REQUIRED_FIELD':
-				return 'hubspotRequiredFieldError';
 			case 'INVALID_NUMBER':
 				return 'hubspotInvalidNumberError';
 			case 'INPUT_TOO_LARGE':
@@ -501,6 +503,43 @@ class HubspotClient implements HubspotClientInterface
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['errors'] ?? [];
+		$output = [];
+
+		foreach ($msg as $value) {
+			$key = $value['errorType'] ?? '';
+			$message = $value['message'] ?? '';
+
+			if (!$key || !$message) {
+				continue;
+			}
+
+			if ($key === 'REQUIRED_FIELD') {
+				// Validate req fields.
+				preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, PREG_SET_ORDER, 0);
+
+				if ($matchesReq) {
+					$match = $matchesReq[0][2] ?? '';
+					if ($match) {
+						$output[$match] = 'validationRequired';
+					}
+				}
+
+			}
+		}
+
+		return $output;
 	}
 
 	/**

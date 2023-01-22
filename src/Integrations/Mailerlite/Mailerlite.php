@@ -171,8 +171,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'dateTracking' => $name,
 						'dateFieldLabel' => $label,
 						'dateType' => 'date',
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => 'Y-m-d',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							'dateType',
+							'dateOutputFormat'
 						]),
 					];
 					break;
