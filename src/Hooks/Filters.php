@@ -38,7 +38,7 @@ use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
 use EightshiftForms\Integrations\Moments\Moments;
 use EightshiftForms\Integrations\Moments\MomentsClient;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;

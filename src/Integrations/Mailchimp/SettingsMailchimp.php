@@ -111,11 +111,9 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$type = self::SETTINGS_TYPE_KEY;
-
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
+			return $this->getNoValidGlobalConfigOutput(self::SETTINGS_TYPE_KEY);
 		}
 
 		// Output additonal tabs for config.

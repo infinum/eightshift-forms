@@ -3,12 +3,12 @@
 /**
  * The class for sending emails.
  *
- * @package EightshiftForms\Mailers
+ * @package EightshiftForms\Integrations\Mailer
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Mailer;
+namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

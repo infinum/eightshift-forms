@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailchimp;
 
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Mailer\MailerInterface;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;

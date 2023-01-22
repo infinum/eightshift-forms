@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Migration;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;

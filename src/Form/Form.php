@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

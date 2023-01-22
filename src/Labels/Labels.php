@@ -230,8 +230,7 @@ class Labels implements LabelsInterface
 	private function getMailerLabels(): array
 	{
 		return [
-			'mailerSuccessNoSend' => \__('E-mail was sent successfully.', 'eightshift-forms'),
-			'mailerErrorSettingsMissing' => \__('Form settings are not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerErrorSettingsMissing' => \__('Form is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerErrorEmailSend' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerErrorEmailConfirmationSend' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerSuccess' => \__('E-mail was sent successfully.', 'eightshift-forms'),

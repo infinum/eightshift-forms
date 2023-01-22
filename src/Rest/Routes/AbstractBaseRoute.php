@@ -156,7 +156,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					// Loop all items and decode.
 					$inner = \array_map(
 						static function ($item) {
-							return \json_decode(($item), true);
+							return \json_decode(\sanitize_text_field($item), true);
 						},
 						$item
 					);
@@ -198,7 +198,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				// Just decode value.
-				return \json_decode(($item), true);
+				return \json_decode(\sanitize_text_field($item), true);
 			},
 			$params
 		);
@@ -260,33 +260,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $formId['value'] ?? '';
-	}
-
-	/**
-	 * Return form sender details from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function getSenderDetails(array $params): array
-	{
-		$output = [];
-
-		foreach ($params as $param) {
-			$name = $param['name'] ?? '';
-			$value = $param['value'] ?? '';
-
-			if (!$name) {
-				continue;
-			}
-
-			if (($name === 'sender-email') && !empty($value)) {
-				$output[$name] = $value;
-			}
-		}
-
-		return $output;
 	}
 
 	/**

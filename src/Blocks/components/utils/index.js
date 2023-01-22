@@ -220,3 +220,14 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
 		...appendItems,
 	}
 }
+
+/**
+ * Get active integration block name by checking the paren item.
+ *
+ * @param {string} clientId Client Id to check.
+ *
+ * @returns {string}
+ */
+export const getActiveIntegrationBlockName = (clientId) => {
+	return select('core/editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
+}

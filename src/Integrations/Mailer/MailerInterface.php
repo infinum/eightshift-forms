@@ -3,12 +3,12 @@
 /**
  * The class for sending emails.
  *
- * @package EightshiftForms\Mailers
+ * @package EightshiftForms\Integrations\Mailers
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Mailer;
+namespace EightshiftForms\Integrations\Mailer;
 
 /**
  * Class Mailer

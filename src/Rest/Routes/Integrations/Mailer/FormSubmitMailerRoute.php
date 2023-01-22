@@ -3,18 +3,16 @@
 /**
  * The class register route for public form submiting endpoint - Mailer
  *
- * @package EightshiftForms\Rest\Route\Integrationss
+ * @package EightshiftForms\Rest\Route\Integrations\Mailer
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Integrations;
+namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Mailer\MailerInterface;
-use EightshiftForms\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -24,16 +22,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitMailerRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -137,17 +125,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		$params = $formDataRefrerence['params'];
 		$files = $formDataRefrerence['files'];
 
-		$isUsed = (bool) $this->isCheckboxSettingsChecked(SettingsMailer::SETTINGS_MAILER_USE_KEY, SettingsMailer::SETTINGS_MAILER_USE_KEY, $formId);
-
-		// If Mailer system is not used just respond with success.
-		if (!$isUsed) {
-			return \rest_ensure_response(
-				$this->getApiSuccessOutput(
-					$this->labels->getLabel('mailerSuccessNoSend', $formId),
-				)
-			);
-		}
-
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
@@ -161,7 +138,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		}
 
 		// Send email.
-		$mailer = $this->mailer->sendFormEmail(
+		$response = $this->mailer->sendFormEmail(
 			$formId,
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
@@ -170,8 +147,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			$params
 		);
 
+		error_log( print_r( ( $response ), true ) );
+
 		// If email fails.
-		if (!$mailer) {
+		if (!$response) {
 			// Always delete the files from the disk.
 			if ($files) {
 				$this->deleteFiles($files);
@@ -184,18 +163,22 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			);
 		}
 
-		// Find Sender Details.
-		$senderDetails = $this->getSenderDetails($params);
-		$confirmationSubject = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
-		$confirmationTemplate = $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
+		// Check if Mailer data is set and valid.
+		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
 
-		if (isset($senderDetails['sender-email']) && $confirmationSubject && $confirmationTemplate) {
+		// Find Sender Details.
+		$senderDetails = $this->prepareParams($params);
+
+		error_log( print_r( ( $params ), true ) );
+		
+
+		if ($isConfirmationValid && isset($senderDetails['sender-email'])) {
 			// Send email.
 			$mailerConfirmation = $this->mailer->sendFormEmail(
 				$formId,
 				$senderDetails['sender-email'],
-				$confirmationSubject,
-				$confirmationTemplate,
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 				$files,
 				$params
 			);
@@ -226,5 +209,33 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 				$this->labels->getLabel('mailerSuccess', $formId),
 			)
 		);
+	}
+
+
+	/**
+	 * Prepare params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareParams(array $params): array
+	{
+		$output = [];
+
+		foreach ($params as $param) {
+			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if (!$name) {
+				continue;
+			}
+
+			if (($name === 'sender-email') && !empty($value)) {
+				$output[$name] = $value;
+			}
+		}
+
+		return $output;
 	}
 }

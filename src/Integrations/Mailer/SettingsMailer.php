@@ -3,12 +3,12 @@
 /**
  * Mailer Settings class.
  *
- * @package EightshiftForms\Mailer
+ * @package EightshiftForms\Integrations\Mailer
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Mailer;
+namespace EightshiftForms\Integrations\Mailer;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
@@ -40,6 +40,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	 * Filter settings is Valid key.
 	 */
 	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_mailer';
+
+	/**
+	 * Filter settings is valid confirmation key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME = 'es_forms_settings_is_valid_confirmation_mailer';
 
 	/**
 	 * Settings key.
@@ -82,6 +87,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public const SETTINGS_MAILER_TEMPLATE_KEY = 'mailer-template';
 
 	/**
+	 * Sender use key.
+	 */
+	public const SETTINGS_MAILER_SENDER_USE_KEY = 'mailer-sender-use';
+
+	/**
 	 * Sender Subject key.
 	 */
 	public const SETTINGS_MAILER_SENDER_SUBJECT_KEY = 'mailer-sender-subject';
@@ -101,6 +111,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, [$this, 'isSettingsConfirmationValid']);
 	}
 
 	/**
@@ -116,17 +127,39 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
-		$senderName = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
-		$senderEmail = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
+		$template = $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
-		if (
-			empty($senderName) ||
-			empty($senderEmail) ||
-			empty($to) ||
-			empty($subject)
-		) {
+		if ($name || $email || $to || $subject || $template) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determine if confirmation settings are valid.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsConfirmationValid(string $formId): bool
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return false;
+		}
+
+		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
+		$template = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
+
+		if ($isUsed || $name || $email || $subject || $template) {
 			return false;
 		}
 
@@ -159,33 +192,17 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public function getSettingsData(string $formId): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isSettingsGlobalValid()) {
+			return $this->getNoActiveFeatureOutput(self::SETTINGS_TYPE_KEY);
 		}
 
-		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY, $formId);
-
 		$formNames = Helper::getFormFieldNames($formId);
+
+		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_USE_KEY),
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Mailer', 'eightshift-forms'),
-						'checkboxIsChecked' => $isUsed,
-						'checkboxValue' => self::SETTINGS_MAILER_USE_KEY,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					]
-				]
-			],
-			$isUsed ? [
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -270,32 +287,50 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									Leave blank to disable the confirmation e-mail.', 'eightshift-forms'),
 							],
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
-								'inputFieldLabel' => \__('E-mail subject', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
-								'inputFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).', 'eightshift-forms'), $formNames),
-								'inputType' => 'text',
-								'inputIsRequired' => false,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_USE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use confirmation email', 'eightshift-forms'),
+										'checkboxIsChecked' => $isSenderUsed,
+										'checkboxValue' => self::SETTINGS_MAILER_SENDER_USE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									]
+								]
 							],
-							[
-								'component' => 'textarea',
-								'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
-								'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
-								'textareaFieldHelp' => \sprintf(\__('
-									Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
-									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
-									These tags are detected from the form:<br />
-									%s', 'eightshift-forms'), $formNames),
-								'textareaIsRequired' => false,
-								'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
-							],
-						]
+							...($isSenderUsed ? [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
+									'inputFieldLabel' => \__('E-mail subject', 'eightshift-forms'),
+									// translators: %s will be replaced with forms field name.
+									'inputFieldHelp' => \sprintf(\__('Data from the form can be used in the form of template tags (<code>{field-name}</code>).', 'eightshift-forms'), $formNames),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+								],
+								[
+									'component' => 'textarea',
+									'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
+									'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
+									// translators: %s will be replaced with forms field name.
+									'textareaFieldHelp' => \sprintf(\__('
+										Data from the form can be used in the form of template tags (<code>{field-name}</code>).<br />
+										If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
+										These tags are detected from the form:<br />
+										%s', 'eightshift-forms'), $formNames),
+									'textareaIsRequired' => true,
+									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+								],
+							] : []),
+						],
 					],
 				],
-			] : [],
+			],
 		];
 	}
 
