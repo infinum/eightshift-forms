@@ -545,4 +545,30 @@ class Helper
 			}
 		);
 	}
+
+	/**
+	 * Convert date formats to libs formats.
+	 *
+	 * @param string $date Date to convert.
+	 * @param string $separator Date separator.
+	 *
+	 * @return string
+	 */
+	public static function getCorrectLibDateFormats(string $date, string $separator) {
+		return \implode(
+			$separator,
+			\array_map(
+				static function ($item) {
+					$item = \count_chars($item, 3);
+
+					if ($item === 'Y') {
+						return $item;
+					}
+
+					return \strtolower($item);
+				},
+				explode($separator, $date)
+			)
+		);
+	}
 }

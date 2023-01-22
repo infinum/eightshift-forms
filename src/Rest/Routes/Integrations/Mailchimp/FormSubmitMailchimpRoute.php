@@ -16,6 +16,7 @@ use EightshiftForms\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -145,6 +146,11 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		// Output integrations validation issues.
+		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		}
+
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->mailer->fallbackEmail($response);
@@ -154,7 +160,10 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
 				$response,
-				$this->labels->getLabel($response['message'], $formId)
+				$this->labels->getLabel($response['message'], $formId),
+				[
+					Validator::VALIDATOR_OUTPUT_KEY
+				]
 			)
 		);
 	}

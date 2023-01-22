@@ -125,20 +125,45 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 
 			switch ($type) {
 				case 'text':
-					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'text',
-						'inputIsRequired' => $name === 'email',
-						'inputIsEmail' => $name === 'email',
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$name === 'email' ? 'inputIsRequired' : '',
-							$name === 'email' ? 'inputIsEmail' : '',
-						]),
-					];
-					break;
+					switch ($name) {
+						case 'phone':
+							$output[] = [
+								'component' => 'phone',
+								'phoneName' => $name,
+								'phoneTracking' => $name,
+								'phoneFieldLabel' => $label,
+								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone'),
+							];
+							break;
+						case 'zip':
+							$output[] = [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputType' => 'number',
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									'inputType'
+								]),
+							];
+							break;
+						default:
+							$output[] = [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputType' => 'text',
+								'inputIsRequired' => $name === 'email',
+								'inputIsEmail' => $name === 'email',
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									$name === 'email' ? 'inputIsRequired' : '',
+									$name === 'email' ? 'inputIsEmail' : '',
+								]),
+							];
+							break;
+					}
+				break;
 				case 'date':
 					$output[] = [
 						'component' => 'date',

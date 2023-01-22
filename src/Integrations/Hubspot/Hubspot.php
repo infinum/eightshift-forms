@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -211,7 +211,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'datePlaceholder' => $placeholder,
 							'dateIsRequired' => (bool) $required,
 							'dateValue' => $value,
-							'datePreviewFormat' => $this->getCorrectDateFormats($metaData[0]['value'], $metaData[1]['value']),
+							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
@@ -522,30 +522,5 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Convert Hubspot date formats to libs formats.
-	 *
-	 * @param string $date Date to convert.
-	 *
-	 * @return string
-	 */
-	private function getCorrectDateFormats(string $date, string $separator) {
-		return \implode(
-			$separator,
-			\array_map(
-				static function ($item) {
-					$item = \count_chars($item, 3);
-
-					if ($item === 'Y') {
-						return $item;
-					}
-
-					return \strtolower($item);
-				},
-				explode($separator, $date)
-			)
-		);
 	}
 }

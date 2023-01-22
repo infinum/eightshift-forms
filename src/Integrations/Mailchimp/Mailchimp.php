@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -138,12 +139,53 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$label = $field['name'] ?? '';
 			$required = $field['required'] ?? false;
 			$value = $field['default_value'] ?? '';
-			$dateFormat = $field['options']['date_format'] ?? '';
-			$options = $field['options']['choices'] ?? [];
-			$id = $name;
+			$options = $field['options'] ?? [];
+			$choices = $options['choices'] ?? [];
+			$dateFormat = $options['date_format'] ?? '';
+			$validationMaxLength = $options['size'] ?? '';
 
 			switch ($type) {
 				case 'text':
+					$input = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputType' => 'text',
+						'inputIsRequired' => (bool) $required,
+						'inputValue' => $value,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							$validationMaxLength ? 'inputMaxLength' : '',
+						]),
+					];
+
+					if ($validationMaxLength) {
+						$input['inputMaxLength'] = (int) $validationMaxLength;
+					}
+
+					$output[] = $input;
+					break;
+				case 'url':
+					$input = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputType' => 'url',
+						'inputIsUrl' => true,
+						'inputIsRequired' => (bool) $required,
+						'inputValue' => $value,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							'inputType',
+							'inputIsUrl',
+						]),
+					];
+
+					$output[] = $input;
+					break;
+				case 'address':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -152,26 +194,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputType' => 'text',
 						'inputIsRequired' => (bool) $required,
 						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
-							$dateFormat ? 'inputValidationPattern' : '',
-						]),
-					];
-					break;
-				case 'address':
-					$output[] = [
-						'component' => 'input',
-						'inputName' => 'address',
-						'inputTracking' => 'address',
-						'inputFieldLabel' => $label,
-						'inputType' => 'text',
-						'inputIsRequired' => (bool) $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
-							$dateFormat ? 'inputValidationPattern' : '',
+							'inputType',
+
 						]),
 					];
 					break;
@@ -184,42 +210,60 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputType' => 'number',
 						'inputIsRequired' => (bool) $required,
 						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
-							$dateFormat ? 'inputValidationPattern' : '',
+							'inputType',
+						]),
+					];
+					break;
+				case 'zip':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $name,
+						'inputFieldLabel' => $label,
+						'inputType' => 'number',
+						'inputIsRequired' => (bool) $required,
+						'inputValue' => $value,
+						'inputMaxLength' => 5,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							'inputType',
+							'inputMaxLength'
 						]),
 					];
 					break;
 				case 'phone':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'tel',
-						'inputIsRequired' => (bool) $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
-							$dateFormat ? 'inputValidationPattern' : '',
+						'component' => 'phone',
+						'phoneName' => $name,
+						'phoneTracking' => $name,
+						'phoneFieldLabel' => $label,
+						'phoneType' => 'tel',
+						'phoneIsRequired' => (bool) $required,
+						'phoneValue' => $value,
+						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+							$required ? 'phoneIsRequired' : '',
+							'phoneType'
 						]),
 					];
 					break;
 				case 'birthday':
+				case 'date':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputType' => 'text',
-						'inputIsRequired' => (bool) $required,
-						'inputValue' => $value,
-						'inputValidationPattern' => $dateFormat,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
-							$dateFormat ? 'inputValidationPattern' : '',
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'date',
+						'dateIsRequired' => (bool) $required,
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => Helper::getCorrectLibDateFormats($dateFormat, '/'),
+						'dateValue' => $value,
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							$required ? 'dateIsRequired' : '',
+							'dateType',
+							'dateOutputFormat',
 						]),
 					];
 					break;
@@ -241,7 +285,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 									], false),
 								];
 							},
-							$options
+							$choices
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 							$required ? 'radiosIsRequired' : '',
@@ -266,7 +310,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 									], false),
 								];
 							},
-							$options
+							$choices
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',

@@ -210,6 +210,10 @@ export class Utils {
 
 	// Output all error for fields.
 	outputErrors(element, fields) {
+		if (typeof fields === 'undefined') {
+			return;
+		}
+
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);

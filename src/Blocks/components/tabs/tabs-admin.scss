@@ -5,7 +5,6 @@
 	@include media(desktop up) {
 		display: flex;
 		flex-wrap: wrap;
-		overflow: hidden;
 		border-top: 1px solid var(--global-colors-es-ebb);
 	}
 

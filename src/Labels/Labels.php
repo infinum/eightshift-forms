@@ -202,6 +202,7 @@ class Labels implements LabelsInterface
 			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix.', 'eightshift-forms'),
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
+			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 		];
 	}
 
@@ -275,7 +276,7 @@ class Labels implements LabelsInterface
 		return [
 			'mailchimpErrorSettingsMissing' => \__('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailchimpBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidResourceError' => \__('Something is not right with the resource. Please check all the fields and try again.', 'eightshift-forms'),
+			'mailchimpInvalidResourceError' => \__('Something is not right with your fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'mailchimpMissingFieldsError' => \__('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
@@ -349,7 +350,6 @@ class Labels implements LabelsInterface
 			'goodbitsErrorSettingsMissing' => \__('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'goodbitsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'goodbitsUnauthorizedError' => \__('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
 			'goodbitsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -415,6 +415,7 @@ class Labels implements LabelsInterface
 	private function getMomentsLabels(): array
 	{
 		return [
+			'momentsErrorSettingsMissing' => \__('Moments integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'momentsBadRequestError' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
 			'momentsSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];

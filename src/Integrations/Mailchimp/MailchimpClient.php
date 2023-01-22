@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\Validator;
 
 /**
  * MailchimpClient integration class.
@@ -217,6 +218,9 @@ class MailchimpClient implements MailchimpClientInterface
 		return $this->getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -230,27 +234,14 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['detail'] ?? '';
-		$errors = $body['errors'] ?? [];
-
-		if ($errors) {
-			$invalidEmail = \array_filter(
-				$errors,
-				static function ($error) {
-					return $error['field'] === 'email_address';
-				}
-			);
-
-			if ($invalidEmail) {
-				$msg = 'INVALID_EMAIL';
-			}
-		}
 
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailchimpBadRequestError';
+			case 'Your request did not include an API key.':
+				return 'mailchimpErrorSettingsMissing';
 			case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
 				return 'mailchimpInvalidResourceError';
-			case 'INVALID_EMAIL':
 			case 'Please provide a valid email address.':
 				return 'mailchimpInvalidEmailError';
 			case 'Your merge fields were invalid.':
@@ -258,6 +249,52 @@ class MailchimpClient implements MailchimpClientInterface
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['detail'] ?? '';
+		$errors = $body['errors'] ?? [];
+
+		$output = [];
+
+		foreach ($errors as $value) {
+			$key = $value['field'] ?? '';
+			$message = $value['message'] ?? '';
+
+			if (!$key || !$message) {
+				continue;
+			}
+
+			switch ($message) {
+				case 'This value should not be blank.':
+					$output[$key] = 'validationRequired';
+					break;
+				case 'That is not a valid URL':
+					$output[$key] = 'validationUrl';
+					break;
+				case 'Please enter a zip code (5 digits)':
+					$output[$key] = 'validationMailchimpInvalidZip';
+					break;
+				case 'Please enter a month (01-12) and a day (01-31)':
+				case 'Please enter the date':
+					$output[$key] = 'validationDate';
+					break;
+			}
+		}
+
+		if ($msg === 'Please provide a valid email address.') {
+			$output['email_address'] = 'validationEmail';
+		}
+
+		return $output;
 	}
 
 	/**

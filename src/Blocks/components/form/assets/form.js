@@ -309,18 +309,19 @@ export class Form {
 
 				// Dispatch event.
 				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
-			})
-			.catch(() => {
-				this.utils.setGlobalMsg(element, this.utils.SETTINGS.FORM_SERVER_ERROR_MSG, 'error');
-
-				// Remove loader.
-				this.utils.hideLoader(element);
-
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 			});
+			// .catch(() => {
+			// 	console.log(response, 'b');
+			// 	this.utils.setGlobalMsg(element, this.utils.SETTINGS.FORM_SERVER_ERROR_MSG, 'error');
+
+			// 	// Remove loader.
+			// 	this.utils.hideLoader(element);
+
+			// 	// Hide global msg in any case after some time.
+			// 	setTimeout(() => {
+			// 		this.utils.hideGlobalMsg(element);
+			// 	}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
+			// });
 	}
 
 	/**

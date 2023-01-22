@@ -182,6 +182,8 @@ class MomentsClient implements ClientInterface
 		switch ($msg) {
 			case 'BAD_REQUEST':
 				return 'momentsBadRequestError';
+			case 'UNAUTHORIZED':
+				return 'momentsErrorSettingsMissing';
 			default:
 				return 'submitWpError';
 		}

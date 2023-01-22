@@ -16,6 +16,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Validation\Validator;
 
 /**
  * MailerliteClient integration class.
@@ -158,7 +159,7 @@ class MailerliteClient implements ClientInterface
 			$url,
 			[
 				'headers' => $this->getHeaders(),
-				'body' => \wp_json_encode($body),
+				// 'body' => \wp_json_encode($body),
 			]
 		);
 
@@ -184,7 +185,10 @@ class MailerliteClient implements ClientInterface
 		// Output error.
 		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -202,6 +206,8 @@ class MailerliteClient implements ClientInterface
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailerliteBadRequestError';
+			case 'Unauthorized':
+				return 'mailerliteErrorSettingsMissing';
 			case 'Invalid email address':
 				return 'mailerliteInvalidEmailError';
 			case 'Email temporarily blocked':
@@ -209,6 +215,31 @@ class MailerliteClient implements ClientInterface
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['error']['message'] ?? '';
+
+		$output = [];
+
+		switch ($msg) {
+			case 'Invalid email address':
+				$output['email'] = 'validationEmail';
+				break;
+			case 'Email temporarily blocked':
+				$output['email'] = 'validationEmail';
+				break;
+		}
+
+		return $output;
 	}
 
 	/**
