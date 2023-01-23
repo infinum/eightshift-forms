@@ -124,6 +124,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		$formId = $formDataRefrerence['formId'];
 		$params = $formDataRefrerence['params'];
 		$files = $formDataRefrerence['files'];
+		$senderEmail = $formDataRefrerence['senderEmail'];
 
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
@@ -147,8 +148,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			$params
 		);
 
-		error_log( print_r( ( $response ), true ) );
-
 		// If email fails.
 		if (!$response) {
 			// Always delete the files from the disk.
@@ -166,17 +165,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		// Check if Mailer data is set and valid.
 		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
 
-		// Find Sender Details.
-		$senderDetails = $this->prepareParams($params);
-
-		error_log( print_r( ( $params ), true ) );
-		
-
-		if ($isConfirmationValid && isset($senderDetails['sender-email'])) {
+		if ($isConfirmationValid && $senderEmail) {
 			// Send email.
 			$mailerConfirmation = $this->mailer->sendFormEmail(
 				$formId,
-				$senderDetails['sender-email'],
+				$senderEmail,
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 				$files,
@@ -209,33 +202,5 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 				$this->labels->getLabel('mailerSuccess', $formId),
 			)
 		);
-	}
-
-
-	/**
-	 * Prepare params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function prepareParams(array $params): array
-	{
-		$output = [];
-
-		foreach ($params as $param) {
-			$name = $param['name'] ?? '';
-			$value = $param['value'] ?? '';
-
-			if (!$name) {
-				continue;
-			}
-
-			if (($name === 'sender-email') && !empty($value)) {
-				$output[$name] = $value;
-			}
-		}
-
-		return $output;
 	}
 }

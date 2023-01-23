@@ -571,4 +571,32 @@ class Helper
 			)
 		);
 	}
+
+	/**
+	 * Prepare generic params output. Used if no specific configurations are needed.
+	 *
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function prepareGenericParamsOutput(array $params): array
+	{
+		$output = [];
+
+		foreach ($params as $key => $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
+
+			$output[$name] = $value;
+		}
+
+		return $output;
+	}
 }

@@ -381,29 +381,13 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		$output = [];
-
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
-		foreach ($params as $param) {
-			$value = $param['value'] ?? '';
-			if (!$value) {
-				continue;
-			}
-
-			$name = $param['name'] ?? '';
-			if (!$name) {
-				continue;
-			}
-
-			$output[$name] = $value;
-		}
-
-		return $output;
+		return Helper::prepareGenericParamsOutput($params);
 	}
 
 	/**

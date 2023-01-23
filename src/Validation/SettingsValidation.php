@@ -49,6 +49,11 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 	public const SETTINGS_VALIDATION_PATTERNS_KEY = 'validation-patterns';
 
 	/**
+	 * Validation use email tld key.
+	 */
+	public const SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY = 'validation-use-email-tld';
+
+	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -93,22 +98,13 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 			],
 		];
 
-		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
+		$formType = Helper::getFormTypeById($formId);
 
-		// List all labels for settings override.
-		foreach ($this->labels->getLabels() as $key => $label) {
-			if (!isset($local[$key])) {
-				continue;
-			}
-
-			$output[] = [
-				'component' => 'input',
-				'inputName' => $this->getSettingsName($key),
-				'inputFieldLabel' => \ucfirst($key),
-				'inputPlaceholder' => $label,
-				'inputValue' => $this->getSettingsValue($key, $formId),
-			];
+		if (!$formType) {
+			return [];
 		}
+
+		$key = "{$formType}Success";
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -118,7 +114,15 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabContent' => $output,
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName($key),
+								'inputFieldLabel' => \ucfirst($key),
+								'inputPlaceholder' => $this->labels->getLabels()[$key],
+								'inputValue' => $this->getSettingsValue($key, $formId),
+							],
+						],
 					],
 				],
 			],
@@ -192,6 +196,27 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
 						'tabContent' => $messagesOutput,
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('General', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+						],
 					],
 				]
 			],

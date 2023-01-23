@@ -107,18 +107,18 @@ export const TextareaOptions = (attributes) => {
 				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
 
 				<TextControl
-					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
-					value={textareaValue}
-					onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
-				/>
-
-				<TextControl
 					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
 					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
 					value={textareaName}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+					value={textareaValue}
+					onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
 				/>
 
 				<div className='es-h-spaced'>

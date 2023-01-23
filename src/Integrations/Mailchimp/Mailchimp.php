@@ -391,7 +391,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								$items
 							),
 						],
-						'selectDisabledOptions' => $this->prepareDisabledOptions('select'),
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+							'selectIsRequired',
+							'selectFieldHidden',
+						]),
 					],
 				];
 			case 'checkboxes':
@@ -416,7 +419,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							},
 							$items
 						),
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesIsRequired',
+							'checkboxesFieldHidden',
+						]),
 					]
 				];
 			case 'radios':
@@ -441,7 +447,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							},
 							$items
 						),
-						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios'),
+						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
+							'radiosIsRequired',
+							'radiosFieldHidden',
+						]),
 					],
 				];
 			case 'hidden':
@@ -468,7 +477,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 							$items
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-							'checkboxesIsRequired'
+							'checkboxesIsRequired',
+							'checkboxesFieldHidden'
 						]),
 					],
 				];

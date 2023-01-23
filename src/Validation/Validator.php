@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -22,6 +23,11 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class Validator extends AbstractValidation
 {
+	/**
+	 * Use general helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Instance variable for labels data.
 	 *
@@ -221,13 +227,15 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 
 						} else {
-							$path = dirname(__FILE__) . '/manifest.json';
+							if ($this->isCheckboxOptionChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+								$path = dirname(__FILE__) . '/manifest.json';
 
-							if (\file_exists($path)) {
-								$data = \json_decode(\implode(' ', (array)\file($path)), true);
+								if (\file_exists($path)) {
+									$data = \json_decode(\implode(' ', (array)\file($path)), true);
 
-								if (!$this->isEmailTlValid($inputValue, $data)) {
-									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
+									if (!$this->isEmailTlValid($inputValue, $data)) {
+										$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
+									}
 								}
 							}
 						}
@@ -396,6 +404,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
+		$senderEmailManifest = Components::getBlock('sender-email');
 		$blockDetails = Helper::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
@@ -405,45 +414,44 @@ class Validator extends AbstractValidation
 			return $output;
 		}
 
-		// Append attributes defined in the manifest as defaults.
-		if ($name === 'senderEmail') {
-			$block['attrs']['senderEmailInputIsRequired'] = true;
-			$block['attrs']['senderEmailInputIsEmail'] = true;
-		}
+		switch ($name) {
+			case $senderEmailManifest['blockName']:
+				$output[$senderEmailManifest['blockName']] = [
+					'isRequired' => true,
+					'isEmail' => true,
+				];
+				break;
+			default:
+				foreach ($block['attrs'] as $attributeKey => $attributeValue) {
+					switch ($name) {
+						// TODO: test this.
+						case 'custom-data':
+							$type = $block['attrs']['customDataFieldType'] ?? '';
+							$attrName = Components::kebabToCamelCase("{$name}-{$type}");
+							$id = $block['attrs']["{$name}Name"] ?? '';
+							break;
+						default:
+							$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
+							$id = $block['attrs']["{$attrName}Name"] ?? '';
+							break;
+					}
 
-		// Check all attributes.
-		foreach ($block['attrs'] as $attributeKey => $attributeValue) {
-			switch ($name) {
-				// If something custom add corrections.
-				case 'senderEmail':
-					$attrName = "{$name}Input";
-					$id = $block['attrs']["{$attrName}Name"] ?? '';
-					break;
-				case 'customData':
-					$type = $block['attrs']['customDataFieldType'] ?? '';
-					$attrName = Components::kebabToCamelCase("{$name}-{$type}");
-					$id = $block['attrs']["{$name}Name"] ?? '';
-					break;
-				default:
-					$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
-					$id = $block['attrs']["{$attrName}Name"] ?? '';
-					break;
-			}
+					// Get all validation fields with the correct prefix.
+					$valid = \array_flip(
+						\array_map(
+							static function ($item) use ($attrName) {
+								return Components::kebabToCamelCase("{$attrName}-{$item}");
+							},
+							self::VALIDATION_FIELDS
+						)
+					);
 
-			// Get all validation fields with the correct prefix.
-			$valid = \array_flip(
-				\array_map(
-					static function ($item) use ($attrName) {
-						return Components::kebabToCamelCase("{$attrName}-{$item}");
-					},
-					self::VALIDATION_FIELDS
-				)
-			);
-
-			// Output validation items with correct value for the matching ID.
-			if (isset($valid[$attributeKey]) && !empty($id)) {
-				$output[$id][\lcfirst(\str_replace($attrName, '', $attributeKey))] = $attributeValue;
-			}
+					// Output validation items with correct value for the matching ID.
+					if (isset($valid[$attributeKey]) && !empty($id)) {
+						$output[$id][\lcfirst(\str_replace($attrName, '', $attributeKey))] = $attributeValue;
+					}
+				}
+				break;
 		}
 
 		return $output;

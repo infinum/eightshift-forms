@@ -20,13 +20,18 @@
 		"attributes": {
 			"inputName": "sender-email",
 			"inputIsRequired": true,
-			"inputIsEmail": true
+			"inputIsEmail": true,
+			"inputType": "email"
 		}
 	},
 	"attributes": {
 		"inputName": {
 			"type": "string",
 			"default": "sender-email"
+		},
+		"inputType": {
+			"type": "string",
+			"default": "email"
 		},
 		"inputIsRequired": {
 			"type": "boolean",

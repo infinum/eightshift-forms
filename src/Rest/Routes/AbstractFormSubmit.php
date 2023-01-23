@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
@@ -62,8 +63,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$files = [];
-
 		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
@@ -102,6 +101,20 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 			// Extract hidden params from localStorage set on the frontend.
 			$formDataRefrerence['params'] = $this->extractStorageParams($formDataRefrerence['params']);
+
+			// Attach som special keys for specific types.
+			switch ($formType) {
+				// Attach sender email to output for mailer.
+				case SettingsMailer::SETTINGS_TYPE_KEY:
+					$formDataRefrerence['senderEmail'] = $this->getFormSenderEmailField($formDataRefrerence['params']);
+					break;
+
+				// Attach custom action and external action to custom mailer.
+				case SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY:
+					$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
+					$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
+					break;
+			}
 
 			// Upload files to temp folder.
 			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);

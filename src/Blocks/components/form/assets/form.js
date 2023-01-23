@@ -259,11 +259,20 @@ export class Form {
 						this.utils.setGlobalMsg(element, response.message, 'success');
 
 						// Redirect to url and update url params from from data.
-						this.utils.redirectToUrl(element, formData);
+						if (singleSubmit) {
+							this.utils.redirectToUrlByRefference(window.location.href);
+						} else {
+							this.utils.redirectToUrl(element, formData);
+						}
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
 						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
+
+						// Do the actual redirect after some time for custom form processed externally.
+						setTimeout(() => {
+							element.submit();
+						}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
 
 						// Set global msg.
 						this.utils.setGlobalMsg(element, response.message, 'success');
@@ -287,21 +296,6 @@ export class Form {
 					this.utils.setGlobalMsg(element, response.message, 'error');
 				}
 
-				// TODO.
-				// On redirect with custom action state.
-				// if (response.code >= 300 && response.code <= 399) {
-				// 	// Send GTM.
-				// 	this.utils.gtmSubmit(element);
-
-				// 	// Set global msg.
-				// 	this.utils.setGlobalMsg(element, response.message, 'success');
-
-				// 	// Do the actual redirect after some time.
-				// 	setTimeout(() => {
-				// 		element.submit();
-				// 	}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
-				// }
-
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
@@ -310,18 +304,6 @@ export class Form {
 				// Dispatch event.
 				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
 			});
-			// .catch(() => {
-			// 	console.log(response, 'b');
-			// 	this.utils.setGlobalMsg(element, this.utils.SETTINGS.FORM_SERVER_ERROR_MSG, 'error');
-
-			// 	// Remove loader.
-			// 	this.utils.hideLoader(element);
-
-			// 	// Hide global msg in any case after some time.
-			// 	setTimeout(() => {
-			// 		this.utils.hideGlobalMsg(element);
-			// 	}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
-			// });
 	}
 
 	/**
@@ -396,7 +378,6 @@ export class Form {
 			const {
 				type,
 				name,
-				files,
 				id,
 				disabled,
 				checked,

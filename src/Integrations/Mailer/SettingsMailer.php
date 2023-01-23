@@ -133,7 +133,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
-		if ($name || $email || $to || $subject || $template) {
+		if (!$name || !$email || !$to || !$subject || !$template) {
 			return false;
 		}
 
@@ -159,7 +159,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
 		$template = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
 
-		if ($isUsed || $name || $email || $subject || $template) {
+		if (!$isUsed || !$name || !$email || !$subject || !$template) {
 			return false;
 		}
 

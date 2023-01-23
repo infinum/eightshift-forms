@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -110,14 +112,13 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
-		$body = [];
-
-		// TODO.
-		$formAction = $params[self::CUSTOM_FORM_PARAMS['action']]['value'];
-		$formActionExternal = $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'];
+		$formId = $formDataRefrerence['formId'];
+		$params = $formDataRefrerence['params'];
+		$action = $formDataRefrerence['action'];
+		$actionExternal = $formDataRefrerence['actionExternal'];
 
 		// If form action is not set or empty.
-		if (!$formAction) {
+		if (!$action) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$this->labels->getLabel('customNoAction', $formId),
@@ -125,7 +126,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			);
 		}
 
-		if ($formActionExternal) {
+		if ($actionExternal) {
 			return \rest_ensure_response(
 				$this->getApiSuccessOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
@@ -136,40 +137,27 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			);
 		}
 
-		// Remove unnecessary internal params before continue.
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
-		// Format body parameters to a key/value array.
-		foreach ($params as $key => $param) {
-			$name = $param['name'] ?? '';
-			$value = $param['value'] ?? '';
-
-			if (!$name || !$value) {
-				continue;
-			}
-
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			$body[$name] = $value;
-		}
+		// Prepare params for output.
+		$params = Helper::prepareGenericParamsOutput($params);
 
 		// Create a custom form action request.
 		$customResponse = \wp_remote_post(
-			$formAction,
+			$action,
 			[
 				'headers' => [
 					'Content-Type' => 'application/x-www-form-urlencoded',
 				],
-				'body' => \http_build_query($body),
+				'body' => \http_build_query($params),
 			]
 		);
 
 		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
-		if ($customResponseCode > 399) {
+		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$this->labels->getLabel('customError', $formId),

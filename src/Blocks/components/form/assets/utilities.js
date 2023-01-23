@@ -392,8 +392,6 @@ export class Utils {
 
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
-			//TODO - check if reset needs to happen.
-
 			// Unset the choices in the submitted form.
 			if (this.CUSTOM_SELECTS[formId]) {
 				this.CUSTOM_SELECTS[formId].forEach((item) => {
@@ -436,9 +434,15 @@ export class Utils {
 			}
 		}
 
+		this.redirectToUrlByRefference(redirectUrl);
+	}
+
+	// Redirect to url by provided path.
+	redirectToUrlByRefference(redirectUrl) {
 		// Do the actual redirect after some time.
 		setTimeout(() => {
 			window.location.href = redirectUrl;
+			window.location.reload();
 		}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
 	}
 
@@ -591,6 +595,9 @@ export class Utils {
 				},
 				redirectToUrl: (element, formData) => {
 					this.redirectToUrl(element, formData);
+				},
+				redirectToUrlByRefference: (redirectUrl) => {
+					this.redirectToUrlByRefference(redirectUrl);
 				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
