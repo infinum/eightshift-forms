@@ -614,7 +614,7 @@ class Helper
 		$path = self::getDataManifestRaw($type, $file);
 
 		if ($path) {
-			return \json_decode(\implode(' ', (array)\file($path)), true);
+			return \json_decode($path, true);
 		}
 
 		return [];
@@ -646,15 +646,15 @@ class Helper
 	 */
 	public static function getCountrySelectList(): array
 	{
-		error_log( print_r( ( self::getDataManifest('country') ), true ) );
-		
 		return array_map(
 			static function ($item) {
 				$label = $item[0] ?? '';
-				$value = $item[1] ?? '';
+				$code = $item[1] ?? '';
+				$value = $item[2] ?? '';
 				return [
 					'label' => $label,
 					'value' => $value,
+					'code' => $code,
 				];
 			},
 			self::getDataManifest('country')

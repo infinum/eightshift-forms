@@ -435,13 +435,8 @@ export class Form {
 				case 'select-one':
 					const phoneSelect = item.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
 
+					// Bailout if select is part of the phone.
 					if (phoneSelect) {
-						break;
-						console.log(item.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect));
-
-						console.log(item);
-						// if (item.config.choices.some((item) => item.selected === true && item.value !== '')) {
-						// }
 						break;
 					}
 
@@ -603,12 +598,18 @@ export class Form {
 	 */
 	setupSelectField(select, formId) {
 		import('choices.js').then((Choices) => {
-			const choices = new Choices.default(select, {
+			const phoneSelect = select.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
+
+			const options = {
 				searchEnabled: false,
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-			});
+			}
+
+			const choices = new Choices.default(select, options);
+
+			console.log(choices);
 
 			this.utils.preFillOnInit(choices, 'select-custom');
 
