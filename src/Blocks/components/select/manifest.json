@@ -45,6 +45,13 @@
 		"selectAttrs": {
 			"type": "object"
 		},
+		"selectUseDynamic": {
+			"type": "boolean",
+			"default": false
+		},
+		"selectDynamicValue": {
+			"type": "string"
+		},
 		"selectDisabledOptions": {
 			"type": "array"
 		}

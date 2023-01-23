@@ -2,31 +2,29 @@
 
 import React, { useMemo } from 'react';
 import classnames from 'classnames';
+import { __ } from '@wordpress/i18n';
 import {
 	selector,
 	checkAttr,
 	props,
-	getAttrKey,
 	getUnique
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
+	const selectUseDynamic = checkAttr('selectUseDynamic', attributes, manifest);
 
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
@@ -45,9 +43,12 @@ export const SelectEditor = (attributes) => {
 
 	const select = (
 		<>
-			<div className={selectClass}>
-				{selectContent}
-			</div>
+			{selectUseDynamic ? 
+				__('This data will be provided by an external source selected in the sidebar!', 'eightshift-forms') :
+				<div className={selectClass}>
+					{selectContent}
+				</div>
+			}
 
 			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
 		</>

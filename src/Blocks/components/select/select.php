@@ -25,6 +25,7 @@ $selectContent = Components::checkAttr('selectContent', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
+$selectUseDynamic = Components::checkAttr('selectUseDynamic', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';

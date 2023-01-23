@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -50,6 +51,8 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$countries = Helper::getDataManifestRaw('country');
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -59,7 +62,18 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Countries', 'eightshift-forms'),
 						'tabContent' => [
-							
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-grid-2',
+								'layoutContent' => [
+									[
+										'component' => 'textarea',
+										'textareaFieldLabel' => \__('Countries list', 'eightshift-forms'),
+										'textareaIsReadOnly' => true,
+										'textareaValue' => $countries,
+									],
+								],
+							],
 						],
 					],
 				],

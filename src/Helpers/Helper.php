@@ -600,4 +600,42 @@ class Helper
 
 		return $output;
 	}
+
+	/**
+	 * Return files from data folder.
+	 *
+	 * @param string $type Folder name.
+	 * @param string $file File name with ext.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getDataManifest(string $type, string $file = 'manifest.json'): array
+	{
+		$path = self::getDataManifestRaw($type, $file);
+
+		if ($path) {
+			return \json_decode(\implode(' ', (array)\file($path)), true);
+		}
+
+		return [];
+	}
+
+	/**
+	 * Return files from data folder in raw format.
+	 *
+	 * @param string $type Folder name.
+	 * @param string $file File name with ext.
+	 *
+	 * @return string
+	 */
+	public static function getDataManifestRaw(string $type, string $file = 'manifest.json'): string
+	{
+		$path = \dirname(__FILE__, 3) . "/data/{$type}/{$file}";
+
+		if (\file_exists($path)) {
+			return \file_get_contents($path);
+		}
+
+		return '';
+	}
 }

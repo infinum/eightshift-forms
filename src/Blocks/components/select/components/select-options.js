@@ -25,6 +25,7 @@ export const SelectOptions = (attributes) => {
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
 	const selectTracking = checkAttr('selectTracking', attributes, manifest);
 	const selectDisabledOptions = checkAttr('selectDisabledOptions', attributes, manifest);
+	const selectUseDynamic = checkAttr('selectUseDynamic', attributes, manifest);
 
 	return (
 		<>

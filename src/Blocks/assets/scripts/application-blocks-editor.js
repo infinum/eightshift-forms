@@ -14,6 +14,7 @@ import { unregisterBlockType } from '@wordpress/blocks';
 import { select } from '@wordpress/data';
 import {
 	registerBlocks,
+	registerVariations,
 	outputCssVariablesGlobal,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts/editor';
@@ -31,6 +32,14 @@ registerBlocks(
 	require.context('./../../custom', true, /-deprecations.js$/),
 	require.context('./../../custom', true, /-overrides.js$/),
 );
+
+registerVariations(
+	globalSettings,
+	require.context('./../../variations', true, /manifest.json$/),
+	require.context('./../../custom', true, /manifest.json$/),
+	require.context('./../../variations', true, /overrides.json$/),
+);
+
 
 // Output global css variables.
 outputCssVariablesGlobal();
