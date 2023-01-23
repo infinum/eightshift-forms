@@ -114,6 +114,8 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			return $output;
 		}
 
+		error_log( print_r( ( $data ), true ) );
+
 		$fields = $data['fields'] ?? [];
 
 		if (!$fields) {
@@ -277,44 +279,53 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = $textarea;
 					break;
 				case 'dropdown':
-					$output[] = [
-						'component' => 'select',
-						'selectFieldLabel' => $label,
-						'selectName' => $name,
-						'selectTracking' => $name,
-						'selectType' => 'select',
-						'selectIsRequired' => (bool) $isRequired,
-						'selectContent' => \array_values(
-							\array_merge(
-								[
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
-										'selectOptionValue' => ' ',
-										'selectOptionIsSelected' => true,
-										'selectOptionIsDisabled' => true,
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [], false),
-									],
-								],
-								\array_map(
-									function ($selectOption) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $selectOption['name'],
-											'selectOptionValue' => $selectOption['value'],
-											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-												'selectOptionValue',
-											], false),
-										];
-									},
-									$options
-								)
-							)
-						),
-						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-							$isRequired ? 'selectIsRequired' : '',
-						]),
-					];
+					switch ($name) {
+						case 'country':
+							# code...
+							break;
+						default:
+							$dropdown = [
+								'component' => 'select',
+								'selectFieldLabel' => $label,
+								'selectName' => $name,
+								'selectTracking' => $name,
+								'selectType' => 'select',
+								'selectIsRequired' => (bool) $isRequired,
+								'selectContent' => \array_values(
+									\array_merge(
+										[
+											[
+												'component' => 'select-option',
+												'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
+												'selectOptionValue' => ' ',
+												'selectOptionIsSelected' => true,
+												'selectOptionIsDisabled' => true,
+												'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [], false),
+											],
+										],
+										\array_map(
+											function ($selectOption) {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $selectOption['name'],
+													'selectOptionValue' => $selectOption['value'],
+													'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+														'selectOptionValue',
+													], false),
+												];
+											},
+											$options
+										)
+									)
+								),
+								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+									$isRequired ? 'selectIsRequired' : '',
+								]),
+							];
+							break;
+					}
+
+					$output[] = $dropdown;
 					break;
 				case 'radiobutton':
 					$output[] = [

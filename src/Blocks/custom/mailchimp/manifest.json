@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "mailchimp",
 	"title": "Mailchimp Form",
 	"description" : "A MailChimp subscription form",

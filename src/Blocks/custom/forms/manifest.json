@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "forms",
 	"title": "Eightshift Forms",
 	"description" : "Allows selecting the form that should be displayed",

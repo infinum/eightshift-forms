@@ -45,6 +45,7 @@ use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
+use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -103,6 +104,11 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1 10h18M1 10v4.5A1.5 1.5 0 0 0 2.5 16h15a1.5 1.5 0 0 0 1.5-1.5V10M1 10l2.13-5.538a1.5 1.5 0 0 1 1.4-.962h11.362a1.5 1.5 0 0 1 1.434 1.059L19 10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M13 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="4.25" cy="13" r="0.75" fill="currentColor" fill-opacity="0.3"/></svg>',
 			'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
+		],
+		SettingsBlocks::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="4.138" rx="7.25" ry="2.638" stroke="currentColor" stroke-width="1.5" fill="none"></ellipse><path d="M17.25 8.197c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.18-7.25-2.638m14.5 3.957c0 1.457-3.246 2.639-7.25 2.639s-7.25-1.181-7.25-2.639" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M17.25 3.935v12.177c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.181-7.25-2.638V3.935" stroke="currentColor" stroke-width="1.5" fill="none"></path></svg>',
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -395,6 +401,10 @@ class Filters
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'title' => \__('Enrichment', 'eightshift-forms'),
 				'desc' => \__('In these settings, you can change all options regarding enrichment roles. We use browser storage to cache data from the URL parameters and pass them to external resources. This way, you can follow the users even if they leave your website.', 'eightshift-forms'),
+			],
+			SettingsBlocks::SETTINGS_TYPE_KEY => [
+				'title' => \__('Blocks', 'eightshift-forms'),
+				'desc' => \__('In these settings, you can change all options regarding blocks.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

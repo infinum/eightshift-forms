@@ -24,9 +24,9 @@ export const isOptionDisabled = (key, options) => {
  *
  * @param {int} clientId Client ID from block editor.
  * @param {string} postId Post ID to get data from.
- * @param {*} type Integration type.
- * @param {*} itemId Integration internal ID.
- * @param {*} innerId Integration internal alternative ID.
+ * @param {string} type Integration type.
+ * @param {string} itemId Integration internal ID.
+ * @param {string} innerId Integration internal alternative ID.
  *
  * @returns {void}
  */
@@ -38,6 +38,8 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
 
 			updateInnerBlocks(clientId, builtBlocks);
+
+			dispatch('core/editor').savePost();
 		}
 	});
 }
