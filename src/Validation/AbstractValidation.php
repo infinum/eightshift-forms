@@ -46,7 +46,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * Check if emails top level domain is valid.
 	 *
 	 * @param string $email String to check.
-	 * @param array $db Database to reference.
+	 * @param array<int, string> $db Database to reference.
 	 *
 	 * @return boolean
 	 */
@@ -55,7 +55,7 @@ abstract class AbstractValidation implements ValidatorInterface
 		$email = \explode('.', $email);
 		$email = \end($email);
 
-		$check = array_filter(
+		$check = \array_filter(
 			$db,
 			static function ($item) use ($email) {
 				return $item === $email;

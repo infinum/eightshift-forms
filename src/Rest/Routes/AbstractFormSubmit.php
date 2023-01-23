@@ -90,6 +90,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+				// @phpstan-ignore-next-line.
 				$validate = $this->getValidator()->validate($formDataRefrerence);
 				if ($validate) {
 					throw new UnverifiedRequestException(
@@ -137,28 +138,28 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Returns validator class.
 	 *
-	 * @return ValidatorInterface
+	 * @return $this
 	 */
 	abstract protected function getValidator();
 
 	/**
 	 * Returns validator patterns class.
 	 *
-	 * @return ValidationPatternsInterface
+	 * @return $this
 	 */
 	abstract protected function getValidatorPatterns();
 
 	/**
 	 * Returns validator labels class.
 	 *
-	 * @return LabelsInterface
+	 * @return $this
 	 */
 	abstract protected function getValidatorLabels();
 
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence From data with all details.
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */

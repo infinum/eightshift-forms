@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

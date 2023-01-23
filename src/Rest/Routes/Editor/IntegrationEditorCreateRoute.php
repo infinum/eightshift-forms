@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;

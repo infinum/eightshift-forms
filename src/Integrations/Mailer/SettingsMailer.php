@@ -193,7 +193,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoActiveFeatureOutput(self::SETTINGS_TYPE_KEY);
+			return $this->getNoActiveFeatureOutput();
 		}
 
 		$formNames = Helper::getFormFieldNames($formId);

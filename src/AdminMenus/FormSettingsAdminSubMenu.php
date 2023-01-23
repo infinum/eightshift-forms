@@ -262,10 +262,12 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		global $submenu;
 
-		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [ // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Add new form', 'eightshift-forms'),
 			FormAdminMenu::ADMIN_MENU_CAPABILITY,
 			\get_admin_url(null, 'post-new.php?post_type=' . Forms::URL_SLUG)
 		];
+		// phpcs:enable
 	}
 }

@@ -125,9 +125,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */

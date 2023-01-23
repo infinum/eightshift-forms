@@ -10,9 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
-use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -55,7 +52,7 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 */
@@ -117,9 +114,7 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */

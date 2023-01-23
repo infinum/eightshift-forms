@@ -56,7 +56,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY = 'greenhouse-file-upload-limit';
 
-		/**
+	/**
 	 * Disable default fields key.
 	 */
 	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY = 'greenhouse-disable-default-fields';

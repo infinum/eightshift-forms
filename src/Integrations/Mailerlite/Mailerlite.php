@@ -163,7 +163,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							];
 							break;
 					}
-				break;
+					break;
 				case 'date':
 					$output[] = [
 						'component' => 'date',

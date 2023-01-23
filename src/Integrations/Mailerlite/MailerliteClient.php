@@ -159,7 +159,7 @@ class MailerliteClient implements ClientInterface
 			$url,
 			[
 				'headers' => $this->getHeaders(),
-				// 'body' => \wp_json_encode($body),
+				'body' => \wp_json_encode($body),
 			]
 		);
 

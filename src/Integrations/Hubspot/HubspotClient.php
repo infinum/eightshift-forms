@@ -527,7 +527,7 @@ class HubspotClient implements HubspotClientInterface
 
 			if ($key === 'REQUIRED_FIELD') {
 				// Validate req fields.
-				preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, PREG_SET_ORDER, 0);
+				\preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
 				if ($matchesReq) {
 					$match = $matchesReq[0][2] ?? '';
@@ -535,7 +535,6 @@ class HubspotClient implements HubspotClientInterface
 						$output[$match] = 'validationRequired';
 					}
 				}
-
 			}
 		}
 
@@ -766,11 +765,11 @@ class HubspotClient implements HubspotClientInterface
 
 			// Must be in UTC timestamp with milliseconds.
 			if ($type === 'date') {
-				$value = strtotime($value) * 1000;
+				$value = \strtotime($value) * 1000;
 			}
 
 			$output[] = [
-				'name' => $name ?? '',
+				'name' => $name,
 				'value' => $value,
 				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];

@@ -121,16 +121,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerContentKey = $keys['innerContent'];
 
 		// Create block grammar from array.
-		$blocksGrammar = \serialize_blocks(
-			[ // @phpstan-ignore-line
-				[
-					$blockNameKey => "{$namespace}/form-selector",
-					$attrsKey => [],
-					$innerBlocksKey => $syncForm['data']['output'],
-					$innerContentKey => $syncForm['data']['output'],
-				]
+		// @phpstan-ignore-next-line.
+		$blocksGrammar = \serialize_blocks([
+			[
+				$blockNameKey => "{$namespace}/form-selector",
+				$attrsKey => [],
+				$innerBlocksKey => $syncForm['data']['output'],
+				$innerContentKey => $syncForm['data']['output'],
 			]
-		);
+		]);
 
 		// Bailout if we have output to show.
 		if (!$blocksGrammar) {
@@ -647,11 +646,10 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$output['output'] = $innerOutput;
 
 		// Add missing content attributes from integration.
-		$missingAttributes = array_diff_key($integration['attrs'], $content['attrs']);
+		$missingAttributes = \array_diff_key($integration['attrs'], $content['attrs']);
 		if ($missingAttributes) {
 			foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
-
-				// No need to add default values
+				// No need to add default values.
 				if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
 					continue;
 				}
@@ -824,7 +822,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		return [
 			[
 				$blockNameKey => "{$namespace}/" . $data['type'],
-				$attrsKey => array_merge(
+				$attrsKey => \array_merge(
 					[
 						$data['type'] . "IntegrationId" => $data['itemId'],
 					],

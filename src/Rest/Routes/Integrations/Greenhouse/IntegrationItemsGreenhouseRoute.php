@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

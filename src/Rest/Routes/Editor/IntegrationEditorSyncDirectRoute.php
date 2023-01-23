@@ -10,11 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use WP_Error;
 use WP_REST_Request;
 
 /**
@@ -101,7 +99,7 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 
 		$formId = $request->get_param('id') ?? '';
 
-		$syncForm = $this->integrationSyncDiff->syncFormDirect($formId, true);
+		$syncForm = $this->integrationSyncDiff->syncFormDirect($formId);
 
 		$status = $syncForm['status'] ?? '';
 		$message = $syncForm['message'] ?? '';

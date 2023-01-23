@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

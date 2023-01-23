@@ -441,7 +441,7 @@ class MailchimpClient implements MailchimpClientInterface
 			}
 
 			// Check for custom address.
-			if ($name === 'ADDRESS' && $value) {
+			if ($name === 'ADDRESS') {
 				$output[$name] = [
 					'addr1' => $value,
 					'addr2' => '',

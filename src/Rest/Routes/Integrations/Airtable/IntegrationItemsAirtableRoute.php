@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
@@ -111,7 +110,6 @@ class TransferRoute extends AbstractBaseRoute
 					\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
 				)
 			);
-
 		}
 
 		$output = [

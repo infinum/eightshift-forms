@@ -96,7 +96,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<string, string>
 	 */
 	public function getValidationPatternOutput(string $pattern): array
 	{
@@ -110,7 +110,11 @@ class ValidationPatterns implements ValidationPatternsInterface
 		$patterns = \reset($patterns);
 
 		if (!$patterns) {
-			return $pattern;
+			return [
+				'value' => $pattern,
+				'label' => $pattern,
+				'output' => $pattern,
+			];
 		}
 
 		return $patterns;

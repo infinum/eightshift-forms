@@ -15,9 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * ActiveCampaignClient integration class.

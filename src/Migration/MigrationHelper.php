@@ -138,12 +138,14 @@ trait MigrationHelper
 		}
 
 		if ($syncFormStatus === AbstractBaseRoute::STATUS_ERROR) {
+			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
 			return $output;
 		}
 
 		if (!$syncFormOutput) {
+			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Missing sync form data output - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
 			return $output;
@@ -154,13 +156,13 @@ trait MigrationHelper
 		}
 
 		foreach ($syncFormOutput as $key => $block) {
-
 			$blockName = Helper::getBlockNameDetails($block['blockName'])['name'];
 			$prefix = Components::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
 
 			if (!$name) {
+				// translators: %s will be replaced with the block name.
 				$output['msg'][] = \sprintf(\__("Missing integration fields name - %s", 'eightshift-forms'), $block['blockName']);
 				continue;
 			}
@@ -168,6 +170,7 @@ trait MigrationHelper
 			$field = $integrationFields[$name] ?? [];
 
 			if (!$field) {
+				// translators: %s will be replaced with block name.
 				$output['msg'][] = \sprintf(\__("Missing integration fields name - %s", 'eightshift-forms'), $name);
 				continue;
 			}

@@ -339,18 +339,10 @@ class AirtableClient implements ClientInterface
 					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
 					break;
 				case 'number':
-					if ($value) {
-						$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
-					} else {
-						$value = 0;
-					}
+					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
 					break;
 				case 'multiCheckbox':
-					if ($value) {
-						$value = \explode(AbstractBaseRoute::DELIMITER, $value);
-					} else {
-						$value = [];
-					}
+					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
 					break;
 				default:
 					$value = $value;

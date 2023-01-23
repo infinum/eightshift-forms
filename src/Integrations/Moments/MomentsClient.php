@@ -206,7 +206,7 @@ class MomentsClient implements ClientInterface
 		}
 
 		// Validate req fields.
-		preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, PREG_SET_ORDER, 0);
+		\preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
 			$key = $matchesReq[0][2] ?? '';
@@ -216,7 +216,7 @@ class MomentsClient implements ClientInterface
 		}
 
 		// Validate invalid phone field.
-		preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, \PREG_SET_ORDER, 0);
 
 		if ($matchesPhone) {
 			$key = $matchesPhone[0][1] ?? '';
@@ -227,7 +227,7 @@ class MomentsClient implements ClientInterface
 		}
 
 		// Validate invalid datetime field.
-		preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
 		if ($matchesDate) {
 			$key = $matchesDate[0][1] ?? '';
@@ -238,7 +238,7 @@ class MomentsClient implements ClientInterface
 		}
 
 		// Validate invalid date field.
-		preg_match_all("/(\w*) (should be an ISO date, but there is)/", $msg, $matchesDate, PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be an ISO date, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
 		if ($matchesDate) {
 			$key = $matchesDate[0][1] ?? '';
@@ -401,7 +401,7 @@ class MomentsClient implements ClientInterface
 					break;
 				case 'tel':
 					$value = \filter_var($value, \FILTER_SANITIZE_NUMBER_INT);
-					$value = \ltrim($value, '0'); 
+					$value = \ltrim($value, '0');
 					break;
 			}
 

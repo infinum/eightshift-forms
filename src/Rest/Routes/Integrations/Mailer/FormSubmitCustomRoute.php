@@ -13,10 +13,8 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Class FormSubmitCustomRoute
@@ -104,9 +102,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */

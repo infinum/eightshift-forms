@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -116,6 +115,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
+				// translators: %s will be replaced with the form type.
 				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type))
 			)
 		);

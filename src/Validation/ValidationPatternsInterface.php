@@ -27,7 +27,7 @@ interface ValidationPatternsInterface
 	 *
 	 * @param string $pattern Pattern to serach.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<string, string>
 	 */
 	public function getValidationPatternOutput(string $pattern): array;
 }

@@ -66,9 +66,9 @@ class Enrichment implements EnrichmentInterface
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \str_replace(',', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \array_values(\array_filter(\explode(\PHP_EOL, $tagsAdditional), 'strlen'));
-			$tagsAdditional = array_unique(array_map(
+			$tagsAdditional = \array_unique(\array_map(
 				static function ($item) {
-					return preg_replace('/[^a-zA-Z0-9_ -]/s','', $item);
+					return \preg_replace('/[^a-zA-Z0-9_ -]/s', '', $item);
 				},
 				$tagsAdditional
 			));
@@ -107,7 +107,7 @@ class Enrichment implements EnrichmentInterface
 	/**
 	 * Map enrichment fields with forms fields.
 	 *
-	 * @param array<string, mixed> $params Params to match
+	 * @param array<string, mixed> $params Params to match.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -120,14 +120,14 @@ class Enrichment implements EnrichmentInterface
 		$storage = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
 
 		// Map param values.
-		return array_map(
+		return \array_map(
 			static function ($item) use ($enrichment, $storage) {
 				// Check param name as a reference.
 				$name = $item['name'] ?? '';
 
 				// Find enrichment key name by checking the array of available names.
 				// Find only first iteration.
-				$enrichmentName = \array_keys(array_filter(
+				$enrichmentName = \array_keys(\array_filter(
 					$enrichment,
 					static function ($inner) use ($name) {
 						if (isset($inner[$name])) {

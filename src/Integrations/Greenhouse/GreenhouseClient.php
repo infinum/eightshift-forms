@@ -255,26 +255,24 @@ class GreenhouseClient implements ClientInterface
 		$output = [];
 
 		// Validate req fields.
-		preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, PREG_SET_ORDER, 0);
+		\preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
 			$key = $matchesReq[0][2] ?? '';
 			if ($key) {
-				$keys = explode(',', $key);
+				$keys = \explode(',', $key);
 
-				if ($keys) {
-					foreach ($keys as $inner) {
-						$output[$inner] = 'validationRequired';
-					}
+				foreach ($keys as $inner) {
+					$output[$inner] = 'validationRequired';
 				}
 			}
 		}
 
-		if (strpos($msg, 'Uploaded resume has an unsupported file type.') !== false) {
+		if (\strpos($msg, 'Uploaded resume has an unsupported file type.') !== false) {
 			$output['resume'] = 'validationGreenhouseAcceptMime';
 		}
 
-		if (strpos($msg, 'Uploaded cover letter has an unsupported file type') !== false) {
+		if (\strpos($msg, 'Uploaded cover letter has an unsupported file type') !== false) {
 			$output['cover_letter'] = 'validationGreenhouseAcceptMime';
 		}
 

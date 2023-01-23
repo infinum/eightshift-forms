@@ -97,14 +97,14 @@ trait ApiHelper
 	 * Return Integration API error response array - in combination with getIntegrationApiReponseDetails response.
 	 *
 	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param string $msg Message to output.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
-	 * @param string $msg Msg for the user.
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
 	{
-		return array_merge(
+		return \array_merge(
 			[
 				'status' => AbstractBaseRoute::STATUS_ERROR,
 				'message' => $msg,
@@ -126,7 +126,7 @@ trait ApiHelper
 	{
 		$integration = $details['integration'] ?? '';
 
-		return array_merge(
+		return \array_merge(
 			[
 				'status' => AbstractBaseRoute::STATUS_SUCCESS,
 				'message' => "{$integration}Success",
@@ -136,14 +136,14 @@ trait ApiHelper
 		);
 	}
 
-		/**
+	/**
 	 * Return Integration API final response array depending on the status - in combination with getIntegrationApiReponseDetails response.
 	 *
 	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
-	 * @param string $msg Msg for the user.
-	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
+	 * @param string $msg Message to output.
+	 * @param array<int, string> $additional Additional array details to attach to the success output.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, array<mixed>|int|string>
 	 */
 	public function getIntegrationApiOutput(array $details, string $msg, array $additional = []): array
 	{
@@ -175,7 +175,7 @@ trait ApiHelper
 	 * @param string $msg Msg for the user.
 	 * @param array<string, mixed> $additional Additonal data to attach to response.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, array<mixed>|int|string>
 	 */
 	public function getApiErrorOutput(string $msg, array $additional = []): array
 	{
@@ -200,9 +200,9 @@ trait ApiHelper
 	 * Return API success response array - Generic.
 	 *
 	 * @param string $msg Msg for the user.
-	 * @param array<string, mixed> $additional Additonal data to attach to response.
+	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, array<mixed>|int|string>
 	 */
 	public function getApiSuccessOutput(string $msg, array $additional = []): array
 	{

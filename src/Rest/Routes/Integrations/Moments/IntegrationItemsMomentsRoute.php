@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

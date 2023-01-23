@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailchimp;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

@@ -105,7 +105,7 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array<string, mixed> $validationReference Reference of form data to check by.
+	 * @param array<string, mixed> $data Date to check from reference helper.
 	 *
 	 * @return array<int|string, mixed>
 	 */
@@ -134,8 +134,8 @@ class Validator extends AbstractValidation
 	 */
 	public function getValidationLabelItems(array $items, string $formId): array
 	{
-		return array_map(
-			function($item) use ($formId) {
+		return \array_map(
+			function ($item) use ($formId) {
 				return $this->getValidationLabel($item, $formId);
 			},
 			$items
@@ -166,11 +166,11 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate params.
 	 *
-	 * @param array<int|string, mixed> $params Params to check.
-	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
+	 * @param array<string, mixed> $params Params to check.
+	 * @param array<string, mixed> $validationReference Validation reference to check against.
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int|string, string>
+	 * @return array<string, mixed>
 	 */
 	private function validateParams(array $params, array $validationReference, string $formId): array
 	{
@@ -197,8 +197,9 @@ class Validator extends AbstractValidation
 			}
 
 			// Sort order or validation by the keys.
-			uksort($reference, function($key1, $key2) use ($order) {
-				return (array_search($key1, $order) > array_search($key2, $order));
+			// @phpstan-ignore-next-line.
+			\uksort($reference, function ($key1, $key2) use ($order) {
+				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
 
 			// Loop all validations from the reference.
@@ -223,12 +224,10 @@ class Validator extends AbstractValidation
 					// Check validation for email params.
 					case 'isEmail':
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
-
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
-
 						} else {
 							if ($this->isCheckboxOptionChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								$path = dirname(__FILE__) . '/manifest.json';
+								$path = \dirname(__FILE__) . '/manifest.json';
 
 								if (\file_exists($path)) {
 									$data = \json_decode(\implode(' ', (array)\file($path)), true);
@@ -268,7 +267,7 @@ class Validator extends AbstractValidation
 						$patternValue = $pattern['value'] ?? '';
 
 						if ($patternValue) {
-							\preg_match_all("/$patternValue/", $inputValue, $matches, PREG_SET_ORDER, 0);
+							\preg_match_all("/$patternValue/", $inputValue, $matches, \PREG_SET_ORDER, 0);
 
 							$isMatch = isset($matches[0][0]) ? $matches[0][0] === $inputValue : false;
 
@@ -468,7 +467,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$allowed = array_flip(self::VALIDATION_MANUAL_COMPONENTS);
+		$allowed = \array_flip(self::VALIDATION_MANUAL_COMPONENTS);
 		$nestedKeys = \array_flip(AbstractFormBuilder::LAYOUT_KEYS);
 
 		foreach ($blocks as $block) {
@@ -477,10 +476,10 @@ class Validator extends AbstractValidation
 			// If nested key exists do a recursive loop.
 			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {
 				// Do recursive loop.
-				$output = array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
+				$output = \array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
 			} else {
 				// Only output arrays of components not the actual components attribute.
-				if (is_array($block)) {
+				if (\is_array($block)) {
 					// Output only allowed fields that are relevant for the validation.
 					if (isset($allowed[$name])) {
 						$output[] = $block;

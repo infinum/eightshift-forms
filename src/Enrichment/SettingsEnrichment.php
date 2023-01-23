@@ -159,7 +159,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 									List all URL parameters you want to allow for enrichment. We will store these parameters in browser storage for later processing. <br />
 									We provided some defaults, but in this field you can add additional tags you want to use. <br />
 									Allowed parameters are provided one per line.", 'eightshift-forms')),
-								'textareaValue' => $allowedAdditional ? implode(\PHP_EOL, $allowedAdditional) : '',
+								'textareaValue' => $allowedAdditional ? \implode(\PHP_EOL, $allowedAdditional) : '',
 							],
 							[
 								'component' => 'divider',
@@ -169,9 +169,9 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'introTitle' => \__('Map your parameter time', 'eightshift-forms'),
 								'introSubtitle' => \__('Here you can map all your enrichment parameters with field names. We will match your parameters with the field names during the form submission and enrich your data. Note you can add multiple field names separated by a comma.', 'eightshift-forms'),
 							],
-							...array_map(
+							...\array_map(
 								function ($item) {
-									return 	[
+									return [
 										'component' => 'input',
 										'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldLabel' => $item,

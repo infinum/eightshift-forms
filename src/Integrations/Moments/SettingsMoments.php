@@ -12,8 +12,6 @@ namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

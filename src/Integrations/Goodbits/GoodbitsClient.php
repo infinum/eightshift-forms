@@ -178,7 +178,7 @@ class GoodbitsClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		if (!$msg) {
-			$msg = !is_array($body['errors']) ? $body['errors'] : '';
+			$msg = !\is_array($body['errors']) ? $body['errors'] : '';
 		}
 
 		switch ($msg) {

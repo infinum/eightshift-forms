@@ -262,8 +262,7 @@ $layoutClass = Components::classnames([
 </div>
 
 <?php
-	echo Components::render(
-		'global-msg',
-		Components::props('globalMsg', $attributes)
-	);
-?>
+echo Components::render(
+	'global-msg',
+	Components::props('globalMsg', $attributes)
+);

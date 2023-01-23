@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
@@ -326,22 +325,5 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		}
 
 		return $output;
-	}
-
-	// HH:MM
-	// h:mma
-	private function correctDateformat($format, $time) {
-		switch ($format) {
-			case 'l':
-				# code...
-				break;
-			case 'LL':
-				# code...
-				break;
-			
-			default:
-				# code...
-				break;
-		}
 	}
 }

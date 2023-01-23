@@ -303,8 +303,8 @@ class Helper
 
 		return [
 			'namespace' => $block[0] ?? '',
-			'name' => $blockName ?? '',
-			'nameAttr' => Components::kebabToCamelCase($blockName ?? ''),
+			'name' => $blockName,
+			'nameAttr' => Components::kebabToCamelCase($blockName),
 		];
 	}
 
@@ -427,7 +427,7 @@ class Helper
 		$type = $blockName['nameAttr'];
 
 		$output['type'] = $type;
-		$output['typeFilter'] = $blockName['name'];;
+		$output['typeFilter'] = $blockName['name'];
 		$output['label'] = Filters::getSettingsLabels($type, 'title');
 		$output['icon'] = Filters::ALL[$type]['icon'] ?? '';
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
@@ -492,7 +492,7 @@ class Helper
 	/**
 	 * Find email field from params sent by form.
 	 *
-	 * @param array<string, mixed> $params Params to check
+	 * @param array<string, mixed> $params Params to check.
 	 *
 	 * @return string
 	 */
@@ -520,7 +520,7 @@ class Helper
 	/**
 	 * Remove unecesery custom params.
 	 *
-	 * @param array<string, mixed> $params Params to check
+	 * @param array<string, mixed> $params Params to check.
 	 * @param array<int, string> $additional Additional keys to remove.
 	 *
 	 * @return array<string, mixed>
@@ -530,7 +530,7 @@ class Helper
 		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
 		$additional = \array_flip($additional);
 
-		return array_filter(
+		return \array_filter(
 			$params,
 			static function ($item) use ($customFields, $additional) {
 				if (isset($customFields[$item['name'] ?? ''])) {
@@ -554,7 +554,8 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getCorrectLibDateFormats(string $date, string $separator) {
+	public static function getCorrectLibDateFormats(string $date, string $separator): string
+	{
 		return \implode(
 			$separator,
 			\array_map(
@@ -567,7 +568,7 @@ class Helper
 
 					return \strtolower($item);
 				},
-				explode($separator, $date)
+				\explode($separator, $date)
 			)
 		);
 	}

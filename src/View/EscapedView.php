@@ -41,12 +41,17 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		);
 	}
 
+	/**
+	 * Add forms additional attributes to allow list.
+	 *
+	 * @return  array<string, array<string, bool>>
+	 */
 	private function setForm(): array
 	{
 		$form = self::FORM;
 
 		$form['input'] = \array_merge(
-			$form['input'] ?? [],
+			$form['input'],
 			[
 				'data-object-type-id' => true,
 			]
@@ -65,7 +70,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		$svg = self::SVG;
 
 		$svg['circle'] = \array_merge(
-			$svg['circle'] ?? [],
+			$svg['circle'],
 			[
 				'stroke-width' => true,
 				'fill-opacity' => true,
@@ -73,21 +78,21 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		);
 
 		$svg['path'] = \array_merge(
-			$svg['path'] ?? [],
+			$svg['path'],
 			[
 				'opacity' => true,
 			]
 		);
 
 		$svg['ellipse'] = \array_merge(
-			$svg['ellipse'] ?? [],
+			$svg['ellipse'],
 			[
 				'fill-opacity' => true,
 			]
 		);
 
 		$svg['g'] = \array_merge(
-			$svg['g'] ?? [],
+			$svg['g'],
 			[
 				'stroke-width' => true,
 			]

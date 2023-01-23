@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
