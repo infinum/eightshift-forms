@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -58,8 +59,16 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
+$phoneSelectAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSelect'];
+error_log( print_r( ( Helper::getCountrySelectList() ), true ) );
+
 $isWpFiveNine = is_wp_version_compatible('5.9');
 $phone = '
+	<select ' . $phoneSelectAttr . '="' . esc_attr($phoneName) . '">
+		<option value="1">Guam</option>
+		<option value="123">Guatemala</option>
+		<option value="444">Guernsey</option>
+	</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
 		name="' . esc_attr($phoneName) . '"

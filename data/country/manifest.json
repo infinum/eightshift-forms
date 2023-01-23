@@ -1,1464 +1,1220 @@
 [
 	[
 		"Afghanistan",
-		"Afghanistan",
 		"af",
 		"93"
 	],
 	[
 		"Åland Islands",
-		"Aland Islands",
 		"ax",
 		"358"
 	],
 	[
-		"Albania",
 		"Albania",
 		"al",
 		"355"
 	],
 	[
 		"Algeria",
-		"Algeria",
 		"dz",
 		"213"
 	],
 	[
-		"American Samoa",
 		"American Samoa",
 		"as",
 		"1684"
 	],
 	[
 		"Andorra",
-		"Andorra",
 		"ad",
 		"376"
 	],
 	[
-		"Angola",
 		"Angola",
 		"ao",
 		"244"
 	],
 	[
 		"Anguilla",
-		"Anguilla",
 		"ai",
 		"1264"
 	],
 	[
-		"Antarctica",
 		"Antarctica",
 		"aq",
 		"672"
 	],
 	[
 		"Antigua and Barbuda",
-		"Antigua and Barbuda",
 		"ag",
 		"1268"
 	],
 	[
-		"Argentina",
 		"Argentina",
 		"ar",
 		"54"
 	],
 	[
 		"Armenia",
-		"Armenia",
 		"am",
 		"374"
 	],
 	[
-		"Aruba",
 		"Aruba",
 		"aw",
 		"297"
 	],
 	[
 		"Australia",
-		"Australia",
 		"au",
 		"61"
 	],
 	[
-		"Austria",
 		"Austria",
 		"at",
 		"43"
 	],
 	[
 		"Azerbaijan",
-		"Azerbaijan",
 		"az",
 		"994"
 	],
 	[
-		"Bahamas",
 		"Bahamas",
 		"bs",
 		"1242"
 	],
 	[
 		"Bahrain",
-		"Bahrain",
 		"bh",
 		"973"
 	],
 	[
-		"Bangladesh",
 		"Bangladesh",
 		"bd",
 		"880"
 	],
 	[
 		"Barbados",
-		"Barbados",
 		"bb",
 		"1246"
 	],
 	[
-		"Belarus",
 		"Belarus",
 		"by",
 		"375"
 	],
 	[
 		"Belgium",
-		"Belgium",
 		"be",
 		"32"
 	],
 	[
-		"Belize",
 		"Belize",
 		"bz",
 		"501"
 	],
 	[
 		"Benin",
-		"Benin",
 		"bj",
 		"229"
 	],
 	[
-		"Bermuda",
 		"Bermuda",
 		"bm",
 		"1441"
 	],
 	[
 		"Bhutan",
-		"Bhutan",
 		"bt",
 		"975"
 	],
 	[
-		"Bolivia",
 		"Bolivia",
 		"bo",
 		"591"
 	],
 	[
 		"Bonaire",
-		"Bonaire",
 		"bq",
 		"5997"
 	],
 	[
-		"Bosnia and Herzegovina",
 		"Bosnia and Herzegovina",
 		"ba",
 		"387"
 	],
 	[
 		"Botswana",
-		"Botswana",
 		"bw",
 		"267"
 	],
 	[
-		"Brazil",
 		"Brazil",
 		"br",
 		"55"
 	],
 	[
 		"British Indian Ocean Territory",
-		"British Indian Ocean Territory",
 		"io",
 		"246"
 	],
 	[
-		"Brunei Darussalam",
 		"Brunei Darussalam",
 		"bn",
 		"673"
 	],
 	[
 		"Bulgaria",
-		"Bulgaria",
 		"bg",
 		"359"
 	],
 	[
-		"Burkina Faso",
 		"Burkina Faso",
 		"bf",
 		"226"
 	],
 	[
 		"Burundi",
-		"Burundi",
 		"bi",
 		"257"
 	],
 	[
-		"Cambodia",
 		"Cambodia",
 		"kh",
 		"855"
 	],
 	[
 		"Cameroon",
-		"Cameroon",
 		"cm",
 		"237"
 	],
 	[
-		"Canada",
 		"Canada",
 		"ca",
 		"1"
 	],
 	[
 		"Cabo Verde",
-		"Cabo Verde",
 		"cv",
 		"238"
 	],
 	[
-		"Cayman Islands",
 		"Cayman Islands",
 		"ky",
 		"1345"
 	],
 	[
 		"Central African Republic",
-		"Central African Republic",
 		"cf",
 		"236"
 	],
 	[
-		"Chad",
 		"Chad",
 		"td",
 		"235"
 	],
 	[
 		"Chile",
-		"Chile",
 		"cl",
 		"56"
 	],
 	[
-		"China",
 		"China",
 		"cn",
 		"86"
 	],
 	[
 		"Christmas Island",
-		"Christmas Island",
 		"cx",
 		"61"
 	],
 	[
-		"Cocos (Keeling) Island",
 		"Cocos (Keeling) Island",
 		"cc",
 		"61"
 	],
 	[
 		"Colombia",
-		"Colombia",
 		"co",
 		"57"
 	],
 	[
-		"Comoros",
 		"Comoros",
 		"km",
 		"269"
 	],
 	[
 		"Congo",
-		"Congo",
 		"cg",
 		"242"
 	],
 	[
-		"Congo (Democratic Republic)",
 		"Congo (Democratic Republic)",
 		"cd",
 		"243"
 	],
 	[
 		"Cook Islands",
-		"Cook Islands",
 		"ck",
 		"682"
 	],
 	[
-		"Costa Rica",
 		"Costa Rica",
 		"cr",
 		"506"
 	],
 	[
 		"Côte d'Ivoire",
-		"Cote d'Ivoire",
 		"ci",
 		"225"
 	],
 	[
-		"Croatia",
 		"Croatia",
 		"hr",
 		"385"
 	],
 	[
 		"Curaçao",
-		"Curacao",
 		"cw",
 		"599"
 	],
 	[
-		"Cyprus",
 		"Cyprus",
 		"cy",
 		"357"
 	],
 	[
 		"Czech Republic",
-		"Czech Republic",
 		"cz",
 		"420"
 	],
 	[
-		"Denmark",
 		"Denmark",
 		"dk",
 		"45"
 	],
 	[
 		"Djibouti",
-		"Djibouti",
 		"dj",
 		"253"
 	],
 	[
-		"Dominica",
 		"Dominica",
 		"dm",
 		"1767"
 	],
 	[
 		"Dominican Republic",
-		"Dominican Republic",
 		"do",
 		"1"
 	],
 	[
-		"Ecuador",
 		"Ecuador",
 		"ec",
 		"593"
 	],
 	[
 		"Egypt",
-		"Egypt",
 		"eg",
 		"20"
 	],
 	[
-		"El Salvador",
 		"El Salvador",
 		"sv",
 		"503"
 	],
 	[
 		"Equatorial Guinea",
-		"Equatorial Guinea",
 		"gq",
 		"240"
 	],
 	[
-		"Eritrea",
 		"Eritrea",
 		"er",
 		"291"
 	],
 	[
 		"Estonia",
-		"Estonia",
 		"ee",
 		"372"
 	],
 	[
-		"Eswatini",
 		"Eswatini",
 		"sz",
 		"268"
 	],
 	[
 		"Ethiopia",
-		"Ethiopia",
 		"et",
 		"251"
 	],
 	[
-		"Falkland Islands",
 		"Falkland Islands",
 		"fk",
 		"500"
 	],
 	[
 		"Faroe Islands",
-		"Faroe Islands",
 		"fo",
 		"298"
 	],
 	[
-		"Fiji",
 		"Fiji",
 		"fj",
 		"679"
 	],
 	[
 		"Finland",
-		"Finland",
 		"fi",
 		"358"
 	],
 	[
-		"France",
 		"France",
 		"fr",
 		"33"
 	],
 	[
 		"French Guiana",
-		"French Guiana",
 		"gf",
 		"594"
 	],
 	[
-		"French Polynesia",
 		"French Polynesia",
 		"pf",
 		"689"
 	],
 	[
 		"French Southern Territories",
-		"French Southern Territories",
 		"tf",
 		"262"
 	],
 	[
-		"Gabon",
 		"Gabon",
 		"ga",
 		"241"
 	],
 	[
 		"Gambia",
-		"Gambia",
 		"gm",
 		"220"
 	],
 	[
-		"Georgia",
 		"Georgia",
 		"ge",
 		"995"
 	],
 	[
 		"Germany",
-		"Germany",
 		"de",
 		"49"
 	],
 	[
-		"Ghana",
 		"Ghana",
 		"gh",
 		"233"
 	],
 	[
 		"Gibraltar",
-		"Gibraltar",
 		"gi",
 		"350"
 	],
 	[
-		"Greece",
 		"Greece",
 		"gr",
 		"30"
 	],
 	[
 		"Greenland",
-		"Greenland",
 		"gl",
 		"299"
 	],
 	[
-		"Grenada",
 		"Grenada",
 		"gd",
 		"1473"
 	],
 	[
 		"Guadeloupe",
-		"Guadeloupe",
 		"gp",
 		"590"
 	],
 	[
-		"Guam",
 		"Guam",
 		"gu",
 		"1"
 	],
 	[
 		"Guatemala",
-		"Guatemala",
 		"gt",
 		"502"
 	],
 	[
-		"Guernsey",
 		"Guernsey",
 		"gg",
 		"44"
 	],
 	[
 		"Guinea",
-		"Guinea",
 		"gn",
 		"224"
 	],
 	[
-		"Guinea-Bissau",
 		"Guinea-Bissau",
 		"gw",
 		"245"
 	],
 	[
 		"Guyana",
-		"Guyana",
 		"gy",
 		"592"
 	],
 	[
-		"Haiti",
 		"Haiti",
 		"ht",
 		"509"
 	],
 	[
 		"Holy See",
-		"Holy See",
 		"va",
 		"39"
 	],
 	[
-		"Honduras",
 		"Honduras",
 		"hn",
 		"504"
 	],
 	[
 		"Hong Kong",
-		"Hong Kong",
 		"hk",
 		"852"
 	],
 	[
-		"Hungary",
 		"Hungary",
 		"hu",
 		"36"
 	],
 	[
 		"Iceland",
-		"Iceland",
 		"is",
 		"354"
 	],
 	[
-		"India",
 		"India",
 		"in",
 		"91"
 	],
 	[
 		"Indonesia",
-		"Indonesia",
 		"id",
 		"62"
 	],
 	[
-		"Iraq",
 		"Iraq",
 		"iq",
 		"964"
 	],
 	[
 		"Ireland",
-		"Ireland",
 		"ie",
 		"353"
 	],
 	[
-		"Isle of Man",
 		"Isle of Man",
 		"im",
 		"44"
 	],
 	[
 		"Israel",
-		"Israel",
 		"il",
 		"972"
 	],
 	[
-		"Italy",
 		"Italy",
 		"it",
 		"39"
 	],
 	[
 		"Jamaica",
-		"Jamaica",
 		"jm",
 		"1"
 	],
 	[
-		"Japan",
 		"Japan",
 		"jp",
 		"81"
 	],
 	[
 		"Jersey",
-		"Jersey",
 		"je",
 		"44"
 	],
 	[
-		"Jordan",
 		"Jordan",
 		"jo",
 		"962"
 	],
 	[
 		"Kazakhstan",
-		"Kazakhstan",
 		"kz",
 		"7"
 	],
 	[
-		"Kenya",
 		"Kenya",
 		"ke",
 		"254"
 	],
 	[
 		"Kiribati",
-		"Kiribati",
 		"ki",
 		"686"
 	],
 	[
-		"Korea, the Republic of",
 		"Korea, the Republic of",
 		"kr",
 		"82"
 	],
 	[
 		"Kuwait",
-		"Kuwait",
 		"kw",
 		"965"
 	],
 	[
-		"Kyrgyzstan",
 		"Kyrgyzstan",
 		"kg",
 		"996"
 	],
 	[
 		"Lao People's Democratic Republic",
-		"Lao People's Democratic Republic",
 		"la",
 		"856"
 	],
 	[
-		"Latvia",
 		"Latvia",
 		"lv",
 		"371"
 	],
 	[
 		"Lebanon",
-		"Lebanon",
 		"lb",
 		"961"
 	],
 	[
-		"Lesotho",
 		"Lesotho",
 		"ls",
 		"266"
 	],
 	[
 		"Liberia",
-		"Liberia",
 		"lr",
 		"231"
 	],
 	[
-		"Libya",
 		"Libya",
 		"ly",
 		"218"
 	],
 	[
 		"Liechtenstein",
-		"Liechtenstein",
 		"li",
 		"423"
 	],
 	[
-		"Lithuania",
 		"Lithuania",
 		"lt",
 		"370"
 	],
 	[
 		"Luxembourg",
-		"Luxembourg",
 		"lu",
 		"352"
 	],
 	[
-		"Macao",
 		"Macao",
 		"mo",
 		"853"
 	],
 	[
 		"Madagascar",
-		"Madagascar",
 		"mg",
 		"261"
 	],
 	[
-		"Malawi",
 		"Malawi",
 		"mw",
 		"265"
 	],
 	[
 		"Malaysia",
-		"Malaysia",
 		"my",
 		"60"
 	],
 	[
-		"Maldives",
 		"Maldives",
 		"mv",
 		"960"
 	],
 	[
 		"Mali",
-		"Mali",
 		"ml",
 		"223"
 	],
 	[
-		"Malta",
 		"Malta",
 		"mt",
 		"356"
 	],
 	[
 		"Marshall Islands",
-		"Marshall Islands",
 		"mh",
 		"692"
 	],
 	[
-		"Martinique",
 		"Martinique",
 		"mq",
 		"596"
 	],
 	[
 		"Mauritania",
-		"Mauritania",
 		"mr",
 		"222"
 	],
 	[
-		"Mauritius",
 		"Mauritius",
 		"mu",
 		"230"
 	],
 	[
 		"Mayotte",
-		"Mayotte",
 		"yt",
 		"262"
 	],
 	[
-		"Mexico",
 		"Mexico",
 		"mx",
 		"52"
 	],
 	[
 		"Micronesia (Federated States of)",
-		"Micronesia (Federated States of)",
 		"fm",
 		"691"
 	],
 	[
-		"Moldova",
 		"Moldova",
 		"md",
 		"373"
 	],
 	[
 		"Monaco",
-		"Monaco",
 		"mc",
 		"377"
 	],
 	[
-		"Mongolia",
 		"Mongolia",
 		"mn",
 		"976"
 	],
 	[
 		"Montenegro",
-		"Montenegro",
 		"me",
 		"382"
 	],
 	[
-		"Montserrat",
 		"Montserrat",
 		"ms",
 		"1664"
 	],
 	[
 		"Morocco",
-		"Morocco",
 		"ma",
 		"212"
 	],
 	[
-		"Mozambique",
 		"Mozambique",
 		"mz",
 		"258"
 	],
 	[
 		"Myanmar",
-		"Myanmar",
 		"mm",
 		"95"
 	],
 	[
-		"Namibia",
 		"Namibia",
 		"na",
 		"264"
 	],
 	[
 		"Nauru",
-		"Nauru",
 		"nr",
 		"674"
 	],
 	[
-		"Nepal",
 		"Nepal",
 		"np",
 		"977"
 	],
 	[
 		"Netherlands",
-		"Netherlands",
 		"nl",
 		"31"
 	],
 	[
-		"New Caledonia",
 		"New Caledonia",
 		"nc",
 		"687"
 	],
 	[
 		"New Zealand",
-		"New Zealand",
 		"nz",
 		"64"
 	],
 	[
-		"Nicaragua",
 		"Nicaragua",
 		"ni",
 		"505"
 	],
 	[
 		"Niger",
-		"Niger",
 		"ne",
 		"227"
 	],
 	[
-		"Nigeria",
 		"Nigeria",
 		"ng",
 		"234"
 	],
 	[
 		"Niue",
-		"Niue",
 		"nu",
 		"683"
 	],
 	[
-		"Norfolk Island",
 		"Norfolk Island",
 		"nf",
 		"672"
 	],
 	[
 		"North Macedonia",
-		"North Macedonia",
 		"mk",
 		"389"
 	],
 	[
-		"Northern Mariana Islands",
 		"Northern Mariana Islands",
 		"mp",
 		"1670"
 	],
 	[
 		"Norway",
-		"Norway",
 		"no",
 		"47"
 	],
 	[
-		"Oman",
 		"Oman",
 		"om",
 		"968"
 	],
 	[
 		"Pakistan",
-		"Pakistan",
 		"pk",
 		"92"
 	],
 	[
-		"Palau",
 		"Palau",
 		"pw",
 		"680"
 	],
 	[
 		"Palestine",
-		"Palestine",
 		"ps",
 		"970"
 	],
 	[
-		"Panama",
 		"Panama",
 		"pa",
 		"507"
 	],
 	[
 		"Papua New Guinea",
-		"Papua New Guinea",
 		"pg",
 		"675"
 	],
 	[
-		"Paraguay",
 		"Paraguay",
 		"py",
 		"595"
 	],
 	[
 		"Peru",
-		"Peru",
 		"pe",
 		"51"
 	],
 	[
-		"Philippines",
 		"Philippines",
 		"ph",
 		"63"
 	],
 	[
 		"Pitcairn",
-		"Pitcairn",
 		"pn",
 		"872"
 	],
 	[
-		"Poland",
 		"Poland",
 		"pl",
 		"48"
 	],
 	[
 		"Portugal",
-		"Portugal",
 		"pt",
 		"351"
 	],
 	[
-		"Puerto Rico",
 		"Puerto Rico",
 		"pr",
 		"1"
 	],
 	[
 		"Qatar",
-		"Qatar",
 		"qa",
 		"974"
 	],
 	[
 		"Réunion",
-		"Reunion",
 		"re",
 		"262"
 	],
 	[
-		"Romania",
 		"Romania",
 		"ro",
 		"40"
 	],
 	[
 		"Russian Federation",
-		"Russian Federation",
 		"ru",
 		"7"
 	],
 	[
-		"Rwanda",
 		"Rwanda",
 		"rw",
 		"250"
 	],
 	[
 		"Saba",
-		"Saba",
 		"bg-sa",
 		"5994"
 	],
 	[
 		"Saint Barthélemy",
-		"Saint Barthelemy",
 		"590",
 		"BL"
 	],
 	[
-		"Saint Helena",
 		"Saint Helena",
 		"sh",
 		"290"
 	],
 	[
 		"Saint Kitts and Nevis",
-		"Saint Kitts and Nevis",
 		"kn",
 		"1869"
 	],
 	[
-		"Saint Lucia",
 		"Saint Lucia",
 		"lc",
 		"1758"
 	],
 	[
 		"Saint Martin (French part)",
-		"Saint Martin (French part)",
 		"mf",
 		"590"
 	],
 	[
-		"Saint Pierre and Miquelon",
 		"Saint Pierre and Miquelon",
 		"pm",
 		"508"
 	],
 	[
 		"Saint Vincent and The Grenadines",
-		"Saint Vincent and The Grenadines",
 		"vc",
 		"1784"
 	],
 	[
-		"Samoa",
 		"Samoa",
 		"ws",
 		"685"
 	],
 	[
 		"San Marino",
-		"San Marino",
 		"sm",
 		"378"
 	],
 	[
-		"Sao Tome and Principe",
 		"Sao Tome and Principe",
 		"st",
 		"239"
 	],
 	[
 		"Saudi Arabia",
-		"Saudi Arabia",
 		"sa",
 		"966"
 	],
 	[
-		"Senegal",
 		"Senegal",
 		"sn",
 		"221"
 	],
 	[
 		"Serbia",
-		"Serbia",
 		"rs",
 		"381"
 	],
 	[
-		"Seychelles",
 		"Seychelles",
 		"sc",
 		"248"
 	],
 	[
 		"Sierra Leone",
-		"Sierra Leone",
 		"sl",
 		"232"
 	],
 	[
-		"Singapore",
 		"Singapore",
 		"sg",
 		"65"
 	],
 	[
 		"Sint Maarten",
-		"Sint Maarten",
 		"sx",
 		"1721"
 	],
 	[
-		"Slovakia",
 		"Slovakia",
 		"sk",
 		"421"
 	],
 	[
 		"Slovenia",
-		"Slovenia",
 		"si",
 		"386"
 	],
 	[
-		"Solomon Islands",
 		"Solomon Islands",
 		"sb",
 		"677"
 	],
 	[
 		"Somalia",
-		"Somalia",
 		"so",
 		"252"
 	],
 	[
-		"South Africa",
 		"South Africa",
 		"za",
 		"27"
 	],
 	[
 		"South Georgia and the South Sandwich Islands",
-		"South Georgia and the South Sandwich Islands",
 		"gs",
 		"500"
 	],
 	[
-		"South Sudan",
 		"South Sudan",
 		"ss",
 		"211"
 	],
 	[
 		"Spain",
-		"Spain",
 		"es",
 		"34"
 	],
 	[
-		"Sri Lanka",
 		"Sri Lanka",
 		"lk",
 		"94"
 	],
 	[
 		"Sudan",
-		"Sudan",
 		"sd",
 		"249"
 	],
 	[
-		"Suriname",
 		"Suriname",
 		"sr",
 		"597"
 	],
 	[
 		"Svalbard",
-		"Svalbard",
 		"sj",
 		"47"
 	],
 	[
-		"Sweden",
 		"Sweden",
 		"se",
 		"46"
 	],
 	[
 		"Switzerland",
-		"Switzerland",
 		"ch",
 		"41"
 	],
 	[
 		"Taiwan, China",
-		"Taiwan",
 		"tw",
 		"886"
 	],
 	[
-		"Tajikistan",
 		"Tajikistan",
 		"tj",
 		"992"
 	],
 	[
 		"Tanzania",
-		"Tanzania",
 		"tz",
 		"255"
 	],
 	[
-		"Thailand",
 		"Thailand",
 		"th",
 		"66"
 	],
 	[
 		"Timor-Leste",
-		"Timor-Leste",
 		"tl",
 		"670"
 	],
 	[
-		"Togo",
 		"Togo",
 		"tg",
 		"228"
 	],
 	[
 		"Tokelau",
-		"Tokelau",
 		"tk",
 		"690"
 	],
 	[
-		"Tonga",
 		"Tonga",
 		"to",
 		"676"
 	],
 	[
 		"Trinidad and Tobago",
-		"Trinidad and Tobago",
 		"tt",
 		"1868"
 	],
 	[
-		"Tunisia",
 		"Tunisia",
 		"tn",
 		"216"
 	],
 	[
 		"Turkey",
-		"Turkey",
 		"tr",
 		"90"
 	],
 	[
-		"Turkmenistan",
 		"Turkmenistan",
 		"tm",
 		"993"
 	],
 	[
 		"Turks and Caicos Islands",
-		"Turks and Caicos Islands",
 		"tc",
 		"1649"
 	],
 	[
-		"Tuvalu",
 		"Tuvalu",
 		"tv",
 		"688"
 	],
 	[
 		"Uganda",
-		"Uganda",
 		"ug",
 		"256"
 	],
 	[
-		"Ukraine",
 		"Ukraine",
 		"ua",
 		"380"
 	],
 	[
 		"United Arab Emirates",
-		"United Arab Emirates",
 		"ae",
 		"971"
 	],
 	[
-		"United Kingdom",
 		"United Kingdom",
 		"gb",
 		"44"
 	],
 	[
 		"United States",
-		"United States",
 		"us",
 		"1"
 	],
 	[
-		"United States Minor Outlying Islands",
 		"United States Minor Outlying Islands",
 		"um",
 		"699"
 	],
 	[
 		"Uruguay",
-		"Uruguay",
 		"uy",
 		"598"
 	],
 	[
-		"Uzbekistan",
 		"Uzbekistan",
 		"uz",
 		"998"
 	],
 	[
 		"Vanuatu",
-		"Vanuatu",
 		"vu",
 		"678"
 	],
 	[
-		"Venezuela",
 		"Venezuela",
 		"ve",
 		"58"
 	],
 	[
 		"Vietnam",
-		"Vietnam",
 		"vn",
 		"84"
 	],
 	[
-		"Virgin Islands (British)",
 		"Virgin Islands (British)",
 		"vg",
 		"1284"
 	],
 	[
 		"Virgin Islands (U.S.)",
-		"Virgin Islands (U.S.)",
 		"vi",
 		"1340"
 	],
 	[
-		"Wallis and Futuna",
 		"Wallis and Futuna",
 		"wf",
 		"681"
 	],
 	[
 		"Western Sahara",
-		"Western Sahara",
 		"eh",
 		"212"
 	],
 	[
-		"Yemen",
 		"Yemen",
 		"ye",
 		"967"
 	],
 	[
 		"Zambia",
-		"Zambia",
 		"zm",
 		"260"
 	],
 	[
-		"Zimbabwe",
 		"Zimbabwe",
 		"zw",
 		"263"

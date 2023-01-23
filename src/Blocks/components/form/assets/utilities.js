@@ -83,6 +83,7 @@ export class Utils {
 		this.globalMsgSelector =  `${this.formSelector}-global-msg`;
 		this.groupSelector =  `${this.formSelector}-group`;
 		this.fieldSelector =  `${this.formSelector}-field`;
+		this.dateSelector =  `${this.fieldSelector}-date`;
 		this.inputSelector =  `${this.fieldSelector} input`;
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
 		this.selectSelector =  `${this.fieldSelector} select`;
@@ -142,7 +143,6 @@ export class Utils {
 		this.FILES = {};
 		this.CUSTOM_TEXTAREAS = [];
 		this.CUSTOM_SELECTS = [];
-		this.CUSTOM_PHONES = [];
 		this.CUSTOM_DATES = [];
 		this.CUSTOM_FILES = [];
 
@@ -534,6 +534,7 @@ export class Utils {
 				globalMsgSelector: this.globalMsgSelector,
 				groupSelector: this.groupSelector,
 				fieldSelector: this.fieldSelector,
+				dateSelector: this.dateSelector,
 				inputSelector: this.inputSelector,
 				textareaSelector: this.textareaSelector,
 				selectSelector: this.selectSelector,
@@ -550,7 +551,6 @@ export class Utils {
 				FILES: this.FILES,
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
-				CUSTOM_PHONES: this.CUSTOM_PHONES,
 				CUSTOM_DATES: this.CUSTOM_DATES,
 				CUSTOM_FILES: this.CUSTOM_FILES,
 

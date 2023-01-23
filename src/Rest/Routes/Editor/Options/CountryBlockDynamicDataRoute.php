@@ -1,46 +1,51 @@
 <?php
 
 /**
- * The class register route for getting Geolocation list of countries endpoint.
+ * The class to provide country select block dynamic data.
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\Editor\Options
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Geolocation\GeolocationInterface;
+use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\SettingsHelper;
 use WP_REST_Request;
 
 /**
- * Class GeolocationCountriesRoute
+ * Class CountryBlockDynamicDataRoute
  */
-class GeolocationCountriesRoute extends AbstractBaseRoute
+class CountryBlockDynamicDataRoute extends AbstractBaseRoute
 {
 	/**
-	 * Route name
-	 *
-	 * @var string
+	 * Use general helper trait.
 	 */
-	public const ROUTE_NAME = 'geolocation-countries';
+	use SettingsHelper;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var GeolocationInterface
+	 * Route slug.
 	 */
-	private $geolocation;
+	public const ROUTE_SLUG = '/country-block-dynamic-data/';
 
 	/**
-	 * Create a new instance that injects classes
+	 * Instance variable for HubSpot form data.
 	 *
-	 * @param GeolocationInterface $geolocation Inject GeolocationInterface which holds Geolocation data.
+	 * @var IntegrationSyncInterface
 	 */
-	public function __construct(GeolocationInterface $geolocation)
+	protected $integrationSyncDiff;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
+	 */
+	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
 	{
-		$this->geolocation = $geolocation;
+		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -50,17 +55,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . self::ROUTE_NAME;
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::READABLE;
+		return self::ROUTE_SLUG;
 	}
 
 	/**
@@ -75,6 +70,16 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 			'callback' => [$this, 'routeCallback'],
 			'permission_callback' => [$this, 'permissionCallback'],
 		];
+	}
+
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string
+	 */
+	protected function getMethods(): string
+	{
+		return static::READABLE;
 	}
 
 	/**
@@ -94,7 +99,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 		}
 
 		try {
-			return $this->geolocation->getCountriesList();
+			// return $this->geolocation->getCountriesList();
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(

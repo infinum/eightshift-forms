@@ -638,4 +638,26 @@ class Helper
 
 		return '';
 	}
+
+	/**
+	 * Return counries filtered by some key for multiple usages.
+	 *
+	 * @return array<int, array<string, string>
+	 */
+	public static function getCountrySelectList(): array
+	{
+		error_log( print_r( ( self::getDataManifest('country') ), true ) );
+		
+		return array_map(
+			static function ($item) {
+				$label = $item[0] ?? '';
+				$value = $item[1] ?? '';
+				return [
+					'label' => $label,
+					'value' => $value,
+				];
+			},
+			self::getDataManifest('country')
+		);
+	}
 }

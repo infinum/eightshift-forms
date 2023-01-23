@@ -96,13 +96,9 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			// Setup regular inputs.
-			this.utils.CUSTOM_PHONES[formId] = [];
 			this.utils.CUSTOM_DATES[formId] = [];
 			[...inputs].forEach((input) => {
 				switch (input.type) {
-					case 'tel':
-						this.setupPhoneField(input, formId);
-						break;
 					case 'date':
 					case 'datetime-local':
 						this.setupDateField(input, formId);
@@ -407,17 +403,22 @@ export class Form {
 				data.objectTypeId = objectTypeId ?? '';
 			}
 
-			// If checkbox/radio on empty change to empty value.
-			if ((type === 'checkbox' || type === 'radio') && !checked) {
-				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
-			}
-
 			if (data.internalType === 'date' || data.internalType === 'datetime-local') {
 				data.type = data.internalType;
 			}
 
 			switch (type) {
+				case 'checkbox':
+				case 'radio':
+					// If checkbox/radio on empty change to empty value.
+					if (!checked) {
+						// If unchecked value attribute is added use that if not send an empty value.
+						data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+					}
+
+					formData.append(id, JSON.stringify(data));
+
+					break;
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
 					const fileList = this.utils.FILES[formId][id] ?? [];
@@ -431,20 +432,39 @@ export class Form {
 						formData.append(`${id}[0]`, JSON.stringify({}));
 					}
 					break;
+				case 'select-one':
+					const phoneSelect = item.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
+
+					if (phoneSelect) {
+						break;
+						console.log(item.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect));
+
+						console.log(item);
+						// if (item.config.choices.some((item) => item.selected === true && item.value !== '')) {
+						// }
+						break;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
+				case 'text':
+					// Skip alt text input created by date time picker lib.
+					if (item?.previousElementSibling?.classList?.contains('flatpickr-input')) {
+						break;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
 				case 'tel':
-					this.utils.CUSTOM_PHONES[formId].map((inner) => {
-						const countryCode = inner?.getSelectedCountryData()?.dialCode;
-						if (countryCode && value) {
-							data.value = inner.getSelectedCountryData().dialCode.concat(value);
-						}
-					});
+					const prefix = item.previousElementSibling.querySelector('select');
+					const selectedPrefix = prefix.options[prefix.selectedIndex].value
+					data.value = `${selectedPrefix}${item.value}`;
 
 					formData.append(id, JSON.stringify(data));
 
 					break;
 
 				default:
-					// Output/append all fields.
 					formData.append(id, JSON.stringify(data));
 
 					break;
@@ -545,26 +565,6 @@ export class Form {
 		input.addEventListener('keydown', this.utils.onFocusEvent);
 		input.addEventListener('focus', this.utils.onFocusEvent);
 		input.addEventListener('blur', this.utils.onBlurEvent);
-	}
-
-	/**
-	 * Setup Phone field.
-	 * 
-	 * @param {object} phone Input element.
-	 * @param {string} formId Form Id specific to one form.
-	 *
-	 * @public
-	 */
-	setupPhoneField(phone, formId) {
-		import('intl-tel-input').then((intlTelInput) => {
-			const initialCountry = cookies.getCookie('esForms-country');
-
-			const telInput = intlTelInput.default(phone, {
-				initialCountry: initialCountry === 'localhost' || !initialCountry ? '' : initialCountry.toLowerCase(),
-			});
-
-			this.utils.CUSTOM_PHONES[formId].push(telInput);
-		});
 	}
 
 	/**
@@ -752,11 +752,6 @@ export class Form {
 
 			[...inputs].forEach((input) => {
 				switch (input.type) {
-					case 'tel':
-						if (typeof this.utils.CUSTOM_PHONES?.[formId] !== 'undefined') {
-							delete this.utils.CUSTOM_PHONES[formId];
-						}
-						break;
 					case 'date':
 					case 'datetime-local':
 						if (typeof this.utils.CUSTOM_DATES?.[formId] !== 'undefined') {
