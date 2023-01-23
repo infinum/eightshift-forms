@@ -51,6 +51,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
 
 	/**
+	 * Form custom name key.
+	 */
+	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
+
+	/**
 	 * Disable default enqueue key.
 	 */
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY = 'general-disable-default-enqueue';
@@ -134,6 +139,21 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'trackingEventName'))),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
+							]
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Identification', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
+								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
+								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Provide your form with a custom, maybe unique, name that your developer can reference using filters and apply changes only to this form. If you want to provide modifications to multiple forms, you can use the same name on various forms.', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
 							]
 						],
 					],
