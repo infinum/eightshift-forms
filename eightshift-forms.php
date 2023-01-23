@@ -59,4 +59,7 @@ $loader = require __DIR__ . '/vendor/autoload.php';
  */
 if (\class_exists(Main::class)) {
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
+
+	// Require public helper class.
+	require __DIR__ . '/src/Helpers/esForms.php';
 }
