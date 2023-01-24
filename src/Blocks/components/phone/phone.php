@@ -24,6 +24,7 @@ $phoneIsReadOnly = Components::checkAttr('phoneIsReadOnly', $attributes, $manife
 $phoneIsRequired = Components::checkAttr('phoneIsRequired', $attributes, $manifest);
 $phoneTracking = Components::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
+$phoneSelectedValue = Components::checkAttr('phoneSelectedValue', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
@@ -31,6 +32,10 @@ $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attrib
 $phoneClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
+]);
+
+$phoneSelectClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'select'),
 ]);
 
 if ($phoneTracking) {
@@ -60,24 +65,37 @@ if (has_filter($filterName)) {
 }
 
 $phoneSelectAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSelect'];
-Helper::getCountrySelectList();
-$options = '';
-foreach (Helper::getCountrySelectList() as $option) {
-	$options .= '<option value="' . $option['value'] . '" data-code="' . $option['code'] . '"><span></span>' . $option['label'] . '</option>';
+
+
+$list = Helper::getCountrySelectList();
+
+
+$options = [];
+foreach ($list as $option) {
+	$label = $option[0] ?? '';
+	$code = $option[1] ?? '';
+	$value = $option[2] ?? '';
+
+	$options[] = '
+		<option
+			value="' . $value . '"
+			data-custom-properties="' . $code . '"
+			' . selected($code, $phoneSelectedValue, false) . '
+		>' . $label . '</option>';
 }
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 $phone = '
-	<select ' . $phoneSelectAttr . '="' . esc_attr($phoneName) . '">
-		' . $options . '
-	</select>
+	<select
+		class="' . esc_attr($phoneSelectClass) . '"
+		' . $phoneSelectAttr . '='. $phoneSelectedValue .'
+	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
 		name="' . esc_attr($phoneName) . '"
 		id="' . esc_attr($phoneName) . '"
 		type="tel"
 		' . disabled($phoneIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($phoneIsReadOnly, true, false) : readonly($phoneIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
+		' . wp_readonly($phoneIsReadOnly, true, false) . '
 		' . $phoneAttrsOutput . '
 	/>
 	' . $additionalContent . '

@@ -5,7 +5,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { checkAttr, BlockIcon } from '@eightshift/frontend-libs/scripts';
-import { createBlockFromTemplate, getAdditionalContent } from './../../../components/utils';
+import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
 import manifest from './../manifest.json';
 
 export const FormSelectorEditor = ({
@@ -15,6 +15,7 @@ export const FormSelectorEditor = ({
 }) => {
 	const {
 		forms,
+		blockName,
 	} = manifest;
 
 	const formSelectorAllowedBlocks = checkAttr('formSelectorAllowedBlocks', attributes, manifest);
@@ -54,7 +55,7 @@ export const FormSelectorEditor = ({
 				</Placeholder>
 			}
 
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContent('formSelectorBlockAdditionalContent') }} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent('formSelector')}} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}

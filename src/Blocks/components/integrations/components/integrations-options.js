@@ -25,14 +25,16 @@ export const IntegrationsOptions = ({
 	const [formInnerItems, setFormInnerItems] = useState([]);
 
 	useEffect( () => {
-		apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-items-${block}` }).then((response) => {
+		apiFetch({ path:
+			`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsItems}-${block}` }).then((response) => {
 			if (response.code === 200) {
 				setFormItems(response.data);
 			}
 		});
 
 		if (innerIdKey && itemId) {
-			apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-items-inner-${block}/?id=${itemId}` }).then((response) => {
+			apiFetch({ path: 
+				`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}` }).then((response) => {
 				if (response.code === 200) {
 					setFormInnerItems(response.data);
 				}

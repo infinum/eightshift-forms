@@ -37,7 +37,7 @@ domReady(() => {
 			const sync = new Sync({
 				utils: new Utils(),
 				selector: selectorSync,
-				syncRestUrl: esFormsLocalization.syncDirectRestUrl,
+				syncRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.syncDirect}`,
 			});
 
 			sync.init();

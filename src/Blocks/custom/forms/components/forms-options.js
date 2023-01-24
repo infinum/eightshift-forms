@@ -54,12 +54,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	}
 
 	// Is geolocation active.
-	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.useGeolocation) {
+	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.use?.geolocation) {
 		formsUseGeolocation = true;
 
-		if (esFormsLocalization?.geolocationApi) {
-			geolocationApi = esFormsLocalization.geolocationApi;
-		}
+		geolocationApi = `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.countriesGeolocation}`;
 	}
 
 	const formSelectOptions = getFetchWpApi(
@@ -70,7 +68,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	);
 
 	const geoLocationOptions = getFetchWpApi(
-		'geolocation-countries',
+		esFormsLocalization.restRoutes.countriesGeolocation,
 		{
 			processLabel: ({ label }) => label,
 			processId: ({ value }) => value,

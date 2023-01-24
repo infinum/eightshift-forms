@@ -7,5 +7,4 @@
 import './logo.svg';
 import './cover.png';
 
-import './phone/flags.png';
-import './phone/flags@2x.png';
+import './../../src/Blocks/variations/country/flags.png';

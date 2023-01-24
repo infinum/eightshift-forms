@@ -62,11 +62,7 @@ class Blocks extends AbstractBlocks
 		\remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		if (\is_wp_version_compatible('5.8')) {
-			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
-		} else {
-			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
-		}
+		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
 
 		// Blocks string to value filter name constant.
 		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);

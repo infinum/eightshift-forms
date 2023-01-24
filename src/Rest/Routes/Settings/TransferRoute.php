@@ -58,7 +58,7 @@ class TransferRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/settings-transfer';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-transfer/';
 
 	/**
 	 * Get the base url of the route

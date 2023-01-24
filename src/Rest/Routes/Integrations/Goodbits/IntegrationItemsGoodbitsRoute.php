@@ -30,7 +30,7 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-goodbits';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-goodbits/';
 
 	/**
 	 * Get the base url of the route

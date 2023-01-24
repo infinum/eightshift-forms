@@ -28,7 +28,7 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-editor-create/';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR . '-create/';
 
 	/**
 	 * Instance variable for HubSpot form data.

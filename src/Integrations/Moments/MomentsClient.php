@@ -226,6 +226,17 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid phone prefix field.
+		\preg_match_all("/(\w*) (number does not have valid country\/network prefix)/", $msg, $matchesPhonePrefix, \PREG_SET_ORDER, 0);
+
+		if ($matchesPhonePrefix) {
+			$key = $matchesPhonePrefix[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationPhone';
+			}
+		}
+
 		// Validate invalid datetime field.
 		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
@@ -245,6 +256,17 @@ class MomentsClient implements ClientInterface
 
 			if ($key) {
 				$output[$key] = 'validationDate';
+			}
+		}
+
+		// Validate invalid country field.
+		\preg_match_all("/(\w*) (should be one of valid options)/", $msg, $matchesCountry, \PREG_SET_ORDER, 0);
+
+		if ($matchesCountry) {
+			$key = $matchesCountry[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationCountry';
 			}
 		}
 

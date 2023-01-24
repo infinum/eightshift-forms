@@ -31,7 +31,7 @@ export const isOptionDisabled = (key, options) => {
  * @returns {void}
  */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
-	apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-create/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
+	apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorCreate}/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
@@ -53,7 +53,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
  * @returns {void}
  */
 export const syncIntegrationBlocks = (clientId, postId) => {
-	return apiFetch({ path: `${esFormsLocalization.restPrefix}/integration-editor-sync/?id=${postId}` }).then((response) => {
+	return apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorSync}/?id=${postId}` }).then((response) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
@@ -139,21 +139,6 @@ export const resetInnerBlocks = (clientId) => {
 }
 
 /**
- * Get additional content filte values.
- *
- * @param {string} key Key to find in global constant.
- *
- * @returns {string}
- */
-export const getAdditionalContent = (key) => {
-	if (typeof esFormsLocalization !== 'undefined' && (esFormsLocalization?.[key]) !== '') {
-		return esFormsLocalization[key];
-	}
-
-	return '';
-}
-
-/**
  * Get forms fields blocks by checking the current block editor state.
  *
  * @returns {object}
@@ -232,4 +217,19 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
  */
 export const getActiveIntegrationBlockName = (clientId) => {
 	return select('core/editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
+}
+
+/**
+ * Get additional block name content from filter.
+ *
+ * @param {string} blockName Block name.
+ *
+ * @returns {string}
+ */
+export const getAdditionalContentFilterContent = (blockName) => {
+	if (esFormsLocalization?.additionalContent?.[blockName]) {
+		return esFormsLocalization?.additionalContent[blockName];
+	}
+
+	return '';
 }

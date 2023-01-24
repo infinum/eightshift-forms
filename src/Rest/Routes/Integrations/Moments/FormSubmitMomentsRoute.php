@@ -25,6 +25,11 @@ use EightshiftForms\Validation\ValidatorInterface;
 class FormSubmitMomentsRoute extends AbstractFormSubmit
 {
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-moments/';
+
+	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -89,7 +94,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-moments';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

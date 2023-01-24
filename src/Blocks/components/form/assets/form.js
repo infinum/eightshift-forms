@@ -600,16 +600,29 @@ export class Form {
 		import('choices.js').then((Choices) => {
 			const phoneSelect = select.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
 
-			const options = {
-				searchEnabled: false,
+			const choices = new Choices.default(select, {
+				searchEnabled: true,
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-			}
+				searchFields: ['label', 'value', 'customProperties'],
+				callbackOnCreateTemplates: function() {
+					return {
+						choice: (...args) => {
+							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 
-			const choices = new Choices.default(select, options);
+							// Implement changes for phone picker.
+							if (phoneSelect) {
+								const findItem = this.config.choices.find((item) => item.label === element.innerHTML).customProperties;
+								element.dataset.customProperties = findItem;
+								return element;
+							}
 
-			console.log(choices);
+							return element;
+						},
+					}
+				},
+			});
 
 			this.utils.preFillOnInit(choices, 'select-custom');
 

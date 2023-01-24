@@ -28,7 +28,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-editor-sync';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR . '-sync/';
 
 	/**
 	 * Instance variable for HubSpot form data.

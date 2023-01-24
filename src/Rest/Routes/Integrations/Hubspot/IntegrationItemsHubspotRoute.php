@@ -30,7 +30,7 @@ class IntegrationItemsHubspotRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-hubspot';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-hubspot/';
 
 	/**
 	 * Get the base url of the route

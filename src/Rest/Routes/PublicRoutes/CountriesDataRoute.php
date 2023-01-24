@@ -1,47 +1,52 @@
 <?php
 
 /**
- * The class register route for getting Geolocation list of countries endpoint.
+ * The class to provide country select and phone block data.
  *
- * @package EightshiftForms\Rest\Routes\Editor\Options;
+ * @package EightshiftForms\Rest\Routes\PublicRoutes
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Editor\Options;
+namespace EightshiftForms\Rest\Routes\PublicRoutes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Geolocation\GeolocationInterface;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\SettingsHelper;
 use WP_REST_Request;
 
 /**
- * Class GeolocationCountriesRoute
+ * Class CountriesDataRoute
  */
-class GeolocationCountriesRoute extends AbstractBaseRoute
+class CountriesDataRoute extends AbstractBaseRoute
 {
 	/**
-	 * Route name
-	 *
-	 * @var string
+	 * Use general helper trait.
 	 */
-	public const ROUTE_NAME = 'geolocation-countries';
+	use SettingsHelper;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var GeolocationInterface
+	 * Route slug.
 	 */
-	private $geolocation;
+	public const ROUTE_SLUG = '/countries-data/';
 
 	/**
-	 * Create a new instance that injects classes
+	 * Instance variable for HubSpot form data.
 	 *
-	 * @param GeolocationInterface $geolocation Inject GeolocationInterface which holds Geolocation data.
+	 * @var IntegrationSyncInterface
 	 */
-	public function __construct(GeolocationInterface $geolocation)
+	protected $integrationSyncDiff;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
+	 */
+	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
 	{
-		$this->geolocation = $geolocation;
+		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -51,17 +56,7 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . self::ROUTE_NAME;
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::READABLE;
+		return self::ROUTE_SLUG;
 	}
 
 	/**
@@ -79,6 +74,16 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	}
 
 	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string
+	 */
+	protected function getMethods(): string
+	{
+		return static::READABLE;
+	}
+
+	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -89,13 +94,8 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			// return \rest_ensure_response($premission);
-		}
-
 		try {
-			return $this->geolocation->getCountriesList();
+			return Helper::getCountrySelectList();
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(

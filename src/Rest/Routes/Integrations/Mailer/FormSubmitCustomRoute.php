@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 
@@ -21,6 +22,11 @@ use EightshiftForms\Validation\ValidationPatternsInterface;
  */
 class FormSubmitCustomRoute extends AbstractFormSubmit
 {
+	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-custom/';
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -66,7 +72,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-custom';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

@@ -41,7 +41,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/settings-cache';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-cache/';
 
 	/**
 	 * Get the base url of the route

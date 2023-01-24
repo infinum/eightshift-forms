@@ -79,7 +79,6 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 $input = '
 	<input
 		class="' . esc_attr($inputClass) . '"
@@ -87,7 +86,7 @@ $input = '
 		id="' . esc_attr($inputName) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($inputIsReadOnly, true, false) : readonly($inputIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
+		' . wp_readonly($inputIsReadOnly, true, false) . '
 		' . $inputAttrsOutput . '
 	/>
 	' . $additionalContent . '

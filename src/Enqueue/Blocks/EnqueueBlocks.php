@@ -18,11 +18,15 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
+use EightshiftForms\Rest\Routes\PublicRoutes\CountriesDataRoute;
+use EightshiftForms\Rest\Routes\PublicRoutes\GeolocationCountriesRoute;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
 /**
@@ -160,11 +164,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getLocalizations(): array
 	{
-		$restRoutesPrefix = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
 
 		$output = [
 			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
+			'restPrefixProject' => $restRoutesPrefixProject,
 			'restPrefix' => $restRoutesPrefix,
 		];
 
@@ -173,38 +179,40 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
 			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
 			$fieldStyleOptionsFilterName = Filters::getBlockFilterName('field', 'styleOptions');
-			$formSelectorAdditionalContentFilterName = Filters::getBlockFilterName('formSelector', 'additionalContent');
-			$inputAdditionalContentFilterName = Filters::getBlockFilterName('input', 'additionalContent');
-			$textareaAdditionalContentFilterName = Filters::getBlockFilterName('textarea', 'additionalContent');
-			$selectAdditionalContentFilterName = Filters::getBlockFilterName('select', 'additionalContent');
-			$fileAdditionalContentFilterName = Filters::getBlockFilterName('file', 'additionalContent');
-			$checkboxesAdditionalContentFilterName = Filters::getBlockFilterName('checkboxes', 'additionalContent');
-			$radiosAdditionalContentFilterName = Filters::getBlockFilterName('radios', 'additionalContent');
-			$submitAdditionalContentFilterName = Filters::getBlockFilterName('submit', 'additionalContent');
 			$customDataOptionsFilterName = Filters::getBlockFilterName('customData', 'options');
 			$breakpointsFilterName = Filters::getBlocksFilterName('breakpoints');
 
 			$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 			$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
 			$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
-			$output['formSelectorBlockAdditionalContent'] = \apply_filters($formSelectorAdditionalContentFilterName, []);
-			$output['inputBlockAdditionalContent'] = \apply_filters($inputAdditionalContentFilterName, []);
-			$output['textareaBlockAdditionalContent'] = \apply_filters($textareaAdditionalContentFilterName, []);
-			$output['selectBlockAdditionalContent'] = \apply_filters($selectAdditionalContentFilterName, []);
-			$output['fileBlockAdditionalContent'] = \apply_filters($fileAdditionalContentFilterName, []);
-			$output['checkboxesBlockAdditionalContent'] = \apply_filters($checkboxesAdditionalContentFilterName, []);
-			$output['radiosBlockAdditionalContent'] = \apply_filters($radiosAdditionalContentFilterName, []);
-			$output['submitBlockAdditionalContent'] = \apply_filters($submitAdditionalContentFilterName, []);
 			$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
 			$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
-			$restApiUrl = \get_rest_url(\get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
+			$output['additionalContent'] = [
+				'formSelector' => \apply_filters(Filters::getBlockFilterName('formSelector', 'additionalContent'), ''),
+				Components::getComponent('input')['componentName'] => \apply_filters(Filters::getBlockFilterName('input', 'additionalContent'), ''),
+				Components::getComponent('textarea')['componentName'] => \apply_filters(Filters::getBlockFilterName('textarea', 'additionalContent'), ''),
+				Components::getComponent('select')['componentName'] => \apply_filters(Filters::getBlockFilterName('select', 'additionalContent'), ''),
+				Components::getComponent('file')['componentName'] => \apply_filters(Filters::getBlockFilterName('file', 'additionalContent'), ''),
+				Components::getComponent('checkboxes')['componentName'] => \apply_filters(Filters::getBlockFilterName('checkboxes', 'additionalContent'), ''),
+				Components::getComponent('radios')['componentName'] => \apply_filters(Filters::getBlockFilterName('radios', 'additionalContent'), ''),
+				Components::getComponent('submit')['componentName'] => \apply_filters(Filters::getBlockFilterName('submit', 'additionalContent'), ''),
+			];
 
-			// Check if Geolocation data is set and valid.
-			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-			$output['geolocationApi'] = $restApiUrl . GeolocationCountriesRoute::ROUTE_NAME;
+			$output['use'] = [
+				'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+			];
+
+			$output['restRoutes'] = [
+				'countriesData' => CountriesDataRoute::ROUTE_SLUG,
+				'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
+				'integrationsItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
+				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
+				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
+				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
+			];
 
 			$output['wpAdminUrl'] = \get_admin_url();
 		} else {
@@ -214,7 +222,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$hideLoadingStateTimeout = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
 			$fileCustomRemoveLabel = Filters::getBlockFilterName('file', 'previewRemoveLabel');
 
-			$output['formSubmitRestApiUrl'] = \rest_url() . $restRoutesPrefix . '/form-submit';
+			$output['restRoutes'] = [
+				'formSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
+			];
+
 			$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 			$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 			$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);

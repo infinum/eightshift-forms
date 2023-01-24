@@ -30,7 +30,7 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-moments';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-moments/';
 
 	/**
 	 * Get the base url of the route

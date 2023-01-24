@@ -30,7 +30,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-inner-airtable/';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER . '-airtable/';
 
 	/**
 	 * Get the base url of the route

@@ -24,6 +24,11 @@ use EightshiftForms\Validation\ValidatorInterface;
 class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 {
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-active-campaign/';
+
+	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -88,7 +93,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-active-campaign';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

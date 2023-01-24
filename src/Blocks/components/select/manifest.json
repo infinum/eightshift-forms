@@ -54,6 +54,10 @@
 		},
 		"selectDisabledOptions": {
 			"type": "array"
+		},
+		"selectUseSearch": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }

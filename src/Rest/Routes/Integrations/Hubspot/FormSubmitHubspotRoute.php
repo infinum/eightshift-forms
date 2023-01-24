@@ -29,6 +29,12 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitHubspotRoute extends AbstractFormSubmit
 {
+
+	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-hubspot/';
+
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -104,7 +110,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-hubspot';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import {
@@ -10,6 +10,7 @@ import {
 	getUnique
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import { getAdditionalContentFilterContent } from './../../utils';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -31,16 +32,6 @@ export const SelectEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.selectBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.selectBlockAdditionalContent;
-	}
-
 	const select = (
 		<>
 			{selectUseDynamic ? 
@@ -50,7 +41,7 @@ export const SelectEditor = (attributes) => {
 				</div>
 			}
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

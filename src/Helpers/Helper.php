@@ -18,6 +18,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -646,18 +647,6 @@ class Helper
 	 */
 	public static function getCountrySelectList(): array
 	{
-		return array_map(
-			static function ($item) {
-				$label = $item[0] ?? '';
-				$code = $item[1] ?? '';
-				$value = $item[2] ?? '';
-				return [
-					'label' => $label,
-					'value' => $value,
-					'code' => $code,
-				];
-			},
-			self::getDataManifest('country')
-		);
+		return self::getDataManifest('country');
 	}
 }

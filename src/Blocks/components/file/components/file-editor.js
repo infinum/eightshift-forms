@@ -1,26 +1,22 @@
 /* global esFormsLocalization */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import {
 	selector,
 	props,
-	getAttrKey,
-	getUnique
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
+import { getAdditionalContentFilterContent } from './../../utils';
 import manifest from '../manifest.json';
 
 export const FileEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
@@ -29,16 +25,6 @@ export const FileEditor = (attributes) => {
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
 	]);
-
-		// Additional content filter.
-		let additionalContent = '';
-
-		if (
-			typeof esFormsLocalization !== 'undefined' &&
-			(esFormsLocalization?.fileBlockAdditionalContent) !== ''
-		) {
-			additionalContent = esFormsLocalization.fileBlockAdditionalContent;
-		}
 
 	const file = (
 		<>
@@ -49,7 +35,7 @@ export const FileEditor = (attributes) => {
 				disabled
 			/>
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

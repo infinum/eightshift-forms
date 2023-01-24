@@ -69,7 +69,7 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/form-settings-submit';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-submit/';
 
 	/**
 	 * Get the base url of the route

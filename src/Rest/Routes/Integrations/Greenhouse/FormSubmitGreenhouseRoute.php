@@ -25,6 +25,11 @@ use EightshiftForms\Validation\ValidatorInterface;
 class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 {
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-greenhouse/';
+
+	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -89,7 +94,7 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-greenhouse';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

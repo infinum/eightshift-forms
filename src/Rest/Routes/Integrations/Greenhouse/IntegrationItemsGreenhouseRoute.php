@@ -30,7 +30,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-greenhouse';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-greenhouse/';
 
 	/**
 	 * Get the base url of the route

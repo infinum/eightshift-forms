@@ -30,7 +30,7 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/integration-items-mailchimp';
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-mailchimp/';
 
 	/**
 	 * Get the base url of the route

@@ -71,7 +71,6 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 $date = '
 	<input
 		class="' . esc_attr($dateClass) . '"
@@ -79,7 +78,7 @@ $date = '
 		id="' . esc_attr($dateName) . '"
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($dateIsReadOnly, true, false) : readonly($dateIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
+		' . wp_readonly($dateIsReadOnly, true, false) . '
 		' . $dateAttrsOutput . '
 	/>
 	' . $additionalContent . '

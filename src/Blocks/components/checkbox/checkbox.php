@@ -66,7 +66,6 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
 }
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>">
@@ -79,7 +78,7 @@ $isWpFiveNine = is_wp_version_compatible('5.9');
 			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
-			<?php $isWpFiveNine ? wp_readonly($checkboxIsReadOnly) : readonly($checkboxIsReadOnly); // @phpstan-ignore-line ?>
+			<?php wp_readonly($checkboxIsReadOnly); ?>
 		/>
 		<label
 			for="<?php echo esc_attr($checkboxName); ?>"

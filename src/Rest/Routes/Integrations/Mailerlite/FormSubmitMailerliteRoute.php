@@ -25,6 +25,11 @@ use EightshiftForms\Validation\ValidatorInterface;
 class FormSubmitMailerliteRoute extends AbstractFormSubmit
 {
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-mailerlite/';
+
+	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -89,7 +94,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-mailerlite';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

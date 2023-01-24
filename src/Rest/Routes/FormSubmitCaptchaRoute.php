@@ -30,6 +30,11 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	use SettingsHelper;
 
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-captcha/';
+
+	/**
 	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
@@ -53,7 +58,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-captcha';
+		return self::ROUTE_SLUG;
 	}
 
 	/**

@@ -1,44 +1,30 @@
 /* global esFormsLocalization */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
 	checkAttr,
 	props,
-	getUnique,
-	getAttrKey
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
+import { getAdditionalContentFilterContent } from './../../utils';
 import manifest from '../manifest.json';
 
 
 export const CheckboxesEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 	} = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.checkboxesBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.checkboxesBlockAdditionalContent;
-	}
-
 	const checkboxes = (
 		<>
 			{checkboxesContent}
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

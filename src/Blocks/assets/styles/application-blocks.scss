@@ -13,3 +13,6 @@
 
 // Find all blocks and require block_name-style.scss inside it.
 @import './../../custom/*/*-style.scss';
+
+// Find all variations and require block_name-style.scss inside it.
+@import './../../variations/*/*-style.scss';

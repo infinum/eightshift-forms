@@ -76,19 +76,25 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	protected function getLocalizations(): array
 	{
-		$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
 
 		return [
 			'esFormsLocalization' => [
-				'nonce' => \wp_create_nonce('wp_rest'),
 				'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
-				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
-				'migrationRestUrl' => $restRoutesPath . MigrationRoute::ROUTE_SLUG,
-				'transferRestUrl' => $restRoutesPath . TransferRoute::ROUTE_SLUG,
-				'syncDirectRestUrl' => $restRoutesPath . IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
-				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms')
+				'restPrefixProject' => $restRoutesPrefixProject,
+				'restPrefix' => $restRoutesPrefix,
+	
+				'nonce' => \wp_create_nonce('wp_rest'),
+				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+				'restRoutes' => [
+					'formSubmit' => FormSettingsSubmitRoute::ROUTE_SLUG,
+					'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
+					'migration' => MigrationRoute::ROUTE_SLUG,
+					'transform' => TransferRoute::ROUTE_SLUG,
+					'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
+				],
 			]
 		];
 	}

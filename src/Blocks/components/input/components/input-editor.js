@@ -1,27 +1,23 @@
 /* global esFormsLocalization */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
 	props,
-	getUnique,
-	getAttrKey
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import { getAdditionalContentFilterContent } from './../../utils';
 import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
@@ -40,16 +36,6 @@ export const InputEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.inputBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.inputBlockAdditionalContent;
-	}
-
 	const input = (
 		<>
 			<input
@@ -60,7 +46,7 @@ export const InputEditor = (attributes) => {
 				readOnly
 			/>
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

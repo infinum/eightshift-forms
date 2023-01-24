@@ -92,6 +92,41 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const DELIMITER = '---';
 
 	/**
+	 * Dynamic name route prefix for integrations items inner.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_ITEMS_INNER = 'integration-items-inner';
+
+	/**
+	 * Dynamic name route prefix for integrations items.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_ITEMS = 'integration-items';
+
+	/**
+	 * Dynamic name route prefix for form submit.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_FORM_SUBMIT = 'form-submit';
+
+	/**
+	 * Dynamic name route prefix for settings.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_SETTINGS = 'settings';
+
+	/**
+	 * Dynamic name route prefix for integration editor.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_EDITOR = 'integration-editor';
+
+	/**
 	 * Method that returns project Route namespace.
 	 *
 	 * @return string Project namespace EightshiftFormsVendor\for REST route.

@@ -71,7 +71,7 @@ export class Utils {
 		this.formIsAdmin = options.formIsAdmin ?? false;
 
 		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? esFormsLocalization.formSubmitRestApiUrl ?? '';
+		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}` ?? '';
 
 		// Selectors.
 		this.formSelector = options.formSelector ?? `.${componentJsClass}`;
@@ -487,15 +487,15 @@ export class Utils {
 			case 'select':
 				toCheck = element.options[element.options.selectedIndex];
 
-				condition = toCheck.value && toCheck.value.length;
+				condition = toCheck?.value && toCheck?.value.length;
 				break;
 			case 'choices':
 				toCheck = element.querySelector('option');
 
-				condition = toCheck.value && toCheck.value.length;
+				condition = toCheck?.value && toCheck?.value.length;
 				break;
 			default:
-				condition = element.value && element.value.length;
+				condition = element?.value && element?.value.length;
 				break;
 		}
 

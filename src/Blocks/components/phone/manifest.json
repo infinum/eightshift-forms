@@ -56,6 +56,10 @@
 		"phoneAttrs": {
 			"type": "object"
 		},
+		"phoneSelectedValue": {
+			"type": "string",
+			"default": "us"
+		},
 		"phoneDisabledOptions": {
 			"type": "array"
 		}

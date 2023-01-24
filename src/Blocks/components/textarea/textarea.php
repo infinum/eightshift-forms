@@ -57,13 +57,12 @@ if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaName) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($textareaIsReadOnly, true, false) : readonly($textareaIsReadOnly, true, false)) . /* @phpstan-ignore-line */ ' 
+		' . wp_readonly($textareaIsReadOnly, true, false) . '
 		' . $textareaAttrsOutput . '
 	>' . apply_filters('the_content', $textareaValue) . '</textarea>
 	' . $additionalContent . '

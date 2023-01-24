@@ -1,19 +1,17 @@
 /* global esFormsLocalization */
 
-import React, { useMemo, useEffect } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
 	props,
-	getAttrKey,
-	getUnique
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import { getAdditionalContentFilterContent } from './../../utils';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
@@ -34,16 +32,6 @@ export const TextareaEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.textareaBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.textareaBlockAdditionalContent;
-	}
-
 	const textarea = (
 		<>
 			<textarea
@@ -54,7 +42,7 @@ export const TextareaEditor = (attributes) => {
 				{textareaValue}
 			</textarea>
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

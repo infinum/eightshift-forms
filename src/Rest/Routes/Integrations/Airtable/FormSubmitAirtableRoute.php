@@ -24,6 +24,11 @@ use EightshiftForms\Validation\ValidatorInterface;
 class FormSubmitAirtableRoute extends AbstractFormSubmit
 {
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-airtable/';
+
+	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -88,7 +93,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-airtable';
+		return self::ROUTE_SLUG;
 	}
 
 	/**
