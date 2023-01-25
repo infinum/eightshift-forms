@@ -280,16 +280,13 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					switch ($name) {
 						case 'country':
 							$dropdown = [
-								'component' => 'select',
-								'selectFieldLabel' => $label,
-								'selectName' => $name,
-								'selectTracking' => $name,
-								'selectType' => 'select',
-								'selectIsRequired' => (bool) $isRequired,
-								'selectContent' => [],
-								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-									$isRequired ? 'selectIsRequired' : '',
-									'selectContent',
+								'component' => 'country',
+								'countryFieldLabel' => $label,
+								'countryName' => $name,
+								'countryTracking' => $name,
+								'countryIsRequired' => (bool) $isRequired,
+								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
+									$isRequired ? 'countryIsRequired' : '',
 								]),
 							];
 							break;

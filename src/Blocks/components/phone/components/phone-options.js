@@ -1,21 +1,21 @@
 /* global esFormsLocalization */
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import apiFetch from '@wordpress/api-fetch';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { TextControl, PanelBody, Button, Popover } from '@wordpress/components';
 import {
 	icons,
-	getOption,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
 	props,
 	FancyDivider,
 	SimpleVerticalSingleSelect,
-	CustomSlider,
-	CustomSelect
+	CustomSelect,
+	BlockIcon
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -24,10 +24,6 @@ import { isOptionDisabled } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const PhoneOptions = (attributes) => {
-	const {
-		options,
-	} = manifest;
-
 	const {
 		setAttributes,
 		title = __('Phone', 'eightshift-forms'),
@@ -42,14 +38,29 @@ export const PhoneOptions = (attributes) => {
 	const phoneTracking = checkAttr('phoneTracking', attributes, manifest);
 	const phoneValidationPattern = checkAttr('phoneValidationPattern', attributes, manifest);
 	const phoneDisabledOptions = checkAttr('phoneDisabledOptions', attributes, manifest);
+	const phoneDatasetUsed = checkAttr('phoneDatasetUsed', attributes, manifest);
+	const phoneSelectedValue = checkAttr('phoneSelectedValue', attributes, manifest);
+	const phoneUseSearch = checkAttr('phoneUseSearch', attributes, manifest);
+
 
 	const [showValidation, setShowValidation] = useState(false);
+	const [dataSet, setDataSet] = useState([]);
 
 	let phoneValidationPatternOptions = [];
 
 	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
 		phoneValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
+
+	useEffect( () => {
+		apiFetch({ path:
+			`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.countryDataset}` }).then((response) => {
+				if (response.code === 200) {
+				setDataSet(response.data);
+			}
+		});
+
+	}, []);
 
 	return (
 		<>
@@ -103,6 +114,49 @@ export const PhoneOptions = (attributes) => {
 						{__('Disabled', 'eightshift-forms')}
 					</Button>
 				</div>
+
+				<div className='es-h-spaced'>
+					<Button
+						icon={icons.fieldRequired}
+						isPressed={phoneUseSearch}
+						onClick={() => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: !phoneUseSearch })}
+						disabled={isOptionDisabled(getAttrKey('phoneUseSearch', attributes, manifest), phoneDisabledOptions)}
+					>
+						{__('Allow search', 'eightshift-forms')}
+					</Button>
+				</div>
+
+				<FancyDivider label={__('Data', 'eightshift-forms')} />
+
+				<CustomSelect
+					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a preselected value', 'eightshift-forms')} />}
+					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+					value={phoneSelectedValue}
+					options={dataSet?.codes}
+					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectedValue', attributes, manifest)]: value })}
+					isClearable={false}
+					cacheOptions={false}
+					reFetchOnSearch={true}
+					multiple={false}
+					closeMenuOnSelect={true}
+					simpleValue
+				/>
+
+				{dataSet?.items?.length > 1 &&
+					<CustomSelect
+						label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a data source to display', 'eightshift-forms')} />}
+						help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						value={phoneDatasetUsed}
+						options={dataSet?.items}
+						onChange={(value) => setAttributes({ [getAttrKey('phoneDatasetUsed', attributes, manifest)]: value })}
+						isClearable={false}
+						cacheOptions={false}
+						reFetchOnSearch={false}
+						multiple={false}
+						closeMenuOnSelect={true}
+						simpleValue
+					/>
+				}
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />
 

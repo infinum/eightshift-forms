@@ -60,8 +60,16 @@
 			"type": "string",
 			"default": "us"
 		},
+		"phoneDatasetUsed": {
+			"type": "string",
+			"default": "default"
+		},
 		"phoneDisabledOptions": {
 			"type": "array"
+		},
+		"phoneUseSearch": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }

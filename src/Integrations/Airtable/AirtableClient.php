@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Airtable;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
@@ -93,7 +94,7 @@ class AirtableClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -133,7 +134,7 @@ class AirtableClient implements ClientInterface
 					];
 				}
 
-				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 

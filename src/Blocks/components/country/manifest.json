@@ -1,16 +1,15 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
-	"componentName": "select",
-	"title": "Select",
-	"componentClass": "es-select",
+	"componentName": "country",
+	"title": "Country",
+	"componentClass": "es-country",
 	"componentCustomJsClass": "js-es-block-form-custom",
 	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
 	"example": {
 		"attributes": {
-			"selectContent": "",
-			"selectName": "Name",
-			"selectIsDisabled": false,
-			"selectIsRequired": false
+			"countryName": "Name",
+			"countryIsDisabled": false,
+			"countryIsRequired": false
 		}
 	},
 	"components": {
@@ -18,37 +17,38 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"selectContent": {
+		"countryDatasetUsed": {
+			"type": "string",
+			"default": "default"
+		},
+		"countrySelectedValue": {
+			"type": "string",
+			"default": "us"
+		},
+		"countryName": {
 			"type": "string"
 		},
-		"selectName": {
-			"type": "string"
-		},
-		"selectIsDisabled": {
+		"countryIsDisabled": {
 			"type": "boolean",
 			"default": false
 		},
-		"selectIsRequired": {
+		"countryIsRequired": {
 			"type": "boolean",
 			"default": false
 		},
-		"selectTracking": {
+		"countryTracking": {
 			"type": "string"
 		},
-		"selectSingleSubmit": {
-			"type": "boolean",
-			"default": false
-		},
-		"selectMeta": {
+		"countryMeta": {
 			"type": "string"
 		},
-		"selectAttrs": {
+		"countryAttrs": {
 			"type": "object"
 		},
-		"selectDisabledOptions": {
+		"countryDisabledOptions": {
 			"type": "array"
 		},
-		"selectUseSearch": {
+		"countryUseSearch": {
 			"type": "boolean",
 			"default": true
 		}

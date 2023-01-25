@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Moments;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
@@ -92,7 +93,7 @@ class MomentsClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -380,7 +381,7 @@ class MomentsClient implements ClientInterface
 				return '';
 			}
 
-			\set_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME, $token, \HOUR_IN_SECONDS - 60);
+			\set_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME, $token, SettingsCache::CACHE_TRANSIENTS_TIMES['momentsToken']);
 			return $token;
 		}
 

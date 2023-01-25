@@ -26,7 +26,7 @@ export const IntegrationsOptions = ({
 
 	useEffect( () => {
 		apiFetch({ path:
-			`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsItems}-${block}` }).then((response) => {
+			`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItems}-${block}` }).then((response) => {
 			if (response.code === 200) {
 				setFormItems(response.data);
 			}
@@ -34,7 +34,7 @@ export const IntegrationsOptions = ({
 
 		if (innerIdKey && itemId) {
 			apiFetch({ path: 
-				`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}` }).then((response) => {
+				`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}` }).then((response) => {
 				if (response.code === 200) {
 					setFormInnerItems(response.data);
 				}

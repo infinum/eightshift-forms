@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
@@ -157,7 +158,7 @@ class Validator extends AbstractValidation
 		if (!$output) {
 			$output = $this->labels->getValidationLabelsOutput($formId);
 
-			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, 180); // 3 min.
+			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
 		}
 
 		return $output[$key] ?? '';

@@ -20,8 +20,8 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
-use EightshiftForms\Rest\Routes\PublicRoutes\CountriesDataRoute;
-use EightshiftForms\Rest\Routes\PublicRoutes\GeolocationCountriesRoute;
+use EightshiftForms\Rest\Routes\Editor\Options\CountryDatasetRoute;
+use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -205,13 +205,15 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 			];
 
+			$output['countryDataset'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+
 			$output['restRoutes'] = [
-				'countriesData' => CountriesDataRoute::ROUTE_SLUG,
 				'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
 				'integrationsItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
 				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
+				'countryDataset' => CountryDatasetRoute::ROUTE_SLUG,
 			];
 
 			$output['wpAdminUrl'] = \get_admin_url();

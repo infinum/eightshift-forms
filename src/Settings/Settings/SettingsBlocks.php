@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -35,6 +37,16 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'blocks';
 
 	/**
+	 * Filter country block data set key.
+	 */
+	public const FILTER_BLOCK_COUNTRY_DATA_SET_NAME = 'es_forms_block_country_data_set';
+
+	/**
+	 * Transient cache name for block country data set. No need to flush it because it is short live.
+	 */
+	public const CACHE_BLOCK_COUNTRY_DATE_SET_NAME = 'es_block_country_data_set_cache';
+
+	/**
 	 * Country default state key.
 	 */
 	public const SETTINGS_COUNTRY_DEFAULT_KEY = 'country-default-state';
@@ -52,6 +64,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_BLOCK_COUNTRY_DATA_SET_NAME, [$this, 'getCountriesDataSet']);
 	}
 
 	/**
@@ -107,12 +120,114 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 								'textareaFieldLabel' => \__('Countries list', 'eightshift-forms'),
 								'selectFieldHelp' => \__('This is the lis of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
-								'textareaValue' => $countries,
+								'textareaValue' => wp_json_encode($this->getCountriesDataSet(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
 							],
 						],
 					],
 				],
 			],
+		];
+	}
+
+
+	/**
+	 * Get countries data set depending on the provided filter and default set.
+	 *
+	 * @return array
+	 */
+	public function getCountriesDataSet($useFullOutput = true): array
+	{
+		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if (!$output) {
+			$countries = Helper::getCountrySelectList();
+			$output = [
+				'default' => [
+					'label' => __('Default', 'eightshift-forms'),
+					'slug' => 'default',
+					'items' => $countries,
+					'codes' => array_map(
+						static function($item) {
+							return [
+								'label' => $item[0],
+								'value' => $item[1],
+							];
+						},
+						$countries
+					)
+				]
+			];
+
+			$alternative = [];
+			$filterName = Filters::getBlockFilterName('country', 'alternativeDataSet');
+			if (\has_filter($filterName)) {
+				$alternative = \apply_filters($filterName, []);
+			}
+
+			$alternativeOutput = [];
+
+			if ($alternative) {
+				foreach ($alternative as $value) {
+					$label = $value['label'] ?? '';
+					$slug = $value['slug'] ?? '';
+					$removed = $value['remove'] ? array_flip($value['remove']) : [];
+					$changed = $value['change'] ?? [];
+
+					if (!$label || !$slug) {
+						continue;
+					}
+
+					$slug = strtolower(str_replace(' ', '-', $slug));
+
+					$alternativeOutput[$slug] = [
+						'label' => $label,
+						'slug' => $slug,
+						'items' => $countries,
+					];
+
+					foreach ($countries as $key => $item) {
+						$countryCode = $item[1] ? strtolower($item[1]) : '';
+
+						// Remove item from list.
+						if (isset($removed[$countryCode])) {
+							unset($alternativeOutput[$slug]['items'][$key]);
+						}
+
+						// Change label in the list.
+						foreach ($changed as $changedKey => $changedValue) {
+							if ($countryCode === $changedKey) {
+								$alternativeOutput[$slug]['items'][$key][0] = $changedValue;
+							}
+						}
+					}
+				}
+			}
+
+			$output = array_merge(
+				$output,
+				$alternativeOutput,
+			);
+
+			\set_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
+		}
+
+		if ($useFullOutput) {
+			return $output;
+		}
+
+		return [
+			'label' => $output['default']['label'],
+			'slug' => $output['default']['slug'],
+			'items' => array_values(array_map(
+				static function($item) {
+					return [
+						'label' => $item['label'],
+						'value' => $item['slug'],
+					];
+				},
+				$output
+			)),
+			'codes' => $output['default']['codes'],
 		];
 	}
 }

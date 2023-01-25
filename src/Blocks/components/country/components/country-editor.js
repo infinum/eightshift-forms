@@ -8,11 +8,11 @@ import {
 	checkAttr,
 	props,
 } from '@eightshift/frontend-libs/scripts';
-import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { FieldEditor } from '../../field/components/field-editor';
+import { getAdditionalContentFilterContent } from '../../utils';
 import manifest from '../manifest.json';
 
-export const SelectEditor = (attributes) => {
+export const CountryEditor = (attributes) => {
 	const {
 		componentClass,
 		componentName
@@ -23,19 +23,14 @@ export const SelectEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
-	const selectContent = checkAttr('selectContent', attributes, manifest);
-
-
-	const selectClass = classnames([
+	const countryClass = classnames([
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
 	]);
 
-	const select = (
+	const country = (
 		<>
-			<div className={selectClass}>
-				{selectContent}
-			</div>
+			{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
@@ -45,7 +40,7 @@ export const SelectEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: select
+					fieldContent: country
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

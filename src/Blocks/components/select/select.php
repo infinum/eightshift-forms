@@ -25,7 +25,7 @@ $selectContent = Components::checkAttr('selectContent', $attributes, $manifest);
 $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
-$selectUseDynamic = Components::checkAttr('selectUseDynamic', $attributes, $manifest);
+$selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -38,6 +38,10 @@ $selectClass = Components::classnames([
 
 if ($selectTracking) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($selectTracking);
+}
+
+if ($selectUseSearch) {
+	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
 $selectAttrsOutput = '';

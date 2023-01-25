@@ -3,24 +3,26 @@
 /**
  * The class to provide country select and phone block data.
  *
- * @package EightshiftForms\Rest\Routes\PublicRoutes
+ * @package EightshiftForms\Rest\Routes\Editor\Options
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\PublicRoutes;
+namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\SettingsHelper;
 use WP_REST_Request;
 
 /**
- * Class CountriesDataRoute
+ * Class CountryDatasetRoute
  */
-class CountriesDataRoute extends AbstractBaseRoute
+class CountryDatasetRoute extends AbstractBaseRoute
 {
 	/**
 	 * Use general helper trait.
@@ -30,7 +32,7 @@ class CountriesDataRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/countries-data/';
+	public const ROUTE_SLUG = '/country-dataset/';
 
 	/**
 	 * Instance variable for HubSpot form data.
@@ -94,8 +96,19 @@ class CountriesDataRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
+		}
+
 		try {
-			return Helper::getCountrySelectList();
+			$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['blocks']['country']['dataSet'];
+			if (has_filter($filterName)) {
+				return $this->getApiSuccessOutput(
+					'',
+					apply_filters($filterName, false)
+				);
+			}
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\General\General;
 use EightshiftForms\Helpers\Helper;
@@ -102,7 +103,7 @@ class GreenhouseClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -133,7 +134,7 @@ class GreenhouseClient implements ClientInterface
 			if ($items) {
 				$output[$itemId]['fields'] = $items;
 
-				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 

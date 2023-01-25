@@ -20,6 +20,11 @@ class Testfilters implements ServiceInterface {
 	 */
 	public function register(): void
 	{
+		// Turn off if cosntant is not se.
+		if (!\defined('ES_RUN_TEST_FILTERS')) {
+			return;
+		}
+
 		// Block filters.
 		\add_filter('es_forms_block_forms_style_options', [$this, 'getBlockFormsStyleOptions']);
 
@@ -30,11 +35,24 @@ class Testfilters implements ServiceInterface {
 		\add_filter('es_forms_block_form_tracking_event_name', [$this, 'getBlockFormTrackingEventName'], 10, 2);
 		\add_filter('es_forms_block_form_data_type_selector', [$this, 'getFormDataTypeSelector'], 10, 2);
 
-		\add_filter('es_forms_block_form_selector_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']); // Dynamic name based on the block type.
+		\add_filter('es_forms_block_form_selector_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_field_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_input_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_textarea_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_select_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_file_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_checkboxes_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_radios_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_phone_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_country_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_date_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
+		\add_filter('es_forms_block_submit_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
 
 		\add_filter('es_forms_block_field_style_options', [$this, 'getBlockFieldStyleOptions']);
 
 		\add_filter('es_forms_block_file_preview_remove_label', [$this, 'getBlockFilePreviewRemoveLabel']);
+
+		\add_filter('es_forms_block_country_alternative_data_set', [$this, 'getBlockCountryAlternativeDataSet']);
 
 		\add_filter('es_forms_block_custom_data_options', [$this, 'getBlockCustomDataOptions']);
 
@@ -267,6 +285,30 @@ class Testfilters implements ServiceInterface {
 	public function getBlockFilePreviewRemoveLabel(): string
 	{
 		return 'Remove item'; // This can be string or svg.
+	}
+
+	/**
+	 * Get country alternative changes for data set and provide filters.
+	 *
+	 * This filter will only provide alternative options and change the original list.
+	 *
+	 * @return array
+	 */
+	public function getBlockCountryAlternativeDataSet(): array
+	{
+		return [
+			[
+				'label' => 'New List',
+				'slug' => 'new-list',
+				'remove' => [
+					'af',
+					'us',
+				],
+				'change' => [
+					'al' => 'New Albania',
+				],
+			],
+		];
 	}
 
 	/**

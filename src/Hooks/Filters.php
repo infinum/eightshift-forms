@@ -52,6 +52,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\SettingsValidation;
+use EightshiftForms\Validation\Validator;
 
 /**
  * The Filters class, used for defining settings and integrations filter variables.
@@ -86,6 +87,9 @@ class Filters
 			'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m5.25 9.813 3.818 3.937 8.182-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15.579 2.621A9.21 9.21 0 0 0 10 .75a9.25 9.25 0 1 0 8.758 6.266" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'cache' => [
+				Validator::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME,
+			]
 		],
 		SettingsCaptcha::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
@@ -109,6 +113,14 @@ class Filters
 			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="4.138" rx="7.25" ry="2.638" stroke="currentColor" stroke-width="1.5" fill="none"></ellipse><path d="M17.25 8.197c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.18-7.25-2.638m14.5 3.957c0 1.457-3.246 2.639-7.25 2.639s-7.25-1.181-7.25-2.639" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M17.25 3.935v12.177c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.181-7.25-2.638V3.935" stroke="currentColor" stroke-width="1.5" fill="none"></path></svg>',
+			'blocks' => [
+				'country' => [
+					'dataSet' => SettingsBlocks::FILTER_BLOCK_COUNTRY_DATA_SET_NAME,
+				],
+			],
+			'cache' => [
+				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
+			],
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -298,6 +310,10 @@ class Filters
 			],
 			'phone' => [
 				'additionalContent' => 'additional_content',
+			],
+			'country' => [
+				'additionalContent' => 'additional_content',
+				'alternativeDataSet' => 'alternative_data_set',
 			],
 			'date' => [
 				'additionalContent' => 'additional_content',

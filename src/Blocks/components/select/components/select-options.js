@@ -25,7 +25,7 @@ export const SelectOptions = (attributes) => {
 	const selectIsRequired = checkAttr('selectIsRequired', attributes, manifest);
 	const selectTracking = checkAttr('selectTracking', attributes, manifest);
 	const selectDisabledOptions = checkAttr('selectDisabledOptions', attributes, manifest);
-	const selectUseDynamic = checkAttr('selectUseDynamic', attributes, manifest);
+	const selectUseSearch = checkAttr('selectUseSearch', attributes, manifest);
 
 	return (
 		<>
@@ -65,6 +65,17 @@ export const SelectOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('selectIsDisabled', attributes, manifest), selectDisabledOptions)}
 					>
 						{__('Disabled', 'eightshift-forms')}
+					</Button>
+				</div>
+
+				<div className='es-h-spaced'>
+					<Button
+						icon={icons.fieldRequired}
+						isPressed={selectUseSearch}
+						onClick={() => setAttributes({ [getAttrKey('selectUseSearch', attributes, manifest)]: !selectUseSearch })}
+						disabled={isOptionDisabled(getAttrKey('selectUseSearch', attributes, manifest), selectDisabledOptions)}
+					>
+						{__('Allow search', 'eightshift-forms')}
 					</Button>
 				</div>
 

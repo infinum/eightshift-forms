@@ -3,12 +3,12 @@
 /**
  * The class register route for getting Geolocation list of countries endpoint.
  *
- * @package EightshiftForms\Rest\Routes\PublicRoutes;
+ * @package EightshiftForms\Rest\Routes\Editor\Options;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\PublicRoutes;
+namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
@@ -89,6 +89,11 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$premission = $this->checkUserPermission();
+		if ($premission) {
+			return \rest_ensure_response($premission);
+		}
+
 		try {
 			return $this->geolocation->getCountriesList();
 		} catch (UnverifiedRequestException $e) {

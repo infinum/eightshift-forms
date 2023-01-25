@@ -601,7 +601,7 @@ export class Form {
 			const phoneSelect = select.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
 
 			const choices = new Choices.default(select, {
-				searchEnabled: true,
+				searchEnabled: Boolean(select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch)),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,

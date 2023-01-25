@@ -7,4 +7,4 @@
 import './logo.svg';
 import './cover.png';
 
-import './../../src/Blocks/variations/country/flags.png';
+import './../../src/Blocks/components/country/flags.png';
