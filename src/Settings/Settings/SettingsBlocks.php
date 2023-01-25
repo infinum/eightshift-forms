@@ -49,12 +49,17 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Country default state key.
 	 */
-	public const SETTINGS_COUNTRY_DEFAULT_KEY = 'country-default-state';
+	public const SETTINGS_COUNTRY_DEFAULT_KEY = 'block-country-default-state';
 
 	/**
 	 * Country default state value key.
 	 */
 	public const SETTINGS_COUNTRY_DEFAULT_VALUE_KEY = 'us';
+
+	/**
+	 * Phone sync with country block key.
+	 */
+	public const SETTINGS_BLOCK_PHONE_SYNC_KEY = 'block-phone-sync';
 
 	/**
 	 * Register all the hooks
@@ -83,7 +88,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Countries', 'eightshift-forms'),
+						'tabLabel' => \__('Country', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
@@ -121,6 +126,29 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 								'selectFieldHelp' => \__('This is the lis of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
 								'textareaValue' => wp_json_encode($this->getCountriesDataSet(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+								'additionalClass' => 'es-textarea--limit-height',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Phone', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_SYNC_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use phone/country sync', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_BLOCK_PHONE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_SYNC_KEY),
+										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_SYNC_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									]
+								]
 							],
 						],
 					],

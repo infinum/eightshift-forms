@@ -96,7 +96,7 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			// Setup regular inputs.
-			this.utils.CUSTOM_DATES[formId] = [];
+			this.utils.CUSTOM_DATES[formId] = {};
 			[...inputs].forEach((input) => {
 				switch (input.type) {
 					case 'date':
@@ -109,22 +109,24 @@ export class Form {
 			});
 
 			// Setup select inputs.
-			this.utils.CUSTOM_SELECTS[formId] = [];
+			this.utils.CUSTOM_SELECTS[formId] = {};
 			[...selects].forEach((select) => {
 				this.setupSelectField(select, formId);
 			});
 
 			// Setup textarea inputs.
-			this.utils.CUSTOM_TEXTAREAS[formId] = [];
+			this.utils.CUSTOM_TEXTAREAS[formId] = {};
 			[...textareas].forEach((textarea) => {
 				this.setupTextareaField(textarea, formId);
 			});
 
 			// Setup file single inputs.
-			this.utils.CUSTOM_FILES[formId] = [];
+			this.utils.CUSTOM_FILES[formId] = {};
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
+
+			this.phoneSync(element, formId);
 
 			// Triger event that form is fully loaded.
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
@@ -584,7 +586,7 @@ export class Form {
 				altInput: true,
 			});
 
-			this.utils.CUSTOM_DATES[formId].push(datePicker);
+			this.utils.CUSTOM_DATES[formId] = datePicker;
 		});
 	}
 
@@ -626,7 +628,7 @@ export class Form {
 
 			this.utils.preFillOnInit(choices, 'select-custom');
 
-			this.utils.CUSTOM_SELECTS[formId].push(choices);
+			this.utils.CUSTOM_SELECTS[formId] = choices;
 
 			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
@@ -654,7 +656,7 @@ export class Form {
 
 			autosize.default(textarea);
 
-			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
+			this.utils.CUSTOM_TEXTAREAS[formId] = autosize.default;
 		});
 	}
 
@@ -692,7 +694,7 @@ export class Form {
 				}
 			);
 
-			this.utils.CUSTOM_FILES[formId].push(myDropzone);
+			this.utils.CUSTOM_FILES[formId] = myDropzone;
 
 			// On add one file.
 			myDropzone.on("addedfile", (file) => {
@@ -814,6 +816,18 @@ export class Form {
 		});
 	}
 
+	phoneSync(form, formId) {
+		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
+		
+		const selects = this.utils.CUSTOM_SELECTS[formId];
+
+		console.log(selects);
+		console.log(this.utils.CUSTOM_SELECTS);
+		console.log(this.utils.CUSTOM_SELECTS[formId]);
+		console.log(this.utils.CUSTOM_DATES[formId]);
+		console.log(this.utils.CUSTOM_SELECTS.hasOwnProperty(formId));
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -923,6 +937,9 @@ export class Form {
 				},
 				removeEvents: () => {
 					this.removeEvents();
+				},
+				phoneSync: () => {
+					this.phoneSync();
 				},
 			};
 		}

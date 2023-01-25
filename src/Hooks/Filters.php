@@ -281,6 +281,7 @@ class Filters
 				'successRedirectUrl' => 'success_redirect_url',
 				'trackingEventName' => 'tracking_event_name',
 				'dataTypeSelector' => 'data_type_selector',
+				'phoneSync' => 'phone_sync',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',

@@ -16,4 +16,8 @@
 	&--monospace {
 		font-family: monospace;
 	}
+
+	&--limit-height {
+		max-height: 500px;
+	}
 }

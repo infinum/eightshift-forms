@@ -69,6 +69,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'dateOutputFormat' => 'data-output-format',
 		'phoneSelect' => 'data-phone-select',
 		'selectAllowSearch' => 'data-allow-search',
+		'phoneSync' => 'data-phone-sync',
 	];
 
 	/**

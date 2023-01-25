@@ -10,7 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Settings\Settings\SettingsBlocks;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -63,5 +66,48 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Additional props from settings.
 		return \array_merge($attributes, $this->getFormAdditionalPropsFromSettings($postId, $blockName, $prefix));
+	}
+
+		/**
+	 * Return Integration form additional props from settings.
+	 *
+	 * @param string $formId Form ID.
+	 * @param string $type Form Type.
+	 * @param string $prefix Attribute prefix key.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormAdditionalPropsFromSettings(string $formId, string $type, string $prefix): array
+	{
+		$formAdditionalProps = [];
+
+		// Tracking event name.
+		$formAdditionalProps["{$prefix}TrackingEventName"] = '';
+		$filterName = Filters::getBlockFilterName('form', 'trackingEventName');
+		if (has_filter($filterName)) {
+			$formAdditionalProps["{$prefix}TrackingEventName"] = \apply_filters($filterName, $type, $formId);
+		} else {
+			$formAdditionalProps["{$prefix}TrackingEventName"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		}
+
+		// Success redirect url.
+		$formAdditionalProps["{$prefix}SuccessRedirect"] = '';
+		$filterName = Filters::getBlockFilterName('form', 'successRedirectUrl');
+		if (has_filter($filterName)) {
+			$formAdditionalProps["{$prefix}SuccessRedirect"] = \apply_filters($filterName, $type, $formId);
+		} else {
+			$formAdditionalProps["{$prefix}SuccessRedirect"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
+		}
+
+		// Phone sync with country block.
+		$formAdditionalProps["{$prefix}PhoneSync"] = '';
+		$filterName = Filters::getBlockFilterName('form', 'phoneSync');
+		if (has_filter($filterName)) {
+			$formAdditionalProps["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
+		} else {
+			$formAdditionalProps["{$prefix}PhoneSync"] = $this->isCheckboxOptionChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY);
+		}
+
+		return $formAdditionalProps;
 	}
 }

@@ -141,9 +141,9 @@ export class Utils {
 
 		// Internal state.
 		this.FILES = {};
-		this.CUSTOM_TEXTAREAS = [];
-		this.CUSTOM_SELECTS = [];
-		this.CUSTOM_DATES = [];
+		this.CUSTOM_TEXTAREAS = {};
+		this.CUSTOM_SELECTS = {};
+		this.CUSTOM_DATES = {};
 		this.CUSTOM_FILES = [];
 
 		// Set all public methods.

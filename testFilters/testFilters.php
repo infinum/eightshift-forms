@@ -34,6 +34,7 @@ class Testfilters implements ServiceInterface {
 		\add_filter('es_forms_block_form_success_redirect_url', [$this, 'getBlockFormSuccessRedirectUrl'], 10, 2);
 		\add_filter('es_forms_block_form_tracking_event_name', [$this, 'getBlockFormTrackingEventName'], 10, 2);
 		\add_filter('es_forms_block_form_data_type_selector', [$this, 'getFormDataTypeSelector'], 10, 2);
+		\add_filter('es_forms_block_form_phone_sync', [$this, 'getFormPhoneSync'], 10, 2);
 
 		\add_filter('es_forms_block_form_selector_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
 		\add_filter('es_forms_block_field_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
@@ -166,7 +167,11 @@ class Testfilters implements ServiceInterface {
 	 */
 	public function getBlockFormSuccessRedirectUrl(string $formType, string $formId): string
 	{
-		return 'https://infinum.com/';
+		if ($formType === 'hubspot') {
+			return 'https://infinum.com/custom-filter';
+		}
+
+		return '';
 	}
 
 	/**
@@ -181,7 +186,11 @@ class Testfilters implements ServiceInterface {
 	 */
 	public function getBlockFormTrackingEventName(string $formType, string $formId): string
 	{
-		return 'Event-Name';
+		if ($formType === 'hubspot') {
+			return 'Event-Name-Filter';
+		}
+
+		return '';
 	}
 
 	/**
@@ -204,6 +213,25 @@ class Testfilters implements ServiceInterface {
 		}
 		
 		return 'my-new-selector';
+	}
+
+	/**
+	 * Set phone sync settings.
+	 *
+	 * This filter will override global settings for phone sync.
+	 *
+	 * @param string $formType Type of form used like greenhouse, hubspot, etc.
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function getFormPhoneSync(string $formType, string $formId): bool
+	{
+		if ($formType === 'hubspot') {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
