@@ -19,10 +19,12 @@ export const hooks = () => {
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
 		if (name === `${namespace}/${blockName}` && typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
 			esFormsLocalization.additionalBlocks.forEach((element) => {
-				settings.attributes.formAllowedBlocks.default.push(element);
+				settings.attributes.mailerAllowedBlocks.default.push(element);
 			});
 		}
 
 		return settings;
 	});
+
+
 };

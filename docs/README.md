@@ -6,15 +6,7 @@ Eightshift forms plugins is a complete form builder tool that utilizes modern Bl
 
 * [Quick start](../README.md)
 * [Global variables](php/global-variables.md)
-* Filters PHP
-	* [Blocks](php/filters/blocks.md)
-	* [Block](php/filters/block.md)
-	* [General](php/filters/general.md)
-	* [Geolocation](php/filters/geolocation.md)
-	* [Integrations](php/filters/integrations.md)
-	* [Enrichment](php/filters/enrichment.md)
-	* [Troubleshooting](php/filters/troubleshooting.md)
-	* [Validation](php/filters/validation.md)
+* [Filters PHP](./../testFilters/)
 * JavaScript
 	* [Manual Initialization](js/manual.md)
 	* [Events](js/events.md)

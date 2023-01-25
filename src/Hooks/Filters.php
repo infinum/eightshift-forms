@@ -258,48 +258,6 @@ class Filters
 	 * All public filters.
 	 */
 	public const ALL_PUBLIC = [
-		'integrations' => [
-			SettingsMailchimp::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsHubspot::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-				'filesOptions' => 'files_options',
-			],
-			SettingsMailerlite::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsGoodbits::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsClearbit::SETTINGS_TYPE_KEY => [
-				'map' => 'map',
-			],
-			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsAirtable::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-			SettingsMoments::SETTINGS_TYPE_KEY => [
-				'data' => 'data',
-			],
-		],
-		'geolocation' => [
-			'countries' => 'countries_list',
-			'disable' => 'disable',
-			'dbLocation' => 'db_location',
-			'pharLocation' => 'phar_location',
-			'cookieName' => 'cookie_name',
-			'wpRocketAdvancedCache' => 'wp_rocket_advanced_cache',
-		],
-		'blocks' => [
-			'additionalBlocks' => 'additional_blocks',
-			'breakpoints' => 'media_breakpoints',
-		],
 		'block' => [
 			'forms' => [
 				'styleOptions' => 'style_options',
@@ -353,15 +311,57 @@ class Filters
 				'additionalContent' => 'additional_content',
 			],
 		],
-		'validation' => [
-			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
+		'blocks' => [
+			'additionalBlocks' => 'additional_blocks',
+			'breakpoints' => 'media_breakpoints',
 		],
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',
 			'setLocale' => 'set_locale',
 		],
+		'geolocation' => [
+			'countries' => 'countries_list',
+			'disable' => 'disable',
+			'dbLocation' => 'db_location',
+			'pharLocation' => 'phar_location',
+			'cookieName' => 'cookie_name',
+			'wpRocketAdvancedCache' => 'wp_rocket_advanced_cache',
+		],
+		'integrations' => [
+			SettingsMailchimp::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsHubspot::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+				'filesOptions' => 'files_options',
+			],
+			SettingsMailerlite::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsGoodbits::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsClearbit::SETTINGS_TYPE_KEY => [
+				'map' => 'map',
+			],
+			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsAirtable::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+			SettingsMoments::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
+		],
 		'troubleshooting' => [
 			'outputLog' => 'output_log',
+		],
+		'validation' => [
+			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
 		],
 	];
 

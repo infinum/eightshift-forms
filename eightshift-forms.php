@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace EightshiftForms;
 
 use EightshiftForms\Main\Main;
+use EightshiftForms\Testfilters\Testfilters;
 
 /**
  * If this file is called directly, abort.
@@ -62,4 +63,9 @@ if (\class_exists(Main::class)) {
 
 	// Require public helper class.
 	require __DIR__ . '/src/Helpers/esForms.php';
+
+	// Require public helper class.
+	require __DIR__ . '/testFilters/testFilters.php';
+
+	(new Testfilters())->register();
 }
