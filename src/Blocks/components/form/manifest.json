@@ -3,7 +3,7 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
-	"componentJsClass": "js-es-block-form",
+	"componentJsClass": "js-es-block",
 	"componentCacheJsClass": "js-es-cache-delete",
 	"componentMigrationJsClass": "js-es-migration",
 	"componentTransferJsClass": "js-es-transfer",

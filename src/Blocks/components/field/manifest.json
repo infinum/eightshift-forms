@@ -3,7 +3,7 @@
 	"componentName": "field",
 	"title": "Field",
 	"componentClass": "es-field",
-	"componentJsClass": "js-es-block-form-field",
+	"componentJsClass": "js-es-block-field",
 	"example": {
 		"attributes": {
 			"fieldContent": "Content",

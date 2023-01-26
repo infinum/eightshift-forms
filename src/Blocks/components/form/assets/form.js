@@ -96,7 +96,7 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			// Setup regular inputs.
-			this.utils.CUSTOM_DATES[formId] = {};
+			this.utils.CUSTOM_DATES[formId] = [];
 			[...inputs].forEach((input) => {
 				switch (input.type) {
 					case 'date':
@@ -109,24 +109,25 @@ export class Form {
 			});
 
 			// Setup select inputs.
-			this.utils.CUSTOM_SELECTS[formId] = {};
+			this.utils.CUSTOM_SELECTS[formId] = [];
 			[...selects].forEach((select) => {
 				this.setupSelectField(select, formId);
 			});
 
 			// Setup textarea inputs.
-			this.utils.CUSTOM_TEXTAREAS[formId] = {};
+			this.utils.CUSTOM_TEXTAREAS[formId] = [];
 			[...textareas].forEach((textarea) => {
 				this.setupTextareaField(textarea, formId);
 			});
 
 			// Setup file single inputs.
-			this.utils.CUSTOM_FILES[formId] = {};
+			this.utils.CUSTOM_FILES[formId] = [];
 			[...files].forEach((file, index) => {
 				this.setupFileField(file, formId, index, element);
 			});
 
-			this.phoneSync(element, formId);
+			// Setup phone sync.
+			this.setupPhoneSync(element, selects.length, formId);
 
 			// Triger event that form is fully loaded.
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
@@ -586,7 +587,7 @@ export class Form {
 				altInput: true,
 			});
 
-			this.utils.CUSTOM_DATES[formId] = datePicker;
+			this.utils.CUSTOM_DATES[formId].push(datePicker);
 		});
 	}
 
@@ -626,9 +627,13 @@ export class Form {
 				},
 			});
 
+			Object.assign(choices, {
+				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
+			});
+
 			this.utils.preFillOnInit(choices, 'select-custom');
 
-			this.utils.CUSTOM_SELECTS[formId] = choices;
+			this.utils.CUSTOM_SELECTS[formId].push(choices);
 
 			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
@@ -656,7 +661,7 @@ export class Form {
 
 			autosize.default(textarea);
 
-			this.utils.CUSTOM_TEXTAREAS[formId] = autosize.default;
+			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
 		});
 	}
 
@@ -694,7 +699,7 @@ export class Form {
 				}
 			);
 
-			this.utils.CUSTOM_FILES[formId] = myDropzone;
+			this.utils.CUSTOM_FILES[formId].push(myDropzone);
 
 			// On add one file.
 			myDropzone.on("addedfile", (file) => {
@@ -745,6 +750,68 @@ export class Form {
 			button.addEventListener('focus', this.utils.onFocusEvent);
 			button.addEventListener('blur', this.utils.onBlurEvent);
 		});
+	}
+
+	/**
+	 * Sync phone and country fields on change.
+	 *
+	 * @param {object} form Form element
+	 * @param {number} selectsCount Total number of selects.
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns void
+	 */
+	setupPhoneSync(form, selectsCount, formId) {
+		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
+
+		if (!phoneSync) {
+			return;
+		}
+
+		// Set interval because of dynamic import of choices.
+		const interval = setInterval(() => {
+			const selects = this.utils.CUSTOM_SELECTS[formId];
+
+			if (selectsCount >= selects.length) {
+				clearInterval(interval);
+
+				if (selects.length !== 0) {
+					// Find all countries.
+					const country = selects.find((element) => element.esFormsFieldType === 'country');
+
+					// Find all phones.
+					const phones = selects.filter((element) => element.esFormsFieldType === 'phone');
+
+					// Loop all phones.
+					phones.map((element) => {
+						// Set phone init value by checking the contry.
+						element.setChoiceByValue(country.getValue(true));
+
+						// Set contry value on any phone change.
+						// TODO: Remove events.
+						element.passedElement.element.addEventListener(
+							'change',
+							function(event) {
+								country.setChoiceByValue(event.detail.value);
+							},
+							false,
+						);
+					});
+
+					// Set phones value on country change.
+					// TODO: Remove events.
+					country.passedElement.element.addEventListener(
+						'change',
+						function(event) {
+							phones.map((element) => {
+								element.setChoiceByValue(event.detail.value);
+							});
+						},
+						false,
+					);
+				}
+			}
+		}, 50);
 	}
 
 	/**
@@ -814,18 +881,6 @@ export class Form {
 
 			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_EVENTS_CLEAR);
 		});
-	}
-
-	phoneSync(form, formId) {
-		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
-		
-		const selects = this.utils.CUSTOM_SELECTS[formId];
-
-		console.log(selects);
-		console.log(this.utils.CUSTOM_SELECTS);
-		console.log(this.utils.CUSTOM_SELECTS[formId]);
-		console.log(this.utils.CUSTOM_DATES[formId]);
-		console.log(this.utils.CUSTOM_SELECTS.hasOwnProperty(formId));
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -931,6 +986,9 @@ export class Form {
 				},
 				setupFileField: (file, formId, index) => {
 					this.setupFileField(file, formId, index);
+				},
+				setupPhoneSync: (form, selectsCount, formId) => {
+					this.setupPhoneSync(form, selectsCount, formId);
 				},
 				onCustomFileWrapClickEvent: (event) => {
 					this.onCustomFileWrapClickEvent(event);

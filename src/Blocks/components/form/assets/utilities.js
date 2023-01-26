@@ -74,16 +74,18 @@ export class Utils {
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}` ?? '';
 
 		// Selectors.
-		this.formSelector = options.formSelector ?? `.${componentJsClass}`;
+		this.formSelectorPrefix = options.formSelectorPrefix ?? `.${componentJsClass}`;
 
 		// Specific selectors.
-		this.submitSingleSelector =  `${this.formSelector}-single-submit`;
-		this.errorSelector =  `${this.formSelector}-error`;
-		this.loaderSelector =  `${this.formSelector}-loader`;
-		this.globalMsgSelector =  `${this.formSelector}-global-msg`;
-		this.groupSelector =  `${this.formSelector}-group`;
-		this.fieldSelector =  `${this.formSelector}-field`;
-		this.dateSelector =  `${this.fieldSelector}-date`;
+		this.formSelector =  this.formSelectorPrefix;
+		this.submitSingleSelector =  `${this.formSelectorPrefix}-single-submit`;
+		this.errorSelector =  `${this.formSelectorPrefix}-error`;
+		this.loaderSelector =  `${this.formSelectorPrefix}-loader`;
+		this.globalMsgSelector =  `${this.formSelectorPrefix}-global-msg`;
+		this.groupSelector =  `${this.formSelectorPrefix}-group`;
+		this.fieldSelector =  `${this.formSelectorPrefix}-field`;
+		this.dateFieldSelector =  `${this.formSelectorPrefix}-date`;
+		this.countryFieldSelector =  `${this.formSelectorPrefix}-county`;
 		this.inputSelector =  `${this.fieldSelector} input`;
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
 		this.selectSelector =  `${this.fieldSelector} select`;
@@ -534,7 +536,8 @@ export class Utils {
 				globalMsgSelector: this.globalMsgSelector,
 				groupSelector: this.groupSelector,
 				fieldSelector: this.fieldSelector,
-				dateSelector: this.dateSelector,
+				dateFieldSelector: this.dateFieldSelector,
+				countryFieldSelector: this.countryFieldSelector,
 				inputSelector: this.inputSelector,
 				textareaSelector: this.textareaSelector,
 				selectSelector: this.selectSelector,

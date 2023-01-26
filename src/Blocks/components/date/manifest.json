@@ -3,7 +3,6 @@
 	"componentName": "date",
 	"title": "Date",
 	"componentClass": "es-date",
-	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"dateName": "Name",

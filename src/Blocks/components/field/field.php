@@ -31,6 +31,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $attributes['blockJsClass'] ?? '';
+$blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
@@ -90,21 +91,23 @@ if ($fieldType === 'fieldset') {
 	$labelTag = 'legend';
 }
 
+if ($fieldConditionalTags) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $fieldConditionalTags;
+}
+
+if ($fieldName) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $fieldName;
+}
+
+if ($blockName) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
+}
+
 $fieldAttrsOutput = '';
 if ($fieldAttrs) {
 	foreach ($fieldAttrs as $key => $value) {
 		$fieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
-}
-
-if ($fieldConditionalTags) {
-	$conditionalTagsAttrKey = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags'];
-	$fieldAttrsOutput .= " {$conditionalTagsAttrKey}='" . $fieldConditionalTags . "'";
-}
-
-if ($fieldName) {
-	$fieldNameAttrKey = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName'];
-	$fieldAttrsOutput .= " {$fieldNameAttrKey}='" . $fieldName . "'";
 }
 
 // Additional content filter.

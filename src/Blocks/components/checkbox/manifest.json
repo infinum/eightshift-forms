@@ -3,7 +3,7 @@
 	"componentName": "checkbox",
 	"title": "Checkbox",
 	"componentClass": "es-checkbox",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"component": {
 		"error": "error"
 	},

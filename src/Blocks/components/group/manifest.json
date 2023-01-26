@@ -3,7 +3,7 @@
 	"componentName": "group",
 	"title": "Group",
 	"componentClass": "es-group",
-	"componentJsClass": "js-es-block-form-group",
+	"componentJsClass": "js-es-block-group",
 	"attributes": {
 		"groupSaveOneField": {
 			"type": "boolean",

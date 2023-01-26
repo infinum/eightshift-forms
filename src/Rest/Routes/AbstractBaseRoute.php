@@ -54,6 +54,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formPostId' => 'data-form-post-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
+		'fieldType' => 'data-field-type',
 		'trackingEventName' => 'data-tracking-event-name',
 		'tracking' => 'data-tracking',
 		'trackingSelectLabel' => 'data-tracking-select-label',

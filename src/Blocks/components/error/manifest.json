@@ -3,7 +3,7 @@
 	"componentName": "error",
 	"title": "Error",
 	"componentClass": "es-error",
-	"componentJsClass": "js-es-block-form-error",
+	"componentJsClass": "js-es-block-error",
 	"example": {
 		"attributes": {
 			"errorValue": "Value",

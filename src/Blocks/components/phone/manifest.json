@@ -3,7 +3,6 @@
 	"componentName": "phone",
 	"title": "Phone",
 	"componentClass": "es-phone",
-	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"phoneName": "Name",

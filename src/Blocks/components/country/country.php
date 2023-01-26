@@ -16,7 +16,6 @@ $manifest = Components::getManifest(__DIR__);
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $countryName = Components::checkAttr('countryName', $attributes, $manifest);
 $countryIsDisabled = Components::checkAttr('countryIsDisabled', $attributes, $manifest);
@@ -107,7 +106,7 @@ echo Components::render(
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
-			'countryorClass' => $manifest['componentName'] ?? '',
+			'countryClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

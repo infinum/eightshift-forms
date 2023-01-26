@@ -67,21 +67,19 @@ export const CountryOptions = (attributes) => {
 					simpleValue
 				/>
 
-				{dataSet?.items?.length > 1 &&
-					<CustomSelect
-						label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a data source to display', 'eightshift-forms')} />}
-						help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-						value={countryDatasetUsed}
-						options={dataSet?.items}
-						onChange={(value) => setAttributes({ [getAttrKey('countryDatasetUsed', attributes, manifest)]: value })}
-						isClearable={false}
-						cacheOptions={false}
-						reFetchOnSearch={false}
-						multiple={false}
-						closeMenuOnSelect={true}
-						simpleValue
-					/>
-				}
+				<CustomSelect
+					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a data source to display', 'eightshift-forms')} />}
+					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+					value={countryDatasetUsed}
+					options={dataSet?.items}
+					onChange={(value) => setAttributes({ [getAttrKey('countryDatasetUsed', attributes, manifest)]: value })}
+					isClearable={false}
+					cacheOptions={false}
+					reFetchOnSearch={false}
+					multiple={false}
+					closeMenuOnSelect={true}
+					simpleValue
+				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />
 

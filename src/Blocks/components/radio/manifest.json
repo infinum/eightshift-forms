@@ -3,7 +3,7 @@
 	"componentName": "radio",
 	"title": "Radio",
 	"componentClass": "es-radio",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"radioLabel": "Label",

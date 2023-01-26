@@ -3,8 +3,6 @@
 	"componentName": "country",
 	"title": "Country",
 	"componentClass": "es-country",
-	"componentCustomJsClass": "js-es-block-form-custom",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
 	"example": {
 		"attributes": {
 			"countryName": "Name",
