@@ -25,7 +25,6 @@ $phoneIsReadOnly = Components::checkAttr('phoneIsReadOnly', $attributes, $manife
 $phoneIsRequired = Components::checkAttr('phoneIsRequired', $attributes, $manifest);
 $phoneTracking = Components::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
-$phoneSelectedValue = Components::checkAttr('phoneSelectedValue', $attributes, $manifest);
 $phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest);
 $phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
 
@@ -89,7 +88,6 @@ if (has_filter($filterName)) {
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
-		' . $phoneSelectAttr . '=' . $phoneSelectedValue . '
 		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
 	>' . implode('', $options) . '</select>
 	<input
