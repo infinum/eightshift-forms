@@ -89,8 +89,8 @@ if (has_filter($filterName)) {
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
-		' . $phoneSelectAttr . '='. $phoneSelectedValue .'
-		' . $phoneSelectUseSearchAttr . '='. $phoneUseSearch .'
+		' . $phoneSelectAttr . '=' . $phoneSelectedValue . '
+		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"

@@ -189,6 +189,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
+			// phpcs:disable
 			$output['additionalContent'] = [
 				'formSelector' => \apply_filters(Filters::getFilterName(['block', 'formSelector', 'additionalContent']), ''),
 				Components::getComponent('input')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'input', 'additionalContent']), ''),
@@ -199,6 +200,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				Components::getComponent('radios')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'radios', 'additionalContent']), ''),
 				Components::getComponent('submit')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'submit', 'additionalContent']), ''),
 			];
+			// phpcs:enable
 
 			$output['use'] = [
 				'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),

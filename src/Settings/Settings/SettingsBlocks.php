@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
@@ -63,12 +64,28 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	 * Phone keys.
 	 */
 	public const SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY = 'block-phone-override-global-settings';
-	public const SETTINGS_BLOCK_PHONE_FALLBACK_VALUE_KEY = self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY;
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_KEY = 'block-phone-data-set';
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY . '-global';
-	public const SETTINGS_BLOCK_PHONE_SYNC_KEY = 'block-phone-sync';
+	public const SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY = 'block-phone-disable-sync';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY = 'block-phone-use-country-data';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
+
+	/**
+	 * Instance variable of geolocation data.
+	 *
+	 * @var GeolocationInterface
+	 */
+	protected GeolocationInterface $geolocation;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
+	 */
+	public function __construct(GeolocationInterface $geolocation)
+	{
+		$this->geolocation = $geolocation;
+	}
 
 	/**
 	 * Register all the hooks
@@ -174,13 +191,13 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_SYNC_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable phone/country sync on change', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxSettingsChecked(self::SETTINGS_BLOCK_PHONE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_SYNC_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_SYNC_KEY,
+										'checkboxIsChecked' => $this->isCheckboxSettingsChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 										'checkboxAsToggleSize' => 'medium',
@@ -231,7 +248,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 								'textareaFieldLabel' => \__('Countries list', 'eightshift-forms'),
 								'selectFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
-								'textareaValue' => wp_json_encode($this->getCountriesDataSet(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+								'textareaValue' => \wp_json_encode($this->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 								'additionalClass' => 'es-textarea--limit-height',
 							],
 						],
@@ -277,14 +294,22 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			$phoneDatasetValue = $this->getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
+		$cookieName = $this->geolocation->getGeolocationCookieName();
+		$locationCookie = isset($_COOKIE[$cookieName]) ? \strtolower(\sanitize_text_field(\wp_unslash($_COOKIE[$cookieName]))) : '';
+
+		$preselectedValue = self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY;
+		if ($locationCookie !== 'localhost') {
+			$preselectedValue = $locationCookie;
+		}
+
 		return [
 			'country' => [
 				'dataset' => $countryDatasetValue,
-				'preselectedValue' => self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY,
+				'preselectedValue' => $preselectedValue,
 			],
 			'phone' => [
 				'dataset' => $phoneDatasetValue,
-				'preselectedValue' => self::SETTINGS_BLOCK_PHONE_FALLBACK_VALUE_KEY
+				'preselectedValue' => $preselectedValue,
 			],
 			'countries' => $this->getCountriesDataSet(),
 		];
@@ -293,9 +318,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Get countries data set depending on the provided filter and default set.
 	 *
-	 * @return array
+	 * @param bool $useFullOutput Used to output limited output used for seetings and output.
+	 *
+	 * @return array<string, mixed>
 	 */
-	private function getCountriesDataSet($useFullOutput = true): array
+	private function getCountriesDataSet(bool $useFullOutput = true): array
 	{
 		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
@@ -303,11 +330,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			$countries = Helper::getCountrySelectList();
 			$output = [
 				'default' => [
-					'label' => __('Default', 'eightshift-forms'),
+					'label' => \__('Default', 'eightshift-forms'),
 					'slug' => 'default',
 					'items' => $countries,
-					'codes' => array_map(
-						static function($item) {
+					'codes' => \array_map(
+						static function ($item) {
 							return [
 								'label' => $item[0],
 								'value' => $item[1],
@@ -330,15 +357,15 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 				foreach ($alternative as $value) {
 					$label = $value['label'] ?? '';
 					$slug = $value['slug'] ?? '';
-					$removed = isset($value['remove']) ? array_flip($value['remove']) : [];
-					$onlyUse = isset($value['onlyUse']) ? array_flip($value['onlyUse']) : [];
+					$removed = isset($value['remove']) ? \array_flip($value['remove']) : [];
+					$onlyUse = isset($value['onlyUse']) ? \array_flip($value['onlyUse']) : [];
 					$changed = $value['change'] ?? [];
 
 					if (!$label || !$slug) {
 						continue;
 					}
 
-					$slug = strtolower(str_replace(' ', '-', $slug));
+					$slug = \strtolower(\str_replace(' ', '-', $slug));
 
 					$alternativeOutput[$slug] = [
 						'label' => $label,
@@ -346,30 +373,37 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'items' => $countries,
 					];
 
-					foreach ($countries as $key => $item) {
-						$countryCode = $item[1] ? strtolower($item[1]) : '';
+					$itemOutput = [];
+
+					foreach ($alternativeOutput[$slug]['items'] as $key => $item) {
+						$countryCode = $item[1] ? \strtolower($item[1]) : '';
 
 						// Only use.
-						if (!isset($onlyUse[$countryCode])) {
+						if ($onlyUse && !isset($onlyUse[$countryCode])) {
 							continue;
 						}
 
 						// Remove item from list.
 						if (isset($removed[$countryCode])) {
-							unset($alternativeOutput[$slug]['items'][$key]);
+							continue;
 						}
 
-						// Change label in the list.
+						// // Change label in the list.
 						foreach ($changed as $changedKey => $changedValue) {
 							if ($countryCode === $changedKey) {
-								$alternativeOutput[$slug]['items'][$key][0] = $changedValue;
+								$item[0] = $changedValue;
 							}
 						}
+
+						$itemOutput[] = $item;
 					}
+
+
+					$alternativeOutput[$slug]['items'] = $itemOutput;
 				}
 			}
 
-			$output = array_merge(
+			$output = \array_merge(
 				$alternativeOutput,
 				$output,
 			);
@@ -384,8 +418,8 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 		return [
 			'label' => $output['default']['label'],
 			'slug' => $output['default']['slug'],
-			'items' => array_values(array_map(
-				static function($item) {
+			'items' => \array_values(\array_map(
+				static function ($item) {
 					return [
 						'label' => $item['label'],
 						'value' => $item['slug'],
@@ -397,6 +431,14 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 		];
 	}
 
+	/**
+	 * Get one settings country list output
+	 *
+	 * @param string $selectedValue Selected value.
+	 * @param string $list List of countries.
+	 *
+	 * @return array<string, mixed>
+	 */
 	private function getCountrySettingsList(string $selectedValue, string $list): array
 	{
 		return \array_map(

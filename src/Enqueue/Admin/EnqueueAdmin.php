@@ -85,7 +85,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
 				'restPrefixProject' => $restRoutesPrefixProject,
 				'restPrefix' => $restRoutesPrefix,
-	
 				'nonce' => \wp_create_nonce('wp_rest'),
 				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
 				'restRoutes' => [

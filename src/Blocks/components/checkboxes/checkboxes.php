@@ -8,7 +8,6 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 

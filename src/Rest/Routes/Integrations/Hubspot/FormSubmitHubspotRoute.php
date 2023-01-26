@@ -29,7 +29,6 @@ use EightshiftForms\Validation\ValidatorInterface;
  */
 class FormSubmitHubspotRoute extends AbstractFormSubmit
 {
-
 	/**
 	 * Route slug.
 	 */

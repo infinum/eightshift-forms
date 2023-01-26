@@ -65,30 +65,30 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Tracking event name.
-		$formAdditionalProps["{$prefix}TrackingEventName"] = '';
+		$attributes["{$prefix}TrackingEventName"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
-		if (has_filter($filterName)) {
-			$formAdditionalProps["{$prefix}TrackingEventName"] = \apply_filters($filterName, $type, $formId);
+		if (\has_filter($filterName)) {
+			$attributes["{$prefix}TrackingEventName"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$formAdditionalProps["{$prefix}TrackingEventName"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+			$attributes["{$prefix}TrackingEventName"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 		}
 
 		// Success redirect url.
-		$formAdditionalProps["{$prefix}SuccessRedirect"] = '';
+		$attributes["{$prefix}SuccessRedirect"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
-		if (has_filter($filterName)) {
-			$formAdditionalProps["{$prefix}SuccessRedirect"] = \apply_filters($filterName, $type, $formId);
+		if (\has_filter($filterName)) {
+			$attributes["{$prefix}SuccessRedirect"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$formAdditionalProps["{$prefix}SuccessRedirect"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
+			$attributes["{$prefix}SuccessRedirect"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
 		}
 
 		// Phone sync with country block.
-		$formAdditionalProps["{$prefix}PhoneSync"] = '';
+		$attributes["{$prefix}PhoneSync"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);
-		if (has_filter($filterName)) {
-			$formAdditionalProps["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
+		if (\has_filter($filterName)) {
+			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$formAdditionalProps["{$prefix}PhoneSync"] = $this->isCheckboxSettingsChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, $formId);
+			$attributes["{$prefix}PhoneSync"] = !$this->isCheckboxSettingsChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
 		}
 
 		return $attributes;

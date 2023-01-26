@@ -12,7 +12,11 @@ namespace EightshiftForms\Testfilters;
 
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
-class Testfilters implements ServiceInterface {
+/**
+ * Test class used for mocking filters.
+ */
+class Testfilters implements ServiceInterface
+{
 	/**
 	 * Register all the hooks
 	 *
@@ -211,7 +215,7 @@ class Testfilters implements ServiceInterface {
 	 *
 	 * In other words, you can use this filter to change the value of the `formDataTypeSelector` attribute during a form render.
 	 * The attribute is used to output a `data-type-selector` HTML attribute of the form element.
-	 * 
+	 *
 	 * @param string $selector The data type selector to filter.
 	 * @param array<mixed> $attr Form component attributes.
 	 *
@@ -222,7 +226,7 @@ class Testfilters implements ServiceInterface {
 		if (($attr['formType'] ?? '') === 'mailchimp') {
 			return '';
 		}
-		
+
 		return 'my-new-selector';
 	}
 
@@ -340,17 +344,18 @@ class Testfilters implements ServiceInterface {
 				'label' => 'New List',
 				'slug' => 'new-list',
 				'remove' => [
-					'af',
+					'cz',
 					'us',
 				],
 				'change' => [
-					'al' => 'New Albania',
+					'hr' => 'New Albania',
 				],
 				'onlyUse' => [
 					'de',
+					'gb',
 					'hr',
 					'cz',
-				]
+				],
 			],
 			[
 				'label' => 'Cool List',
@@ -359,7 +364,8 @@ class Testfilters implements ServiceInterface {
 					'ba',
 					'jp',
 					'gb',
-				]
+					'fr',
+				],
 			],
 		];
 	}
@@ -440,9 +446,9 @@ class Testfilters implements ServiceInterface {
 	 *
 	 * This filter is used if you want to add your custom or core blocks to the custom form builder.
 	 *
-	 * @return array<string>
+	 * @return array<int, string>
 	 */
-	function getAdditionalBlocks(): array
+	public function getAdditionalBlocks(): array
 	{
 		return [
 			'core/heading',
@@ -487,12 +493,13 @@ class Testfilters implements ServiceInterface {
 	 *
 	 * This filter can be used to change the value of current locale. By default WordPress sets the locale in the admin to `en_US` and with this filter it can be changed to whichever locale is needed (e.g. when using multilanguage plugin).
 	 *
-	 * @param string $locale Default locale from WordPress
+	 * @param string $locale Default locale from WordPress.
+	 *
 	 * @return string
 	 */
 	public function setFormsLocale(string $locale): string
 	{
-		// Get the custom locale (e.g. from WPML plugin)
+		// Get the custom locale (e.g. from WPML plugin).
 		return $locale;
 	}
 
@@ -616,7 +623,7 @@ class Testfilters implements ServiceInterface {
 	 * This filter is used if you want to change form fields data before output. By changing the name of the filter you will target different integrations.
 	 *
 	 * @param array<string, mixed> $data Array of component/attributes data.
-	 * @param string $fromId Form Id.
+	 * @param string $formId Form Id.
 	 *
 	 * @return array<string, mixed>
 	 */

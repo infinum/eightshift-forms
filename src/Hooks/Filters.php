@@ -532,14 +532,14 @@ class Filters
 	 */
 	public static function getFilterName(array $names): string
 	{
-		$names = array_map(
+		$names = \array_map(
 			function ($item) {
 				return Helper::camelToSnakeCase($item);
 			},
 			$names
 		);
 
-		$names = implode('_', $names);
+		$names = \implode('_', $names);
 
 		return self::FILTER_PREFIX . "_{$names}";
 	}

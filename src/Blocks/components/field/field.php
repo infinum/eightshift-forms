@@ -40,13 +40,15 @@ $filterName = Filters::getFilterName(['blocks', 'breakpoints']);
 if (has_filter($filterName)) {
 	$customMediaBreakpoints = apply_filters($filterName, []);
 
-	if (is_array($customMediaBreakpoints) &&
+	if (
+		is_array($customMediaBreakpoints) &&
 		isset($customMediaBreakpoints['mobile']) &&
 		isset($customMediaBreakpoints['tablet']) &&
 		isset($customMediaBreakpoints['desktop']) &&
-		isset($customMediaBreakpoints['large'])) {
+		isset($customMediaBreakpoints['large'])
+	) {
 			Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
-		}
+	}
 }
 
 $unique = Components::getUnique();

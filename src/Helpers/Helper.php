@@ -633,7 +633,7 @@ class Helper
 		$path = \dirname(__FILE__, 3) . "/data/{$type}/{$file}";
 
 		if (\file_exists($path)) {
-			return \file_get_contents($path);
+			return \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		}
 
 		return '';
@@ -642,7 +642,7 @@ class Helper
 	/**
 	 * Return counries filtered by some key for multiple usages.
 	 *
-	 * @return array<int, array<string, string>
+	 * @return array<int, array<int, string>>
 	 */
 	public static function getCountrySelectList(): array
 	{
@@ -660,8 +660,8 @@ class Helper
 	public static function getBlockAdditionalContentViaFilter(string $name, array $attributes): string
 	{
 		$filterName = Filters::getFilterName(['block', $name, 'additionalContent']);
-		if (has_filter($filterName)) {
-			return apply_filters($filterName, $attributes ?? []);
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $attributes);
 		}
 
 		return '';

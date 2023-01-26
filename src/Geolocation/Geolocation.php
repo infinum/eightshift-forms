@@ -41,6 +41,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * @var string
 	 */
 	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
+	public const GEOLOCATION_COOKIE_NAME = 'es_geolocation_cookie_name';
 
 	/**
 	 * Register all the hooks

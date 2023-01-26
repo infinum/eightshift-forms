@@ -81,7 +81,7 @@ trait SettingsHelper
 	public function getSettingsValueWithFallback(string $key, string $optionKey, string $fallback, string $formId): string
 	{
 		$value = $this->getSettingsValue($key, $formId);
-		
+
 		if (!$value) {
 			return $this->getOptionValue($optionKey);
 		}
