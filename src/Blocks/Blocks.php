@@ -76,32 +76,6 @@ class Blocks extends AbstractBlocks
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
-	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
-	 *
-	 * @param array<array<string, mixed>> $categories Array of categories for block types.
-	 * @param WP_Post $post Post being loaded.
-	 *
-	 * @return array<array<string, mixed>> Array of categories for block types.
-	 */
-	public function getCustomCategoryOld(array $categories, WP_Post $post): array
-	{
-		return \array_merge(
-			$categories,
-			[
-				[
-					'slug' => 'eightshift-forms',
-					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
-					'icon' => 'admin-settings',
-				],
-			]
-		);
-	}
-
-	/**
-	 * Create custom category to assign all custom blocks
-	 *
-	 * This category will be shown on all blocks list in "Add Block" button.
-	 *
 	 * @hook block_categories_all Available from WP 5.8.
 	 *
 	 * @param array<array<string, mixed>> $categories Array of categories for block types.

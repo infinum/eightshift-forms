@@ -34,10 +34,10 @@ const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit);
 if (!disableAutoInit) {
 	domReady(() => {
 		const {
-			componentJsPrefixClass,
+			componentJsClass,
 		} = manifest;
 
-		const elements = document.querySelectorAll(`.${componentJsPrefixClass}`);
+		const elements = document.querySelectorAll(`.${componentJsClass}`);
 
 		if (elements.length) {
 			initAll();

@@ -782,33 +782,35 @@ export class Form {
 					// Find all phones.
 					const phones = selects.filter((element) => element.esFormsFieldType === 'phone');
 
-					// Loop all phones.
-					phones.map((element) => {
-						// Set phone init value by checking the contry.
-						element.setChoiceByValue(country.getValue(true));
+					if (country) {
+						// Loop all phones.
+						phones.map((element) => {
+							// Set phone init value by checking the contry.
+							element.setChoiceByValue(country.getValue(true));
+	
+							// Set contry value on any phone change.
+							// TODO: Remove events.
+							element.passedElement.element.addEventListener(
+								'change',
+								function(event) {
+									country.setChoiceByValue(event.detail.value);
+								},
+								false,
+							);
+						});
 
-						// Set contry value on any phone change.
+						// Set phones value on country change.
 						// TODO: Remove events.
-						element.passedElement.element.addEventListener(
+						country.passedElement.element.addEventListener(
 							'change',
 							function(event) {
-								country.setChoiceByValue(event.detail.value);
+								phones.map((element) => {
+									element.setChoiceByValue(event.detail.value);
+								});
 							},
 							false,
 						);
-					});
-
-					// Set phones value on country change.
-					// TODO: Remove events.
-					country.passedElement.element.addEventListener(
-						'change',
-						function(event) {
-							phones.map((element) => {
-								element.setChoiceByValue(event.detail.value);
-							});
-						},
-						false,
-					);
+					}
 				}
 			}
 		}, 50);
