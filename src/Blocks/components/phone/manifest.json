@@ -52,16 +52,11 @@
 		"phoneMeta": {
 			"type": "string"
 		},
+		"phoneFormPostId": {
+			"type": "string"
+		},
 		"phoneAttrs": {
 			"type": "object"
-		},
-		"phoneSelectedValue": {
-			"type": "string",
-			"default": "us"
-		},
-		"phoneDatasetUsed": {
-			"type": "string",
-			"default": "default"
 		},
 		"phoneDisabledOptions": {
 			"type": "array"

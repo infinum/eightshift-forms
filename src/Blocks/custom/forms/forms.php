@@ -122,7 +122,7 @@ if ($formsServerSideRender) {
 
 			if (isset($block['innerBlocks'])) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-					$blockName = Components::kebabToCamelCase(explode('/', $innerBlock['blockName'])[1]);
+					$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
@@ -132,11 +132,17 @@ if ($formsServerSideRender) {
 
 					if (isset($innerBlock['innerBlocks'])) {
 						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
-							$name = Components::kebabToCamelCase(explode('/', $inBlock['blockName'])[1]);
+							$name = Helper::getBlockNameDetails($inBlock['blockName'])['name'];
 
-							if ($name === 'submit') {
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
+							switch ($name) {
+								case 'submit':
+									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
+									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
+									break;
+								case 'phone':
+								case 'country':
+									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
+									break;
 							}
 						}
 					}

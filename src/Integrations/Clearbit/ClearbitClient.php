@@ -287,7 +287,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
-		$filterName = Filters::getIntegrationFilterName(SettingsClearbit::SETTINGS_TYPE_KEY, 'map');
+		$filterName = Filters::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}

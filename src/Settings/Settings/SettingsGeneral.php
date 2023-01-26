@@ -110,7 +110,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'successRedirectUrl'))),
+									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $this->getAppliedFilterOutput(Filters::getFilterName(['block', 'form', 'successRedirectUrl']))),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
@@ -126,7 +126,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Tracking event name', 'eightshift-forms'),
 								// translators: %s will be replaced with th filter output copy.
-								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getBlockFilterName('form', 'trackingEventName'))),
+								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getFilterName(['block', 'form', 'trackingEventName']))),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
 							]

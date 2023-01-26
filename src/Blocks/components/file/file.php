@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -66,11 +67,7 @@ if ($fileAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('file', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('file', $attributes);
 
 $file = '
 	<input

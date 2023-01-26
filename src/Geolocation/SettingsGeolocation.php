@@ -75,7 +75,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 		}
 
 		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
-		$filterName = Filters::getGeolocationFilterName('disable');
+		$filterName = Filters::getFilterName(['geolocation', 'disable']);
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			return false;
 		}

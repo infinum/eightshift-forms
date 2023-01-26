@@ -396,7 +396,7 @@ class HubspotClient implements HubspotClientInterface
 			]),
 		];
 
-		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions');
+		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
 		if (\has_filter($filterName)) {
 			$options = \apply_filters($filterName, []);
 		}

@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 
@@ -33,11 +34,7 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 }, $checkboxesContent);
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('checkboxes', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
 
 $checkboxes = '
 	' . $checkboxesContent . '

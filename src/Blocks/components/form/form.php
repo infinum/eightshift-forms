@@ -36,7 +36,7 @@ $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attribu
 $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = Filters::getBlockFilterName('form', 'dataTypeSelector');
+$formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Exception\MissingFilterInfoException;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
@@ -111,13 +110,10 @@ class Filters
 		],
 		SettingsBlocks::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="10" cy="4.138" rx="7.25" ry="2.638" stroke="currentColor" stroke-width="1.5" fill="none"></ellipse><path d="M17.25 8.197c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.18-7.25-2.638m14.5 3.957c0 1.457-3.246 2.639-7.25 2.639s-7.25-1.181-7.25-2.639" stroke="currentColor" stroke-width="1.5" fill="none"></path><path d="M17.25 3.935v12.177c0 1.457-3.246 2.638-7.25 2.638s-7.25-1.181-7.25-2.638V3.935" stroke="currentColor" stroke-width="1.5" fill="none"></path></svg>',
-			'blocks' => [
-				'country' => [
-					'dataSet' => SettingsBlocks::FILTER_BLOCK_COUNTRY_DATA_SET_NAME,
-				],
-			],
+			'settingsValuesOutput' => SettingsBlocks::FILTER_BLOCK_SETTINGS_VALUE_NAME,
 			'cache' => [
 				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
 			],
@@ -528,159 +524,23 @@ class Filters
 	}
 
 	/**
-	 * Get Integration filter by name and type.
+	 * Get private filter name.
 	 *
-	 * @param string $type Integration type.
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
+	 * @param array<int, string> $names Array of names.
 	 *
 	 * @return string
-	 *
-	 * @example filter_name es_forms_integration_mailchimp_fields_settings
 	 */
-	public static function getIntegrationFilterName(string $type, string $name): string
+	public static function getFilterName(array $names): string
 	{
-		$internalType = Helper::camelToSnakeCase($type);
+		$names = array_map(
+			function ($item) {
+				return Helper::camelToSnakeCase($item);
+			},
+			$names
+		);
 
-		$filter = self::ALL_PUBLIC['integrations'][$internalType][$name] ?? '';
+		$names = implode('_', $names);
 
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('integrations', $type, $name);
-		}
-
-		return self::FILTER_PREFIX . "_integration_{$internalType}_{$filter}";
-	}
-
-	/**
-	 * Get Blocks filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_blocks_additional_blocks
-	 */
-	public static function getBlocksFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['blocks'][$name] ?? '';
-
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('blocks', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_blocks_{$filter}";
-	}
-
-	/**
-	 * Get Blocks filter by name.
-	 *
-	 * @param string $type Block type.
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_block_input_additional_content
-	 */
-	public static function getBlockFilterName(string $type, string $name): string
-	{
-		$internalType = Helper::camelToSnakeCase($type);
-
-		$filter = self::ALL_PUBLIC['block'][$type][$name] ?? '';
-
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('block', $type, $name);
-		}
-
-		return self::FILTER_PREFIX . "_block_{$internalType}_{$filter}";
-	}
-
-	/**
-	 * Get Geolocation filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_geolocation_disable
-	 */
-	public static function getGeolocationFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['geolocation'][$name] ?? '';
-
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('geolocation', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_geolocation_{$filter}";
-	}
-
-	/**
-	 * Get Validation filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_validation_force_mimetype_from_fs
-	 */
-	public static function getValidationFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['validation'][$name] ?? '';
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('validation', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_validation_{$filter}";
-	}
-
-	/**
-	 * Get General filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_general_http_request_timeout
-	 */
-	public static function getGeneralFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['general'][$name] ?? '';
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('general', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_general_{$filter}";
-	}
-
-	/**
-	 * Get Troubleshooting filter by name.
-	 *
-	 * @param string $name Filter name.
-	 *
-	 * @throws MissingFilterInfoException Throws error if filter name is missing or wrong.
-	 *
-	 * @return string
-	 *
-	 * @example filter_name es_forms_troubleshooting_output_log
-	 */
-	public static function getTroubleshootingFilterName(string $name): string
-	{
-		$filter = self::ALL_PUBLIC['troubleshooting'][$name] ?? '';
-		if (!$filter) {
-			throw MissingFilterInfoException::viewException('troubleshooting', '', $name);
-		}
-
-		return self::FILTER_PREFIX . "_troubleshooting_{$filter}";
+		return self::FILTER_PREFIX . "_{$names}";
 	}
 }

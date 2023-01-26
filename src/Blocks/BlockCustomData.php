@@ -46,7 +46,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 	 */
 	public function getCustomDataComponent(array $attributes): string
 	{
-		$filterName = Filters::getBlockFilterName('customData', 'data');
+		$filterName = Filters::getFilterName(['block', 'customData', 'data']);
 		if (!\has_filter($filterName)) {
 			return '';
 		}

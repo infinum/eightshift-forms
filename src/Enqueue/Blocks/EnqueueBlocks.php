@@ -20,7 +20,6 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
-use EightshiftForms\Rest\Routes\Editor\Options\CountryDatasetRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
@@ -176,11 +175,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Admin part.
 		if (\is_admin()) {
-			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
-			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
-			$fieldStyleOptionsFilterName = Filters::getBlockFilterName('field', 'styleOptions');
-			$customDataOptionsFilterName = Filters::getBlockFilterName('customData', 'options');
-			$breakpointsFilterName = Filters::getBlocksFilterName('breakpoints');
+			$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
+			$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
+			$fieldStyleOptionsFilterName = Filters::getFilterName(['block', 'field', 'styleOptions']);
+			$customDataOptionsFilterName = Filters::getFilterName(['block', 'customData', 'options']);
+			$breakpointsFilterName = Filters::getFilterName(['blocks', 'breakpoints']);
 
 			$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 			$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
@@ -191,14 +190,14 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
 			$output['additionalContent'] = [
-				'formSelector' => \apply_filters(Filters::getBlockFilterName('formSelector', 'additionalContent'), ''),
-				Components::getComponent('input')['componentName'] => \apply_filters(Filters::getBlockFilterName('input', 'additionalContent'), ''),
-				Components::getComponent('textarea')['componentName'] => \apply_filters(Filters::getBlockFilterName('textarea', 'additionalContent'), ''),
-				Components::getComponent('select')['componentName'] => \apply_filters(Filters::getBlockFilterName('select', 'additionalContent'), ''),
-				Components::getComponent('file')['componentName'] => \apply_filters(Filters::getBlockFilterName('file', 'additionalContent'), ''),
-				Components::getComponent('checkboxes')['componentName'] => \apply_filters(Filters::getBlockFilterName('checkboxes', 'additionalContent'), ''),
-				Components::getComponent('radios')['componentName'] => \apply_filters(Filters::getBlockFilterName('radios', 'additionalContent'), ''),
-				Components::getComponent('submit')['componentName'] => \apply_filters(Filters::getBlockFilterName('submit', 'additionalContent'), ''),
+				'formSelector' => \apply_filters(Filters::getFilterName(['block', 'formSelector', 'additionalContent']), ''),
+				Components::getComponent('input')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'input', 'additionalContent']), ''),
+				Components::getComponent('textarea')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'textarea', 'additionalContent']), ''),
+				Components::getComponent('select')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'select', 'additionalContent']), ''),
+				Components::getComponent('file')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'file', 'additionalContent']), ''),
+				Components::getComponent('checkboxes')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'checkboxes', 'additionalContent']), ''),
+				Components::getComponent('radios')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'radios', 'additionalContent']), ''),
+				Components::getComponent('submit')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'submit', 'additionalContent']), ''),
 			];
 
 			$output['use'] = [
@@ -213,16 +212,15 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
-				'countryDataset' => CountryDatasetRoute::ROUTE_SLUG,
 			];
 
 			$output['wpAdminUrl'] = \get_admin_url();
 		} else {
 			// Frontend part.
-			$hideGlobalMessageTimeout = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
-			$redirectionTimeout = Filters::getBlockFilterName('form', 'redirectionTimeout');
-			$hideLoadingStateTimeout = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
-			$fileCustomRemoveLabel = Filters::getBlockFilterName('file', 'previewRemoveLabel');
+			$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+			$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
+			$hideLoadingStateTimeout = Filters::getFilterName(['block', 'form', 'hideLoadingStateTimeout']);
+			$fileCustomRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 			$output['restRoutes'] = [
 				'formSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,

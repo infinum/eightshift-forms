@@ -22,9 +22,8 @@ $countryIsDisabled = Components::checkAttr('countryIsDisabled', $attributes, $ma
 $countryIsRequired = Components::checkAttr('countryIsRequired', $attributes, $manifest);
 $countryTracking = Components::checkAttr('countryTracking', $attributes, $manifest);
 $countryAttrs = Components::checkAttr('countryAttrs', $attributes, $manifest);
-$countryDatasetUsed = Components::checkAttr('countryDatasetUsed', $attributes, $manifest);
-$countrySelectedValue = Components::checkAttr('countrySelectedValue', $attributes, $manifest);
 $countryUseSearch = Components::checkAttr('countryUseSearch', $attributes, $manifest);
+$countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
@@ -51,29 +50,28 @@ if ($countryAttrs) {
 
 // Additional content filter.
 $additionalContent = '';
-$filterName = Filters::getBlockFilterName('country', 'additionalContent');
+$filterName = Filters::getFilterName(['block', 'country', 'additionalContent']);
 if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['blocks']['country']['dataSet'];
-if (has_filter($filterName)) {
-	$dataSet = apply_filters($filterName, true);
+$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['settingsValuesOutput'];
 
-	if (isset($dataSet[$countryDatasetUsed])) {
-		foreach ($dataSet[$countryDatasetUsed]['items'] as $option) {
-			$label = $option[0] ?? '';
-			$code = $option[1] ?? '';
-			$value = $option[2] ?? '';
-	
-			$options[] = '
-				<option
-					value="' . $value . '"
-					data-custom-properties="' . $code . '"
-					' . selected($code, $countrySelectedValue, false) . '
-				>' . $label . '</option>';
-		}
+if (has_filter($filterName)) {
+	$settings = apply_filters($filterName, $countryFormPostId);
+
+	foreach ($settings['countries'][$settings['country']['dataset']]['items'] as $option) {
+		$label = $option[0] ?? '';
+		$code = $option[1] ?? '';
+		$value = $option[2] ?? '';
+
+		$options[] = '
+			<option
+				value="' . $value . '"
+				data-custom-properties="' . $code . '"
+				' . selected($code, $settings['country']['preselectedValue'], false) . '
+			>' . $label . '</option>';
 	}
 }
 

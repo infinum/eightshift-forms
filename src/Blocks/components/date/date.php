@@ -66,7 +66,7 @@ if ($dateAttrs) {
 
 // Additional content filter.
 $additionalContent = '';
-$filterName = Filters::getBlockFilterName('date', 'additionalContent');
+$filterName = Filters::getFilterName(['block', 'date', 'additionalContent']);
 if (has_filter($filterName)) {
 	$additionalContent = apply_filters($filterName, $attributes ?? []);
 }

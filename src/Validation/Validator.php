@@ -472,7 +472,7 @@ class Validator extends AbstractValidation
 		$nestedKeys = \array_flip(AbstractFormBuilder::LAYOUT_KEYS);
 
 		foreach ($blocks as $block) {
-			$name = $block['component'];
+			$name = $block['component'] ?? '';
 
 			// If nested key exists do a recursive loop.
 			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {

@@ -52,38 +52,21 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	public function updateFormAttributesBeforeOutput(array $attributes): array
 	{
 		$prefix = $attributes['prefix'] ?? '';
-		$blockName = $attributes['blockName'] ?? '';
-		$postId = $attributes["{$prefix}PostId"] ?? '';
+		$type = $attributes['blockName'] ?? '';
+		$formId = $attributes["{$prefix}PostId"] ?? '';
 
-		if (!$prefix || !$blockName || !$postId) {
+		if (!$prefix || !$type || !$formId) {
 			return $attributes;
 		}
 
 		// Change form type depending if it is mailer empty.
-		if ($blockName === SettingsMailer::SETTINGS_TYPE_KEY && isset($attributes["{$prefix}Action"])) {
+		if ($type === SettingsMailer::SETTINGS_TYPE_KEY && isset($attributes["{$prefix}Action"])) {
 			$attributes["{$prefix}Type"] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
 		}
 
-		// Additional props from settings.
-		return \array_merge($attributes, $this->getFormAdditionalPropsFromSettings($postId, $blockName, $prefix));
-	}
-
-		/**
-	 * Return Integration form additional props from settings.
-	 *
-	 * @param string $formId Form ID.
-	 * @param string $type Form Type.
-	 * @param string $prefix Attribute prefix key.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function getFormAdditionalPropsFromSettings(string $formId, string $type, string $prefix): array
-	{
-		$formAdditionalProps = [];
-
 		// Tracking event name.
 		$formAdditionalProps["{$prefix}TrackingEventName"] = '';
-		$filterName = Filters::getBlockFilterName('form', 'trackingEventName');
+		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
 		if (has_filter($filterName)) {
 			$formAdditionalProps["{$prefix}TrackingEventName"] = \apply_filters($filterName, $type, $formId);
 		} else {
@@ -92,7 +75,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Success redirect url.
 		$formAdditionalProps["{$prefix}SuccessRedirect"] = '';
-		$filterName = Filters::getBlockFilterName('form', 'successRedirectUrl');
+		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (has_filter($filterName)) {
 			$formAdditionalProps["{$prefix}SuccessRedirect"] = \apply_filters($filterName, $type, $formId);
 		} else {
@@ -101,13 +84,13 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Phone sync with country block.
 		$formAdditionalProps["{$prefix}PhoneSync"] = '';
-		$filterName = Filters::getBlockFilterName('form', 'phoneSync');
+		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);
 		if (has_filter($filterName)) {
 			$formAdditionalProps["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$formAdditionalProps["{$prefix}PhoneSync"] = $this->isCheckboxOptionChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY);
+			$formAdditionalProps["{$prefix}PhoneSync"] = $this->isCheckboxSettingsChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_SYNC_KEY, $formId);
 		}
 
-		return $formAdditionalProps;
+		return $attributes;
 	}
 }

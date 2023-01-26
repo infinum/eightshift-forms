@@ -29,56 +29,13 @@ export const CountryOptions = (attributes) => {
 	const countryIsRequired = checkAttr('countryIsRequired', attributes, manifest);
 	const countryTracking = checkAttr('countryTracking', attributes, manifest);
 	const countryDisabledOptions = checkAttr('countryDisabledOptions', attributes, manifest);
-	const countryDatasetUsed = checkAttr('countryDatasetUsed', attributes, manifest);
-	const countrySelectedValue = checkAttr('countrySelectedValue', attributes, manifest);
 	const countryUseSearch = checkAttr('countryUseSearch', attributes, manifest);
-
-	const [dataSet, setDataSet] = useState([]);
-
-	useEffect( () => {
-		apiFetch({ path:
-			`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.countryDataset}` }).then((response) => {
-				if (response.code === 200) {
-				setDataSet(response.data);
-			}
-		});
-	}, []);
 
 	return (
 		<>
 			<PanelBody title={__('Country', 'eightshift-forms')}>
 				<FieldOptions
 					{...props('field', attributes)}
-				/>
-
-				<FancyDivider label={__('Data', 'eightshift-forms')} />
-
-				<CustomSelect
-					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a preselected value', 'eightshift-forms')} />}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={countrySelectedValue}
-					options={dataSet?.codes}
-					onChange={(value) => setAttributes({ [getAttrKey('countrySelectedValue', attributes, manifest)]: value })}
-					isClearable={false}
-					cacheOptions={false}
-					reFetchOnSearch={true}
-					multiple={false}
-					closeMenuOnSelect={true}
-					simpleValue
-				/>
-
-				<CustomSelect
-					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a data source to display', 'eightshift-forms')} />}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={countryDatasetUsed}
-					options={dataSet?.items}
-					onChange={(value) => setAttributes({ [getAttrKey('countryDatasetUsed', attributes, manifest)]: value })}
-					isClearable={false}
-					cacheOptions={false}
-					reFetchOnSearch={false}
-					multiple={false}
-					closeMenuOnSelect={true}
-					simpleValue
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />

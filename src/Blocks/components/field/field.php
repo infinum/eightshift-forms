@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -35,16 +36,17 @@ $blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
-$customMediaBreakpoints = apply_filters(Filters::getBlocksFilterName('breakpoints'), []);
-if (
-	has_filter(Filters::getBlocksFilterName('breakpoints')) &&
-	is_array($customMediaBreakpoints) &&
-	isset($customMediaBreakpoints['mobile']) &&
-	isset($customMediaBreakpoints['tablet']) &&
-	isset($customMediaBreakpoints['desktop']) &&
-	isset($customMediaBreakpoints['large'])
-) {
-	Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+$filterName = Filters::getFilterName(['blocks', 'breakpoints']);
+if (has_filter($filterName)) {
+	$customMediaBreakpoints = apply_filters($filterName, []);
+
+	if (is_array($customMediaBreakpoints) &&
+		isset($customMediaBreakpoints['mobile']) &&
+		isset($customMediaBreakpoints['tablet']) &&
+		isset($customMediaBreakpoints['desktop']) &&
+		isset($customMediaBreakpoints['large'])) {
+			Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+		}
 }
 
 $unique = Components::getUnique();
@@ -111,12 +113,7 @@ if ($fieldAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('field', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
-
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
 
 <<?php echo esc_attr($fieldTag); ?>

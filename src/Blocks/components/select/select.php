@@ -8,7 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
@@ -52,12 +51,7 @@ if ($selectAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('select', 'additionalContent');
-if (has_filter($filterName)) {
-	$attributes['selectContent'] = Helper::convertInnerBlocksToArray($attributes['selectContent'] ?? '', $componentName);
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
 $select = '
 	<select

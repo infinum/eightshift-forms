@@ -58,7 +58,7 @@ trait SettingsHelper
 	/**
 	 * Get settings value.
 	 *
-	 * @param string $key Providing string to append to.
+	 * @param string $key Key to find in db settings.
 	 * @param string $formId Form Id.
 	 *
 	 * @return string
@@ -66,6 +66,27 @@ trait SettingsHelper
 	public function getSettingsValue(string $key, string $formId): string
 	{
 		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+	}
+
+	/**
+	 * Get settings value with fallback.
+	 *
+	 * @param string $key Key to find in db settings.
+	 * @param string $optionKey Key to find in db options.
+	 * @param string $fallback Fallback value.
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public function getSettingsValueWithFallback(string $key, string $optionKey, string $fallback, string $formId): string
+	{
+		$value = $this->getSettingsValue($key, $formId);
+		
+		if (!$value) {
+			return $this->getOptionValue($optionKey);
+		}
+
+		return $value;
 	}
 
 	/**
@@ -96,6 +117,25 @@ trait SettingsHelper
 	public function getOptionValue(string $key): string
 	{
 		return (string) \get_option($this->getSettingsName($key), false);
+	}
+
+	/**
+	 * Get option value with fallback.
+	 *
+	 * @param string $key Key to find in db settings.
+	 * @param string $fallback Fallback value.
+	 *
+	 * @return string
+	 */
+	public function getOptionValueWithFallback(string $key, string $fallback): string
+	{
+		$value = $this->getOptionValue($key);
+
+		if (!$value) {
+			return $fallback;
+		}
+
+		return $value;
 	}
 
 	/**
@@ -208,7 +248,7 @@ trait SettingsHelper
 	public function getLocale(): string
 	{
 		$locale = \get_locale();
-		$filterName = Filters::getGeneralFilterName('setLocale');
+		$filterName = Filters::getFilterName(['general', 'setLocale']);
 
 		if (\has_filter($filterName)) {
 			$locale = \apply_filters($filterName, $locale);

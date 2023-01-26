@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -25,8 +26,8 @@ $phoneIsRequired = Components::checkAttr('phoneIsRequired', $attributes, $manife
 $phoneTracking = Components::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
 $phoneSelectedValue = Components::checkAttr('phoneSelectedValue', $attributes, $manifest);
-$phoneDatasetUsed = Components::checkAttr('phoneDatasetUsed', $attributes, $manifest);
 $phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest);
+$phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
@@ -60,33 +61,28 @@ if ($phoneAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('phone', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
 
 $phoneSelectAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSelect'];
 $phoneSelectUseSearchAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch'];
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['blocks']['country']['dataSet'];
-if (has_filter($filterName)) {
-	$dataSet = apply_filters($filterName, true);
+$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['settingsValuesOutput'];
 
-	if (isset($dataSet[$phoneDatasetUsed])) {
-		foreach ($dataSet[$phoneDatasetUsed]['items'] as $option) {
-			$label = $option[0] ?? '';
-			$code = $option[1] ?? '';
-			$value = $option[2] ?? '';
-	
-			$options[] = '
-				<option
-					value="' . $value . '"
-					data-custom-properties="' . $code . '"
-					' . selected($code, $phoneSelectedValue, false) . '
-				>' . $label . '</option>';
-		}
+if (has_filter($filterName)) {
+	$settings = apply_filters($filterName, $phoneFormPostId);
+
+	foreach ($settings['countries'][$settings['phone']['dataset']]['items'] as $option) {
+		$label = $option[0] ?? '';
+		$code = $option[1] ?? '';
+		$value = $option[2] ?? '';
+
+		$options[] = '
+			<option
+				value="' . $value . '"
+				data-custom-properties="' . $code . '"
+				' . selected($code, $settings['phone']['preselectedValue'], false) . '
+			>' . $label . '</option>';
 	}
 }
 

@@ -20,79 +20,90 @@ class Testfilters implements ServiceInterface {
 	 */
 	public function register(): void
 	{
+		$filters = [
+			'es_forms_block_forms_style_options' => ['getBlockFormsStyleOptions'],
+			'es_forms_block_form_redirection_timeout' => ['getBlockFormRedirectionTimeout'],
+			'es_forms_block_form_hide_global_message_timeout' => ['getBlockFormHideGlobalMessageTimeout'],
+			'es_forms_block_form_hide_loading_state_timeout' => ['getBlockFormHideLoadingStateTimeout'],
+			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
+			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
+			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
+			'es_forms_block_form_phone_sync' => ['getFormPhoneSync', 2],
+
+			'es_forms_block_form_selector_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_field_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_input_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_textarea_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_select_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_file_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_checkboxes_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_radios_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_phone_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_country_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_date_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_submit_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+
+			'es_forms_block_field_style_options' => ['getBlockFieldStyleOptions'],
+
+			'es_forms_block_file_preview_remove_label' => ['getBlockFilePreviewRemoveLabel'],
+
+			'es_forms_block_country_alternative_data_set' => ['getBlockCountryAlternativeDataSet'],
+
+			'es_forms_block_custom_data_options' => ['getBlockCustomDataOptions'],
+
+			'es_forms_block_submit_component' => ['getBlockSubmitComponent'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// Blocks filters.
+			'es_forms_blocks_additional_blocks' => ['getAdditionalBlocks'],
+
+			'es_forms_media_breakpoints' => ['getMediaBreakpoints'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// General filters.
+			'es_forms_general_http_request_timeout' => ['getHttpRequestTimeout'],
+
+			'es_forms_general_set_locale' => ['setFormsLocale'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// Geolocation filters.
+			'es_forms_geolocation_countries_list' => ['getGeolocationCountriesList'],
+			'es_forms_geolocation_disable' => ['getGeolocationDisable'],
+			'es_forms_geolocation_db_location' => ['getGeolocationDbLocation'],
+			'es_forms_geolocation_phar_location' => ['getGeolocationPharLocation'],
+			'es_forms_geolocation_cookie_name' => ['getGeolocationCookieName'],
+			'es_forms_geolocation_wp_rocket_advanced_cache' => ['getGeolocationWpRocketAdvancedCache'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// Integrations filters.
+			'es_forms_integration_greenhouse_data' => ['getIntegrationData', 2], // Dynamic name based on the integration type.
+			'es_forms_integration_hubspot_files_options' => ['getFileUploadCustomOptions'],
+			'es_forms_integration_clearbit_map' => ['getClearbitFieldsMap'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// Troubleshooting filters.
+			'es_forms_troubleshooting_output_log' => ['getTroubleshootingOutputLog'],
+
+			// ---------------------------------------------------------------------------------------------------------
+			// Validation filters.
+			'es_forms_validation_force_mimetype_from_fs' => ['forceMimetypeFs'],
+		];
+
 		// Turn off if cosntant is not se.
-		if (!\defined('ES_RUN_TEST_FILTERS')) {
-			return;
+		if (\defined('ES_RUN_TEST_FILTERS')) {
+			if (\ES_RUN_TEST_FILTERS === 'all') {
+				// Loop all filters.
+				foreach ($filters as $key => $value) {
+					\add_filter($key, [$this, $value[0]], 10, $value[1] ?? 1);
+				}
+			} else {
+				$filter = $filters[\ES_RUN_TEST_FILTERS] ?? '';
+
+				if ($filter) {
+					\add_filter(\ES_RUN_TEST_FILTERS, [$this, $filters[\ES_RUN_TEST_FILTERS][0]], 10, $filters[\ES_RUN_TEST_FILTERS][1] ?? 1);
+				}
+			}
 		}
-
-		// Block filters.
-		\add_filter('es_forms_block_forms_style_options', [$this, 'getBlockFormsStyleOptions']);
-
-		\add_filter('es_forms_block_form_redirection_timeout', [$this, 'getBlockFormRedirectionTimeout']);
-		\add_filter('es_forms_block_form_hide_global_message_timeout', [$this, 'getBlockFormHideGlobalMessageTimeout']);
-		\add_filter('es_forms_block_form_hide_loading_state_timeout', [$this, 'getBlockFormHideLoadingStateTimeout']);
-		\add_filter('es_forms_block_form_success_redirect_url', [$this, 'getBlockFormSuccessRedirectUrl'], 10, 2);
-		\add_filter('es_forms_block_form_tracking_event_name', [$this, 'getBlockFormTrackingEventName'], 10, 2);
-		\add_filter('es_forms_block_form_data_type_selector', [$this, 'getFormDataTypeSelector'], 10, 2);
-		\add_filter('es_forms_block_form_phone_sync', [$this, 'getFormPhoneSync'], 10, 2);
-
-		\add_filter('es_forms_block_form_selector_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_field_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_input_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_textarea_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_select_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_file_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_checkboxes_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_radios_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_phone_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_country_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_date_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-		\add_filter('es_forms_block_submit_additional_content', [$this, 'getBlockFormSelectorAdditionalContent']);
-
-		\add_filter('es_forms_block_field_style_options', [$this, 'getBlockFieldStyleOptions']);
-
-		\add_filter('es_forms_block_file_preview_remove_label', [$this, 'getBlockFilePreviewRemoveLabel']);
-
-		\add_filter('es_forms_block_country_alternative_data_set', [$this, 'getBlockCountryAlternativeDataSet']);
-
-		\add_filter('es_forms_block_custom_data_options', [$this, 'getBlockCustomDataOptions']);
-
-		\add_filter('es_forms_block_submit_component', [$this, 'getBlockSubmitComponent']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// Blocks filters.
-		\add_filter('es_forms_blocks_additional_blocks', [$this, 'getAdditionalBlocks']);
-
-		\add_filter('es_forms_media_breakpoints', [$this, 'getMediaBreakpoints']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// General filters.
-		\add_filter('es_forms_general_http_request_timeout', [$this, 'getHttpRequestTimeout']);
-
-		\add_filter('es_forms_general_set_locale', [$this, 'setFormsLocale']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// Geolocation filters.
-		\add_filter('es_forms_geolocation_countries_list', [$this, 'getGeolocationCountriesList']);
-		\add_filter('es_forms_geolocation_disable', [$this, 'getGeolocationDisable']);
-		\add_filter('es_forms_geolocation_db_location', [$this, 'getGeolocationDbLocation']);
-		\add_filter('es_forms_geolocation_phar_location', [$this, 'getGeolocationPharLocation']);
-		\add_filter('es_forms_geolocation_cookie_name', [$this, 'getGeolocationCookieName']);
-		\add_filter('es_forms_geolocation_wp_rocket_advanced_cache', [$this, 'getGeolocationWpRocketAdvancedCache']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// Integrations filters.
-		\add_filter('es_forms_integration_greenhouse_data', [$this, 'getIntegrationData'], 10, 2); // Dynamic name based on the integration type.
-		\add_filter('es_forms_integration_hubspot_files_options', [$this, 'getFileUploadCustomOptions']);
-		\add_filter('es_forms_integration_clearbit_map', [$this, 'getClearbitFieldsMap']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// Troubleshooting filters.
-		\add_filter('es_forms_troubleshooting_output_log', [$this, 'getTroubleshootingOutputLog']);
-
-		// ---------------------------------------------------------------------------------------------------------
-		// Validation filters.
-		\add_filter('es_forms_validation_force_mimetype_from_fs', [$this, 'forceMimetypeFs']);
 	}
 
 	// -----------------------------------------------------------------------------------------------------------
@@ -335,6 +346,20 @@ class Testfilters implements ServiceInterface {
 				'change' => [
 					'al' => 'New Albania',
 				],
+				'onlyUse' => [
+					'de',
+					'hr',
+					'cz',
+				]
+			],
+			[
+				'label' => 'Cool List',
+				'slug' => 'cool-list',
+				'onlyUse' => [
+					'ba',
+					'jp',
+					'gb',
+				]
 			],
 		];
 	}

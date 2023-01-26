@@ -210,7 +210,7 @@ class Helper
 				unset($data['files']);
 			}
 
-			$filterName = Filters::getTroubleshootingFilterName('outputLog');
+			$filterName = Filters::getFilterName(['troubleshooting', 'outputLog']);
 
 			if (\has_filter($filterName)) {
 				\apply_filters($filterName, $data);
@@ -647,5 +647,23 @@ class Helper
 	public static function getCountrySelectList(): array
 	{
 		return self::getDataManifest('country');
+	}
+
+	/**
+	 * Output additional content from filter by block.
+	 *
+	 * @param string $name Name of the block/component.
+	 * @param array<string, mixed> $attributes To load in filter.
+	 *
+	 * @return string
+	 */
+	public static function getBlockAdditionalContentViaFilter(string $name, array $attributes): string
+	{
+		$filterName = Filters::getFilterName(['block', $name, 'additionalContent']);
+		if (has_filter($filterName)) {
+			return apply_filters($filterName, $attributes ?? []);
+		}
+
+		return '';
 	}
 }

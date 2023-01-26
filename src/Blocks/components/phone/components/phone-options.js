@@ -38,29 +38,15 @@ export const PhoneOptions = (attributes) => {
 	const phoneTracking = checkAttr('phoneTracking', attributes, manifest);
 	const phoneValidationPattern = checkAttr('phoneValidationPattern', attributes, manifest);
 	const phoneDisabledOptions = checkAttr('phoneDisabledOptions', attributes, manifest);
-	const phoneDatasetUsed = checkAttr('phoneDatasetUsed', attributes, manifest);
-	const phoneSelectedValue = checkAttr('phoneSelectedValue', attributes, manifest);
 	const phoneUseSearch = checkAttr('phoneUseSearch', attributes, manifest);
 
-
 	const [showValidation, setShowValidation] = useState(false);
-	const [dataSet, setDataSet] = useState([]);
 
 	let phoneValidationPatternOptions = [];
 
 	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
 		phoneValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
-
-	useEffect( () => {
-		apiFetch({ path:
-			`${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.countryDataset}` }).then((response) => {
-				if (response.code === 200) {
-				setDataSet(response.data);
-			}
-		});
-
-	}, []);
 
 	return (
 		<>
@@ -125,36 +111,6 @@ export const PhoneOptions = (attributes) => {
 						{__('Allow search', 'eightshift-forms')}
 					</Button>
 				</div>
-
-				<FancyDivider label={__('Data', 'eightshift-forms')} />
-
-				<CustomSelect
-					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a preselected value', 'eightshift-forms')} />}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={phoneSelectedValue}
-					options={dataSet?.codes}
-					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectedValue', attributes, manifest)]: value })}
-					isClearable={false}
-					cacheOptions={false}
-					reFetchOnSearch={true}
-					multiple={false}
-					closeMenuOnSelect={true}
-					simpleValue
-				/>
-
-				<CustomSelect
-					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a data source to display', 'eightshift-forms')} />}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={phoneDatasetUsed}
-					options={dataSet?.items}
-					onChange={(value) => setAttributes({ [getAttrKey('phoneDatasetUsed', attributes, manifest)]: value })}
-					isClearable={false}
-					cacheOptions={false}
-					reFetchOnSearch={false}
-					multiple={false}
-					closeMenuOnSelect={true}
-					simpleValue
-				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />
 

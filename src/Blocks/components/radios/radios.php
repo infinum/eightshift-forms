@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 
@@ -33,11 +34,7 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 }, $radiosContent);
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('radios', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('radios', $attributes);
 
 $radios = '
 	' . $radiosContent . '

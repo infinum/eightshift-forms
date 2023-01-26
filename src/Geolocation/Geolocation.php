@@ -105,7 +105,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		$outputContent = \substr_replace($content, $output, $position, 0);
 
 		// Override output with filter.
-		$filterName = Filters::getGeolocationFilterName('wpRocketAdvancedCache');
+		$filterName = Filters::getFilterName(['geolocation', 'wpRocketAdvancedCache']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $content, $outputContent);
 		}
@@ -122,7 +122,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$name = Variables::getGeolocationCookieName();
 
-		$filterName = Filters::getGeolocationFilterName('cookieName');
+		$filterName = Filters::getFilterName(['geolocation', 'cookieName']);
 		if (\has_filter($filterName)) {
 			$name = \apply_filters($filterName, null);
 		}
@@ -141,7 +141,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Variables::getGeolocationPharPath();
 
-		$filterName = Filters::getGeolocationFilterName('pharLocation');
+		$filterName = Filters::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -165,7 +165,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Variables::getGeolocationDbPath();
 
-		$filterName = Filters::getGeolocationFilterName('dbLocation');
+		$filterName = Filters::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -185,7 +185,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = Filters::getGeolocationFilterName('countries');
+		$filterName = Filters::getFilterName(['geolocation', 'countries']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());
@@ -234,7 +234,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		$logModeCheck = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
-		$filterName = Filters::getGeolocationFilterName('disable');
+		$filterName = Filters::getFilterName(['geolocation', 'disable']);
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			if ($logModeCheck) {
 				Helper::logger([
