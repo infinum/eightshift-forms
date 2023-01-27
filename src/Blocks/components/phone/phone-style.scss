@@ -1,15 +1,11 @@
-.es-phone {
-	width: 100%;
-	border: 1px solid var(--global-colors-es-chalice);
-	cursor: text;
-	background-color: transparent;
-	height: var(--global-es-input-height);
-	padding: 0 10px;
-	border-radius: 0;
+input.es-phone {
+	@include input-styles;
+}
 
-	&:focus {
-		outline: none;
-		box-shadow: none;
-		border-color: var(--global-colors-es-matisse);
+.es-field--phone {
+	.es-field__content-wrap {
+		display: grid;
+		column-gap: var(--es-grid-spacing);
+		grid-template-columns: min(120px) 1fr;
 	}
 }

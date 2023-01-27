@@ -1,37 +1,35 @@
-.es-submit {
-	$this: &;
+button {
+	&.es-submit {
+		$this: &;
 
-	width: 100%;
-	background-color: var(--global-colors-es-matisse);
-	color: var(--global-colors-es-white);
-	padding: 0.5rem 1rem;
-	border: var(--global-colors-es-matisse);
-	cursor: pointer;
+		--submit-scoped-background-color: var(--global-colors-es-matisse);
 
-	transition: {
-		property: background-color;
-		timing-function: ease-in-out;
-		duration: 0.3s;
-	}
+		font-weight: bold;
+		width: 100%;
+		background-color: var(--submit-scoped-background-color);
+		color: var(--global-colors-es-white);
+		padding: calc(var(--es-input-spacing) * 2);
+		border: var(--submit-scoped-background-color);
+		cursor: pointer;
 
-	&:hover {
-		background-color: var(--global-colors-es-blumine);
-	}
+		transition: {
+			property: background-color;
+			timing-function: var(--es-input-transition-timing);
+			duration: var(--es-input-transition-duration);
+		}
 
-	&:disabled {
-		opacity: 0.6;
-		cursor: default;
-	}
+		&:hover:not(:disabled) {
+			--submit-scoped-background-color: var(--global-colors-es-blumine);
+		}
 
-	&__inner {
-		pointer-events: none;
-	}
+		&:disabled {
+			opacity: 0.6;
+			cursor: default;
+			pointer-events: none;
+		}
 
-	&--with-icon {
-		#{$this}__inner {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
+		&__inner {
+			pointer-events: none;
 		}
 	}
 }

@@ -67,6 +67,10 @@
 		},
 		"formAttrs": {
 			"type": "object"
+		},
+		"formServerSideRender": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

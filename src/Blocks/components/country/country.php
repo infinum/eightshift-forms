@@ -29,7 +29,7 @@ $countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $ma
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
 $countryClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
+	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
@@ -40,6 +40,8 @@ if ($countryTracking) {
 if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
 }
+
+$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons']] = true;
 
 $countryAttrsOutput = '';
 if ($countryAttrs) {
@@ -104,7 +106,7 @@ echo Components::render(
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
-			'countryClass' => $manifest['componentName'] ?? '',
+			'selectorClass' => $manifest['componentName'] ?? '',
 		]
 	)
 );

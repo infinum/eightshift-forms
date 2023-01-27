@@ -35,6 +35,7 @@ $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes,
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
+$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -104,7 +105,7 @@ if ($formAttrs) {
 
 ?>
 
-<form
+<<?php echo $formServerSideRender ? 'div' : 'form'; ?>
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
@@ -125,4 +126,4 @@ if ($formAttrs) {
 		Components::props('loader', $attributes)
 	);
 	?>
-</form>
+</<?php echo $formServerSideRender ? 'div' : 'form'; ?>>

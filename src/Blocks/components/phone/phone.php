@@ -13,6 +13,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestSelect = Components::getComponent('select');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -37,6 +38,7 @@ $phoneClass = Components::classnames([
 ]);
 
 $phoneSelectClass = Components::classnames([
+	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Components::selector($componentClass, $componentClass, 'select'),
 ]);
 
@@ -62,7 +64,7 @@ if ($phoneAttrs) {
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
 
-$phoneSelectAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSelect'];
+$selectShowCountryIcons = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons'];
 $phoneSelectUseSearchAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch'];
 
 $options = [];
@@ -72,7 +74,6 @@ if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);
 
 	foreach ($settings['countries'][$settings['phone']['dataset']]['items'] as $option) {
-		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
 
@@ -81,7 +82,7 @@ if (has_filter($filterName)) {
 				value="' . $value . '"
 				data-custom-properties="' . $code . '"
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
-			>' . $label . '</option>';
+			>+' . $value . '</option>';
 	}
 }
 
@@ -89,6 +90,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
+		' . $selectShowCountryIcons . '=true
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"

@@ -78,12 +78,6 @@ if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
 	]);
 }
 
-// Replace button with div for the editor.
-if ($submitServerSideRender) {
-	$button = str_replace('<button', '<div', $button);
-	$button = str_replace('</button>', '</div>', $button);
-}
-
 if ($submitIsLayoutFree) {
 	echo $button; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	return;

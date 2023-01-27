@@ -78,28 +78,33 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
 
 		// Editor only style.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyleLocal'], 50);
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorOptionsStyles'], 51);
+		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
-		// Editor and frontend style.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
+		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
 	}
 
 	/**
-	 * Method that returns editor only style with check.
+	 * Enqueue blocks style for editor only.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function enqueueBlockEditorStyleLocal()
+	public function enqueueBlockEditorStyle(): void
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
-			return null;
-		}
+		$handle = $this->getBlockEditorStyleHandle();
 
-		$this->enqueueBlockEditorStyle();
+		\wp_register_style(
+			$handle,
+			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
+			[],
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
 	}
 
 	/**
@@ -107,33 +112,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @return mixed
 	 */
-	public function enqueueBlockStyleLocal()
+	public function enqueueBlockFrontendStyleLocal()
 	{
 		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
-		$this->enqueueBlockStyle();
-	}
-
-	/**
-	 * Enqueue blocks style for editor only - used for libs component styles.
-	 *
-	 * @return void
-	 */
-	public function enqueueBlockEditorOptionsStyles(): void
-	{
-		$handler = "{$this->getAssetsPrefix()}-editor-style";
-
-		\wp_register_style(
-			$handler,
-			$this->manifest->getAssetsManifestItem('applicationEditor.css'),
-			[],
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handler);
+		$this->enqueueBlockFrontendStyle();
 	}
 
 	/**

@@ -1,6 +1,7 @@
 /* global esFormsLocalization */
 
 import manifest from './../manifest.json';
+import selectManifest from './../../select/manifest.json';
 
 const {
 	componentJsClass,
@@ -90,6 +91,9 @@ export class Utils {
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
 		this.selectSelector =  `${this.fieldSelector} select`;
 		this.fileSelector =  `${this.fieldSelector} input[type='file']`;
+
+		// Class names.
+		this.selectClassName = selectManifest.componentClass;
 
 		// Custom fields params.
 		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
@@ -542,6 +546,8 @@ export class Utils {
 				textareaSelector: this.textareaSelector,
 				selectSelector: this.selectSelector,
 				fileSelector: this.fileSelector,
+
+				selectClassName: this.selectClassName,
 
 				FORM_PARAMS: this.FORM_PARAMS,
 				DATA_ATTRIBUTES: this.DATA_ATTRIBUTES,

@@ -68,7 +68,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
 		'datePreviewFormat' => 'data-preview-format',
 		'dateOutputFormat' => 'data-output-format',
-		'phoneSelect' => 'data-phone-select',
+		'selectShowCountryIcons' => 'data-select-show-country-icons',
 		'selectAllowSearch' => 'data-allow-search',
 		'phoneSync' => 'data-phone-sync',
 	];

@@ -2,11 +2,12 @@
 
 import React from 'react';
 import classnames from 'classnames';
+import { select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
 	props,
-	getAttrKey
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { getAdditionalContentFilterContent } from './../../utils';
@@ -23,6 +24,11 @@ export const PhoneEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
+	const manifestSelect = select(STORE_NAME).getComponent('select');
+
+	console.log(manifestSelect);
+	
+
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
 
@@ -31,8 +37,14 @@ export const PhoneEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	const selectClass = classnames([
+		selector(manifestSelect.componentClass, manifestSelect.componentClass),
+		selector(additionalClass, additionalClass),
+	]);
+
 	const phone = (
 		<>
+			<select className={selectClass}></select>
 			<input
 				className={phoneClass}
 				value={phoneValue}

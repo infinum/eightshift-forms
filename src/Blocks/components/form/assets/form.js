@@ -436,10 +436,10 @@ export class Form {
 					}
 					break;
 				case 'select-one':
-					const phoneSelect = item.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
+					const selectShowCountryIcons = item.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
 
 					// Bailout if select is part of the phone.
-					if (phoneSelect) {
+					if (selectShowCountryIcons) {
 						break;
 					}
 
@@ -601,7 +601,9 @@ export class Form {
 	 */
 	setupSelectField(select, formId) {
 		import('choices.js').then((Choices) => {
-			const phoneSelect = select.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSelect);
+			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
+
+			console.log(selectShowCountryIcons);
 
 			const choices = new Choices.default(select, {
 				searchEnabled: Boolean(select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch)),
@@ -609,13 +611,17 @@ export class Form {
 				position: 'bottom',
 				allowHTML: true,
 				searchFields: ['label', 'value', 'customProperties'],
+				itemSelectText: '',
+				classNames: {
+					containerOuter: `choices ${this.utils.selectClassName}`,
+				},
 				callbackOnCreateTemplates: function() {
 					return {
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 
 							// Implement changes for phone picker.
-							if (phoneSelect) {
+							if (selectShowCountryIcons) {
 								const findItem = this.config.choices.find((item) => item.label === element.innerHTML).customProperties;
 								element.dataset.customProperties = findItem;
 								return element;

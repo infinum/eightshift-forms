@@ -12,7 +12,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
-$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
@@ -30,7 +29,7 @@ $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manife
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
 $selectClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
+	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
 ]);

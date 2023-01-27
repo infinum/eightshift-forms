@@ -1,0 +1,64 @@
+@import '~choices.js/public/assets/styles/choices.min.css';
+
+div.es-select {
+	border-radius: 0;
+	margin: 0;
+	font-size: initial;
+
+	.choices__inner {
+		font-size: initial;
+		border-radius: 0;
+		background-color: transparent;
+		height: var(--es-input-height);
+		border: 1px solid var(--es-input-border-color);
+		padding: var(--es-input-spacing);
+		min-height: auto;
+		transition: {
+			property: border-color;
+			timing-function: var(--es-input-transition-timing);
+			duration: var(--es-input-transition-duration);
+		}
+	}
+
+	.choices__list {
+		&--dropdown {
+			font-size: initial;
+			transition: {
+				property: border-color;
+				timing-function: var(--es-input-transition-timing);
+				duration: var(--es-input-transition-duration);
+			}
+
+			.choices__item {
+				font-size: initial;
+				padding: var(--es-input-spacing);
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+		}
+
+		&--single {
+			padding: 0;
+		}
+	}
+
+	.choices__item {
+		font-size: initial;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	&.is-focused {
+		.choices__inner{
+			border-color: var(--es-input-focus-border-color);
+		}
+	}
+
+	&.is-open {
+		.choices__list--dropdown {
+			border-color: var(--es-input-focus-border-color);
+		}
+	}
+}

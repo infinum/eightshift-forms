@@ -1,15 +1,20 @@
 @import './submit-style.scss';
 
-.es-submit,
-.es-submit--global {
-	border-radius: 6px;
-}
+button.es-submit {
+	&--global {
+		width: auto;
+	}
 
-.es-submit--global {
-	width: auto;
-}
+	&--migration,
+	&--transfer {
+		width: fit-content;
+	}
 
-.es-submit--migration,
-.es-submit--transfer {
-	width: fit-content;
+	&--with-icon {
+		.es-submit__inner {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+	}
 }
