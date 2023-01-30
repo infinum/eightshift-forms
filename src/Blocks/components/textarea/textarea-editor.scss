@@ -1,1 +1,5 @@
 @import './textarea-style.scss';
+
+textarea.es-textarea {
+	@include input-styles-disabled;
+}

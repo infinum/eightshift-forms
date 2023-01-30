@@ -1,3 +1,13 @@
-select.es-select {
+select.es-select,
+select.es-select__select {
 	@include input-styles;
+}
+
+.es-select {
+	padding: var(--es-input-spacing);
+	border: 1px solid var(--es-input-border-color);
+
+	&--disabled {
+		@include input-styles-disabled;
+	}
 }

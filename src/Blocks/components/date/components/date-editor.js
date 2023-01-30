@@ -24,6 +24,7 @@ export const DateEditor = (attributes) => {
 
 	const dateValue = checkAttr('dateValue', attributes, manifest);
 	const datePlaceholder = checkAttr('datePlaceholder', attributes, manifest);
+	const dateType = checkAttr('dateType', attributes, manifest);
 
 	const dateClass = classnames([
 		selector(componentClass, componentClass),
@@ -36,7 +37,7 @@ export const DateEditor = (attributes) => {
 				className={dateClass}
 				value={dateValue}
 				placeholder={datePlaceholder}
-				type={'tel'}
+				type={dateType}
 				readOnly
 			/>
 

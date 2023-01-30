@@ -1,0 +1,13 @@
+@import 'media-blender';
+@import '@eightshift/frontend-libs/styles/index.scss';
+
+:root {
+	--es-grid-spacing: 10px;
+	--es-form-max-width: 600px;
+	--es-form-field-spacing: 30px;
+}
+
+@import './input';
+@import './checkbox';
+@import './checkbox-toggle';
+@import './submit';

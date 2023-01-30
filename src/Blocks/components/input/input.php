@@ -97,7 +97,6 @@ echo Components::render(
 			'fieldName' => $inputName,
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
-			'fieldHidden' => $inputType === 'hidden',
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
 			'fieldConditionalTags' => Components::render(

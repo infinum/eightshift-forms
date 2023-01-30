@@ -30,7 +30,9 @@ export const CountryEditor = (attributes) => {
 
 	const country = (
 		<>
-			{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
+			<div className={`${componentClass}__info-text`}>
+				{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
+			</div>
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

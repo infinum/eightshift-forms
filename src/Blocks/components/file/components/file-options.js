@@ -36,7 +36,9 @@ export const FileOptions = (attributes) => {
 		<>
 			<PanelBody title={__('File', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: fileDisabledOptions,
+					})}
 				/>
 
 				<Button

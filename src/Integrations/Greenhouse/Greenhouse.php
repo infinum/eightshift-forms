@@ -122,7 +122,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			$fields = $item['fields'] ?? [];
 			$label = $item['label'] ?? '';
 			$description = $item['description'] ?? '';
-			$required = $item['required'] ?? false;
+			$isRequired = isset($item['required']) ? (bool) $item['required'] : false;
 
 			foreach ($fields as $field) {
 				$type = $field['type'] ?? '';
@@ -140,9 +140,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'phoneTracking' => $name,
 									'phoneFieldLabel' => $label,
 									'phoneMeta' => $description,
-									'phoneIsRequired' => (bool) $required,
+									'phoneIsRequired' => (bool) $isRequired,
 									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
-										$required ? 'phoneIsRequired' : '',
+										$isRequired ? 'phoneIsRequired' : '',
 									]),
 								];
 								break;
@@ -154,10 +154,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'inputFieldLabel' => $label,
 									'inputMeta' => $description,
 									'inputType' => 'email',
-									'inputIsRequired' => (bool) $required,
+									'inputIsRequired' => (bool) $isRequired,
 									'inputIsEmail' => true,
 									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-										$required ? 'inputIsRequired' : '',
+										$isRequired ? 'inputIsRequired' : '',
 										'inputType',
 									]),
 								];
@@ -170,9 +170,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'inputFieldLabel' => $label,
 									'inputMeta' => $description,
 									'inputType' => 'text',
-									'inputIsRequired' => (bool) $required,
+									'inputIsRequired' => (bool) $isRequired,
 									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-										$required ? 'inputIsRequired' : '',
+										$isRequired ? 'inputIsRequired' : '',
 									]),
 								];
 								break;
@@ -187,12 +187,12 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileTracking' => $name,
 							'fileFieldLabel' => $label,
 							'fileMeta' => $description,
-							'fileIsRequired' => (bool) $required,
+							'fileIsRequired' => (bool) $isRequired,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => '1',
 							'fileMaxSize' => \strval($maxFileSize * 1000),
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
-								$required ? 'fileIsRequired' : '',
+								$isRequired ? 'fileIsRequired' : '',
 								'fileAccept',
 								'fileMinSize',
 								'fileMaxSize',
@@ -213,9 +213,9 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaMeta' => $description,
-							'textareaIsRequired' => (bool) $required,
+							'textareaIsRequired' => (bool) $isRequired,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-								$required ? 'textareaIsRequired' : '',
+								$isRequired ? 'textareaIsRequired' : '',
 							]),
 						];
 						break;
@@ -225,7 +225,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'checkboxes',
 								'checkboxesName' => $name,
 								'checkboxesMeta' => $description,
-								'checkboxesIsRequired' => (bool) $required,
+								'checkboxesIsRequired' => (bool) $isRequired,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -239,7 +239,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									],
 								],
 								'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-									$required ? 'checkboxesIsRequired' : '',
+									$isRequired ? 'checkboxesIsRequired' : '',
 								]),
 							];
 						} else {
@@ -249,7 +249,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectTracking' => $name,
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
-								'selectIsRequired' => (bool) $required,
+								'selectIsRequired' => (bool) $isRequired,
 								'selectContent' => \array_map(
 									function ($selectOption) {
 										return [
@@ -264,7 +264,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									$values
 								),
 								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-									$required ? 'selectIsRequired' : '',
+									$isRequired ? 'selectIsRequired' : '',
 								]),
 							];
 						}
@@ -275,35 +275,35 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 
 		$output[] = [
 			'component' => 'input',
-			'inputType' => 'hidden',
+			'inputFieldHidden' => true,
 			'inputFieldLabel' => 'mapped_url_token',
 			'inputName' => 'mapped_url_token',
 			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 				'inputType',
 				'inputFieldLabel',
-				'inputFieldLabel',
+				'inputFieldHidden',
 			]),
 		];
 		$output[] = [
 			'component' => 'input',
-			'inputType' => 'hidden',
+			'inputFieldHidden' => true,
 			'inputFieldLabel' => 'longitude',
 			'inputName' => 'longitude',
 			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 				'inputType',
 				'inputFieldLabel',
-				'inputFieldLabel',
+				'inputFieldHidden',
 			]),
 		];
 		$output[] = [
 			'component' => 'input',
-			'inputType' => 'hidden',
+			'inputFieldHidden' => true,
 			'inputFieldLabel' => 'latitude',
 			'inputName' => 'latitude',
 			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 				'inputType',
 				'inputFieldLabel',
-				'inputFieldLabel',
+				'inputFieldHidden',
 			]),
 		];
 

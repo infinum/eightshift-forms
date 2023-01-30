@@ -15,6 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -68,7 +69,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				continue;
 			}
 
-			$icon = $value['icon'];
+			$icon = Helper::getProjectIcons($key);
 			$type = $value['type'];
 
 			$checked = $this->isCheckboxOptionChecked($use, $use);

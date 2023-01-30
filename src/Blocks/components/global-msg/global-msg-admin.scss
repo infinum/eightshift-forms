@@ -1,31 +1,30 @@
-// .es-global-msg {
-// 	position: fixed;
-// 	right: 2rem;
-// 	bottom: 2rem;
-// 	z-index: 1;
+.es-global-msg {
+	position: fixed;
+	right: 0;
+	bottom: 2rem;
+	z-index: 1;
 
-// 	padding: 0.75rem 1rem;
+	padding: 0.75rem 1rem;
 
-// 	opacity: 0;
-// 	border-radius: 6px;
-// 	color: var(--global-colors-es-white);
-// 	background-color: var(--global-colors-es-reef);
-// 	box-shadow: 0 0.25rem 0.75rem rgb(20 20 20 / 0.2);
+	opacity: 0;
+	color: var(--global-colors-es-white);
+	background-color: var(--global-colors-es-reef);
+	box-shadow: 0 0.25rem 0.75rem rgb(20 20 20 / 0.2);
 
-// 	transform: translateX(10rem);
+	transform: translateX(10rem);
 
-// 	transition: {
-// 		property: transform, background-color, opacity;
-// 		timing-function: ease-in-out;
-// 		duration: 0.3s;
-// 	}
+	transition: {
+		property: transform, background-color, opacity;
+		timing-function: ease-in-out;
+		duration: 0.3s;
+	}
 
-// 	&[data-status='error'] {
-// 		background-color: var(--global-colors-es-pome);
-// 	}
+	&[data-status='error'] {
+		background-color: var(--global-colors-es-pome);
+	}
 
-// 	&.is-active {
-// 		transform: translateX(0);
-// 		opacity: 1;
-// 	}
-// }
+	&.is-active {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}

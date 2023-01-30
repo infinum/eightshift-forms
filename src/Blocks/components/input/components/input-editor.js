@@ -24,6 +24,7 @@ export const InputEditor = (attributes) => {
 
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
+	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
 	let inputType = checkAttr('inputType', attributes, manifest);
 
 	// For some reason React won't allow input type email.

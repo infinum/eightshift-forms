@@ -10,4 +10,4 @@
  * Usage: `WordPress admin editor`.
  */
 
-import './items/cover.png';
+import './items/cover.jpg';

@@ -28,7 +28,9 @@ export const SubmitOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Submit', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: submitDisabledOptions,
+					})}
 					showFieldLabel={false}
 				/>
 

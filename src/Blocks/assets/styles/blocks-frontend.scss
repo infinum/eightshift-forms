@@ -9,7 +9,7 @@
  */
 
 // Globals.
-@import './shared';
+@import './parts/shared';
 
 // Find all components and require component_name-style.scss inside it.
 @import './../../components/*/*-frontend.scss';

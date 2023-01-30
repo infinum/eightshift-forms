@@ -182,12 +182,6 @@ class Validator extends AbstractValidation
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
 			$inputValue = $paramValue['value'] ?? '';
-			$inputType = $paramValue['type'] ?? '';
-
-			// No need to validate hidden fields.
-			if ($inputType === 'hidden') {
-				continue;
-			}
 
 			// Find validation reference by ID.
 			$reference = $validationReference[$paramKey] ?? [];

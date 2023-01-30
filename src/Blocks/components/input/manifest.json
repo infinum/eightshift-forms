@@ -104,10 +104,6 @@
 			{
 				"label": "Number",
 				"value": "number"
-			},
-			{
-				"label": "No user input (hidden field)",
-				"value": "hidden"
 			}
 		],
 		"inputMinLength": {

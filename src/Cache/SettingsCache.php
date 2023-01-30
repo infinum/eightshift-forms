@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
@@ -72,7 +73,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 				'component' => 'layout',
 				'layoutContent' => \array_values(\array_filter(\array_map(
 					static function ($key, $value) use ($manifestForm) {
-						$icon = $value['icon'];
+						$icon = Helper::getProjectIcons($key);
 						$cache = $value['cache'] ?? [];
 
 						if ($cache) {

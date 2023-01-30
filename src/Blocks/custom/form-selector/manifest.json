@@ -29,15 +29,8 @@
 	},
 	"forms": [
 		{
-			"label": "Empty",
-			"slug": "empty",
-			"icon": "esf-form-custom",
-			"blockName": "eightshift-forms/mailer"
-		},
-		{
 			"label": "Simple contact",
-			"slug": "contact",
-			"icon": "esf-sender-email",
+			"slug": "mailer",
 			"blockName": "eightshift-forms/mailer",
 			"innerBlocks": [
 				[
@@ -72,49 +65,41 @@
 		{
 			"label": "Mailchimp",
 			"slug": "mailchimp",
-			"icon": "esf-form-mailchimp",
 			"blockName": "eightshift-forms/mailchimp"
 		},
 		{
 			"label": "Greenhouse",
 			"slug": "greenhouse",
-			"icon": "esf-form-greenhouse",
 			"blockName": "eightshift-forms/greenhouse"
 		},
 		{
 			"label": "HubSpot",
 			"slug": "hubspot",
-			"icon": "esf-form-hubspot",
 			"blockName": "eightshift-forms/hubspot"
 		},
 		{
 			"label": "MailerLite",
 			"slug": "mailerlite",
-			"icon": "esf-form-mailerlite",
 			"blockName": "eightshift-forms/mailerlite"
 		},
 		{
 			"label": "Goodbits",
 			"slug": "goodbits",
-			"icon": "esf-form-goodbits",
 			"blockName": "eightshift-forms/goodbits"
 		},
 		{
 			"label": "ActiveCampaign",
 			"slug": "active-campaign",
-			"icon": "esf-form-active-campaign",
 			"blockName": "eightshift-forms/active-campaign"
 		},
 		{
 			"label": "Airtable",
 			"slug": "airtable",
-			"icon": "esf-form-airtable",
 			"blockName": "eightshift-forms/airtable"
 		},
 		{
 			"label": "Moments",
 			"slug": "moments",
-			"icon": "esf-form-moments",
 			"blockName": "eightshift-forms/moments"
 		}
 	]

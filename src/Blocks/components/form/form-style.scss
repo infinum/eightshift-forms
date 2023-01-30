@@ -1,8 +1,8 @@
 .es-form {
 	$this: &;
 
-	max-width: 600px;
-	padding: 0 20px;
+	max-width: var(--es-form-max-width);
+	padding: 0 var(--es-grid-spacing);
 	margin: 0 auto;
 	position: relative;
 
@@ -17,7 +17,7 @@
 			max-width: var(--field-width, 100%);
 			padding-left: var(--es-grid-spacing);
 			padding-right: var(--es-grid-spacing);
-			margin-bottom: 20px;
+			margin-bottom: var(--es-form-field-spacing);
 		}
 	}
 }

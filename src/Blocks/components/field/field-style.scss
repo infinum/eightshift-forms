@@ -1,39 +1,22 @@
-// .es-field {
-// 	$this: &;
-// 	order: var(--field-order);
-// 	border: none; // Because of fieldset.
+.es-field {
+	$this: &;
+	border: none; // Because of fieldset.
+	margin-left: 0;
+	margin-right: 0;
 
-// 	&--hidden,
-// 	&.is-hidden {
-// 		display: none;
-// 		user-select: none;
-// 	}
+	&__label {
+		margin-bottom: 5px;
+		display: block;
+		transition: {
+			property: color;
+			timing-function: ease-in-out;
+			duration: 0.3s;
+		}
+	}
 
-// 	&__label {
-// 		margin-bottom: 10px;
-// 		display: block;
-// 		transition: {
-// 			property: color;
-// 			timing-function: ease-in-out;
-// 			duration: 0.3s;
-// 		}
-// 	}
-
-// 	&.is-active {
-// 		#{$this}__label {
-// 			color: var(--global-colors-es-matisse);
-// 		}
-// 	}
-
-// 	&.is-filled {
-// 		#{$this}__label {
-// 			color: var(--global-colors-es-reef);
-// 		}
-
-// 		&.is-active {
-// 			#{$this}__label {
-// 				color: var(--global-colors-es-blumine);
-// 			}
-// 		}
-// 	}
-// }
+	&.is-active {
+		#{$this}__label {
+			color: var(--global-colors-es-matisse);
+		}
+	}
+}

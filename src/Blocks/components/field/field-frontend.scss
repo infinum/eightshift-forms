@@ -1,1 +1,9 @@
 @import './field-style.scss';
+
+.es-field {
+	&--hidden,
+	&.is-hidden {
+		display: none;
+		user-select: none;
+	}
+}

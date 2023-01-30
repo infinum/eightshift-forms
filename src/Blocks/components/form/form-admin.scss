@@ -1,14 +1,14 @@
-// .es-form {
-// 	box-sizing: border-box;
+.es-form {
+	box-sizing: border-box;
 
-// 	*,
-// 	*::after,
-// 	*::before {
-// 		box-sizing: border-box;
-// 	}
+	*,
+	*::after,
+	*::before {
+		box-sizing: border-box;
+	}
 
-// 	&__fields {
-// 		display: grid;
-// 		row-gap: var(--global-es-spacing-horizontal);
-// 	}
-// }
+	&__fields {
+		display: grid;
+		row-gap: var(--global-es-spacing-horizontal);
+	}
+}

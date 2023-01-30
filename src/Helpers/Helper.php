@@ -429,7 +429,7 @@ class Helper
 		$output['type'] = $type;
 		$output['typeFilter'] = $blockName['name'];
 		$output['label'] = Filters::getSettingsLabels($type, 'title');
-		$output['icon'] = Filters::ALL[$type]['icon'] ?? '';
+		$output['icon'] = Helper::getProjectIcons($type) ?? '';
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
 		$output['fields'] = $blocks;
@@ -665,5 +665,17 @@ class Helper
 		}
 
 		return '';
+	}
+
+	/**
+	 * Return project icons from utils component.
+	 *
+	 * @param string $type Type to return.
+	 *
+	 * @return string
+	 */
+	public static function getProjectIcons(string $type): string
+	{
+		return Components::getComponent('utils')['icons'][Components::kebabToCamelCase($type)];
 	}
 }

@@ -55,7 +55,9 @@ export const DateOptions = (attributes) => {
 		<>
 			<PanelBody title={title}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: dateDisabledOptions,
+					})}
 				/>
 
 				<TextControl

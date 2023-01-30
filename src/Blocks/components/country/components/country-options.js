@@ -35,7 +35,9 @@ export const CountryOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Country', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: countryDisabledOptions,
+					})}
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />

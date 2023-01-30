@@ -31,7 +31,9 @@ export const SelectOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Select', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: selectDisabledOptions,
+					})}
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />

@@ -28,7 +28,9 @@ export const RadiosOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Radio buttons', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: radiosDisabledOptions,
+					})}
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />

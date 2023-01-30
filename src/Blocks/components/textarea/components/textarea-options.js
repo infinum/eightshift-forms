@@ -56,7 +56,9 @@ export const TextareaOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Multiline text', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: textareaDisabledOptions,
+					})}
 				/>
 
 				<TextControl

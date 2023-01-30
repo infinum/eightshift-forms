@@ -81,7 +81,9 @@ export const InputOptions = (attributes) => {
 		<>
 			<PanelBody title={title}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: inputDisabledOptions,
+					})}
 				/>
 
 				{showInputPlaceholder &&

@@ -6,7 +6,7 @@ textarea.es-textarea {
 	min-height: calc(var(--es-input-height) * 3);
 	height: calc(var(--es-input-height) * 3);
 	padding: var(--es-input-spacing);
-	border-radius: 0;
+	border-radius: var(--es-input-radius);
 	transition: {
 		property: border-color;
 		timing-function: var(--es-input-transition-timing);
@@ -14,17 +14,14 @@ textarea.es-textarea {
 	}
 
 	&:focus {
-		outline: none;
-		box-shadow: none;
-		border-color: var(--es-input-focus-border-color);
+		@include input-styles-focus;
 	}
 
 	&:disabled {
-		cursor: default;
-		background-color: var(--es-input-disabled-background-color);
+		@include input-styles-disabled;
 	}
 
 	&:read-only {
-		background-color: var(--es-input-readonly-background-color);
+		@include input-styles-read-only;
 	}
 }

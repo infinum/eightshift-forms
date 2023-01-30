@@ -50,7 +50,9 @@ export const CheckboxesOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Checkboxes', 'eightshift-forms')}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: checkboxesDisabledOptions,
+					})}
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />

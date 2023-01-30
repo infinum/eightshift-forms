@@ -12,6 +12,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestSelect = Components::getComponent('select');
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -29,6 +30,7 @@ $countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $ma
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
 $countryClass = Components::classnames([
+	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
 ]);

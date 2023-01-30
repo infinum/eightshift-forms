@@ -1,0 +1,10 @@
+.es-field--country {
+	.es-country__info-text {
+		@include input-styles-disabled;
+		border: 1px solid var(--es-input-border-color);
+		padding: var(--es-input-spacing);
+		min-height: var(--es-input-height);
+		display: flex;
+		align-items: center;
+	}
+}

@@ -25,9 +25,9 @@ export const SelectEditor = (attributes) => {
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 
-
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
+		selector(componentClass, componentClass, '', 'disabled'),
 		selector(additionalClass, additionalClass),
 	]);
 

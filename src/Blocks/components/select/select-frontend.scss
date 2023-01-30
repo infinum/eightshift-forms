@@ -1,13 +1,13 @@
 @import '~choices.js/public/assets/styles/choices.min.css';
 
 div.es-select {
-	border-radius: 0;
+	border-radius: var(--es-input-radius);
 	margin: 0;
 	font-size: initial;
 
 	.choices__inner {
 		font-size: initial;
-		border-radius: 0;
+		border-radius: var(--es-input-radius);
 		background-color: transparent;
 		height: var(--es-input-height);
 		border: 1px solid var(--es-input-border-color);
@@ -50,6 +50,16 @@ div.es-select {
 		flex-wrap: wrap;
 	}
 
+	.choices__input {
+		border-radius: 0;
+		border: none;
+		border-bottom: 1px solid var(--es-input-border-color);
+
+		&:focus {
+			@include input-styles-focus();
+		}
+	}
+
 	&.is-focused {
 		.choices__inner{
 			border-color: var(--es-input-focus-border-color);
@@ -61,4 +71,8 @@ div.es-select {
 			border-color: var(--es-input-focus-border-color);
 		}
 	}
+}
+
+select.es-select__select {
+	@include input-styles($loadReadonly: 'false');
 }

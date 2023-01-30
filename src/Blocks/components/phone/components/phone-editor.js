@@ -26,9 +26,6 @@ export const PhoneEditor = (attributes) => {
 
 	const manifestSelect = select(STORE_NAME).getComponent('select');
 
-	console.log(manifestSelect);
-	
-
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
 

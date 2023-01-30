@@ -603,8 +603,6 @@ export class Form {
 		import('choices.js').then((Choices) => {
 			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
 
-			console.log(selectShowCountryIcons);
-
 			const choices = new Choices.default(select, {
 				searchEnabled: Boolean(select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch)),
 				shouldSort: false,

@@ -1,12 +1,14 @@
 /* global esFormsLocalization */
 
 import React from 'react';
+import { camelCase } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { checkAttr, BlockIcon } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
 import manifest from './../manifest.json';
+import utilsManifest from './../../../components/utils/manifest.json';
 
 export const FormSelectorEditor = ({
 	attributes,
@@ -15,7 +17,6 @@ export const FormSelectorEditor = ({
 }) => {
 	const {
 		forms,
-		blockName,
 	} = manifest;
 
 	const formSelectorAllowedBlocks = checkAttr('formSelectorAllowedBlocks', attributes, manifest);
@@ -34,19 +35,18 @@ export const FormSelectorEditor = ({
 							const {
 								label,
 								slug,
-								icon
 							} = form;
 
 							return (
 								<Button
 									className='esf-form-type-picker-button'
-									icon={<BlockIcon iconName={icon} />}
 									key={index}
 									isTertiary
 									onClick={() => {
 										createBlockFromTemplate(clientId, slug, forms);
 									}}
 								>
+									<div dangerouslySetInnerHTML={{__html: utilsManifest.icons[camelCase(slug)]}} />
 									{sprintf(__('%s form', 'eightshift-forms'), label)}
 								</Button>
 							);

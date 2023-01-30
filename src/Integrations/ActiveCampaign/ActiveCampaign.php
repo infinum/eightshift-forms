@@ -146,7 +146,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			$name = $field['name'] ?? '';
 			$label = $field['label'] ?? '';
 			$header = $field['header'] ?? '';
-			$required = $field['isRequired'] ?? false;
+			$isRequired = isset($field['isRequired']) ? (bool) $field['isRequired'] : false;
 			$options = $field['options'] ?? [];
 			$id = $field['id'] ?? '';
 
@@ -167,9 +167,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'firstName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => (bool) $required,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
+							$isRequired ? 'inputIsRequired' : '',
 						]),
 					];
 					break;
@@ -180,9 +180,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'lastName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => (bool) $required,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
+							$isRequired ? 'inputIsRequired' : '',
 						]),
 					];
 					break;
@@ -193,9 +193,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => 'fullName',
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => (bool) $required,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
+							$isRequired ? 'inputIsRequired' : '',
 						]),
 					];
 					break;
@@ -204,9 +204,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
-						'inputType' => 'hidden',
-						'inputFieldHidden' => 'hidden',
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+						'inputFieldHidden' => true,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputFieldHidden',
+						]),
 					];
 					break;
 				case 'textarea':
@@ -215,9 +216,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaIsRequired' => (bool) $required,
+						'textareaIsRequired' => (bool) $isRequired,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-							$required ? 'textareaIsRequired' : '',
+							$isRequired ? 'textareaIsRequired' : '',
 						]),
 					];
 					break;
@@ -242,9 +243,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'tel',
-						'inputIsRequired' => (bool) $required,
+						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'textareaIsRequired' : '',
+							$isRequired ? 'textareaIsRequired' : '',
 						]),
 					];
 					break;
@@ -253,7 +254,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'checkboxes',
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
-						'checkboxesIsRequired' => (bool) $required,
+						'checkboxesIsRequired' => (bool) $isRequired,
 						'checkboxesContent' => \array_map(
 							function ($checkbox) use ($name) {
 								return [
@@ -267,7 +268,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 							$options
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-							$required ? 'checkboxesIsRequired' : '',
+							$isRequired ? 'checkboxesIsRequired' : '',
 						]),
 					];
 					break;
@@ -276,7 +277,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'radios',
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
-						'radiosIsRequired' => (bool) $required,
+						'radiosIsRequired' => (bool) $isRequired,
 						'radiosContent' => \array_map(
 							function ($radio) use ($name) {
 								return [
@@ -292,7 +293,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 							$options
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
-							$required ? 'radiosIsRequired' : '',
+							$isRequired ? 'radiosIsRequired' : '',
 						]),
 					];
 					break;
@@ -302,7 +303,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
-						'selectIsRequired' => (bool) $required,
+						'selectIsRequired' => (bool) $isRequired,
 						'selectContent' => \array_map(
 							function ($option) {
 								return [
@@ -317,7 +318,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 							$options
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-							$required ? 'selectIsRequired' : '',
+							$isRequired ? 'selectIsRequired' : '',
 						]),
 					];
 					break;
@@ -340,10 +341,12 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				$output[] = [
 					'component' => 'input',
 					'inputFieldLabel' => $action,
+					'inputFieldHidden' => true,
 					'inputName' => 'action',
-					'inputType' => 'hidden',
 					'inputValue' => $actionValue,
-					'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+					'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+						'inputFieldHidden',
+					]),
 				];
 			}
 		}

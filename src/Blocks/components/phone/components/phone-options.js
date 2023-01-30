@@ -52,7 +52,9 @@ export const PhoneOptions = (attributes) => {
 		<>
 			<PanelBody title={title}>
 				<FieldOptions
-					{...props('field', attributes)}
+					{...props('field', attributes, {
+						fieldDisabledOptions: phoneDisabledOptions,
+					})}
 				/>
 
 				<TextControl

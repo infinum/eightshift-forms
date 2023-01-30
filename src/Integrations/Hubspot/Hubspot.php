@@ -142,14 +142,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$name = $field['name'] ?? '';
 				$label = $field['label'] ?? '';
 				$type = $field['fieldType'] ?? '';
-				$required = $field['required'] ?? false;
+				$isRequired = isset($field['required']) ? (bool) $field['required'] : false;
 				$value = $field['defaultValue'] ?? '';
 				$placeholder = $field['placeholder'] ?? '';
 				$options = $field['options'] ?? '';
 				$validation = $field['validation']['data'] ?? '';
 				$metaData = $field['metaData'] ?? [];
 				$enabled = $field['enabled'] ?? true;
-				$hidden = $field['hidden'] ?? false;
+				$isHidden = isset($field['hidden']) ? (bool) $field['hidden'] : false;
 
 				$validation = \explode(':', $validation);
 				$min = $validation[0] ?? '';
@@ -163,24 +163,25 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'text':
 						$item = [
 							'component' => 'input',
-							'inputFieldHidden' => $hidden,
+							'inputFieldHidden' => $isHidden,
 							'inputFieldLabel' => $label,
 							'inputFieldHelp' => $description,
 							'inputName' => $name,
 							'inputTracking' => $name,
-							'inputType' => $hidden ? 'hidden' : 'text',
+							'inputType' => 'text',
 							'inputPlaceholder' => $placeholder,
-							'inputIsRequired' => (bool) $required,
+							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-								$required ? 'inputIsRequired' : '',
+								$isRequired ? 'inputIsRequired' : '',
 								$min ? 'inputMinLength' : '',
 								$max ? 'inputMaxLength' : '',
 								$name === 'email' ? 'inputType' : '',
 								$name === 'email' ? 'inputValidationPattern' : '',
+								$isHidden ? 'inputFieldHidden' : '',
 							]),
 						];
 
@@ -194,7 +195,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						if ($name === 'email') {
 							$item['inputValidationPattern'] = 'simpleEmail';
-							$item['inputType'] = $hidden ? 'hidden' : 'email';
+							$item['inputType'] = $isHidden ? 'hidden' : 'email';
 						}
 
 						$output[] = $item;
@@ -202,26 +203,27 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'date':
 						$item = [
 							'component' => 'date',
-							'dateFieldHidden' => $hidden,
+							'dateFieldHidden' => $isHidden,
 							'dateFieldLabel' => $label,
 							'dateFieldHelp' => $description,
 							'dateName' => $name,
 							'dateTracking' => $name,
 							'dateType' => 'date',
 							'datePlaceholder' => $placeholder,
-							'dateIsRequired' => (bool) $required,
+							'dateIsRequired' => $isRequired,
 							'dateValue' => $value,
 							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
-								$required ? 'dateIsRequired' : '',
+								$isRequired ? 'dateIsRequired' : '',
 								$min ? 'dateMinLength' : '',
 								$max ? 'dateMaxLength' : '',
 								$name === 'email' ? 'dateType' : '',
 								$name === 'email' ? 'dateValidationPattern' : '',
 								'dateOutputFormat',
+								$isHidden ? 'dateFieldHidden' : '',
 							]),
 						];
 
@@ -234,22 +236,23 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'number':
 						$item = [
 							'component' => 'input',
-							'inputFieldHidden' => $hidden,
+							'inputFieldHidden' => $isHidden,
 							'inputFieldHelp' => $description,
 							'inputName' => $name,
 							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
-							'inputType' => $hidden ? 'hidden' : 'number',
-							'inputIsRequired' => (bool) $required,
+							'inputType' => 'number',
+							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-								$required ? 'inputIsRequired' : '',
+								$isRequired ? 'inputIsRequired' : '',
 								$min ? 'inputMin' : '',
 								$max ? 'inputMax' : '',
 								'inputType',
+								$isHidden ? 'inputFieldHidden' : '',
 							]),
 						];
 
@@ -266,18 +269,19 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'phonenumber':
 						$item = [
 							'component' => 'phone',
-							'phoneFieldHidden' => $hidden,
+							'phoneFieldHidden' => $isHidden,
 							'phoneFieldHelp' => $description,
 							'phoneName' => $name,
 							'phoneTracking' => $name,
 							'phoneFieldLabel' => $label,
-							'phoneIsRequired' => (bool) $required,
+							'phoneIsRequired' => $isRequired,
 							'phoneValue' => $value,
 							'phoneAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
-								$required ? 'phoneIsRequired' : '',
+								$isRequired ? 'phoneIsRequired' : '',
+								$isHidden ? 'phoneFieldHidden' : '',
 							]),
 						];
 
@@ -286,19 +290,20 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'textarea':
 						$output[] = [
 							'component' => 'textarea',
-							'textareaFieldHidden' => $hidden,
+							'textareaFieldHidden' => $isHidden,
 							'textareaFieldLabel' => $label,
 							'textareaFieldHelp' => $description,
 							'textareaName' => $name,
 							'textareaTracking' => $name,
 							'textareaPlaceholder' => $placeholder,
-							'textareaIsRequired' => (bool) $required,
+							'textareaIsRequired' => $isRequired,
 							'textareaValue' => $value,
 							'textareaAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-								$required ? 'textareaIsRequired' : '',
+								$isRequired ? 'textareaIsRequired' : '',
+								$isHidden ? 'textareaFieldHidden' : '',
 							]),
 						];
 						break;
@@ -314,21 +319,22 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$fileOutput = [
 							'component' => 'file',
-							'fileFieldHidden' => $hidden,
+							'fileFieldHidden' => $isHidden,
 							'fileFieldLabel' => $label,
 							'fileFieldHelp' => $description,
 							'fileName' => $name,
 							'fileTracking' => $name,
 							'filePlaceholder' => $placeholder,
-							'fileIsRequired' => (bool) $required,
+							'fileIsRequired' => $isRequired,
 							'fileValue' => $value,
 							'fileIsMultiple' => !empty($isMultiple),
 							'fileAttrs' => [
 								'data-object-type-id' => $objectTypeId,
 							],
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
-								$required ? 'fileIsRequired' : '',
+								$isRequired ? 'fileIsRequired' : '',
 								$allowedFileTypes ? 'fileAccept' : '',
+								$isHidden ? 'fileFieldHidden' : '',
 							]),
 						];
 
@@ -343,13 +349,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$output[] = [
 							'component' => 'select',
-							'selectFieldHidden' => $hidden,
+							'selectFieldHidden' => $isHidden,
 							'selectFieldLabel' => $label,
 							'selectFieldHelp' => $description,
 							'selectName' => $name,
 							'selectTracking' => $name,
 							'selectPlaceholder' => $placeholder,
-							'selectIsRequired' => (bool) $required,
+							'selectIsRequired' => $isRequired,
 							'selectValue' => $value,
 							'selectAttrs' => [
 								'data-object-type-id' => $objectTypeId,
@@ -371,7 +377,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								)
 							),
 							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-								$required ? 'selectIsRequired' : '',
+								$isRequired ? 'selectIsRequired' : '',
+								$isHidden ? 'selectFieldHidden' : '',
 							]),
 						];
 						break;
@@ -380,10 +387,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$output[] = [
 							'component' => 'checkboxes',
-							'checkboxesFieldHidden' => $hidden,
+							'checkboxesFieldHidden' => $isHidden,
 							'checkboxesFieldHelp' => $description,
 							'checkboxesName' => $name,
-							'checkboxesIsRequired' => (bool) $required,
+							'checkboxesIsRequired' => $isRequired,
 							'checkboxesContent' => [
 								[
 									'component' => 'checkbox',
@@ -400,7 +407,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								]
 							],
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-								$required ? 'checkboxesIsRequired' : '',
+								$isRequired ? 'checkboxesIsRequired' : '',
+								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 						break;
@@ -409,11 +417,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$output[] = [
 							'component' => 'checkboxes',
-							'checkboxesFieldHidden' => $hidden,
+							'checkboxesFieldHidden' => $isHidden,
 							'checkboxesFieldHelp' => $description,
 							'checkboxesName' => $name,
 							'checkboxesFieldLabel' => $label,
-							'checkboxesIsRequired' => (bool) $required,
+							'checkboxesIsRequired' => $isRequired,
 							'checkboxesContent' => \array_map(
 								function ($checkbox) use ($name, $objectTypeId, $selectedOption) {
 									return [
@@ -433,7 +441,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$options
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-								$required ? 'checkboxesIsRequired' : '',
+								$isRequired ? 'checkboxesIsRequired' : '',
+								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 						break;
@@ -442,11 +451,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						$output[] = [
 							'component' => 'radios',
-							'radiosFieldHidden' => $hidden,
+							'radiosFieldHidden' => $isHidden,
 							'radiosFieldHelp' => $description,
 							'radiosName' => $name,
 							'radiosFieldLabel' => $label,
-							'radiosIsRequired' => (bool) $required,
+							'radiosIsRequired' => $isRequired,
 							'radiosContent' => \array_map(
 								function ($radio) use ($name, $objectTypeId, $selectedOption) {
 									return [
@@ -466,20 +475,21 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$options
 							),
 							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
-								$required ? 'radiosIsRequired' : '',
+								$isRequired ? 'radiosIsRequired' : '',
+								$isHidden ? 'radiosFieldHidden' : '',
 							]),
 						];
 						break;
 					case 'consent':
 						$output[] = [
 							'component' => 'checkboxes',
-							'checkboxesFieldHidden' => $hidden,
+							'checkboxesFieldHidden' => $isHidden,
 							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
 							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
 							'checkboxesFieldHideLabel' => true,
 							'checkboxesFieldHelp' => $description,
 							'checkboxesName' => $name,
-							'checkboxesIsRequired' => (bool) $required,
+							'checkboxesIsRequired' => $isRequired,
 							'checkboxesContent' => \array_map(
 								function ($checkbox) use ($name, $objectTypeId) {
 									return [
@@ -498,7 +508,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$options
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-								$required ? 'checkboxesIsRequired' : '',
+								$isRequired ? 'checkboxesIsRequired' : '',
+								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 

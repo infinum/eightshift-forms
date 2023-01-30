@@ -8,13 +8,6 @@
 	"attributes": {
 		"tabsContent": {
 			"type": "string"
-		},
-		"tabsLoaderIsActive": {
-			"type": "boolean",
-			"default": true
 		}
-	},
-	"components": {
-		"loader": "loader"
 	}
 }

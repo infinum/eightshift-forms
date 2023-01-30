@@ -101,6 +101,9 @@
 		},
 		"fieldConditionalTags": {
 			"type": "string"
+		},
+		"fieldDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"responsiveAttributes": {
