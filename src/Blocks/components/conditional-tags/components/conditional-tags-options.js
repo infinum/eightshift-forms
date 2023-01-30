@@ -36,12 +36,12 @@ export const ConditionalTagsOptions = (attributes) => {
 	const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
 		[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('show', 'eightshift-forms'),
 		[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hide', 'eightshift-forms'),
-	}
+	};
 
 	const CONDITIONAL_TAGS_LOGIC_INTERNAL = {
 		[CONDITIONAL_TAGS_LOGIC.ALL]: __('all', 'eightshift-forms'),
 		[CONDITIONAL_TAGS_LOGIC.ANY]: __('any', 'eightshift-forms'),
-	}
+	};
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -60,7 +60,7 @@ export const ConditionalTagsOptions = (attributes) => {
 		}
 
 		return useEmpty ? [empty, ...items] : items;
-	}
+	};
 
 	const ConditionalTagsItem = ({index}) => {
 		return (
@@ -106,11 +106,11 @@ export const ConditionalTagsOptions = (attributes) => {
 					setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
 
 					if (!value) {
-						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined })
-						setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: undefined })
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined })
+						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined });
+						setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: undefined });
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
 					} else {
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [] })
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [] });
 					}
 				}}
 			/>
@@ -183,4 +183,4 @@ export const ConditionalTagsOptions = (attributes) => {
 			}
 		</PanelBody>
 	);
-}
+};

@@ -1,12 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSelect } from "@wordpress/data";
-import { getAttrKey, getUnique } from '@eightshift/frontend-libs/scripts';
 import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
 
-export const CustomDataEditor = ({ attributes, setAttributes, clientId }) => {
-	const unique = useMemo(() => getUnique(), []);
-
+export const CustomDataEditor = ({ attributes, clientId }) => {
 	const {
 		blockClass,
 		blockFullName

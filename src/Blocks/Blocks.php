@@ -13,7 +13,6 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
-use WP_Post;
 use WP_Block_Editor_Context;
 
 /**

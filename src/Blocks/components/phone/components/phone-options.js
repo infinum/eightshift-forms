@@ -1,7 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useEffect } from 'react';
-import apiFetch from '@wordpress/api-fetch';
+import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
@@ -14,8 +13,6 @@ import {
 	props,
 	FancyDivider,
 	SimpleVerticalSingleSelect,
-	CustomSelect,
-	BlockIcon
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';

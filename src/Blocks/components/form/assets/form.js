@@ -228,7 +228,7 @@ export class Form {
 		if (this.utils.formIsAdmin) {
 			url = this.utils.formSubmitRestApiUrl;
 			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
-		};
+		}
 
 		fetch(url, body)
 			.then((response) => {
@@ -424,7 +424,7 @@ export class Form {
 					break;
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.utils.FILES[formId][id] ?? [];
+					const fileList = this.utils.FILES[formId][id] ?? []; // eslint-disable-line no-case-declarations
 
 					// Loop files and append.
 					if (fileList.length) {
@@ -436,7 +436,7 @@ export class Form {
 					}
 					break;
 				case 'select-one':
-					const selectShowCountryIcons = item.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
+					const selectShowCountryIcons = item.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons); // eslint-disable-line no-case-declarations
 
 					// Bailout if select is part of the phone.
 					if (selectShowCountryIcons) {
@@ -454,8 +454,8 @@ export class Form {
 					formData.append(id, JSON.stringify(data));
 					break;
 				case 'tel':
-					const prefix = item.previousElementSibling.querySelector('select');
-					const selectedPrefix = prefix.options[prefix.selectedIndex].value
+					const prefix = item.previousElementSibling.querySelector('select'); // eslint-disable-line no-case-declarations
+					const selectedPrefix = prefix.options[prefix.selectedIndex].value; // eslint-disable-line no-case-declarations
 					data.value = `${selectedPrefix}${item.value}`;
 
 					formData.append(id, JSON.stringify(data));
@@ -627,7 +627,7 @@ export class Form {
 
 							return element;
 						},
-					}
+					};
 				},
 			});
 
@@ -854,7 +854,7 @@ export class Form {
 				input.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
-			[...selects].forEach((select) => {
+			[...selects].forEach(() => {
 				if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
 					delete this.utils.CUSTOM_SELECTS[formId];
 				}

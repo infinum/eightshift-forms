@@ -5,8 +5,7 @@ import { Button, BaseControl } from '@wordpress/components';
 import { icons } from '@eightshift/frontend-libs/scripts';
 import { getSettingsPageUrl } from './../index';
 
-export const SettingsButton = ({
-}) => {
+export const SettingsButton = () => {
 	const postId = select('core/editor').getCurrentPostId();
 
 	return (
@@ -22,4 +21,4 @@ export const SettingsButton = ({
 			</Button>
 		</BaseControl>
 	);
-}
+};

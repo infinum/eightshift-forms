@@ -8,8 +8,10 @@
  *
  */
 
+// Global.
 @import './parts/shared';
 
+// Utils helpers
 @import '@eightshift/frontend-libs/styles/es-utility-classes.scss';
 @import '@eightshift/frontend-libs/styles/es-component-styles.scss';
 
@@ -18,8 +20,3 @@
 
 // Find all blocks and require block_name-editor.scss inside it.
 @import './../../custom/*/*-editor.scss';
-
-// Hack for geo modal for select dropdown to work.
-// .es-geolocation-modal {
-// 	z-index: 1;
-// }

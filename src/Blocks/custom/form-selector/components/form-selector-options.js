@@ -1,9 +1,6 @@
-/* global esFormsLocalization */
-
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
 import { PanelBody, Button, BaseControl, Modal } from '@wordpress/components';
 import { icons, FancyDivider } from '@eightshift/frontend-libs/scripts';
 import { resetInnerBlocks, syncIntegrationBlocks, getActiveIntegrationBlockName } from '../../../components/utils';
@@ -43,7 +40,7 @@ export const FormSelectorOptions = ({
 					<>
 						<h4>{__('Fields added', 'eightshift-forms')}:</h4>
 						<ul>
-								{added.map((item) => <li>- {item}</li>)}
+								{added.map((item, index) => <li key={index}>- {item}</li>)}
 						</ul>
 						<hr />
 					</>
@@ -53,7 +50,7 @@ export const FormSelectorOptions = ({
 					<>
 						<h4>{__('Fields removed', 'eightshift-forms')}:</h4>
 						<ul>
-								{removed.map((item) => <li>- {item}</li>)}
+								{removed.map((item, index) => <li key={index}>- {item}</li>)}
 						</ul>
 						<hr />
 					</>
@@ -63,7 +60,7 @@ export const FormSelectorOptions = ({
 					<>
 						<h4>{__('Fields replaced', 'eightshift-forms')}:</h4>
 						<ul>
-								{replaced.map((item) => <li>- {item}</li>)}
+								{replaced.map((item, index) => <li key={index}>- {item}</li>)}
 						</ul>
 						<hr />
 					</>
@@ -73,12 +70,12 @@ export const FormSelectorOptions = ({
 					<>
 						<h4>{__('Fields attributes changed', 'eightshift-forms')}:</h4>
 						<ul>
-								{changed.map((item) => {
+								{changed.map((item, index) => {
 									return (
-										<li>
+										<li key={index}>
 											- {Object.keys(item)[0]}:
 											<ul>
-												{Object.values(item)[0].map((inner) => <li>--- {inner}</li>)}
+												{Object.values(item)[0].map((inner, innerIndex) => <li key={innerIndex}>--- {inner}</li>)}
 											</ul>
 										</li>
 									);
@@ -88,8 +85,8 @@ export const FormSelectorOptions = ({
 					</>
 				}
 			</Modal>
-		)
-	}
+		);
+	};
 
 	return (
 		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
@@ -133,7 +130,7 @@ export const FormSelectorOptions = ({
 								{__('Sync integration', 'eightshift-forms')} 
 							</Button>
 						</BaseControl>
- 					}
+					}
 
 					{isModalOpen && <SyncModal />}
 				</>

@@ -56,12 +56,12 @@ div.es-select {
 		border-bottom: 1px solid var(--es-input-border-color);
 
 		&:focus {
-			@include input-styles-focus();
+			@include input-styles-focus;
 		}
 	}
 
 	&.is-focused {
-		.choices__inner{
+		.choices__inner {
 			border-color: var(--es-input-focus-border-color);
 		}
 	}

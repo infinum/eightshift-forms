@@ -1,7 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
-import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
@@ -17,7 +15,7 @@ import { camelize, STORE_NAME } from '@eightshift/frontend-libs/scripts';
  */
 export const isOptionDisabled = (key, options) => {
 	return options.includes(key);
-}
+};
 
 /**
  * Update/create new integration blocks by getting the update from rest api.
@@ -42,7 +40,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 			dispatch('core/editor').savePost();
 		}
 	});
-}
+};
 
 /**
  * Sync integration blocks by getting the update from rest api.
@@ -67,10 +65,10 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 				added: response?.data?.data?.added,
 				replaced: response?.data?.data?.replaced,
 				changed: response?.data?.data?.changed,
-			}
+			};
 		}
 	});
-}
+};
 
 /**
  * Get settings page url.
@@ -87,7 +85,7 @@ export const getSettingsPageUrl = (postId) => {
 	} = select(STORE_NAME).getSettings();
 
 	return `${wpAdminUrl}${settingsPageUrl}&formId=${postId}`;
-}
+};
 
 /**
  * Create new inner blocks from provided template.
@@ -113,7 +111,7 @@ export const createBlockFromTemplate = (clientId, name, templates) => {
 
 	// Insert built block in DOM.
 	dispatch('core/block-editor').insertBlock(block, 0, clientId);
-}
+};
 
 /**
  * Update inner blocks state by id.
@@ -125,7 +123,7 @@ export const createBlockFromTemplate = (clientId, name, templates) => {
  */
 export const updateInnerBlocks = (clientId, blocks) => {
 	dispatch( 'core/block-editor' ).replaceInnerBlocks( clientId, blocks);
-}
+};
 
 /**
  * Reset current inner blocks by id.
@@ -136,7 +134,7 @@ export const updateInnerBlocks = (clientId, blocks) => {
  */
 export const resetInnerBlocks = (clientId) => {
 	updateInnerBlocks(clientId, []);
-}
+};
 
 /**
  * Get forms fields blocks by checking the current block editor state.
@@ -182,7 +180,7 @@ export const getFormFields = () => {
 			};
 		}).filter((elm) => elm),
 	];
-}
+};
 
 /**
  * Filter attributes by array of keys. Used to provide alternative attributes to server side render component to prevent unecesery rerender.
@@ -194,7 +192,7 @@ export const getFormFields = () => {
  * @returns {object}
  */
 export const getFilteredAttributes = (attributes, filterAttributes, appendItems = {}) => {
-	const output = {}
+	const output = {};
 
 	for (const [key, value] of Object.entries(attributes)) {
 		if (filterAttributes.includes(key)) {
@@ -205,8 +203,8 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
 	return {
 		...output,
 		...appendItems,
-	}
-}
+	};
+};
 
 /**
  * Get active integration block name by checking the paren item.
@@ -217,7 +215,7 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
  */
 export const getActiveIntegrationBlockName = (clientId) => {
 	return select('core/editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
-}
+};
 
 /**
  * Get additional block name content from filter.
@@ -232,4 +230,4 @@ export const getAdditionalContentFilterContent = (blockName) => {
 	}
 
 	return '';
-}
+};

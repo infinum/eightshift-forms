@@ -2,10 +2,9 @@
 	$this: &;
 
 	--submit-scoped-background-color: var(--global-colors-es-matisse);
-
 	--submit-scoped-spacing: calc(var(--es-input-spacing) * 2);
 
-	@if ($size == 'medium') {
+	@if $size == 'medium' {
 		--submit-scoped-spacing: calc(var(--es-input-spacing));
 	}
 

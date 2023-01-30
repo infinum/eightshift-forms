@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React from 'react';
 import classnames from 'classnames';
 import {
@@ -18,8 +16,6 @@ export const TextareaEditor = (attributes) => {
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;

@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
-import { useState } from '@wordpress/element';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
@@ -10,8 +8,6 @@ import {
 	IconLabel,
 	props,
 	FancyDivider,
-	CustomSelect,
-	BlockIcon,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';

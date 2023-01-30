@@ -40,7 +40,7 @@ export const IntegrationsOptions = ({
 				}
 			});
 		}
-	}, [itemId]);
+	}, [itemId, block, innerIdKey]);
 
 	return (
 		<>
@@ -100,5 +100,5 @@ export const IntegrationsOptions = ({
 				</Button>
 			</BaseControl>
 		</>
-	)
-}
+	);
+};

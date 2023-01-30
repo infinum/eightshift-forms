@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React from 'react';
 import { camelCase } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';

@@ -36,7 +36,7 @@ export const CONDITIONAL_TAGS_OPERATORS = {
 	C: 'c',
 	SW: 'sw',
 	EW: 'ew',
-}
+};
 
 /**
  * Conditional tags actions constants.
@@ -47,7 +47,7 @@ export const CONDITIONAL_TAGS_OPERATORS = {
 export const CONDITIONAL_TAGS_ACTIONS = {
 	SHOW: 'show',
 	HIDE: 'hide',
-}
+};
 
 /**
  * Conditional tags logic constants.
@@ -58,7 +58,7 @@ export const CONDITIONAL_TAGS_ACTIONS = {
 export const CONDITIONAL_TAGS_LOGIC = {
 	ALL: 'all',
 	ANY: 'any',
-}
+};
 
 /**
  * Main Utilities class.

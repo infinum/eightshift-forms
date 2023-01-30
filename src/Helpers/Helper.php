@@ -429,7 +429,7 @@ class Helper
 		$output['type'] = $type;
 		$output['typeFilter'] = $blockName['name'];
 		$output['label'] = Filters::getSettingsLabels($type, 'title');
-		$output['icon'] = Helper::getProjectIcons($type) ?? '';
+		$output['icon'] = Helper::getProjectIcons($type);
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
 		$output['fields'] = $blocks;

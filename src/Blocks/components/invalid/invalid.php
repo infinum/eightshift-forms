@@ -19,9 +19,10 @@ $icon = $attributes['icon'] ?? '';
 ?>
 
 <div class="<?php echo esc_attr($componentClass); ?>">
-		<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-			<?php echo $icon ? $icon : $iconDefault; ?>
-		</div>
+	<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
+		<?php echo $icon ? $icon : $iconDefault; //phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	</div>
+
 	<?php if ($heading) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__heading"); ?>">
 			<?php echo esc_html($heading); ?>

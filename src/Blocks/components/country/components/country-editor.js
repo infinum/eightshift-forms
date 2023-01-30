@@ -1,11 +1,6 @@
-/* global esFormsLocalization */
-
 import React from 'react';
-import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import {
-	selector,
-	checkAttr,
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
@@ -20,13 +15,7 @@ export const CountryEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
-		additionalClass,
 	} = attributes;
-
-	const countryClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
 
 	const country = (
 		<>

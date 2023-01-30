@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React from 'react';
 import {
 	checkAttr,

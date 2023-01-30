@@ -1,4 +1,3 @@
-/* global esFormsLocalization */
 /**
  * This is the main entry point for Block Editor blocks scripts used for the `WordPress admin editor`.
  * This file registers blocks dynamically using `registerBlocks` helper method.

@@ -4,7 +4,6 @@ import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { props } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from './../../form/components/form-editor';
-import manifest from '../manifest.json';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
 
 export const IntegrationsEditor = ({
@@ -29,8 +28,8 @@ export const IntegrationsEditor = ({
 				heading={__('You need to select the form from the dropdown.', 'eightshift-forms')}
 				text={__('Check the forms sidebar and select the integration form your want to use.', 'eightshift-forms')}
 			/>
-		)
-	}
+		);
+	};
 
 	const OutputDefault = () => {
 		return (
@@ -41,7 +40,7 @@ export const IntegrationsEditor = ({
 				}
 			</>
 		);
-	}
+	};
 
 	const OutputWithInner = () => {
 		return (
@@ -52,7 +51,7 @@ export const IntegrationsEditor = ({
 				}
 			</>
 		);
-	}
+	};
 
 	const Output = () => {
 		return (
@@ -63,7 +62,7 @@ export const IntegrationsEditor = ({
 				})}
 			/>
 		);
-	}
+	};
 
 	return (
 		<>
@@ -79,4 +78,4 @@ export const IntegrationsEditor = ({
 			
 		</>
 	);
-}
+};

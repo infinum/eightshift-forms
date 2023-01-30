@@ -1,4 +1,6 @@
-%countryChoicesIcons {
+// stylelint-disable max-nesting-depth
+
+%country-choices-icons {
 	.choices__item {
 		$countries: (
 			af,
@@ -264,10 +266,11 @@
 			&[data-custom-properties="#{$country}"]::before {
 				$index: index($countries, $country);
 
-				@if ($index == 1) {
-					background-position: 0 0px;
-				} @else {
-					background-position: -#{$index*$width} 0px;
+				@if $index == 1 {
+					background-position: 0 0;
+				}
+				@else {
+					background-position: -#{$index * $width} 0;
 				}
 			}
 		}

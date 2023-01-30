@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import { Utils } from "../assets/utilities";
 
 export class Migration {
