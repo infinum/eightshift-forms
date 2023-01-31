@@ -3,6 +3,7 @@
 	right: 0;
 	bottom: 2rem;
 	z-index: 1;
+	max-width: 300px;
 
 	padding: 0.75rem 1rem;
 
@@ -21,6 +22,10 @@
 
 	&[data-status='error'] {
 		background-color: var(--global-colors-es-pome);
+	}
+
+	&[data-status='warning'] {
+		background-color: var(--global-colors-es-ronchi);
 	}
 
 	&.is-active {

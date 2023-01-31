@@ -54,6 +54,13 @@ $layoutClass = Components::classnames([
 							}
 							?>
 						</div>
+
+						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
+							<a href="#" class="<?php echo esc_attr("{$sectionClass}__link {$componentJsSyncClass}"); ?>" data-id="all">
+								<svg class="<?php echo esc_attr("{$sectionClass}__link-icon"); ?>" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.999 13.306A5 5 0 0 1 6.75 5h7.5m0 0-3-3m3 3-3 3m5.751-1a5 5 0 0 1-3.751 8.306h-7.5m0 0 3 3m-3-3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>
+								<?php echo esc_html__('Sync all forms', 'eightshift-forms'); ?>
+							</a>
+						<?php } ?>
 					</div>
 
 					<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">

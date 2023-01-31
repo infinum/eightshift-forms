@@ -89,6 +89,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const STATUS_SUCCESS = 'success';
 
 	/**
+	 * Status warning const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_WARNING = 'warning';
+
+	/**
 	 * Delimiter used in checkboxes and multiple items.
 	 *
 	 * @var string

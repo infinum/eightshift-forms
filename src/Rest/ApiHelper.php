@@ -220,6 +220,29 @@ trait ApiHelper
 	}
 
 	/**
+	 * Return API warning response array - Generic.
+	 *
+	 * @param string $msg Msg for the user.
+	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function getApiWarningOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractBaseRoute::STATUS_WARNING,
+			'code' => 200,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Return API error response array for missing permissions.
 	 *
 	 * @return array<string, mixed>

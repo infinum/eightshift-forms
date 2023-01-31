@@ -10,9 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use WP_Query;
 use WP_REST_Request;
 
 /**
@@ -99,27 +101,70 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 
 		$formId = $request->get_param('id') ?? '';
 
-		$syncForm = $this->integrationSyncDiff->syncFormDirect($formId);
+		$output = [];
+		if ($formId === 'all') {
+			// Prepare query args.
+			$args = [
+				'post_type' => Forms::POST_TYPE_SLUG,
+				'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+				'post_status' => 'any',
+			];
 
-		$status = $syncForm['status'] ?? '';
-		$message = $syncForm['message'] ?? '';
+			$theQuery = new WP_Query($args);
+			while ($theQuery->have_posts()) {
+				$theQuery->the_post();
 
-		unset($syncForm['message']);
-		unset($syncForm['status']);
+				$id = \get_the_ID();
 
-		if ($status === AbstractBaseRoute::STATUS_ERROR) {
+				$item = $this->integrationSyncDiff->syncFormDirect((string) $id);
+
+				$output[$item['status']][] = \get_the_title($item['formId']);
+			}
+
+			\wp_reset_postdata();
+
+		} else {
+			$item = $this->integrationSyncDiff->syncFormDirect($formId);
+
+			$output[$item['status']][] = \get_the_title($item['formId']);
+		}
+
+		$hasErrors = isset($output['error']) && count($output['error']) > 0;
+
+		if ($hasErrors) {
+			$msgOutput = [
+				__('Not all forms synced with success. Please check manualy all forms with errors.', 'eightshift-forms'),
+			];
+
+			if (isset($output['success'])) {
+				$msgOutput[] = sprintf(__('<br/><strong>Success:</strong><br/> %s', 'eightshift-forms'), implode('<br/>', $output['success'] ?? []));
+			}
+
+			if (isset($output['error'])) {
+				$msgOutput[] = sprintf(__('<br/><strong>Error:</strong><br/> %s', 'eightshift-forms'), implode('<br/>', $output['error'] ?? []));
+			}
+
+			return \rest_ensure_response(
+				$this->getApiWarningOutput(
+					implode('<br/>', $msgOutput),
+					$output
+				)
+			);
+		}
+
+		if (count($output) === 0) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
-					$message,
-					$syncForm
+					__('There are no forms in your list to sync.', 'eightshift-forms'),
+					$output
 				)
 			);
 		}
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				$message,
-				$syncForm
+				sprintf(_n('%s form synced with success.', '%s forms synced with success.', count($output), 'eightshift-forms'), count($output)),
+				$output
 			)
 		);
 	}

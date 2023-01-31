@@ -469,6 +469,8 @@ class TransferRoute extends AbstractBaseRoute
 
 		$theQuery = new WP_Query($args);
 
+		\wp_reset_postdata();
+
 		return isset($theQuery->posts[0]) ? (string) $theQuery->posts[0] : '';
 	}
 }

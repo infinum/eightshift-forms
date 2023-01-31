@@ -911,7 +911,6 @@ export class Form {
 		event.preventDefault();
 
 		const element = event.target;
-		
 
 		if (this.utils.isCaptchaUsed()) {
 			grecaptcha.ready(() => {

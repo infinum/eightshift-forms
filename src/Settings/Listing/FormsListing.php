@@ -68,6 +68,8 @@ class FormsListing implements FormListingInterface
 			];
 		}
 
+		\wp_reset_postdata();
+
 		return $output;
 	}
 }

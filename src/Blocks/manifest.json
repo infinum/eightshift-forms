@@ -89,6 +89,11 @@
 				"color": "#797878"
 			},
 			{
+				"name": "Ronchi",
+				"slug": "es-ronchi",
+				"color": "#E8B14E"
+			},
+			{
 				"name": "Pome",
 				"slug": "es-pome",
 				"color": "#E84E4E"
