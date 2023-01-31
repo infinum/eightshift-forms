@@ -21,6 +21,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
+use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -199,9 +200,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
+				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
 			];
 
 			$output['wpAdminUrl'] = \get_admin_url();
+			$output['nonce'] = \wp_create_nonce('wp_rest');
 		} else {
 			// Frontend part.
 			$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);

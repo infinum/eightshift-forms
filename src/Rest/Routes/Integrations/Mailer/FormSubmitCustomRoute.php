@@ -171,6 +171,9 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				$this->labels->getLabel('customSuccess', $formId),
+				[
+					'processExternaly' => true,
+				]
 			)
 		);
 	}

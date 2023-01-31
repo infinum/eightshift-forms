@@ -239,12 +239,10 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'phoneName' => $name,
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
-						'phoneType' => 'tel',
 						'phoneIsRequired' => (bool) $isRequired,
 						'phoneValue' => $value,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							$isRequired ? 'phoneIsRequired' : '',
-							'phoneType'
 						]),
 					];
 					break;

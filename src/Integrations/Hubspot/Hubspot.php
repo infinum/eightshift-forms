@@ -179,9 +179,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$isRequired ? 'inputIsRequired' : '',
 								$min ? 'inputMinLength' : '',
 								$max ? 'inputMaxLength' : '',
-								$name === 'email' ? 'inputType' : '',
-								$name === 'email' ? 'inputValidationPattern' : '',
-								$isHidden ? 'inputFieldHidden' : '',
 							]),
 						];
 
@@ -195,7 +192,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 						if ($name === 'email') {
 							$item['inputValidationPattern'] = 'simpleEmail';
-							$item['inputType'] = $isHidden ? 'hidden' : 'email';
+							$item['inputType'] = 'email';
+							$item['inputDisabledOptions'][] = 'inputType';
+							$item['inputDisabledOptions'][] = 'inputValidationPattern';
 						}
 
 						$output[] = $item;
@@ -220,10 +219,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$isRequired ? 'dateIsRequired' : '',
 								$min ? 'dateMinLength' : '',
 								$max ? 'dateMaxLength' : '',
-								$name === 'email' ? 'dateType' : '',
-								$name === 'email' ? 'dateValidationPattern' : '',
 								'dateOutputFormat',
-								$isHidden ? 'dateFieldHidden' : '',
 							]),
 						];
 
@@ -252,7 +248,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								$min ? 'inputMin' : '',
 								$max ? 'inputMax' : '',
 								'inputType',
-								$isHidden ? 'inputFieldHidden' : '',
 							]),
 						];
 
@@ -281,7 +276,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$isRequired ? 'phoneIsRequired' : '',
-								$isHidden ? 'phoneFieldHidden' : '',
 							]),
 						];
 
@@ -303,7 +297,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$isRequired ? 'textareaIsRequired' : '',
-								$isHidden ? 'textareaFieldHidden' : '',
 							]),
 						];
 						break;
@@ -334,7 +327,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
 								$allowedFileTypes ? 'fileAccept' : '',
-								$isHidden ? 'fileFieldHidden' : '',
 							]),
 						];
 
@@ -378,7 +370,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 								$isRequired ? 'selectIsRequired' : '',
-								$isHidden ? 'selectFieldHidden' : '',
 							]),
 						];
 						break;
@@ -408,7 +399,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$isRequired ? 'checkboxesIsRequired' : '',
-								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 						break;
@@ -442,7 +432,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$isRequired ? 'checkboxesIsRequired' : '',
-								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 						break;
@@ -476,7 +465,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 								$isRequired ? 'radiosIsRequired' : '',
-								$isHidden ? 'radiosFieldHidden' : '',
 							]),
 						];
 						break;
@@ -509,7 +497,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$isRequired ? 'checkboxesIsRequired' : '',
-								$isHidden ? 'checkboxesFieldHidden' : '',
 							]),
 						];
 

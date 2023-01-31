@@ -269,9 +269,11 @@ export class Form {
 						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
 
 						// Do the actual redirect after some time for custom form processed externally.
-						setTimeout(() => {
-							element.submit();
-						}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+						if (response?.data?.processExternaly) {
+							setTimeout(() => {
+								element.submit();
+							}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+						}
 
 						// Set global msg.
 						this.utils.setGlobalMsg(element, response.message, 'success');
@@ -436,10 +438,8 @@ export class Form {
 					}
 					break;
 				case 'select-one':
-					const selectShowCountryIcons = item.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons); // eslint-disable-line no-case-declarations
-
 					// Bailout if select is part of the phone.
-					if (selectShowCountryIcons) {
+					if (item.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType) === 'phone') {
 						break;
 					}
 
@@ -456,12 +456,17 @@ export class Form {
 				case 'tel':
 					const prefix = item.previousElementSibling.querySelector('select'); // eslint-disable-line no-case-declarations
 					const selectedPrefix = prefix.options[prefix.selectedIndex].value; // eslint-disable-line no-case-declarations
-					data.value = `${selectedPrefix}${item.value}`;
+
+					if (item.value) {
+						data.value = `${selectedPrefix}${item.value}`;
+					}
 
 					formData.append(id, JSON.stringify(data));
 
 					break;
-
+				case 'search':
+					// Skip search field from dropdown.
+					break;
 				default:
 					formData.append(id, JSON.stringify(data));
 

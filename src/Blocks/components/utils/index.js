@@ -37,7 +37,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 
 			updateInnerBlocks(clientId, builtBlocks);
 
-			dispatch('core/editor').savePost();
+			dispatch('core/block-editor').savePost();
 		}
 	});
 };
@@ -67,6 +67,23 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 				changed: response?.data?.data?.changed,
 			};
 		}
+	});
+};
+
+/**
+ * Clear transient cache.
+ *
+ * @param {string} type Cache integration type name.
+ *
+ * @returns {string}
+ */
+export const clearTransientCache = (type) => {
+	return apiFetch({
+		path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.cacheClear}/`,
+		method: 'POST',
+		data: {type},
+	}).then((response) => {
+		return response.message;
 	});
 };
 
@@ -214,7 +231,7 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
  * @returns {string}
  */
 export const getActiveIntegrationBlockName = (clientId) => {
-	return select('core/editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
+	return select('core/block-editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
 };
 
 /**

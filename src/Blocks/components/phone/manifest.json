@@ -49,6 +49,12 @@
 		"phoneValidationPattern": {
 			"type": "string"
 		},
+		"phoneMinLength": {
+			"type": "integer"
+		},
+		"phoneMaxLength": {
+			"type": "integer"
+		},
 		"phoneMeta": {
 			"type": "string"
 		},

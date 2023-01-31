@@ -85,6 +85,16 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 		$params = $request->get_body_params();
 
+		// Used for JS api fecth from editor.
+		if (!$params) {
+			$params = $request->get_json_params();
+
+			// @phpstan-ignore-next-line.
+			if (\is_string($params)) {
+				$params = \json_decode($params, true);
+			}
+		}
+
 		if (!isset($params['type'])) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(

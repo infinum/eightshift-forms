@@ -72,7 +72,7 @@ if (has_filter($filterName)) {
 
 		$options[] = '
 			<option
-				value="' . $value . '"
+				value="' . $label . '"
 				data-custom-properties="' . $code . '"
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';

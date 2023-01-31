@@ -428,7 +428,6 @@ class MomentsClient implements ClientInterface
 					break;
 			}
 
-
 			$output[$name] = $value;
 		}
 

@@ -14,6 +14,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -137,23 +138,42 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 			switch ($type) {
 				case 'text':
-					$input = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputFieldHidden' => $isHidden,
-						'inputType' => 'text',
-						'inputIsRequired' => $isRequired,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$isRequired ? 'inputIsRequired' : '',
-							$validationMaxLength ? 'inputMaxLength' : '',
-							$isHidden ? 'inputFieldHidden' : '',
-						]),
-					];
+					switch ($name) {
+						case 'country':
+							$input = [
+								'component' => 'country',
+								'countryFieldLabel' => $label,
+								'countryFieldHidden' => $isHidden,
+								'countryName' => $name,
+								'countryTracking' => $name,
+								'countryIsRequired' => $isRequired,
+								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
+									$isRequired ? 'countryIsRequired' : '',
+								]),
+								'countryAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
+								],
+							];
+							break;
+						default:
+							$input = [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputFieldHidden' => $isHidden,
+								'inputType' => 'text',
+								'inputIsRequired' => $isRequired,
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									$isRequired ? 'inputIsRequired' : '',
+									$validationMaxLength ? 'inputMaxLength' : '',
+								]),
+							];
 
-					if ($validationMaxLength) {
-						$input['inputMaxLength'] = (int) $validationMaxLength;
+							if ($validationMaxLength) {
+								$input['inputMaxLength'] = (int) $validationMaxLength;
+							}
+							break;
 					}
 
 					$output[] = $input;
@@ -171,7 +191,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							$isRequired ? 'phoneIsRequired' : '',
 							$validationMaxLength ? 'phoneMaxLength' : '',
 							'phoneIsNumber',
-							$isHidden ? 'phoneFieldHidden' : '',
 						]),
 					];
 
@@ -182,6 +201,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = $phone;
 					break;
 				case 'date':
+					// Removed validation patterns because there is no need.
 					$output[] = [
 						'component' => 'date',
 						'dateName' => $name,
@@ -192,17 +212,15 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'datePreviewFormat' => 'F j, Y',
 						'dateOutputFormat' => 'Z',
 						'dateIsRequired' => $isRequired,
-						'dateValidationPattern' => $validationPattern ? 'momentsDate' : '',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
-							$validationPattern ? 'dateValidationPattern' : '',
 							'dateType',
 							'dateOutputFormat',
-							$isHidden ? 'dateFieldHidden' : '',
 						]),
 					];
 					break;
 				case 'datetime':
+					// Removed validation patterns because there is no need.
 					$output[] = [
 						'component' => 'date',
 						'dateName' => $name,
@@ -212,13 +230,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'dateType' => 'datetime-local',
 						'dateOutputFormat' => 'Z',
 						'dateIsRequired' => $isRequired,
-						'dateValidationPattern' => $validationPattern ? 'momentsDateTime' : '',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
-							$validationPattern ? 'dateValidationPattern' : '',
 							'dateType',
 							'dateOutputFormat',
-							$isHidden ? 'dateFieldHidden' : '',
 						]),
 					];
 					break;
@@ -239,7 +254,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							$validationPattern ? 'inputValidationPattern' : '',
 							'inputIsEmail',
 							'inputType',
-							$isHidden ? 'inputFieldHidden' : '',
 						]),
 					];
 
@@ -265,7 +279,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							$validationPattern ? 'inputValidationPattern' : '',
 							'inputIsNumber',
 							'inputType',
-							$isHidden ? 'inputFieldHidden' : '',
 						]),
 					];
 					break;
@@ -276,12 +289,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'textareaFieldHidden' => $isHidden,
 						'textareaName' => $name,
 						'textareaTracking' => $name,
-						'textareaType' => 'textarea',
 						'textareaIsRequired' => $isRequired,
 						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 							$isRequired ? 'textareaIsRequired' : '',
 							$validationMaxLength ? 'textareaMaxLength' : '',
-							$isHidden ? 'textareaFieldHidden' : '',
 						]),
 					];
 
@@ -303,8 +314,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryIsRequired' => $isRequired,
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
-									$isHidden ? 'countryFieldHidden' : '',
 								]),
+								'countryAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
+								],
 							];
 							break;
 						default:
@@ -314,7 +327,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'selectFieldHidden' => $isHidden,
 								'selectName' => $name,
 								'selectTracking' => $name,
-								'selectType' => 'select',
 								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_values(
 									\array_merge(
@@ -345,7 +357,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								),
 								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 									$isRequired ? 'selectIsRequired' : '',
-									$isHidden ? 'selectFieldHidden' : '',
 								]),
 							];
 							break;
@@ -376,7 +387,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 							$isRequired ? 'radiosIsRequired' : '',
-							$isHidden ? 'radiosFieldHidden' : '',
 						]),
 					];
 					break;
@@ -400,7 +410,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						],
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							$isRequired ? 'checkboxesIsRequired' : '',
-							$isHidden ? 'checkboxesFieldHidden' : '',
 						]),
 					];
 					break;
@@ -427,7 +436,6 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							$isRequired ? 'checkboxesIsRequired' : '',
-							$isHidden ? 'checkboxesFieldHidden' : '',
 						]),
 					];
 					break;

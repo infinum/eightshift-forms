@@ -166,7 +166,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'intro',
-								'introTitle' => \__('Map your parameter time', 'eightshift-forms'),
+								'introTitle' => \__('Map your parameters', 'eightshift-forms'),
 								'introSubtitle' => \__('Here you can map all your enrichment parameters with field names. We will match your parameters with the field names during the form submission and enrich your data. Note you can add multiple field names separated by a comma.', 'eightshift-forms'),
 							],
 							...\array_map(

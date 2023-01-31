@@ -114,7 +114,13 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = $this->getEnrichmentConfig()['map'];
+		$enrichment = $this->getEnrichmentConfig();
+
+		if (!$enrichment) {
+			return $params;
+		}
+
+		$enrichment = $enrichment['map'];
 
 		// Get storage param values.
 		$storage = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];

@@ -661,6 +661,17 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 		}
 
+		// Remove attributes removed from integration but it is still in the content.
+		$removedAttributes = \array_diff_key($content['attrs'], $integration['attrs']);
+		if ($removedAttributes) {
+			foreach ($removedAttributes as $removedAttributesKey => $removedAttributesValue) {
+				// Remove attributes to the otput.
+				$output['update'] = true;
+				$output['removed'] = $removedAttributesKey;
+				unset($output['output']['attrs'][$removedAttributesKey]);
+			}
+		}
+
 		return $output;
 	}
 

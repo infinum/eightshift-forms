@@ -72,7 +72,7 @@
 		}
 	},
 	"options": {
-		"inputType": [
+		"dateType": [
 			{
 				"label": "Date",
 				"value": "date"
