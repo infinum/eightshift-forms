@@ -63,7 +63,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
 
-		/**
+	/**
 	 * Tooggle geolocation usage based on this flag.
 	 *
 	 * @return boolean
@@ -245,9 +245,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (!$isGeolocationSettingsGlobalValid) {
 			return $formId;
 		}
-
-		error_log( print_r( ( $isGeolocationSettingsGlobalValid ), true ) );
-		
 
 		$logModeCheck = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 

@@ -12,8 +12,6 @@ namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Helpers\Helper;
 
-use function EightshiftFormsVendor\DI\value;
-
 /**
  * The Variables class, used for defining available Variables.
  */

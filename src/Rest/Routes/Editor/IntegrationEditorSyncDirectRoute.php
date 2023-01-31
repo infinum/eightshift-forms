@@ -122,40 +122,37 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 			}
 
 			\wp_reset_postdata();
-
 		} else {
 			$item = $this->integrationSyncDiff->syncFormDirect($formId);
 
 			$output[$item['status']][] = \get_the_title($item['formId']);
 		}
 
-		$hasErrors = isset($output['error']) && count($output['error']) > 0;
-
-		if ($hasErrors) {
+		if (isset($output['error'])) {
 			$msgOutput = [
-				__('Not all forms synced with success. Please check manualy all forms with errors.', 'eightshift-forms'),
+				\__('Not all forms synced with success. Please check manualy all forms with errors.', 'eightshift-forms'),
 			];
 
 			if (isset($output['success'])) {
-				$msgOutput[] = sprintf(__('<br/><strong>Success:</strong><br/> %s', 'eightshift-forms'), implode('<br/>', $output['success'] ?? []));
+				// translators: %s replaces form name.
+				$msgOutput[] = \sprintf(\__('<br/><strong>Success:</strong><br/> %s', 'eightshift-forms'), \implode('<br/>', $output['success']));
 			}
 
-			if (isset($output['error'])) {
-				$msgOutput[] = sprintf(__('<br/><strong>Error:</strong><br/> %s', 'eightshift-forms'), implode('<br/>', $output['error'] ?? []));
-			}
+			// translators: %s replaces form name.
+			$msgOutput[] = \sprintf(\__('<br/><strong>Error:</strong><br/> %s', 'eightshift-forms'), \implode('<br/>', $output['error']));
 
 			return \rest_ensure_response(
 				$this->getApiWarningOutput(
-					implode('<br/>', $msgOutput),
+					\implode('<br/>', $msgOutput),
 					$output
 				)
 			);
 		}
 
-		if (count($output) === 0) {
+		if (\count($output) === 0) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
-					__('There are no forms in your list to sync.', 'eightshift-forms'),
+					\__('There are no forms in your list to sync.', 'eightshift-forms'),
 					$output
 				)
 			);
@@ -163,7 +160,8 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				sprintf(_n('%s form synced with success.', '%s forms synced with success.', count($output), 'eightshift-forms'), count($output)),
+				// translators: %s replaces form count number.
+				\sprintf(\_n('%s form synced with success.', '%s forms synced with success.', \count($output), 'eightshift-forms'), \count($output)),
 				$output
 			)
 		);
