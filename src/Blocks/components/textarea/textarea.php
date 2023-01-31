@@ -15,6 +15,7 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
+$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
@@ -25,6 +26,7 @@ $textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
+$textareaSingleSubmit = Components::checkAttr('textareaSingleSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -33,6 +35,7 @@ $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
+	Components::selector($textareaSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
 if ($textareaTracking) {

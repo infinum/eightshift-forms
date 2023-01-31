@@ -3,6 +3,7 @@
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "es-textarea",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"textareaName": "Name",
@@ -63,6 +64,10 @@
 		},
 		"textareaDisabledOptions": {
 			"type": "array"
+		},
+		"textareaSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {
