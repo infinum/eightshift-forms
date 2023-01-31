@@ -238,6 +238,17 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid phone length field.
+		\preg_match_all("/(\w*) (number has invalid length for network)/", $msg, $matchesPhoneLength, \PREG_SET_ORDER, 0);
+
+		if ($matchesPhoneLength) {
+			$key = $matchesPhoneLength[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationMomentsInvalidPhoneLenght';
+			}
+		}
+
 		// Validate invalid datetime field.
 		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 

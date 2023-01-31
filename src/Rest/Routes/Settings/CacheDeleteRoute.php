@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
@@ -105,16 +106,33 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 		$type = $params['type'];
 
-		if (!isset(Filters::ALL[$type]['cache'])) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
-				)
-			);
-		}
+		if ($type === 'all') {
+			$allItems = Components::flattenArray(\array_map(
+				static function ($item) {
+					if (isset($item['cache'])) {
+						return $item['cache'];
+					}
+				},
+				Filters::ALL
+			));
 
-		foreach (Filters::ALL[$type]['cache'] as $item) {
-			\delete_transient($item);
+			if ($allItems) {
+				foreach ($allItems as $item) {
+					\delete_transient($item);
+				}
+			}
+		} else {
+			if (!isset(Filters::ALL[$type]['cache'])) {
+				return \rest_ensure_response(
+					$this->getApiErrorOutput(
+						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
+					)
+				);
+			}
+
+			foreach (Filters::ALL[$type]['cache'] as $item) {
+				\delete_transient($item);
+			}
 		}
 
 		// Clear WP-Rocket cache if cache is cleared.

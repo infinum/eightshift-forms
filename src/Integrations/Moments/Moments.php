@@ -329,30 +329,18 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'selectTracking' => $name,
 								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_values(
-									\array_merge(
-										[
-											[
+									\array_map(
+										function ($selectOption) {
+											return [
 												'component' => 'select-option',
-												'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
-												'selectOptionValue' => ' ',
-												'selectOptionIsSelected' => true,
-												'selectOptionIsDisabled' => true,
-												'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [], false),
-											],
-										],
-										\array_map(
-											function ($selectOption) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $selectOption['name'],
-													'selectOptionValue' => $selectOption['value'],
-													'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-														'selectOptionValue',
-													], false),
-												];
-											},
-											$options
-										)
+												'selectOptionLabel' => $selectOption['name'],
+												'selectOptionValue' => $selectOption['value'],
+												'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+													'selectOptionValue',
+												], false),
+											];
+										},
+										$options
 									)
 								),
 								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [

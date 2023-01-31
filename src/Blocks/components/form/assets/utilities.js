@@ -375,7 +375,7 @@ export class Utils {
 					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
 				}
 				break;
-			case 'select-custom': {
+			case 'select': {
 				const customSelect = input.config.choices;
 
 				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
@@ -394,14 +394,16 @@ export class Utils {
 	// Reset form values if the condition is right.
 	resetForm(element) {
 		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
-			element.reset();
+			// element.reset();
 
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
 			if (this.CUSTOM_SELECTS[formId]) {
 				this.CUSTOM_SELECTS[formId].forEach((item) => {
-					item.setChoiceByValue('');
+					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.DATA_ATTRIBUTES.selectInitial));
+					item.clearInput();
+					item.unhighlightAll();
 				});
 			}
 
@@ -418,6 +420,12 @@ export class Utils {
 				item.classList.remove(this.SELECTORS.CLASS_FILLED);
 				item.classList.remove(this.SELECTORS.CLASS_ACTIVE);
 				item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+			});
+
+			const inputs = element.querySelectorAll(`${this.inputSelector}, ${this.textareaSelector}`);
+			[...inputs].forEach((item) => {
+				item.value = '';
+				item.checked = false;
 			});
 
 			// Remove focus from last input.

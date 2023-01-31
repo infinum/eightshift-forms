@@ -67,39 +67,61 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	{
 		$manifestForm = Components::getComponent('form');
 
+		$output = \array_values(\array_filter(\array_map(
+			static function ($key, $value) use ($manifestForm) {
+				$icon = Helper::getProjectIcons($key);
+				$cache = $value['cache'] ?? [];
+
+				if ($cache) {
+					return [
+						'component' => 'card',
+						'cardTitle' => Filters::getSettingsLabels($key),
+						'cardSubTitle' => Filters::getSettingsLabels($key),
+						'cardIcon' => $icon,
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => $key,
+									'data-reload' => 'false',
+								],
+								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+							],
+						],
+					];
+				}
+			},
+			\array_keys(Filters::ALL),
+			Filters::ALL
+		)));
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutContent' => \array_values(\array_filter(\array_map(
-					static function ($key, $value) use ($manifestForm) {
-						$icon = Helper::getProjectIcons($key);
-						$cache = $value['cache'] ?? [];
-
-						if ($cache) {
-							return [
-								'component' => 'card',
-								'cardTitle' => Filters::getSettingsLabels($key),
-								'cardSubTitle' => Filters::getSettingsLabels($key),
-								'cardIcon' => $icon,
-								'cardContent' => [
-									[
-										'component' => 'submit',
-										'submitFieldSkip' => true,
-										'submitValue' => \__('Clear cache', 'eightshift-forms'),
-										'submitAttrs' => [
-											'data-type' => $key,
-											'data-reload' => 'false',
-										],
-										'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
-									],
+				'layoutContent' => [
+					...$output,
+					[
+						'component' => 'card',
+						'cardTitle' => 'All cache',
+						'cardSubTitle' => 'Use with caution!',
+						'cardIcon' => '',
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => 'all',
+									'data-reload' => 'false',
 								],
-							];
-						}
-					},
-					\array_keys(Filters::ALL),
-					Filters::ALL
-				))),
+								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+							],
+						],
+					],
+				]
 			],
 		];
 	}

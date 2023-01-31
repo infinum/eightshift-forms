@@ -636,11 +636,13 @@ export class Form {
 				},
 			});
 
+			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true).value);
+
 			Object.assign(choices, {
 				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
 			});
 
-			this.utils.preFillOnInit(choices, 'select-custom');
+			this.utils.preFillOnInit(choices, 'select');
 
 			this.utils.CUSTOM_SELECTS[formId].push(choices);
 
@@ -781,7 +783,7 @@ export class Form {
 		const interval = setInterval(() => {
 			const selects = this.utils.CUSTOM_SELECTS[formId];
 
-			if (selectsCount >= selects.length) {
+			if (selects.length >= selectsCount) {
 				clearInterval(interval);
 
 				if (selects.length !== 0) {
@@ -795,14 +797,14 @@ export class Form {
 						// Loop all phones.
 						phones.map((element) => {
 							// Set phone init value by checking the contry.
-							element.setChoiceByValue(country.getValue(true));
+							element.setChoiceByValue(country.getValue()?.customProperties);
 	
 							// Set contry value on any phone change.
 							// TODO: Remove events.
 							element.passedElement.element.addEventListener(
 								'change',
 								function(event) {
-									country.setChoiceByValue(event.detail.value);
+									country.setChoiceByValue(country.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
 								},
 								false,
 							);
@@ -814,7 +816,7 @@ export class Form {
 							'change',
 							function(event) {
 								phones.map((element) => {
-									element.setChoiceByValue(event.detail.value);
+									element.setChoiceByValue(element.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
 								});
 							},
 							false,

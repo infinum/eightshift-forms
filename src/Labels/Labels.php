@@ -205,6 +205,7 @@ class Labels implements LabelsInterface
 			'validationCountry' => \__('This country is not valid.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
+			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
 		];
 	}
 

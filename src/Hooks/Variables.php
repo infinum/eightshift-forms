@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Hooks;
 
+use EightshiftForms\Helpers\Helper;
+
 /**
  * The Variables class, used for defining available Variables.
  */
@@ -142,7 +144,7 @@ class Variables
 	 */
 	public static function getGeolocationPharPath(): string
 	{
-		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : Helper::getDataManifestRaw('geolocation', 'geoip.phar');
 	}
 
 	/**
@@ -152,7 +154,7 @@ class Variables
 	 */
 	public static function getGeolocationDbPath(): string
 	{
-		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : Helper::getDataManifestRaw('geolocation', 'geoip.mmdb');
 	}
 
 	/**
