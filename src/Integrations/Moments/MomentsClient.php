@@ -271,6 +271,17 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid date field.
+		\preg_match_all("/(\w*) (should be earlier than current date)/", $msg, $matchesDateNoFuture, \PREG_SET_ORDER, 0);
+
+		if ($matchesDateNoFuture) {
+			$key = $matchesDateNoFuture[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationDateNoFuture';
+			}
+		}
+
 		// Validate invalid country field.
 		\preg_match_all("/(\w*) (should be one of valid options)/", $msg, $matchesCountry, \PREG_SET_ORDER, 0);
 

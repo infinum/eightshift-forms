@@ -96,7 +96,8 @@ $phone = '
 		class="' . esc_attr($phoneClass) . '"
 		name="' . esc_attr($phoneName) . '"
 		id="' . esc_attr($phoneName) . '"
-		type="tel"
+		type="number"
+		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '
 		' . $phoneAttrsOutput . '

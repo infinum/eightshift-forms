@@ -244,10 +244,11 @@ export class Form {
 				// Remove loader.
 				this.utils.hideLoader(element);
 
+				this.utils.gtmSubmit(element, formData);
 				// On success state.
 				if (response.status === 'success') {
 					// Send GTM.
-					this.utils.gtmSubmit(element);
+					this.utils.gtmSubmit(element, formData);
 
 					// Redirect on success.
 					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {

@@ -284,80 +284,69 @@ export class Utils {
 	}
 
 	// Build GTM data for the data layer.
-	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${this.DATA_ATTRIBUTES.tracking}]`);
-		const dataTemp = {};
-
-		if (!items.length) {
-			return {};
-		}
-
-		[...items].forEach((item) => {
-			const tracking = item.getAttribute(this.DATA_ATTRIBUTES.tracking);
-
-			if (tracking) {
-				const {type, checked} = item;
-
-				if (typeof dataTemp[tracking] === 'undefined') {
-					if (type === 'checkbox') {
-						dataTemp[tracking] = [];
-					} else {
-						dataTemp[tracking] = '';
-					}
-				}
-
-				if ((type === 'checkbox' || type === 'radio') && !checked) {
-					return;
-				}
-
-				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(this.DATA_ATTRIBUTES.trackingSelectLabel)) {
-					dataTemp[tracking] = item.selectedOptions[0].label;
-					return;
-				}
-
-				if (type === 'checkbox') {
-					dataTemp[tracking].push(item.value);
-					return;
-				}
-
-				dataTemp[tracking] = item.value;
-			}
-		});
-
+	getGtmData(element, eventName, formData) {
+		const output = {};
 		const data = {};
 
-		for (const [key, value] of Object.entries(dataTemp)) {
+		for (const [key, value] of formData) {
+			const itemValue = JSON.parse(value);
+			const item = element.querySelector(`${this.fieldSelector} [name="${itemValue.name}"]`);
+			const trackingValue = item?.getAttribute(this.DATA_ATTRIBUTES.tracking);
+			if (!trackingValue) {
+				continue;
+			}
+
+			if (trackingValue in data) {
+				if (itemValue.value) {
+					data[trackingValue].push(itemValue.value);
+				}
+			} else {
+				switch (itemValue.type) {
+					case 'checkbox':
+					case 'radio':
+						data[trackingValue] = itemValue.value ? [itemValue.value] : [];
+						break;
+					case 'select-one':
+						data[trackingValue] = item.selectedOptions[0].label;
+						break;
+					default:
+						data[trackingValue]= itemValue.value;
+						break;
+				}
+			}
+		}
+
+		for (const [key, value] of Object.entries(data)) {
 			if (Array.isArray(value)) {
 				switch (value.length) {
 					case 0:
-						data[key] = false;
+						output[key] = false;
 						break;
 					case 1:
 						if (value[0] === 'on') {
-							data[key] = true;
+							output[key] = true;
 						} else {
-							data[key] = value;
+							output[key] = value;
 						}
 						break;
 					default:
-						data[key] = value;
+						output[key] = value;
 						break;
 				}
 			} else {
-				data[key] = value;
+				output[key] = value;
 			}
 		}
 
-		return Object.assign({}, { event: eventName, ...data });
+		return Object.assign({}, { event: eventName, ...output });
 	}
 
 	// Submit GTM event.
-	gtmSubmit(element) {
+	gtmSubmit(element, formData) {
 		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
-			const gtmData = this.getGtmData(element, eventName);
+			const gtmData = this.getGtmData(element, eventName, formData);
 
 			if (window?.dataLayer && gtmData?.event) {
 				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
@@ -598,11 +587,11 @@ export class Utils {
 				hideGlobalMsg: (element) => {
 					this.hideGlobalMsg(element);
 				},
-				getGtmData: (element, eventName) => {
-					this.getGtmData(element, eventName);
+				getGtmData: (element, eventName, formData) => {
+					this.getGtmData(element, eventName, formData);
 				},
-				gtmSubmit: (element) => {
-					this.gtmSubmit(element);
+				gtmSubmit: (element, formData) => {
+					this.gtmSubmit(element, formData);
 				},
 				preFillOnInit: (input, type) => {
 					this.preFillOnInit(input, type);

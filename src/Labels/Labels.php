@@ -202,6 +202,7 @@ class Labels implements LabelsInterface
 			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix.', 'eightshift-forms'),
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
+			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
 			'validationCountry' => \__('This country is not valid.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
