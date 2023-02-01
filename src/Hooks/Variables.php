@@ -144,7 +144,7 @@ class Variables
 	 */
 	public static function getGeolocationPharPath(): string
 	{
-		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : Helper::getDataManifestRaw('geolocation', 'geoip.phar');
+		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : Helper::getDataManifestPath('geolocation', 'geoip.phar');
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Variables
 	 */
 	public static function getGeolocationDbPath(): string
 	{
-		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : Helper::getDataManifestRaw('geolocation', 'geoip.mmdb');
+		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
 	}
 
 	/**

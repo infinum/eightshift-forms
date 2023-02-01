@@ -630,13 +630,26 @@ class Helper
 	 */
 	public static function getDataManifestRaw(string $type, string $file = 'manifest.json'): string
 	{
-		$path = \dirname(__FILE__, 3) . "/data/{$type}/{$file}";
+		$path = self::getDataManifestPath($type, $file);
 
 		if (\file_exists($path)) {
 			return \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		}
 
 		return '';
+	}
+
+	/**
+	 * Return files full path.
+	 *
+	 * @param string $type Folder name.
+	 * @param string $file File name with ext.
+	 *
+	 * @return string
+	 */
+	public static function getDataManifestPath(string $type, string $file = 'manifest.json'): string
+	{
+		return \dirname(__FILE__, 3) . "/data/{$type}/{$file}";
 	}
 
 	/**

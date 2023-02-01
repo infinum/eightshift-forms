@@ -70,7 +70,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function useGeolocation(): bool
 	{
-		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return false;
 		}
 
