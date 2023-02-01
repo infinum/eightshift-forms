@@ -161,7 +161,7 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				// translators: %s replaces form count number.
-				\sprintf(\_n('%s form synced with success.', '%s forms synced with success.', \count($output), 'eightshift-forms'), \count($output)),
+				\sprintf(\_n('%s form synced with success.', '%s forms synced with success.', \count($output['success']), 'eightshift-forms'), \count($output['success'])),
 				$output
 			)
 		);
