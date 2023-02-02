@@ -31,6 +31,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_hide_loading_state_timeout' => ['getBlockFormHideLoadingStateTimeout'],
 			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
 			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
+			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditinalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
 			'es_forms_block_form_phone_sync' => ['getFormPhoneSync', 2],
 
@@ -206,6 +207,52 @@ class Testfilters implements ServiceInterface
 		}
 
 		return '';
+	}
+
+	/**
+	 * Set tracking additional data and that data will be send to the GTM along with all field values and event name.
+	 *
+	 * This filter will override settings for tracking additiona data.
+	 *
+	 * @param string $formType Type of form used like greenhouse, hubspot, etc.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<int, array<int, string>>
+	 */
+	public function getBlockFormTrackingAdditinalData(string $formType, string $formId): array
+	{
+		return [
+			'general' => [
+				[
+					'customKey',
+					'customValue',
+				],
+				[
+					'additionalKey',
+					'additionalValue',
+				],
+			],
+			'success' => [
+				[
+					'successKey',
+					'successValue',
+				],
+				[
+					'successAdditionalKey',
+					'successAdditionalValue',
+				],
+			],
+			'error' => [
+				[
+					'errorKey',
+					'errorValue',
+				],
+				[
+					'errorAdditionalKey',
+					'errorAdditionalValue',
+				],
+			],
+		];
 	}
 
 	/**

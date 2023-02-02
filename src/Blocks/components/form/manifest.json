@@ -56,6 +56,9 @@
 		"formTrackingEventName": {
 			"type": "string"
 		},
+		"formTrackingAdditionalData": {
+			"type": "string"
+		},
 		"formType": {
 			"type": "string"
 		},

@@ -73,6 +73,38 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}TrackingEventName"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 		}
 
+		// Provide additional data to tracking attr.
+		$attributes["{$prefix}TrackingAdditionalData"] = '';
+		$filterName = Filters::getFilterName(['block', 'form', 'trackingAdditionalData']);
+		$trackingAdditionalData = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
+		$trackingAdditionalDataSuccess = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
+		$trackingAdditionalDataError = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
+		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
+
+		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {
+			$trackingData = \array_merge_recursive(
+				[
+					'general' => $trackingAdditionalData
+				],
+				[
+					'success' => $trackingAdditionalDataSuccess
+				],
+				[
+					'error' => $trackingAdditionalDataError
+				],
+				$trackingAdditionalDataFilterValue,
+			);
+			$trackingDataOutput = [];
+
+			foreach ($trackingData as $key => $value) {
+				foreach ($value as $inner) {
+					$trackingDataOutput[$key][$inner[0]] = $inner[1];
+				}
+			}
+
+			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingDataOutput);
+		}
+
 		// Success redirect url.
 		$attributes["{$prefix}SuccessRedirect"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);

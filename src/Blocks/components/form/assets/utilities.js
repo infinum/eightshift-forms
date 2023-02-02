@@ -342,15 +342,32 @@ export class Utils {
 	}
 
 	// Submit GTM event.
-	gtmSubmit(element, formData) {
+	gtmSubmit(element, formData, status) {
 		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName, formData);
 
+			const additionalData = JSON.parse(element.getAttribute(this.DATA_ATTRIBUTES.trackingAdditionalData));
+			let additionalDataItems = additionalData.general;
+
+			if (status === 'success') {
+				additionalDataItems = {
+					...additionalDataItems,
+					...additionalData.success,
+				}
+			}
+
+			if (status === 'error') {
+				additionalDataItems = {
+					...additionalDataItems,
+					...additionalData.error,
+				}
+			}
+
 			if (window?.dataLayer && gtmData?.event) {
 				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
-				window.dataLayer.push(gtmData);
+				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
 	}

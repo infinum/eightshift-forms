@@ -252,6 +252,7 @@ class Filters
 				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
 				'trackingEventName' => 'tracking_event_name',
+				'trackingAdditionalData' => 'tracking_additional_data',
 				'dataTypeSelector' => 'data_type_selector',
 				'phoneSync' => 'phone_sync',
 			],

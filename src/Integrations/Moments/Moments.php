@@ -185,12 +185,10 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
 						'phoneFieldHidden' => $isHidden,
-						'phoneIsNumber' => true,
 						'phoneIsRequired' => $isRequired,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							$isRequired ? 'phoneIsRequired' : '',
 							$validationMaxLength ? 'phoneMaxLength' : '',
-							'phoneIsNumber',
 						]),
 					];
 

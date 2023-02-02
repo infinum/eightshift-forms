@@ -69,6 +69,25 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get option value string saved as json array - used for textarea with : delimiter.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $formId Form Id.
+	 * @param int $useNumber Number of items to use.
+	 *
+	 * @return string
+	 */
+	public function getSettingsValueAsJson(string $key, string $formId, int $useNumber = 2): string
+	{
+		$values = $this->getSettingsValueGroup($key, $formId);
+		if (!$values) {
+			return '';
+		}
+
+		return $this->getSavedValueAsJson($values, $useNumber);
+	}
+
+	/**
 	 * Get settings value with fallback.
 	 *
 	 * @param string $key Key to find in db settings.
@@ -105,24 +124,6 @@ trait SettingsHelper
 		}
 
 		return $value;
-	}
-
-	/**
-	 * Get option value as array - used to return save as json format.
-	 *
-	 * @param string $key Providing string to append to.
-	 *
-	 * @return array<int, array<int, string>>
-	 */
-	public function getOptionValueArray(string $key): array
-	{
-		$output = \get_option($this->getSettingsName($key), false);
-
-		if (!$output) {
-			return [];
-		}
-
-		return $output;
 	}
 
 	/**
@@ -174,7 +175,6 @@ trait SettingsHelper
 		return $value;
 	}
 
-
 	/**
 	 * Get option value string saved as json array - used for textarea with : delimiter.
 	 *
@@ -185,32 +185,12 @@ trait SettingsHelper
 	 */
 	public function getOptionValueAsJson(string $key, int $useNumber = 2): string
 	{
-		$values = $this->getOptionValueArray($key);
+		$values = $this->getOptionValueGroup($key);
 		if (!$values) {
 			return '';
 		}
 
-		$output = [];
-		$i = 1;
-		foreach ($values as $value) {
-			if (!$value) {
-				continue;
-			}
-
-			$value = \array_filter(
-				$value,
-				static function ($item) use ($useNumber) {
-					return $item <= $useNumber - 1;
-				},
-				\ARRAY_FILTER_USE_KEY
-			);
-
-			$output[] = \implode(' : ', $value);
-
-			$i++;
-		}
-
-		return \implode(\PHP_EOL, $output);
+		return $this->getSavedValueAsJson($values, $useNumber);
 	}
 
 	/**
@@ -451,5 +431,43 @@ trait SettingsHelper
 			'isValid' => $integrationDetails['isValid'],
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
+	}
+
+	/**
+	 * Get saved value string saved as json array - used for textarea with : delimiter.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param int $useNumber Number of items to use.
+	 *
+	 * @return string
+	 */
+	private function getSavedValueAsJson(array $values, int $useNumber = 2): string
+	{
+		$output = [];
+		$i = 1;
+		foreach ($values as $value) {
+			if (!$value) {
+				continue;
+			}
+
+			$value = \array_filter(
+				$value,
+				static function ($item) use ($useNumber) {
+					return $item <= $useNumber - 1;
+				},
+				\ARRAY_FILTER_USE_KEY
+			);
+
+			// Remove keys that are note set properly.
+			if (count($value) < $useNumber) {
+				continue;
+			}
+
+			$output[] = \implode(' : ', $value);
+
+			$i++;
+		}
+
+		return \implode(\PHP_EOL, $output);
 	}
 }

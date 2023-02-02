@@ -51,6 +51,13 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
 
 	/**
+	 * Tracking additional data key.
+	 */
+	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY = 'general-tracking-additional-data';
+	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY = 'general-tracking-additional-data-success';
+	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY = 'general-tracking-additional-data-error';
+
+	/**
 	 * Form custom name key.
 	 */
 	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
@@ -129,7 +136,55 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getFilterName(['block', 'form', 'trackingEventName']))),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
-							]
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Tacking additional parameters', 'eightshift-forms'),
+								// translators: %s will be list example keys.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+									You can provide manual additional keys we will send to the tracking software.<br/>
+									One key value pair should be provided per line, in the following format:<br />
+									Here are some examples:
+									<ul>
+									%s
+									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Tacking additional parameters on success', 'eightshift-forms'),
+								// translators: %s will be list example keys.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+									This attributes we will send to the tracking software on form success.<br />
+									One key value pair should be provided per line, in the following format:<br />
+									Here are some examples:
+									<ul>
+									%s
+									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Tacking additional parameters on error', 'eightshift-forms'),
+								// translators: %s will be list example keys.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								This attributes we will send to the tracking software on form error.<br />
+									One key value pair should be provided per line, in the following format:<br />
+									Here are some examples:
+									<ul>
+									%s
+									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
+							],
 						],
 					],
 					[

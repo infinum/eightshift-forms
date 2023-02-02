@@ -244,11 +244,10 @@ export class Form {
 				// Remove loader.
 				this.utils.hideLoader(element);
 
-				this.utils.gtmSubmit(element, formData);
 				// On success state.
 				if (response.status === 'success') {
 					// Send GTM.
-					this.utils.gtmSubmit(element, formData);
+					this.utils.gtmSubmit(element, formData, response.status);
 
 					// Redirect on success.
 					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
@@ -283,6 +282,7 @@ export class Form {
 						this.utils.resetForm(element);
 					}
 				} else {
+					this.utils.gtmSubmit(element, formData, response.status);
 					const isValidationError = response?.data?.validation !== undefined;
 
 					// Dispatch event.

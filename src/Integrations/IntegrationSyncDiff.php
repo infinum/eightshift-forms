@@ -597,6 +597,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Find components disabled options.
 		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
+		$disabledOptionsKeys = \array_flip($disabledOptions);
 
 		// Check disabled options.
 		if ($disabledOptions) {
@@ -665,6 +666,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$removedAttributes = \array_diff_key($content['attrs'], $integration['attrs']);
 		if ($removedAttributes) {
 			foreach ($removedAttributes as $removedAttributesKey => $removedAttributesValue) {
+				// TODO
+				// if (!isset($disabledOptionsKeys[$removedAttributesKey])) {
+				// 	error_log( print_r( ( $removedAttributesKey ), true ) );
+				// 	continue;
+				// }
+
 				// Remove attributes to the otput.
 				$output['update'] = true;
 				$output['removed'] = $removedAttributesKey;

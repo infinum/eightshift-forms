@@ -35,10 +35,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"phoneIsNumber": {
-			"type": "boolean",
-			"default": true
-		},
 		"phoneIsRequired": {
 			"type": "boolean",
 			"default": false
