@@ -288,7 +288,7 @@ export class Utils {
 		const output = {};
 		const data = {};
 
-		for (const [key, value] of formData) {
+		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
 			const itemValue = JSON.parse(value);
 			const item = element.querySelector(`${this.fieldSelector} [name="${itemValue.name}"]`);
 			const trackingValue = item?.getAttribute(this.DATA_ATTRIBUTES.tracking);

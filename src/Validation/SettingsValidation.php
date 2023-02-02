@@ -177,6 +177,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 								'component' => 'textarea',
 								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
@@ -188,7 +189,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
 						],
 					],

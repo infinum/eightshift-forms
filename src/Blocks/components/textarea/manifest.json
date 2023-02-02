@@ -50,6 +50,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaSaveAsJson": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaTracking": {
 			"type": "string"
 		},

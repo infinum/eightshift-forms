@@ -117,9 +117,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 		$enrichment = $this->enrichment->getEnrichmentConfig();
 
 		$expiration = $enrichment['expiration'] ?? '';
-		$expirationChanged = $enrichment['expirationChanged'] ?? false;
 		$allowed = $enrichment['allowed'] ?? '';
-		$allowedAdditional = $enrichment['allowedAdditional'] ?? '';
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -141,7 +139,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'inputMax' => 100,
 								'inputStep' => 1,
 								'inputPlaceholder' => $expiration,
-								'inputValue' => $expirationChanged ? $expiration : '',
+								'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
 						],
 					],
@@ -154,13 +152,14 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'textareaName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSingleSubmit' => true,
+								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__("
 									List all URL parameters you want to allow for enrichment. We will store these parameters in browser storage for later processing. <br />
 									We provided some defaults, but in this field you can add additional tags you want to use. <br />
 									Allowed parameters are provided one per line.", 'eightshift-forms')),
-								'textareaValue' => $allowedAdditional ? \implode(\PHP_EOL, $allowedAdditional) : '',
+								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
 							],
 							[
 								'component' => 'divider',

@@ -27,6 +27,7 @@ $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $mani
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
 $textareaSingleSubmit = Components::checkAttr('textareaSingleSubmit', $attributes, $manifest);
+$textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -40,6 +41,10 @@ $textareaClass = Components::classnames([
 
 if ($textareaTracking) {
 	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($textareaTracking);
+}
+
+if ($textareaSaveAsJson) {
+	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['saveAsJson']] = esc_attr($textareaSaveAsJson);
 }
 
 if ($textareaPlaceholder) {

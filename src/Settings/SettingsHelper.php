@@ -108,7 +108,25 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Get option value.
+	 * Get option value as array - used to return save as json format.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return array<int, array<int, string>>
+	 */
+	public function getOptionValueArray(string $key): array
+	{
+		$output = \get_option($this->getSettingsName($key), false);
+
+		if (!$output) {
+			return [];
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get option value array.
 	 *
 	 * @param string $key Providing string to append to.
 	 *
@@ -154,6 +172,45 @@ trait SettingsHelper
 		}
 
 		return $value;
+	}
+
+
+	/**
+	 * Get option value string saved as json array - used for textarea with : delimiter.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param int $useNumber Number of items to use.
+	 *
+	 * @return string
+	 */
+	public function getOptionValueAsJson(string $key, int $useNumber = 2): string
+	{
+		$values = $this->getOptionValueArray($key);
+		if (!$values) {
+			return '';
+		}
+
+		$output = [];
+		$i = 1;
+		foreach ($values as $value) {
+			if (!$value) {
+				continue;
+			}
+
+			$value = \array_filter(
+				$value,
+				static function ($item) use ($useNumber) {
+					return $item <= $useNumber - 1;
+				},
+				\ARRAY_FILTER_USE_KEY
+			);
+
+			$output[] = \implode(' : ', $value);
+
+			$i++;
+		}
+
+		return \implode(\PHP_EOL, $output);
 	}
 
 	/**

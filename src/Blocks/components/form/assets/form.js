@@ -465,6 +465,44 @@ export class Form {
 					formData.append(id, JSON.stringify(data));
 
 					break;
+				case 'textarea':
+					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarationsettingsHelper.ph
+
+					// Convert textarea to json format with : as delimiter.
+					if (saveAsJson) {
+						const textareaOutput = [];
+						const regexItems = data.value.split(/\r\n|\r|\n/);
+
+						if (regexItems.length) {
+							regexItems.forEach((element) => {
+								if (!element) {
+									return;
+								}
+
+								const innerItem = element.split(':');
+								const innerOutput = [];
+
+								if (innerItem) {
+									innerItem.forEach((inner) => {
+										inner = inner.trim();
+
+										if (!inner) {
+											return;
+										}
+
+										innerOutput.push(inner.trim());
+									});
+								}
+
+								textareaOutput.push(innerOutput);
+							});
+						}
+
+						data.value = textareaOutput;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
 				case 'search':
 					// Skip search field from dropdown.
 					break;
@@ -545,11 +583,11 @@ export class Form {
 		if (this.enrichment.isEnrichmentUsed()) {
 			const storage = this.enrichment.getLocalStorage();
 			if (storage) {
-			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
+				formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
 					name: this.utils.FORM_PARAMS.storage,
-				 value: storage,
-				 type: 'hidden',
-			 }));
+					value: storage,
+					type: 'hidden',
+				}));
 			}
 		}
 

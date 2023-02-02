@@ -61,7 +61,8 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		$tags = [];
-		$tagsAdditional = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY) ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$tagsAdditional = $this->getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
+
 		if ($tagsAdditional) {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \str_replace(',', \PHP_EOL, $tagsAdditional);
@@ -97,8 +98,6 @@ class Enrichment implements EnrichmentInterface
 
 		return [
 			'expiration' => $expiration ?: self::ENRICHMENT_EXPIRATION, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'expirationChanged' => $expiration !== '',
-			'allowedAdditional' => $tagsAdditional,
 			'allowed' => $fullAllowed,
 			'map' => $map,
 		];
