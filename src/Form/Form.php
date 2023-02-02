@@ -12,6 +12,7 @@ namespace EightshiftForms\Form;
 
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
@@ -26,6 +27,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use filters mock helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter settings option value key.
@@ -65,53 +71,21 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Tracking event name.
-		$attributes["{$prefix}TrackingEventName"] = '';
-		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
-		if (\has_filter($filterName)) {
-			$attributes["{$prefix}TrackingEventName"] = \apply_filters($filterName, $type, $formId);
-		} else {
-			$attributes["{$prefix}TrackingEventName"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		$trackingEventName = $this->getTrackingEventNameFilterValue($type, $formId)['data'];
+		if ($trackingEventName) {
+			$attributes["{$prefix}TrackingEventName"] = $trackingEventName;
 		}
 
 		// Provide additional data to tracking attr.
-		$attributes["{$prefix}TrackingAdditionalData"] = '';
-		$filterName = Filters::getFilterName(['block', 'form', 'trackingAdditionalData']);
-		$trackingAdditionalData = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
-		$trackingAdditionalDataSuccess = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
-		$trackingAdditionalDataError = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
-		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
-
-		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {
-			$trackingData = \array_merge_recursive(
-				[
-					'general' => $trackingAdditionalData
-				],
-				[
-					'success' => $trackingAdditionalDataSuccess
-				],
-				[
-					'error' => $trackingAdditionalDataError
-				],
-				$trackingAdditionalDataFilterValue,
-			);
-			$trackingDataOutput = [];
-
-			foreach ($trackingData as $key => $value) {
-				foreach ($value as $inner) {
-					$trackingDataOutput[$key][$inner[0]] = $inner[1];
-				}
-			}
-
-			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingDataOutput);
+		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		if ($trackingAdditionalData) {
+			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingAdditionalData);
 		}
 
 		// Success redirect url.
-		$attributes["{$prefix}SuccessRedirect"] = '';
-		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
-		if (\has_filter($filterName)) {
-			$attributes["{$prefix}SuccessRedirect"] = \apply_filters($filterName, $type, $formId);
-		} else {
-			$attributes["{$prefix}SuccessRedirect"] = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
+		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		if ($successRedirectUrl) {
+			$attributes["{$prefix}SuccessRedirect"] = $successRedirectUrl;
 		}
 
 		// Phone sync with country block.

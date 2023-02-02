@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 /**
  * SettingsHelper trait.

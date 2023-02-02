@@ -183,11 +183,7 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getBlockFormSuccessRedirectUrl(string $formType, string $formId): string
 	{
-		if ($formType === 'hubspot') {
-			return 'https://infinum.com/custom-filter';
-		}
-
-		return '';
+		return 'https://infinum.com/custom-filter';
 	}
 
 	/**
@@ -202,11 +198,7 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getBlockFormTrackingEventName(string $formType, string $formId): string
 	{
-		if ($formType === 'hubspot') {
-			return 'Event-Name-Filter';
-		}
-
-		return '';
+		return 'Event-Name-Filter';
 	}
 
 	/**

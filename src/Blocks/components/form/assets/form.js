@@ -282,7 +282,7 @@ export class Form {
 						this.utils.resetForm(element);
 					}
 				} else {
-					this.utils.gtmSubmit(element, formData, response.status);
+					this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
 					const isValidationError = response?.data?.validation !== undefined;
 
 					// Dispatch event.

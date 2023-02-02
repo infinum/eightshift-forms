@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -24,6 +25,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter settings key.
@@ -97,6 +103,20 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		$specialConstants = array_map(
+			static function ($item, $key) {
+				return "<li><code>{$key}</code> - {$item}</li>";
+			},
+			Filters::getSpecialConstants('tracking'),
+			array_keys(Filters::getSpecialConstants('tracking'))
+		);
+
+		$formType = Helper::getFormDetailsById($formId)['type'] ?? '';
+
+		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
+		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
+		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -117,10 +137,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $this->getAppliedFilterOutput(Filters::getFilterName(['block', 'form', 'successRedirectUrl']))),
+									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settings']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId),
+								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
+								'inputValue' => $successRedirectUrl['data'],
 							]
 						],
 					],
@@ -133,9 +154,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Tracking event name', 'eightshift-forms'),
 								// translators: %s will be replaced with th filter output copy.
-								'inputFieldHelp' => \sprintf(\__('Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s', 'eightshift-forms'), $this->getAppliedFilterOutput(Filters::getFilterName(['block', 'form', 'trackingEventName']))),
+								'inputFieldHelp' => Helper::minifyString(\sprintf(\__("
+									Used when pushing data to Google Tag Manager, if nothing is provided GTM event will not be sent. %s", 'eightshift-forms'), $trackingEventName['settings'])),
 								'inputType' => 'text',
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId),
+								'inputIsDisabled' => $trackingEventName['filterUsed'],
+								'inputValue' => $trackingEventName['data'],
 							],
 							[
 								'component' => 'textarea',
@@ -149,8 +172,9 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									One key value pair should be provided per line, in the following format:<br />
 									Here are some examples:
 									<ul>
-									%s
-									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+									%1\$s
+									</ul>
+									%2\$s", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>', $trackingAdditionalData['settings']['general'] ?? '')),
 								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
 							],
 							[
@@ -165,8 +189,10 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									One key value pair should be provided per line, in the following format:<br />
 									Here are some examples:
 									<ul>
-									%s
-									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+									%1\$s
+									</ul>
+									%2\$s
+									", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>', $trackingAdditionalData['settings']['success'] ?? '')),
 								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
 							],
 							[
@@ -181,8 +207,15 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									One key value pair should be provided per line, in the following format:<br />
 									Here are some examples:
 									<ul>
-									%s
-									</ul>", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>')),
+									%1\$s
+									</ul>
+									<br />
+									In this setting you can use special contants to output dynamic data:
+									<ul>
+									%2\$s
+									</ul>
+									%3\$s
+									", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>', implode('', $specialConstants), $trackingAdditionalData['settings']['error'] ?? '')),
 								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
 							],
 						],

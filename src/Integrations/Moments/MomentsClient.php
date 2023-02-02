@@ -216,6 +216,17 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid email field.
+		\preg_match_all("/(\w*) (should have a valid email format)/", $msg, $matchesEmail, \PREG_SET_ORDER, 0);
+
+		if ($matchesEmail) {
+			$key = $matchesEmail[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationEmail';
+			}
+		}
+
 		// Validate invalid phone field.
 		\preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, \PREG_SET_ORDER, 0);
 

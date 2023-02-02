@@ -500,6 +500,27 @@ class Filters
 		return isset($data[$type][$key]) ? $data[$type][$key] : '';
 	}
 
+		/**
+	 * Get the settings labels and details by type and key.
+	 * This method is used to provide the ability to translate all strings.
+	 *
+	 * @param string $type Settings type from the Settings class.
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public static function getSpecialConstants(string $type): array
+	{
+		$data = [
+			'tracking' => [
+				'{invalidFieldsString}' => \__('This constant will output all invalid fields to your tracking software as string with coma separator.', 'eightshift-forms'),
+				'{invalidFieldsArray}' => \__('This constant will output all invalid fields to your tracking software as array.', 'eightshift-forms'),
+			],
+		];
+		return isset($data[$type]) ? $data[$type] : [];
+	}
+
+
+
 	/**
 	 * Get private filter name.
 	 *

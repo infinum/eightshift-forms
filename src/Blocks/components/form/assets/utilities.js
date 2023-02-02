@@ -342,7 +342,7 @@ export class Utils {
 	}
 
 	// Submit GTM event.
-	gtmSubmit(element, formData, status) {
+	gtmSubmit(element, formData, status, errors) {
 		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
@@ -364,6 +364,17 @@ export class Utils {
 					...additionalData.error,
 				}
 			}
+
+			for (const [key, value] of Object.entries(additionalDataItems)) {
+				if (value === '{invalidFieldsString}') {
+					additionalDataItems[key] = Object.keys(errors).join(',');
+				}
+
+				if (value === '{invalidFieldsArray}') {
+					additionalDataItems[key] = Object.keys(errors);
+				}
+			}
+			console.log(additionalDataItems);
 
 			if (window?.dataLayer && gtmData?.event) {
 				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
@@ -607,8 +618,8 @@ export class Utils {
 				getGtmData: (element, eventName, formData) => {
 					this.getGtmData(element, eventName, formData);
 				},
-				gtmSubmit: (element, formData) => {
-					this.gtmSubmit(element, formData);
+				gtmSubmit: (element, formData, errors) => {
+					this.gtmSubmit(element, formData, errors);
 				},
 				preFillOnInit: (input, type) => {
 					this.preFillOnInit(input, type);
