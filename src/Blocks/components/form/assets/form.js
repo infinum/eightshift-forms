@@ -466,7 +466,7 @@ export class Form {
 
 					break;
 				case 'textarea':
-					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarationsettingsHelper.ph
+					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarations
 
 					// Convert textarea to json format with : as delimiter.
 					if (saveAsJson) {
@@ -484,13 +484,13 @@ export class Form {
 
 								if (innerItem) {
 									innerItem.forEach((inner) => {
-										inner = inner.trim();
+										const innerItem = inner.trim();
 
-										if (!inner) {
+										if (!innerItem) {
 											return;
 										}
 
-										innerOutput.push(inner.trim());
+										innerOutput.push(innerItem.trim());
 									});
 								}
 

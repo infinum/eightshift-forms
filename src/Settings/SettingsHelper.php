@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 /**
  * SettingsHelper trait.
@@ -437,7 +436,7 @@ trait SettingsHelper
 	/**
 	 * Get saved value string saved as json array - used for textarea with : delimiter.
 	 *
-	 * @param string $key Providing string to append to.
+	 * @param array<string, mixed> $values Values provided from settings.
 	 * @param int $useNumber Number of items to use.
 	 *
 	 * @return string
@@ -460,7 +459,7 @@ trait SettingsHelper
 			);
 
 			// Remove keys that are note set properly.
-			if (count($value) < $useNumber) {
+			if (\count($value) < $useNumber) {
 				continue;
 			}
 

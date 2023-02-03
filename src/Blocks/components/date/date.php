@@ -6,8 +6,8 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
@@ -65,11 +65,7 @@ if ($dateAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getFilterName(['block', 'date', 'additionalContent']);
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('date', $attributes);
 
 $date = '
 	<input

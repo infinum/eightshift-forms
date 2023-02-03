@@ -508,12 +508,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'added' => [],
 			'replaced' => [],
 			'changed' => [],
+			'order' => $diff['order'],
 			'output' => [],
-			'diff' => $diff,
+			'diff' => $diff['diff'],
 		];
 
 		// Loop diff of content and integration.
-		foreach ($diff as $key => $block) {
+		foreach ($diff['diff'] as $key => $block) {
 			// Do diff on one field.
 			$changes = $this->diffChange($block['integration'] ?? [], $block['content'] ?? [], $key);
 
@@ -538,6 +539,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				}
 			}
 		}
+
+		// Reorder block by provided array list in the content data and remove items that are missing.
+		$output['output'] = \array_filter(
+			\array_replace(
+				\array_flip($output['order']),
+				$output['output']
+			),
+			static fn($item) => \is_array($item)
+		);
 
 		// Recounstruct blocks output and build array for final serialization.
 		$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
@@ -593,15 +603,16 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerOutput = $content;
 
 		// Find prefix of the component.
-		$prefix = $integration['component'] . \ucfirst($integration['component']);
+		$prefix = Components::kebabToCamelCase($integration['component'] . \ucfirst($integration['component']));
 
 		// Find components disabled options.
-		$disabledOptions = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
-		$disabledOptionsKeys = \array_flip($disabledOptions);
+		$disabledOptionsIntegration = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
+
+		$innerOutput['attrs']["{$prefix}DisabledOptions"] = $disabledOptionsIntegration;
 
 		// Check disabled options.
-		if ($disabledOptions) {
-			foreach ($disabledOptions as $disabledOption) {
+		if ($disabledOptionsIntegration) {
+			foreach ($disabledOptionsIntegration as $disabledOption) {
 				// Find attributes in integration and content that match disabled options item.
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
@@ -618,7 +629,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				if (!$c) {
 					$output['update'] = true;
 					$output['changed'][$key][] = $disabledOption;
-					$innerOutput['attrs']["{$prefix}DisabledOptions"] = $integration['attrs']["{$prefix}DisabledOptions"];
 					$innerOutput['attrs'][$disabledOption] = $i;
 					break;
 				}
@@ -636,7 +646,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					// Output the changed value.
 					$output['update'] = true;
 					$output['changed'][$key][] = $disabledOption;
-					$innerOutput['attrs']["{$prefix}DisabledOptions"] = $integration['attrs']["{$prefix}DisabledOptions"];
 					$innerOutput['attrs'][$disabledOption] = $i;
 					continue;
 				}
@@ -645,6 +654,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Populate output data.
 		$output['output'] = $innerOutput;
+
+		$disabledOptionsKeys = \array_flip($output['output']['attrs']["{$prefix}DisabledOptions"]);
 
 		// Add missing content attributes from integration.
 		$missingAttributes = \array_diff_key($integration['attrs'], $content['attrs']);
@@ -666,11 +677,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$removedAttributes = \array_diff_key($content['attrs'], $integration['attrs']);
 		if ($removedAttributes) {
 			foreach ($removedAttributes as $removedAttributesKey => $removedAttributesValue) {
-				// TODO
-				// if (!isset($disabledOptionsKeys[$removedAttributesKey])) {
-				// 	error_log( print_r( ( $removedAttributesKey ), true ) );
-				// 	continue;
-				// }
+				if (!isset($disabledOptionsKeys[$removedAttributesKey])) {
+					continue;
+				}
 
 				// Remove attributes to the otput.
 				$output['update'] = true;
@@ -760,6 +769,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	{
 		$output = $integration;
 
+		// Used to preserver content order of the blocks.
+		$order = [];
+
 		foreach ($blocks as $block) {
 			$blockTypeOriginal = $block['blockName'] ?? '';
 
@@ -790,6 +802,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				'parent' => '',
 			];
 
+			$order[] = $name;
+
 			if (isset($block['innerBlocks'])) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockInnerType = $innerBlock['blockName'] ?? '';
@@ -802,18 +816,25 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					$blockInnerAttributes = $innerBlock['attrs'];
 					$innerPrefix = $blockInnerType['prefix'];
 
-					$output[$this->getInnerBlocksKeyName($innerPrefix, $blockInnerAttributes, $innerKey, $name)]['content'] = [
+					$innerKeyValue = $this->getInnerBlocksKeyName($innerPrefix, $blockInnerAttributes, $innerKey, $name);
+
+					$output[$innerKeyValue]['content'] = [
 						'namespace' => $blockInnerType['namespace'],
 						'component' => $blockInnerType['component'],
 						'prefix' => $innerPrefix,
 						'attrs' => $blockInnerAttributes,
 						'parent' => $name,
 					];
+
+					$order[] = $innerKeyValue;
 				}
 			}
 		}
 
-		return $output;
+		return [
+			'order' => $order ? $order : \array_keys($output),
+			'diff' => $output,
+		];
 	}
 
 	/**

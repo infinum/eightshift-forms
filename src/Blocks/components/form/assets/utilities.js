@@ -355,14 +355,14 @@ export class Utils {
 				additionalDataItems = {
 					...additionalDataItems,
 					...additionalData.success,
-				}
+				};
 			}
 
 			if (status === 'error') {
 				additionalDataItems = {
 					...additionalDataItems,
 					...additionalData.error,
-				}
+				};
 			}
 
 			for (const [key, value] of Object.entries(additionalDataItems)) {

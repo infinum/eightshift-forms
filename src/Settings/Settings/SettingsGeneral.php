@@ -103,12 +103,12 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$specialConstants = array_map(
+		$specialConstants = \array_map(
 			static function ($item, $key) {
 				return "<li><code>{$key}</code> - {$item}</li>";
 			},
 			Filters::getSpecialConstants('tracking'),
-			array_keys(Filters::getSpecialConstants('tracking'))
+			\array_keys(Filters::getSpecialConstants('tracking'))
 		);
 
 		$formType = Helper::getFormDetailsById($formId)['type'] ?? '';
@@ -116,6 +116,8 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
+
+		var_dump($successRedirectUrl);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -215,7 +217,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									%2\$s
 									</ul>
 									%3\$s
-									", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>', implode('', $specialConstants), $trackingAdditionalData['settings']['error'] ?? '')),
+									", 'eightshift-forms'), '<li><code>testKey : keyValue</code></li>', \implode('', $specialConstants), $trackingAdditionalData['settings']['error'] ?? '')),
 								'textareaValue' => $this->getSettingsValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
 							],
 						],

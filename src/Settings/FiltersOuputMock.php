@@ -29,7 +29,7 @@ trait FiltersOuputMock
 	 * @param string $type Type of field.
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<string, array<mixed>>
+	 * @return array<string, mixed>
 	 */
 	public function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
 	{
@@ -39,7 +39,7 @@ trait FiltersOuputMock
 
 		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterName)) {
-			$data = apply_filters($filterName, $type, $formId);
+			$data = \apply_filters($filterName, $type, $formId);
 			$filterUsed = true;
 		} else {
 			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
@@ -58,7 +58,7 @@ trait FiltersOuputMock
 	 * @param string $type Type of field.
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<string, array<mixed>>
+	 * @return array<string, mixed>
 	 */
 	public function getTrackingEventNameFilterValue(string $type, string $formId): array
 	{
@@ -68,7 +68,7 @@ trait FiltersOuputMock
 
 		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
-			$data = apply_filters($filterName, $type, $formId);
+			$data = \apply_filters($filterName, $type, $formId);
 			$filterUsed = true;
 		} else {
 			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
@@ -130,10 +130,10 @@ trait FiltersOuputMock
 		if ($filterUsed) {
 			$settings .= \__('This field has a code filter applied to it, and the following items will be applied to the output:', 'eightshift-forms');
 
-			foreach ($data as $key => $value) {
+			foreach ($trackingAdditionalDataFilterValue as $key => $value) {
 				$settingsDetails[$key] = "{$settings}<ul>";
-				foreach ($value as $innerKey => $inner) {
-					$settingsDetails[$key] .= "<li><code>{$innerKey}</code> : <code>{$inner}</code></li>";
+				foreach ($value as $inner) {
+					$settingsDetails[$key] .= "<li><code>{$inner[0]}</code> : <code>{$inner[1]}</code></li>";
 				}
 				$settingsDetails[$key] .= '</ul>';
 
@@ -163,10 +163,7 @@ trait FiltersOuputMock
 			return $data;
 		}
 
-		$prefix = '';
-		if ($defaultPrefix && $used) {
-			$prefix = \__("This field has a code filter applied to it so this field can't be changed.", 'eightshift-forms');
-		}
+		$prefix = $defaultPrefix ? \__("This field has a code filter applied to it so this field can't be changed.", 'eightshift-forms') : '';
 
 		return '<div class="is-filter-applied">' . $prefix . $data . '</div>';
 	}
