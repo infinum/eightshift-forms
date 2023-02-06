@@ -1,83 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, SelectControl, PanelBody, Button, Modal } from '@wordpress/components';
+import { SelectControl, PanelBody, Button, Modal } from '@wordpress/components';
 import {
 	icons,
 	getAttrKey,
 	checkAttr,
 	IconToggle,
 	InlineNotification,
-	InlineNotificationType,
+	InlineNotificationType
 } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_LOGIC_INTERNAL } from './conditional-tags-utils';
+import { select } from "@wordpress/data";
+import { CONDITIONAL_TAGS_ACTIONS_INTERNAL } from './conditional-tags-utils';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 
-export const ConditionalTagsOptions = (attributes) => {
+export const ConditionalTagsFormsOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
 
-	// TODO, remove after fixing the options-select conditionals.
-	return <></>;
-
-	const postId = select('core/editor').getCurrentPostId();
-
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
 	const conditionalTagsAction = checkAttr('conditionalTagsAction', attributes, manifest);
-	const conditionalTagsLogic = checkAttr('conditionalTagsLogic', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
+	const conditionalTagsPostId = checkAttr('conditionalTagsPostId', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
+		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${conditionalTagsPostId}` }).then((response) => {
 
 			if (response.code === 200) {
 				setFormFields(getConstantsOptions(response.data, true));
 			}
 		});
-	}, [isModalOpen]);
+	}, [conditionalTagsPostId, isModalOpen]);
 
 	const ConditionalTagsItem = ({index}) => {
-		// Internal state due to rerendering issue.
-		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[index]?.[2]);
-
 		return (
-			<>
-				<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
-					<SelectControl
-						value={conditionalTagsRules?.[index]?.[0]}
-						options={formFields}
-						onChange={(value) => {
-							conditionalTagsRules[index][0] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						}}
-					/>
+			<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
+				<SelectControl
+					value={conditionalTagsRules?.[index]?.[0]}
+					options={formFields}
+					onChange={(value) => {
+						conditionalTagsRules[index][0] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+				/>
 
-					<SelectControl
-						value={conditionalTagsRules?.[index]?.[1]}
-						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL, true)}
-						onChange={(value) => {
-							conditionalTagsRules[index][1] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						}}
-					/>
-
-					<TextControl
-						value={inputCheck}
-						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
-						onChange={(value) => {
-							conditionalTagsRules[index][2] = value;
-							setInputCheck(value);
-						}}
-					/>
-				</div>
-			</>
+				<SelectControl
+					value={conditionalTagsRules?.[index]?.[1]}
+					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
+					onChange={(value) => {
+						conditionalTagsRules[index][1] = value;
+						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+				/>
+			</div>
 		);
 	};
 
@@ -92,7 +74,6 @@ export const ConditionalTagsOptions = (attributes) => {
 
 					if (!value) {
 						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined });
-						setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: undefined });
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
 					} else {
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [] });
@@ -125,18 +106,6 @@ export const ConditionalTagsOptions = (attributes) => {
 							<InlineNotification
 								text={__('If some fields are missing please make sure all your field names are set and you have updated/saved form in the top right corner.', 'eightshift-forms')}
 								type={InlineNotificationType.INFO}
-							/>
-
-							<SelectControl
-								value={conditionalTagsAction}
-								options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: value })}
-							/>
-		
-							<SelectControl
-								value={conditionalTagsLogic}
-								options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: value })}
 							/>
 
 							{conditionalTagsRules?.map((_, index) => {

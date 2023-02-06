@@ -6,7 +6,7 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const DateEditor = (attributes) => {
@@ -23,6 +23,7 @@ export const DateEditor = (attributes) => {
 	const dateValue = checkAttr('dateValue', attributes, manifest);
 	const datePlaceholder = checkAttr('datePlaceholder', attributes, manifest);
 	const dateType = checkAttr('dateType', attributes, manifest);
+	const dateName = checkAttr('dateName', attributes, manifest);
 
 	const dateClass = classnames([
 		selector(componentClass, componentClass),
@@ -38,6 +39,8 @@ export const DateEditor = (attributes) => {
 				type={dateType}
 				readOnly
 			/>
+
+			<MissingName value={dateName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

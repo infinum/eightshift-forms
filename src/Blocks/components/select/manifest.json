@@ -20,6 +20,9 @@
 		"selectContent": {
 			"type": "string"
 		},
+		"selectPlaceholder": {
+			"type": "string"
+		},
 		"selectName": {
 			"type": "string"
 		},

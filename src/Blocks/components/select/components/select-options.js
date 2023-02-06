@@ -7,12 +7,12 @@ import {
 	getAttrKey,
 	IconLabel,
 	props,
-	FancyDivider
+	FancyDivider,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from './../../utils';
+import { isOptionDisabled, MissingName } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const SelectOptions = (attributes) => {
@@ -26,6 +26,7 @@ export const SelectOptions = (attributes) => {
 	const selectTracking = checkAttr('selectTracking', attributes, manifest);
 	const selectDisabledOptions = checkAttr('selectDisabledOptions', attributes, manifest);
 	const selectUseSearch = checkAttr('selectUseSearch', attributes, manifest);
+	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 
 	return (
 		<>
@@ -34,6 +35,14 @@ export const SelectOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: selectDisabledOptions,
 					})}
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+					help={__('Shown when the field is empty', 'eightshift-forms')}
+					value={selectPlaceholder}
+					onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
 				/>
 
 				<FancyDivider label={__('Validation', 'eightshift-forms')} />
@@ -53,11 +62,12 @@ export const SelectOptions = (attributes) => {
 
 				<TextControl
 					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
 					value={selectName}
 					onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
 				/>
+				<MissingName value={selectName} />
 
 				<div className='es-h-spaced'>
 					<Button

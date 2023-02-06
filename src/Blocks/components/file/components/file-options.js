@@ -7,12 +7,12 @@ import {
 	getAttrKey,
 	IconLabel,
 	props,
-	FancyDivider
+	FancyDivider,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from './../../utils';
+import { isOptionDisabled, MissingName } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const FileOptions = (attributes) => {
@@ -133,11 +133,12 @@ export const FileOptions = (attributes) => {
 
 				<TextControl
 					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
 					value={fileName}
 					onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
 				/>
+				<MissingName value={fileName} />
 
 				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
 

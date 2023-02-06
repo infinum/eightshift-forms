@@ -3,9 +3,10 @@ import classnames from 'classnames';
 import {
 	selector,
 	props,
+	checkAttr,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const FileEditor = (attributes) => {
@@ -18,6 +19,8 @@ export const FileEditor = (attributes) => {
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
+
+	const fileName = checkAttr('fileName', attributes, manifest);
 
 	const fileClass = classnames([
 		selector(componentClass, componentClass),
@@ -32,6 +35,8 @@ export const FileEditor = (attributes) => {
 				readOnly
 				disabled
 			/>
+
+			<MissingName value={fileName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

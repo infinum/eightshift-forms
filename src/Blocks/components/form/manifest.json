@@ -26,6 +26,9 @@
 		"formContent": {
 			"type": "string"
 		},
+		"formConditionalTags": {
+			"type": "string"
+		},
 		"formName": {
 			"type": "string"
 		},

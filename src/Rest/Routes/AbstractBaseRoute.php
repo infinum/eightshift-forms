@@ -71,6 +71,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'selectShowCountryIcons' => 'data-select-show-country-icons',
 		'selectAllowSearch' => 'data-allow-search',
 		'selectInitial' => 'data-initial',
+		'selectPlaceholder' => 'data-placeholder',
 		'phoneSync' => 'data-phone-sync',
 		'saveAsJson' => 'data-save-as-json',
 	];

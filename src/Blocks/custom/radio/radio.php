@@ -16,8 +16,12 @@ $radioId = $attributes['radioRadioId'] ?? '';
 $radioValue = $attributes['radioRadioValue'] ?? '';
 $props = [];
 
-if (empty($radioValue)) {
-	$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
+if (!$radioValue) {
+	if ($radioLabel) {
+		$props['radioValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $radioLabel);
+	} else {
+		$props['radioValue'] = 'true';
+	}
 }
 
 echo Components::render(

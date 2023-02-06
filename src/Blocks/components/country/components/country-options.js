@@ -12,7 +12,7 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from '../../utils';
+import { isOptionDisabled, MissingName } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CountryOptions = (attributes) => {
@@ -53,11 +53,12 @@ export const CountryOptions = (attributes) => {
 
 				<TextControl
 					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
 					value={countryName}
 					onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
 				/>
+				<MissingName value={countryName} />
 
 				<div className='es-h-spaced'>
 					<Button

@@ -17,7 +17,7 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from '../../utils';
+import { isOptionDisabled, MissingName } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const PhoneOptions = (attributes) => {
@@ -66,11 +66,12 @@ export const PhoneOptions = (attributes) => {
 
 				<TextControl
 					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data. If not set, a random name will be generated.', 'eightshift-forms')}
+					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
 					value={phoneName}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
 				/>
+				<MissingName value={phoneName} />
 
 				<TextControl
 					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}

@@ -8,7 +8,7 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const PhoneEditor = (attributes) => {
@@ -26,6 +26,7 @@ export const PhoneEditor = (attributes) => {
 
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
+	const phoneName = checkAttr('phoneName', attributes, manifest);
 
 	const phoneClass = classnames([
 		selector(componentClass, componentClass),
@@ -47,6 +48,8 @@ export const PhoneEditor = (attributes) => {
 				type={'tel'}
 				readOnly
 			/>
+
+			<MissingName value={phoneName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

@@ -6,7 +6,7 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
@@ -22,6 +22,7 @@ export const TextareaEditor = (attributes) => {
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
+	const textareaName = checkAttr('textareaName', attributes, manifest);
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),
@@ -37,6 +38,8 @@ export const TextareaEditor = (attributes) => {
 			>
 				{textareaValue}
 			</textarea>
+
+			<MissingName value={textareaName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

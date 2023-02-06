@@ -18,6 +18,10 @@
 		"selectOptionValue": {
 			"type": "string"
 		},
+		"selectOptionAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"selectOptionIsSelected": {
 			"type": "boolean",
 			"default": false

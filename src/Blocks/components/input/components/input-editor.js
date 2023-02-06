@@ -6,7 +6,7 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
@@ -20,6 +20,7 @@ export const InputEditor = (attributes) => {
 		additionalClass,
 	} = attributes;
 
+	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	let inputType = checkAttr('inputType', attributes, manifest);
@@ -43,6 +44,8 @@ export const InputEditor = (attributes) => {
 				type={inputType}
 				readOnly
 			/>
+
+			<MissingName value={inputName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

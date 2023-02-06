@@ -16,7 +16,9 @@ import {
 	BlockIcon,
 	FancyDivider,
 	STORE_NAME,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import manifest from '../manifest.json';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
@@ -112,62 +114,62 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	};
 
 	return (
-		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
-			<CustomSelect
-				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
-				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-				value={parseInt(formsFormPostId)}
-				loadOptions={formSelectOptions}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
-				isClearable={false}
-				reFetchOnSearch={true}
-				multiple={false}
-				simpleValue
-			/>
-
-			{formsFormPostId &&
-				<div className='es-v-spaced es-has-wp-field-b-space'>
-					<Button
-						icon={icons.edit}
-						href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
-					>
-						{__('Edit fields', 'eightshift-forms')}
-					</Button>
-
-					<Button
-						icon={icons.options}
-						href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
-					>
-						{__('Form settings', 'eightshift-forms')}
-					</Button>
-				</div>
-			}
-
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-			<TextControl
-				label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
-				help={__('Additional data type selectors', 'eightshift-forms')}
-				value={formsFormDataTypeSelector}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
-			/>
-
-			{formsStyleOptions?.length > 0 &&
+		<>
+			<PanelBody title={__('Settings', 'eightshift-forms')}>
 				<CustomSelect
-					label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
-					value={formsStyle}
-					options={formsStyleOptions}
-					onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
-					simpleValue
-					isSearchable={false}
+					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
+					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+					value={parseInt(formsFormPostId)}
+					loadOptions={formSelectOptions}
+					onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
 					isClearable={false}
+					reFetchOnSearch={true}
+					multiple={false}
+					simpleValue
 				/>
-			}
+
+				{formsFormPostId &&
+					<div className='es-v-spaced es-has-wp-field-b-space'>
+						<Button
+							icon={icons.edit}
+							href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
+						>
+							{__('Edit fields', 'eightshift-forms')}
+						</Button>
+
+						<Button
+							icon={icons.options}
+							href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
+						>
+							{__('Form settings', 'eightshift-forms')}
+						</Button>
+					</div>
+				}
+
+				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+				<TextControl
+					label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
+					help={__('Additional data type selectors', 'eightshift-forms')}
+					value={formsFormDataTypeSelector}
+					onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
+				/>
+
+				{formsStyleOptions?.length > 0 &&
+					<CustomSelect
+						label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
+						value={formsStyle}
+						options={formsStyleOptions}
+						onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
+						simpleValue
+						isSearchable={false}
+						isClearable={false}
+					/>
+				}
+			</PanelBody>
 
 			{formsUseGeolocation &&
-				<>
-					<FancyDivider label={__('Geolocation', 'eightshift-forms')} />
-
+				<PanelBody title={__('Geolocation', 'eightshift-forms')} initialOpen={false}>
 					<CustomSelect
 						label={<IconLabel icon={icons.locationAllow} label={__('Show form only if in countries', 'eightshift-forms')} />}
 						help={
@@ -262,8 +264,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							</div>
 						</Modal>
 					)}
-				</>
+				</PanelBody>
 			}
-		</PanelBody>
+
+			<ConditionalTagsFormsOptions
+				{...props('conditionalTags', attributes, {
+					setAttributes,
+					conditionalTagsPostId: formsFormPostId,
+				})}
+			/>
+
+		</>
 	);
 };

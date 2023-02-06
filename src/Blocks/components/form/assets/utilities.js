@@ -137,6 +137,7 @@ export class Utils {
 			CLASS_FILLED: 'is-filled',
 			CLASS_LOADING: 'is-loading',
 			CLASS_HIDDEN: 'is-hidden',
+			CLASS_VISIBLE: 'is-visible',
 			CLASS_HAS_ERROR: 'has-error',
 		};
 
@@ -374,7 +375,6 @@ export class Utils {
 					additionalDataItems[key] = Object.keys(errors);
 				}
 			}
-			console.log(additionalDataItems);
 
 			if (window?.dataLayer && gtmData?.event) {
 				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);

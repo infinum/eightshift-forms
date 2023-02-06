@@ -74,6 +74,31 @@ export class ConditionalTags {
 	 * @public
 	 */
 	initOne(element) {
+		this.initForms(element);
+		this.initFields(element);
+	}
+
+	initForms(element) {
+		let tags = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+
+		if (!tags) {
+			return;
+		}
+
+		JSON.parse(tags).forEach((tag) => {
+			const item = element.querySelector(`${this.utils.fieldSelector}[data-field-name='${tag[0]}']`);
+
+			if (item) {
+				if (tag[1] === this.utils.CONDITIONAL_TAGS_ACTIONS.HIDE) {
+					item.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+				} else {
+					item.classList.add(this.utils.SELECTORS.CLASS_VISIBLE);
+				}
+			}
+		});
+	}
+
+	initFields(element) {
 		const elements = element.querySelectorAll(this.utils.fieldSelector);
 
 		const data = {};
@@ -170,7 +195,7 @@ export class ConditionalTags {
 			}
 
 			// Add event.
-			if (this.utils.isCustom(item) && item.localName === 'select') {
+			if (item.localName === 'select') {
 				item.addEventListener('change', this.onCustomSelectChangeEvent);
 			} else {
 				item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));

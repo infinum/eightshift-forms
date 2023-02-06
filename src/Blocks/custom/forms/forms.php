@@ -12,6 +12,7 @@ use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 
 $manifest = Components::getManifest(__DIR__);
@@ -32,6 +33,7 @@ $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attribu
 $formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 $formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attributes, $manifest);
 $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
+$formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
 if (!$formsServerSideRender) {
@@ -121,6 +123,7 @@ if ($formsServerSideRender) {
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRules);
 
 					if (isset($innerBlock['innerBlocks'])) {
 						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {

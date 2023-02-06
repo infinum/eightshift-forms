@@ -18,6 +18,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
@@ -200,6 +201,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
+				'formFields' => FormFieldsRoute::ROUTE_SLUG,
 				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
 			];
 

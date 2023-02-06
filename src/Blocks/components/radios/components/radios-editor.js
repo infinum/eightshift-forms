@@ -4,7 +4,7 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const RadiosEditor = (attributes) => {
@@ -17,10 +17,12 @@ export const RadiosEditor = (attributes) => {
 	} = attributes;
 
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
+	const radiosName = checkAttr('radiosName', attributes, manifest);
 
 	const radios = (
 		<>
 			{radiosContent}
+			<MissingName value={radiosName} isEditor={true} />
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);

@@ -117,8 +117,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
 
-		var_dump($successRedirectUrl);
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[

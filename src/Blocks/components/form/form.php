@@ -37,6 +37,7 @@ $formTrackingAdditionalData = Components::checkAttr('formTrackingAdditionalData'
 $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
+$formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -79,6 +80,10 @@ if ($formPostId) {
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
+}
+
+if ($formConditionalTags) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($formConditionalTags);
 }
 
 if ($formId) {

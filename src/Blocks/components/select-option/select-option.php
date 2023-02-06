@@ -14,8 +14,9 @@ $selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $ma
 $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
 $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
+$selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
 
-if (empty($selectOptionValue)) {
+if (empty($selectOptionValue) && !$selectOptionAsPlaceholder) {
 	$selectOptionValue = $selectOptionLabel;
 }
 

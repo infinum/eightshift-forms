@@ -324,6 +324,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'selectFieldLabel' => $label,
 								'selectFieldHidden' => $isHidden,
 								'selectName' => $name,
+								'selectPlaceholder' => __('Select option', 'eightshift-forms'),
 								'selectTracking' => $name,
 								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_values(

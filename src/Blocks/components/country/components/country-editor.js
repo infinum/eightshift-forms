@@ -2,9 +2,10 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import {
 	props,
+	checkAttr,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from '../../utils';
+import { getAdditionalContentFilterContent, MissingName } from '../../utils';
 import manifest from '../manifest.json';
 
 export const CountryEditor = (attributes) => {
@@ -17,11 +18,15 @@ export const CountryEditor = (attributes) => {
 		additionalFieldClass,
 	} = attributes;
 
+	const countryName = checkAttr('countryName', attributes, manifest);
+
 	const country = (
 		<>
 			<div className={`${componentClass}__info-text`}>
 				{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
 			</div>
+
+			<MissingName value={countryName} isEditor={true} />
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

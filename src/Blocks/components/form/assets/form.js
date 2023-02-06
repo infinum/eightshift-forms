@@ -646,12 +646,15 @@ export class Form {
 	setupSelectField(select, formId) {
 		import('choices.js').then((Choices) => {
 			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
+			const selectPlaceholder = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectPlaceholder);
+			const selectAllowSearch = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch);
 
 			const choices = new Choices.default(select, {
-				searchEnabled: Boolean(select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch)),
+				searchEnabled: Boolean(selectAllowSearch),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
+				placeholder: Boolean(selectPlaceholder),
 				searchFields: ['label', 'value', 'customProperties'],
 				itemSelectText: '',
 				classNames: {

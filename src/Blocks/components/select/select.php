@@ -24,6 +24,7 @@ $selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest
 $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
+$selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -42,6 +43,10 @@ if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
+if ($selectPlaceholder) {
+	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectPlaceholder']] = esc_attr($selectPlaceholder);
+}
+
 $selectAttrsOutput = '';
 if ($selectAttrs) {
 	foreach ($selectAttrs as $key => $value) {
@@ -52,6 +57,13 @@ if ($selectAttrs) {
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
+$placeholder = $selectPlaceholder ? Components::render(
+	'select-option', [
+		'selectOptionLabel' => $selectPlaceholder,
+		'selectOptionAsPlaceholder' => true,
+	]
+) : '';
+
 $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
@@ -60,6 +72,7 @@ $select = '
 		' . disabled($selectIsDisabled, true, false) . '
 		' . $selectAttrsOutput . '
 	>
+		' . $placeholder . '
 		' . $selectContent . '
 	</select>
 	' . $additionalContent . '

@@ -4,7 +4,7 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 
@@ -18,10 +18,12 @@ export const CheckboxesEditor = (attributes) => {
 	} = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
+	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 
 	const checkboxes = (
 		<>
 			{checkboxesContent}
+			<MissingName value={checkboxesName} isEditor={true} />
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);

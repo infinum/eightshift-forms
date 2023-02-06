@@ -10,4 +10,9 @@ select.es-select__select {
 	&--disabled {
 		@include input-styles-disabled;
 	}
+
+	&__placeholder {
+		padding-bottom: 15px;
+		opacity: 0.5;
+	}
 }

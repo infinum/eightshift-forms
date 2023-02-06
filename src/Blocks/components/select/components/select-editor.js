@@ -6,7 +6,8 @@ import {
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { SelectOptionEditor } from './../../select-option/components/select-option-editor';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -21,6 +22,8 @@ export const SelectEditor = (attributes) => {
 	} = attributes;
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
+	const selectName = checkAttr('selectName', attributes, manifest);
+	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
@@ -31,7 +34,17 @@ export const SelectEditor = (attributes) => {
 	const select = (
 		<>
 			<div className={selectClass}>
+				{selectPlaceholder &&
+					<div className={`${componentClass}__placeholder`}>
+						<SelectOptionEditor
+							selectOptionLabel={
+								selectPlaceholder
+							}
+						/>
+					</div>
+				}
 				{selectContent}
+				<MissingName value={selectName} isEditor={true} />
 			</div>
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />

@@ -17,6 +17,9 @@
 		},
 		"conditionalTagsRules": {
 			"type": "array"
+		},
+		"conditionalTagsPostId": {
+			"type": "string"
 		}
 	}
 }

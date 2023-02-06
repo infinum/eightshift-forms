@@ -1,9 +1,10 @@
 /* global esFormsLocalization */
 
+import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { camelize, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { camelize, STORE_NAME, InlineNotification, InlineNotificationType } from '@eightshift/frontend-libs/scripts';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -37,7 +38,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 
 			updateInnerBlocks(clientId, builtBlocks);
 
-			dispatch('core/block-editor').savePost();
+			dispatch('core/editor').savePost();
 		}
 	});
 };
@@ -248,3 +249,58 @@ export const getAdditionalContentFilterContent = (blockName) => {
 
 	return '';
 };
+
+/**
+ * Output select options from array.
+ *
+ * @param {object} options 
+ * @param {*} useEmpty 
+ * @returns 
+ */
+export const getConstantsOptions = (options, useEmpty = false) => {
+	const empty = {
+		value: '',
+		label: '',
+	};
+
+	const items = [];
+	if (options) {
+		for (const [key, value] of Object.entries(options)) {
+			items.push({
+				'value': key,
+				'label': value
+			});
+		}
+	}
+
+	return useEmpty ? [empty, ...items] : items;
+};
+
+/**
+ * Outputs notification if name is missing.
+ *
+ * @param {string} value Field name value.
+ *
+ * @returns Component
+ */
+export const MissingName = ({value, isEditor = false}) => {
+	return (
+		<>
+			{!value &&
+				<>
+				{isEditor &&
+					<><br/><br/></>
+				}
+				<InlineNotification
+					text={
+						isEditor ? 
+						__('Name field is mandatory and your form will not work correctly it\'s not set. Please fill it in the sidebar.', 'eightshift-forms'):
+						__('Name field is mandatory and your form will not work correctly it\'s not set.', 'eightshift-forms')
+					}
+					type={InlineNotificationType.ERROR}
+				/>
+				</>
+			}
+		</>
+	);
+}
