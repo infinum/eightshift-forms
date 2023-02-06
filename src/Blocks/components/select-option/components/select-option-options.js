@@ -6,9 +6,11 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	FancyDivider
+	FancyDivider,
+	props,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled } from './../../utils';
 
 export const SelectOptionOptions = (attributes) => {
@@ -62,6 +64,10 @@ export const SelectOptionOptions = (attributes) => {
 					{__('Disabled', 'eightshift-forms')}
 				</Button>
 			</div>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
+			/>
 		</>
 	);
 };

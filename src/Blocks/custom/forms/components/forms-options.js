@@ -1,8 +1,10 @@
 /* global esFormsLocalization */
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { select } from "@wordpress/data";
+import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import {
@@ -45,6 +47,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [formFields, setFormFields] = useState([]);
 
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
@@ -69,16 +72,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		}
 	);
 
-	const geoLocationOptions = getFetchWpApi(
-		esFormsLocalization.restRoutes.countriesGeolocation,
-		{
-			processLabel: ({ label }) => label,
-			processId: ({ value }) => value,
-			routePrefix: esFormsLocalization.restPrefix,
-			fields: 'label, value',
-			perPage: 500,
-		}
-	);
+	useEffect(() => {
+		apiFetch({ path: `${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.countriesGeolocation}` }).then((response) => {
+			if (response.code === 200) {
+				setFormFields(response.data);
+			}
+		});
+	}, []);
 
 	const GeoLocationModalItem = ({
 		index,
@@ -101,12 +101,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 					<CustomSelect
 						value={formsFormGeolocationAlternatives?.[index]?.geoLocation}
-						loadOptions={geoLocationOptions}
+						options={formFields}
 						onChange={(value) => {
 							formsFormGeolocationAlternatives[index].geoLocation = value;
 							setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: formsFormGeolocationAlternatives });
 						}}
+						cacheOptions={false}
 						multiple={true}
+						simpleValue
 					/>
 				</div>
 			</>
@@ -182,9 +184,11 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								)
 						}
 						value={formsFormGeolocation}
-						loadOptions={geoLocationOptions}
+						options={formFields}
 						onChange={(value) => setAttributes({[getAttrKey('formsFormGeolocation', attributes, manifest)]: value})}
+						cacheOptions={false}
 						multiple={true}
+						simpleValue
 						disabled={formsFormGeolocationAlternatives?.length > 0}
 					/>
 

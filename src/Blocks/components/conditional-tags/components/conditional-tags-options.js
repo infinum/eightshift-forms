@@ -20,9 +20,6 @@ export const ConditionalTagsOptions = (attributes) => {
 		setAttributes,
 	} = attributes;
 
-	// TODO, remove after fixing the options-select conditionals.
-	return <></>;
-
 	const postId = select('core/editor').getCurrentPostId();
 
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);

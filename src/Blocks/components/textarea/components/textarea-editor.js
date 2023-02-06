@@ -7,6 +7,7 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
@@ -40,6 +41,10 @@ export const TextareaEditor = (attributes) => {
 			</textarea>
 
 			<MissingName value={textareaName} isEditor={true} />
+
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
+			/>
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>

@@ -8,6 +8,7 @@ import {
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { SelectOptionEditor } from './../../select-option/components/select-option-editor';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -34,6 +35,7 @@ export const SelectEditor = (attributes) => {
 	const select = (
 		<>
 			<div className={selectClass}>
+
 				{selectPlaceholder &&
 					<div className={`${componentClass}__placeholder`}>
 						<SelectOptionEditor
@@ -43,8 +45,14 @@ export const SelectEditor = (attributes) => {
 						/>
 					</div>
 				}
+
 				{selectContent}
+
 				<MissingName value={selectName} isEditor={true} />
+
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
 			</div>
 
 			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />

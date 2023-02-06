@@ -6,8 +6,10 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	FancyDivider
+	FancyDivider,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';
 
@@ -67,6 +69,10 @@ export const RadioOptions = (attributes) => {
 				value={radioTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('radioTracking', attributes, manifest), radioDisabledOptions)}
+			/>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

@@ -3,8 +3,10 @@ import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import {
 	selector,
-	checkAttr
+	checkAttr,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
@@ -48,6 +50,9 @@ export const CheckboxEditor = (attributes) => {
 					type={'checkbox'}
 					readOnly
 					checked={checkboxIsChecked}
+				/>
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
 				/>
 				<Label />
 			</div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const SelectOptionEditor = (attributes) => {
@@ -26,6 +27,9 @@ export const SelectOptionEditor = (attributes) => {
 
 	return (
 		<div className={selectOptionClass}>
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
+			/>
 			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
 		</div>
 	);

@@ -95,7 +95,12 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 		}
 
 		try {
-			return $this->geolocation->getCountriesList();
+			return \rest_ensure_response(
+				$this->getApiSuccessOutput(
+					\esc_html__('Success.', 'eightshift-forms'),
+					$this->geolocation->getCountriesList()
+				)
+			);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(

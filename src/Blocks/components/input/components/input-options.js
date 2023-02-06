@@ -30,7 +30,6 @@ export const InputOptions = (attributes) => {
 
 	const {
 		setAttributes,
-		blockClientId,
 
 		showInputName = true,
 		showInputValue = true,

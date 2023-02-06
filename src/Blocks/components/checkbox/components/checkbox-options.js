@@ -6,8 +6,10 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	FancyDivider
+	FancyDivider,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';
 
@@ -81,6 +83,10 @@ export const CheckboxOptions = (attributes) => {
 				value={checkboxTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
+			/>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);
