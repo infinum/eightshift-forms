@@ -240,6 +240,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			// Enrichment config.
 			$output['enrichmentConfig'] = \wp_json_encode($this->enrichment->getEnrichmentConfig());
 
+			$output['delimiter'] = AbstractBaseRoute::DELIMITER;
 			$output['captcha'] = '';
 
 			// Check if Captcha data is set and valid.

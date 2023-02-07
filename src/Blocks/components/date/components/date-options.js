@@ -152,7 +152,9 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: dateName,
+				})}
 			/>
 		</>
 	);

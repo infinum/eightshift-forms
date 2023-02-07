@@ -2,8 +2,10 @@ import React from 'react';
 import {
 	ServerSideRender,
 	checkAttr,
+	props,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';
 import { getFilteredAttributes } from '../../../components/utils';
 
 export const FormsEditor = ({ attributes, preview }) => {
@@ -34,6 +36,10 @@ export const FormsEditor = ({ attributes, preview }) => {
 						}
 					)
 				}
+			/>
+
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
 			/>
 
 			{isGeoPreview &&

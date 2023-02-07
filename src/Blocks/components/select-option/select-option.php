@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -20,14 +19,6 @@ $selectOptionAttrs = Components::checkAttr('selectOptionAttrs', $attributes, $ma
 
 if (empty($selectOptionValue) && !$selectOptionAsPlaceholder) {
 	$selectOptionValue = $selectOptionLabel;
-}
-
-$conditionalTags = Components::render(
-	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
-);
-if ($conditionalTags) {
-	$selectOptionAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
 }
 
 $selectOptionAttrsOutput = '';

@@ -141,12 +141,15 @@ export class Utils {
 			CLASS_HAS_ERROR: 'has-error',
 		};
 
+		this.DELIMITER = esFormsLocalization.delimiter
+
 		// Conditional tags
 		this.CONDITIONAL_TAGS_OPERATORS = CONDITIONAL_TAGS_OPERATORS;
 		this.CONDITIONAL_TAGS_ACTIONS = CONDITIONAL_TAGS_ACTIONS;
 		this.CONDITIONAL_TAGS_LOGIC = CONDITIONAL_TAGS_LOGIC;
 
 		// Internal state.
+		this.FORMS = {};
 		this.FILES = {};
 		this.CUSTOM_TEXTAREAS = {};
 		this.CUSTOM_SELECTS = {};
@@ -486,6 +489,27 @@ export class Utils {
 		return false;
 	}
 
+	isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength) {
+		const interval = setInterval(() => {
+			const selects = this.CUSTOM_SELECTS[formId];
+			const textareas = this.CUSTOM_TEXTAREAS[formId];
+			const files = this.CUSTOM_FILES[formId];
+
+			if (
+				selects.length >= selectsLength &&
+				textareas.length >= textareaLenght &&
+				files.length >= filesLength
+			) {
+				clearInterval(interval);
+
+				this.FORMS[formId] = true;
+
+				// Triger event that form is fully loaded.
+				this.dispatchFormEvent(element, this.EVENTS.FORM_JS_LOADED);
+			}
+		}, 100);
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -579,9 +603,11 @@ export class Utils {
 				SETTINGS: this.SETTINGS,
 				EVENTS: this.EVENTS,
 				SELECTORS: this.SELECTORS,
+				DELIMITER: this.DELIMITER,
 				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
 				CONDITIONAL_TAGS_ACTIONS: this.CONDITIONAL_TAGS_ACTIONS,
 				CONDITIONAL_TAGS_LOGIC: this.CONDITIONAL_TAGS_LOGIC,
+				FORMS: this.FORMS,
 				FILES: this.FILES,
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,

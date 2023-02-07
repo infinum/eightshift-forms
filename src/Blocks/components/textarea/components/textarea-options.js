@@ -209,7 +209,9 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: textareaName,
+				})}
 			/>
 		</>
 	);

@@ -27,7 +27,6 @@ if ($fieldSkip) {
 	return;
 }
 
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;

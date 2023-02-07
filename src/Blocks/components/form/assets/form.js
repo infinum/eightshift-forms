@@ -69,68 +69,77 @@ export class Form {
 	 * @public
 	 */
 	initOne(element) {
-			// Regular submit.
-			element.addEventListener('submit', this.onFormSubmitEvent);
+		// Regular submit.
+		element.addEventListener('submit', this.onFormSubmitEvent);
 
-			// Single submit for admin settings.
-			if (this.utils.formIsAdmin) {
-				const items = element.querySelectorAll(this.utils.submitSingleSelector);
+		// Single submit for admin settings.
+		if (this.utils.formIsAdmin) {
+			const items = element.querySelectorAll(this.utils.submitSingleSelector);
 
-				// Look all internal items for single submit option.
-				[...items].forEach((item) => {
-					if (item.type === 'submit') {
-						item.addEventListener('click', this.onFormSubmitSingleEvent);
-					} else {
-						item.addEventListener('change', this.onFormSubmitSingleEvent);
-					}
-				});
+			// Look all internal items for single submit option.
+			[...items].forEach((item) => {
+				if (item.type === 'submit') {
+					item.addEventListener('click', this.onFormSubmitSingleEvent);
+				} else {
+					item.addEventListener('change', this.onFormSubmitSingleEvent);
+				}
+			});
+		}
+
+		// Get form ID.
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+
+		// Form loading started.
+		this.utils.FORMS[formId] = false;
+
+		// All fields selectors.
+		const inputs = element.querySelectorAll(this.utils.inputSelector);
+		const textareas = element.querySelectorAll(this.utils.textareaSelector);
+		const selects = element.querySelectorAll(this.utils.selectSelector);
+		const files = element.querySelectorAll(this.utils.fileSelector);
+
+		// Setup regular inputs.
+		this.utils.CUSTOM_DATES[formId] = [];
+		[...inputs].forEach((input) => {
+			switch (input.type) {
+				case 'date':
+				case 'datetime-local':
+					this.setupDateField(input, formId);
+					break;
 			}
 
-			// Get form ID.
-			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+			this.setupInputField(input);
+		});
 
-			// All fields selectors.
-			const inputs = element.querySelectorAll(this.utils.inputSelector);
-			const textareas = element.querySelectorAll(this.utils.textareaSelector);
-			const selects = element.querySelectorAll(this.utils.selectSelector);
-			const files = element.querySelectorAll(this.utils.fileSelector);
+		// Setup select inputs.
+		this.utils.CUSTOM_SELECTS[formId] = [];
+		[...selects].forEach((select) => {
+			this.setupSelectField(select, formId);
+		});
 
-			// Setup regular inputs.
-			this.utils.CUSTOM_DATES[formId] = [];
-			[...inputs].forEach((input) => {
-				switch (input.type) {
-					case 'date':
-					case 'datetime-local':
-						this.setupDateField(input, formId);
-						break;
-				}
+		// Setup textarea inputs.
+		this.utils.CUSTOM_TEXTAREAS[formId] = [];
+		[...textareas].forEach((textarea) => {
+			this.setupTextareaField(textarea, formId);
+		});
 
-				this.setupInputField(input);
-			});
+		// Setup file single inputs.
+		this.utils.CUSTOM_FILES[formId] = [];
+		[...files].forEach((file, index) => {
+			this.setupFileField(file, formId, index, element);
+		});
 
-			// Setup select inputs.
-			this.utils.CUSTOM_SELECTS[formId] = [];
-			[...selects].forEach((select) => {
-				this.setupSelectField(select, formId);
-			});
+		// Form loaded.
+		this.utils.isFormLoaded(
+			formId,
+			element,
+			selects.length,
+			textareas.length,
+			files.length
+		);
 
-			// Setup textarea inputs.
-			this.utils.CUSTOM_TEXTAREAS[formId] = [];
-			[...textareas].forEach((textarea) => {
-				this.setupTextareaField(textarea, formId);
-			});
-
-			// Setup file single inputs.
-			this.utils.CUSTOM_FILES[formId] = [];
-			[...files].forEach((file, index) => {
-				this.setupFileField(file, formId, index, element);
-			});
-
-			// Setup phone sync.
-			this.setupPhoneSync(element, selects.length, formId);
-
-			// Triger event that form is fully loaded.
-			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
+		// Setup phone sync.
+		this.setupPhoneSync(element, selects.length, formId);
 	}
 
 	/**
@@ -823,10 +832,10 @@ export class Form {
 
 		// Set interval because of dynamic import of choices.
 		const interval = setInterval(() => {
-			const selects = this.utils.CUSTOM_SELECTS[formId];
-
-			if (selects.length >= selectsCount) {
+			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
 				clearInterval(interval);
+
+				const selects = window[this.utils.prefix].utils.CUSTOM_SELECTS[formId];
 
 				if (selects.length !== 0) {
 					// Find all countries.
@@ -840,7 +849,7 @@ export class Form {
 						phones.map((element) => {
 							// Set phone init value by checking the contry.
 							element.setChoiceByValue(country.getValue()?.customProperties);
-	
+
 							// Set contry value on any phone change.
 							// TODO: Remove events.
 							element.passedElement.element.addEventListener(
@@ -866,7 +875,7 @@ export class Form {
 					}
 				}
 			}
-		}, 50);
+		}, 100);
 	}
 
 	/**

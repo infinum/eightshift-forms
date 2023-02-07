@@ -155,7 +155,9 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: fileName,
+				})}
 			/>
 		</>
 	);

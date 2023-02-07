@@ -106,7 +106,9 @@ export const SelectOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: selectName,
+				})}
 			/>
 		</>
 	);

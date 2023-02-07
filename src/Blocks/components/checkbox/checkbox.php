@@ -50,14 +50,6 @@ if ($checkboxTracking) {
 	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
 }
 
-$conditionalTags = Components::render(
-	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
-);
-if ($conditionalTags) {
-	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
-}
-
 if ($checkboxValue) {
 	$checkboxAttrs['value'] = esc_attr($checkboxValue);
 }

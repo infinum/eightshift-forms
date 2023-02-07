@@ -20,6 +20,7 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 export const CheckboxesOptions = (attributes) => {
 	const {
 		options,
+		componentName,
 	} = manifest;
 
 	const {
@@ -110,7 +111,9 @@ export const CheckboxesOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: checkboxesName,
+				})}
 			/>
 		</>
 	);

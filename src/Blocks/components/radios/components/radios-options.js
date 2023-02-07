@@ -62,7 +62,9 @@ export const RadiosOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: radiosName,
+				})}
 			/>
 		</>
 	);

@@ -26,6 +26,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	const conditionalTagsAction = checkAttr('conditionalTagsAction', attributes, manifest);
 	const conditionalTagsLogic = checkAttr('conditionalTagsLogic', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
+	const conditionalTagsParentName = checkAttr('conditionalTagsParentName', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
@@ -35,36 +36,51 @@ export const ConditionalTagsOptions = (attributes) => {
 		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
 
 			if (response.code === 200) {
-				setFormFields(getConstantsOptions(response.data, true));
+				setFormFields(response.data);
 			}
 		});
 	}, [isModalOpen]);
 
 	const ConditionalTagsItem = ({index}) => {
+
+		const operatorValue = conditionalTagsRules?.[index]?.[1] ?? 'is';
+		const fieldValue = conditionalTagsRules?.[index]?.[0];
+
 		// Internal state due to rerendering issue.
 		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[index]?.[2]);
 
+		const options = formFields.find((item) => item.value === conditionalTagsRules[index][0])?.options ?? [];
+		const optionsItem = formFields.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
+
 		return (
-			<>
-				<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
+			<div className='es-conditional-tags-modal__item-inner es-conditional-tags-modal__grid' data-count={optionsItem.length ? '4' : '3'}>
+				<SelectControl
+					value={fieldValue}
+					options={formFields}
+					onChange={(value) => {
+						conditionalTagsRules[index][0] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+				/>
+
+				<SelectControl
+					value={operatorValue}
+					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
+					onChange={(value) => {
+						conditionalTagsRules[index][1] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+				/>
+
+				{(options.length && (operatorValue === 'is' || operatorValue === 'isn')) ?
 					<SelectControl
-						value={conditionalTagsRules?.[index]?.[0]}
-						options={formFields}
+						value={conditionalTagsRules?.[index]?.[2]}
+						options={options}
 						onChange={(value) => {
-							conditionalTagsRules[index][0] = value;
+							conditionalTagsRules[index][2] = value;
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 						}}
-					/>
-
-					<SelectControl
-						value={conditionalTagsRules?.[index]?.[1]}
-						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL, true)}
-						onChange={(value) => {
-							conditionalTagsRules[index][1] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						}}
-					/>
-
+					/> :
 					<TextControl
 						value={inputCheck}
 						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
@@ -73,13 +89,32 @@ export const ConditionalTagsOptions = (attributes) => {
 							setInputCheck(value);
 						}}
 					/>
-				</div>
-			</>
+				}
+
+				<SelectControl
+					value={conditionalTagsRules?.[index]?.[3]}
+					options={optionsItem.map((item) => {
+						if (item.value === '') {
+							return {
+								...item,
+								label: __('All fields', 'eightshift-forms'),
+							};
+						}
+						return item;
+					})}
+					onChange={(value) => {
+						conditionalTagsRules[index][3] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+				/>
+			</div>
 		);
 	};
 
+	const optionsItem = formFields.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
+
 	return (
-		<PanelBody title={__('Conditional tags', 'eightshift-forms')} initialOpen={false}>
+		<PanelBody title={__('Conditional tags', 'eightshift-forms')} initialOpen={true}>
 			<IconToggle
 				icon={icons.width}
 				label={__('Use conditional tags', 'eightshift-frontend-libs')}
@@ -119,22 +154,38 @@ export const ConditionalTagsOptions = (attributes) => {
 								setIsNewRuleAdded(false);
 							}}
 						>
+							<p className='es-conditional-tags-modal__desc'>
+								{__('With this options you can control what fields/options are visible or hidden on your form.', 'eightshift-forms')}
+							</p>
+
 							<InlineNotification
 								text={__('If some fields are missing please make sure all your field names are set and you have updated/saved form in the top right corner.', 'eightshift-forms')}
 								type={InlineNotificationType.INFO}
 							/>
 
-							<SelectControl
-								value={conditionalTagsAction}
-								options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: value })}
-							/>
-		
-							<SelectControl
-								value={conditionalTagsLogic}
-								options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: value })}
-							/>
+							<div className="es-conditional-tags-modal__header-intro">
+								<SelectControl
+									value={conditionalTagsAction}
+									options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
+									onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: value })}
+								/>
+								<span className='es-conditional-tags-modal__header-intro-text'>{__('this field if', 'eightshift-forms')}</span>
+								<SelectControl
+									value={conditionalTagsLogic}
+									options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
+									onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: value })}
+								/>
+								<span className='es-conditional-tags-modal__header-intro-text'>{__('of the following match:', 'eightshift-forms')}</span>
+							</div>
+
+							<div className="es-conditional-tags-modal__header es-conditional-tags-modal__grid" data-count={optionsItem.length ? '4' : '3'}>
+								<span>{__('Field', 'eightshift-forms')}</span>
+								<span>{__('Condition', 'eightshift-forms')}</span>
+								<span>{__('Value', 'eightshift-forms')}</span>
+								{optionsItem.length === 3 &&
+									<span>{__('Inner fields', 'eightshift-forms')}</span>
+								}
+							</div>
 
 							{conditionalTagsRules?.map((_, index) => {
 								const itemExists = formFields.filter((item) => {
@@ -148,17 +199,16 @@ export const ConditionalTagsOptions = (attributes) => {
 								}
 
 								return (
-									<div key={index}>
+									<div key={index} className="es-conditional-tags-modal__item">
 										<ConditionalTagsItem index={index} />
 										<Button
-											isLarge
+											className="es-conditional-tags-modal__item-remove"
 											icon={icons.trash}
 											onClick={() => {
 												conditionalTagsRules.splice(index, 1);
 												setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 											}}
 											label={__('Remove', 'eightshift-forms')}
-											style={{ marginTop: '0.2rem' }}
 										/>
 									</div>
 								);
@@ -168,7 +218,9 @@ export const ConditionalTagsOptions = (attributes) => {
 								isSecondary
 								icon={icons.add}
 								onClick={() => {
-									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [] ]})
+									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [
+										formFields?.[0]?.value ?? '', 'is', '', '',
+									] ]})
 									setIsNewRuleAdded(true);
 								}}
 							>
@@ -176,10 +228,13 @@ export const ConditionalTagsOptions = (attributes) => {
 							</Button>
 
 							<div className='es-h-end es-has-wp-field-t-space'>
-								<Button onClick={() => {
-									setIsModalOpen(false);
-									setIsNewRuleAdded(false);
-								}}>
+								<Button
+									isPrimary
+									onClick={() => {
+										setIsModalOpen(false);
+										setIsNewRuleAdded(false);
+									}}
+								>
 									{__('Close', 'eightshift-forms')}
 								</Button>
 							</div>

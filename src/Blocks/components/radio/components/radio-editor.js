@@ -2,7 +2,6 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const RadioEditor = (attributes) => {
@@ -44,9 +43,6 @@ export const RadioEditor = (attributes) => {
 					className={`${componentClass}__input`}
 					type={'radio'}
 					readOnly
-				/>
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
 				/>
 				<Label />
 			</div>

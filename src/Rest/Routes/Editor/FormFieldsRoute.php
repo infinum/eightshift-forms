@@ -96,7 +96,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
@@ -137,10 +137,20 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$label = $value['attrs']["{$prefix}FieldLabel"] ?? $name;
 
-			$output[$name] = $label;
+			$outputItem = [
+				'label' => $label,
+				'value' => $name,
+				'type' => $blockName['name'],
+				'options' => [],
+			];
 
 			if ($value['innerBlocks']) {
-				foreach ($value['innerBlocks'] as $key => $valueInner) {
+				$outputItem['options'][] = [
+					'label' => __('Empty', 'eightshift-forms'),
+					'value' => '',
+				];
+
+				foreach ($value['innerBlocks'] as $valueInner) {
 					$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
 					$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
 
@@ -150,9 +160,14 @@ class FormFieldsRoute extends AbstractBaseRoute
 						continue;
 					}
 
-					$output["{$name}-{$innerKeyValue}"] = $label . ' - ' . $valueInner['attrs']["{$prefixInner}Label"] ?? $innerKeyValue;
+					$outputItem['options'][] = [
+						'label' => $valueInner['attrs']["{$prefixInner}Label"] ?? $innerKeyValue,
+						'value' => $innerKeyValue,
+					];
 				}
 			}
+
+			$output[] = $outputItem;
 		}
 
 		return \rest_ensure_response(

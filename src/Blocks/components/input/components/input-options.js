@@ -368,7 +368,9 @@ export const InputOptions = (attributes) => {
 			/>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsParentName: inputName,
+				})}
 			/>
 		</>
 	);

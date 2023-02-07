@@ -14,11 +14,11 @@ export const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
 };
 
 export const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
-	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('show', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hide', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('Show', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('Hide', 'eightshift-forms'),
 };
 
 export const CONDITIONAL_TAGS_LOGIC_INTERNAL = {
-	[CONDITIONAL_TAGS_LOGIC.ALL]: __('all', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_LOGIC.ANY]: __('any', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_LOGIC.ALL]: __('All', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_LOGIC.ANY]: __('Any', 'eightshift-forms'),
 };

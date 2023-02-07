@@ -74,8 +74,15 @@ export class ConditionalTags {
 	 * @public
 	 */
 	initOne(element) {
-		this.initForms(element);
-		this.initFields(element);
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+		const interval = setInterval(() => {
+			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
+				clearInterval(interval);
+
+				this.initForms(element);
+				this.initFields(element);
+			}
+		}, 100);
 	}
 
 	initForms(element) {
@@ -88,18 +95,38 @@ export class ConditionalTags {
 		JSON.parse(tags).forEach((tag) => {
 			const item = element.querySelector(`${this.utils.fieldSelector}[data-field-name='${tag[0]}']`);
 
-			if (item) {
-				if (tag[1] === this.utils.CONDITIONAL_TAGS_ACTIONS.HIDE) {
-					item.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			if (!item) {
+				return;
+			}
+
+			const type = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
+			let innerItem = '';
+
+			if (tag[2]) {
+				if (type === 'select') {
+					// select.
+					innerItem = item.querySelector(`.choices__item--choice[data-value="${tag[2]}"]`);
 				} else {
-					item.classList.add(this.utils.SELECTORS.CLASS_VISIBLE);
+					// checkbox/radio.
+					innerItem = item.querySelector(`[value="${tag[2]}"]`).parentNode.parentNode;
+				}
+			} else {
+				// input/textarea.
+				innerItem = item;
+			}
+
+			if (innerItem) {
+				if (tag[1] === this.utils.CONDITIONAL_TAGS_ACTIONS.HIDE) {
+					innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+				} else {
+					innerItem.classList.add(this.utils.SELECTORS.CLASS_VISIBLE);
 				}
 			}
 		});
 	}
 
 	initFields(element) {
-		const elements = element.querySelectorAll(this.utils.fieldSelector);
+		const elements = element.querySelectorAll(`[${this.utils.DATA_ATTRIBUTES.conditionalTags}]`);
 
 		const data = {};
 
@@ -146,6 +173,7 @@ export class ConditionalTags {
 						'id': innerItem[0],
 						'operator': innerItem[1],
 						'value': innerItem[2],
+						'inner': innerItem[3],
 					};
 				})
 			};
@@ -159,19 +187,35 @@ export class ConditionalTags {
 	 */
 	setInit() {
 		for (const [key, value] of Object.entries(this.INTERNAL_DATA[this.DATA_FIELDS])) {
-			const item = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
+			const input = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
 
-			if (!item) {
+			if (!input) {
 				continue;
 			}
-
-			const field = item.closest(this.utils.fieldSelector);
 
 			const {
 				action,
 			} = value;
 
-			if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
+			const isEmptyRule = value.rules.some((element) => element.value === '');
+			const isInner = value.rules.filter((element) => element.inner !== '');
+
+			let field = '';
+
+			if (isInner.length) {
+				if (input.type === 'select-one') {
+					// select.
+					field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${isInner?.[0]?.inner}"]`);
+				} else {
+					// checkbox/radio.
+					field = input.parentNode.parentNode;
+				}
+			} else {
+				// input/textarea.
+				field = input.closest(this.utils.fieldSelector);
+			}
+
+			if (field && action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW && !isEmptyRule) {
 				// If action is to show the initial state is hide.
 				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
@@ -187,19 +231,21 @@ export class ConditionalTags {
 		// Loop items from all rules mapped earlier.
 		Object.entries(this.INTERNAL_DATA[this.DATA_EVENT_ITEMS]).forEach(([key]) => {
 			// Find that item by ID.
-			const item = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
+			const items = document.querySelectorAll(`${this.utils.formSelector} [name="${key}"]`);
 
 			// Bailout if non existing.
-			if (!item) {
+			if (!items) {
 				return;
 			}
 
-			// Add event.
-			if (item.localName === 'select') {
-				item.addEventListener('change', this.onCustomSelectChangeEvent);
-			} else {
-				item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
-			}
+			[...items].forEach((element) => {
+				// Add event.
+				if (element.localName === 'select') {
+					element.addEventListener('change', this.onChangeEvent);
+				} else {
+					element.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
+				}
+			})
 		});
 	}
 
@@ -263,7 +309,7 @@ export class ConditionalTags {
 	 *
 	 * @public
 	 */
-	onCustomSelectChangeEvent = (event) => {
+	onChangeEvent = (event) => {
 		this.onFieldChangeEvent(event);
 	};
 
@@ -283,7 +329,9 @@ export class ConditionalTags {
 		switch (inputType) {
 			case 'checkbox':
 			case 'radio':
-				inputValue = event.target.checked ? 'true' : 'false';
+				if (!event.target.checked) {
+					inputValue = '';
+				}
 				break;
 		}
 
@@ -310,6 +358,7 @@ export class ConditionalTags {
 			rules.map((rule, index) => {
 				const {
 					id,
+					inner,
 				} = rule;
 
 				// Find only rules applied to this this input.
@@ -318,24 +367,39 @@ export class ConditionalTags {
 				}
 
 				// Find input field selector.
-				const field = input.closest(this.utils.fieldSelector);
+				let field = '';
 
-				this.isRuleValid(rule, inputValue, item, index);
-
-				// Validate rule by checking input value.
-				if (this.areAllRulesValid(logic, item)) {
-					// If rule is valid do action.
-					if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
-						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+				if (inner) {
+					if (input.type === 'select-one') {
+						// select.
+						field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${inner}"]`);
 					} else {
-						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						// checkbox/radio.
+						field = input.parentNode.parentNode;
 					}
 				} else {
-					// If rule is not valid do action by resting the field to the original state.
-					if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
-						field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+					// input/textarea.
+					field = input.closest(this.utils.fieldSelector);
+				}
+
+				if (field) {
+					this.isRuleValid(rule, inputValue, item, index);
+
+				// Validate rule by checking input value.
+					if (this.areAllRulesValid(logic, item)) {
+						// If rule is valid do action.
+						if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
+							field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+						} else {
+							field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						}
 					} else {
-						field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+						// If rule is not valid do action by resting the field to the original state.
+						if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
+							field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						} else {
+							field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+						}
 					}
 				}
 			});
@@ -377,8 +441,8 @@ export class ConditionalTags {
 				setListeners: () => {
 					this.setListeners();
 				},
-				onCustomSelectChangeEvent: (event) => {
-					this.onCustomSelectChangeEvent(event);
+				onChangeEvent: (event) => {
+					this.onChangeEvent(event);
 				},
 				onFieldChangeEvent: (event) => {
 					this.onFieldChangeEvent(event);

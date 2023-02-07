@@ -43,14 +43,6 @@ if ($radioTracking) {
 	$radioAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($radioTracking);
 }
 
-$conditionalTags = Components::render(
-	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
-);
-if ($conditionalTags) {
-	$radioAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
-}
-
 if ($radioValue) {
 	$radioAttrs['value'] = esc_attr($radioValue);
 }

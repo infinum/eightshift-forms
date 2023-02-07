@@ -14,9 +14,6 @@
 			"radioIsRequired": false
 		}
 	},
-	"components": {
-		"conditionalTags": "conditionalTags"
-	},
 	"attributes": {
 		"radioId": {
 			"type": "string"
