@@ -20,7 +20,6 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 export const CheckboxesOptions = (attributes) => {
 	const {
 		options,
-		componentName,
 	} = manifest;
 
 	const {

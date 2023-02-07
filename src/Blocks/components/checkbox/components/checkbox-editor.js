@@ -4,7 +4,6 @@ import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
-	props,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 

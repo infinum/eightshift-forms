@@ -30,6 +30,13 @@
 		"formsStyle": {
 			"type": "string"
 		},
+		"formsDownloads": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
+		},
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},

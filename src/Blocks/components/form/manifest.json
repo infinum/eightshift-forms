@@ -77,6 +77,13 @@
 		"formServerSideRender": {
 			"type": "boolean",
 			"default": false
+		},
+		"formsDownloads": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
 		}
 	},
 	"options": {

@@ -7,7 +7,6 @@ import {
 	icons,
 	IconLabel,
 	FancyDivider,
-	props,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';

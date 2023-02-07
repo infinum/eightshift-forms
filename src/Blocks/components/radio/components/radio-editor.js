@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const RadioEditor = (attributes) => {

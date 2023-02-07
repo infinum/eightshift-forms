@@ -6,6 +6,7 @@
  * @package EightshiftForms\Helpers
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 
@@ -28,4 +29,16 @@ function esFormsGetFormIdByName(string $formId): string
 	);
 
 	return $class->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+}
+
+/**
+ * Decrypt method.
+ *
+ * @param string $value Value used.
+ *
+ * @return string|bool
+ */
+function esFormsDecryptor(string $value)
+{
+	return Helper::decryptor($value);
 }

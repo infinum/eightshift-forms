@@ -245,7 +245,7 @@ export class ConditionalTags {
 				} else {
 					element.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
 				}
-			})
+			});
 		});
 	}
 

@@ -142,7 +142,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
 								'inputValue' => $successRedirectUrl['data'],
-							]
+							],
 						],
 					],
 					[
@@ -168,7 +168,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'textareaFieldLabel' => \__('Tacking additional parameters', 'eightshift-forms'),
 								// translators: %s will be list example keys.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-									You can provide manual additional keys we will send to the tracking software.<br/>
+									This attributes we will send to the tracking software every time.<br/>
 									One key value pair should be provided per line, in the following format:<br />
 									Here are some examples:
 									<ul>
@@ -203,7 +203,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'textareaFieldLabel' => \__('Tacking additional parameters on error', 'eightshift-forms'),
 								// translators: %s will be list example keys.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-								This attributes we will send to the tracking software on form error.<br />
+									This attributes we will send to the tracking software on form error.<br />
 									One key value pair should be provided per line, in the following format:<br />
 									Here are some examples:
 									<ul>

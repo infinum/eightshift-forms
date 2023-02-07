@@ -27,14 +27,14 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 class Helper
 {
 	/**
-	 * Encript/Decrypt method.
+	 * Encript method.
 	 *
-	 * @param string $action Action used.
 	 * @param string $value Value used.
+	 * @param string $action Action used.
 	 *
 	 * @return string|bool
 	 */
-	public static function encryptor(string $action, string $value)
+	public static function encryptor(string $value, string $action = 'encrypt')
 	{
 		$encryptMethod = "AES-256-CBC";
 		$secretKey = \wp_salt(); // user define private key.
@@ -49,6 +49,18 @@ class Helper
 		}
 
 		return \openssl_decrypt(\base64_decode($value), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+	}
+
+	/**
+	 * Decrypt method.
+	 *
+	 * @param string $value Value used.
+	 *
+	 * @return string|bool
+	 */
+	public static function decryptor(string $value)
+	{
+		return self::encryptor($value, 'decryptor');
 	}
 
 	/**

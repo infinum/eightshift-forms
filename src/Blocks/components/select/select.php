@@ -58,7 +58,8 @@ if ($selectAttrs) {
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
 $placeholder = $selectPlaceholder ? Components::render(
-	'select-option', [
+	'select-option',
+	[
 		'selectOptionLabel' => $selectPlaceholder,
 		'selectOptionAsPlaceholder' => true,
 	]

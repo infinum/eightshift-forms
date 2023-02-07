@@ -303,4 +303,4 @@ export const MissingName = ({value, isEditor = false}) => {
 			}
 		</>
 	);
-}
+};

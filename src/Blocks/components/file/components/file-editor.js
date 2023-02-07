@@ -1,7 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
+import { __ } from '@wordpress/i18n';
 import {
-	selector,
 	props,
 	checkAttr,
 } from '@eightshift/frontend-libs/scripts';
@@ -18,24 +17,13 @@ export const FileEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
-		additionalClass,
 	} = attributes;
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 
-	const fileClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const file = (
 		<>
-			<input
-				className={fileClass}
-				type={'file'}
-				readOnly
-				disabled
-			/>
+			<div className={componentClass}>{__('File upload', 'eightshift-forms')}</div>
 
 			<MissingName value={fileName} isEditor={true} />
 

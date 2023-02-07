@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
@@ -39,7 +41,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				setFormFields(response.data);
 			}
 		});
-	}, [isModalOpen]);
+	}, [isModalOpen, postId]);
 
 	const ConditionalTagsItem = ({index}) => {
 
@@ -114,7 +116,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	const optionsItem = formFields.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
 
 	return (
-		<PanelBody title={__('Conditional tags', 'eightshift-forms')} initialOpen={true}>
+		<PanelBody title={__('Conditional tags', 'eightshift-forms')} initialOpen={false}>
 			<IconToggle
 				icon={icons.width}
 				label={__('Use conditional tags', 'eightshift-frontend-libs')}
@@ -218,9 +220,7 @@ export const ConditionalTagsOptions = (attributes) => {
 								isSecondary
 								icon={icons.add}
 								onClick={() => {
-									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [
-										formFields?.[0]?.value ?? '', 'is', '', '',
-									] ]})
+									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [formFields?.[0]?.value ?? '', 'is', '', '']]});
 									setIsNewRuleAdded(true);
 								}}
 							>

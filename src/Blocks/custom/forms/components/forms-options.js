@@ -6,7 +6,8 @@ import { isArray } from 'lodash';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
+import { MediaPlaceholder } from '@wordpress/block-editor';
+import { PanelBody, BaseControl, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -45,6 +46,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
 	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
+	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
@@ -156,6 +158,43 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					value={formsFormDataTypeSelector}
 					onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 				/>
+
+				<BaseControl label={<IconLabel icon={icons.design} label={__('Download', 'eightshift-forms')} />}>
+					<MediaPlaceholder
+						icon={icons.image}
+						multiple = {true}
+						onSelect={(value) => {
+							console.log(value);
+
+							const items = value.map((item) => {
+								return {
+									title: item.filename,
+									id: item.id,
+								};
+							});
+							setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
+						}}
+					/>
+
+					{formsDownloads.map((item, index) => {
+						console.log(index);
+						
+						return (
+							<div className="es-forms-options-download">
+								<Button
+										onClick={() => {
+											delete formsDownloads[index];
+											const item = formsDownloads.filter((_, i) => i !== index);
+											setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
+										}}
+										icon={icons.trash}
+										className='es-button-icon-24 es-slight-button-border-cool-gray-300 es-rounded-1.0 es-nested-color-red-500'
+									></Button>
+									{item.id}<br/>{item.title}
+							</div>
+						);
+					})}
+				</BaseControl>
 
 				{formsStyleOptions?.length > 0 &&
 					<CustomSelect

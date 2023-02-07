@@ -1,8 +1,11 @@
-@import './file-style.scss';
-
-
-// // stylelint-disable declaration-no-important
-
-// .es-file {
-// 	background-color: transparent !important;
-// }
+.es-field--file {
+	.es-file {
+		padding: 20px;
+		border: 1px dashed var(--es-input-border-color);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--global-colors-es-boulder);
+		height: 70px;
+	}
+}

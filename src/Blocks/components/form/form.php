@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -38,6 +39,7 @@ $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
+$formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -84,6 +86,10 @@ if ($formType) {
 
 if ($formConditionalTags) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($formConditionalTags);
+}
+
+if ($formDownloads) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode(array_map(fn ($item) => $item['id'], $formDownloads)));
 }
 
 if ($formId) {

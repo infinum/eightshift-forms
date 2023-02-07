@@ -141,7 +141,7 @@ export class Utils {
 			CLASS_HAS_ERROR: 'has-error',
 		};
 
-		this.DELIMITER = esFormsLocalization.delimiter
+		this.DELIMITER = esFormsLocalization.delimiter;
 
 		// Conditional tags
 		this.CONDITIONAL_TAGS_OPERATORS = CONDITIONAL_TAGS_OPERATORS;
@@ -459,6 +459,7 @@ export class Utils {
 	// Redirect to url and update url params from from data.
 	redirectToUrl(element, formData) {
 		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
+		const downloads = element.getAttribute(this.DATA_ATTRIBUTES.downloads) ?? '';
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -468,15 +469,24 @@ export class Utils {
 			}
 		}
 
-		this.redirectToUrlByRefference(redirectUrl);
+		const url = new URL(redirectUrl);
+
+		if (downloads) {
+			url.searchParams.append('downloads', downloads);
+		}
+
+		this.redirectToUrlByRefference(url.href);
 	}
 
 	// Redirect to url by provided path.
-	redirectToUrlByRefference(redirectUrl) {
+	redirectToUrlByRefference(redirectUrl, reload = false) {
 		// Do the actual redirect after some time.
 		setTimeout(() => {
-			window.location.href = redirectUrl;
-			window.location.reload();
+			window.location = redirectUrl;
+
+			if (reload) {
+				window.location.reload();
+			}
 		}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
 	}
 
@@ -656,8 +666,8 @@ export class Utils {
 				redirectToUrl: (element, formData) => {
 					this.redirectToUrl(element, formData);
 				},
-				redirectToUrlByRefference: (redirectUrl) => {
-					this.redirectToUrlByRefference(redirectUrl);
+				redirectToUrlByRefference: (redirectUrl, reload) => {
+					this.redirectToUrlByRefference(redirectUrl, reload);
 				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();

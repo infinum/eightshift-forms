@@ -268,7 +268,7 @@ export class Form {
 
 						// Redirect to url and update url params from from data.
 						if (singleSubmit) {
-							this.utils.redirectToUrlByRefference(window.location.href);
+							this.utils.redirectToUrlByRefference(window.location.href, true);
 						} else {
 							this.utils.redirectToUrl(element, formData);
 						}

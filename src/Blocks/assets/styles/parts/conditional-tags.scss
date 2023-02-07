@@ -2,14 +2,12 @@
 	// Used for conditional tags.
 	&--hidden,
 	&.is-hidden {
-		opacity: 0.2;
-		// display: none;
+		display: none;
 		user-select: none;
 	}
 
 	// Used for conditional tags.
 	&.is-visible {
-		opacity: 1;
-		// display: block;
+		display: block;
 	}
 }
