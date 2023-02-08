@@ -111,7 +111,7 @@ export class Utils {
 			HIDE_LOADING_STATE_TIMEOUT: options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600,
 			FILE_CUSTOM_REMOVE_LABEL: options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '',
 			FORM_SERVER_ERROR_MSG: options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '',
-			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? '',
+			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? [],
 			ENRICHMENT_CONFIG: options.enrichmentConfig ?? esFormsLocalization.enrichmentConfig ?? '[]',
 		};
 
@@ -497,7 +497,15 @@ export class Utils {
 
 	// Check if captcha is used.
 	isCaptchaUsed() {
-		if (this.SETTINGS.CAPTCHA) {
+		if (this.SETTINGS.CAPTCHA?.['siteKey']) {
+			return true;
+		}
+
+		return false;
+	}
+
+	isCaptchaEnterprise() {
+		if (this.SETTINGS.CAPTCHA?.['isEnterprise']) {
 			return true;
 		}
 
@@ -676,6 +684,9 @@ export class Utils {
 				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
+				},
+				isCaptchaEnterprise: () => {
+					this.isCaptchaEnterprise();
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

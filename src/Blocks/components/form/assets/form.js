@@ -209,7 +209,7 @@ export class Form {
 		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
-		if (!this.utils.SETTINGS.CAPTCHA) {
+		if (!this.utils.isCaptchaUsed()) {
 			this.utils.showLoader(element);
 		}
 
@@ -964,11 +964,21 @@ export class Form {
 		const element = event.target;
 
 		if (this.utils.isCaptchaUsed()) {
-			grecaptcha.ready(() => {
-				grecaptcha.execute(this.utils.SETTINGS.CAPTCHA, {action: 'submit'}).then((token) => {
-					this.formSubmitCaptcha(element, token);
+			const actionName = this.utils.SETTINGS.CAPTCHA['submitAction'];
+
+			if (this.utils.isCaptchaEnterprise()) {
+				grecaptcha.enterprise.ready(() => {
+					grecaptcha.enterprise.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
+						this.formSubmitCaptcha(element, token);
+					});
 				});
-			});
+			} else {
+				grecaptcha.ready(() => {
+					grecaptcha.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
+						this.formSubmitCaptcha(element, token);
+					});
+				});
+			}
 		} else {
 			this.formSubmit(element);
 		}

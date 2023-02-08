@@ -251,13 +251,17 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['enrichmentConfig'] = \wp_json_encode($this->enrichment->getEnrichmentConfig());
 
 			$output['delimiter'] = AbstractBaseRoute::DELIMITER;
-			$output['captcha'] = '';
+			$output['captcha'] = [];
 
 			// Check if Captcha data is set and valid.
 			$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 			if ($isCaptchaSettingsGlobalValid) {
-				$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+				$output['captcha'] = [
+					'isEnterprise' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+					'siteKey' => !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+					'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
+				];
 			}
 		}
 

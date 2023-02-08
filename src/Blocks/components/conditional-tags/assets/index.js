@@ -432,6 +432,12 @@ export class ConditionalTags {
 				initOne: (element) => {
 					this.initOne(element);
 				},
+				initForms: (element) => {
+					this.initForms(element);
+				},
+				initFields: (element) => {
+					this.initFields(element);
+				},
 				setData: (data) => {
 					this.setData(data);
 				},
@@ -441,17 +447,17 @@ export class ConditionalTags {
 				setListeners: () => {
 					this.setListeners();
 				},
-				onChangeEvent: (event) => {
-					this.onChangeEvent(event);
-				},
-				onFieldChangeEvent: (event) => {
-					this.onFieldChangeEvent(event);
-				},
 				areAllRulesValid: (logic, item) => {
 					this.areAllRulesValid(logic, item);
 				},
 				isRuleValid: (rule, inputValue, item, index) => {
 					this.isRuleValid(rule, inputValue, item, index);
+				},
+				onChangeEvent: (event) => {
+					this.onChangeEvent(event);
+				},
+				onFieldChangeEvent: (event) => {
+					this.onFieldChangeEvent(event);
 				},
 			};
 		}

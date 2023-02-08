@@ -62,9 +62,20 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_CAPTCHA_SCORE_KEY = 'captcha-score';
 
 	/**
+	 * Google reCaptcha submit action key.
+	 */
+	public const SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY = 'captcha-submit-action';
+	public const SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY = 'submit';
+
+	/**
 	 * Google reCaptcha score default key.
 	 */
 	public const SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY = 0.5;
+
+	/**
+	 * Is neteryprise version key.
+	 */
+	public const SETTINGS_CAPTCHA_ENTERPRISE_KEY = 'captcha-enterprise';
 
 	/**
 	 * Instance variable for labels data.
@@ -105,8 +116,16 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY);
 		$secretKey = !empty(Variables::getGoogleReCaptchaSecretKey()) ? Variables::getGoogleReCaptchaSecretKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY);
 
-		if (!$isUsed || empty($siteKey) || empty($secretKey)) {
-			return false;
+		$isEnterprise = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+
+		if ($isEnterprise) {
+			if (!$isUsed || empty($siteKey)) {
+				return false;
+			}
+		} else {
+			if (!$isUsed || empty($siteKey) || empty($secretKey)) {
+				return false;
+			}
 		}
 
 		return true;
@@ -127,6 +146,8 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 		$siteKey = Variables::getGoogleReCaptchaSiteKey();
 		$secretKey = Variables::getGoogleReCaptchaSecretKey();
 
+		$isEnterprise = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -142,6 +163,22 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('API', 'eightshift-forms'),
 						'tabContent' => [
 							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Captcha type', 'eightshift-forms'),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Is enterprise', 'eightshift-forms'),
+										'checkboxIsChecked' => $isEnterprise,
+										'checkboxValue' => self::SETTINGS_CAPTCHA_ENTERPRISE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								],
+							],
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
 								'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
@@ -150,7 +187,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
 								'inputIsDisabled' => !empty($siteKey),
 							],
-							[
+							!$isEnterprise ? [
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
 								'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
@@ -158,7 +195,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputIsRequired' => true,
 								'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
 								'inputIsDisabled' => !empty($secretKey),
-							],
+							] : [],
 						],
 					],
 					[
@@ -176,6 +213,15 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputMax' => 1,
 								'inputStep' => 0.1,
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
+								'inputFieldLabel' => \__('Submit action name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('This is the action name that will be sent to Google reCaptcha on form submit.', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
+								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
 							],
 						],
 					],

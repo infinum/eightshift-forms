@@ -96,9 +96,17 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
 
+		$isEnterprise = $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+
+		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
+
+		if ($isEnterprise) {
+			$url = "https://www.google.com/recaptcha/enterprise.js?render={$siteKey}";
+		}
+
 		\wp_register_script(
 			$handle,
-			"https://www.google.com/recaptcha/api.js?render={$siteKey}",
+			$url,
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			false
