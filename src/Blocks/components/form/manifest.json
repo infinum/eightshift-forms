@@ -52,6 +52,9 @@
 		"formSuccessRedirect": {
 			"type": "string"
 		},
+		"formSuccessRedirectVariation": {
+			"type": "string"
+		},
 		"formPhoneSync": {
 			"type": "boolean",
 			"default": false
@@ -78,7 +81,7 @@
 			"type": "boolean",
 			"default": false
 		},
-		"formsDownloads": {
+		"formDownloads": {
 			"type": "array",
 			"items": {
 				"type": "object"

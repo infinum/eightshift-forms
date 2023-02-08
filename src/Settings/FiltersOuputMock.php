@@ -24,6 +24,75 @@ trait FiltersOuputMock
 	use SettingsHelper;
 
 	/**
+	 * Return success redirect variations options data filter output.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getSuccessRedirectVariationOptionsFilterValue(): array
+	{
+		$settings = '';
+		$data = '';
+		$filterData = [];
+		$filterUsed = false;
+
+		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
+		if (\has_filter($filterName)) {
+			$filterData = \apply_filters($filterName, []);
+
+			if ($filterData) {
+				$settings .= \__('This field has a code filter applied to it, and the following items will be applied to the output:', 'eightshift-forms');
+				$settings .= '<ul>';
+				foreach ($filterData as $value) {
+					$settings .= "<li><code>{$value[0]}</code> : <code>{$value[1]}</code></li>";
+				}
+				$settings .= '</ul>';
+			}
+
+			$filterUsed = true;
+		}
+
+		$data = [
+			...$this->getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
+			...$filterData,
+		];
+
+		return [
+			'settings' => $this->getSettingsDivWrap($settings, $filterUsed, false),
+			'data' => $data,
+			'filterUsed' => $filterUsed,
+		];
+	}
+
+	/**
+	 * Return success redirect variations data filter output.
+	 *
+	 * @param string $type Type of field.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
+	{
+		$settings = '';
+		$data = '';
+		$filterUsed = false;
+
+		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariation']);
+		if (\has_filter($filterName)) {
+			$data = \apply_filters($filterName, $type, $formId);
+			$filterUsed = true;
+		} else {
+			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		}
+
+		return [
+			'settings' => $this->getSettingsDivWrap($settings, $filterUsed),
+			'data' => $data,
+			'filterUsed' => $filterUsed,
+		];
+	}
+
+	/**
 	 * Return success redirect url data filter output.
 	 *
 	 * @param string $type Type of field.
@@ -42,7 +111,7 @@ trait FiltersOuputMock
 			$data = \apply_filters($filterName, $type, $formId);
 			$filterUsed = true;
 		} else {
-			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY, $formId);
+			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
 		}
 
 		return [

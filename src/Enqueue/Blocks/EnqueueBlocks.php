@@ -15,7 +15,6 @@ use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
@@ -23,6 +22,8 @@ use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Settings\FiltersOuputMock;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -39,6 +40,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Instance variable of ValidationPatternsInterface data.
@@ -116,7 +122,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function enqueueBlockFrontendStyleLocal()
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -189,6 +195,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			];
 			// phpcs:enable
 
+			$output['settings'] = [
+				'successRedirectVariations' => $this->getSuccessRedirectVariationOptionsFilterValue()['data'],
+			];
+
 			$output['use'] = [
 				'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 			];
@@ -223,16 +233,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);
 			$output['fileCustomRemoveLabel'] = \apply_filters($fileCustomRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
 			$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			);
 			$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			);
 			$output['formDisableAutoInit'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 			);
 			$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');

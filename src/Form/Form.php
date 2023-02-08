@@ -87,6 +87,15 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}SuccessRedirect"] = $successRedirectUrl;
 		}
 
+		// Success redirect variation.
+		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
+			$successRedirectUrl = $this->getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+
+			if ($successRedirectUrl) {
+				$attributes["{$prefix}SuccessRedirectVariation"] = $successRedirectUrl;
+			}
+		}
+
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);

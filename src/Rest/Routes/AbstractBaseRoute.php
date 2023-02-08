@@ -59,6 +59,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
 		'successRedirect' => 'data-success-redirect',
+		'successRedirectVariation' => 'data-success-redirect-variation',
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',

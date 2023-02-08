@@ -49,7 +49,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	/**
 	 * Redirection Success key.
 	 */
-	public const SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY = 'general-redirection-success';
+	public const SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY = 'general-redirection-success';
 
 	/**
 	 * Tracking event name key.
@@ -63,25 +63,13 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY = 'general-tracking-additional-data-success';
 	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY = 'general-tracking-additional-data-error';
 
+	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY = 'general-success-redirect-variation-options';
+	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY = 'general-success-redirect-variation';
+
 	/**
 	 * Form custom name key.
 	 */
 	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
-
-	/**
-	 * Disable default enqueue key.
-	 */
-	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY = 'general-disable-default-enqueue';
-	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY = 'scripts';
-	public const SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY = 'autoinit';
-	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY = 'styles';
-
-	/**
-	 * Disable scroll settings key.
-	 */
-	public const SETTINGS_GENERAL_DISABLE_SCROLL_KEY = 'general-disable-scroll';
-	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR = 'disable-scroll-to-field-on-error';
-	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
 
 	/**
 	 * Register all the hooks
@@ -114,6 +102,8 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 		$formType = Helper::getFormDetailsById($formId)['type'] ?? '';
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
+		$successRedirectVariation = $this->getSuccessRedirectVariationFilterValue($formType, $formId);
+		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
 
@@ -128,7 +118,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY),
+								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -142,6 +132,31 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
 								'inputValue' => $successRedirectUrl['data'],
+							],
+							[
+								'component' => 'select',
+								'selectFieldLabel' => \__('After submit redirect variation', 'eightshift-forms'),
+								'selectName' => $this->getSettingsName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
+								'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+								'selectIsDisabled' => $successRedirectVariation['filterUsed'],
+								// translators: %s will be replaced with forms field name and filter output copy.
+								'selectFieldHelp' => \sprintf(\__('
+									This attributes we will be added to your redirect url as a parameter so you can provide tnx page variations based on the key.<br/>
+									<br />
+									%s', 'eightshift-forms'), $successRedirectVariation['settings']),
+								'selectContent' => \array_values(
+									\array_map(
+										function ($selectOption) use ($successRedirectVariation) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $selectOption[1],
+												'selectOptionValue' => $selectOption[0],
+												'selectOptionIsSelected' => $selectOption[0] === $successRedirectVariation['data'],
+											];
+										},
+										$successRedirectVariationOptions['data']
+									)
+								),
 							],
 						],
 					],
@@ -247,6 +262,8 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -254,68 +271,25 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Scripts & Styles', 'eightshift-forms'),
+						'tabLabel' => \__('Submit', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('Built-in scripts and styles', 'eightshift-forms'),
-								'checkboxesFieldHelp' => \__('
-									Don\'t forget to provide your own scripts and styles if you disable the built-in ones.<br /><br />
-									<strong>Disable default styles</strong> will disable all the frontend and block editor styles.<br />
-									<strong>Disable default scripts</strong> will remove all the frontend logic, including validation and form submission.<br />
-									<strong>Don\'t auto-initialize scripts</strong> will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.', 'eightshift-forms'),
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable default styles', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable default scripts', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Don\'t auto-initialize scripts', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-										'checkboxAsToggle' => true,
-									],
-								],
-							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Actions', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('After submitting the form', 'eightshift-forms'),
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-								'checkboxesFieldHelp' => \__('If checked, forms will not use these features.', 'eightshift-forms'),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable scroll to first field with an error', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-										'checkboxAsToggle' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable scroll to top of the form to see the success message', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-										'checkboxAsToggle' => true,
-									],
-								],
+								'component' => 'textarea',
+								'textareaName' => $this->getSettingsName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
+								'textareaIsMonospace' => true,
+								'selectIsDisabled' => $successRedirectVariationOptions['filterUsed'],
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('After submit redirect varitations', 'eightshift-forms'),
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+									This attributes we will create dropdown options for your forms tnx page that you can use to provide variations to the users.<br/>
+									One key value pair should be provided per line, in the following format:<br />
+									Here are some examples:
+									<ul>
+									%1\$s
+									</ul>
+									%2\$s", 'eightshift-forms'), '<li><code>slug : label</code></li>', $successRedirectVariationOptions['settings'])),
+								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY, 2),
 							],
 						],
 					],

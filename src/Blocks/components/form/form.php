@@ -25,6 +25,7 @@ $attributes = apply_filters(
 	$attributes
 );
 
+
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
 $formActionExternal = Components::checkAttr('formActionExternal', $attributes, $manifest);
@@ -33,6 +34,7 @@ $formId = Components::checkAttr('formId', $attributes, $manifest);
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
+$formSuccessRedirectVariation = Components::checkAttr('formSuccessRedirectVariation', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formTrackingAdditionalData = Components::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
 $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
@@ -62,6 +64,10 @@ if ($formDataTypeSelector) {
 
 if ($formSuccessRedirect) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect']] = esc_attr($formSuccessRedirect);
+}
+
+if ($formSuccessRedirectVariation) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Helper::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {

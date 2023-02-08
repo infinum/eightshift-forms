@@ -46,6 +46,7 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -110,6 +111,10 @@ class Filters
 			'cache' => [
 				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
 			],
+		],
+		SettingsSettings::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -251,6 +256,7 @@ class Filters
 				'hideGlobalMsgTimeout' => 'hide_global_message_timeout',
 				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
+				'successRedirectVariation' => 'success_redirect_variation',
 				'trackingEventName' => 'tracking_event_name',
 				'trackingAdditionalData' => 'tracking_additional_data',
 				'dataTypeSelector' => 'data_type_selector',
@@ -373,7 +379,7 @@ class Filters
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
 				'title' => \__('General', 'eightshift-forms'),
-				'desc' => \__('Options that modify the general behavior of the forms (disabling styles and scripts, custom fields, action behavior, etc.).', 'eightshift-forms'),
+				'desc' => \__('Options that modify the general behavior of the forms.', 'eightshift-forms'),
 			],
 			SettingsValidation::SETTINGS_TYPE_KEY => [
 				'title' => \__('Validation', 'eightshift-forms'),
@@ -395,6 +401,10 @@ class Filters
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'title' => \__('Blocks', 'eightshift-forms'),
 				'desc' => \__('In these settings, you can change all options regarding blocks.', 'eightshift-forms'),
+			],
+			SettingsSettings::SETTINGS_TYPE_KEY => [
+				'title' => \__('Settings', 'eightshift-forms'),
+				'desc' => \__('Options that modify the forms settings behavior (disabling styles and scripts, custom fields, action behavior, etc.).', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

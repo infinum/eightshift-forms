@@ -40,6 +40,9 @@
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
+		"formsSuccessRedirectVariation": {
+			"type": "string"
+		},
 		"formsServerSideRender": {
 			"type": "boolean",
 			"default": false

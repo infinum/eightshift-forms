@@ -23,6 +23,7 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import manifest from '../manifest.json';
+import { getSettingsJsonOptions } from '../../../components/utils';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const {
@@ -30,7 +31,12 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		settingsPageUrl
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const {
+		wpAdminUrl,
+		settings: {
+			successRedirectVariations,
+		}
+	} = esFormsLocalization;
 
 	const {
 		postType,
@@ -47,6 +53,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
+	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
@@ -159,7 +166,20 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 				/>
 
+				<FancyDivider label={__('Thank you page', 'eightshift-forms')} />
+
 				<BaseControl label={<IconLabel icon={icons.design} label={__('Download', 'eightshift-forms')} />}>
+					<CustomSelect
+						value={formsSuccessRedirectVariation}
+						options={getSettingsJsonOptions(successRedirectVariations)}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
+						}}
+						cacheOptions={false}
+						multiple={false}
+						simpleValue
+					/>
+
 					<MediaPlaceholder
 						icon={icons.image}
 						multiple = {true}
@@ -177,10 +197,8 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					/>
 
 					{formsDownloads.map((item, index) => {
-						console.log(index);
-						
 						return (
-							<div className="es-forms-options-download">
+							<div key={index} className="es-forms-options-download">
 								<Button
 										onClick={() => {
 											delete formsDownloads[index];

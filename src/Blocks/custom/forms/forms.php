@@ -12,12 +12,12 @@ use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Manifest\Manifest;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
 
-$checkEnqueue = $this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+$checkEnqueue = $this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 if (!$checkEnqueue) {
 	echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
@@ -34,6 +34,7 @@ $formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attribute
 $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
 $formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
 $formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
+$formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
 if (!$formsServerSideRender) {
@@ -118,6 +119,7 @@ if ($formsServerSideRender) {
 				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
 					$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;

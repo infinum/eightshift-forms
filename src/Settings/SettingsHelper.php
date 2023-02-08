@@ -295,6 +295,44 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get saved value string saved as json array - used for textarea with : delimiter.
+	 *
+	 * @param array<string, mixed> $values Values provided from settings.
+	 * @param int $useNumber Number of items to use.
+	 *
+	 * @return string
+	 */
+	public function getSavedValueAsJson(array $values, int $useNumber = 2): string
+	{
+		$output = [];
+		$i = 1;
+		foreach ($values as $value) {
+			if (!$value) {
+				continue;
+			}
+
+			$value = \array_filter(
+				$value,
+				static function ($item) use ($useNumber) {
+					return $item <= $useNumber - 1;
+				},
+				\ARRAY_FILTER_USE_KEY
+			);
+
+			// Remove keys that are note set properly.
+			if (\count($value) < $useNumber) {
+				continue;
+			}
+
+			$output[] = \implode(' : ', $value);
+
+			$i++;
+		}
+
+		return \implode(\PHP_EOL, $output);
+	}
+
+	/**
 	 * No active feature settings output.
 	 *
 	 * @param string $type Settings/Integration type.
@@ -431,43 +469,5 @@ trait SettingsHelper
 			'isValid' => $integrationDetails['isValid'],
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
-	}
-
-	/**
-	 * Get saved value string saved as json array - used for textarea with : delimiter.
-	 *
-	 * @param array<string, mixed> $values Values provided from settings.
-	 * @param int $useNumber Number of items to use.
-	 *
-	 * @return string
-	 */
-	private function getSavedValueAsJson(array $values, int $useNumber = 2): string
-	{
-		$output = [];
-		$i = 1;
-		foreach ($values as $value) {
-			if (!$value) {
-				continue;
-			}
-
-			$value = \array_filter(
-				$value,
-				static function ($item) use ($useNumber) {
-					return $item <= $useNumber - 1;
-				},
-				\ARRAY_FILTER_USE_KEY
-			);
-
-			// Remove keys that are note set properly.
-			if (\count($value) < $useNumber) {
-				continue;
-			}
-
-			$output[] = \implode(' : ', $value);
-
-			$i++;
-		}
-
-		return \implode(\PHP_EOL, $output);
 	}
 }

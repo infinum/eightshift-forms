@@ -277,6 +277,32 @@ export const getConstantsOptions = (options, useEmpty = false) => {
 };
 
 /**
+ * Output select options from array.
+ *
+ * @param {object} options 
+ * @param {bool} useEmpty 
+ * @returns 
+ */
+export const getSettingsJsonOptions = (options, useEmpty = false) => {
+	const empty = {
+		value: '',
+		label: '',
+	};
+
+	const items = [];
+	if (options) {
+		options.map((item) => {
+			items.push({
+				'value': item[0],
+				'label': item[1],
+			});
+		});
+	}
+
+	return useEmpty ? [empty, ...items] : items;
+};
+
+/**
  * Outputs notification if name is missing.
  *
  * @param {string} value Field name value.

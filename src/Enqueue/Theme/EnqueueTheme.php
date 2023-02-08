@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Validation\SettingsCaptcha;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
@@ -56,7 +56,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueScriptsLocal()
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -70,7 +70,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueStylesLocal()
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 

@@ -30,6 +30,8 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_hide_global_message_timeout' => ['getBlockFormHideGlobalMessageTimeout'],
 			'es_forms_block_form_hide_loading_state_timeout' => ['getBlockFormHideLoadingStateTimeout'],
 			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
+			'es_forms_block_form_success_redirect_variation' => ['getBlockFormSuccessRedirectVariation', 2],
+			'es_forms_block_form_success_redirect_variation_options' => ['getBlockFormSuccessRedirectVariationOptions'],
 			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
 			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditinalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
@@ -184,6 +186,42 @@ class Testfilters implements ServiceInterface
 	public function getBlockFormSuccessRedirectUrl(string $formType, string $formId): string
 	{
 		return 'https://infinum.com/custom-filter';
+	}
+
+	/**
+	 * Set success redirect variation value.
+	 *
+	 * This filter will override settings for success redirect variation.
+	 *
+	 * @param string $formType Type of form used like greenhouse, hubspot, etc.
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public function getBlockFormSuccessRedirectVariation(string $formType, string $formId): string
+	{
+		return 'aaa';
+	}
+
+	/**
+	 * Set success redirect variation options value.
+	 *
+	 * This filter will override settings for success redirect variation options.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getBlockFormSuccessRedirectVariationOptions(): array
+	{
+		return [
+			[
+				'test1',
+				'label1',
+			],
+			[
+				'test2',
+				'label2',
+			],
+		];
 	}
 
 	/**

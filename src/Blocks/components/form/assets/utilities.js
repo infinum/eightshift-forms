@@ -460,6 +460,7 @@ export class Utils {
 	redirectToUrl(element, formData) {
 		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
 		const downloads = element.getAttribute(this.DATA_ATTRIBUTES.downloads) ?? '';
+		const variation = element.getAttribute(this.DATA_ATTRIBUTES.successRedirectVariation) ?? '';
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -472,7 +473,11 @@ export class Utils {
 		const url = new URL(redirectUrl);
 
 		if (downloads) {
-			url.searchParams.append('downloads', downloads);
+			url.searchParams.append('es-downloads', downloads);
+		}
+
+		if (variation) {
+			url.searchParams.append('es-variation', variation);
 		}
 
 		this.redirectToUrlByRefference(url.href);
