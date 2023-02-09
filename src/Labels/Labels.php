@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\SettingsCaptcha;
 
@@ -41,6 +42,7 @@ class Labels implements LabelsInterface
 		'goodbitsSuccess',
 		'customSuccess',
 		'activeCampaignSuccess',
+		'workableSuccess',
 	];
 
 	/**
@@ -90,6 +92,11 @@ class Labels implements LabelsInterface
 		// ActiveCampaign.
 		if ($this->isCheckboxOptionChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
 			$output = \array_merge($output, $this->getActiveCampaignLabels());
+		}
+
+		// Workable.
+		if ($this->isCheckboxOptionChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
+			$output = \array_merge($output, $this->getWorkableLabels());
 		}
 
 		return $output;
@@ -299,6 +306,22 @@ class Labels implements LabelsInterface
 			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
 			'activeCampaignForbidenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Workable
+	 *
+	 * @return array<string, string>
+	 */
+	private function getWorkableLabels(): array
+	{
+		return [
+			'workableErrorSettingsMissing' => \__('Workable integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'workableInvalidRequiredError' => \__('"First name", "Last name", "E-mail" must be provided.', 'eightshift-forms'),
+			'workableInvalidLastNameError' => \__('"Last name" must be provided.', 'eightshift-forms'),
+			'workableInvalidFirstNameError' => \__('"First name" must be provided.', 'eightshift-forms'),
+			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

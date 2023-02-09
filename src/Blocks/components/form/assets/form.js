@@ -450,6 +450,9 @@ export class Form {
 				type,
 			};
 
+			// Adde internal type for additional logic in some integrations.
+			data.internalType = item.getAttribute('data-type-internal');
+
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
 			}

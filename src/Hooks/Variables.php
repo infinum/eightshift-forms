@@ -56,6 +56,26 @@ class Variables
 	}
 
 	/**
+	 * Get API Key for Workable.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyWorkable(): string
+	{
+		return \defined('ES_API_KEY_WORKABLE') ? \ES_API_KEY_WORKABLE : '';
+	}
+
+	/**
+	 * Get subdomain Key for Workable.
+	 *
+	 * @return string
+	 */
+	public static function getSubdomainWorkable(): string
+	{
+		return \defined('ES_SUBDOMAIN_WORKABLE') ? \ES_SUBDOMAIN_WORKABLE : '';
+	}
+
+	/**
 	 * Get API Key for Mailchimp.
 	 *
 	 * @return string

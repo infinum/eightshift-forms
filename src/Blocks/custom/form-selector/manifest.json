@@ -20,7 +20,8 @@
 				"eightshift-forms/hubspot",
 				"eightshift-forms/mailerlite",
 				"eightshift-forms/goodbits",
-				"eightshift-forms/active-campaign"
+				"eightshift-forms/active-campaign",
+				"eightshift-forms/workable"
 			]
 		}
 	},
@@ -101,6 +102,12 @@
 			"slug": "active-campaign",
 			"icon": "esf-form-active-campaign",
 			"blockName": "eightshift-forms/active-campaign"
+		},
+		{
+			"label": "Workable",
+			"slug": "workable",
+			"icon": "esf-form-workable",
+			"blockName": "eightshift-forms/workable"
 		}
 	]
 }

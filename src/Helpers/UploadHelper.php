@@ -68,6 +68,7 @@ trait UploadHelper
 					'name' => $name,
 					'path' => $finalFilePath,
 					'type' => $type,
+					'tmpName' => $tmpName,
 				];
 			}
 		}

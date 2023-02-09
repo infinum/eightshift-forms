@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\Greenhouse\GreenhouseClient;
 use EightshiftForms\Integrations\Hubspot\HubspotClient;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClient;
 use EightshiftForms\Integrations\Mailerlite\MailerliteClient;
+use EightshiftForms\Integrations\Workable\WorkableClient;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\GlobalSettings\SettingsGlobalDataInterface;
 use EightshiftForms\Settings\Settings\SettingsAll;
@@ -71,6 +72,10 @@ class SettingsCache implements SettingsGlobalDataInterface, ServiceInterface
 		'active-campaign' => [
 			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
 			ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEM_TRANSIENT_NAME,
+		],
+		'workable' => [
+			WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
+			WorkableClient::CACHE_WORKABLE_ITEM_TRANSIENT_NAME,
 		],
 	];
 

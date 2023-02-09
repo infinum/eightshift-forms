@@ -1,0 +1,29 @@
+{
+	"blockName": "workable",
+	"title": "Workable Form",
+	"description" : "A Workable job application form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-workable"
+	},
+	"keywords": [
+		"workable"
+	],
+	"example": {
+	},
+	"attributes": {
+		"workableFormPostId": {
+			"type": "string"
+		},
+		"workableFormServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"workableFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

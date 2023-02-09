@@ -27,6 +27,8 @@ use EightshiftForms\Integrations\Mailerlite\Mailerlite;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaign;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Mailer\SettingsMailer;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsLocation;
@@ -141,6 +143,14 @@ class Filters
 			'valid' => SettingsActiveCampaign::FILTER_SETTINGS_IS_VALID_NAME,
 			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m4 1.5 10.272 7.276a1.5 1.5 0 0 1 0 2.448L4 18.5m0-12L9.5 10" stroke="#29A3A3" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
 		],
+		SettingsWorkable::SETTINGS_TYPE_KEY => [
+			'global' => SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsWorkable::FILTER_SETTINGS_NAME,
+			'settingsSidebar' => SettingsWorkable::FILTER_SETTINGS_SIDEBAR_NAME,
+			'fields' => Workable::FILTER_FORM_FIELDS_NAME,
+			'valid' => SettingsWorkable::FILTER_SETTINGS_IS_VALID_NAME,
+			'icon' => '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="15.373" r="3.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="10" cy="5.873" r="2.75" stroke="#29A3A3" stroke-width="1.5" fill="none"/><circle cx="13" cy="1.373" r="1.25" fill="#29A3A3"/><path d="M9.25 8.623c.5.5 1.2 1.8 0 3" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M10.912 8.623c-.5.5-1.2 1.8 0 3m1.885-10.5c-.085.453-.513 1.454-1.547 1.844" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13.371 1.606c-.43.162-1.343.757-1.547 1.843" stroke="#29A3A3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+		],
 		SettingsLocation::SETTINGS_TYPE_KEY => [
 			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
 			'settingsSidebar' => SettingsLocation::FILTER_SETTINGS_SIDEBAR_NAME,
@@ -205,6 +215,12 @@ class Filters
 				'map' => 'map',
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+				'fieldsSettings' => 'fields_settings',
+				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
+				'data' => 'data',
+				'adminFieldsSettings' => 'admin_field_settings_additional_content',
+			],
+			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'fieldsSettings' => 'fields_settings',
 				'fieldsSettingsIsEditable' => 'fields_settings_is_editable',
 				'data' => 'data',
