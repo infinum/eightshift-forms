@@ -16,6 +16,7 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 * **esFormsBeforeGtmDataPush** - Triggers before the GTM data is pushed. Hook: `Form element`.
 * **esFormsJsLoaded** - Triggers after all JS is loaded and ready to be used in the forms script. This event can be used when manually triggering forms javascript from your project. Hook: `window`.
 * **esFormsJsFormLoaded** - Triggers after each JS is loaded and ready to be used in the forms script. This event can be used when manually triggering form javascript from your project. Hook: `Form element`.
+* **esFormsAfterCaptchaInit** - Triggers if global init load captcha is active and after the captcha returns a response from the API.. Hook: `window`.
 
 ### Code example one form: 
 ```js

@@ -129,6 +129,7 @@ export class Utils {
 			BEFORE_GTM_DATA_PUSH: `${this.prefix}BeforeGtmDataPush`,
 			FORMS_JS_LOADED: `${this.prefix}JsLoaded`,
 			FORM_JS_LOADED: `${this.prefix}JsFormLoaded`,
+			AFTER_CAPTCHA_INIT: `${this.prefix}AfterCaptchaInit`,
 		};
 
 		// All form custom state selectors.
@@ -190,10 +191,16 @@ export class Utils {
 	}
 
 	// Dispatch custom event.
-	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(name, {
-			bubbles: true
-		});
+	dispatchFormEvent(element, name, detail) {
+		const options = {
+			bubbles: true,
+		};
+
+		if (detail) {
+			options['detail'] = detail;
+		}
+
+		const event = new CustomEvent(name, options);
 
 		element.dispatchEvent(event);
 	}
@@ -497,19 +504,15 @@ export class Utils {
 
 	// Check if captcha is used.
 	isCaptchaUsed() {
-		if (this.SETTINGS.CAPTCHA?.['siteKey']) {
-			return true;
-		}
+		return Boolean(this.SETTINGS.CAPTCHA?.['siteKey']);
+	}
 
-		return false;
+	isCaptchaInitUsed() {
+		return Boolean(this.SETTINGS.CAPTCHA?.['loadOnInit']);
 	}
 
 	isCaptchaEnterprise() {
-		if (this.SETTINGS.CAPTCHA?.['isEnterprise']) {
-			return true;
-		}
-
-		return false;
+		return Boolean(this.SETTINGS.CAPTCHA?.['isEnterprise']);
 	}
 
 	isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength) {
@@ -684,6 +687,9 @@ export class Utils {
 				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
+				},
+				isCaptchaInitUsed: () => {
+					this.isCaptchaInitUsed();
 				},
 				isCaptchaEnterprise: () => {
 					this.isCaptchaEnterprise();

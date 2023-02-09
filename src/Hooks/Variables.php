@@ -98,6 +98,26 @@ class Variables
 	}
 
 	/**
+	 * Get Google reCaptcha api key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaApiKey()
+	{
+		return \defined('ES_GOOGLE_RECAPTCHA_API_KEY') ? \ES_GOOGLE_RECAPTCHA_API_KEY : '';
+	}
+
+	/**
+	 * Get Google reCaptcha project id key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaProjectIdKey()
+	{
+		return \defined('ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY') ? \ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY : '';
+	}
+
+	/**
 	 * Get forms geolocation use feature. Default: false.
 	 *
 	 * @return bool

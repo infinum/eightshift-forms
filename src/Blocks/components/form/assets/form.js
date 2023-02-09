@@ -34,6 +34,9 @@ export class Form {
 		// Set all public methods.
 		this.publicMethods();
 
+		// Load captcha on init.
+		this.initCaptchaOnLoad();
+
 		// Init all forms.
 		this.initOnlyForms();
 
@@ -143,6 +146,40 @@ export class Form {
 	}
 
 	/**
+	 *  Handle form submit and all logic in case we have captcha in place for init load.
+	 * 
+	 * @param {string} token Captcha token from api.
+	 *
+	 * @public
+	 */
+	formSubmitCaptchaInvisible(token, payed, action) {
+		// Populate body data.
+		const body = {
+			method: 'POST',
+			mode: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+			},
+			body: JSON.stringify({
+				token,
+				payed,
+				action,
+			}),
+			credentials: 'same-origin',
+			redirect: 'follow',
+			referrer: 'no-referrer',
+		};
+
+		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
+		.then((response) => {
+			return response.json();
+		})
+		.then((response) => {
+			this.utils.dispatchFormEvent(window, this.utils.EVENTS.AFTER_CAPTCHA_INIT, response?.data?.response);
+		});
+	}
+
+	/**
 	 *  Handle form submit and all logic in case we have captcha in place.
 	 * 
 	 * @param {object} element Form element.
@@ -150,7 +187,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmitCaptcha(element, token) {
+	formSubmitCaptcha(element, token, payed, action) {
 		// Loader show.
 		this.utils.showLoader(element);
 
@@ -163,7 +200,8 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId),
+				payed,
+				action,
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -947,6 +985,42 @@ export class Form {
 		});
 	}
 
+	initCaptchaOnLoad() {
+		if (this.utils.isCaptchaUsed()) {
+			this.runCaptcha(this.utils.SETTINGS.CAPTCHA['initAction'], 'init');
+		}
+	}
+
+	runCaptcha(actionName, type = 'submit', element = '') {
+		if (this.utils.isCaptchaUsed()) {
+			if (this.utils.isCaptchaEnterprise()) {
+				grecaptcha.enterprise.ready(async () => {
+					await grecaptcha.enterprise.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
+						if (type === 'submit') {
+							this.formSubmitCaptcha(element, token, 'enterprise', actionName);
+						}
+
+						if (type === 'init') {
+							this.formSubmitCaptchaInvisible(token, 'enterprise', actionName);
+						}
+					});
+				});
+			} else {
+				grecaptcha.ready(async () => {
+					await grecaptcha.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
+						if (type === 'submit') {
+							this.formSubmitCaptcha(element, token, 'free', actionName);
+						}
+
+						if (type === 'init') {
+							this.formSubmitCaptchaInvisible(token, 'free', actionName);
+						}
+					});
+				});
+			}
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -964,21 +1038,7 @@ export class Form {
 		const element = event.target;
 
 		if (this.utils.isCaptchaUsed()) {
-			const actionName = this.utils.SETTINGS.CAPTCHA['submitAction'];
-
-			if (this.utils.isCaptchaEnterprise()) {
-				grecaptcha.enterprise.ready(() => {
-					grecaptcha.enterprise.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
-						this.formSubmitCaptcha(element, token);
-					});
-				});
-			} else {
-				grecaptcha.ready(() => {
-					grecaptcha.execute(this.utils.SETTINGS.CAPTCHA['siteKey'], {action: actionName}).then((token) => {
-						this.formSubmitCaptcha(element, token);
-					});
-				});
-			}
+			this.runCaptcha(this.utils.SETTINGS.CAPTCHA['submitAction'], 'submit', element);
 		} else {
 			this.formSubmit(element);
 		}
@@ -1039,8 +1099,11 @@ export class Form {
 				onFormSubmitEvent: (event) => {
 					this.onFormSubmitEvent(event);
 				},
-				formSubmitCaptcha: (element, token) => {
-					this.formSubmitCaptcha(element, token);
+				formSubmitCaptcha: (element, token, type) => {
+					this.formSubmitCaptcha(element, token, type);
+				},
+				formSubmitCaptchaInvisible: (token, type) => {
+					this.formSubmitCaptchaInvisible(token, type);
 				},
 				formSubmit: (element) => {
 					this.formSubmit(element);
@@ -1071,6 +1134,12 @@ export class Form {
 				},
 				phoneSync: () => {
 					this.phoneSync();
+				},
+				initCaptchaOnLoad: () => {
+					this.initCaptchaOnLoad();
+				},
+				runCaptcha: (actionName) => {
+					this.runCaptcha(actionName);
 				},
 			};
 		}

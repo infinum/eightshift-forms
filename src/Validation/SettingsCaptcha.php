@@ -57,6 +57,15 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_CAPTCHA_SECRET_KEY = 'captcha-secret-key';
 
 	/**
+	 * Google reCaptcha project_id key.
+	 */
+	public const SETTINGS_CAPTCHA_PROJECT_ID_KEY = 'captcha-project-id-key';
+	/**
+	 * Google reCaptcha api_key key.
+	 */
+	public const SETTINGS_CAPTCHA_API_KEY = 'captcha-api-key-key';
+
+	/**
 	 * Google reCaptcha score key.
 	 */
 	public const SETTINGS_CAPTCHA_SCORE_KEY = 'captcha-score';
@@ -73,9 +82,20 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY = 0.5;
 
 	/**
-	 * Is neteryprise version key.
+	 * Is enterprise version key.
 	 */
 	public const SETTINGS_CAPTCHA_ENTERPRISE_KEY = 'captcha-enterprise';
+
+	/**
+	 * Load on init key.
+	 */
+	public const SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY = 'captcha-load-on-init';
+
+	/**
+	 * Google reCaptcha init action key.
+	 */
+	public const SETTINGS_CAPTCHA_INIT_ACTION_KEY = 'captcha-init-action';
+	public const SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY = 'homepage';
 
 	/**
 	 * Instance variable for labels data.
@@ -115,11 +135,13 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
 		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY);
 		$secretKey = !empty(Variables::getGoogleReCaptchaSecretKey()) ? Variables::getGoogleReCaptchaSecretKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY);
+		$apiKey = !empty(Variables::getGoogleReCaptchaApiKey()) ? Variables::getGoogleReCaptchaApiKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = !empty(Variables::getGoogleReCaptchaProjectIdKey()) ? Variables::getGoogleReCaptchaProjectIdKey() : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		$isEnterprise = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		if ($isEnterprise) {
-			if (!$isUsed || empty($siteKey)) {
+			if (!$isUsed || empty($siteKey) || empty($apiKey) || empty($projectIdKey)) {
 				return false;
 			}
 		} else {
@@ -145,8 +167,11 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 
 		$siteKey = Variables::getGoogleReCaptchaSiteKey();
 		$secretKey = Variables::getGoogleReCaptchaSecretKey();
+		$secretApiKey = Variables::getGoogleReCaptchaApiKey();
+		$secretProjectId = Variables::getGoogleReCaptchaProjectIdKey();
 
 		$isEnterprise = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isInit = $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -187,15 +212,36 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
 								'inputIsDisabled' => !empty($siteKey),
 							],
-							!$isEnterprise ? [
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
-								'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
-								'inputIsDisabled' => !empty($secretKey),
-							] : [],
+							...(!$isEnterprise ? [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
+									'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
+									'inputIsDisabled' => !empty($secretKey),
+								]
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
+									'inputFieldLabel' => \__('Project Id', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($secretProjectId) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
+									'inputIsDisabled' => !empty($secretProjectId),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_API_KEY),
+									'inputFieldLabel' => \__('Api key', 'eightshift-forms'),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($secretApiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY),
+									'inputIsDisabled' => !empty($secretApiKey),
+								]
+							]),
 						],
 					],
 					[
@@ -223,6 +269,31 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
 							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldHideLabel' => true,
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Load on init', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+										'checkboxValue' => self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								],
+							],
+							$isInit ? [
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
+								'inputFieldLabel' => \__('Init action name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('This is the action name that will be sent to Google reCaptcha on form init.', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
+								'inputPlaceholder' => self::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY,
+							] : [],
 						],
 					],
 					[
