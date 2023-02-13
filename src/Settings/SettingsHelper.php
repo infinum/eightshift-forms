@@ -539,7 +539,7 @@ trait SettingsHelper
 						$formFields[$key]["{$component}FieldStyle"] = $itemValue;
 						break;
 					case $this->integrationFieldOrder:
-						$formFields[$key]["{$component}FieldOrder"] = $itemValue;
+						$formFields[$key]["{$component}FieldOrder"] = $itemValue ?? $i;
 						break;
 					case $this->integrationFieldUse:
 						if ($fieldType !== 'hidden') {

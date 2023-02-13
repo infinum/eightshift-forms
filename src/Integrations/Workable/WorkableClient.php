@@ -316,6 +316,7 @@ class WorkableClient implements ClientInterface
 				case 'free_text':
 				case 'short_text':
 					if ($key === 'summary' || $key === 'cover_letter') {
+						$output[$key] = $value;
 						break;
 					}
 

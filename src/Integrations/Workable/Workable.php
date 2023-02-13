@@ -190,7 +190,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				$name = $item['id'] ?? '';
 			}
 
-			if ($name === 'headline' || $name === 'photo' || $name === 'avatar') {
+			if ($name === 'photo' || $name === 'avatar') {
 				continue;
 			}
 
