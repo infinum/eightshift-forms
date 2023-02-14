@@ -37,7 +37,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	useEffect(() => {
 		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
 
-			if (response.code === 200) {
+			if (response.code === 200 && response.data) {
 				setFormFields(response.data);
 			}
 		});
@@ -51,69 +51,77 @@ export const ConditionalTagsOptions = (attributes) => {
 		// Internal state due to rerendering issue.
 		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[index]?.[2]);
 
-		const options = formFields.find((item) => item.value === conditionalTagsRules[index][0])?.options ?? [];
-		const optionsItem = formFields.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
+		const options = formFields?.find((item) => item.value === conditionalTagsRules[index][0])?.options ?? [];
+		const optionsItem = formFields?.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
+
+		if (formFields.length <= 0) {
+			return (<>{__('Missing field names!','eightshift-forms')}</>);
+		}
 
 		return (
 			<div className='es-conditional-tags-modal__item-inner es-conditional-tags-modal__grid' data-count={optionsItem.length ? '4' : '3'}>
-				<SelectControl
-					value={fieldValue}
-					options={formFields}
-					onChange={(value) => {
-						conditionalTagsRules[index][0] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-					}}
-				/>
+				{formFields && 
+					<>
+						<SelectControl
+							value={fieldValue}
+							options={formFields}
+							onChange={(value) => {
+								conditionalTagsRules[index][0] = value;
+								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							}}
+						/>
 
-				<SelectControl
-					value={operatorValue}
-					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
-					onChange={(value) => {
-						conditionalTagsRules[index][1] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-					}}
-				/>
+						<SelectControl
+							value={operatorValue}
+							options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
+							onChange={(value) => {
+								conditionalTagsRules[index][1] = value;
+								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							}}
+						/>
 
-				{(options.length && (operatorValue === 'is' || operatorValue === 'isn')) ?
-					<SelectControl
-						value={conditionalTagsRules?.[index]?.[2]}
-						options={options}
-						onChange={(value) => {
-							conditionalTagsRules[index][2] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						}}
-					/> :
-					<TextControl
-						value={inputCheck}
-						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
-						onChange={(value) => {
-							conditionalTagsRules[index][2] = value;
-							setInputCheck(value);
-						}}
-					/>
-				}
-
-				<SelectControl
-					value={conditionalTagsRules?.[index]?.[3]}
-					options={optionsItem.map((item) => {
-						if (item.value === '') {
-							return {
-								...item,
-								label: __('All fields', 'eightshift-forms'),
-							};
+						{(options.length && (operatorValue === 'is' || operatorValue === 'isn')) ?
+							<SelectControl
+								value={conditionalTagsRules?.[index]?.[2]}
+								options={options}
+								onChange={(value) => {
+									conditionalTagsRules[index][2] = value;
+									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+								}}
+							/> :
+							<TextControl
+								value={inputCheck}
+								onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
+								onChange={(value) => {
+									conditionalTagsRules[index][2] = value;
+									setInputCheck(value);
+								}}
+							/>
 						}
-						return item;
-					})}
-					onChange={(value) => {
-						conditionalTagsRules[index][3] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-					}}
-				/>
+
+						<SelectControl
+							value={conditionalTagsRules?.[index]?.[3]}
+							options={optionsItem.map((item) => {
+								if (item.value === '') {
+									return {
+										...item,
+										label: __('All fields', 'eightshift-forms'),
+									};
+								}
+								return item;
+							})}
+							onChange={(value) => {
+								conditionalTagsRules[index][3] = value;
+								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							}}
+						/>
+					</>
+				}
 			</div>
 		);
 	};
 
-	const optionsItem = formFields.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
+	const optionsItem = formFields?.find((item) => item.value === conditionalTagsParentName)?.options ?? [];
 
 	return (
 		<PanelBody title={__('Conditional tags', 'eightshift-forms')} initialOpen={false}>
@@ -190,7 +198,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							</div>
 
 							{conditionalTagsRules?.map((_, index) => {
-								const itemExists = formFields.filter((item) => {
+								const itemExists = formFields?.filter((item) => {
 									return conditionalTagsRules?.[index]?.[0] === item?.value && item?.value !== '';
 								});
 

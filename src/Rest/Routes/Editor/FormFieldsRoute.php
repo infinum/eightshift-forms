@@ -96,7 +96,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
@@ -169,6 +169,8 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$output[] = $outputItem;
 		}
+
+		error_log( print_r( ( $output ), true ) );
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
