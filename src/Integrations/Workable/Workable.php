@@ -291,6 +291,8 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								'component' => 'checkbox',
 								'checkboxLabel' => $label,
 								'checkboxTracking' => $name,
+								'checkboxValue' => 'true',
+								'checkboxUncheckedValue' => 'false',
 								'checkboxAttrs' => [
 									'data-type-internal' => $type,
 								]

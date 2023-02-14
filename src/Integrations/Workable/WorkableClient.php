@@ -300,9 +300,13 @@ class WorkableClient implements ClientInterface
 
 		foreach ($params as $key => $param) {
 			$value = $param['value'] ?? '';
+			$internalType = $param['internalType'] ?? '';
 
-			if (!$value) {
-				continue;
+			// Skip empty check if bool.
+			if ($internalType !== 'boolean') {
+				if (!$value) {
+					continue;
+				}
 			}
 
 			// Remove unecesery fields.
