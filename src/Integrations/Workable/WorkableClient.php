@@ -332,7 +332,7 @@ class WorkableClient implements ClientInterface
 				case 'boolean':
 					$answers[] = [
 						'question_key' => $key,
-						'checked' => (bool) $value,
+						'checked' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
 					];
 					break;
 				case 'multiple_choice':
