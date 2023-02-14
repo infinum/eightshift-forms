@@ -248,7 +248,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 			// Enrichment config.
-			$output['enrichmentConfig'] = \wp_json_encode($this->enrichment->getEnrichmentConfig());
+			$output['enrichmentConfig'] = \wp_json_encode($this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config']);
 
 			$output['delimiter'] = AbstractBaseRoute::DELIMITER;
 			$output['captcha'] = [];

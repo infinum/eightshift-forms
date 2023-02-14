@@ -88,6 +88,10 @@ class Testfilters implements ServiceInterface
 			'es_forms_integration_clearbit_map' => ['getClearbitFieldsMap'],
 
 			// ---------------------------------------------------------------------------------------------------------
+			// Enrichment filters.
+			'es_forms_enrichment_manual_map' => ['getEnrichmentManualMap'],
+
+			// ---------------------------------------------------------------------------------------------------------
 			// Troubleshooting filters.
 			'es_forms_troubleshooting_output_log' => ['getTroubleshootingOutputLog'],
 
@@ -745,6 +749,32 @@ class Testfilters implements ServiceInterface
 		$params['company-location-combined'] = "{$street} {$city} {$postalCode}";
 
 		return $params;
+	}
+
+	// -----------------------------------------------------------------------------------------------------------
+	// Enrichment filters.
+
+	/**
+	 * Manual map enrichment array.
+	 *
+	 * This filter provides you with the ability to manualy map enrichment array combined with settings data.
+	 *
+	 * @return array<string, array<int, string>
+	 */
+	public function getEnrichmentManualMap(): array
+	{
+		return [
+			'__IB_LT_ga_client_id' => [
+				'ga_client_id',
+				'miro',
+				'pero',
+			],
+			'aaaa' => [
+				'ffff',
+				'vvv',
+				'rrr',
+			],
+		];
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

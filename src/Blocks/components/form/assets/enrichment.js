@@ -57,6 +57,11 @@ export class Enrichment {
 	getUrlAllowedParams(allowedTags) {
 		const output = {};
 
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
+			return output;
+		}
+
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
 
@@ -107,11 +112,6 @@ export class Enrichment {
 
 		// Missing data from backend, bailout.
 		if (!allowedTags) {
-			return;
-		}
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
 			return;
 		}
 

@@ -24,6 +24,52 @@ trait FiltersOuputMock
 	use SettingsHelper;
 
 	/**
+	 * Return enrichment manual map data filter output.
+	 *
+	 * @param array<string, mixed> $config getEnrichmentConfig output value.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getEnrichmentManualMapFilterValue(array $config): array
+	{
+		$settings = '';
+		$data = [
+			'config' => $config,
+			'allowedFilter' => [],
+			'mapFilter' => [],
+		];
+		$filterUsed = false;
+
+		$filterName = Filters::getFilterName(['enrichment', 'manualMap']);
+
+		if (\has_filter($filterName)) {
+			$filterData = \apply_filters($filterName, []);
+			$filterUsed = true;
+
+			$settings .= \__('This field has a code filter applied to it, and the following items will be applied to your enrichment data:', 'eightshift-forms');
+			$settings .= '<ul>';
+			foreach ($filterData as $key => $value) {
+				$data['config']['allowed'][] = $key;
+				$data['config']['map'][$key] = \array_flip($value);
+
+				$settingsValue = \implode(', ', $value);
+
+				$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+			}
+			$settings .= '</ul>';
+		}
+
+		return [
+			'settings' => $this->getSettingsDivWrap($settings, $filterUsed, false),
+			'data' => [
+				'original' => $config,
+				'config' => $data['config'],
+			],
+			'filterUsed' => $filterUsed,
+		];
+	}
+
+	/**
 	 * Return success redirect variations options data filter output.
 	 *
 	 * @return array<string, mixed>

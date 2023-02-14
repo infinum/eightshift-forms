@@ -1,6 +1,7 @@
 .es-tabs {
 	margin: 0 calc(-1 * var(--global-es-spacing-horizontal));
 	position: relative;
+	overflow-x: hidden;
 
 	@include media(desktop up) {
 		display: flex;

@@ -353,6 +353,9 @@ class Filters
 				'data' => 'data',
 			],
 		],
+		'enrichment' => [
+			'manualMap' => 'manual_map',
+		],
 		'troubleshooting' => [
 			'outputLog' => 'output_log',
 		],
@@ -528,8 +531,6 @@ class Filters
 		];
 		return isset($data[$type]) ? $data[$type] : [];
 	}
-
-
 
 	/**
 	 * Get private filter name.

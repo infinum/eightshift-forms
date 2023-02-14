@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enrichment;
 
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -23,6 +24,11 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter settings key.
@@ -114,10 +120,10 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 			return $this->getNoActiveFeatureOutput();
 		}
 
-		$enrichment = $this->enrichment->getEnrichmentConfig();
+		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
 		$expiration = $enrichment['expiration'] ?? '';
-		$allowed = $enrichment['allowed'] ?? '';
+		$allowed = $enrichment['data']['original']['allowed'] ?? '';
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -155,10 +161,10 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => \sprintf(\__("
+								'textareaFieldHelp' => \sprintf(\__('
 									List all URL parameters you want to allow for enrichment. We will store these parameters in browser storage for later processing. <br />
 									We provided some defaults, but in this field you can add additional tags you want to use. <br />
-									Allowed parameters are provided one per line.", 'eightshift-forms')),
+									Allowed parameters are provided one per line. %s', 'eightshift-forms'), $enrichment['settings']),
 								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
 							],
 							[
