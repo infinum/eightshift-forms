@@ -184,8 +184,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						icon={icons.image}
 						multiple = {true}
 						onSelect={(value) => {
-							console.log(value);
-
 							const items = value.map((item) => {
 								return {
 									title: item.filename,
