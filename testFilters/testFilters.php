@@ -759,7 +759,7 @@ class Testfilters implements ServiceInterface
 	 *
 	 * This filter provides you with the ability to manualy map enrichment array combined with settings data.
 	 *
-	 * @return array<string, array<int, string>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getEnrichmentManualMap(): array
 	{
