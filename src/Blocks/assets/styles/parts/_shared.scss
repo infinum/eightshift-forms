@@ -3,8 +3,8 @@
 
 :root {
 	--es-grid-spacing: 10px;
-	--es-form-max-width: 600px;
-	--es-form-field-spacing: 30px;
+	--es-max-width: 850px;
+	--es-field-spacing: 30px;
 }
 
 // stylelint-disable no-invalid-position-at-import-rule
@@ -12,4 +12,5 @@
 @import './checkbox';
 @import './checkbox-toggle';
 @import './submit';
+@import './error';
 @import './conditional-tags';

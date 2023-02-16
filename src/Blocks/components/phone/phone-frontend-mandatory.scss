@@ -1,0 +1,5 @@
+@import './../country/country-style.scss';
+
+.es-field--phone {
+	@extend %country-choices-icons;
+}

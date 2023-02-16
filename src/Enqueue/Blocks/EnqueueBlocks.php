@@ -89,6 +89,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
 
 		// Frontend only script.
@@ -108,6 +109,26 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
 			[],
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
+	}
+
+	/**
+	 * Method that returns editor and frontend style with check.
+	 *
+	 * @return mixed
+	 */
+	public function enqueueBlockFrontendStyleMandatory()
+	{
+		$handle = "{$this->getAssetsPrefix()}-block-frontend-mandatory-style";
+
+		\wp_register_style(
+			$handle,
+			$this->manifest->getAssetsManifestItem('applicationBlocksFrontendMandatory.css'),
+			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);

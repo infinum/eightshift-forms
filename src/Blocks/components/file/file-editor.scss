@@ -1,11 +1,23 @@
 .es-field--file {
 	.es-file {
-		padding: 20px;
-		border: 1px dashed var(--es-input-border-color);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--global-colors-es-boulder);
-		height: 70px;
+		display: none;
+
+		&__custom-wrap {
+			padding: 20px;
+			border: 1px dashed var(--es-input-border-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			color: var(--global-colors-es-boulder);
+			width: 100%;
+		}
+
+		&__button {
+			@include submit-styles($size: 'medium');
+			margin-top: 15px;
+			display: inline-flex;
+			width: initial;
+		}
 	}
 }

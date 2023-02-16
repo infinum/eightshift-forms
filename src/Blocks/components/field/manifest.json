@@ -86,9 +86,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"fieldOrder": {
-			"type": "integer"
-		},
 		"fieldStyle": {
 			"type": "string"
 		},
@@ -119,15 +116,7 @@
 			{
 				"inverse": true,
 				"variable": {
-					"field-width": "calc((%value%/12)*100%)"
-				}
-			}
-		],
-		"fieldOrder": [
-			{
-				"inverse": true,
-				"variable": {
-					"field-order": "%value%"
+					"es-field-width": "calc((%value%/12)*100%)"
 				}
 			}
 		]

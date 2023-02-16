@@ -81,6 +81,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formDisabledDefaultStyles": {
+			"type": "boolean",
+			"default": false
+		},
 		"formDownloads": {
 			"type": "array",
 			"items": {

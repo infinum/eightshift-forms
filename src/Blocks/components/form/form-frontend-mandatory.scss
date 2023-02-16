@@ -1,0 +1,13 @@
+@import './form-style.scss';
+
+.es-form {
+	$this: &;
+
+	&__fields {
+		@include form-fields-mandatory-styles;
+
+		> .es-field {
+			@include form-fields-children-mandatory-styles;
+		}
+	}
+}

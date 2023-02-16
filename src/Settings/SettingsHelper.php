@@ -21,41 +21,6 @@ use EightshiftForms\Settings\Settings\SettingsDashboard;
 trait SettingsHelper
 {
 	/**
-	 * Integration field style.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldStyle = 'field-style';
-
-	/**
-	 * Integration field order.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldOrder = 'order';
-
-	/**
-	 * Integration field use.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldUse = 'use';
-
-	/**
-	 * Integration field file info label.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldFileInfoLabel = 'file-info-label';
-
-	/**
-	 * Integration field label.
-	 *
-	 * @var string
-	 */
-	private $integrationFieldLabel = 'label';
-
-	/**
 	 * Get settings value.
 	 *
 	 * @param string $key Key to find in db settings.

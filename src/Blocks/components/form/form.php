@@ -17,14 +17,15 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
+$blockSsr = $attributes['blockSsr'] ?? false;
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
+
 
 $attributes = apply_filters(
 	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
 	$attributes
 );
-
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
@@ -42,6 +43,7 @@ $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 $formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
+$formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -117,6 +119,9 @@ if ($formActionExternal) {
 if ($formMethod) {
 	$formAttrs['method'] = esc_attr($formMethod);
 }
+
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['blockSsr']] = wp_json_encode($blockSsr);
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['disabledDefaultStyles']] = wp_json_encode($formDisabledDefaultStyles);
 
 $formAttrsOutput = '';
 if ($formAttrs) {
