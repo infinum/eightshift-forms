@@ -253,7 +253,7 @@ class Filters
 			],
 			'form' => [
 				'redirectionTimeout' => 'redirection_timeout',
-				'hideGlobalMsgTimeout' => 'hide_global_message_timeout',
+				'hideGlobalMsgTimeout' => 'hide_global_msg_timeout',
 				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
 				'successRedirectVariation' => 'success_redirect_variation',
@@ -261,6 +261,7 @@ class Filters
 				'trackingAdditionalData' => 'tracking_additional_data',
 				'dataTypeSelector' => 'data_type_selector',
 				'phoneSync' => 'phone_sync',
+				'globalMsgHeadings' => 'global_msg_headings',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',

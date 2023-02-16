@@ -273,13 +273,29 @@ export class Utils {
 			return;
 		}
 
+		const headingSuccess = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingSuccess);
+		const headingError = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingError);
+
 		messageContainer.classList.add(this.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
-		messageContainer.innerHTML = `<span>${msg}</span>`;
 
 		// Scroll to msg if the condition is right.
-		if (status === 'success' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
-			this.scrollToElement(messageContainer);
+		if (status === 'success') {
+			if (this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
+				this.scrollToElement(messageContainer);
+			}
+
+			if (headingSuccess) {
+				messageContainer.innerHTML = `<div><div>${headingSuccess}</div><span>${msg}</span></div>`;
+			} else {
+				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
+			}
+		} else {
+			if (headingError) {
+				messageContainer.innerHTML = `<div><div>${headingError}</div><span>${msg}</span></div>`;
+			} else {
+				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
+			}
 		}
 	}
 

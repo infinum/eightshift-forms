@@ -78,6 +78,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'downloads' => 'data-downloads',
 		'blockSsr' => 'data-block-ssr',
 		'disabledDefaultStyles' => 'data-disabled-default-styles',
+		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
+		'globalMsgHeadingError' => 'data-msg-heading-error',
 	];
 
 	/**

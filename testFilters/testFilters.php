@@ -27,7 +27,7 @@ class Testfilters implements ServiceInterface
 		$filters = [
 			'es_forms_block_forms_style_options' => ['getBlockFormsStyleOptions'],
 			'es_forms_block_form_redirection_timeout' => ['getBlockFormRedirectionTimeout'],
-			'es_forms_block_form_hide_global_message_timeout' => ['getBlockFormHideGlobalMessageTimeout'],
+			'es_forms_block_form_hide_global_msg_timeout' => ['getBlockFormHideGlobalMsgTimeout'],
 			'es_forms_block_form_hide_loading_state_timeout' => ['getBlockFormHideLoadingStateTimeout'],
 			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
 			'es_forms_block_form_success_redirect_variation' => ['getBlockFormSuccessRedirectVariation', 2],
@@ -36,6 +36,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditinalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
 			'es_forms_block_form_phone_sync' => ['getFormPhoneSync', 2],
+			'es_forms_block_form_global_msg_headings' => ['getGlobalMsgHeadings'],
 
 			'es_forms_block_form_selector_additional_content' => ['getBlockFormSelectorAdditionalContent'],
 			'es_forms_block_field_additional_content' => ['getBlockFormSelectorAdditionalContent'],
@@ -160,7 +161,7 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @return string
 	 */
-	public function getBlockFormHideGlobalMessageTimeout(): string
+	public function getBlockFormHideGlobalMsgTimeout(): string
 	{
 		return '10000'; // 10 seconds.
 	}
@@ -328,6 +329,21 @@ class Testfilters implements ServiceInterface
 		}
 
 		return false;
+	}
+
+	/**
+	 * Set global msg headings.
+	 *
+	 * This filter will set global message headings for success and error.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getGlobalMsgHeadings(): array
+	{
+		return [
+			'success' => \__('Good news!', 'eightshift-form'),
+			'error' => \__('Something is going wrong.', 'eightshift-form'),
+		];
 	}
 
 	/**

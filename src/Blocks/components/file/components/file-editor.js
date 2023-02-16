@@ -23,7 +23,13 @@ export const FileEditor = (attributes) => {
 
 	const file = (
 		<>
-			<div className={componentClass}>{__('File upload', 'eightshift-forms')}</div>
+			<div className={`${componentClass}__custom-wrap`}>
+			{__('Drag and drop files here', 'eightshift-forms')}
+
+				<div className={`${componentClass}__button`}>
+					{__('Add files', 'eightshift-forms')}
+				</div>
+			</div>
 
 			<MissingName value={fileName} isEditor={true} />
 
