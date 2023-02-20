@@ -35,7 +35,8 @@ $blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
-$filterName = Filters::getFilterName(['blocks', 'breakpoints']);
+$filterName = Filters::getFilterName(['blocks', 'mediaBreakpoints']);
+
 if (has_filter($filterName)) {
 	$customMediaBreakpoints = apply_filters($filterName, []);
 

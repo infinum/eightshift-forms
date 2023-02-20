@@ -310,7 +310,7 @@ class Filters
 		],
 		'blocks' => [
 			'additionalBlocks' => 'additional_blocks',
-			'breakpoints' => 'media_breakpoints',
+			'mediaBreakpoints' => 'media_breakpoints',
 		],
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',

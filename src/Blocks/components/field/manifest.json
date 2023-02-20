@@ -76,7 +76,8 @@
 			"type": "integer"
 		},
 		"fieldWidthMobile": {
-			"type": "integer"
+			"type": "integer",
+			"default": 12
 		},
 		"fieldDisabled": {
 			"type": "boolean",

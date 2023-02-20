@@ -65,7 +65,7 @@ class Testfilters implements ServiceInterface
 			// Blocks filters.
 			'es_forms_blocks_additional_blocks' => ['getAdditionalBlocks'],
 
-			'es_forms_media_breakpoints' => ['getMediaBreakpoints'],
+			'es_forms_blocks_media_breakpoints' => ['getMediaBreakpoints'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// General filters.
