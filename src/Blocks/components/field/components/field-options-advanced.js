@@ -70,7 +70,7 @@ export const FieldOptionsAdvanced = (attributes) => {
 						<CustomSlider
 							key={index}
 							label={<IconLabel icon={icons[`screen${_.capitalize(breakpoint)}`]} label={_.capitalize(breakpoint)} />}
-							value={checkAttr(responsiveAttribute, attributes, manifest, true) ?? 12}
+							value={checkAttr(responsiveAttribute, attributes, manifest, true) ?? 0}
 							onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
 							min={options.fieldWidth.min}
 							max={options.fieldWidth.max}

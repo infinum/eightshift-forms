@@ -73,11 +73,11 @@
 			"type": "integer"
 		},
 		"fieldWidthTablet": {
-			"type": "integer"
-		},
-		"fieldWidthMobile": {
 			"type": "integer",
 			"default": 12
+		},
+		"fieldWidthMobile": {
+			"type": "integer"
 		},
 		"fieldDisabled": {
 			"type": "boolean",
