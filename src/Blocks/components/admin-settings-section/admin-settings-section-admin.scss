@@ -62,6 +62,7 @@
 		border-left: 1px solid var(--global-colors-es-ebb);
 
 		#{$this}__content {
+			overflow-x: hidden;
 			padding: var(--global-es-spacing-horizontal);
 
 			#{$this}__content {
