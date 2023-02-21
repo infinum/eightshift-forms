@@ -701,6 +701,6 @@ class Helper
 	 */
 	public static function getProjectIcons(string $type): string
 	{
-		return Components::getComponent('utils')['icons'][Components::kebabToCamelCase($type)];
+		return Components::getComponent('utils')['icons'][Components::kebabToCamelCase($type)] ?? '';
 	}
 }
