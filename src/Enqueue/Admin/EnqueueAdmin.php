@@ -12,10 +12,11 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\CacheDeleteRoute;
-use EightshiftForms\Rest\Routes\FormSettingsSubmitRoute;
-use EightshiftForms\Rest\Routes\MigrationRoute;
-use EightshiftForms\Rest\Routes\TransferRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncDirectRoute;
+use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\FormSettingsSubmitRoute;
+use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
+use EightshiftForms\Rest\Routes\Settings\TransferRoute;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -75,17 +76,24 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	protected function getLocalizations(): array
 	{
-		$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
 
 		return [
 			'esFormsLocalization' => [
 				'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-				'formSettingsSubmitRestApiUrl' => $restRoutesPath . FormSettingsSubmitRoute::ROUTE_SLUG,
-				'clearCacheRestUrl' => $restRoutesPath . CacheDeleteRoute::ROUTE_SLUG,
-				'migrationRestUrl' => $restRoutesPath . MigrationRoute::ROUTE_SLUG,
-				'transferRestUrl' => $restRoutesPath . TransferRoute::ROUTE_SLUG,
-				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms')
+				'restPrefixProject' => $restRoutesPrefixProject,
+				'restPrefix' => $restRoutesPrefix,
+				'nonce' => \wp_create_nonce('wp_rest'),
+				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+				'restRoutes' => [
+					'formSubmit' => FormSettingsSubmitRoute::ROUTE_SLUG,
+					'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
+					'migration' => MigrationRoute::ROUTE_SLUG,
+					'transform' => TransferRoute::ROUTE_SLUG,
+					'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
+				],
 			]
 		];
 	}

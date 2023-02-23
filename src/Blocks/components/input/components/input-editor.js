@@ -1,31 +1,27 @@
-/* global esFormsLocalization */
-
-import React, { useMemo, useEffect } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
 	props,
-	getUnique,
-	getAttrKey
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
+	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	let inputType = checkAttr('inputType', attributes, manifest);
@@ -35,25 +31,10 @@ export const InputEditor = (attributes) => {
 		inputType = 'text';
 	}
 
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('inputId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
 	const inputClass = classnames([
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
 	]);
-
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.inputBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.inputBlockAdditionalContent;
-	}
 
 	const input = (
 		<>
@@ -65,7 +46,13 @@ export const InputEditor = (attributes) => {
 				readOnly
 			/>
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<MissingName value={inputName} isEditor={true} />
+
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
+			/>
+
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

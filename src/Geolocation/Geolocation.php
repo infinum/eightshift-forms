@@ -41,6 +41,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * @var string
 	 */
 	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
+	public const GEOLOCATION_COOKIE_NAME = 'es_geolocation_cookie_name';
 
 	/**
 	 * Register all the hooks
@@ -60,6 +61,20 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		\add_filter('rocket_cache_dynamic_cookies', [$this, 'dynamicCookiesList']);
 
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
+	}
+
+	/**
+	 * Tooggle geolocation usage based on this flag.
+	 *
+	 * @return boolean
+	 */
+	public function useGeolocation(): bool
+	{
+		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -105,7 +120,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		$outputContent = \substr_replace($content, $output, $position, 0);
 
 		// Override output with filter.
-		$filterName = Filters::getGeolocationFilterName('wpRocketAdvancedCache');
+		$filterName = Filters::getFilterName(['geolocation', 'wpRocketAdvancedCache']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $content, $outputContent);
 		}
@@ -122,7 +137,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$name = Variables::getGeolocationCookieName();
 
-		$filterName = Filters::getGeolocationFilterName('cookieName');
+		$filterName = Filters::getFilterName(['geolocation', 'cookieName']);
 		if (\has_filter($filterName)) {
 			$name = \apply_filters($filterName, null);
 		}
@@ -141,7 +156,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Variables::getGeolocationPharPath();
 
-		$filterName = Filters::getGeolocationFilterName('pharLocation');
+		$filterName = Filters::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -165,7 +180,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Variables::getGeolocationDbPath();
 
-		$filterName = Filters::getGeolocationFilterName('dbLocation');
+		$filterName = Filters::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -185,7 +200,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = Filters::getGeolocationFilterName('countries');
+		$filterName = Filters::getFilterName(['geolocation', 'countries']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());
@@ -234,7 +249,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		$logModeCheck = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
-		$filterName = Filters::getGeolocationFilterName('disable');
+		$filterName = Filters::getFilterName(['geolocation', 'disable']);
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			if ($logModeCheck) {
 				Helper::logger([

@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "loader",
 	"title": "Loader",
 	"componentClass": "es-loader",
-	"componentJsClass": "js-es-block-form-loader",
+	"componentJsClass": "js-es-block-loader",
 	"attributes": {
 		"loaderIsActive": {
 			"type": "boolean",

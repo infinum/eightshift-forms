@@ -7,6 +7,7 @@ import {
 	getAttrKey,
 	IconLabel,
 } from '@eightshift/frontend-libs/scripts';
+import { isOptionDisabled } from './../../utils';
 import manifest from '../manifest.json';
 
 export const FieldOptions = (attributes) => {
@@ -18,6 +19,8 @@ export const FieldOptions = (attributes) => {
 
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
+	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
+	const fieldDisabledOptions = checkAttr('fieldDisabledOptions', attributes, manifest);
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 
 	return (
@@ -53,6 +56,17 @@ export const FieldOptions = (attributes) => {
 				value={fieldHelp}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 			/>
+
+			<Button
+				icon={icons.fieldReadonly}
+				isPressed={fieldHidden}
+				onClick={() => setAttributes({ [getAttrKey('fieldHidden', attributes, manifest)]: !fieldHidden })}
+				disabled={isOptionDisabled(getAttrKey('fieldHidden', attributes, manifest), fieldDisabledOptions)}
+			>
+				{__('Is hidden', 'eightshift-forms')}
+			</Button>
+
+			<br/><br/>
 		</>
 	);
 };

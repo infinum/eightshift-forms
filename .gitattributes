@@ -10,6 +10,7 @@
 /assets export-ignore
 /storybook export-ignore
 /tests export-ignore
+/docs export-ignore
 /.editorconfig export-ignore
 /.eslintignore export-ignore
 /.eslintrc export-ignore

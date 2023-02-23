@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "airtable",
 	"title": "Airtable Form",
 	"description" : "An Airtable subscription form",
@@ -11,13 +12,19 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"airtableFormPostId": {
+		"airtableIntegrationId": {
 			"type": "string"
 		},
-		"airtableFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"airtableIntegrationInnerId": {
+			"type": "string"
+		},
+		"airtableFormPostId": {
+			"type": "string"
 		},
 		"airtableFormDataTypeSelector": {
 			"type": "string"

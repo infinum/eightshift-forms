@@ -46,7 +46,7 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 	 */
 	public function getCustomDataComponent(array $attributes): string
 	{
-		$filterName = Filters::getBlockFilterName('customData', 'data');
+		$filterName = Filters::getFilterName(['block', 'customData', 'data']);
 		if (!\has_filter($filterName)) {
 			return '';
 		}
@@ -69,7 +69,6 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => $attributes['customDataCheckboxesFieldLabel'] ?? '',
-						'checkboxesId' => $attributes['customDataId'] ?? '',
 						'checkboxesName' => $attributes['customDataCheckboxesName'] ?? '',
 						'checkboxesContent' => \array_map(
 							static function ($option) {
@@ -95,7 +94,6 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 					[
 						'component' => 'radios',
 						'radiosFieldLabel' => $attributes['customDataRadiosFieldLabel'] ?? '',
-						'radiosId' => $attributes['customDataId'] ?? '',
 						'radiosName' => $attributes['customDataRadiosName'] ?? '',
 						'radiosContent' => \array_map(
 							static function ($option) {
@@ -120,9 +118,8 @@ class BlockCustomData extends AbstractFormBuilder implements ServiceInterface
 				$output = \array_merge(
 					[
 						'component' => 'select',
-						'selectId' => $attributes['customDataId'] ?? '',
 						'selectName' => $attributes['customDataSelectName'] ?? '',
-						'selectOptions' => \array_map(
+						'selectContent' => \array_map(
 							static function ($option) {
 								return [
 									'component' => 'select-option',

@@ -13,7 +13,6 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
-use WP_Post;
 use WP_Block_Editor_Context;
 
 /**
@@ -62,43 +61,13 @@ class Blocks extends AbstractBlocks
 		\remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		if (\is_wp_version_compatible('5.8')) {
-			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
-		} else {
-			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
-		}
+		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
 
 		// Blocks string to value filter name constant.
 		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);
 
 		// Blocks option checkbox is checked name constant.
 		\add_filter(static::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME, [$this, 'isCheckboxOptionChecked'], 10, 2);
-	}
-
-	/**
-	 * Create custom category to assign all custom blocks
-	 *
-	 * This category will be shown on all blocks list in "Add Block" button.
-	 *
-	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
-	 *
-	 * @param array<array<string, mixed>> $categories Array of categories for block types.
-	 * @param WP_Post $post Post being loaded.
-	 *
-	 * @return array<array<string, mixed>> Array of categories for block types.
-	 */
-	public function getCustomCategoryOld(array $categories, WP_Post $post): array
-	{
-		return \array_merge(
-			$categories,
-			[
-				[
-					'slug' => 'eightshift-forms',
-					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
-					'icon' => 'admin-settings',
-				],
-			]
-		);
 	}
 
 	/**

@@ -12,17 +12,16 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
-use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsHubspot class.
  */
-class SettingsHubspot implements SettingInterface, ServiceInterface
+class SettingsHubspot implements SettingInterface, SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -40,11 +39,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_hubspot';
 
 	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_hubspot';
-
-	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'hubspot';
@@ -58,16 +52,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 * API Key.
 	 */
 	public const SETTINGS_HUBSPOT_API_KEY_KEY = 'hubspot-api-key';
-
-	/**
-	 * Item ID Key.
-	 */
-	public const SETTINGS_HUBSPOT_ITEM_ID_KEY = 'hubspot-item-id';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY = 'hubspot-integration-fields';
 
 	/**
 	 * Filemanager folder Key.
@@ -90,26 +74,9 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	public const SETTINGS_HUBSPOT_USE_CLEARBIT_KEY = 'hubspot-use-clearbit';
 
 	/**
-	 * Use Clearbit email field Key.
-	 */
-	public const SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY = 'hubspot-clearbit-email-field';
-
-	/**
 	 * Use Clearbit map keys Key.
 	 */
 	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY = 'hubspot-conditional-tags';
-
-	/**
-	 * Instance variable for Clearbit data.
-	 *
-	 * @var ClearbitClientInterface
-	 */
-	protected $clearbitClient;
 
 	/**
 	 * Instance variable for Clearbit settings.
@@ -126,13 +93,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	protected $hubspotClient;
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $hubspot;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -142,23 +102,17 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
 	 * @param SettingsClearbitDataInterface $settingsClearbit Inject Clearbit which holds Clearbit settings data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
-	 * @param MapperInterface $hubspot Inject HubSpot which holds HubSpot form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
-		ClearbitClientInterface $clearbitClient,
 		SettingsClearbitDataInterface $settingsClearbit,
 		HubspotClientInterface $hubspotClient,
-		MapperInterface $hubspot,
 		SettingsFallbackDataInterface $settingsFallback
 	) {
-		$this->clearbitClient = $clearbitClient;
 		$this->settingsClearbit = $settingsClearbit;
 		$this->hubspotClient = $hubspotClient;
-		$this->hubspot = $hubspot;
 		$this->settingsFallback = $settingsFallback;
 	}
 
@@ -171,29 +125,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(string $formId): bool
-	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$itemId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-
-		if (empty($itemId)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -222,68 +153,23 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$type = self::SETTINGS_TYPE_KEY;
-
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
-		}
-
-		// Get forms from the API.
-		$items = $this->hubspotClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_HUBSPOT_ITEM_ID_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the list.
-		if ($selectedFormId) {
-			$formFields = $this->hubspot->getFormFields($formId);
-
-			// Output additonal tabs for config.
-			$output = [
-				'component' => 'tabs',
-				'tabsContent' => [
-					$this->getOutputIntegrationFields(
-						$formId,
-						$formFields,
-						$type,
-						self::SETTINGS_HUBSPOT_INTEGRATION_FIELDS_KEY,
-					),
-					$this->getOutputConditionalTags(
-						$formId,
-						$formFields,
-						self::SETTINGS_HUBSPOT_CONDITIONAL_TAGS_KEY
-					),
-					$this->getOutputFilemanager($formId),
-					$this->settingsClearbit->getOutputClearbit(
-						$formId,
-						$formFields,
-						[
-							'use' => self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
-							'email' => self::SETTINGS_HUBSPOT_CLEARBIT_EMAIL_FIELD_KEY,
-						]
-					),
-				],
-			];
+			return $this->getNoValidGlobalConfigOutput(self::SETTINGS_TYPE_KEY);
 		}
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_HUBSPOT_ITEM_ID_KEY
-			),
-			$output,
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					$this->getOutputFilemanager($formId),
+					$this->settingsClearbit->getOutputClearbit(
+						$formId,
+						self::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY
+					),
+				],
+			],
 		];
 	}
 
@@ -313,7 +199,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -330,10 +215,11 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
 								// translators: %s will be replaced with the link.
-								'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+								'inputFieldHelp' => \sprintf(\__('
+									Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.<br/>
+									Example: pdf,jpg,txt', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 							],
@@ -389,7 +275,6 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
 					'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
 					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder in your HubSpot file manager.', 'eightshift-forms'),
@@ -399,10 +284,11 @@ class SettingsHubspot implements SettingInterface, ServiceInterface
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-					'inputId' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					// translators: %s will be replaced with the link.
-					'inputFieldHelp' => \sprintf(\__('Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings.', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+					'inputFieldHelp' => \sprintf(\__('
+						Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings. <br/>
+						Example: pdf,jpg,txt', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
 					'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputType' => 'text',
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),

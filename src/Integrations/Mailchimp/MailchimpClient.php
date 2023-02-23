@@ -10,12 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Validation\Validator;
 
 /**
  * MailchimpClient integration class.
@@ -38,14 +41,21 @@ class MailchimpClient implements MailchimpClientInterface
 	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
 
 	/**
-	 * Transient cache name for item.
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
 	 */
-	public const CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME = 'es_mailchimp_item_cache';
+	protected EnrichmentInterface $enrichment;
 
 	/**
-	 * Transient cache name for item tags.
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
 	 */
-	public const CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME = 'es_mailchimp_item_tags_cache';
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -69,6 +79,8 @@ class MailchimpClient implements MailchimpClientInterface
 					$output[$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
+						'fields' => [],
+						'tags' => [],
 					];
 				}
 
@@ -77,7 +89,7 @@ class MailchimpClient implements MailchimpClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -97,16 +109,18 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
+
+		$item = $output[$itemId]['fields'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$fields = $this->getMailchimpListFields($itemId);
+		if (!$output || !$item) {
+			$items = $this->getMailchimpListFields($itemId);
 
-			if ($itemId && $fields) {
-				$output[$itemId] = $fields;
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
-				\set_transient(self::CACHE_MAILCHIMP_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -122,28 +136,30 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function getTags(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
+
+		$item = $output[$itemId]['tags'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$tags = $this->getMailchimpTags($itemId);
+		if (!$output || !$item) {
+			$items = $this->getMailchimpTags($itemId);
 
-			if ($tags) {
-				$output[$itemId] = \array_map(
+			if ($items) {
+				$output[$itemId]['tags'] = \array_map(
 					static function ($item) {
 						return [
 							'id' => (string) $item['id'],
 							'name' => (string) $item['name'],
 						];
 					},
-					$tags
+					$items
 				);
 
-				\set_transient(self::CACHE_MAILCHIMP_ITEM_TAGS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
-		return $output[$itemId] ?? [];
+		return $output[$itemId]['tags'] ?? [];
 	}
 
 	/**
@@ -158,20 +174,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$email = $params['email_address']['value'];
+		$email = Helper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
-		$prepareParams = $this->prepareParams($params);
 
 		$body = [
 			'email_address' => $email,
 			'status_if_new' => 'subscribed',
 			'status' => 'subscribed',
 			'tags' => $this->prepareTags($params),
+			'merge_fields' => $this->prepareParams($params),
 		];
-
-		if (!empty($prepareParams)) {
-			$body['merge_fields'] = $prepareParams;
-		}
 
 		$url = "{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}";
 
@@ -185,7 +197,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -200,13 +212,16 @@ class MailchimpClient implements MailchimpClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -220,34 +235,61 @@ class MailchimpClient implements MailchimpClientInterface
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['detail'] ?? '';
-		$errors = $body['errors'] ?? [];
-
-		if ($errors) {
-			$invalidEmail = \array_filter(
-				$errors,
-				static function ($error) {
-					return $error['field'] === 'email_address';
-				}
-			);
-
-			if ($invalidEmail) {
-				$msg = 'INVALID_EMAIL';
-			}
-		}
 
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailchimpBadRequestError';
-			case "The resource submitted could not be validated. For field-specific details, see the 'errors' array.":
-				return 'mailchimpInvalidResourceError';
-			case 'INVALID_EMAIL':
-			case 'Please provide a valid email address.':
-				return 'mailchimpInvalidEmailError';
-			case 'Your merge fields were invalid.':
-				return 'mailchimpMissingFieldsError';
+			case 'Your request did not include an API key.':
+				return 'mailchimpErrorSettingsMissing';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['detail'] ?? '';
+		$errors = $body['errors'] ?? [];
+
+		$output = [];
+
+		foreach ($errors as $value) {
+			$key = $value['field'] ?? '';
+			$message = $value['message'] ?? '';
+
+			if (!$key || !$message) {
+				continue;
+			}
+
+			switch ($message) {
+				case 'This value should not be blank.':
+					$output[$key] = 'validationRequired';
+					break;
+				case 'That is not a valid URL':
+					$output[$key] = 'validationUrl';
+					break;
+				case 'Please enter a zip code (5 digits)':
+					$output[$key] = 'validationMailchimpInvalidZip';
+					break;
+				case 'Please enter a month (01-12) and a day (01-31)':
+				case 'Please enter the date':
+					$output[$key] = 'validationDate';
+					break;
+			}
+		}
+
+		if ($msg === 'Please provide a valid email address.') {
+			$output['email_address'] = 'validationEmail';
+		}
+
+		return $output;
 	}
 
 	/**
@@ -269,7 +311,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -320,7 +362,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -354,7 +396,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -382,19 +424,26 @@ class MailchimpClient implements MailchimpClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		foreach ($params as $key => $param) {
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
+
+		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
 
-			// Remove email.
-			if ($key === 'email_address') {
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
 			// Check for custom address.
-			if ($key === 'ADDRESS' && $value) {
-				$output[$key] = [
+			if ($name === 'ADDRESS') {
+				$output[$name] = [
 					'addr1' => $value,
 					'addr2' => '',
 					'city' => '&sbsp;',
@@ -406,12 +455,7 @@ class MailchimpClient implements MailchimpClientInterface
 				continue;
 			}
 
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			$output[$key] = $value;
+			$output[$name] = $value;
 		}
 
 		return $output;
@@ -432,13 +476,13 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		$value = $params[$key]['value'];
+		$value = $params[$key]['value'] ?? '';
 
-		if (empty($value)) {
+		if (!$value) {
 			return [];
 		}
 
-		return \explode(', ', $params[$key]['value']);
+		return \explode(AbstractBaseRoute::DELIMITER, $params[$key]['value']);
 	}
 
 	/**

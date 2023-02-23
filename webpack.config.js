@@ -17,7 +17,10 @@ module.exports = (env, argv) => {
 			projectPath: 'wp-content/plugins/eightshift-forms', // Project path relative to project root.
 		},
 		overrides: [
-			'browserSyncPlugin'
+			'browserSyncPlugin',
+			'application',
+			'applicationAdmin',
+			'applicationBlocks',
 		],
 	};
 
@@ -36,7 +39,8 @@ module.exports = (env, argv) => {
 
 		entry: {
 			...project.entry,
-			applicationEditor: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-editor.js'),
+			applicationAdmin: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-admin.js'),
+			applicationBlocksFrontendMandatory: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-blocks-frontend-mandatory.js'),
 		},
 	};
 };

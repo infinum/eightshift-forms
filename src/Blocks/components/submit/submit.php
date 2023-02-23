@@ -18,7 +18,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
-$submitId = Components::checkAttr('submitId', $attributes, $manifest);
+$submitName = Components::checkAttr('submitName', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
@@ -41,10 +41,6 @@ if ($submitTracking) {
 	$submitAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($submitTracking);
 }
 
-if ($submitId) {
-	$submitAttrs['id'] = esc_attr($submitId);
-}
-
 $submitAttrsOutput = '';
 if ($submitAttrs) {
 	foreach ($submitAttrs as $key => $value) {
@@ -53,11 +49,7 @@ if ($submitAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('submit', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attributes);
 
 $submitIconContent = '';
 if (!empty($submitIcon)) {
@@ -75,7 +67,7 @@ $button = '
 ';
 
 // With this filder you can override default submit component and provide your own.
-$filterNameComponent = Filters::getBlockFilterName('submit', 'component');
+$filterNameComponent = Filters::getFilterName(['block', 'submit', 'component']);
 if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
 	$button = apply_filters($filterNameComponent, [
 		'value' => $submitValue,
@@ -84,12 +76,6 @@ if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
 		'attrs' => $submitAttrs,
 		'attributes' => $attributes,
 	]);
-}
-
-// Replace button with div for the editor.
-if ($submitServerSideRender) {
-	$button = str_replace('<button', '<div', $button);
-	$button = str_replace('</button>', '</div>', $button);
 }
 
 if ($submitIsLayoutFree) {
@@ -102,7 +88,7 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $button,
-			'fieldId' => $submitId,
+			'fieldId' => $submitName,
 			'fieldUseError' => false,
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldUniqueId' => $submitUniqueId,

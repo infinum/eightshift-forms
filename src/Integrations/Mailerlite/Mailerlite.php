@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -27,13 +26,6 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_mailerlite_mapper_filter';
 
 	/**
 	 * Filter form fields.
@@ -50,24 +42,13 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	protected $mailerliteClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $mailerliteClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ClientInterface $mailerliteClient)
+	{
 		$this->mailerliteClient = $mailerliteClient;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -78,63 +59,43 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
-
-		// Get form type.
-		$type = SettingsMailerlite::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
-	}
-
-	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsMailerlite::SETTINGS_MAILERLITE_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
+		$output = [
+			'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'innerId' => $innerId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->mailerliteClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->mailerliteClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -142,11 +103,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -154,7 +114,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $field) {
+		foreach ($data['fields'] as $field) {
 			if (empty($field)) {
 				continue;
 			}
@@ -162,21 +122,61 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			$type = $field['type'] ? \strtolower($field['type']) : '';
 			$name = $field['key'] ?? '';
 			$label = $field['title'] ?? '';
-			$id = $name;
 
 			switch ($type) {
 				case 'text':
+					switch ($name) {
+						case 'phone':
+							$output[] = [
+								'component' => 'phone',
+								'phoneName' => $name,
+								'phoneTracking' => $name,
+								'phoneFieldLabel' => $label,
+								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone'),
+							];
+							break;
+						case 'zip':
+							$output[] = [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputType' => 'number',
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									'inputType'
+								]),
+							];
+							break;
+						default:
+							$output[] = [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputType' => 'text',
+								'inputIsRequired' => $name === 'email',
+								'inputIsEmail' => $name === 'email',
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									$name === 'email' ? 'inputIsRequired' : '',
+									$name === 'email' ? 'inputIsEmail' : '',
+								]),
+							];
+							break;
+					}
+					break;
 				case 'date':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsRequired' => $name === 'email',
-						'inputIsEmail' => $name === 'email',
-						'blockSsr' => $ssr,
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'date',
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => 'Y-m-d',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							'dateType',
+							'dateOutputFormat'
+						]),
 					];
 					break;
 				case 'number':
@@ -185,9 +185,10 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'number',
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputType'
+						]),
 					];
 					break;
 			}
@@ -196,23 +197,16 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.
-		$dataFilterName = Filters::getIntegrationFilterName(SettingsMailerlite::SETTINGS_TYPE_KEY, 'data');
-		if (\has_filter($dataFilterName) && !\is_admin()) {
-			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
+		$filterName = Filters::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'data']);
+		if (\has_filter($filterName) && !\is_admin()) {
+			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsMailerlite::SETTINGS_MAILERLITE_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsMailerlite::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

@@ -2,6 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
+import { Captcha } from './captcha';
 import { Utils } from './utilities';
 
 if (typeof esFormsLocalization === 'undefined') {
@@ -10,6 +11,9 @@ if (typeof esFormsLocalization === 'undefined') {
 
 // Run initial utils.
 const utils = new Utils();
+
+// Run cpatcha on init state.
+const captcha = new Captcha();
 
 /**
  * Init all functionality with one function.
@@ -42,6 +46,8 @@ if (!disableAutoInit) {
 		if (elements.length) {
 			initAll();
 		}
+
+		captcha.init();
 	});
 } else {
 	// Load initAll method in window object for manual trigger.

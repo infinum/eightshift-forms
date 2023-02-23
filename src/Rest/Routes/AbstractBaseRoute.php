@@ -10,25 +10,31 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftForms\Validation\Validator; // phpcs:ignore
 
 /**
- * Class FormSubmitRoute
- *
- * @property Validator $validator
+ * Class AbstractBaseRoute
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
+
 	/**
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
+		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
 		'action' => 'es-form-action',
@@ -47,16 +53,97 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formType' => 'data-form-type',
 		'formPostId' => 'data-form-post-id',
 		'fieldId' => 'data-field-id',
+		'fieldName' => 'data-field-name',
+		'fieldType' => 'data-field-type',
 		'trackingEventName' => 'data-tracking-event-name',
+		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
-		'trackingSelectLabel' => 'data-tracking-select-label',
 		'successRedirect' => 'data-success-redirect',
+		'successRedirectVariation' => 'data-success-redirect-variation',
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',
 		'fieldTypeInternal' => 'data-type-internal',
 		'fieldUncheckedValue' => 'data-unchecked-value',
+		'settingsType' => 'data-settings-type',
+		'groupSaveAsOneField' => 'data-group-save-as-one-field',
+		'datePreviewFormat' => 'data-preview-format',
+		'dateOutputFormat' => 'data-output-format',
+		'selectShowCountryIcons' => 'data-select-show-country-icons',
+		'selectAllowSearch' => 'data-allow-search',
+		'selectInitial' => 'data-initial',
+		'selectPlaceholder' => 'data-placeholder',
+		'phoneSync' => 'data-phone-sync',
+		'saveAsJson' => 'data-save-as-json',
+		'downloads' => 'data-downloads',
+		'blockSsr' => 'data-block-ssr',
+		'disabledDefaultStyles' => 'data-disabled-default-styles',
+		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
+		'globalMsgHeadingError' => 'data-msg-heading-error',
 	];
+
+	/**
+	 * Status error const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_ERROR = 'error';
+
+	/**
+	 * Status success const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_SUCCESS = 'success';
+
+	/**
+	 * Status warning const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_WARNING = 'warning';
+
+	/**
+	 * Delimiter used in checkboxes and multiple items.
+	 *
+	 * @var string
+	 */
+	public const DELIMITER = '---';
+
+	/**
+	 * Dynamic name route prefix for integrations items inner.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_ITEMS_INNER = 'integration-items-inner';
+
+	/**
+	 * Dynamic name route prefix for integrations items.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_ITEMS = 'integration-items';
+
+	/**
+	 * Dynamic name route prefix for form submit.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_FORM_SUBMIT = 'form-submit';
+
+	/**
+	 * Dynamic name route prefix for settings.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_SETTINGS = 'settings';
+
+	/**
+	 * Dynamic name route prefix for integration editor.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_INTEGRATION_EDITOR = 'integration-editor';
 
 	/**
 	 * Method that returns project Route namespace.
@@ -99,33 +186,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Sanitizes all received fields recursively. If a field is something we don't need to
-	 * sanitize then we don't touch it.
-	 *
-	 * @param array<string|int, mixed> $params Array of params.
-	 *
-	 * @return array<string|int, mixed>
-	 */
-	protected function sanitizeFields(array $params)
-	{
-		foreach ($params as $key => $param) {
-			$type = $param['type'] ?? '';
-
-			if (\array_values($param) === $param) {
-				$params[$key] = $this->sanitizeFields($param);
-			} else {
-				if ($type === 'textarea') {
-					$params[$key]['value'] = \sanitize_textarea_field($param['value']);
-				} else {
-					$params[$key]['value'] = \sanitize_text_field($param['value']);
-				}
-			}
-		}
-
-		return $params;
-	}
-
-	/**
 	 * Toggle if this route requires nonce verification.
 	 *
 	 * @return bool
@@ -133,46 +193,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function requiresNonceVerification(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Verifies everything is ok with request.
-	 *
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<string, bool|string>> $files Files array.
-	 * @param string $formId Form Id.
-	 * @param array<string, mixed> $formData Form data to validate.
-	 *
-	 * @throws UnverifiedRequestException When we should abort the request for some reason.
-	 *
-	 * @return void
-	 */
-	protected function verifyRequest(array $params, array $files = [], string $formId = '', array $formData = []): void
-	{
-		// Sanitize Fields.
-		$params = $this->sanitizeFields($params);
-
-		// Verify nonce if submitted.
-		if ($this->requiresNonceVerification()) {
-			if (
-				! isset($params['nonce']) ||
-				! isset($params['form-unique-id']) ||
-				! \wp_verify_nonce($params['nonce'], $params['form-unique-id'])
-			) {
-				throw new UnverifiedRequestException(
-					\esc_html__('Invalid nonce.', 'eightshift-forms')
-				);
-			}
-		}
-
-		// Validate Params.
-		$validate = $this->validator->validate($params, $files, $formId, $formData);
-		if (!empty($validate)) {
-			throw new UnverifiedRequestException(
-				\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-				$validate
-			);
-		}
 	}
 
 	/**
@@ -192,7 +212,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					// Loop all items and decode.
 					$inner = \array_map(
 						static function ($item) {
-							return \json_decode($item, true);
+							return \json_decode(\sanitize_text_field($item), true);
 						},
 						$item
 					);
@@ -224,7 +244,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 						);
 
 						// Append values to the first value.
-						$innerNotEmpty[0]['value'] = \implode(", ", $multiple);
+						$innerNotEmpty[0]['value'] = \implode(AbstractBaseRoute::DELIMITER, $multiple);
 
 						return $innerNotEmpty[0];
 					}
@@ -234,7 +254,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				// Just decode value.
-				return \json_decode($item, true);
+				return \json_decode(\sanitize_text_field($item), true);
 			},
 			$params
 		);
@@ -263,59 +283,76 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Return form sender details from form params.
+	 * Return mailer for sender email field params.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
 	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	protected function getSenderDetails(array $params): array
+	protected function getFormSenderEmailField(array $params): string
 	{
-		$output = [];
-
-		foreach ($params as $param) {
-			$name = $param['name'] ?? '';
-			$value = $param['value'] ?? '';
-
-			if (!$name) {
-				continue;
-			}
-
-			if (($name === 'sender-email') && !empty($value)) {
-				$output[$name] = $value;
-			}
-		}
-
-		return $output;
+		$senderEmailManifest = Components::getBlock('sender-email')['blockName'];
+		return $params[$senderEmailManifest]['value'] ?? '';
 	}
 
 	/**
-	 * Return form ID from form params and determins if ID needs decrypting.
+	 * Return mailer for sender email field params.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
-	 * @param bool $throwError Throw error if missing post Id.
+	 *
+	 * @return string
+	 */
+	protected function getFormCustomAction(array $params): string
+	{
+		return $params[self::CUSTOM_FORM_PARAMS['action']]['value'] ?? '';
+	}
+
+	/**
+	 * Return mailer for sender email field params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return string
+	 */
+	protected function getFormCustomActionExternal(array $params): string
+	{
+		return $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'] ?? '';
+	}
+
+	/**
+	 * Return form settings type from form params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
 	 *
 	 * @throws UnverifiedRequestException Wrong request response.
 	 *
 	 * @return string
 	 */
-	protected function getFormId(array $params, bool $throwError = true): string
+	protected function getFormSettingsType(array $params): string
+	{
+		return $params[self::CUSTOM_FORM_PARAMS['settingsType']]['value'] ?? '';
+	}
+
+	/**
+	 * Return form ID from form params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @throws UnverifiedRequestException Wrong request response.
+	 *
+	 * @return string
+	 */
+	protected function getFormId(array $params): string
 	{
 		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
 
 		if (!$formId) {
-			return '';
-		}
-
-		$formId = $formId['value'] ?? '';
-
-		if (!$formId && $throwError) {
 			throw new UnverifiedRequestException(
 				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
 			);
 		}
 
-		return $formId;
+		return $formId['value'] ?? '';
 	}
 
 	/**
@@ -342,5 +379,21 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$params[self::CUSTOM_FORM_PARAMS['storage']]['value'] = $storage;
 
 		return $params;
+	}
+
+	/**
+	 * Check user permission for route action.
+	 *
+	 * @param string $permission Permission to check.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function checkUserPermission(string $permission = FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY): array
+	{
+		if (\current_user_can($permission)) {
+			return [];
+		}
+
+		return $this->getApiPermissionsErrorOutput();
 	}
 }

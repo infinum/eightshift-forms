@@ -17,7 +17,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsDocumentation class.
  */
-class SettingsDocumentation implements SettingInterface, ServiceInterface
+class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -42,20 +42,6 @@ class SettingsDocumentation implements SettingInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-		];
 	}
 
 	/**

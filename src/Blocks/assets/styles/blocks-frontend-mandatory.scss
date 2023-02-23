@@ -1,0 +1,19 @@
+/**
+ * This is the main entry point for Block Editor blocks styles used for the `WordPress frontend screen`.
+ * But files that are mandatory to load if the user disables the options in admin.
+ * File names must follow naming convention to be able to run dynamically.
+ *
+ * `src/blocks/custom/block_name/block_name-editor.scss`.
+ *
+ * Usage: `WordPress frontend screen`.
+ *
+ */
+
+// Globals.
+@import './parts/shared';
+
+// Find all components and require component_name-style.scss inside it.
+@import './../../components/*/*-frontend-mandatory.scss';
+
+// Find all blocks and require block_name-editor.scss inside it.
+@import './../../custom/*/*-frontend-mandatory.scss';

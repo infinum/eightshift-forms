@@ -1,9 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "group",
 	"title": "Group",
 	"componentClass": "es-group",
-	"componentJsClass": "js-es-block-form-group",
-	"componentJsClassInner": "js-es-block-form-group-inner",
+	"componentJsClass": "js-es-block-group",
 	"attributes": {
 		"groupSaveOneField": {
 			"type": "boolean",
@@ -27,7 +27,7 @@
 		"groupBeforeContent": {
 			"type": "string"
 		},
-		"groupId": {
+		"groupName": {
 			"type": "string"
 		}
 	}

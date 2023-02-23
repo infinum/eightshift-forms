@@ -1,0 +1,11 @@
+input.es-phone {
+	@include input-styles;
+}
+
+.es-field--phone {
+	.es-field__content-wrap {
+		display: grid;
+		column-gap: var(--es-grid-spacing);
+		grid-template-columns: min(120px) 1fr;
+	}
+}

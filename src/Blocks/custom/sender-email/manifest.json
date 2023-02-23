@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "sender-email",
 	"title": "Sender Email",
 	"description" : "A field for inputting e-mail addresses that will be the target for sending confirmation e-mails",
@@ -20,13 +21,18 @@
 		"attributes": {
 			"inputName": "sender-email",
 			"inputIsRequired": true,
-			"inputIsEmail": true
+			"inputIsEmail": true,
+			"inputType": "email"
 		}
 	},
 	"attributes": {
 		"inputName": {
 			"type": "string",
 			"default": "sender-email"
+		},
+		"inputType": {
+			"type": "string",
+			"default": "email"
 		},
 		"inputIsRequired": {
 			"type": "boolean",

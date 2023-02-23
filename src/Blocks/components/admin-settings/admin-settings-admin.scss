@@ -1,14 +1,14 @@
 // stylelint-disable selector-max-specificity
 
 .es-admin-settings {
-	.es-form[data-form-type='cache'],
-	.es-form[data-form-type='location'],
-	.es-form[data-form-type='dashboard'],
-	.es-form[data-form-type='documentation'],
-	.es-form[data-form-type='migration'],
-	.es-form[data-settings-type='settingsGlobal'][data-form-type='geolocation'],
-	.es-form[data-settings-type='settingsGlobal'][data-form-type='mailer'],
-	.es-form[data-settings-type='settingsGlobal'][data-form-type='transfer'] {
+	.es-form[data-settings-type='cache'],
+	.es-form[data-settings-type='location'],
+	.es-form[data-settings-type='dashboard'],
+	.es-form[data-settings-type='documentation'],
+	.es-form[data-settings-type='migration'],
+	.es-form[data-settings-type='transfer'],
+	.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+	.es-form[data-form-type='settingsGlobal'][data-settings-type='mailer'] {
 		.es-submit--global {
 			display: none;
 		}

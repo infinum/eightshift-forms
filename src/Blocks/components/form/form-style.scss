@@ -1,25 +1,30 @@
-.es-form {
-	$this: &;
-
-	--es-form-scoped-spacing: 10px;
-
-	max-width: 600px;
-	padding: 0 20px;
+@mixin form-styles() {
 	margin: 0 auto;
 	position: relative;
+}
 
-	&__fields {
-		display: flex;
-		flex-wrap: wrap;
-		margin-left: calc(var(--es-form-scoped-spacing) * -1);
-		margin-right: calc(var(--es-form-scoped-spacing) * -1);
+@mixin form-width-limit-styles() {
+	max-width: var(--es-max-width);
+	padding: 0 var(--es-grid-spacing);
+}
 
-		> .es-field {
-			flex: 0 0 var(--field-width, 100%);
-			max-width: var(--field-width, 100%);
-			padding-left: var(--es-form-scoped-spacing);
-			padding-right: var(--es-form-scoped-spacing);
-			margin-bottom: 20px;
-		}
-	}
+@mixin form-fields-mandatory-styles() {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+@mixin form-fields-styles() {
+	margin-left: calc(var(--es-grid-spacing) * -1);
+	margin-right: calc(var(--es-grid-spacing) * -1);
+}
+
+@mixin form-fields-children-mandatory-styles() {
+	flex: 0 0 var(--es-field-width, 100%);
+	max-width: var(--es-field-width, 100%);
+}
+
+@mixin form-fields-children-styles() {
+	padding-left: var(--es-grid-spacing);
+	padding-right: var(--es-grid-spacing);
+	margin-bottom: var(--es-field-spacing);
 }

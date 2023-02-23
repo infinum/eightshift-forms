@@ -10,12 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Airtable;
 
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * AirtableClient integration class.
@@ -45,6 +47,23 @@ class AirtableClient implements ClientInterface
 	public const CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME = 'es_airtable_items_cache';
 
 	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
+
+	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -56,7 +75,7 @@ class AirtableClient implements ClientInterface
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (!$output) {
 			$items = $this->getAirtableLists();
 
 			if ($items) {
@@ -75,7 +94,7 @@ class AirtableClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -115,11 +134,11 @@ class AirtableClient implements ClientInterface
 					];
 				}
 
-				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
-		return $output[$itemId] ?? [];
+		return $output[$itemId]['items'] ?? [];
 	}
 
 	/**
@@ -134,7 +153,7 @@ class AirtableClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemIdExploded = \explode('---', $itemId);
+		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
 
 		$body = [
 			'fields' => $this->prepareParams($params),
@@ -151,7 +170,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -166,11 +185,11 @@ class AirtableClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body)
 		);
@@ -237,7 +256,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -271,7 +290,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -299,38 +318,39 @@ class AirtableClient implements ClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		foreach ($params as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
+
+		foreach ($params as $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
 				continue;
 			}
 
-			switch ($param['internalType']) {
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
+
+			switch ($param['internalType'] ?? '') {
 				case 'singleCheckbox':
-					$value = \filter_var($param['value'], \FILTER_VALIDATE_BOOLEAN);
+					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
 					break;
 				case 'number':
-					if ($param['value']) {
-						$value = \filter_var($param['value'], \FILTER_VALIDATE_FLOAT);
-					} else {
-						$value = 0;
-					}
+					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
 					break;
 				case 'multiCheckbox':
-					if ($param['value']) {
-						$value = \explode(', ', $param['value']);
-					} else {
-						$value = [];
-					}
+					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
 					break;
 				default:
-					$value = $param['value'];
+					$value = $value;
 					break;
 			}
 
-			$output[$key] = $value;
+			$output[$name] = $value;
 		}
 
 		return $output;

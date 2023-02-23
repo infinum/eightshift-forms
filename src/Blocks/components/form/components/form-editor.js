@@ -18,6 +18,7 @@ export const FormEditor = (attributes) => {
 
 	const formClass = classnames([
 		selector(componentClass, componentClass),
+		selector(componentClass, componentClass, 'editor'),
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 	]);

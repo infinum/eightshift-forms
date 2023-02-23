@@ -13,16 +13,15 @@ $unique = Components::getUnique();
 
 $checkboxLabel = $attributes['checkboxCheckboxLabel'] ?? '';
 $checkboxName = $attributes['checkboxCheckboxName'] ?? '';
-$checkboxId = $attributes['checkboxCheckboxId'] ?? '';
 $checkboxValue = $attributes['checkboxCheckboxValue'] ?? '';
 $props = [];
 
-if (empty($checkboxName)) {
-	$props['checkboxName'] = $checkboxId;
-}
-
-if (empty($checkboxValue)) {
-	$props['checkboxValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $checkboxLabel);
+if (!$checkboxValue) {
+	if ($checkboxLabel) {
+		$props['checkboxValue'] = apply_filters(Blocks::BLOCKS_STRING_TO_VALUE_FILTER_NAME, $checkboxLabel);
+	} else {
+		$props['checkboxValue'] = 'true';
+	}
 }
 
 echo Components::render(

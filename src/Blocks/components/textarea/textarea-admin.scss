@@ -1,19 +1,12 @@
-// stylelint-disable declaration-no-important
-
 @import './textarea-style.scss';
 
-.es-textarea {
-	padding: 10px !important;
-	border-color: var(--global-colors-es-chalice) !important;
-	border-radius: 3px !important;
-
-	&:focus {
-		outline: none !important;
-		box-shadow: none !important;
-		border-color: var(--global-colors-es-matisse) !important;
-	}
-
+textarea.es-textarea {
 	&--monospace {
 		font-family: monospace;
+	}
+
+	&--limit-height {
+		min-height: 500px;
+		max-height: 500px;
 	}
 }

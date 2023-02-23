@@ -1,9 +1,10 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "checkbox",
 	"title": "Checkbox",
 	"componentClass": "es-checkbox",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
-	"component": {
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
+	"components": {
 		"error": "error"
 	},
 	"example": {
@@ -18,9 +19,6 @@
 		}
 	},
 	"attributes": {
-		"checkboxId": {
-			"type": "string"
-		},
 		"checkboxLabel": {
 			"type": "string"
 		},
@@ -65,7 +63,7 @@
 			"default": false
 		},
 		"checkboxAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"checkboxAsToggle": {
 			"type": "boolean",
@@ -73,6 +71,9 @@
 		},
 		"checkboxAsToggleSize": {
 			"type": "string"
+		},
+		"checkboxDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

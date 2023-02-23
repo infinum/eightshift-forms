@@ -31,4 +31,13 @@ interface LabelsInterface
 	 * @return string
 	 */
 	public function getLabel(string $key, string $formId = ''): string;
+
+	/**
+	 * Output all validation labels from cache for fater validation.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getValidationLabelsOutput(string $formId = ''): array;
 }

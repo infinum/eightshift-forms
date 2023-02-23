@@ -1,0 +1,16 @@
+@import './form-style.scss';
+
+.es-form {
+	$this: &;
+
+	@include form-styles;
+	@include form-width-limit-styles;
+
+	&__fields {
+		@include form-fields-styles;
+
+		> .es-field {
+			@include form-fields-children-styles;
+		}
+	}
+}

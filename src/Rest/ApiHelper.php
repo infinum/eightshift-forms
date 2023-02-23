@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -40,19 +41,19 @@ trait ApiHelper
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
-	 * @param string $listId List Id used for API (questions, form id, list id, item id).
+	 * @param string $itemId List Id used for API (questions, form id, list id, item id).
 	 * @param string $formId Internal form ID.
 	 * @param boolean $isCurl Used for some changed if native cURL is used.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApiReponseDetails(
+	public function getIntegrationApiReponseDetails(
 		string $integration,
 		$response,
 		string $url,
 		array $params = [],
 		array $files = [],
-		string $listId = '',
+		string $itemId = '',
 		string $formId = '',
 		bool $isCurl = false
 	): array {
@@ -64,7 +65,11 @@ trait ApiHelper
 				$body = $response;
 			} else {
 				$code = $response['response']['code'] ?? 200;
-				$body = \json_decode($response['body'] ?? '', true) ?? [];
+				$body = $response['body'] ?? '';
+
+				if (Components::isJson($body)) {
+					$body = \json_decode($body, true) ?? [];
+				}
 			}
 		} else {
 			// Mock response for WP_Error.
@@ -83,53 +88,169 @@ trait ApiHelper
 			'code' => $code,
 			'body' => $body,
 			'url' => $url,
-			'listId' => $listId,
+			'itemId' => $itemId,
 			'formId' => $formId,
 		];
 	}
 
 	/**
-	 * Return API error response array with logger.
+	 * Return Integration API error response array - in combination with getIntegrationApiReponseDetails response.
 	 *
-	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
-	 * @param string $msg Msg for the user.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getApiErrorOutput(array $details, string $msg): array
-	{
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-			Helper::logger($details);
-		}
-
-		return [
-			'status' => 'error',
-			'code' => $details['code'] ?? 400,
-			'message' => $msg,
-			'data' => $details,
-		];
-	}
-
-	/**
-	 * Return API success response array.
-	 *
-	 * @param array<string, mixed> $details Details provided by getApiReponseDetails method.
+	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param string $msg Message to output.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApiSuccessOutput(array $details, array $additional = []): array
+	public function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
 	{
+		return \array_merge(
+			[
+				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'message' => $msg,
+			],
+			$details,
+			$additional
+		);
+	}
 
+	/**
+	 * Return Integration API success response array - in combination with getIntegrationApiReponseDetails response.
+	 *
+	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getIntegrationApiSuccessOutput(array $details, array $additional = []): array
+	{
 		$integration = $details['integration'] ?? '';
 
 		return \array_merge(
 			[
-				'status' => 'success',
-				'code' => $details['code'] ?? 200,
+				'status' => AbstractBaseRoute::STATUS_SUCCESS,
 				'message' => "{$integration}Success",
 			],
+			$details,
 			$additional
+		);
+	}
+
+	/**
+	 * Return Integration API final response array depending on the status - in combination with getIntegrationApiReponseDetails response.
+	 *
+	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param string $msg Message to output.
+	 * @param array<int, string> $additional Additional array details to attach to the success output.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function getIntegrationApiOutput(array $details, string $msg, array $additional = []): array
+	{
+		$status = $details['status'] ?? AbstractBaseRoute::STATUS_ERROR;
+
+		$additionalOutput = [];
+		foreach ($additional as $value) {
+			if (isset($details[$value])) {
+				$additionalOutput[$value] = $details[$value];
+			}
+		}
+
+		if ($status === AbstractBaseRoute::STATUS_SUCCESS) {
+			return $this->getApiSuccessOutput(
+				$msg,
+				$additionalOutput
+			);
+		}
+
+		return $this->getApiErrorOutput(
+			$msg,
+			$additionalOutput
+		);
+	}
+
+	/**
+	 * Return API error response array with logger.
+	 *
+	 * @param string $msg Msg for the user.
+	 * @param array<string, mixed> $additional Additonal data to attach to response.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function getApiErrorOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractBaseRoute::STATUS_ERROR,
+			'code' => 400,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			Helper::logger($output);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return API success response array - Generic.
+	 *
+	 * @param string $msg Msg for the user.
+	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function getApiSuccessOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractBaseRoute::STATUS_SUCCESS,
+			'code' => 200,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return API warning response array - Generic.
+	 *
+	 * @param string $msg Msg for the user.
+	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function getApiWarningOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractBaseRoute::STATUS_WARNING,
+			'code' => 200,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return API error response array for missing permissions.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getApiPermissionsErrorOutput(): array
+	{
+		return $this->getApiErrorOutput(
+			\esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 		);
 	}
 }

@@ -8,14 +8,11 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$unique = Components::getUnique();
-
 $radiosName = $attributes['radiosRadiosName'] ?? '';
-$radiosId = $attributes['radiosRadiosId'] ?? '';
 $props = [];
 
 if (empty($radiosName)) {
-	$props['radiosName'] = $radiosId;
+	$props['radiosName'] = Components::getUnique();
 }
 
 $props['radiosContent'] = $innerBlockContent;

@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "custom-data",
 	"title": "Custom data",
 	"description" : "A field that displays custom data from a data source",

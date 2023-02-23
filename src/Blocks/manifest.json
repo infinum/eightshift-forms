@@ -26,6 +26,7 @@
 			"desktop": 1920,
 			"large": 1921
 		},
+		
 		"colors": [
 			{
 				"name": "French",
@@ -88,9 +89,19 @@
 				"color": "#797878"
 			},
 			{
+				"name": "Ronchi",
+				"slug": "es-ronchi",
+				"color": "#E8B14E"
+			},
+			{
 				"name": "Pome",
 				"slug": "es-pome",
 				"color": "#E84E4E"
+			},
+			{
+				"name": "Pome 10%",
+				"slug": "es-pome-10",
+				"color": "#E84E4E1A"
 			},
 			{
 				"name": "Reef",

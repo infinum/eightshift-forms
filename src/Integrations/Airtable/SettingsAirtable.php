@@ -12,16 +12,14 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsAirtable class.
  */
-class SettingsAirtable implements SettingInterface, ServiceInterface
+class SettingsAirtable implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -29,19 +27,9 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_airtable';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_airtable';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_airtable';
 
 	/**
 	 * Settings key.
@@ -59,40 +47,6 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 	public const SETTINGS_AIRTABLE_API_KEY_KEY = 'airtable-api-key';
 
 	/**
-	 * List ID Key.
-	 */
-	public const SETTINGS_AIRTABLE_LIST_KEY = 'airtable-list';
-
-	/**
-	 * Field ID Key.
-	 */
-	public const SETTINGS_AIRTABLE_FIELD_KEY = 'airtable-field';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY = 'airtable-integration-fields';
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY = 'airtable-conditional-tags';
-
-	/**
-	 * Instance variable for airtable data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $airtableClient;
-
-	/**
-	 * Instance variable for Airtable form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $airtable;
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -102,17 +56,10 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
-	 * @param MapperInterface $airtable Inject Airtable which holds Airtable form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $airtableClient,
-		MapperInterface $airtable,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->airtableClient = $airtableClient;
-		$this->airtable = $airtable;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 	/**
@@ -122,32 +69,7 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(string $formId): bool
-	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$list = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-		$field = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-		if (empty($list) || empty($field)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -165,85 +87,6 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		$type = self::SETTINGS_TYPE_KEY;
-
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
-		}
-
-		// Get forms from the API.
-		$items = $this->airtableClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_AIRTABLE_LIST_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the form id populate additional config.
-		if ($selectedFormId) {
-			$item = $this->airtableClient->getItem($selectedFormId);
-
-			$formFields = $this->airtable->getFormFields($formId);
-
-			if ($item) {
-				$selectedFormFieldId = $this->getSettingsValue(self::SETTINGS_AIRTABLE_FIELD_KEY, $formId);
-
-				// Output additonal tabs for config.
-				$output = [
-					...$this->getOutputFormSelectionAdditional(
-						$formId,
-						$item['items'],
-						$selectedFormFieldId,
-						self::SETTINGS_AIRTABLE_FIELD_KEY
-					),
-					$formFields ? [
-						'component' => 'tabs',
-						'tabsContent' => [
-							$this->getOutputIntegrationFields(
-								$formId,
-								$formFields,
-								$type,
-								self::SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY,
-							),
-							$this->getOutputConditionalTags(
-								$formId,
-								$formFields,
-								self::SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY
-							),
-						],
-					] : [],
-				];
-			}
-		}
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_AIRTABLE_LIST_KEY
-			),
-			...$output,
-		];
 	}
 
 	/**
@@ -272,7 +115,6 @@ class SettingsAirtable implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_AIRTABLE_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_AIRTABLE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',

@@ -28,13 +28,6 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	use SettingsHelper;
 
 	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_greenhouse_mapper_filter';
-
-	/**
 	 * Filter form fields.
 	 *
 	 * @var string
@@ -66,76 +59,54 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = (string) $formId;
-
-		// Get form type.
-		$type = SettingsGreenhouse::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = $formAdditionalProps['ssr'] ?? false;
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		// Return form to the frontend.
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
-	}
-
-	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
-		// Get Item Id.
-		$itemId = $this->getSettingsValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_JOB_ID_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
+		$output = [
+			'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'innerId' => $innerId,
+			'fields' => [],
+		];
+
+		// Get fields.
+		$item = $this->greenhouseClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		// Get Form.
-		$fields = $this->greenhouseClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
-	 * Map Greenhouse fields to our components.
+	 * Map fields to our components.
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -143,15 +114,15 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			return $output;
 		}
 
-		foreach ($data as $item) {
-			if (empty($item)) {
+		foreach ($data['fields'] as $item) {
+			if (!$item) {
 				continue;
 			}
 
-			$fields = $item['fields'] ?? '';
+			$fields = $item['fields'] ?? [];
 			$label = $item['label'] ?? '';
 			$description = $item['description'] ?? '';
-			$required = $item['required'] ?? false;
+			$isRequired = isset($item['required']) ? (bool) $item['required'] : false;
 
 			foreach ($fields as $field) {
 				$type = $field['type'] ?? '';
@@ -161,19 +132,51 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						$output[] = [
-							'component' => 'input',
-							'inputName' => $name,
-							'inputTracking' => $name,
-							'inputFieldLabel' => $label,
-							'inputId' => $name,
-							'inputMeta' => $description,
-							'inputType' => 'text',
-							'inputIsRequired' => $required,
-							'inputIsEmail' => $name === 'email' ? 'true' : '',
-							'inputIsNumber' => $name === 'phone' ? 'true' : '',
-							'blockSsr' => $ssr,
-						];
+						switch ($name) {
+							case 'phone':
+								$output[] = [
+									'component' => 'phone',
+									'phoneName' => $name,
+									'phoneTracking' => $name,
+									'phoneFieldLabel' => $label,
+									'phoneMeta' => $description,
+									'phoneIsRequired' => (bool) $isRequired,
+									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+										$isRequired ? 'phoneIsRequired' : '',
+									]),
+								];
+								break;
+							case 'email':
+								$output[] = [
+									'component' => 'input',
+									'inputName' => $name,
+									'inputTracking' => $name,
+									'inputFieldLabel' => $label,
+									'inputMeta' => $description,
+									'inputType' => 'email',
+									'inputIsRequired' => (bool) $isRequired,
+									'inputIsEmail' => true,
+									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+										$isRequired ? 'inputIsRequired' : '',
+										'inputType',
+									]),
+								];
+								break;
+							default:
+								$output[] = [
+									'component' => 'input',
+									'inputName' => $name,
+									'inputTracking' => $name,
+									'inputFieldLabel' => $label,
+									'inputMeta' => $description,
+									'inputType' => 'text',
+									'inputIsRequired' => (bool) $isRequired,
+									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+										$isRequired ? 'inputIsRequired' : '',
+									]),
+								];
+								break;
+						}
 						break;
 					case 'input_file':
 						$maxFileSize = $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
@@ -183,25 +186,37 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileName' => $name,
 							'fileTracking' => $name,
 							'fileFieldLabel' => $label,
-							'fileId' => $name,
 							'fileMeta' => $description,
-							'fileIsRequired' => $required,
+							'fileIsRequired' => (bool) $isRequired,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
-							'fileMinSize' => 1,
-							'fileMaxSize' => (int) $maxFileSize * 1000,
-							'blockSsr' => $ssr,
+							'fileMinSize' => '1',
+							'fileMaxSize' => \strval($maxFileSize * 1000),
+							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
+								$isRequired ? 'fileIsRequired' : '',
+								'fileAccept',
+								'fileMinSize',
+								'fileMaxSize',
+							]),
 						];
 						break;
 					case 'textarea':
+						$disableResume = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableCoverLetter = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+
+						if ($disableResume || $disableCoverLetter) {
+							break;
+						}
+
 						$output[] = [
 							'component' => 'textarea',
 							'textareaName' => $name,
 							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
-							'textareaId' => $name,
 							'textareaMeta' => $description,
-							'textareaIsRequired' => $required,
-							'blockSsr' => $ssr,
+							'textareaIsRequired' => (bool) $isRequired,
+							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+								$isRequired ? 'textareaIsRequired' : '',
+							]),
 						];
 						break;
 					case 'multi_value_single_select':
@@ -209,40 +224,48 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							$output[] = [
 								'component' => 'checkboxes',
 								'checkboxesName' => $name,
-								'checkboxesId' => $name,
 								'checkboxesMeta' => $description,
-								'checkboxesIsRequired' => $required,
+								'checkboxesIsRequired' => (bool) $isRequired,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => $label,
-										'checkboxValue' => 1,
-										'checkboxUncheckedValue' => 0,
+										'checkboxValue' => 'true',
+										'checkboxUncheckedValue' => 'false',
 										'checkboxTracking' => $name,
+										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+											'checkboxValue',
+										], false),
 									],
 								],
-								'blockSsr' => $ssr,
+								'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+									$isRequired ? 'checkboxesIsRequired' : '',
+								]),
 							];
 						} else {
 							$output[] = [
 								'component' => 'select',
 								'selectName' => $name,
 								'selectTracking' => $name,
-								'selectId' => $name,
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
-								'selectIsRequired' => $required,
-								'selectOptions' => \array_map(
-									static function ($selectOption) {
+								'selectIsRequired' => (bool) $isRequired,
+								'selectContent' => \array_map(
+									function ($selectOption) {
 										return [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['label'],
 											'selectOptionValue' => $selectOption['value'],
+											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+												'selectOptionValue',
+											], false),
 										];
 									},
 									$values
 								),
-								'blockSsr' => $ssr,
+								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+									$isRequired ? 'selectIsRequired' : '',
+								]),
 							];
 						}
 						break;
@@ -250,41 +273,53 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			}
 		}
 
-		if (!$ssr) {
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => 'longitude',
-				'inputName' => 'longitude',
-			];
-			$output[] = [
-				'component' => 'input',
-				'inputType' => 'hidden',
-				'inputId' => 'latitude',
-				'inputName' => 'latitude',
-			];
-		}
+		$output[] = [
+			'component' => 'input',
+			'inputFieldHidden' => true,
+			'inputFieldLabel' => 'mapped_url_token',
+			'inputName' => 'mapped_url_token',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldHidden',
+			]),
+		];
+		$output[] = [
+			'component' => 'input',
+			'inputFieldHidden' => true,
+			'inputFieldLabel' => 'longitude',
+			'inputName' => 'longitude',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldHidden',
+			]),
+		];
+		$output[] = [
+			'component' => 'input',
+			'inputFieldHidden' => true,
+			'inputFieldLabel' => 'latitude',
+			'inputName' => 'latitude',
+			'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+				'inputType',
+				'inputFieldLabel',
+				'inputFieldHidden',
+			]),
+		];
 
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.
-		$dataFilterName = Filters::getIntegrationFilterName(SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data');
-		if (\has_filter($dataFilterName) && !\is_admin()) {
-			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
+		$filterName = Filters::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
+		if (\has_filter($filterName) && !\is_admin()) {
+			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsGreenhouse::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsGreenhouse::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

@@ -9,7 +9,15 @@
 
 Eightshift forms plugins is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.
 
-## :rocket: Quick start
+## ⚠️ Requirements
+To get started, you'll need:
+
+* [Node LTS](https://nodejs.org/)
+* [Composer](https://getcomposer.org/)
+* [git](https://git-scm.com/)
+* [WP-CLI](https://wp-cli.org/)
+
+## 🏁 Quick start
 
 Clone the project + build to get started:
 
@@ -18,15 +26,20 @@ Clone the project + build to get started:
 3. `npm install`
 4. `npm start`
 
-**For more details about this and all other eightshift-boilerplate based plugins follow [this link](https://eightshift.com).**
+## 📚 Documentation
 
-This is required for the GitHub action which builds assets on new releases and adds them to the release as a zip file (so the plugin can be installed without manually building it)
-## :mailbox: Who do I talk to?
+Eightshift forms documentation is located [here](docs/README.md).
 
-If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on github and we will do our best to give you a timely answer.
+Eightshift forms plugin is created on the [Eightshift development kit](https://eightshift.com).
 
-Eightshift WordPress Boilerplate Plugin is maintained and sponsored by [Infinum](https://infinum.co).
+## 🛟 Getting help
 
-## :scroll: License
+If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on GitHub. 
 
-WordPress Boilerplate Plugin is Copyright ©2022 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+When submitting issues or otherwise participating in development, please follow our [code of conduct](https://github.com/infinum/eightshift-forms/blob/develop/CODE_OF_CONDUCT.md), and fill out the issue template properly. We'll do our best to answer your issues as quickly as humanly possible: following these steps helps us out a lot in doing that.
+
+## 👩‍💻 Maintainers 🧑‍💻 
+Eightshift Forms is maintained and sponsored by [Infinum](https://infinum.com).
+
+## ⚖️ License
+Eightshift Forms &copy;2022 [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.

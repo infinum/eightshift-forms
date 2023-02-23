@@ -1,13 +1,13 @@
 .es-global-msg {
 	position: fixed;
-	right: 2rem;
+	right: 0;
 	bottom: 2rem;
 	z-index: 1;
+	max-width: 300px;
 
 	padding: 0.75rem 1rem;
 
 	opacity: 0;
-	border-radius: 6px;
 	color: var(--global-colors-es-white);
 	background-color: var(--global-colors-es-reef);
 	box-shadow: 0 0.25rem 0.75rem rgb(20 20 20 / 0.2);
@@ -22,6 +22,10 @@
 
 	&[data-status='error'] {
 		background-color: var(--global-colors-es-pome);
+	}
+
+	&[data-status='warning'] {
+		background-color: var(--global-colors-es-ronchi);
 	}
 
 	&.is-active {

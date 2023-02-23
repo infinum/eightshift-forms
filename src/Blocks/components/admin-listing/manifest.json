@@ -1,9 +1,11 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "admin-listing",
 	"title": "Admin Listing",
 	"componentClass": "es-admin-listing",
 	"componentJsFilterClass": "js-es-admin-listing-filter",
 	"componentJsItemClass": "js-es-admin-listing-item",
+	"componentJsSyncClass": "js-es-admin-listing-sync",
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"

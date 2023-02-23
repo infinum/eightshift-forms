@@ -1,21 +1,18 @@
-// stylelint-disable declaration-no-important
+select.es-select,
+select.es-select__select {
+	@include input-styles;
+}
 
 .es-select {
-	height: var(--global-es-input-height) !important;
-	line-height: 1 !important;
-	border: 1px solid var(--global-colors-es-chalice) !important;
-	padding: 10px !important;
-	max-width: initial !important;
-	min-height: initial !important;
-	border-radius: 0 !important;
-}
+	padding: var(--es-input-spacing);
+	border: 1px solid var(--es-input-border-color);
 
-div.es-select {
-	height: auto !important;
-}
+	&--disabled {
+		@include input-styles-disabled;
+	}
 
-.es-select-is-custom {
-	select {
-		display: block;
+	&__placeholder {
+		padding-bottom: 15px;
+		opacity: 0.5;
 	}
 }

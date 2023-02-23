@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "submit",
 	"title": "Submit",
 	"componentClass": "es-submit",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"submitValue": "Value",
@@ -17,7 +18,7 @@
 		"submitUniqueId": {
 			"type": "string"
 		},
-		"submitId": {
+		"submitName": {
 			"type": "string"
 		},
 		"submitValue": {
@@ -36,7 +37,7 @@
 			"type": "string"
 		},
 		"submitAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"submitFieldHideLabel": {
 			"type": "boolean",
@@ -55,6 +56,9 @@
 		},
 		"submitIcon": {
 			"type": "string"
+		},
+		"submitDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"icons": {

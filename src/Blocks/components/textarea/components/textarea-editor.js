@@ -1,53 +1,34 @@
-/* global esFormsLocalization */
-
-import React, { useMemo, useEffect } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
 	props,
-	getAttrKey,
-	getUnique
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentClass,
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 		additionalClass,
 	} = attributes;
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
+	const textareaName = checkAttr('textareaName', attributes, manifest);
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
 	]);
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('textareaId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.textareaBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.textareaBlockAdditionalContent;
-	}
 
 	const textarea = (
 		<>
@@ -59,7 +40,13 @@ export const TextareaEditor = (attributes) => {
 				{textareaValue}
 			</textarea>
 
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+			<MissingName value={textareaName} isEditor={true} />
+
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
+			/>
+
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

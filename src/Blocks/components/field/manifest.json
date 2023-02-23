@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "field",
 	"title": "Field",
 	"componentClass": "es-field",
-	"componentJsClass": "js-es-block-form-field",
+	"componentJsClass": "js-es-block-field",
 	"example": {
 		"attributes": {
 			"fieldContent": "Content",
@@ -72,7 +73,8 @@
 			"type": "integer"
 		},
 		"fieldWidthTablet": {
-			"type": "integer"
+			"type": "integer",
+			"default": 12
 		},
 		"fieldWidthMobile": {
 			"type": "integer"
@@ -85,18 +87,21 @@
 			"type": "boolean",
 			"default": false
 		},
-		"fieldOrder": {
-			"type": "integer"
-		},
 		"fieldStyle": {
 			"type": "string"
 		},
 		"fieldAttrs": {
-			"type": "array"
+			"type": "object"
 		},
 		"fieldSkip": {
 			"type": "boolean",
 			"default": false
+		},
+		"fieldConditionalTags": {
+			"type": "string"
+		},
+		"fieldDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"responsiveAttributes": {
@@ -112,15 +117,7 @@
 			{
 				"inverse": true,
 				"variable": {
-					"field-width": "calc((%value%/12)*100%)"
-				}
-			}
-		],
-		"fieldOrder": [
-			{
-				"inverse": true,
-				"variable": {
-					"field-order": "%value%"
+					"es-field-width": "calc((%value%/12)*100%)"
 				}
 			}
 		]

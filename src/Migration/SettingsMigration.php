@@ -12,13 +12,13 @@ namespace EightshiftForms\Migration;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMigration class.
  */
-class SettingsMigration implements SettingInterface, ServiceInterface
+class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -41,6 +41,11 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 	public const VERSION_2_3 = '2-3';
 
 	/**
+	 * Version 3-4 key.
+	 */
+	public const VERSION_3_4 = '3-4';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -48,18 +53,6 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**
@@ -81,7 +74,7 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutItems' => [
+				'layoutContent' => [
 					[
 						'component' => 'card',
 						'cardTitle' => \__('Version 2 to 3'),
@@ -97,8 +90,30 @@ class SettingsMigration implements SettingInterface, ServiceInterface
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
 						],
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 3 to 4'),
+						'cardSubTitle' => \__('In this version we have changed everything, the way we configure integration forms, all integration settings and much more.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => self::VERSION_3_4,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
 					]
 				]
+			],
+			[
+				'component' => 'textarea',
+				'textareaFieldLabel' => \__('Migration output log', 'eightshift-forms'),
+				'textareaIsReadOnly' => true,
+				'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
 			],
 		];
 	}

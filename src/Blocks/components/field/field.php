@@ -6,7 +6,9 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -25,24 +27,28 @@ if ($fieldSkip) {
 	return;
 }
 
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockJsClass = $attributes['blockJsClass'] ?? '';
+$blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Update media breakpoints from the filter.
-$customMediaBreakpoints = apply_filters(Filters::getBlocksFilterName('breakpoints'), []);
-if (
-	has_filter(Filters::getBlocksFilterName('breakpoints')) &&
-	is_array($customMediaBreakpoints) &&
-	isset($customMediaBreakpoints['mobile']) &&
-	isset($customMediaBreakpoints['tablet']) &&
-	isset($customMediaBreakpoints['desktop']) &&
-	isset($customMediaBreakpoints['large'])
-) {
-	Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+$filterName = Filters::getFilterName(['blocks', 'mediaBreakpoints']);
+
+if (has_filter($filterName)) {
+	$customMediaBreakpoints = apply_filters($filterName, []);
+
+	if (
+		is_array($customMediaBreakpoints) &&
+		isset($customMediaBreakpoints['mobile']) &&
+		isset($customMediaBreakpoints['tablet']) &&
+		isset($customMediaBreakpoints['desktop']) &&
+		isset($customMediaBreakpoints['large'])
+	) {
+			Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+	}
 }
 
 $unique = Components::getUnique();
@@ -63,6 +69,7 @@ $fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
 $fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manifest);
+$fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -88,6 +95,18 @@ if ($fieldType === 'fieldset') {
 	$labelTag = 'legend';
 }
 
+if ($fieldConditionalTags) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $fieldConditionalTags;
+}
+
+if ($fieldName) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $fieldName;
+}
+
+if ($blockName) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
+}
+
 $fieldAttrsOutput = '';
 if ($fieldAttrs) {
 	foreach ($fieldAttrs as $key => $value) {
@@ -96,12 +115,7 @@ if ($fieldAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('field', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
-
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
 
 <<?php echo esc_attr($fieldTag); ?>

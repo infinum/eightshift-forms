@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import { Utils } from "../assets/utilities";
 
 export class Cache {
@@ -34,6 +36,7 @@ export class Cache {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
+				'X-WP-Nonce': esFormsLocalization.nonce,
 			},
 			body: formData,
 			credentials: 'same-origin',

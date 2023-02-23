@@ -1,0 +1,71 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "phone",
+	"title": "Phone",
+	"componentClass": "es-phone",
+	"example": {
+		"attributes": {
+			"phoneName": "Name",
+			"phoneValue": "Value",
+			"phonePlaceholder": "Placeholder",
+			"phoneIsDisabled": false,
+			"phoneIsReadOnly": false,
+			"phoneIsRequired": false
+		}
+	},
+	"components": {
+		"field": "field",
+		"conditionalTags": "conditionalTags"
+	},
+	"attributes": {
+		"phoneName": {
+			"type": "string"
+		},
+		"phoneValue": {
+			"type": "string"
+		},
+		"phonePlaceholder": {
+			"type": "string"
+		},
+		"phoneIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"phoneTracking": {
+			"type": "string"
+		},
+		"phoneValidationPattern": {
+			"type": "string"
+		},
+		"phoneMinLength": {
+			"type": "integer"
+		},
+		"phoneMaxLength": {
+			"type": "integer"
+		},
+		"phoneMeta": {
+			"type": "string"
+		},
+		"phoneFormPostId": {
+			"type": "string"
+		},
+		"phoneAttrs": {
+			"type": "object"
+		},
+		"phoneDisabledOptions": {
+			"type": "array"
+		},
+		"phoneUseSearch": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

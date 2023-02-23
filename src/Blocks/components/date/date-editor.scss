@@ -1,0 +1,5 @@
+@import './date-style.scss';
+
+input.es-date {
+	@include input-styles-disabled;
+}

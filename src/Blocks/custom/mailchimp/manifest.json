@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "mailchimp",
 	"title": "Mailchimp Form",
 	"description" : "A MailChimp subscription form",
@@ -11,13 +12,16 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"mailchimpFormPostId": {
+		"mailchimpIntegrationId": {
 			"type": "string"
 		},
-		"mailchimpFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"mailchimpFormPostId": {
+			"type": "string"
 		},
 		"mailchimpFormDataTypeSelector": {
 			"type": "string"

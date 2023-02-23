@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Hooks;
 
+use EightshiftForms\Helpers\Helper;
+
 /**
  * The Variables class, used for defining available Variables.
  */
@@ -96,6 +98,26 @@ class Variables
 	}
 
 	/**
+	 * Get Google reCaptcha api key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaApiKey()
+	{
+		return \defined('ES_GOOGLE_RECAPTCHA_API_KEY') ? \ES_GOOGLE_RECAPTCHA_API_KEY : '';
+	}
+
+	/**
+	 * Get Google reCaptcha project id key.
+	 *
+	 * @return string
+	 */
+	public static function getGoogleReCaptchaProjectIdKey()
+	{
+		return \defined('ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY') ? \ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY : '';
+	}
+
+	/**
 	 * Get forms geolocation use feature. Default: false.
 	 *
 	 * @return bool
@@ -142,7 +164,7 @@ class Variables
 	 */
 	public static function getGeolocationPharPath(): string
 	{
-		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : Helper::getDataManifestPath('geolocation', 'geoip.phar');
 	}
 
 	/**
@@ -152,7 +174,7 @@ class Variables
 	 */
 	public static function getGeolocationDbPath(): string
 	{
-		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
 	}
 
 	/**
@@ -203,5 +225,45 @@ class Variables
 	public static function getApiKeyAirtable(): string
 	{
 		return \defined('ES_API_KEY_AIRTABLE') ? \ES_API_KEY_AIRTABLE : '';
+	}
+
+	/**
+	 * Get API URL for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiUrlMoments(): string
+	{
+		return \defined('ES_API_URL_MOMENTS') ? \ES_API_URL_MOMENTS : '';
+	}
+
+	/**
+	 * Get API Key for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyMoments(): string
+	{
+		return \defined('ES_API_KEY_MOMENTS') ? \ES_API_KEY_MOMENTS : '';
+	}
+
+	/**
+	 * Get API username for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiUsernameMoments(): string
+	{
+		return \defined('ES_API_USERNAME_MOMENTS') ? \ES_API_USERNAME_MOMENTS : '';
+	}
+
+	/**
+	 * Get API password for Moments.
+	 *
+	 * @return string
+	 */
+	public static function getApiPasswordMoments(): string
+	{
+		return \defined('ES_API_PASSWORD_MOMENTS') ? \ES_API_PASSWORD_MOMENTS : '';
 	}
 }

@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "select-option",
 	"title": "Select Option",
 	"componentClass": "es-select-option",
@@ -17,6 +18,10 @@
 		"selectOptionValue": {
 			"type": "string"
 		},
+		"selectOptionAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"selectOptionIsSelected": {
 			"type": "boolean",
 			"default": false
@@ -24,6 +29,12 @@
 		"selectOptionIsDisabled": {
 			"type": "boolean",
 			"default": false
+		},
+		"selectOptionDisabledOptions": {
+			"type": "array"
+		},
+		"selectOptionAttrs": {
+			"type": "object"
 		}
 	}
 }

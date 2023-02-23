@@ -15,25 +15,18 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingInterface, ServiceInterface
+class SettingsValidation implements SettingInterface, SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Custom validation patterns.
-	 */
-	public const VALIDATION_PATTERNS = [
-		'MM/DD' => '^(1[0-2]|0[1-9])\/(3[01]|[12][0-9]|0[1-9])$',
-		'DD/MM' => '^(3[01]|[12][0-9]|0[1-9])\/(1[0-2]|0[1-9])$'
-	];
 
 	/**
 	 * Filter settings key.
@@ -54,6 +47,11 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 	 * Validation Patterns key.
 	 */
 	public const SETTINGS_VALIDATION_PATTERNS_KEY = 'validation-patterns';
+
+	/**
+	 * Validation use email tld key.
+	 */
+	public const SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY = 'validation-use-email-tld';
 
 	/**
 	 * Instance variable for labels data.
@@ -100,23 +98,13 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			],
 		];
 
-		$local = \array_flip(Labels::ALL_LOCAL_LABELS);
+		$formType = Helper::getFormTypeById($formId);
 
-		// List all labels for settings override.
-		foreach ($this->labels->getLabels() as $key => $label) {
-			if (!isset($local[$key])) {
-				continue;
-			}
-
-			$output[] = [
-				'component' => 'input',
-				'inputName' => $this->getSettingsName($key),
-				'inputId' => $this->getSettingsName($key),
-				'inputFieldLabel' => \ucfirst($key),
-				'inputPlaceholder' => $label,
-				'inputValue' => $this->getSettingsValue($key, $formId),
-			];
+		if (!$formType) {
+			return [];
 		}
+
+		$key = "{$formType}Success";
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -125,8 +113,16 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Success', 'eightshift-forms'),
-						'tabContent' => $output,
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName($key),
+								'inputFieldLabel' => \ucfirst($key),
+								'inputPlaceholder' => $this->labels->getLabels()[$key],
+								'inputValue' => $this->getSettingsValue($key, $formId),
+							],
+						],
 					],
 				],
 			],
@@ -141,8 +137,8 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$validationPatterns = '';
-		foreach (self::VALIDATION_PATTERNS as $key => $value) {
-			$validationPatterns .= "<li><code>{$key} : {$value}</code></li>";
+		foreach (ValidationPatterns::VALIDATION_PATTERNS as $pattern) {
+			$validationPatterns .= "<li><code>{$pattern['label']} : {$pattern['value']} : {$pattern['output']}</code></li>";
 		}
 
 		$labels = \array_flip(Labels::ALL_LOCAL_LABELS);
@@ -162,7 +158,6 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 			$messagesOutput[] = [
 				'component' => 'input',
 				'inputName' => $this->getSettingsName($key),
-				'inputId' => $this->getSettingsName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getOptionValue($key),
@@ -180,20 +175,21 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaId' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
 									Custom validation patterns that are defined in this field can be selected inside the Form editor.<br />
 									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
 									One validation pattern should be provided per line, in the following format:<br />
-									<code>pattern-name : pattern </code><br /><br />
+									<code>pattern-name : pattern : output </code><br /><br />
 									Here are some examples:
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => $this->getOptionValue(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
 						],
 					],
@@ -201,6 +197,27 @@ class SettingsValidation implements SettingInterface, ServiceInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
 						'tabContent' => $messagesOutput,
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('General', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+						],
 					],
 				]
 			],

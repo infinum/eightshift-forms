@@ -11,14 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\General\General;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Validation\Validator;
 
 /**
  * GreenhouseClient integration class.
@@ -48,9 +50,21 @@ class GreenhouseClient implements ClientInterface
 	public const CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME = 'es_greenhouse_items_cache';
 
 	/**
-	 * Transient cache name for item.
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
 	 */
-	public const CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME = 'es_greenhouse_item_cache';
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -64,22 +78,23 @@ class GreenhouseClient implements ClientInterface
 		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
-			$jobs = $this->getGreenhouseJobs();
+		if (!$output) {
+			$items = $this->getGreenhouseItems();
 
-			if ($jobs) {
-				foreach ($jobs as $job) {
-					$jobId = $job['id'] ?? '';
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
 
-					if (!$jobId) {
+					if (!$id) {
 						continue;
 					}
 
-					$output[$jobId] = [
-						'id' => (string) $jobId,
-						'title' => $job['title'] ?? '',
-						'locations' => \explode(', ', $job['location']['name']),
-						'updatedAt' => $job['updated_at'],
+					$output[$id] = [
+						'id' => (string) $id,
+						'title' => $item['title'] ?? '',
+						'locations' => \explode(', ', $item['location']['name']),
+						'fields' => [],
+						'updatedAt' => $item['updated_at'],
 					];
 				}
 
@@ -88,7 +103,7 @@ class GreenhouseClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -108,18 +123,18 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
+
+		$item = $output[$itemId]['fields'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$job = $this->getGreenhouseJob($itemId);
+		if (!$output || !$item) {
+			$items = $this->getGreenhouseItem($itemId)['questions'] ?? [];
 
-			$questions = $job['questions'] ?? [];
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
-			if ($itemId && $questions) {
-				$output[$itemId] = $questions;
-
-				\set_transient(self::CACHE_GREENHOUSE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -146,7 +161,7 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles
 		);
 
-		$filterName = Filters::getGeneralFilterName('httpRequestTimeout');
+		$filterName = Filters::getFilterName(['general', 'httpRequestTimeout']);
 
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";
 
@@ -179,7 +194,7 @@ class GreenhouseClient implements ClientInterface
 		}
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -195,13 +210,16 @@ class GreenhouseClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -219,39 +237,47 @@ class GreenhouseClient implements ClientInterface
 		switch ($msg) {
 			case 'Bad Request':
 				return 'greenhouseBadRequestError';
-			case 'Uploaded resume has an unsupported file type.':
-				return 'greenhouseUnsupportedFileTypeError';
-			case 'Invalid attributes: first_name':
-				return 'greenhouseInvalidFirstNameError';
-			case 'Invalid attributes: last_name':
-				return 'greenhouseInvalidLastNameError';
-			case 'Invalid attributes: email':
-				return 'greenhouseInvalidEmailError';
-			case 'Invalid attributes: first_name,last_name,email':
-				return 'greenhouseInvalidFirstNameLastNameEmailError';
-			case 'Invalid attributes: first_name,last_name':
-				return 'greenhouseInvalidFirstNameLastNameError';
-			case 'Invalid attributes: first_name,email':
-				return 'greenhouseInvalidFirstNameEmailError';
-			case 'Invalid attributes: last_name,email':
-				return 'greenhouseInvalidLastNameEmailError';
-			case 'Invalid attributes: first_name,phone':
-				return 'greenhouseInvalidFirstNamePhoneError';
-			case 'Invalid attributes: last_name,phone':
-				return 'greenhouseInvalidLastNamePhoneError';
-			case 'Invalid attributes: email,phone':
-				return 'greenhouseInvalidEmailPhoneError';
-			case 'Invalid attributes: first_name,last_name,email,phone':
-				return 'greenhouseInvalidFirstNameLastNameEmailPhoneError';
-			case 'Invalid attributes: first_name,last_name,phone':
-				return 'greenhouseInvalidFirstNameLastNamePhoneError';
-			case 'Invalid attributes: first_name,email,phone':
-				return 'greenhouseInvalidFirstNameEmailPhoneError';
-			case 'Invalid attributes: last_name,email,phone':
-				return 'greenhouseInvalidLastNameEmailPhoneError';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['error'] ?? '';
+		$output = [];
+
+		// Validate req fields.
+		\preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
+
+		if ($matchesReq) {
+			$key = $matchesReq[0][2] ?? '';
+			if ($key) {
+				$keys = \explode(',', $key);
+
+				foreach ($keys as $inner) {
+					$output[$inner] = 'validationRequired';
+				}
+			}
+		}
+
+		if (\strpos($msg, 'Uploaded resume has an unsupported file type.') !== false) {
+			$output['resume'] = 'validationGreenhouseAcceptMime';
+		}
+
+		if (\strpos($msg, 'Uploaded cover letter has an unsupported file type') !== false) {
+			$output['cover_letter'] = 'validationGreenhouseAcceptMime';
+		}
+
+		return $output;
 	}
 
 	/**
@@ -259,7 +285,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getGreenhouseJobs()
+	private function getGreenhouseItems()
 	{
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs";
 
@@ -271,7 +297,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -295,7 +321,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getGreenhouseJob(string $jobId)
+	private function getGreenhouseItem(string $jobId)
 	{
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$jobId}?questions=true";
 
@@ -307,7 +333,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -354,34 +380,13 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		$output = [];
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
-		foreach ($params as $key => $param) {
-			if (!isset($param['value'])) {
-				continue;
-			}
-
-			// Get gh_src from url and map it.
-			if ($key === AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage'] && isset($param['value']['gh_src'])) {
-				$output['mapped_url_token'] = $param['value']['gh_src'];
-				continue;
-			}
-
-			// Remove unecesery fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			if (empty($param['value'])) {
-				continue;
-			}
-
-			$output[$key] = $param['value'] ?? '';
-		}
-
-		return $output;
+		return Helper::prepareGenericParamsOutput($params);
 	}
 
 	/**

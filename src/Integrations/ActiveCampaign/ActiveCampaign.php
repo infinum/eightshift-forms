@@ -28,13 +28,6 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	use SettingsHelper;
 
 	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_active_campaign_mapper_filter';
-
-	/**
 	 * Filter form fields.
 	 *
 	 * @var string
@@ -79,63 +72,43 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
-
-		// Get form type.
-		$type = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
-	}
-
-	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
+		$output = [
+			'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'innerId' => $innerId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->activeCampaignClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->activeCampaignClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($fields, $formId, $ssr);
+		$fields = $this->getFields($item, $formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -143,11 +116,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using SSR.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -174,7 +146,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 			$name = $field['name'] ?? '';
 			$label = $field['label'] ?? '';
 			$header = $field['header'] ?? '';
-			$required = $field['isRequired'] ?? false;
+			$isRequired = isset($field['isRequired']) ? (bool) $field['isRequired'] : false;
 			$options = $field['options'] ?? [];
 			$id = $field['id'] ?? '';
 
@@ -194,10 +166,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'firstName',
 						'inputTracking' => 'firstName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'firstName',
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'blockSsr' => $ssr,
+						'inputIsRequired' => (bool) $isRequired,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+						]),
 					];
 					break;
 				case 'lastname':
@@ -206,10 +179,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'lastName',
 						'inputTracking' => 'lastName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'lastName',
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'blockSsr' => $ssr,
+						'inputIsRequired' => (bool) $isRequired,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+						]),
 					];
 					break;
 				case 'fullname':
@@ -218,10 +192,11 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => 'fullName',
 						'inputTracking' => 'fullName',
 						'inputFieldLabel' => $label,
-						'inputId' => 'fullName',
 						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'blockSsr' => $ssr,
+						'inputIsRequired' => (bool) $isRequired,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'inputIsRequired' : '',
+						]),
 					];
 					break;
 				case 'hidden':
@@ -229,10 +204,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $name,
-						'inputId' => $id,
-						'inputType' => 'hidden',
-						'inputFieldHidden' => 'hidden',
-						'blockSsr' => $ssr,
+						'inputFieldHidden' => true,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputFieldHidden',
+						]),
 					];
 					break;
 				case 'textarea':
@@ -241,9 +216,10 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaId' => $id,
-						'textareaIsRequired' => $required,
-						'blockSsr' => $ssr,
+						'textareaIsRequired' => (bool) $isRequired,
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+							$isRequired ? 'textareaIsRequired' : '',
+						]),
 					];
 					break;
 				case 'email':
@@ -251,11 +227,13 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'component' => 'input',
 						'inputName' => 'email',
 						'inputFieldLabel' => $header,
-						'inputId' => 'email',
 						'inputType' => 'text',
 						'inputIsEmail' => true,
 						'inputIsRequired' => 1,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputIsRequired',
+							'inputIsEmail',
+						]),
 					];
 					break;
 				case 'phone':
@@ -264,73 +242,84 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'tel',
-						'inputIsRequired' => $required,
-						'blockSsr' => $ssr,
+						'inputIsRequired' => (bool) $isRequired,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$isRequired ? 'textareaIsRequired' : '',
+						]),
 					];
 					break;
 				case 'checkbox':
 					$output[] = [
 						'component' => 'checkboxes',
-						'checkboxesId' => $id,
 						'checkboxesName' => $name,
 						'checkboxesFieldLabel' => $label,
-						'checkboxesIsRequired' => $required,
+						'checkboxesIsRequired' => (bool) $isRequired,
 						'checkboxesContent' => \array_map(
-							static function ($checkbox) use ($name) {
+							function ($checkbox) use ($name) {
 								return [
 									'component' => 'checkbox',
 									'checkboxLabel' => $checkbox['value'],
 									'checkboxValue' => $checkbox['value'],
 									'checkboxTracking' => $name,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							$isRequired ? 'checkboxesIsRequired' : '',
+						]),
 					];
 					break;
 				case 'radio':
 					$output[] = [
 						'component' => 'radios',
-						'radiosId' => $id,
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
-						'radiosIsRequired' => $required,
+						'radiosIsRequired' => (bool) $isRequired,
 						'radiosContent' => \array_map(
-							static function ($radio) use ($name) {
+							function ($radio) use ($name) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio['value'],
 									'radioValue' => $radio['value'],
 									'radioTracking' => $name,
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
+							$isRequired ? 'radiosIsRequired' : '',
+						]),
 					];
 					break;
 				case 'dropdown':
 					$output[] = [
 						'component' => 'select',
-						'selectId' => $id,
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
-						'selectIsRequired' => $required,
-						'selectOptions' => \array_map(
-							static function ($option) {
+						'selectIsRequired' => (bool) $isRequired,
+						'selectContent' => \array_map(
+							function ($option) {
 								return [
 									'component' => 'select-option',
 									'selectOptionLabel' => $option['value'],
 									'selectOptionValue' => $option['value'],
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
 								];
 							},
 							$options
 						),
-						'blockSsr' => $ssr,
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+							$isRequired ? 'selectIsRequired' : '',
+						]),
 					];
 					break;
 			}
@@ -352,11 +341,12 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 				$output[] = [
 					'component' => 'input',
 					'inputFieldLabel' => $action,
+					'inputFieldHidden' => true,
 					'inputName' => 'action',
-					'inputId' => "action{$action}[$key]",
-					'inputType' => 'hidden',
 					'inputValue' => $actionValue,
-					'blockSsr' => $ssr,
+					'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+						'inputFieldHidden',
+					]),
 				];
 			}
 		}
@@ -364,23 +354,16 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
+			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
 		// Change the final output if necesery.
-		$dataFilterName = Filters::getIntegrationFilterName(SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data');
-		if (\has_filter($dataFilterName) && !\is_admin()) {
-			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
+		$filterName = Filters::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data']);
+		if (\has_filter($filterName) && !\is_admin()) {
+			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsActiveCampaign::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

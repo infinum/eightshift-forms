@@ -1,10 +1,11 @@
 // stylelint-disable declaration-no-important
+
 .es-block-form-selector {
 	--wp-admin-theme-color: var(--global-colors-es-matisse);
 
 	.esf-form-type-picker-group {
 		display: flex;
-		flex-direction: column;
+		flex-flow: row wrap;
 		gap: 0.5rem;
 		margin-top: 0.5rem;
 	}
@@ -25,6 +26,7 @@
 			flex-shrink: 0;
 			width: 1.75rem;
 			height: 1.75rem;
+			margin-right: 10px;
 		}
 	}
 

@@ -1,23 +1,29 @@
 import React from 'react';
-import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
+import { checkAttr } from '@eightshift/frontend-libs/scripts';
+import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
+import manifest from './../manifest.json';
 
-export const AirtableEditor = ({ attributes, postId }) => {
+export const AirtableEditor = ({
+	attributes,
+	setAttributes,
+	itemIdKey,
+	innerIdKey,
+	clientId,
+}) => {
+
 	const {
 		blockClass,
-		blockFullName
 	} = attributes;
 
 	return (
 		<div className={blockClass}>
-			<ServerSideRender
-				block={blockFullName}
-				attributes={
-					{
-						...attributes,
-						airtableFormServerSideRender: true,
-						airtableFormPostId: postId.toString(),
-					}
-				}
+			<IntegrationsEditor
+				clientId={clientId}
+				itemId={checkAttr(itemIdKey, attributes, manifest)}
+				innerId={checkAttr(innerIdKey, attributes, manifest)}
+				useInnerId={true}
+				attributes={attributes}
+				setAttributes={setAttributes}
 			/>
 		</div>
 	);

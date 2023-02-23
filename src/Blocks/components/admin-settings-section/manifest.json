@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "admin-settings-section",
 	"title": "Admin Settings Section",
 	"componentClass": "es-admin-settings-section"

@@ -35,10 +35,29 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	public function setCustomWpksesPostTags(array $tags, string $context)  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
 	{
 		return \array_merge(
-			self::FORM,
+			$this->setForm(),
 			$this->getSvg(),
 			$tags
 		);
+	}
+
+	/**
+	 * Add forms additional attributes to allow list.
+	 *
+	 * @return  array<string, array<string, bool>>
+	 */
+	private function setForm(): array
+	{
+		$form = self::FORM;
+
+		$form['input'] = \array_merge(
+			$form['input'],
+			[
+				'data-object-type-id' => true,
+			]
+		);
+
+		return $form;
 	}
 
 	/**

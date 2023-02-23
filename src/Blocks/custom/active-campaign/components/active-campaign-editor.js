@@ -1,23 +1,24 @@
 import React from 'react';
-import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
+import { checkAttr } from '@eightshift/frontend-libs/scripts';
+import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
+import manifest from './../manifest.json';
 
-export const ActiveCampaignEditor = ({ attributes, postId }) => {
+export const ActiveCampaignEditor = ({
+	attributes,
+	setAttributes,
+	itemIdKey,
+}) => {
+
 	const {
 		blockClass,
-		blockFullName
 	} = attributes;
 
 	return (
 		<div className={blockClass}>
-			<ServerSideRender
-				block={blockFullName}
-				attributes={
-					{
-						...attributes,
-						activeCampaignFormServerSideRender: true,
-						activeCampaignFormPostId: postId.toString(),
-					}
-				}
+			<IntegrationsEditor
+				itemId={checkAttr(itemIdKey, attributes, manifest)}
+				attributes={attributes}
+				setAttributes={setAttributes}
 			/>
 		</div>
 	);

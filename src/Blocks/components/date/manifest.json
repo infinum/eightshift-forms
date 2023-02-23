@@ -1,0 +1,86 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "date",
+	"title": "Date",
+	"componentClass": "es-date",
+	"example": {
+		"attributes": {
+			"dateName": "Name",
+			"dateValue": "Value",
+			"datePlaceholder": "Placeholder",
+			"dateIsDisabled": false,
+			"dateIsReadOnly": false,
+			"dateIsRequired": false
+		}
+	},
+	"components": {
+		"field": "field",
+		"conditionalTags": "conditionalTags"
+	},
+	"attributes": {
+		"dateName": {
+			"type": "string"
+		},
+		"dateValue": {
+			"type": "string"
+		},
+		"datePlaceholder": {
+			"type": "string"
+		},
+		"dateType": {
+			"type": "string",
+			"default": "date"
+		},
+		"dateIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"dateIsReadOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"dateIsNumber": {
+			"type": "boolean",
+			"default": true
+		},
+		"dateIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"dateTracking": {
+			"type": "string"
+		},
+		"dateValidationPattern": {
+			"type": "string"
+		},
+		"dateMeta": {
+			"type": "string"
+		},
+		"dateAttrs": {
+			"type": "object"
+		},
+		"dateDisabledOptions": {
+			"type": "array"
+		},
+		"datePreviewFormat": {
+			"type": "string",
+			"default": "F j, Y H:i"
+		},
+		"dateOutputFormat": {
+			"type": "string",
+			"default": "Y-m-d H:i"
+		}
+	},
+	"options": {
+		"dateType": [
+			{
+				"label": "Date",
+				"value": "date"
+			},
+			{
+				"label": "Date & time",
+				"value": "datetime-local"
+			}
+		]
+	}
+}

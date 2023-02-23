@@ -1,14 +1,13 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "checkboxes",
 	"title": "checkboxes",
 	"componentClass": "es-checkboxes",
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"checkboxesId": {
-			"type": "string"
-		},
 		"checkboxesContent": {
 			"type": "string"
 		},
@@ -29,6 +28,9 @@
 		},
 		"checkboxesMeta": {
 			"type": "string"
+		},
+		"checkboxesDisabledOptions": {
+			"type": "array"
 		}
 	},
 	"options": {

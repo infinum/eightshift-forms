@@ -1,0 +1,5 @@
+@import './country-style.scss';
+
+.es-field--country {
+	@extend %country-choices-icons;
+}

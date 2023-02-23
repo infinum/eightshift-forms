@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import { Utils } from "../assets/utilities";
 
 export class Transfer {
@@ -59,6 +61,7 @@ export class Transfer {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'multipart/form-data',
+				'X-WP-Nonce': esFormsLocalization.nonce,
 			},
 			body: formData,
 			credentials: 'same-origin',

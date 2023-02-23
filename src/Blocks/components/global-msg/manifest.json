@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "global-msg",
 	"title": "Global Msg",
 	"componentClass": "es-global-msg",
-	"componentJsClass": "js-es-block-form-global-msg",
+	"componentJsClass": "js-es-block-global-msg",
 	"example": {
 		"attributes": {
 			"globalMsgValue": "Value"

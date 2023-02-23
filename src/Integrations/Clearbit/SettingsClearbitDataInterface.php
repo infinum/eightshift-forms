@@ -10,23 +10,20 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Settings\Settings\SettingInterface;
-
 /**
  * Interface for SettingsClearbitDataInterface.
  */
-interface SettingsClearbitDataInterface extends SettingInterface
+interface SettingsClearbitDataInterface
 {
 	/**
 	 * Output array settings for form.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array<int, array<string, mixed>> $formFields Items from cache data.
-	 * @param array<string, string> $keys Array of keys to get data from.
+	 * @param string $key Key for use toggle.
 	 *
 	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
 	 */
-	public function getOutputClearbit(string $formId, array $formFields, array $keys): array;
+	public function getOutputClearbit(string $formId, string $key): array;
 
 	/**
 	 * Output array settings for form - global.

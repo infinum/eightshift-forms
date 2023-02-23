@@ -1,15 +1,27 @@
-.es-textarea {
+textarea.es-textarea {
 	width: 100%;
-	border: 1px solid var(--global-colors-es-chalice);
+	border: 1px solid var(--es-input-border-color);
 	cursor: text;
 	background-color: transparent;
-	min-height: calc(var(--global-es-input-height) * 3);
-	height: calc(var(--global-es-input-height) * 3);
-	padding: 10px;
+	min-height: calc(var(--es-input-height) * 3);
+	height: calc(var(--es-input-height) * 3);
+	padding: var(--es-input-spacing);
+	border-radius: var(--es-input-radius);
+	transition: {
+		property: border-color;
+		timing-function: var(--es-input-transition-timing);
+		duration: var(--es-input-transition-duration);
+	}
 
 	&:focus {
-		outline: none;
-		box-shadow: none;
-		border-color: var(--global-colors-es-matisse);
+		@include input-styles-focus;
+	}
+
+	&:disabled {
+		@include input-styles-disabled;
+	}
+
+	&:read-only {
+		@include input-styles-read-only;
 	}
 }

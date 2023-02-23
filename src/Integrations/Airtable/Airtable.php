@@ -16,7 +16,6 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -28,13 +27,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_airtable_mapper_filter';
 
 	/**
 	 * Filter form fields.
@@ -51,24 +43,13 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	protected $airtableClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $airtableClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ClientInterface $airtableClient)
+	{
 		$this->airtableClient = $airtableClient;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -79,71 +60,43 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
-
-		// Get form type.
-		$type = SettingsAirtable::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsAirtable::SETTINGS_AIRTABLE_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
-	}
-
-	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
-		}
-
-		// Get selected field.
-		$fieldId = $this->getSettingsValue(SettingsAirtable::SETTINGS_AIRTABLE_FIELD_KEY, (string) $formId);
-		if (empty($fieldId)) {
-			return [];
-		}
+		$output = [
+			'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'innerId' => $innerId,
+			'fields' => [],
+		];
 
 		// Get fields.
-		$fields = $this->airtableClient->getItem($itemId);
-		if (empty($fields)) {
-			return [];
+		$item = $this->airtableClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		$fields = $fields['items'][$fieldId] ?? [];
+		$fields = $this->getFields($item[$innerId] ?? [], $formId);
 
-		return $this->getFields($fields, $formId, $ssr);
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
@@ -151,11 +104,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, bool $ssr): array
+	private function getFields(array $data, string $formId): array
 	{
 		$output = [];
 
@@ -182,9 +134,8 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
 						'inputType' => 'text',
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 					];
 					break;
 				case 'email':
@@ -193,10 +144,15 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
+						'inputType' => 'email',
 						'inputIsEmail' => true,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputIsEmail',
+							'inputType'
+						]),
+						'inputAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'email',
+						],
 					];
 					break;
 				case 'url':
@@ -205,22 +161,57 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
+						'inputType' => 'url',
 						'inputIsUrl' => true,
-						'blockSsr' => $ssr,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputIsUrl',
+							'inputType'
+						]),
+						'inputAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'url',
+						],
 					];
 					break;
 				case 'phoneNumber':
 					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $name,
-						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
-						'inputIsNumber' => true,
-						'blockSsr' => $ssr,
+						'component' => 'phone',
+						'phoneName' => $name,
+						'phoneTracking' => $name,
+						'phoneFieldLabel' => $label,
+						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone'),
+						'phoneAttrs' => [
+							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'phone',
+						],
+					];
+					break;
+				case 'dateTime':
+					$output[] = [
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'datetime-local',
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => 'Z',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							'dateType',
+							'dateOutputFormat',
+						]),
+					];
+					break;
+				case 'date':
+					$output[] = [
+						'component' => 'date',
+						'dateName' => $name,
+						'dateTracking' => $name,
+						'dateFieldLabel' => $label,
+						'dateType' => 'date',
+						'datePreviewFormat' => 'F j, Y',
+						'dateOutputFormat' => 'Y-m-d',
+						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
+							'dateType',
+							'dateOutputFormat',
+						]),
 					];
 					break;
 				case 'number':
@@ -229,12 +220,15 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
-						'inputId' => $id,
-						'inputType' => 'text',
+						'inputType' => 'number',
+						'inputIsNumber' => true,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							'inputIsNumber',
+							'inputType'
+						]),
 						'inputAttrs' => [
 							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'number',
 						],
-						'blockSsr' => $ssr,
 					];
 					break;
 				case 'multilineText':
@@ -243,8 +237,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareaId' => $id,
-						'blockSsr' => $ssr,
+						'textareatDisabledOptions' => $this->prepareDisabledOptions('textareat'),
 					];
 					break;
 				case 'singleSelect':
@@ -252,19 +245,21 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'component' => 'select',
 						'selectName' => $name,
 						'selectTracking' => $name,
-						'selectId' => $id,
 						'selectFieldLabel' => $label,
-						'selectOptions' => \array_map(
-							static function ($selectOption) {
+						'selectContent' => \array_map(
+							function ($selectOption) {
 								return [
 									'component' => 'select-option',
 									'selectOptionLabel' => $selectOption['name'],
 									'selectOptionValue' => $selectOption['id'],
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('selectOption', [
+										'selectOptionValue',
+									], false),
 								];
 							},
 							$options['choices'] ?? []
 						),
-						'blockSsr' => $ssr,
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select'),
 					];
 					break;
 				case 'multipleSelects':
@@ -272,10 +267,9 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'component' => 'checkboxes',
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
-						'checkboxesId' => $id,
 						'checkboxesFieldLabel' => $label,
 						'checkboxesContent' => \array_map(
-							static function ($checkbox) {
+							function ($checkbox) {
 								return [
 									'component' => 'checkbox',
 									'checkboxLabel' => $checkbox['name'],
@@ -283,11 +277,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 									'checkboxAttrs' => [
 										AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'multiCheckbox',
 									],
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue'
+									], false),
 								];
 							},
 							$options['choices'] ?? []
 						),
-						'blockSsr' => $ssr,
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
 					];
 					break;
 				case 'checkbox':
@@ -296,18 +293,20 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesId' => $id,
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $label,
-								'checkboxValue' => true,
+								'checkboxValue' => 'true',
 								'checkboxAttrs' => [
 									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'singleCheckbox',
 								],
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue',
+								], false),
 							]
 						],
-						'blockSsr' => $ssr,
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
 					];
 					break;
 			}
@@ -316,23 +315,15 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
-			'submitId' => 'submit',
 			'submitFieldUseError' => false,
-			'submitFieldOrder' => \count($output) + 1,
-			'submitServerSideRender' => $ssr,
-			'blockSsr' => $ssr,
 		];
 
 		// Change the final output if necesery.
-		$dataFilterName = Filters::getIntegrationFilterName(SettingsAirtable::SETTINGS_TYPE_KEY, 'data');
-		if (\has_filter($dataFilterName) && !\is_admin()) {
-			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
+		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
+		if (\has_filter($filterName) && !\is_admin()) {
+			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsAirtable::SETTINGS_AIRTABLE_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsAirtable::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -27,13 +26,6 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Filter mapper.
-	 *
-	 * @var string
-	 */
-	public const FILTER_MAPPER_NAME = 'es_goodbits_mapper_filter';
 
 	/**
 	 * Filter form fields.
@@ -50,24 +42,13 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	protected $goodbitsClient;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 */
-	public function __construct(
-		ClientInterface $goodbitsClient,
-		ValidatorInterface $validator
-	) {
+	public function __construct(ClientInterface $goodbitsClient)
+	{
 		$this->goodbitsClient = $goodbitsClient;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -78,68 +59,53 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_MAPPER_NAME, [$this, 'getForm'], 10, 2);
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 11, 2);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 	}
 
 	/**
-	 * Map form to our components.
-	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $formAdditionalProps Additional props.
-	 *
-	 * @return string
-	 */
-	public function getForm(string $formId, array $formAdditionalProps = []): string
-	{
-		// Get post ID prop.
-		$formAdditionalProps['formPostId'] = $formId;
-
-		// Get form type.
-		$type = SettingsGoodbits::SETTINGS_TYPE_KEY;
-		$formAdditionalProps['formType'] = $type;
-
-		// Check if it is loaded on the front or the backend.
-		$ssr = (bool) ($formAdditionalProps['ssr'] ?? false);
-
-		// Add conditional tags.
-		$formConditionalTags = $this->getGroupDataWithoutKeyPrefix($this->getSettingsValueGroup(SettingsGoodbits::SETTINGS_GOODBITS_CONDITIONAL_TAGS_KEY, $formId));
-		$formAdditionalProps['formConditionalTags'] = $formConditionalTags ? \wp_json_encode($formConditionalTags) : '';
-
-		return $this->buildForm(
-			$this->getFormFields($formId, $ssr),
-			\array_merge($formAdditionalProps, $this->getFormAdditionalProps($formId, $type))
-		);
-	}
-
-	/**
-	 * Get mapped form fields.
+	 * Get mapped form fields from integration.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
+	 * @param string $itemId Integration/external form ID.
+	 * @param string $innerId Integration/external additional inner form ID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<int, array<string, mixed>>|string>
 	 */
-	public function getFormFields(string $formId, bool $ssr = false): array
+	public function getFormFields(string $formId, string $itemId, string $innerId): array
 	{
-		// Get item Id.
-		$itemId = $this->getSettingsValue(SettingsGoodbits::SETTINGS_GOODBITS_LIST_KEY, (string) $formId);
-		if (empty($itemId)) {
-			return [];
+		$output = [
+			'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+			'itemId' => $itemId,
+			'innerId' => $innerId,
+			'fields' => [],
+		];
+
+		// Get fields.
+		$item = $this->goodbitsClient->getItem($itemId);
+
+		if (empty($item)) {
+			return $output;
 		}
 
-		return $this->getFields($formId, $ssr);
+		$fields = $this->getFields($formId);
+
+		if (!$fields) {
+			return $output;
+		}
+
+		$output['fields'] = $fields;
+
+		return $output;
 	}
 
 	/**
 	 * Map Goodbits fields to our components.
 	 *
 	 * @param string $formId Form Id.
-	 * @param bool $ssr Does form load using ssr.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(string $formId, bool $ssr): array
+	private function getFields(string $formId): array
 	{
 		$output = [
 			[
@@ -147,51 +113,43 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputName' => 'email',
 				'inputTracking' => 'email',
 				'inputFieldLabel' => \__('Email', 'eightshift-forms'),
-				'inputId' => 'email',
 				'inputType' => 'text',
 				'inputIsRequired' => true,
 				'inputIsEmail' => true,
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+					'inputIsRequired',
+				]),
 			],
 			[
 				'component' => 'input',
 				'inputName' => 'first_name',
 				'inputTracking' => 'first_name',
 				'inputFieldLabel' => \__('First Name', 'eightshift-forms'),
-				'inputId' => 'first_name',
 				'inputType' => 'text',
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 			],
 			[
 				'component' => 'input',
 				'inputName' => 'last_name',
 				'inputTracking' => 'last_name',
 				'inputFieldLabel' => \__('Last Name', 'eightshift-forms'),
-				'inputId' => 'last_name',
 				'inputType' => 'text',
-				'blockSsr' => $ssr,
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
 			],
 			[
 				'component' => 'submit',
 				'submitName' => 'submit',
-				'submitId' => 'submit',
 				'submitFieldUseError' => false,
-				'submitFieldOrder' => 4,
-				'submitServerSideRender' => $ssr,
-				'blockSsr' => $ssr,
+				'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 			],
 		];
 
 		// Change the final output if necesery.
-		$dataFilterName = Filters::getIntegrationFilterName(SettingsGoodbits::SETTINGS_TYPE_KEY, 'data');
-		if (\has_filter($dataFilterName) && !\is_admin()) {
-			$output = \apply_filters($dataFilterName, $output, $formId) ?? [];
+		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
+		if (\has_filter($filterName) && !\is_admin()) {
+			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
-		return $this->getIntegrationFieldsValue(
-			$this->getSettingsValueGroup(SettingsGoodbits::SETTINGS_GOODBITS_INTEGRATION_FIELDS_KEY, $formId),
-			$output,
-			SettingsGoodbits::SETTINGS_TYPE_KEY
-		);
+		return $output;
 	}
 }

@@ -1,67 +1,23 @@
-/* global esFormsLocalization */
-
-import React, { useEffect } from 'react';
+import React from 'react';
+import { camelCase } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { createBlock } from '@wordpress/blocks';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { dispatch, useSelect } from '@wordpress/data';
-import {
-	checkAttr,
-	BlockIcon
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, BlockIcon } from '@eightshift/frontend-libs/scripts';
+import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
 import manifest from './../manifest.json';
+import utilsManifest from './../../../components/utils/manifest.json';
 
-export const FormSelectorEditor = ({ attributes, clientId }) => {
+export const FormSelectorEditor = ({
+	attributes,
+	clientId,
+	hasInnerBlocks,
+}) => {
 	const {
 		forms,
 	} = manifest;
 
 	const formSelectorAllowedBlocks = checkAttr('formSelectorAllowedBlocks', attributes, manifest);
-
-	// Internal state to toggle buttons.
-	const [hasInnerBlocks, setHasInnerBlocks] = useState(false);
-
-	// Check if form selector has inner blocks.
-	const hasInnerBlocksCheck = useSelect((select) => {
-		const { innerBlocks } = select('core/block-editor').getBlock(clientId);
-
-		return innerBlocks.length;
-	});
-
-	// If parent block has inner blocks set internal state.
-	useEffect(() => {
-		setHasInnerBlocks(hasInnerBlocksCheck);
-	}, [hasInnerBlocksCheck]);
-
-	// Create block from manifest.
-	const createFormType = (slug) => {
-		const {
-			blockName,
-			attributes = {},
-			innerBlocks = [],
-		} = forms.filter((form) => form.slug === slug)[0];
-
-		// Build all inner blocks.
-		const inner = innerBlocks.map((item) => createBlock(item[0], item[1] ?? {}, item[2] ?? []));
-
-		// Build top level block.
-		const block = createBlock(blockName, attributes, inner);
-
-		// Insert built block in DOM.
-		dispatch('core/block-editor').insertBlock(block, 0, clientId);
-
-		// Set internal state to hide buttons.
-		setHasInnerBlocks(!hasInnerBlocks);
-	};
-
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (typeof esFormsLocalization !== 'undefined' && (esFormsLocalization?.formSelectorBlockAdditionalContent) !== '') {
-		additionalContent = esFormsLocalization.formSelectorBlockAdditionalContent;
-	}
 
 	return (
 		<>
@@ -77,17 +33,18 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 							const {
 								label,
 								slug,
-								icon
 							} = form;
 
 							return (
 								<Button
 									className='esf-form-type-picker-button'
-									icon={<BlockIcon iconName={icon} />}
 									key={index}
 									isTertiary
-									onClick={() => createFormType(slug)}
+									onClick={() => {
+										createBlockFromTemplate(clientId, slug, forms);
+									}}
 								>
+									<div dangerouslySetInnerHTML={{__html: utilsManifest.icons[camelCase(slug)]}} />
 									{sprintf(__('%s form', 'eightshift-forms'), label)}
 								</Button>
 							);
@@ -96,11 +53,12 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 				</Placeholder>
 			}
 
-			<div dangerouslySetInnerHTML={{ __html: additionalContent }} />
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent('formSelector')}} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}
-				templateLock={hasInnerBlocks}
+				templateLock={hasInnerBlocks && 'insert'}
+				renderAppender={false}
 			/>
 		</>
 	);

@@ -1,0 +1,20 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "country",
+	"title": "Country",
+	"description" : "An item country field",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-country"
+	},
+	"keywords": [
+		"country"
+	],
+	"hasInnerBlocks": true,
+	"components": {
+		"country": "country"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	]
+}

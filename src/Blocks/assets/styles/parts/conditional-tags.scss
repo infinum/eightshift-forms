@@ -1,0 +1,13 @@
+@mixin conditional-tags-styles() {
+	// Used for conditional tags.
+	&--hidden,
+	&.is-hidden {
+		display: none;
+		user-select: none;
+	}
+
+	// Used for conditional tags.
+	&.is-visible {
+		display: block;
+	}
+}

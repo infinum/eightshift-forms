@@ -6,9 +6,10 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	FancyDivider
+	FancyDivider,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../utils';
 
 export const RadioOptions = (attributes) => {
 	const {
@@ -20,6 +21,7 @@ export const RadioOptions = (attributes) => {
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 	const radioTracking = checkAttr('radioTracking', attributes, manifest);
+	const radioDisabledOptions = checkAttr('radioDisabledOptions', attributes, manifest);
 
 	return (
 		<>
@@ -27,12 +29,14 @@ export const RadioOptions = (attributes) => {
 				label={<IconLabel icon={icons.textSize} label={__('Radio button label', 'eightshift-forms')} />}
 				value={radioLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
 			/>
 
 			<Button
 				icon={icons.checkCircle}
 				isPressed={radioIsChecked}
 				onClick={() => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: !radioIsChecked })}
+				disabled={isOptionDisabled(getAttrKey('radioIsChecked', attributes, manifest), radioDisabledOptions)}
 			>
 				{__('Select by default', 'eightshift-forms')}
 			</Button>
@@ -44,12 +48,14 @@ export const RadioOptions = (attributes) => {
 				help={__('Internal value, sent if the radio button is selected.', 'eightshift-forms')}
 				value={radioValue}
 				onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
 			/>
 
 			<Button
 				icon={icons.fieldDisabled}
 				isPressed={radioIsDisabled}
 				onClick={() => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: !radioIsDisabled })}
+				disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
 			>
 				{__('Disabled', 'eightshift-forms')}
 			</Button>
@@ -60,6 +66,7 @@ export const RadioOptions = (attributes) => {
 				label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
 				value={radioTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radioTracking', attributes, manifest), radioDisabledOptions)}
 			/>
 		</>
 	);

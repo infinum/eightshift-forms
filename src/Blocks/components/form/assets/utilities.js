@@ -1,10 +1,64 @@
 /* global esFormsLocalization */
 
 import manifest from './../manifest.json';
+import selectManifest from './../../select/manifest.json';
 
 const {
 	componentJsClass,
 } = manifest;
+
+/**
+ * Conditional tags operators constants.
+ *
+ * show - show item it conditions is set, hidden by default.
+ * hide - hide item it conditions is set, visible by default.
+ *
+ * all - activate condition if all conditions in rules array are met.
+ * any - activate condition if at least one condition in rules array is met.
+ *
+ * is  - is                  - if value is exact match.
+ * isn - is not              - if value is not exact match.
+ * gt  - greater than        - if value is greater than.
+ * gte  - greater/equal than - if value is greater/equal than.
+ * lt  - less than           - if value is less than.
+ * lte  - less/equal than    - if value is less/equal than.
+ * c   - contains            - if value contains value.
+ * sw  - starts with         - if value starts with value.
+ * ew  - ends with           - if value starts with value.
+ */
+export const CONDITIONAL_TAGS_OPERATORS = {
+	IS: 'is',
+	ISN: 'isn',
+	GT: 'gt',
+	GTE: 'gte',
+	LT: 'lt',
+	LTE: 'lte',
+	C: 'c',
+	SW: 'sw',
+	EW: 'ew',
+};
+
+/**
+ * Conditional tags actions constants.
+ *
+ * show - show item it conditions is set, hidden by default.
+ * hide - hide item it conditions is set, visible by default.
+ */
+export const CONDITIONAL_TAGS_ACTIONS = {
+	SHOW: 'show',
+	HIDE: 'hide',
+};
+
+/**
+ * Conditional tags logic constants.
+ *
+ * all - activate condition if all conditions in rules array are met.
+ * any - activate condition if at least one condition in rules array is met.
+ */
+export const CONDITIONAL_TAGS_LOGIC = {
+	ALL: 'all',
+	ANY: 'any',
+};
 
 /**
  * Main Utilities class.
@@ -18,24 +72,28 @@ export class Utils {
 		this.formIsAdmin = options.formIsAdmin ?? false;
 
 		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? esFormsLocalization.formSubmitRestApiUrl ?? '';
+		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}` ?? '';
 
 		// Selectors.
-		this.formSelector = options.formSelector ?? `.${componentJsClass}`;
+		this.formSelectorPrefix = options.formSelectorPrefix ?? `.${componentJsClass}`;
 
 		// Specific selectors.
-		this.submitSingleSelector =  `${this.formSelector}-single-submit`;
-		this.errorSelector =  `${this.formSelector}-error`;
-		this.loaderSelector =  `${this.formSelector}-loader`;
-		this.globalMsgSelector =  `${this.formSelector}-global-msg`;
-		this.groupSelector =  `${this.formSelector}-group`;
-		this.groupInnerSelector =  `${this.formSelector}-group-inner`;
-		this.customSelector =  `${this.formSelector}-custom`;
-		this.fieldSelector =  `${this.formSelector}-field`;
+		this.formSelector =  this.formSelectorPrefix;
+		this.submitSingleSelector =  `${this.formSelectorPrefix}-single-submit`;
+		this.errorSelector =  `${this.formSelectorPrefix}-error`;
+		this.loaderSelector =  `${this.formSelectorPrefix}-loader`;
+		this.globalMsgSelector =  `${this.formSelectorPrefix}-global-msg`;
+		this.groupSelector =  `${this.formSelectorPrefix}-group`;
+		this.fieldSelector =  `${this.formSelectorPrefix}-field`;
+		this.dateFieldSelector =  `${this.formSelectorPrefix}-date`;
+		this.countryFieldSelector =  `${this.formSelectorPrefix}-county`;
 		this.inputSelector =  `${this.fieldSelector} input`;
 		this.textareaSelector =  `${this.fieldSelector} textarea`;
 		this.selectSelector =  `${this.fieldSelector} select`;
 		this.fileSelector =  `${this.fieldSelector} input[type='file']`;
+
+		// Class names.
+		this.selectClassName = selectManifest.componentClass;
 
 		// Custom fields params.
 		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
@@ -53,7 +111,7 @@ export class Utils {
 			HIDE_LOADING_STATE_TIMEOUT: options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600,
 			FILE_CUSTOM_REMOVE_LABEL: options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '',
 			FORM_SERVER_ERROR_MSG: options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '',
-			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? '',
+			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? [],
 			ENRICHMENT_CONFIG: options.enrichmentConfig ?? esFormsLocalization.enrichmentConfig ?? '[]',
 		};
 
@@ -71,6 +129,7 @@ export class Utils {
 			BEFORE_GTM_DATA_PUSH: `${this.prefix}BeforeGtmDataPush`,
 			FORMS_JS_LOADED: `${this.prefix}JsLoaded`,
 			FORM_JS_LOADED: `${this.prefix}JsFormLoaded`,
+			AFTER_CAPTCHA_INIT: `${this.prefix}AfterCaptchaInit`,
 		};
 
 		// All form custom state selectors.
@@ -79,48 +138,23 @@ export class Utils {
 			CLASS_FILLED: 'is-filled',
 			CLASS_LOADING: 'is-loading',
 			CLASS_HIDDEN: 'is-hidden',
+			CLASS_VISIBLE: 'is-visible',
 			CLASS_HAS_ERROR: 'has-error',
 		};
 
-		/**
-		 * Data constants.
-		 *
-		 * show - show item it conditions is set, hidden by default.
-		 * hide - hide item it conditions is set, visible by default.
-		 *
-		 * all - activate condition if all conditions in rules array are met.
-		 * any - activate condition if at least one condition in rules array is met.
-		 *
-		 * is  - is                  - if value is exact match.
-		 * isn - is not              - if value is not exact match.
-		 * gt  - greater than        - if value is greater than.
-		 * gte  - greater/equal than - if value is greater/equal than.
-		 * lt  - less than           - if value is less than.
-		 * lte  - less/equal than    - if value is less/equal than.
-		 * c   - contains            - if value contains value.
-		 * sw  - starts with         - if value starts with value.
-		 * ew  - ends with           - if value starts with value.
-		 */
-		this.CONDITIONAL_TAGS = {
-			IS: 'is',
-			ISN: 'isn',
-			GT: 'gt',
-			GTE: 'gte',
-			LT: 'lt',
-			LTE: 'lte',
-			C: 'c',
-			SW: 'sw',
-			EW: 'ew',
-			SHOW: 'show',
-			HIDE: 'hide',
-			ALL: 'all',
-			ANY: 'any',
-		};
+		this.DELIMITER = esFormsLocalization.delimiter;
+
+		// Conditional tags
+		this.CONDITIONAL_TAGS_OPERATORS = CONDITIONAL_TAGS_OPERATORS;
+		this.CONDITIONAL_TAGS_ACTIONS = CONDITIONAL_TAGS_ACTIONS;
+		this.CONDITIONAL_TAGS_LOGIC = CONDITIONAL_TAGS_LOGIC;
 
 		// Internal state.
+		this.FORMS = {};
 		this.FILES = {};
-		this.CUSTOM_TEXTAREAS = [];
-		this.CUSTOM_SELECTS = [];
+		this.CUSTOM_TEXTAREAS = {};
+		this.CUSTOM_SELECTS = {};
+		this.CUSTOM_DATES = {};
 		this.CUSTOM_FILES = [];
 
 		// Set all public methods.
@@ -156,16 +190,17 @@ export class Utils {
 		this.unsetGlobalMsg(element);
 	}
 
-	// Determine if field is custom type or normal.
-	isCustom(element) {
-		return element.closest(this.fieldSelector).classList.contains(this.customSelector.substring(1)) && !this.formIsAdmin;
-	}
-
 	// Dispatch custom event.
-	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(name, {
-			bubbles: true
-		});
+	dispatchFormEvent(element, name, detail) {
+		const options = {
+			bubbles: true,
+		};
+
+		if (detail) {
+			options['detail'] = detail;
+		}
+
+		const event = new CustomEvent(name, options);
 
 		element.dispatchEvent(event);
 	}
@@ -192,6 +227,10 @@ export class Utils {
 
 	// Output all error for fields.
 	outputErrors(element, fields) {
+		if (typeof fields === 'undefined') {
+			return;
+		}
+
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
 			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
@@ -204,7 +243,7 @@ export class Utils {
 		}
 
 		// Scroll to element if the condition is right.
-		if (typeof fields !== 'undefined' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
+		if (fields.length > 0 && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
@@ -228,23 +267,35 @@ export class Utils {
 
 	// Set global message.
 	setGlobalMsg(element, msg, status) {
-		if(element.hasAttribute(this.DATA_ATTRIBUTES.successRedirect) && status === 'success') {
-			return;
-		}
-
 		const messageContainer = element.querySelector(this.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
 		}
 
+		const headingSuccess = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingSuccess);
+		const headingError = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingError);
+
 		messageContainer.classList.add(this.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
-		messageContainer.innerHTML = `<span>${msg}</span>`;
 
 		// Scroll to msg if the condition is right.
-		if (status === 'success' && this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
-			this.scrollToElement(messageContainer);
+		if (status === 'success') {
+			if (this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
+				this.scrollToElement(messageContainer);
+			}
+
+			if (headingSuccess) {
+				messageContainer.innerHTML = `<div><div>${headingSuccess}</div><span>${msg}</span></div>`;
+			} else {
+				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
+			}
+		} else {
+			if (headingError) {
+				messageContainer.innerHTML = `<div><div>${headingError}</div><span>${msg}</span></div>`;
+			} else {
+				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
+			}
 		}
 	}
 
@@ -260,84 +311,100 @@ export class Utils {
 	}
 
 	// Build GTM data for the data layer.
-	getGtmData(element, eventName) {
-		const items = element.querySelectorAll(`[${this.DATA_ATTRIBUTES.tracking}]`);
-		const dataTemp = {};
-
-		if (!items.length) {
-			return {};
-		}
-
-		[...items].forEach((item) => {
-			const tracking = item.getAttribute(this.DATA_ATTRIBUTES.tracking);
-
-			if (tracking) {
-				const {type, checked} = item;
-
-				if (typeof dataTemp[tracking] === 'undefined') {
-					if (type === 'checkbox') {
-						dataTemp[tracking] = [];
-					} else {
-						dataTemp[tracking] = '';
-					}
-				}
-
-				if ((type === 'checkbox' || type === 'radio') && !checked) {
-					return;
-				}
-
-				// Check if you have this data attr and if so use select label.
-				if (item.hasAttribute(this.DATA_ATTRIBUTES.trackingSelectLabel)) {
-					dataTemp[tracking] = item.selectedOptions[0].label;
-					return;
-				}
-
-				if (type === 'checkbox') {
-					dataTemp[tracking].push(item.value);
-					return;
-				}
-
-				dataTemp[tracking] = item.value;
-			}
-		});
-
+	getGtmData(element, eventName, formData) {
+		const output = {};
 		const data = {};
 
-		for (const [key, value] of Object.entries(dataTemp)) {
+		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
+			const itemValue = JSON.parse(value);
+			const item = element.querySelector(`${this.fieldSelector} [name="${itemValue.name}"]`);
+			const trackingValue = item?.getAttribute(this.DATA_ATTRIBUTES.tracking);
+			if (!trackingValue) {
+				continue;
+			}
+
+			if (trackingValue in data) {
+				if (itemValue.value) {
+					data[trackingValue].push(itemValue.value);
+				}
+			} else {
+				switch (itemValue.type) {
+					case 'checkbox':
+					case 'radio':
+						data[trackingValue] = itemValue.value ? [itemValue.value] : [];
+						break;
+					case 'select-one':
+						data[trackingValue] = item.selectedOptions[0].label;
+						break;
+					default:
+						data[trackingValue]= itemValue.value;
+						break;
+				}
+			}
+		}
+
+		for (const [key, value] of Object.entries(data)) {
 			if (Array.isArray(value)) {
 				switch (value.length) {
 					case 0:
-						data[key] = false;
+						output[key] = false;
 						break;
 					case 1:
 						if (value[0] === 'on') {
-							data[key] = true;
+							output[key] = true;
 						} else {
-							data[key] = value;
+							output[key] = value;
 						}
 						break;
 					default:
-						data[key] = value;
+						output[key] = value;
 						break;
 				}
 			} else {
-				data[key] = value;
+				output[key] = value;
 			}
 		}
 
-		return Object.assign({}, { event: eventName, ...data });
+		return Object.assign({}, { event: eventName, ...output });
 	}
 
 	// Submit GTM event.
-	gtmSubmit(element) {
+	gtmSubmit(element, formData, status, errors) {
 		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
-			const gtmData = this.getGtmData(element, eventName);
+			const gtmData = this.getGtmData(element, eventName, formData);
+
+			const additionalData = JSON.parse(element.getAttribute(this.DATA_ATTRIBUTES.trackingAdditionalData));
+			let additionalDataItems = additionalData.general;
+
+			if (status === 'success') {
+				additionalDataItems = {
+					...additionalDataItems,
+					...additionalData.success,
+				};
+			}
+
+			if (status === 'error') {
+				additionalDataItems = {
+					...additionalDataItems,
+					...additionalData.error,
+				};
+			}
+
+			for (const [key, value] of Object.entries(additionalDataItems)) {
+				if (value === '{invalidFieldsString}') {
+					additionalDataItems[key] = Object.keys(errors).join(',');
+				}
+
+				if (value === '{invalidFieldsArray}') {
+					additionalDataItems[key] = Object.keys(errors);
+				}
+			}
 
 			if (window?.dataLayer && gtmData?.event) {
 				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
-				window.dataLayer.push(gtmData);
+				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
 	}
@@ -351,7 +418,7 @@ export class Utils {
 					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
 				}
 				break;
-			case 'select-custom': {
+			case 'select': {
 				const customSelect = input.config.choices;
 
 				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
@@ -370,14 +437,16 @@ export class Utils {
 	// Reset form values if the condition is right.
 	resetForm(element) {
 		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
-			element.reset();
+			// element.reset();
 
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
 			if (this.CUSTOM_SELECTS[formId]) {
 				this.CUSTOM_SELECTS[formId].forEach((item) => {
-					item.setChoiceByValue('');
+					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.DATA_ATTRIBUTES.selectInitial));
+					item.clearInput();
+					item.unhighlightAll();
 				});
 			}
 
@@ -396,6 +465,12 @@ export class Utils {
 				item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
 			});
 
+			const inputs = element.querySelectorAll(`${this.inputSelector}, ${this.textareaSelector}`);
+			[...inputs].forEach((item) => {
+				item.value = '';
+				item.checked = false;
+			});
+
 			// Remove focus from last input.
 			document.activeElement.blur();
 
@@ -407,6 +482,8 @@ export class Utils {
 	// Redirect to url and update url params from from data.
 	redirectToUrl(element, formData) {
 		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
+		const downloads = element.getAttribute(this.DATA_ATTRIBUTES.downloads) ?? '';
+		const variation = element.getAttribute(this.DATA_ATTRIBUTES.successRedirectVariation) ?? '';
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -416,19 +493,63 @@ export class Utils {
 			}
 		}
 
+		const url = new URL(redirectUrl);
+
+		if (downloads) {
+			url.searchParams.append('es-downloads', downloads);
+		}
+
+		if (variation) {
+			url.searchParams.append('es-variation', variation);
+		}
+
+		this.redirectToUrlByRefference(url.href);
+	}
+
+	// Redirect to url by provided path.
+	redirectToUrlByRefference(redirectUrl, reload = false) {
 		// Do the actual redirect after some time.
 		setTimeout(() => {
-			window.location.href = redirectUrl;
+			window.location = redirectUrl;
+
+			if (reload) {
+				window.location.reload();
+			}
 		}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
 	}
 
 	// Check if captcha is used.
 	isCaptchaUsed() {
-		if (this.SETTINGS.CAPTCHA) {
-			return true;
-		}
+		return Boolean(this.SETTINGS.CAPTCHA?.['siteKey']);
+	}
 
-		return false;
+	isCaptchaInitUsed() {
+		return Boolean(this.SETTINGS.CAPTCHA?.['loadOnInit']);
+	}
+
+	isCaptchaEnterprise() {
+		return Boolean(this.SETTINGS.CAPTCHA?.['isEnterprise']);
+	}
+
+	isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength) {
+		const interval = setInterval(() => {
+			const selects = this.CUSTOM_SELECTS[formId];
+			const textareas = this.CUSTOM_TEXTAREAS[formId];
+			const files = this.CUSTOM_FILES[formId];
+
+			if (
+				selects.length >= selectsLength &&
+				textareas.length >= textareaLenght &&
+				files.length >= filesLength
+			) {
+				clearInterval(interval);
+
+				this.FORMS[formId] = true;
+
+				// Triger event that form is fully loaded.
+				this.dispatchFormEvent(element, this.EVENTS.FORM_JS_LOADED);
+			}
+		}, 100);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -463,15 +584,15 @@ export class Utils {
 			case 'select':
 				toCheck = element.options[element.options.selectedIndex];
 
-				condition = toCheck.value && toCheck.value.length;
+				condition = toCheck?.value && toCheck?.value.length;
 				break;
 			case 'choices':
 				toCheck = element.querySelector('option');
 
-				condition = toCheck.value && toCheck.value.length;
+				condition = toCheck?.value && toCheck?.value.length;
 				break;
 			default:
-				condition = element.value && element.value.length;
+				condition = element?.value && element?.value.length;
 				break;
 		}
 
@@ -509,23 +630,30 @@ export class Utils {
 				loaderSelector: this.loaderSelector,
 				globalMsgSelector: this.globalMsgSelector,
 				groupSelector: this.groupSelector,
-				groupInnerSelector: this.groupInnerSelector,
-				customSelector: this.customSelector,
 				fieldSelector: this.fieldSelector,
+				dateFieldSelector: this.dateFieldSelector,
+				countryFieldSelector: this.countryFieldSelector,
 				inputSelector: this.inputSelector,
 				textareaSelector: this.textareaSelector,
 				selectSelector: this.selectSelector,
 				fileSelector: this.fileSelector,
+
+				selectClassName: this.selectClassName,
 
 				FORM_PARAMS: this.FORM_PARAMS,
 				DATA_ATTRIBUTES: this.DATA_ATTRIBUTES,
 				SETTINGS: this.SETTINGS,
 				EVENTS: this.EVENTS,
 				SELECTORS: this.SELECTORS,
-				CONDITIONAL_TAGS: this.CONDITIONAL_TAGS,
+				DELIMITER: this.DELIMITER,
+				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
+				CONDITIONAL_TAGS_ACTIONS: this.CONDITIONAL_TAGS_ACTIONS,
+				CONDITIONAL_TAGS_LOGIC: this.CONDITIONAL_TAGS_LOGIC,
+				FORMS: this.FORMS,
 				FILES: this.FILES,
 				CUSTOM_TEXTAREAS: this.CUSTOM_TEXTAREAS,
 				CUSTOM_SELECTS: this.CUSTOM_SELECTS,
+				CUSTOM_DATES: this.CUSTOM_DATES,
 				CUSTOM_FILES: this.CUSTOM_FILES,
 
 				unsetGlobalMsg: (element) => {
@@ -533,9 +661,6 @@ export class Utils {
 				},
 				reset: (element) => {
 					this.reset(element);
-				},
-				isCustom: (element) => {
-					this.isCustom(element);
 				},
 				dispatchFormEvent: (element, name) => {
 					this.dispatchFormEvent(element, name);
@@ -558,11 +683,11 @@ export class Utils {
 				hideGlobalMsg: (element) => {
 					this.hideGlobalMsg(element);
 				},
-				getGtmData: (element, eventName) => {
-					this.getGtmData(element, eventName);
+				getGtmData: (element, eventName, formData) => {
+					this.getGtmData(element, eventName, formData);
 				},
-				gtmSubmit: (element) => {
-					this.gtmSubmit(element);
+				gtmSubmit: (element, formData, errors) => {
+					this.gtmSubmit(element, formData, errors);
 				},
 				preFillOnInit: (input, type) => {
 					this.preFillOnInit(input, type);
@@ -573,8 +698,17 @@ export class Utils {
 				redirectToUrl: (element, formData) => {
 					this.redirectToUrl(element, formData);
 				},
+				redirectToUrlByRefference: (redirectUrl, reload) => {
+					this.redirectToUrlByRefference(redirectUrl, reload);
+				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
+				},
+				isCaptchaInitUsed: () => {
+					this.isCaptchaInitUsed();
+				},
+				isCaptchaEnterprise: () => {
+					this.isCaptchaEnterprise();
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

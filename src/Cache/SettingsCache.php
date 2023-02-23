@@ -10,16 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCache class.
  */
-class SettingsCache implements SettingInterface, ServiceInterface
+class SettingsCache implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -37,6 +38,17 @@ class SettingsCache implements SettingInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'cache';
 
 	/**
+	 * Cache transients default times.
+	 *
+	 * @var array<string, int>
+	 */
+	public const CACHE_TRANSIENTS_TIMES = [
+		'integration' => \HOUR_IN_SECONDS, // 60 min
+		'momentsToken' => \HOUR_IN_SECONDS - \MINUTE_IN_SECONDS, // 50 min
+		'quick' => \MINUTE_IN_SECONDS * 3 // 3 min
+	];
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -44,18 +56,6 @@ class SettingsCache implements SettingInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**
@@ -67,38 +67,61 @@ class SettingsCache implements SettingInterface, ServiceInterface
 	{
 		$manifestForm = Components::getComponent('form');
 
+		$output = \array_values(\array_filter(\array_map(
+			static function ($key, $value) use ($manifestForm) {
+				$icon = Helper::getProjectIcons($key);
+				$cache = $value['cache'] ?? [];
+
+				if ($cache) {
+					return [
+						'component' => 'card',
+						'cardTitle' => Filters::getSettingsLabels($key),
+						'cardSubTitle' => Filters::getSettingsLabels($key),
+						'cardIcon' => $icon,
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => $key,
+									'data-reload' => 'false',
+								],
+								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+							],
+						],
+					];
+				}
+			},
+			\array_keys(Filters::ALL),
+			Filters::ALL
+		)));
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutItems' => \array_values(\array_filter(\array_map(
-					static function ($key, $value) use ($manifestForm) {
-						$icon = $value['icon'];
-						$cache = $value['cache'] ?? [];
-
-						if ($cache) {
-							return [
-								'component' => 'card',
-								'cardTitle' => Filters::getSettingsLabels($key),
-								'cardSubTitle' => Filters::getSettingsLabels($key),
-								'cardIcon' => $icon,
-								'cardContent' => [
-									[
-										'component' => 'submit',
-										'submitFieldSkip' => true,
-										'submitValue' => \__('Clear cache', 'eightshift-forms'),
-										'submitAttrs' => [
-											'data-type' => $key,
-										],
-										'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
-									],
+				'layoutContent' => [
+					...$output,
+					[
+						'component' => 'card',
+						'cardTitle' => 'All cache',
+						'cardSubTitle' => 'Use with caution!',
+						'cardIcon' => '',
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitAttrs' => [
+									'data-type' => 'all',
+									'data-reload' => 'false',
 								],
-							];
-						}
-					},
-					\array_keys(Filters::ALL),
-					Filters::ALL
-				))),
+								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+							],
+						],
+					],
+				]
 			],
 		];
 	}

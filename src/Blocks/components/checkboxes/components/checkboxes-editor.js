@@ -1,49 +1,36 @@
-/* global esFormsLocalization */
-
-import React, { useMemo, useEffect } from 'react';
+import React from 'react';
 import {
 	checkAttr,
 	props,
-	getUnique,
-	getAttrKey
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
+import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import manifest from '../manifest.json';
 
-
 export const CheckboxesEditor = (attributes) => {
-	const unique = useMemo(() => getUnique(), []);
 	const {
 		componentName
 	} = manifest;
 
 	const {
-		setAttributes,
-
 		additionalFieldClass,
 	} = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
-
-	// Populate ID manually and make it generic.
-	useEffect(() => {
-		setAttributes({ [getAttrKey('checkboxesId', attributes, manifest)]: unique });
-	}, []); // eslint-disable-line
-
-	// Additional content filter.
-	let additionalContent = '';
-
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		(esFormsLocalization?.checkboxesBlockAdditionalContent) !== ''
-	) {
-		additionalContent = esFormsLocalization.checkboxesBlockAdditionalContent;
-	}
+	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 
 	const checkboxes = (
 		<>
 			{checkboxesContent}
-			<div dangerouslySetInnerHTML={{__html: additionalContent}} />
+
+			<MissingName value={checkboxesName} isEditor={true} />
+
+			<ConditionalTagsEditor
+				{...props('conditionalTags', attributes)}
+			/>
+			
+			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
 		</>
 	);
 

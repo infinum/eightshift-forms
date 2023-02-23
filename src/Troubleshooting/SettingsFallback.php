@@ -10,13 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsFallback class.
  */
-class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface
+class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, SettingGlobalInterface
 {
 	/**
 	 * Use general helper trait.
@@ -77,18 +78,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	}
 
 	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
-	}
-
-	/**
 	 * Get global settings array for building settings page.
 	 *
 	 * @return array<int, array<string, mixed>>
@@ -115,7 +104,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -149,7 +137,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
-					'inputId' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 					'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
 					'inputType' => 'text',

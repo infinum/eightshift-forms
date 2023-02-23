@@ -13,6 +13,7 @@ namespace EightshiftForms\Settings\Settings;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Settings class.
@@ -40,6 +41,9 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
 
+	public const SETTINGS_TYPE_NAME = 'settings';
+	public const SETTINGS_GLOBAL_TYPE_NAME = 'settingsGlobal';
+
 	/**
 	 * Get sidebar settings array for building settings page.
 	 *
@@ -50,10 +54,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array
 	{
-		$internalType = 'settingsGlobal';
+		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = 'settings';
+			$internalType = self::SETTINGS_TYPE_NAME;
 		}
 
 		$output = [];
@@ -83,7 +87,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 				'label' => Filters::getSettingsLabels($key),
 				'desc' => Filters::getSettingsLabels($key, 'desc'),
 				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
-				'icon' => $value['icon'],
+				'icon' => Helper::getProjectIcons($key),
 				'type' => $type,
 				'key' => $key,
 			];
@@ -103,10 +107,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsForm(string $type, string $formId = ''): string
 	{
-		$internalType = 'settingsGlobal';
+		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = 'settings';
+			$internalType = self::SETTINGS_TYPE_NAME;
 		}
 
 		// Find settings page.
@@ -120,15 +124,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		// Get filter data.
 		$data = \apply_filters($filter, $formId);
 
-		// Add additional props to form component.
-		$formAdditionalProps['formType'] = $type;
-
-		if ($formId) {
-			$formAdditionalProps['formPostId'] = $formId;
-		}
-
 		$formAdditionalProps['formAttrs'] = [
-			'data-settings-type' => $internalType,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId'] => $formId,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType'] => $internalType,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['settingsType'] => $type,
 		];
 
 		// Populate and build form.

@@ -1,0 +1,6 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "integrations",
+	"title": "Integrations",
+	"componentClass": "es-integrations"
+}

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -21,7 +21,7 @@ use WP_Query;
 /**
  * SettingsTransfer class.
  */
-class SettingsTransfer implements ServiceInterface, SettingInterface
+class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 {
 	/**
 	 * Use general helper trait.
@@ -71,29 +71,6 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-	}
-
-	/**
-	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsGlobalValid(): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**
@@ -197,12 +174,10 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 								'fileIsRequired' => true,
 								'fileFieldLabel' =>  \__('Upload json file', 'eightshift-forms'),
 								'fileAccept' => 'json',
-								'fileUseCustom' => false,
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
 							],
 							[
 								'component' => 'checkboxes',
-								'checkboxesId' => 'override',
 								'checkboxesName' => 'override',
 								'checkboxesFieldLabel' => '',
 								'checkboxesContent' => [
@@ -275,7 +250,6 @@ class SettingsTransfer implements ServiceInterface, SettingInterface
 
 		return [
 			'component' => 'checkboxes',
-			'checkboxesId' => 'form',
 			'checkboxesName' => 'form',
 			'checkboxesFieldLabel' => \__('Forms', 'eightshift-forms'),
 			'checkboxesContent' => $output,

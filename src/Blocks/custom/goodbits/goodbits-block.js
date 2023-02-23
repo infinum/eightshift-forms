@@ -1,23 +1,23 @@
 import React from 'react';
-import { useSelect } from "@wordpress/data";
 import { InspectorControls } from '@wordpress/block-editor';
 import { GoodbitsEditor } from './components/goodbits-editor';
 import { GoodbitsOptions } from './components/goodbits-options';
 
 export const Goodbits = (props) => {
-	const postId = useSelect((select) => select('core/editor').getCurrentPostId());
+	const itemIdKey = 'goodbitsIntegrationId';
 
 	return (
 		<>
 			<InspectorControls>
 				<GoodbitsOptions
 					{...props}
-					postId={postId}
+					clientId={props.clientId}
+					itemIdKey={itemIdKey}
 				/>
 			</InspectorControls>
 			<GoodbitsEditor
 				{...props}
-				postId={postId}
+				itemIdKey={itemIdKey}
 			/>
 		</>
 	);

@@ -16,96 +16,11 @@
 		max-width: var(--global-es-max-width);
 	}
 
-	// Integration specific.
-	&--integration-inner {
-		> #{$this}__content {
-			display: grid;
-			row-gap: var(--global-es-spacing-horizontal-small);
-			column-gap: var(--global-es-spacing-horizontal);
-			grid-template-columns: repeat(1, 1fr);
-			grid-column: 1 / 13;
-
-			@include media(large up) {
-				grid-column: 4 / 11;
-				grid-template-columns: repeat(4, 1fr);
-			}
-
-			.es-field {
-				&__inner {
-					display: block;
-					position: relative;
-				}
-
-				&__label {
-					margin-bottom: 5px;
-					display: block;
-					padding-top: 0;
-					font-size: 12px;
-					padding-right: 25px;
-				}
-
-				&__es-tooltip {
-					position: absolute;
-					right: 0;
-					top: 0;
-				}
-			}
-		}
-	}
-
 	// Default listing for fields.
 	&--default-listing {
 		> #{$this}__content {
 			display: grid;
 			row-gap: var(--global-es-spacing-horizontal);
-		}
-	}
-
-	// Default listing with top divider.
-	&--default-listing-divider {
-		> #{$this}__content {
-			display: grid;
-			row-gap: var(--global-es-spacing-horizontal);
-
-			> * {
-				padding-top: var(--global-es-spacing-horizontal);
-				border-top: 1px solid var(--global-colors-es-ebb);
-			}
-		}
-	}
-
-	// Tags listing top group.
-	&--tags {
-		> #{$this}__content {
-			display: grid;
-			column-gap: var(--global-es-spacing-horizontal);
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	// Tags listing for checkboxes.
-	&--tags-inner-checkbox {
-		> #{$this}__content {
-			.es-field__content-wrap {
-				padding-top: 12px;
-				display: grid;
-				row-gap: 39px;
-				padding-bottom: 12px;
-
-				> * {
-					margin-bottom: 0;
-				}
-			}
-		}
-	}
-
-	// Tags listing for input.
-	&--tags-inner-input {
-		grid-row-start: 1;
-
-		> #{$this}__content {
-			display: grid;
-			row-gap: var(--global-es-spacing-horizontal-small);
 		}
 	}
 }

@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "radio",
 	"title": "Radio",
 	"componentClass": "es-radio",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"radioLabel": "Label",
@@ -50,6 +51,9 @@
 			"default": false
 		},
 		"radioAttrs": {
+			"type": "object"
+		},
+		"radioDisabledOptions": {
 			"type": "array"
 		}
 	}

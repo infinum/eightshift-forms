@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "es-textarea",
-	"componentCustomJsClass": "js-es-block-form-custom",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"textareaName": "Name",
@@ -14,12 +15,10 @@
 		}
 	},
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"textareaId": {
-			"type": "string"
-		},
 		"textareaName": {
 			"type": "string"
 		},
@@ -41,7 +40,17 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaMinLength": {
+			"type": "integer"
+		},
+		"textareaMaxLength": {
+			"type": "integer"
+		},
 		"textareaIsMonospace": {
+			"type": "boolean",
+			"default": false
+		},
+		"textareaSaveAsJson": {
 			"type": "boolean",
 			"default": false
 		},
@@ -51,15 +60,28 @@
 		"textareaValidationPattern": {
 			"type": "string"
 		},
-		"textareaUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"textareaMeta": {
 			"type": "string"
 		},
 		"textareaAttrs": {
+			"type": "object"
+		},
+		"textareaDisabledOptions": {
 			"type": "array"
+		},
+		"textareaSingleSubmit": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"options": {
+		"textareaMinLength": {
+			"min":  0,
+			"step": 1
+		},
+		"textareaMaxLength": {
+			"min":  1,
+			"step": 1
 		}
 	}
 }

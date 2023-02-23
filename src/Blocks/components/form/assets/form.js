@@ -1,7 +1,7 @@
-/* global grecaptcha */
+/* global grecaptcha, esFormsLocalization */
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import { ConditionalTags } from './conditional-tags';
+import { ConditionalTags } from './../../conditional-tags/assets';
 import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 
@@ -68,57 +68,77 @@ export class Form {
 	 * @public
 	 */
 	initOne(element) {
-			// Regular submit.
-			element.addEventListener('submit', this.onFormSubmitEvent);
+		// Regular submit.
+		element.addEventListener('submit', this.onFormSubmitEvent);
 
-			// Single submit for admin settings.
-			if (this.utils.formIsAdmin) {
-				const items = element.querySelectorAll(this.utils.submitSingleSelector);
+		// Single submit for admin settings.
+		if (this.utils.formIsAdmin) {
+			const items = element.querySelectorAll(this.utils.submitSingleSelector);
 
-				// Look all internal items for single submit option.
-				[...items].forEach((item) => {
-					if (item.type === 'submit') {
-						item.addEventListener('click', this.onFormSubmitSingleEvent);
-					} else {
-						item.addEventListener('change', this.onFormSubmitSingleEvent);
-					}
-				});
+			// Look all internal items for single submit option.
+			[...items].forEach((item) => {
+				if (item.type === 'submit') {
+					item.addEventListener('click', this.onFormSubmitSingleEvent);
+				} else {
+					item.addEventListener('change', this.onFormSubmitSingleEvent);
+				}
+			});
+		}
+
+		// Get form ID.
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+
+		// Form loading started.
+		this.utils.FORMS[formId] = false;
+
+		// All fields selectors.
+		const inputs = element.querySelectorAll(this.utils.inputSelector);
+		const textareas = element.querySelectorAll(this.utils.textareaSelector);
+		const selects = element.querySelectorAll(this.utils.selectSelector);
+		const files = element.querySelectorAll(this.utils.fileSelector);
+
+		// Setup regular inputs.
+		this.utils.CUSTOM_DATES[formId] = [];
+		[...inputs].forEach((input) => {
+			switch (input.type) {
+				case 'date':
+				case 'datetime-local':
+					this.setupDateField(input, formId);
+					break;
 			}
 
-			// Get form ID.
-			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+			this.setupInputField(input);
+		});
 
-			// All fields selectors.
-			const inputs = element.querySelectorAll(this.utils.inputSelector);
-			const textareas = element.querySelectorAll(this.utils.textareaSelector);
-			const selects = element.querySelectorAll(this.utils.selectSelector);
-			const files = element.querySelectorAll(this.utils.fileSelector);
+		// Setup select inputs.
+		this.utils.CUSTOM_SELECTS[formId] = [];
+		[...selects].forEach((select) => {
+			this.setupSelectField(select, formId);
+		});
 
-			// Setup regular inputs.
-			[...inputs].forEach((input) => {
-				this.setupInputField(input);
-			});
+		// Setup textarea inputs.
+		this.utils.CUSTOM_TEXTAREAS[formId] = [];
+		[...textareas].forEach((textarea) => {
+			this.setupTextareaField(textarea, formId);
+		});
 
-			// Setup select inputs.
-			this.utils.CUSTOM_SELECTS[formId] = [];
-			[...selects].forEach((select) => {
-				this.setupSelectField(select, formId);
-			});
+		// Setup file single inputs.
+		this.utils.CUSTOM_FILES[formId] = [];
+		[...files].forEach((file, index) => {
+			this.setupFileField(file, formId, index, element);
+		});
 
-			// Setup textarea inputs.
-			this.utils.CUSTOM_TEXTAREAS[formId] = [];
-			[...textareas].forEach((textarea) => {
-				this.setupTextareaField(textarea, formId);
-			});
+		// Form loaded.
+		this.utils.isFormLoaded(
+			formId,
+			element,
+			selects.length,
+			textareas.length,
+			files.length
+		);
 
-			// Setup file single inputs.
-			this.utils.CUSTOM_FILES[formId] = [];
-			[...files].forEach((file, index) => {
-				this.setupFileField(file, formId, index, element);
-			});
-
-			// Triger event that form is fully loaded.
-			this.utils.dispatchFormEvent(element, this.utils.EVENTS.FORM_JS_LOADED);
+		// Setup phone sync.
+		this.setupPhoneSync(element, selects.length, formId);
 	}
 
 	/**
@@ -129,7 +149,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmitCaptcha(element, token) {
+	formSubmitCaptcha(element, token, payed, action) {
 		// Loader show.
 		this.utils.showLoader(element);
 
@@ -142,7 +162,8 @@ export class Form {
 			},
 			body: JSON.stringify({
 				token,
-				formId: element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId),
+				payed,
+				action,
 			}),
 			credentials: 'same-origin',
 			redirect: 'follow',
@@ -155,12 +176,9 @@ export class Form {
 		})
 		.then((response) => {
 			// On success state.
-			if (response.code >= 200 && response.code <= 299) {
+			if (response.status === 'success') {
 				this.formSubmit(element);
-			}
-
-			// Normal errors.
-			if (response.status === 'error') {
+			} else {
 				// Clear all errors.
 				this.utils.reset(element);
 
@@ -191,7 +209,7 @@ export class Form {
 		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
 		// Loader show.
-		if (!this.utils.SETTINGS.CAPTCHA) {
+		if (!this.utils.isCaptchaUsed()) {
 			this.utils.showLoader(element);
 		}
 
@@ -212,7 +230,16 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(!this.utils.formIsAdmin ? `${this.utils.formSubmitRestApiUrl}-${formType}` : this.utils.formSubmitRestApiUrl, body)
+		// Url for frontend forms.
+		let url = `${this.utils.formSubmitRestApiUrl}-${formType}`;
+
+		// For admin settings use different url and add nonce.
+		if (this.utils.formIsAdmin) {
+			url = this.utils.formSubmitRestApiUrl;
+			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
+		}
+
+		fetch(url, body)
 			.then((response) => {
 				return response.json();
 			})
@@ -227,9 +254,9 @@ export class Form {
 				this.utils.hideLoader(element);
 
 				// On success state.
-				if (response.code >= 200 && response.code <= 299) {
+				if (response.status === 'success') {
 					// Send GTM.
-					this.utils.gtmSubmit(element);
+					this.utils.gtmSubmit(element, formData, response.status);
 
 					// Redirect on success.
 					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
@@ -240,11 +267,22 @@ export class Form {
 						this.utils.setGlobalMsg(element, response.message, 'success');
 
 						// Redirect to url and update url params from from data.
-						this.utils.redirectToUrl(element, formData);
+						if (singleSubmit) {
+							this.utils.redirectToUrlByRefference(window.location.href, true);
+						} else {
+							this.utils.redirectToUrl(element, formData);
+						}
 					} else {
 						// Do normal success without redirect.
 						// Dispatch event.
 						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
+
+						// Do the actual redirect after some time for custom form processed externally.
+						if (response?.data?.processExternaly) {
+							setTimeout(() => {
+								element.submit();
+							}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+						}
 
 						// Set global msg.
 						this.utils.setGlobalMsg(element, response.message, 'success');
@@ -252,38 +290,21 @@ export class Form {
 						// Clear form values.
 						this.utils.resetForm(element);
 					}
-				}
+				} else {
+					this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
+					const isValidationError = response?.data?.validation !== undefined;
 
-				// On redirect with custom action state.
-				if (response.code >= 300 && response.code <= 399) {
-					// Send GTM.
-					this.utils.gtmSubmit(element);
-
-					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'success');
-
-					// Do the actual redirect after some time.
-					setTimeout(() => {
-						element.submit();
-					}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
-				}
-
-				// Normal errors.
-				if (response.status === 'error') {
 					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					if (isValidationError) {
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
+					} else {
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					}
+
+					this.utils.outputErrors(element, response?.data?.validation);
 
 					// Set global msg.
 					this.utils.setGlobalMsg(element, response.message, 'error');
-				}
-
-				// Validate fields error.
-				if (response.status === 'error_validation') {
-					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
-
-					// Output field errors.
-					this.utils.outputErrors(element, response.validation);
 				}
 
 				// Hide global msg in any case after some time.
@@ -293,17 +314,6 @@ export class Form {
 
 				// Dispatch event.
 				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
-			})
-			.catch(() => {
-				this.utils.setGlobalMsg(element, this.utils.SETTINGS.FORM_SERVER_ERROR_MSG, 'error');
-
-				// Remove loader.
-				this.utils.hideLoader(element);
-
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 			});
 	}
 
@@ -317,59 +327,61 @@ export class Form {
 	 */
 	getFormData(element, singleSubmit = false) {
 		const formData = new FormData();
+		const selectors = 'input, select, textarea';
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
-
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-
-		// Check if we are saving group items in one key.
-		if (groups.length && !singleSubmit) {
-			for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-				const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
-				const groupInner = group.querySelectorAll(`
-					${this.utils.groupInnerSelector} input,
-					${this.utils.groupInnerSelector} select,
-					${this.utils.groupInnerSelector} textarea
-				`);
-
-				if (groupInner.length) {
-					const groupInnerItems = {};
-
-					for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
-						const {
-							id,
-							value,
-							disabled,
-						} = groupInnerItem;
-
-						if (disabled) {
-							continue;
-						}
-
-						groupInnerItems[id] = value;
-					}
-
-					formData.append(groupId, JSON.stringify({
-						value: groupInnerItems,
-						type: 'group',
-					}));
-				}
-			}
-		}
-
-		let items = element.querySelectorAll(`
-			input:not(${this.utils.groupInnerSelector} input),
-			select:not(${this.utils.groupInnerSelector} select),
-			textarea:not(${this.utils.groupInnerSelector} textarea)
-		`);
-
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+		let items = element.querySelectorAll(selectors);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
 			items = [
 				singleSubmit
 			];
+		} else {
+			// Check if we are saving group items in one key.
+			if (groups.length) {
+				for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
+					const groupSaveAsOneField = Boolean(group.getAttribute(this.utils.DATA_ATTRIBUTES.groupSaveAsOneField));
+
+					if (!groupSaveAsOneField) {
+						continue;
+					}
+
+					const groupInner = group.querySelectorAll(selectors);
+
+					if (groupInner.length) {
+						const groupInnerItems = {};
+
+						for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
+							const {
+								id,
+								value,
+								disabled,
+							} = groupInnerItem;
+
+							if (disabled) {
+								continue;
+							}
+
+							groupInnerItems[id] = value;
+						}
+
+						const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
+
+						if (groupId) {
+							formData.append(groupId, JSON.stringify({
+								value: groupInnerItems,
+								type: 'group',
+							}));
+						}
+					}
+
+					// Remove group items from the original items.
+					items = Array.prototype.slice.call(items).filter((item) => Array.prototype.slice.call(groupInner).indexOf(item) == -1);
+				}
+			}
 		}
 
 		// Iterate all form items.
@@ -378,14 +390,12 @@ export class Form {
 				type,
 				name,
 				id,
-				files,
 				disabled,
 				checked,
 				dataset: {
 					objectTypeId, // Used for HubSpot only
 				}
 			} = item;
-
 			if (disabled) {
 				continue;
 			}
@@ -408,56 +418,134 @@ export class Form {
 				data.objectTypeId = objectTypeId ?? '';
 			}
 
-			// If checkbox/radio on empty change to empty value.
-			if ((type === 'checkbox' || type === 'radio') && !checked) {
-				// If unchecked value attribute is added use that if not send an empty value.
-				data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+			if (data.internalType === 'date' || data.internalType === 'datetime-local') {
+				data.type = data.internalType;
 			}
 
-			// Append files field.
-			if (type === 'file') {
-				// Default use normal files form input.
-				let fileList = files;
-
-				// If custom file use files got from the global object of files uploaded.
-				if (this.utils.isCustom(item)) {
-					fileList = this.utils.FILES[formId][id] ?? [];
-				}
-
-				// Loop files and append.
-				if (fileList.length) {
-					for (const [key, file] of Object.entries(fileList)) {
-						formData.append(`${id}[${key}]`, file);
+			switch (type) {
+				case 'checkbox':
+				case 'radio':
+					// If checkbox/radio on empty change to empty value.
+					if (!checked) {
+						// If unchecked value attribute is added use that if not send an empty value.
+						data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 					}
-				} else {
-					formData.append(`${id}[0]`, JSON.stringify({}));
-				}
-			} else {
-				// Output/append all fields.
-				formData.append(id, JSON.stringify(data));
+
+					formData.append(id, JSON.stringify(data));
+
+					break;
+				case 'file':
+					// If custom file use files got from the global object of files uploaded.
+					const fileList = this.utils.FILES[formId][id] ?? []; // eslint-disable-line no-case-declarations
+
+					// Loop files and append.
+					if (fileList.length) {
+						for (const [key, file] of Object.entries(fileList)) {
+							formData.append(`${id}[${key}]`, file);
+						}
+					} else {
+						formData.append(`${id}[0]`, JSON.stringify({}));
+					}
+					break;
+				case 'select-one':
+					// Bailout if select is part of the phone.
+					if (item.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType) === 'phone') {
+						break;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
+				case 'text':
+					// Skip alt text input created by date time picker lib.
+					if (item?.previousElementSibling?.classList?.contains('flatpickr-input')) {
+						break;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
+				case 'tel':
+					const prefix = item.previousElementSibling.querySelector('select'); // eslint-disable-line no-case-declarations
+					const selectedPrefix = prefix.options[prefix.selectedIndex].value; // eslint-disable-line no-case-declarations
+
+					if (item.value) {
+						data.value = `${selectedPrefix}${item.value}`;
+					}
+
+					formData.append(id, JSON.stringify(data));
+
+					break;
+				case 'textarea':
+					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarations
+
+					// Convert textarea to json format with : as delimiter.
+					if (saveAsJson) {
+						const textareaOutput = [];
+						const regexItems = data.value.split(/\r\n|\r|\n/);
+
+						if (regexItems.length) {
+							regexItems.forEach((element) => {
+								if (!element) {
+									return;
+								}
+
+								const innerItem = element.split(':');
+								const innerOutput = [];
+
+								if (innerItem) {
+									innerItem.forEach((inner) => {
+										const innerItem = inner.trim();
+
+										if (!innerItem) {
+											return;
+										}
+
+										innerOutput.push(innerItem.trim());
+									});
+								}
+
+								textareaOutput.push(innerOutput);
+							});
+						}
+
+						data.value = textareaOutput;
+					}
+
+					formData.append(id, JSON.stringify(data));
+					break;
+				case 'search':
+					// Skip search field from dropdown.
+					break;
+				default:
+					formData.append(id, JSON.stringify(data));
+
+					break;
 			}
 		}
 
 		// Add form ID field.
 		formData.append(this.utils.FORM_PARAMS.postId, JSON.stringify({
+			name: this.utils.FORM_PARAMS.postId,
 			value: formId,
 			type: 'hidden',
 		}));
 
 		// Add form type field.
 		formData.append(this.utils.FORM_PARAMS.type, JSON.stringify({
+			name: this.utils.FORM_PARAMS.type,
 			value: formType,
 			type: 'hidden',
 		}));
 
 		// Add form action field.
 		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
+			name: this.utils.FORM_PARAMS.action,
 			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add action external field.
 		formData.append(this.utils.FORM_PARAMS.actionExternal, JSON.stringify({
+			name: this.utils.FORM_PARAMS.actionExternal,
 			value: element.getAttribute(this.utils.DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
@@ -465,36 +553,50 @@ export class Form {
 		// Add additional options for HubSpot only.
 		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
 			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotCookie,
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
 			formData.append(this.utils.FORM_PARAMS.hubspotPageName, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotPageName,
 				value: document.title,
 				type: 'hidden',
 			}));
 
 			formData.append(this.utils.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
+				name: this.utils.FORM_PARAMS.hubspotPageUrl,
 				value: window.location.href,
 				type: 'hidden',
 			}));
 		}
 
-		if (singleSubmit && this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
-				value: 'true',
+		if (this.utils.formIsAdmin) {
+			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
+				name: this.utils.FORM_PARAMS.settingsType,
+				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
 				type: 'hidden',
 			}));
+
+			if (singleSubmit) {
+				formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
+					name: this.utils.FORM_PARAMS.singleSubmit,
+					value: 'true',
+					type: 'hidden',
+				}));
+			}
+	
 		}
 
 		// Set localStorage to hidden field.
 		if (this.enrichment.isEnrichmentUsed()) {
 			const storage = this.enrichment.getLocalStorage();
 			if (storage) {
-			 formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
-				 value: storage,
-				 type: 'hidden',
-			 }));
+				formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
+					name: this.utils.FORM_PARAMS.storage,
+					value: storage,
+					type: 'hidden',
+				}));
 			}
 		}
 
@@ -517,6 +619,32 @@ export class Form {
 	}
 
 	/**
+	 * Setup Date time field.
+	 * 
+	 * @param {object} date Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupDateField(date, formId) {
+		import('flatpickr').then((flatpickr) => {
+			const {type} = date;
+
+			const previewFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.datePreviewFormat);
+			const outputFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.dateOutputFormat);
+
+			const datePicker = flatpickr.default(date, {
+				enableTime: type === 'datetime-local',
+				dateFormat: outputFormat,
+				altFormat: previewFormat,
+				altInput: true,
+			});
+
+			this.utils.CUSTOM_DATES[formId].push(datePicker);
+		});
+	}
+
+	/**
 	 * Setup Select field.
 	 * 
 	 * @param {object} select Input element.
@@ -525,30 +653,53 @@ export class Form {
 	 * @public
 	 */
 	setupSelectField(select, formId) {
-		const option = select.querySelector('option');
+		import('choices.js').then((Choices) => {
+			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
+			const selectPlaceholder = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectPlaceholder);
+			const selectAllowSearch = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch);
 
-		if (this.utils.isCustom(select)) {
-			import('choices.js').then((Choices) => {
-				const choices = new Choices.default(select, {
-					searchEnabled: false,
-					shouldSort: false,
-					position: 'bottom',
-					allowHTML: true,
-				});
+			const choices = new Choices.default(select, {
+				searchEnabled: Boolean(selectAllowSearch),
+				shouldSort: false,
+				position: 'bottom',
+				allowHTML: true,
+				placeholder: Boolean(selectPlaceholder),
+				searchFields: ['label', 'value', 'customProperties'],
+				itemSelectText: '',
+				classNames: {
+					containerOuter: `choices ${this.utils.selectClassName}`,
+				},
+				callbackOnCreateTemplates: function() {
+					return {
+						choice: (...args) => {
+							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 
-				this.utils.preFillOnInit(choices, 'select-custom');
+							// Implement changes for phone picker.
+							if (selectShowCountryIcons) {
+								const findItem = this.config.choices.find((item) => item.label === element.innerHTML).customProperties;
+								element.dataset.customProperties = findItem;
+								return element;
+							}
 
-				this.utils.CUSTOM_SELECTS[formId].push(choices);
-
-				select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
-				select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+							return element;
+						},
+					};
+				},
 			});
-		} else {
-			this.utils.preFillOnInit(option, 'select');
 
-			select.addEventListener('focus', this.utils.onFocusEvent);
-			select.addEventListener('blur', this.utils.onBlurEvent);
-		}
+			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true).value);
+
+			Object.assign(choices, {
+				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
+			});
+
+			this.utils.preFillOnInit(choices, 'select');
+
+			this.utils.CUSTOM_SELECTS[formId].push(choices);
+
+			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
+			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+		});
 	}
 
 	/**
@@ -566,16 +717,14 @@ export class Form {
 		textarea.addEventListener('focus', this.utils.onFocusEvent);
 		textarea.addEventListener('blur', this.utils.onBlurEvent);
 
-		if (this.utils.isCustom(textarea)) {
-			import('autosize').then((autosize) => {
-				textarea.setAttribute('rows', '1');
-				textarea.setAttribute('cols', '');
+		import('autosize').then((autosize) => {
+			textarea.setAttribute('rows', '1');
+			textarea.setAttribute('cols', '');
 
-				autosize.default(textarea);
+			autosize.default(textarea);
 
-				this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
-			});
-		}
+			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
+		});
 	}
 
 	/**
@@ -588,84 +737,145 @@ export class Form {
 	 * @public
 	 */
 	setupFileField(file, formId, index) {
-		if (this.utils.isCustom(file)) {
+		const fileId = file?.id;
 
-			const fileId = file?.id;
-
-			if (typeof this.utils.FILES[formId] === 'undefined') {
-				this.utils.FILES[formId] = {};
-			}
-
-			if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
-				this.utils.FILES[formId][fileId] = [];
-			}
-
-			import('dropzone').then((Dropzone) => {
-				// Init dropzone.
-				const myDropzone = new Dropzone.default(
-					file.closest(this.utils.fieldSelector),
-					{
-						url: "/",
-						addRemoveLinks: true,
-						autoProcessQueue: false,
-						autoDiscover: false,
-						maxFiles: !file.multiple ? 1 : null,
-						dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
-					}
-				);
-
-				this.utils.CUSTOM_FILES[formId].push(myDropzone);
-
-				// On add one file.
-				myDropzone.on("addedfile", (file) => {
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
-					}, 200);
-
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
-					}, 1200);
-
-					this.utils.FILES[formId][fileId].push(file);
-				});
-
-				// On max file size reached.
-				myDropzone.on('maxfilesreached', () => {
-					myDropzone.removeEventListeners();
-				});
-
-				// On error while upload.
-				myDropzone.on("error", (file) => {
-					setTimeout(() => {
-						file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
-					}, 1500);
-
-					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-					this.utils.FILES[formId][fileId] = [...itemsLeft];
-				});
-
-				// On remove files.
-				myDropzone.on("removedfile", (file) => {
-					const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-					this.utils.FILES[formId][fileId] = [...itemsLeft];
-
-					myDropzone.setupEventListeners();
-				});
-
-				// Trigger on wrap click.
-				file.nextElementSibling.setAttribute('dropzone-index', index);
-				file.nextElementSibling.setAttribute('dropzone-form-id', formId);
-				file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
-
-				// Button inside wrap element.
-				const button = file.parentNode.querySelector('a');
-
-				button.addEventListener('focus', this.utils.onFocusEvent);
-				button.addEventListener('blur', this.utils.onBlurEvent);
-			});
+		if (typeof this.utils.FILES[formId] === 'undefined') {
+			this.utils.FILES[formId] = {};
 		}
+
+		if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
+			this.utils.FILES[formId][fileId] = [];
+		}
+
+		import('dropzone').then((Dropzone) => {
+			// Init dropzone.
+			const myDropzone = new Dropzone.default(
+				file.closest(this.utils.fieldSelector),
+				{
+					url: "/",
+					addRemoveLinks: true,
+					autoProcessQueue: false,
+					autoDiscover: false,
+					maxFiles: !file.multiple ? 1 : null,
+					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
+				}
+			);
+
+			this.utils.CUSTOM_FILES[formId].push(myDropzone);
+
+			// On add one file.
+			myDropzone.on("addedfile", (file) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+				}, 200);
+
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
+				}, 1200);
+
+				this.utils.FILES[formId][fileId].push(file);
+			});
+
+			// On max file size reached.
+			myDropzone.on('maxfilesreached', () => {
+				myDropzone.removeEventListeners();
+			});
+
+			// On error while upload.
+			myDropzone.on("error", (file) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
+				}, 1500);
+
+				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+				this.utils.FILES[formId][fileId] = [...itemsLeft];
+			});
+
+			// On remove files.
+			myDropzone.on("removedfile", (file) => {
+				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+
+				this.utils.FILES[formId][fileId] = [...itemsLeft];
+
+				myDropzone.setupEventListeners();
+			});
+
+			// Trigger on wrap click.
+			file.nextElementSibling.setAttribute('dropzone-index', index);
+			file.nextElementSibling.setAttribute('dropzone-form-id', formId);
+			file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
+
+			// Button inside wrap element.
+			const button = file.parentNode.querySelector('a');
+
+			button.addEventListener('focus', this.utils.onFocusEvent);
+			button.addEventListener('blur', this.utils.onBlurEvent);
+		});
+	}
+
+	/**
+	 * Sync phone and country fields on change.
+	 *
+	 * @param {object} form Form element
+	 * @param {number} selectsCount Total number of selects.
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns void
+	 */
+	setupPhoneSync(form, selectsCount, formId) {
+		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
+
+		if (!phoneSync) {
+			return;
+		}
+
+		// Set interval because of dynamic import of choices.
+		const interval = setInterval(() => {
+			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
+				clearInterval(interval);
+
+				const selects = window[this.utils.prefix].utils.CUSTOM_SELECTS[formId];
+
+				if (selects.length !== 0) {
+					// Find all countries.
+					const country = selects.find((element) => element.esFormsFieldType === 'country');
+
+					// Find all phones.
+					const phones = selects.filter((element) => element.esFormsFieldType === 'phone');
+
+					if (country) {
+						// Loop all phones.
+						phones.map((element) => {
+							// Set phone init value by checking the contry.
+							element.setChoiceByValue(country.getValue()?.customProperties);
+
+							// Set contry value on any phone change.
+							// TODO: Remove events.
+							element.passedElement.element.addEventListener(
+								'change',
+								function(event) {
+									country.setChoiceByValue(country.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
+								},
+								false,
+							);
+						});
+
+						// Set phones value on country change.
+						// TODO: Remove events.
+						country.passedElement.element.addEventListener(
+							'change',
+							function(event) {
+								phones.map((element) => {
+									element.setChoiceByValue(element.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
+								});
+							},
+							false,
+						);
+					}
+				}
+			}
+		}, 100);
 	}
 
 	/**
@@ -688,19 +898,23 @@ export class Form {
 			const files = element.querySelectorAll(this.utils.fileSelector);
 
 			[...inputs].forEach((input) => {
+				switch (input.type) {
+					case 'date':
+					case 'datetime-local':
+						if (typeof this.utils.CUSTOM_DATES?.[formId] !== 'undefined') {
+							delete this.utils.CUSTOM_DATES[formId];
+						}
+						break;
+				}
+
 				input.removeEventListener('keydown', this.utils.onFocusEvent);
 				input.removeEventListener('focus', this.utils.onFocusEvent);
 				input.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
-			[...selects].forEach((select) => {
-				if (this.utils.isCustom(select)) {
-					if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
-						delete this.utils.CUSTOM_SELECTS[formId];
-					}
-				} else {
-					select.removeEventListener('focus', this.utils.onFocusEvent);
-					select.removeEventListener('blur', this.utils.onBlurEvent);
+			[...selects].forEach(() => {
+				if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
+					delete this.utils.CUSTOM_SELECTS[formId];
 				}
 			});
 
@@ -710,10 +924,8 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				if (this.utils.isCustom(textarea)) {
-					if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
-						delete this.utils.CUSTOM_TEXTAREAS[formId];
-					}
+				if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
+					delete this.utils.CUSTOM_TEXTAREAS[formId];
 				}
 			});
 
@@ -735,6 +947,29 @@ export class Form {
 		});
 	}
 
+	runFormCaptcha(element = '') {
+		if (!this.utils.isCaptchaUsed()) {
+			return;
+		}
+
+		const actionName = this.utils.SETTINGS.CAPTCHA['submitAction'];
+		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
+
+		if (this.utils.isCaptchaEnterprise()) {
+			grecaptcha.enterprise.ready(async () => {
+				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
+					this.formSubmitCaptcha(element, token, 'enterprise', actionName);
+				});
+			});
+		} else {
+			grecaptcha.ready(async () => {
+				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
+					this.formSubmitCaptcha(element, token, 'free', actionName);
+				});
+			});
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -750,14 +985,9 @@ export class Form {
 		event.preventDefault();
 
 		const element = event.target;
-		
 
 		if (this.utils.isCaptchaUsed()) {
-			grecaptcha.ready(() => {
-				grecaptcha.execute(this.utils.SETTINGS.CAPTCHA, {action: 'submit'}).then((token) => {
-					this.formSubmitCaptcha(element, token);
-				});
-			});
+			this.runFormCaptcha(element);
 		} else {
 			this.formSubmit(element);
 		}
@@ -818,8 +1048,8 @@ export class Form {
 				onFormSubmitEvent: (event) => {
 					this.onFormSubmitEvent(event);
 				},
-				formSubmitCaptcha: (element, token) => {
-					this.formSubmitCaptcha(element, token);
+				formSubmitCaptcha: (element, token, type) => {
+					this.formSubmitCaptcha(element, token, type);
 				},
 				formSubmit: (element) => {
 					this.formSubmit(element);
@@ -839,11 +1069,20 @@ export class Form {
 				setupFileField: (file, formId, index) => {
 					this.setupFileField(file, formId, index);
 				},
+				setupPhoneSync: (form, selectsCount, formId) => {
+					this.setupPhoneSync(form, selectsCount, formId);
+				},
 				onCustomFileWrapClickEvent: (event) => {
 					this.onCustomFileWrapClickEvent(event);
 				},
 				removeEvents: () => {
 					this.removeEvents();
+				},
+				phoneSync: () => {
+					this.phoneSync();
+				},
+				runFormCaptcha: (element) => {
+					this.runFormCaptcha(element);
 				},
 			};
 		}

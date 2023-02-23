@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "active-campaign",
 	"title": "ActiveCampaign Form",
 	"description" : "An ActiveCampaign subscription form",
@@ -11,13 +12,19 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"activeCampaignFormPostId": {
+		"activeCampaignIntegrationId": {
 			"type": "string"
 		},
-		"activeCampaignFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"activeCampaignIntegrationInnerId": {
+			"type": "string"
+		},
+		"activeCampaignFormPostId": {
+			"type": "string"
 		},
 		"activeCampaignFormDataTypeSelector": {
 			"type": "string"

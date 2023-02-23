@@ -11,10 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
 
 /**
@@ -59,8 +63,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$files = [];
-
 		// Try catch request.
 		try {
 			$params = $this->prepareParams($request->get_body_params());
@@ -68,58 +70,98 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 			// Get form ID.
 			$formId = $this->getFormId($params);
+			$formType = $this->getFormType($params);
+			$formSettingsType = $this->getFormSettingsType($params);
 
-			if (!$formId) {
-				throw new UnverifiedRequestException(
-					\esc_html__('Invalid nonce.', 'eightshift-forms')
-				);
+			if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+				$formDataRefrerence = [
+					'formId' => $formId,
+					'type' => $formType,
+					'itemId' => '',
+					'innerId' => '',
+					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
+				];
+			} else {
+				$formDataRefrerence = Helper::getFormDetailsById($formId);
 			}
 
-			// Determine form type.
-			$formType = $this->getFormType($params);
-
-			// Get form fields for validation.
-			$formData = isset(Filters::ALL[$formType]['fields']) ? \apply_filters(Filters::ALL[$formType]['fields'], $formId) : [];
+			$formDataRefrerence['params'] = $params;
+			$formDataRefrerence['files'] = $files;
 
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				$this->verifyRequest(
-					$params,
-					$files,
-					$formId,
-					$formData
-				);
+				// @phpstan-ignore-next-line.
+				$validate = $this->getValidator()->validate($formDataRefrerence);
+				if ($validate) {
+					throw new UnverifiedRequestException(
+						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+						$validate
+					);
+				}
 			}
 
 			// Extract hidden params from localStorage set on the frontend.
-			$params = $this->extractStorageParams($params);
+			$formDataRefrerence['params'] = $this->extractStorageParams($formDataRefrerence['params']);
+
+			// Attach som special keys for specific types.
+			switch ($formType) {
+				// Attach sender email to output for mailer.
+				case SettingsMailer::SETTINGS_TYPE_KEY:
+					$formDataRefrerence['senderEmail'] = $this->getFormSenderEmailField($formDataRefrerence['params']);
+					break;
+
+				// Attach custom action and external action to custom mailer.
+				case SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY:
+					$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
+					$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
+					break;
+			}
 
 			// Upload files to temp folder.
-			$files = $this->uploadFiles($files);
+			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);
 
 			// Do Action.
-			return $this->submitAction($formId, $params, $files);
+			return $this->submitAction($formDataRefrerence);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				[
-					'code' => 400,
-					'status' => 'error_validation',
-					'message' => $e->getMessage(),
-					'validation' => $e->getData(),
-				]
+				$this->getApiErrorOutput(
+					$e->getMessage(),
+					[
+						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
+					]
+				)
 			);
 		}
 	}
 
 	/**
+	 * Returns validator class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getValidator();
+
+	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getValidatorPatterns();
+
+	/**
+	 * Returns validator labels class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getValidatorLabels();
+
+	/**
 	 * Implement submit action.
 	 *
-	 * @param string $formId Form ID.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	abstract public function submitAction(string $formId, array $params = [], $files = []);
+	abstract protected function submitAction(array $formDataRefrerence);
 }

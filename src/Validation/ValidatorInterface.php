@@ -18,36 +18,19 @@ interface ValidatorInterface
 	/**
 	 * Validate form and return error if it is not valid.
 	 *
-	 * @param array<string, mixed> $params Get params.
-	 * @param array<string, mixed> $files Get files.
-	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $validationReference Reference of form data to check by.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validate(array $params = [], array $files = [], string $formId = ''): array;
+	public function validate(array $validationReference): array;
 
 	/**
-	 * Prepare validation patterns
+	 * Get validation label from cache or db on multiple items.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @param array<string, string> $items Array of items to get label.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
 	 */
-	public function getValidationPatterns(): array;
-
-	/**
-	 * Get validation pattern - pattern from name.
-	 *
-	 * @param string $name Name to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPattern(string $name): string;
-
-	/**
-	 * Get validation pattern - name from pattern.
-	 *
-	 * @param string $pattern Pattern to serach.
-	 *
-	 * @return string
-	 */
-	public function getValidationPatternName(string $pattern): string;
+	public function getValidationLabelItems(array $items, string $formId): array;
 }

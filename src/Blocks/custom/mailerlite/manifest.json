@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "mailerlite",
 	"title": "Mailerlite Form",
 	"description" : "A MailerLite subscription form",
@@ -11,13 +12,16 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"mailerliteFormPostId": {
+		"mailerliteIntegrationId": {
 			"type": "string"
 		},
-		"mailerliteFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"mailerliteFormPostId": {
+			"type": "string"
 		},
 		"mailerliteFormDataTypeSelector": {
 			"type": "string"

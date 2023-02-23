@@ -10,12 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailerlite;
 
+use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Validation\Validator;
 
 /**
  * MailerliteClient integration class.
@@ -45,9 +47,21 @@ class MailerliteClient implements ClientInterface
 	public const CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME = 'es_mailerlite_items_cache';
 
 	/**
-	 * Transient cache name for item.
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
 	 */
-	public const CACHE_MAILERLITE_ITEM_TRANSIENT_NAME = 'es_mailerlite_item_cache';
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
 
 	/**
 	 * Return items.
@@ -61,7 +75,7 @@ class MailerliteClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (!$output) {
 			$items = $this->getMailerliteLists();
 
 			if ($items) {
@@ -71,6 +85,7 @@ class MailerliteClient implements ClientInterface
 					$output[$id] = [
 						'id' => (string) $id,
 						'title' => $item['name'] ?? '',
+						'fields' => [],
 					];
 				}
 
@@ -79,7 +94,7 @@ class MailerliteClient implements ClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -99,20 +114,22 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = $this->getItems();
+
+		$item = $output[$itemId]['fields'] ?? [];
 
 		// Check if form exists in cache.
-		if (empty($output)) {
-			$fields = $this->getMailerliteListFields();
+		if (!$output || !$item) {
+			$items = $this->getMailerliteListFields();
 
-			if ($itemId && $fields) {
-				$output = $fields;
+			if ($items) {
+				$output[$itemId]['fields'] = $items;
 
-				\set_transient(self::CACHE_MAILERLITE_ITEM_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
-		return $output;
+		return $output[$itemId] ?? [];
 	}
 
 	/**
@@ -148,7 +165,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -163,13 +180,16 @@ class MailerliteClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -187,13 +207,36 @@ class MailerliteClient implements ClientInterface
 		switch ($msg) {
 			case 'Bad Request':
 				return 'mailerliteBadRequestError';
-			case 'Invalid email address':
-				return 'mailerliteInvalidEmailError';
-			case 'Email temporarily blocked':
-				return 'mailerliteEmailTemporarilyBlockedError';
+			case 'Unauthorized':
+				return 'mailerliteErrorSettingsMissing';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['error']['message'] ?? '';
+
+		$output = [];
+
+		switch ($msg) {
+			case 'Invalid email address':
+				$output['email'] = 'validationEmail';
+				break;
+			case 'Email temporarily blocked':
+				$output['email'] = 'validationEmail';
+				break;
+		}
+
+		return $output;
 	}
 
 	/**
@@ -228,7 +271,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -262,7 +305,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -288,25 +331,13 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		$output = [];
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params, ['email']);
 
-		foreach ($params as $key => $param) {
-			// Remove email.
-			if ($key === 'email') {
-				continue;
-			}
-
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			$output[$key] = $param['value'] ?? '';
-		}
-
-		return $output;
+		return Helper::prepareGenericParamsOutput($params);
 	}
 
 	/**

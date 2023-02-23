@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "tabs",
 	"title": "Tabs",
 	"componentClass": "es-tabs",
@@ -7,13 +8,6 @@
 	"attributes": {
 		"tabsContent": {
 			"type": "string"
-		},
-		"tabsLoaderIsActive": {
-			"type": "boolean",
-			"default": true
 		}
-	},
-	"components": {
-		"loader": "loader"
 	}
 }

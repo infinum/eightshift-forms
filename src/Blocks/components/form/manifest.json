@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
-	"componentJsClass": "js-es-block-form",
+	"componentJsClass": "js-es-block",
 	"componentCacheJsClass": "js-es-cache-delete",
 	"componentMigrationJsClass": "js-es-migration",
 	"componentTransferJsClass": "js-es-transfer",
@@ -23,6 +24,9 @@
 	},
 	"attributes": {
 		"formContent": {
+			"type": "string"
+		},
+		"formConditionalTags": {
 			"type": "string"
 		},
 		"formName": {
@@ -48,10 +52,17 @@
 		"formSuccessRedirect": {
 			"type": "string"
 		},
+		"formSuccessRedirectVariation": {
+			"type": "string"
+		},
+		"formPhoneSync": {
+			"type": "boolean",
+			"default": false
+		},
 		"formTrackingEventName": {
 			"type": "string"
 		},
-		"formConditionalTags": {
+		"formTrackingAdditionalData": {
 			"type": "string"
 		},
 		"formType": {
@@ -60,15 +71,26 @@
 		"formDataTypeSelector": {
 			"type": "string"
 		},
-		"formServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"formMeta": {
 			"type": "string"
 		},
 		"formAttrs": {
-			"type": "array"
+			"type": "object"
+		},
+		"formServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"formDisabledDefaultStyles": {
+			"type": "boolean",
+			"default": false
+		},
+		"formDownloads": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
 		}
 	},
 	"options": {

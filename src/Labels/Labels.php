@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\SettingsCaptcha;
 
@@ -43,6 +44,7 @@ class Labels implements LabelsInterface
 		'customSuccess',
 		'activeCampaignSuccess',
 		'airtableSuccess',
+		'momentsSuccess',
 	];
 
 	/**
@@ -99,6 +101,60 @@ class Labels implements LabelsInterface
 			$output = \array_merge($output, $this->getAirtableLabels());
 		}
 
+		// Moments.
+		if ($this->isCheckboxOptionChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
+			$output = \array_merge($output, $this->getMomentsLabels());
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return one label by key
+	 *
+	 * @param string $key Label key.
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public function getLabel(string $key, string $formId = ''): string
+	{
+		// If form ID is not missing check form settings for the overrides.
+		if (!empty($formId)) {
+			$local = \array_flip(self::ALL_LOCAL_LABELS);
+
+			if (isset($local[$key])) {
+				$dbLabel = $this->getSettingsValue($key, $formId);
+			} else {
+				$dbLabel = $this->getOptionValue($key);
+			}
+
+			// If there is an override in the DB use that.
+			if (!empty($dbLabel)) {
+				return $dbLabel;
+			}
+		}
+
+		$labels = $this->getLabels();
+
+		return $labels[$key] ?? '';
+	}
+
+	/**
+	 * Output all validation labels from cache for fater validation.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getValidationLabelsOutput(string $formId = ''): array
+	{
+		$output = [];
+
+		foreach ($this->getValidationLabels() as $key => $value) {
+			$output[$key] = $this->getLabel($key, $formId);
+		}
+
 		return $output;
 	}
 
@@ -126,6 +182,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying required number.
 			'validationRequiredCount' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
 			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
+			'validationEmailTld' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
 			// translators: %s used for displaying length min number to the user.
 			'validationMinLength' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
@@ -133,15 +190,23 @@ class Labels implements LabelsInterface
 			'validationMaxLength' => \__('This field value has more characters than expected. We expect maximum %s characters.', 'eightshift-forms'),
 			'validationNumber' => \__('This field should only contain numbers.', 'eightshift-forms'),
 			// translators: %s used for displaying validation pattern to the user.
-			'validationPattern' => \__('This field doesn\'t satisfy the validation pattern: %s.', 'eightshift-forms'),
+			'validationPattern' => \__('This field value should be in this format: %s.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
-			'validationAccept' => \__('The file type is not supported. Only %s are allowed.', 'eightshift-forms'),
+			'validationAccept' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
-			'validationAcceptMime' => \__('The file seems to be corrupted. Only %s are allowed.', 'eightshift-forms'),
+			'validationAcceptMime' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
+			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix with only numbers.', 'eightshift-forms'),
+			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
+			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
+			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
+			'validationCountry' => \__('This country is not valid.', 'eightshift-forms'),
+			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
+			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
+			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
 		];
 	}
 
@@ -168,8 +233,7 @@ class Labels implements LabelsInterface
 	private function getMailerLabels(): array
 	{
 		return [
-			'mailerSuccessNoSend' => \__('E-mail was sent successfully.', 'eightshift-forms'),
-			'mailerErrorSettingsMissing' => \__('Form settings are not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerErrorSettingsMissing' => \__('Form is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerErrorEmailSend' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerErrorEmailConfirmationSend' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerSuccess' => \__('E-mail was sent successfully.', 'eightshift-forms'),
@@ -186,21 +250,6 @@ class Labels implements LabelsInterface
 		return [
 			'greenhouseErrorSettingsMissing' => \__('Greenhouse integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'greenhouseBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'greenhouseUnsupportedFileTypeError' => \__('An unsupported file type was uploaded. Please try again.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameError' => \__('"First name" is in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameError' => \__('"Last name" is in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailError' => \__('"First name", "Last name", and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameError' => \__('"First name" and "Last name" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailError' => \__('"First name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailError' => \__('"Last name" and "E-mail" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNamePhoneError' => \__('"First name" and "Phone" are an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNamePhoneError' => \__('"First name" and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidEmailPhoneError' => \__('"E-mail" and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNameEmailPhoneError' => \__('"First name", "Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameLastNamePhoneError' => \__('"First name", "Last name", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidFirstNameEmailPhoneError' => \__('"First name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
-			'greenhouseInvalidLastNameEmailPhoneError' => \__('"Last name", "E-mail", and "Phone" are in an incorrect format.', 'eightshift-forms'),
 			'greenhouseSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -215,9 +264,6 @@ class Labels implements LabelsInterface
 		return [
 			'mailchimpErrorSettingsMissing' => \__('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailchimpBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidResourceError' => \__('Something is not right with the resource. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailchimpInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'mailchimpMissingFieldsError' => \__('It looks like some required fields are missing. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -240,7 +286,6 @@ class Labels implements LabelsInterface
 			'hubspotMaxNumberOfSubmittedValuesExceededError' => \__('More than 1000 fields were included in the response. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'hubspotBlockedEmailError' => \__('We are sorry but you email was blocked in our blacklist.', 'eightshift-forms'),
-			'hubspotRequiredFieldError' => \__('Some required fields are not filled in, please check them and try again.', 'eightshift-forms'),
 			'hubspotInvalidNumberError' => \__('Some of number fields are not a valid number value.', 'eightshift-forms'),
 			'hubspotInputTooLargeError' => \__('The value in the field is too large for the type of field.', 'eightshift-forms'),
 			'hubspotFieldNotInFormDefinitionError' => \__('The field was included in the form submission but is not in the form definition.', 'eightshift-forms'),
@@ -272,8 +317,6 @@ class Labels implements LabelsInterface
 		return [
 			'mailerliteErrorSettingsMissing' => \__('MailerLite integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'mailerliteInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'mailerliteEmailTemporarilyBlockedError' => \__('The e-mail is temporarily blocked by our e-mail client. Please try again later or use try a different e-mail.', 'eightshift-forms'),
 			'mailerliteSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -288,8 +331,6 @@ class Labels implements LabelsInterface
 		return [
 			'goodbitsErrorSettingsMissing' => \__('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'goodbitsInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
-			'goodbitsUnauthorizedError' => \__('There was an authorization error (incorrect API key). Contact support.', 'eightshift-forms'),
 			'goodbitsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -348,33 +389,16 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Return one label by key
+	 * Return labels - Moments
 	 *
-	 * @param string $key Label key.
-	 * @param string $formId Form ID.
-	 *
-	 * @return string
+	 * @return array<string, string>
 	 */
-	public function getLabel(string $key, string $formId = ''): string
+	private function getMomentsLabels(): array
 	{
-		// If form ID is not missing check form settings for the overrides.
-		if (!empty($formId)) {
-			$local = \array_flip(self::ALL_LOCAL_LABELS);
-
-			if (isset($local[$key])) {
-				$dbLabel = $this->getSettingsValue($key, $formId);
-			} else {
-				$dbLabel = $this->getOptionValue($key);
-			}
-
-			// If there is an override in the DB use that.
-			if (!empty($dbLabel)) {
-				return $dbLabel;
-			}
-		}
-
-		$labels = $this->getLabels();
-
-		return $labels[$key] ?? '';
+		return [
+			'momentsErrorSettingsMissing' => \__('Moments integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'momentsBadRequestError' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
+			'momentsSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+		];
 	}
 }

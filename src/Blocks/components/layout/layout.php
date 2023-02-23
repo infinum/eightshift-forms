@@ -20,7 +20,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$layoutItems = Components::checkAttr('layoutItems', $attributes, $manifest);
+$layoutContent = Components::checkAttr('layoutContent', $attributes, $manifest);
 $layoutTag = Components::checkAttr('layoutTag', $attributes, $manifest);
 $layoutType = Components::checkAttr('layoutType', $attributes, $manifest);
 
@@ -37,6 +37,6 @@ $layoutClass = Components::classnames([
 	data-layout-type="<?php echo esc_attr($layoutType); ?>"
 >
 	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutItems; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	</div>
 </<?php echo esc_attr($layoutTag); ?>>

@@ -1,0 +1,27 @@
+.es-invalid {
+	$this: &;
+
+	background-color: var(--global-colors-es-pome);
+	padding: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column wrap;
+	color: var(--global-colors-es-white);
+	border: 2px solid var(--global-colors-es-pome);
+
+	&__icon {
+		margin-bottom: 15px;
+
+		svg {
+			width: 36px;
+			height: 36px;
+			color: var(--global-colors-es-white);
+		}
+	}
+
+	&__heading {
+		margin-bottom: 5px;
+		font-weight: bold;
+	}
+}

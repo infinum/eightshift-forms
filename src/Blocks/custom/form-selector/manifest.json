@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "form-selector",
 	"title": "Form selector",
 	"description" : "Allows selecting the form that should be displayed",
@@ -21,22 +22,16 @@
 				"eightshift-forms/mailerlite",
 				"eightshift-forms/goodbits",
 				"eightshift-forms/active-campaign",
-				"eightshift-forms/airtable"
+				"eightshift-forms/airtable",
+				"eightshift-forms/moments"
 			]
 		}
 	},
 	"forms": [
 		{
-			"label": "Empty",
-			"slug": "empty",
-			"icon": "esf-form-custom",
-			"blockName": "eightshift-forms/form"
-		},
-		{
 			"label": "Simple contact",
-			"slug": "contact",
-			"icon": "esf-sender-email",
-			"blockName": "eightshift-forms/form",
+			"slug": "mailer",
+			"blockName": "eightshift-forms/mailer",
 			"innerBlocks": [
 				[
 					"eightshift-forms/sender-email",
@@ -70,44 +65,42 @@
 		{
 			"label": "Mailchimp",
 			"slug": "mailchimp",
-			"icon": "esf-form-mailchimp",
 			"blockName": "eightshift-forms/mailchimp"
 		},
 		{
 			"label": "Greenhouse",
 			"slug": "greenhouse",
-			"icon": "esf-form-greenhouse",
 			"blockName": "eightshift-forms/greenhouse"
 		},
 		{
 			"label": "HubSpot",
 			"slug": "hubspot",
-			"icon": "esf-form-hubspot",
 			"blockName": "eightshift-forms/hubspot"
 		},
 		{
 			"label": "MailerLite",
 			"slug": "mailerlite",
-			"icon": "esf-form-mailerlite",
 			"blockName": "eightshift-forms/mailerlite"
 		},
 		{
 			"label": "Goodbits",
 			"slug": "goodbits",
-			"icon": "esf-form-goodbits",
 			"blockName": "eightshift-forms/goodbits"
 		},
 		{
 			"label": "ActiveCampaign",
 			"slug": "active-campaign",
-			"icon": "esf-form-active-campaign",
 			"blockName": "eightshift-forms/active-campaign"
 		},
 		{
 			"label": "Airtable",
 			"slug": "airtable",
-			"icon": "esf-form-airtable",
 			"blockName": "eightshift-forms/airtable"
+		},
+		{
+			"label": "Moments",
+			"slug": "moments",
+			"blockName": "eightshift-forms/moments"
 		}
 	]
 }

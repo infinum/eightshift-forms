@@ -14,9 +14,18 @@ $selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $ma
 $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
 $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
+$selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
+$selectOptionAttrs = Components::checkAttr('selectOptionAttrs', $attributes, $manifest);
 
-if (empty($selectOptionValue)) {
+if (empty($selectOptionValue) && !$selectOptionAsPlaceholder) {
 	$selectOptionValue = $selectOptionLabel;
+}
+
+$selectOptionAttrsOutput = '';
+if ($selectOptionAttrs) {
+	foreach ($selectOptionAttrs as $key => $value) {
+		$selectOptionAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
 }
 
 ?>
@@ -25,6 +34,7 @@ if (empty($selectOptionValue)) {
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
+	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

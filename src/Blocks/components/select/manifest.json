@@ -1,25 +1,26 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "select",
 	"title": "Select",
 	"componentClass": "es-select",
-	"componentCustomJsClass": "js-es-block-form-custom",
-	"componentJsSingleSubmitClass": "js-es-block-form-single-submit",
+	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
-			"selectOptions": "",
+			"selectContent": "",
 			"selectName": "Name",
 			"selectIsDisabled": false,
 			"selectIsRequired": false
 		}
 	},
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"selectId": {
+		"selectContent": {
 			"type": "string"
 		},
-		"selectOptions": {
+		"selectPlaceholder": {
 			"type": "string"
 		},
 		"selectName": {
@@ -40,15 +41,18 @@
 			"type": "boolean",
 			"default": false
 		},
-		"selectUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"selectMeta": {
 			"type": "string"
 		},
 		"selectAttrs": {
+			"type": "object"
+		},
+		"selectDisabledOptions": {
 			"type": "array"
+		},
+		"selectUseSearch": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }

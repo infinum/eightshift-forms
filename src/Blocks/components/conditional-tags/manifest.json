@@ -1,0 +1,29 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "conditional-tags",
+	"componentClass": "es-conditional-tags",
+	"title": "Conditional tags",
+	"attributes": {
+		"conditionalTagsUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"conditionalTagsAction": {
+			"type": "string",
+			"default": "show"
+		},
+		"conditionalTagsLogic": {
+			"type": "string",
+			"default": "all"
+		},
+		"conditionalTagsRules": {
+			"type": "array"
+		},
+		"conditionalTagsPostId": {
+			"type": "string"
+		},
+		"conditionalTagsParentName": {
+			"type": "string"
+		}
+	}
+}

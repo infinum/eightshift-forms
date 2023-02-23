@@ -12,8 +12,8 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Settings\SettingsHelper;
 use WP_Query;
 
 /**
@@ -21,6 +21,11 @@ use WP_Query;
  */
 class FormsListing implements FormListingInterface
 {
+	/**
+	 * Use dashboard helper trait.
+	 */
+	use SettingsHelper;
+
 	/**
 	 * Get Forms List.
 	 *
@@ -59,31 +64,12 @@ class FormsListing implements FormListingInterface
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
 				'activeIntegration' =>  $this->getActiveIntegrationIcons((string) $id),
+				'useSync' => true,
 			];
 		}
 
+		\wp_reset_postdata();
+
 		return $output;
-	}
-
-	/**
-	 * Get all active integration on specific form.
-	 *
-	 * @param string $id Form Id.
-	 *
-	 * @return array<string, string>
-	 */
-	private function getActiveIntegrationIcons(string $id): array
-	{
-		$integrationTypeUsed = Helper::getUsedFormTypeById($id);
-
-		if (!$integrationTypeUsed) {
-			return [];
-		}
-
-		return [
-			'label' => Filters::getSettingsLabels($integrationTypeUsed, 'title'),
-			'icon' => Filters::ALL[$integrationTypeUsed]['icon'] ?? '',
-			'value' => $integrationTypeUsed,
-		];
 	}
 }

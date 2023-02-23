@@ -1,0 +1,8 @@
+.es-field--radios {
+	.es-field__content-wrap {
+		padding: var(--es-input-spacing);
+		border: 1px solid var(--es-input-border-color);
+
+		@include input-styles-disabled;
+	}
+}

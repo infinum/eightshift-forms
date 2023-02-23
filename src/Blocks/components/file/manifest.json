@@ -1,8 +1,8 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "file",
 	"title": "file",
 	"componentClass": "es-file",
-	"componentCustomJsClass": "js-es-block-form-custom",
 	"example": {
 		"attributes": {
 			"fileName": "Name",
@@ -12,12 +12,10 @@
 		}
 	},
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"fileId": {
-			"type": "string"
-		},
 		"fileName": {
 			"type": "string"
 		},
@@ -51,14 +49,13 @@
 		"fileCustomInfoButtonText": {
 			"type": "string"
 		},
-		"fileUseCustom": {
-			"type": "boolean",
-			"default": true
-		},
 		"fileMeta": {
 			"type": "string"
 		},
 		"fileAttrs": {
+			"type": "object"
+		},
+		"fileDisabledOptions": {
 			"type": "array"
 		}
 	}

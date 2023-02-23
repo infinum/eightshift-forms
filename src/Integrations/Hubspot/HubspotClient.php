@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
@@ -18,6 +19,8 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -79,7 +82,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Check if form exists in cache.
-		if (empty($output)) {
+		if (!$output) {
 			$items = $this->getHubspotItems();
 
 			if ($items) {
@@ -100,7 +103,8 @@ class HubspotClient implements HubspotClientInterface
 					}
 
 					$portalId = $item['portalId'] ?? '';
-					$value = "{$id}---{$portalId}";
+					$delimiter = AbstractBaseRoute::DELIMITER;
+					$value = "{$id}{$delimiter}{$portalId}";
 
 					$output[$value] = [
 						'id' => $value,
@@ -115,7 +119,7 @@ class HubspotClient implements HubspotClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, 3600);
+				\set_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -135,14 +139,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
-			$output = $this->getItems();
-		}
-
-		return $output[$itemId] ?? [];
+		return $this->getItems()[$itemId] ?? [];
 	}
 
 	/**
@@ -185,7 +182,7 @@ class HubspotClient implements HubspotClientInterface
 
 			\sort($output);
 
-			\set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, 3600);
+			\set_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 		}
 
 		return $output;
@@ -203,7 +200,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemId = \explode('---', $itemId);
+		$itemId = \explode(AbstractBaseRoute::DELIMITER, $itemId);
 
 		$consent = \array_filter(
 			$params,
@@ -272,13 +269,13 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$paramsPrepared,
 			$paramsFiles,
-			\implode(', ', $itemId),
+			\implode(AbstractBaseRoute::DELIMITER, $itemId),
 			$formId
 		);
 
@@ -287,13 +284,16 @@ class HubspotClient implements HubspotClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
-			$this->getErrorMsg($body)
+			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -340,7 +340,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -352,11 +352,11 @@ class HubspotClient implements HubspotClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body)
 		);
@@ -396,7 +396,7 @@ class HubspotClient implements HubspotClientInterface
 			]),
 		];
 
-		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions');
+		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
 		if (\has_filter($filterName)) {
 			$options = \apply_filters($filterName, []);
 		}
@@ -465,8 +465,6 @@ class HubspotClient implements HubspotClientInterface
 				return 'hubspotInvalidEmailError';
 			case 'BLOCKED_EMAIL':
 				return 'hubspotBlockedEmailError';
-			case 'REQUIRED_FIELD':
-				return 'hubspotRequiredFieldError';
 			case 'INVALID_NUMBER':
 				return 'hubspotInvalidNumberError';
 			case 'INPUT_TOO_LARGE':
@@ -509,6 +507,42 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$msg = $body['errors'] ?? [];
+		$output = [];
+
+		foreach ($msg as $value) {
+			$key = $value['errorType'] ?? '';
+			$message = $value['message'] ?? '';
+
+			if (!$key || !$message) {
+				continue;
+			}
+
+			if ($key === 'REQUIRED_FIELD') {
+				// Validate req fields.
+				\preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
+
+				if ($matchesReq) {
+					$match = $matchesReq[0][2] ?? '';
+					if ($match) {
+						$output[$match] = 'validationRequired';
+					}
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	/**
 	 * API request to get contact properties from Hubspot.
 	 *
 	 * @return array<string, mixed>
@@ -525,7 +559,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -559,7 +593,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -703,13 +737,22 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		foreach ($params as $key => $param) {
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
+
+		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
-			$value = $param['value'] ?? '';
 
+			$value = $param['value'] ?? '';
 			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
@@ -718,34 +761,19 @@ class HubspotClient implements HubspotClientInterface
 					$value = 'true';
 				}
 
-				if (empty($value)) {
-					continue;
-				}
-
-				$value = \str_replace(', ', ';', $value);
+				$value = \str_replace(AbstractBaseRoute::DELIMITER, ';', $value);
 			}
 
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
+			// Must be in UTC timestamp with milliseconds.
+			if ($type === 'date') {
+				$value = \strtotime($value) * 1000;
 			}
 
 			$output[] = [
-				'name' => $param['name'] ?? '',
+				'name' => $name,
 				'value' => $value,
 				'objectTypeId' => $param['objectTypeId'] ?? '',
 			];
-		}
-
-		$filterName = Filters::getIntegrationFilterName(SettingsHubspot::SETTINGS_TYPE_KEY, 'localStorageMap');
-		if (isset($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value']) && \has_filter($filterName)) {
-			return \apply_filters(
-				$filterName,
-				$output,
-				$params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'],
-				$params,
-				$this->enrichment->getEnrichmentConfig()
-			) ?? [];
 		}
 
 		return $output;

@@ -8,14 +8,11 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$unique = Components::getUnique();
-
 $textareaName = $attributes['textareaTextareaName'] ?? '';
-$textareaId = $attributes['textareaTextareaId'] ?? '';
 $props = [];
 
 if (empty($textareaName)) {
-	$props['textareaName'] = $textareaId;
+	$props['textareaName'] = Components::getUnique();
 }
 
 echo Components::render(

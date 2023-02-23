@@ -1,6 +1,7 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "hubspot",
-	"title": "HubSpot Form",
+	"title": "HubSpot",
 	"description" : "A HubSpot form",
 	"category": "eightshift-forms",
 	"icon": {
@@ -11,13 +12,16 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"hubspotFormPostId": {
+		"hubspotIntegrationId": {
 			"type": "string"
 		},
-		"hubspotFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"hubspotFormPostId": {
+			"type": "string"
 		},
 		"hubspotFormDataTypeSelector": {
 			"type": "string"

@@ -6,8 +6,10 @@
  * @package EightshiftForms\Helpers
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Geolocation\Geolocation;
 
 /**
  * Outputs the forms custom unique name set in the settings by provided form ID.
@@ -28,4 +30,26 @@ function esFormsGetFormIdByName(string $formId): string
 	);
 
 	return $class->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+}
+
+/**
+ * Decrypt method.
+ *
+ * @param string $value Value used.
+ *
+ * @return string|bool
+ */
+function esFormsDecryptor(string $value)
+{
+	return Helper::decryptor($value);
+}
+
+/**
+ * Geolocation countries list method.
+ *
+ * @return array<int, array<string|array<int, string>>>
+ */
+function esFormsGeolocationCountriesList()
+{
+	return (new Geolocation())->getCountriesList();
 }

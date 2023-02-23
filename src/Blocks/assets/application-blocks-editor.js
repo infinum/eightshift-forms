@@ -5,8 +5,11 @@
  * Usage: `WordPress admin editor`.
  */
 
+// Images.
+import './images/blocks-editor';
+
 // Styles.
-import './styles/application-blocks-editor.scss';
+import './styles/blocks-editor.scss';
 
 // Scripts.
-import './scripts/application-blocks-editor';
+import './scripts/blocks-editor';

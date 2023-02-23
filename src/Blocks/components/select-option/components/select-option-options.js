@@ -6,9 +6,10 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	FancyDivider
+	FancyDivider,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
+import { isOptionDisabled } from './../../utils';
 
 export const SelectOptionOptions = (attributes) => {
 	const {
@@ -19,6 +20,7 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
+	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
 	return (
 		<>
@@ -26,6 +28,7 @@ export const SelectOptionOptions = (attributes) => {
 				label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
 			/>
 
 			<div className='es-h-spaced'>
@@ -33,6 +36,7 @@ export const SelectOptionOptions = (attributes) => {
 					icon={icons.checkSquare}
 					isPressed={selectOptionIsSelected}
 					onClick={() => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: !selectOptionIsSelected })}
+					disabled={isOptionDisabled(getAttrKey('selectOptionIsSelected', attributes, manifest), selectOptionDisabledOptions)}
 				>
 					{__('Select by default', 'eightshift-forms')}
 				</Button>
@@ -45,6 +49,7 @@ export const SelectOptionOptions = (attributes) => {
 				help={__('Internal value, sent if the option is selected', 'eightshift-forms')}
 				value={selectOptionValue}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('selectOptionValue', attributes, manifest), selectOptionDisabledOptions)}
 			/>
 
 			<div className='es-h-spaced'>
@@ -52,6 +57,7 @@ export const SelectOptionOptions = (attributes) => {
 					icon={icons.fieldDisabled}
 					isPressed={selectOptionIsDisabled}
 					onClick={() => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: !selectOptionIsDisabled })}
+					disabled={isOptionDisabled(getAttrKey('selectOptionIsDisabled', attributes, manifest), selectOptionDisabledOptions)}
 				>
 					{__('Disabled', 'eightshift-forms')}
 				</Button>

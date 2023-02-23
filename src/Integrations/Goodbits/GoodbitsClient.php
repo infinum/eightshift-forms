@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Goodbits;
 
+use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
@@ -46,6 +47,23 @@ class GoodbitsClient implements ClientInterface
 	private const BASE_URL = 'https://app.goodbits.io/api/v1/';
 
 	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 */
+	public function __construct(EnrichmentInterface $enrichment)
+	{
+		$this->enrichment = $enrichment;
+	}
+
+	/**
 	 * Return items.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
@@ -64,7 +82,7 @@ class GoodbitsClient implements ClientInterface
 			$output = [];
 
 			foreach ($key as $itemKey => $itemValue) {
-				$output[(string) $itemKey] = [
+				$output[(string) $itemValue] = [
 					'title' => $itemKey,
 					'id' => $itemValue,
 				];
@@ -90,7 +108,7 @@ class GoodbitsClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		return [];
+		return $this->getItems()[$itemId] ?? [];
 	}
 
 	/**
@@ -120,7 +138,7 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getApiReponseDetails(
+		$details = $this->getIntegrationApiReponseDetails(
 			SettingsGoodbits::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -135,13 +153,16 @@ class GoodbitsClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getApiSuccessOutput($details);
+			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getApiErrorOutput(
+		return $this->getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
+			[
+				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+			]
 		);
 	}
 
@@ -154,32 +175,48 @@ class GoodbitsClient implements ClientInterface
 	 */
 	private function getErrorMsg(array $body): string
 	{
-		$msg = !\is_array($body['errors']) ? $body['errors'] : '';
-		$errors = \is_array($body['errors']) ? $body['errors']['message'] : [];
+		$msg = $body['error'] ?? '';
 
-		if ($errors) {
-			$invalidEmail = \array_filter(
-				$errors,
-				static function ($error) {
-					return $error === 'Email is invalid';
-				}
-			);
-
-			if ($invalidEmail) {
-				$msg = 'INVALID_EMAIL';
-			}
+		if (!$msg) {
+			$msg = !\is_array($body['errors']) ? $body['errors'] : '';
 		}
 
 		switch ($msg) {
 			case 'Bad Request':
 				return 'goodbitsBadRequestError';
 			case 'Invalid API Key has been submitted, please refer to your API key under your settings':
-				return 'goodbitsUnauthorizedError';
-			case 'INVALID_EMAIL':
-				return 'goodbitsInvalidEmailError';
+				return 'goodbitsErrorSettingsMissing';
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body): array
+	{
+		$errors = $body['errors']['message'] ?? [];
+
+		$output = [];
+
+		if (!$errors) {
+			return $output;
+		}
+
+		foreach ($errors as $value) {
+			switch ($value) {
+				case 'Email is invalid':
+					$output['email'] = 'validationEmail';
+					break;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -208,19 +245,12 @@ class GoodbitsClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		$output = [];
+		// Map enrichment data.
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
-		foreach ($params as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			$output[$key] = $param['value'] ?? '';
-		}
-
-		return $output;
+		return Helper::prepareGenericParamsOutput($params);
 	}
 }

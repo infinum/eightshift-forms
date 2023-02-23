@@ -1,0 +1,49 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "country",
+	"title": "Country",
+	"componentClass": "es-country",
+	"example": {
+		"attributes": {
+			"countryName": "Name",
+			"countryIsDisabled": false,
+			"countryIsRequired": false
+		}
+	},
+	"components": {
+		"field": "field",
+		"conditionalTags": "conditionalTags"
+	},
+	"attributes": {
+		"countryFormPostId": {
+			"type": "string"
+		},
+		"countryName": {
+			"type": "string"
+		},
+		"countryIsDisabled": {
+			"type": "boolean",
+			"default": false
+		},
+		"countryIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"countryTracking": {
+			"type": "string"
+		},
+		"countryMeta": {
+			"type": "string"
+		},
+		"countryAttrs": {
+			"type": "object"
+		},
+		"countryDisabledOptions": {
+			"type": "array"
+		},
+		"countryUseSearch": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

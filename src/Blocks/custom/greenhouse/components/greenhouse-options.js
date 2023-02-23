@@ -1,31 +1,31 @@
-/* global esFormsLocalization */
-
 import React from 'react';
-import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
-import { PanelBody, BaseControl, Button } from '@wordpress/components';
-import { IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { __, sprintf } from '@wordpress/i18n';
+import { PanelBody } from '@wordpress/components';
+import { checkAttr } from '@eightshift/frontend-libs/scripts';
+import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
+import manifest from './../manifest.json';
 
-export const GreenhouseOptions = ({ postId }) => {
+export const GreenhouseOptions = ({
+	attributes,
+	setAttributes,
+	clientId,
+	itemIdKey,
+}) => {
+
 	const {
-		settingsPageUrl,
-	} = select(STORE_NAME).getSettings();
-
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+		title,
+		blockName,
+	} = manifest;
 
 	return (
-		<PanelBody title={__('Greenhouse', 'eightshift-forms')}>
-			<BaseControl
-				label={<IconLabel icon={icons.options} label={__('Settings', 'eightshift-forms')} />}
-				help={__('On Greenhouse settings page you can setup all details regarding you integration.', 'eightshift-forms')}
-			>
-				<Button
-					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=greenhouse`}
-					isSecondary
-				>
-					{__('Open Greenhouse Form Settings', 'eightshift-forms')}
-				</Button>
-			</BaseControl>
+		<PanelBody title={sprintf(__('%s form', 'eightshift-forms'), title)}>
+			<IntegrationsOptions
+				block={blockName}
+				setAttributes={setAttributes}
+				clientId={clientId}
+				itemId={checkAttr(itemIdKey, attributes, manifest)}
+				itemIdKey={itemIdKey}
+			/>
 		</PanelBody>
 	);
 };

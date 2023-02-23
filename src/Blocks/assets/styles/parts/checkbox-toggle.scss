@@ -1,0 +1,102 @@
+@mixin checkbox-toggle-styles() {
+	$this: &;
+
+	--es-checkbox-toggle-scoped-icon-size: 18px;
+
+	margin-bottom: var(--es-checkbox-toggle-scoped-spacing, var(--es-checkbox-spacing));
+
+	&:last-child {
+		--es-checkbox-toggle-scoped-spacing: 0;
+	}
+
+	--es-checkbox-toggle-scoped-height: 20px;
+	--es-checkbox-toggle-scoped-width: calc(var(--es-checkbox-toggle-scoped-height) * 2);
+	--es-checkbox-toggle-scoped-label-spacing: 10px;
+	--es-checkbox-toggle-scoped-dot-spacing: 4px;
+	--es-checkbox-toggle-scoped-dot-size: calc(var(--es-checkbox-toggle-scoped-height) - var(--es-checkbox-toggle-scoped-dot-spacing));
+	--es-checkbox-toggle-scoped-dot-hover: 5px;
+
+	&--medium {
+		--es-checkbox-toggle-scoped-height: 30px;
+		--es-checkbox-toggle-scoped-dot-spacing: 6px;
+		--es-checkbox-toggle-scoped-label-spacing: 15px;
+	}
+
+	&--big {
+		--es-checkbox-toggle-scoped-height: 40px;
+		--es-checkbox-toggle-scoped-dot-spacing: 6px;
+		--es-checkbox-toggle-scoped-label-spacing: 20px;
+	}
+
+	&__label {
+		cursor: pointer;
+		position: relative;
+		min-height: var(--es-checkbox-toggle-scoped-height);
+		display: flex;
+		align-items: center;
+		min-width: var(--es-checkbox-toggle-scoped-width);
+
+		&:hover::after {
+			width: calc(var(--es-checkbox-toggle-scoped-dot-size) + var(--es-checkbox-toggle-scoped-dot-hover));
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: var(--es-checkbox-toggle-scoped-width);
+			height: var(--es-checkbox-toggle-scoped-height);
+			background-color: var(--global-colors-es-chalice);
+			border-radius: 100px;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: calc(var(--es-checkbox-toggle-scoped-dot-spacing) / 2);
+			left: calc(var(--es-checkbox-toggle-scoped-dot-spacing) / 2);
+			width: var(--es-checkbox-toggle-scoped-dot-size);
+			height: var(--es-checkbox-toggle-scoped-dot-size);
+			background-color: var(--global-colors-es-white);
+			border-radius: 90px;
+			transition: {
+				property: background-color, width, transform;
+				timing-function: ease-in-out;
+				duration: 0.25s;
+			}
+		}
+	}
+
+	&__label-inner {
+		display: block;
+		padding-left: calc(var(--es-checkbox-toggle-scoped-width) + var(--es-checkbox-toggle-scoped-label-spacing));
+	}
+
+	&__input:checked {
+		& + #{$this}__label {
+			&::before {
+				background-color: var(--global-colors-es-matisse);
+			}
+
+			&:hover::after {
+				transform: translateX(calc(var(--es-checkbox-toggle-scoped-width) - (var(--es-checkbox-toggle-scoped-dot-spacing)) - var(--es-checkbox-toggle-scoped-dot-size) - var(--es-checkbox-toggle-scoped-dot-hover)));
+			}
+		}
+
+		& + #{$this}__label::after {
+			transform: translateX(calc(var(--es-checkbox-toggle-scoped-width) - (var(--es-checkbox-toggle-scoped-dot-spacing)) - var(--es-checkbox-toggle-scoped-dot-size)));
+		}
+	}
+
+	&__input:disabled + #{$this}__label::before,
+	&__input:disabled:checked + #{$this}__label::before {
+		background-color: var(--global-colors-es-matisse-30);
+	}
+
+	&__input {
+		// Important because if hidden focus/blur is not working.
+		position: absolute;
+		left: -99999px;
+	}
+}

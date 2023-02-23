@@ -1,14 +1,13 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "radios",
 	"title": "radios",
 	"componentClass": "es-radios",
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"radiosId": {
-			"type": "string"
-		},
 		"radiosContent": {
 			"type": "string"
 		},
@@ -25,6 +24,9 @@
 		},
 		"radiosMeta": {
 			"type": "string"
+		},
+		"radiosDisabledOptions": {
+			"type": "array"
 		}
 	}
 }

@@ -1,0 +1,65 @@
+:root {
+	--es-input-border-color: var(--global-colors-es-ebb);
+	--es-input-disabled-background-color: var(--global-colors-es-alto);
+	--es-input-readonly-background-color: var(--global-colors-es-alto);
+	--es-input-spacing: 10px;
+	--es-input-height: 42px;
+	--es-input-focus-border-color: var(--global-colors-es-matisse);
+	--es-input-transition-timing: ease-in-out;
+	--es-input-transition-duration: 0.3s;
+	--es-input-radius: 0;
+	--es-input-background-color: transparent;
+}
+
+@mixin input-styles(
+	$loadReadonly: 'true',
+	$loadDisabled: 'true',
+	$loadFocus: 'true',
+) {
+	width: 100%;
+	max-width: 100%;
+	border: 1px solid var(--es-input-border-color);
+	cursor: text;
+	background-color: var(--es-input-background-color);
+	height: var(--es-input-height);
+	padding: 0 var(--es-input-spacing);
+	border-radius: var(--es-input-radius);
+	transition: {
+		property: border-color;
+		timing-function: var(--es-input-transition-timing);
+		duration: var(--es-input-transition-duration);
+	}
+
+	@if $loadFocus == 'true' {
+		&:focus {
+			@include input-styles-focus;
+		}
+	}
+
+	@if $loadDisabled == 'true' {
+		&:disabled {
+			@include input-styles-disabled;
+		}
+	}
+
+	@if $loadReadonly == 'true' {
+		&:read-only {
+			@include input-styles-read-only;
+		}
+	}
+}
+
+@mixin input-styles-focus {
+	outline: none;
+	box-shadow: none;
+	border-color: var(--es-input-focus-border-color);
+}
+
+@mixin input-styles-read-only {
+	background-color: var(--es-input-readonly-background-color);
+}
+
+@mixin input-styles-disabled {
+	cursor: default;
+	background-color: var(--es-input-disabled-background-color);
+}

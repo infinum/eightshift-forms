@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "checkboxes",
 	"title": "Checkboxes",
 	"description" : "A group of checkboxes",

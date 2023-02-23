@@ -2,36 +2,28 @@
 .es-block-forms {
 	&__edit-wrap {
 		display: flex;
-		position: absolute;
-		right: 10px;
 		flex-direction: column;
+		position: absolute;
+		right: 0;
 		z-index: 1;
+		box-shadow: 0 0 5px var(--global-colors-es-chalice-50);
 	}
 
 	&__edit-link {
 		text-decoration: none;
-		margin-bottom: 10px;
-		font-size: 13px;
-		display: flex;
-		align-items: center;
+		border: 1px solid var(--global-colors-es-ebb);
+		margin-top: -1px;
+		padding: 10px;
+		background-color: var(--global-colors-es-white);
 		color: var(--global-colors-es-matisse);
 		transition: {
-			property: color;
+			property: color, background-color;
 			timing-function: ease-in-out;
 			duration: 0.3s;
 		}
 
-		&:last-child {
-			margin-bottom: 0;
-		}
-
 		&:hover {
-			color: var(--global-colors-es-blumine);
+			background-color: var(--global-colors-es-alto);
 		}
-	}
-
-	&__edit-link-icon {
-		margin-right: 5px;
-		display: block;
 	}
 }

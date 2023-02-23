@@ -1,0 +1,28 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "date",
+	"title": "Date",
+	"description" : "A simple data date field",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-date"
+	},
+	"keywords": [
+		"date",
+		"text",
+		"email",
+		"e-mail",
+		"number",
+		"numbers",
+		"url",
+		"urls",
+		"link",
+		"links"
+	],
+	"components": {
+		"date": "date"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	]
+}

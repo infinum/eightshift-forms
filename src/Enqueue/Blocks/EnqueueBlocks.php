@@ -15,14 +15,20 @@ use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\GeolocationCountriesRoute;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
+use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
+use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
+use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Settings\FiltersOuputMock;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsCaptcha;
-use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
 /**
@@ -36,11 +42,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	use SettingsHelper;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
+	 * Use general helper trait.
 	 */
-	protected $validator;
+	use FiltersOuputMock;
+
+	/**
+	 * Instance variable of ValidationPatternsInterface data.
+	 *
+	 * @var ValidationPatternsInterface
+	 */
+	protected $validationPatterns;
 
 	/**
 	 * Instance variable of enrichment data.
@@ -53,16 +64,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
 		ManifestInterface $manifest,
-		ValidatorInterface $validator,
+		ValidationPatternsInterface $validationPatterns,
 		EnrichmentInterface $enrichment
 	) {
 		$this->manifest = $manifest;
-		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 		$this->enrichment = $enrichment;
 	}
 
@@ -75,28 +86,34 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
 
 		// Editor only style.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyleLocal'], 50);
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorOptionsStyles'], 51);
+		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
-		// Editor and frontend style.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyleLocal'], 50);
+		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
 	}
 
 	/**
-	 * Method that returns editor only style with check.
+	 * Enqueue blocks style for editor only.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function enqueueBlockEditorStyleLocal()
+	public function enqueueBlockEditorStyle(): void
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
-			return null;
-		}
+		$handle = $this->getBlockEditorStyleHandle();
 
-		$this->enqueueBlockEditorStyle();
+		\wp_register_style(
+			$handle,
+			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
+			[],
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
 	}
 
 	/**
@@ -104,33 +121,33 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @return mixed
 	 */
-	public function enqueueBlockStyleLocal()
+	public function enqueueBlockFrontendStyleMandatory()
 	{
-		if ($this->isCheckboxOptionChecked(SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
-			return null;
-		}
-
-		$this->enqueueBlockStyle();
-	}
-
-	/**
-	 * Enqueue blocks style for editor only - used for libs component styles.
-	 *
-	 * @return void
-	 */
-	public function enqueueBlockEditorOptionsStyles(): void
-	{
-		$handler = "{$this->getAssetsPrefix()}-editor-style";
+		$handle = "{$this->getAssetsPrefix()}-block-frontend-mandatory-style";
 
 		\wp_register_style(
-			$handler,
-			$this->manifest->getAssetsManifestItem('applicationEditor.css'),
-			[],
+			$handle,
+			$this->manifest->getAssetsManifestItem('applicationBlocksFrontendMandatory.css'),
+			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
 
-		\wp_enqueue_style($handler);
+		\wp_enqueue_style($handle);
+	}
+
+	/**
+	 * Method that returns editor and frontend style with check.
+	 *
+	 * @return mixed
+	 */
+	public function enqueueBlockFrontendStyleLocal()
+	{
+		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+			return null;
+		}
+
+		$this->enqueueBlockFrontendStyle();
 	}
 
 	/**
@@ -160,89 +177,114 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getLocalizations(): array
 	{
+		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
+
 		$output = [
 			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
 			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
+			'restPrefixProject' => $restRoutesPrefixProject,
+			'restPrefix' => $restRoutesPrefix,
 		];
 
 		// Admin part.
 		if (\is_admin()) {
-			$additionalBlocksFilterName = Filters::getBlocksFilterName('additionalBlocks');
-			$formsStyleOptionsFilterName = Filters::getBlockFilterName('forms', 'styleOptions');
-			$fieldStyleOptionsFilterName = Filters::getBlockFilterName('field', 'styleOptions');
-			$formSelectorAdditionalContentFilterName = Filters::getBlockFilterName('formSelector', 'additionalContent');
-			$inputAdditionalContentFilterName = Filters::getBlockFilterName('input', 'additionalContent');
-			$textareaAdditionalContentFilterName = Filters::getBlockFilterName('textarea', 'additionalContent');
-			$selectAdditionalContentFilterName = Filters::getBlockFilterName('select', 'additionalContent');
-			$fileAdditionalContentFilterName = Filters::getBlockFilterName('file', 'additionalContent');
-			$checkboxesAdditionalContentFilterName = Filters::getBlockFilterName('checkboxes', 'additionalContent');
-			$radiosAdditionalContentFilterName = Filters::getBlockFilterName('radios', 'additionalContent');
-			$submitAdditionalContentFilterName = Filters::getBlockFilterName('submit', 'additionalContent');
-			$customDataOptionsFilterName = Filters::getBlockFilterName('customData', 'options');
-			$breakpointsFilterName = Filters::getBlocksFilterName('breakpoints');
+			$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
+			$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
+			$fieldStyleOptionsFilterName = Filters::getFilterName(['block', 'field', 'styleOptions']);
+			$customDataOptionsFilterName = Filters::getFilterName(['block', 'customData', 'options']);
+			$breakpointsFilterName = Filters::getFilterName(['blocks', 'breakpoints']);
 
 			$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 			$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
 			$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
-			$output['formSelectorBlockAdditionalContent'] = \apply_filters($formSelectorAdditionalContentFilterName, []);
-			$output['inputBlockAdditionalContent'] = \apply_filters($inputAdditionalContentFilterName, []);
-			$output['textareaBlockAdditionalContent'] = \apply_filters($textareaAdditionalContentFilterName, []);
-			$output['selectBlockAdditionalContent'] = \apply_filters($selectAdditionalContentFilterName, []);
-			$output['fileBlockAdditionalContent'] = \apply_filters($fileAdditionalContentFilterName, []);
-			$output['checkboxesBlockAdditionalContent'] = \apply_filters($checkboxesAdditionalContentFilterName, []);
-			$output['radiosBlockAdditionalContent'] = \apply_filters($radiosAdditionalContentFilterName, []);
-			$output['submitBlockAdditionalContent'] = \apply_filters($submitAdditionalContentFilterName, []);
 			$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
-			$output['validationPatternsOptions'] = $this->validator->getValidationPatterns();
+			$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 			$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 			$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
-			$restApiUrl = \get_rest_url(\get_current_blog_id()) . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion() . '/';
+			// phpcs:disable
+			$output['additionalContent'] = [
+				'formSelector' => \apply_filters(Filters::getFilterName(['block', 'formSelector', 'additionalContent']), ''),
+				Components::getComponent('input')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'input', 'additionalContent']), ''),
+				Components::getComponent('textarea')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'textarea', 'additionalContent']), ''),
+				Components::getComponent('select')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'select', 'additionalContent']), ''),
+				Components::getComponent('file')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'file', 'additionalContent']), ''),
+				Components::getComponent('checkboxes')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'checkboxes', 'additionalContent']), ''),
+				Components::getComponent('radios')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'radios', 'additionalContent']), ''),
+				Components::getComponent('submit')['componentName'] => \apply_filters(Filters::getFilterName(['block', 'submit', 'additionalContent']), ''),
+			];
+			// phpcs:enable
 
-			// Check if Geolocation data is set and valid.
-			$output['useGeolocation'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-			$output['geolocationApi'] = $restApiUrl . GeolocationCountriesRoute::ROUTE_NAME;
+			$output['settings'] = [
+				'successRedirectVariations' => $this->getSuccessRedirectVariationOptionsFilterValue()['data'],
+			];
+
+			$output['use'] = [
+				'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+			];
+
+			$output['countryDataset'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+
+			$output['restRoutes'] = [
+				'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
+				'integrationsItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
+				'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
+				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
+				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
+				'formFields' => FormFieldsRoute::ROUTE_SLUG,
+				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
+			];
 
 			$output['wpAdminUrl'] = \get_admin_url();
+			$output['nonce'] = \wp_create_nonce('wp_rest');
 		} else {
 			// Frontend part.
-			$restRoutesPath = \rest_url() . Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+			$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+			$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
+			$hideLoadingStateTimeout = Filters::getFilterName(['block', 'form', 'hideLoadingStateTimeout']);
+			$fileCustomRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
-			$hideGlobalMessageTimeout = Filters::getBlockFilterName('form', 'hideGlobalMsgTimeout');
-			$redirectionTimeout = Filters::getBlockFilterName('form', 'redirectionTimeout');
-			$hideLoadingStateTimeout = Filters::getBlockFilterName('form', 'hideLoadingStateTimeout');
-			$fileCustomRemoveLabel = Filters::getBlockFilterName('file', 'previewRemoveLabel');
+			$output['restRoutes'] = [
+				'formSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
+			];
 
-			$output['formSubmitRestApiUrl'] = $restRoutesPath . '/form-submit';
 			$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 			$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 			$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);
 			$output['fileCustomRemoveLabel'] = \apply_filters($fileCustomRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
 			$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			);
 			$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			);
 			$output['formDisableAutoInit'] = $this->isCheckboxOptionChecked(
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
-				SettingsGeneral::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 			);
 			$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 			$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 			// Enrichment config.
-			$output['enrichmentConfig'] = \wp_json_encode($this->enrichment->getEnrichmentConfig());
+			$output['enrichmentConfig'] = \wp_json_encode($this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config']);
 
-			$output['captcha'] = '';
+			$output['delimiter'] = AbstractBaseRoute::DELIMITER;
+			$output['captcha'] = [];
 
 			// Check if Captcha data is set and valid.
 			$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 			if ($isCaptchaSettingsGlobalValid) {
-				$output['captcha'] = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+				$output['captcha'] = [
+					'isEnterprise' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+					'siteKey' => !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+					'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'initAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'loadOnInit' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				];
 			}
 		}
 

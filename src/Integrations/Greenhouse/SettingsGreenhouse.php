@@ -12,16 +12,14 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGreenhouse class.
  */
-class SettingsGreenhouse implements SettingInterface, ServiceInterface
+class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -29,19 +27,9 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 	use SettingsHelper;
 
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_greenhouse';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_greenhouse';
-
-	/**
-	 * Filter settings is Valid key.
-	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_greenhouse';
 
 	/**
 	 * Settings key.
@@ -64,43 +52,21 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 	public const SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY = 'greenhouse-board-token';
 
 	/**
-	 * Job ID Key.
-	 */
-	public const SETTINGS_GREENHOUSE_JOB_ID_KEY = 'greenhouse-job-id';
-
-	/**
-	 * Integration fields Key.
-	 */
-	public const SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY = 'greenhouse-integration-fields';
-
-	/**
 	 * File upload limit Key.
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY = 'greenhouse-file-upload-limit';
 
 	/**
+	 * Disable default fields key.
+	 */
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY = 'greenhouse-disable-default-fields';
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER = 'disable-cover-letter';
+	public const SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME = 'disable-resume';
+
+	/**
 	 * File upload limit default. Defined in MB.
 	 */
 	public const SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
-
-	/**
-	 * Conditional tags key.
-	 */
-	public const SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY = 'greenhouse-conditional-tags';
-
-	/**
-	 * Instance variable for Greenhouse data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
-	 * Instance variable for Greenhouse form data.
-	 *
-	 * @var MapperInterface
-	 */
-	protected $greenhouse;
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -112,17 +78,10 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
-	 * @param MapperInterface $greenhouse Inject Greenhouse which holds Greenhouse form data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $greenhouseClient,
-		MapperInterface $greenhouse,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->greenhouseClient = $greenhouseClient;
-		$this->greenhouse = $greenhouse;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 
@@ -133,31 +92,7 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-	}
-
-	/**
-	 * Determine if settings are valid.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
-	 */
-	public function isSettingsValid(string $formId): bool
-	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		$jobKey = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
-
-		if (empty($jobKey)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -176,71 +111,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		$type = self::SETTINGS_TYPE_KEY;
-
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput($type);
-		}
-
-		// Get forms from the API.
-		$items = $this->greenhouseClient->getItems(false);
-
-		// Bailout if integration can't fetch data.
-		if (!$items) {
-			return $this->getNoIntegrationFetchDataOutput($type);
-		}
-
-		// Find selected form id.
-		$selectedFormId = $this->getSettingsValue(self::SETTINGS_GREENHOUSE_JOB_ID_KEY, $formId);
-
-		$output = [];
-
-		// If the user has selected the form id populate additional config.
-		if ($selectedFormId) {
-			$formFields = $this->greenhouse->getFormFields($formId);
-
-			// Output additonal tabs for config.
-			$output = [
-				'component' => 'tabs',
-				'tabsContent' => [
-					$this->getOutputIntegrationFields(
-						$formId,
-						$formFields,
-						$type,
-						self::SETTINGS_GREENHOUSE_INTEGRATION_FIELDS_KEY,
-					),
-					$this->getOutputConditionalTags(
-						$formId,
-						$formFields,
-						self::SETTINGS_GREENHOUSE_CONDITIONAL_TAGS_KEY
-					),
-				],
-			];
-		}
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			...$this->getOutputFormSelection(
-				$formId,
-				$items,
-				$selectedFormId,
-				self::SETTINGS_TYPE_KEY,
-				self::SETTINGS_GREENHOUSE_JOB_ID_KEY
-			),
-			$output,
-		];
 	}
 
 	/**
@@ -270,7 +140,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'password',
@@ -281,7 +150,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 								'inputFieldLabel' => \__('Job Board name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -298,7 +166,6 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
-								'inputId' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -308,6 +175,28 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => \__('Disable default fields', 'eightshift-forms'),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+								'checkboxesFieldHelp' => \__('Disable Greenhouse fields on all forms.', 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable cover letter textarea', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable resume textarea', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,
+										'checkboxAsToggle' => true,
+									],
+								],
 							],
 						],
 					],
@@ -319,7 +208,7 @@ class SettingsGreenhouse implements SettingInterface, ServiceInterface
 							[
 								'component' => 'layout',
 								'layoutType' => 'layout-grid-2',
-								'layoutItems' => [
+								'layoutContent' => [
 									[
 										'component' => 'steps',
 										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),

@@ -1,8 +1,9 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "error",
 	"title": "Error",
 	"componentClass": "es-error",
-	"componentJsClass": "js-es-block-form-error",
+	"componentJsClass": "js-es-block-error",
 	"example": {
 		"attributes": {
 			"errorValue": "Value",

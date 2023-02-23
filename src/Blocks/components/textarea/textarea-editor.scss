@@ -1,8 +1,5 @@
-// stylelint-disable declaration-no-important
+@import './textarea-style.scss';
 
-.es-textarea {
-	padding: 10px !important;
-	border-radius: 0 !important;
-	border-color: var(--global-colors-es-chalice) !important;
-	background-color: transparent !important;
+textarea.es-textarea {
+	@include input-styles-disabled;
 }

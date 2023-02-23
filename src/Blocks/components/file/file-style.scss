@@ -1,8 +1,16 @@
 // stylelint-disable declaration-no-important
 
-.es-file-is-custom {
+.es-field--file {
 	.es-file {
 		display: none;
+
+		.es-field__inner {
+			transition: {
+				property: opacity;
+				timing-function: var(--es-input-transition-timing);
+				duration: var(--es-input-transition-duration);
+			}
+		}
 
 		&__custom-wrap {
 			cursor: pointer;
@@ -10,7 +18,12 @@
 			display: flex;
 			align-items: center;
 			flex-direction: column;
-			border: 1px dashed var(--global-colors-es-french);
+			border: 1px dashed var(--es-input-border-color);
+			transition: {
+				property: background-color;
+				timing-function: var(--es-input-transition-timing);
+				duration: var(--es-input-transition-duration);
+			}
 		}
 
 		&__info {
@@ -18,24 +31,16 @@
 		}
 
 		&__button {
-			margin-top: 20px;
+			@include submit-styles($size: 'medium');
+			margin-top: 15px;
 			display: inline-flex;
-			background-color: var(--global-colors-es-matisse);
-			color: var(--global-colors-es-white);
-			padding: 10px 30px;
-			font-size: 14px;
-			border: var(--global-colors-es-matisse);
-			cursor: pointer;
-			text-decoration: none;
-			transition: {
-				property: background-color;
-				timing-function: ease-in-out;
-				duration: 0.3s;
-			}
+			width: initial;
+		}
+	}
 
-			&:hover {
-				background-color: var(--global-colors-es-blumine);
-			}
+	&.dz-drag-hover {
+		.es-file__custom-wrap {
+			background-color: var(--global-colors-es-alto);
 		}
 	}
 
@@ -86,7 +91,7 @@
 			padding-bottom: 20px;
 
 			.dz-error-message {
-				@extend .es-error; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+				@include error-styles;
 				display: block;
 				position: absolute;
 				left: 0;

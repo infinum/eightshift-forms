@@ -34,7 +34,7 @@
 		}
 
 		ul {
-			margin: 0;
+			margin: 5px 0 0;
 		}
 
 		li {
@@ -47,13 +47,10 @@
 	&__before-content,
 	&__after-content {
 		.is-filter-applied {
+			margin-top: 15px;
+			background-color: var(--global-colors-es-pome-10);
+			padding: 10px;
 			color: var(--global-colors-es-pome);
-			display: flex;
-			align-items: center;
-
-			svg {
-				margin-right: 10px;
-			}
 		}
 	}
 

@@ -1,37 +1,3 @@
-.es-submit {
-	$this: &;
-
-	width: 100%;
-	background-color: var(--global-colors-es-matisse);
-	color: var(--global-colors-es-white);
-	padding: 0.5rem 1rem;
-	border: var(--global-colors-es-matisse);
-	cursor: pointer;
-
-	transition: {
-		property: background-color;
-		timing-function: ease-in-out;
-		duration: 0.3s;
-	}
-
-	&:hover {
-		background-color: var(--global-colors-es-blumine);
-	}
-
-	&:disabled {
-		opacity: 0.6;
-		cursor: default;
-	}
-
-	&__inner {
-		pointer-events: none;
-	}
-
-	&--with-icon {
-		#{$this}__inner {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-		}
-	}
+button.es-submit {
+	@include submit-styles;
 }

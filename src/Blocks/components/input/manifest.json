@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "input",
 	"title": "Input",
 	"componentClass": "es-input",
@@ -6,7 +7,6 @@
 		"attributes": {
 			"inputName": "Name",
 			"inputValue": "Value",
-			"inputId": "Id",
 			"inputPlaceholder": "Placeholder",
 			"inputType": "text",
 			"inputIsDisabled": false,
@@ -15,12 +15,10 @@
 		}
 	},
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"attributes": {
-		"inputId": {
-			"type": "string"
-		},
 		"inputName": {
 			"type": "string"
 		},
@@ -83,6 +81,9 @@
 			"type": "string"
 		},
 		"inputAttrs": {
+			"type": "object"
+		},
+		"inputDisabledOptions": {
 			"type": "array"
 		}
 	},
@@ -103,22 +104,6 @@
 			{
 				"label": "Number",
 				"value": "number"
-			},
-			{
-				"label": "Phone number",
-				"value": "tel"
-			},
-			{
-				"label": "Date",
-				"value": "date"
-			},
-			{
-				"label": "Date & time",
-				"value": "datetime-local"
-			},
-			{
-				"label": "No user input (hidden field)",
-				"value": "hidden"
 			}
 		],
 		"inputMinLength": {

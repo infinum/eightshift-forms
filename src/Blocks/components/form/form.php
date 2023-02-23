@@ -6,6 +6,8 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Form\Form;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -15,8 +17,15 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
+$blockSsr = $attributes['blockSsr'] ?? false;
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
+
+
+$attributes = apply_filters(
+	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
+	$attributes
+);
 
 $formName = Components::checkAttr('formName', $attributes, $manifest);
 $formAction = Components::checkAttr('formAction', $attributes, $manifest);
@@ -26,18 +35,23 @@ $formId = Components::checkAttr('formId', $attributes, $manifest);
 $formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Components::checkAttr('formContent', $attributes, $manifest);
 $formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
+$formSuccessRedirectVariation = Components::checkAttr('formSuccessRedirectVariation', $attributes, $manifest);
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
-$formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
+$formTrackingAdditionalData = Components::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
+$formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
+$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
+$formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
+$formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
+$formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = Filters::getBlockFilterName('form', 'dataTypeSelector');
+$formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),
 	$attributes
 );
 
-$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 
 $formClass = Components::classnames([
@@ -54,12 +68,20 @@ if ($formSuccessRedirect) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect']] = esc_attr($formSuccessRedirect);
 }
 
+if ($formSuccessRedirectVariation) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Helper::encryptor($formSuccessRedirectVariation);
+}
+
 if ($formTrackingEventName) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['trackingEventName']] = esc_attr($formTrackingEventName);
 }
 
-if ($formConditionalTags) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_attr($formConditionalTags);
+if ($formTrackingAdditionalData) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['trackingAdditionalData']] = esc_attr($formTrackingAdditionalData);
+}
+
+if ($formPhoneSync) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSync']] = esc_attr($formPhoneSync);
 }
 
 if ($formPostId) {
@@ -68,6 +90,14 @@ if ($formPostId) {
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
+}
+
+if ($formConditionalTags) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($formConditionalTags);
+}
+
+if ($formDownloads) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode(array_map(fn ($item) => $item['id'], $formDownloads)));
 }
 
 if ($formId) {
@@ -90,6 +120,9 @@ if ($formMethod) {
 	$formAttrs['method'] = esc_attr($formMethod);
 }
 
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['blockSsr']] = wp_json_encode($blockSsr);
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['disabledDefaultStyles']] = wp_json_encode($formDisabledDefaultStyles);
+
 $formAttrsOutput = '';
 if ($formAttrs) {
 	foreach ($formAttrs as $key => $value) {
@@ -97,15 +130,9 @@ if ($formAttrs) {
 	}
 }
 
-$formTag = 'form';
-
-if ($formServerSideRender) {
-	$formTag = 'div';
-}
-
 ?>
 
-<<?php echo esc_attr($formTag); ?>
+<<?php echo $formServerSideRender ? 'div' : 'form'; ?>
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
@@ -126,4 +153,4 @@ if ($formServerSideRender) {
 		Components::props('loader', $attributes)
 	);
 	?>
-</<?php echo esc_attr($formTag); ?>>
+</<?php echo $formServerSideRender ? 'div' : 'form'; ?>>

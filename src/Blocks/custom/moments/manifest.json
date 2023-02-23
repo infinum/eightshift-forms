@@ -1,0 +1,33 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "moments",
+	"title": "Moments Form",
+	"description" : "A Moments subscription form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-moments"
+	},
+	"keywords": [
+		"moments"
+	],
+	"example": {
+	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"momentsIntegrationId": {
+			"type": "string"
+		},
+		"momentsFormPostId": {
+			"type": "string"
+		},
+		"momentsFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

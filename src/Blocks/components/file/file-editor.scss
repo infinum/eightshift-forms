@@ -1,5 +1,23 @@
-// stylelint-disable declaration-no-important
+.es-field--file {
+	.es-file {
+		display: none;
 
-.es-file {
-	background-color: transparent !important;
+		&__custom-wrap {
+			padding: 20px;
+			border: 1px dashed var(--es-input-border-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			color: var(--global-colors-es-boulder);
+			width: 100%;
+		}
+
+		&__button {
+			@include submit-styles($size: 'medium');
+			margin-top: 15px;
+			display: inline-flex;
+			width: initial;
+		}
+	}
 }

@@ -23,7 +23,7 @@ domReady(() => {
 		import('./../assets/form').then(({ Form }) => {
 			const form = new Form({
 				utils: new Utils({
-					formSubmitRestApiUrl: esFormsLocalization.formSettingsSubmitRestApiUrl,
+					formSubmitRestApiUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`,
 					formIsAdmin: true,
 				}),
 			});
@@ -40,7 +40,7 @@ domReady(() => {
 			const cache = new Cache({
 				utils: new Utils(),
 				selector: selectorCache,
-				clearCacheRestUrl: esFormsLocalization.clearCacheRestUrl,
+				clearCacheRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.cacheClear}`,
 			});
 
 			cache.init();
@@ -55,7 +55,8 @@ domReady(() => {
 			const migration = new Migration({
 				utils: new Utils(),
 				selector: selectorMigration,
-				migrationRestUrl: esFormsLocalization.migrationRestUrl,
+				outputSelector: `.${componentMigrationJsClass}-output`,
+				migrationRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.migration}`,
 			});
 
 			migration.init();
@@ -73,7 +74,7 @@ domReady(() => {
 				itemSelector: `.${componentTransferJsClass}-item`,
 				uploadSelector: `.${componentTransferJsClass}-upload`,
 				overrideExistingSelector: `.${componentTransferJsClass}-existing`,
-				transferRestUrl: esFormsLocalization.transferRestUrl,
+				transferRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.transform}`,
 				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
 			});
 

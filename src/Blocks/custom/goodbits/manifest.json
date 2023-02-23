@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "goodbits",
 	"title": "Goodbits Form",
 	"description" : "A Goodbits subscription form",
@@ -11,13 +12,16 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"goodbitsFormPostId": {
+		"goodbitsIntegrationId": {
 			"type": "string"
 		},
-		"goodbitsFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"goodbitsFormPostId": {
+			"type": "string"
 		},
 		"goodbitsFormDataTypeSelector": {
 			"type": "string"

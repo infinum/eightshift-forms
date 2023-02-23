@@ -1,7 +1,14 @@
+@import './field-style.scss';
+
 .es-field {
 	&__label {
 		a {
 			pointer-events: none;
 		}
+	}
+
+	&--hidden,
+	&.is-hidden {
+		opacity: 0.5;
 	}
 }

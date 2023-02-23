@@ -1,0 +1,46 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "mailer",
+	"title": "Mailer form",
+	"description" : "A form with mailer",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form"
+	},
+	"keywords": [
+		"form"
+	],
+	"hasInnerBlocks": true,
+	"components": {
+		"form": "form"
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	],
+	"attributes": {
+		"mailerAllowedBlocks": {
+			"type": "array",
+			"default": [
+				"eightshift-forms/file",
+				"eightshift-forms/input",
+				"eightshift-forms/radios",
+				"eightshift-forms/select",
+				"eightshift-forms/submit",
+				"eightshift-forms/textarea",
+				"eightshift-forms/checkboxes",
+				"eightshift-forms/phone",
+				"eightshift-forms/date",
+				"eightshift-forms/country"
+			]
+		},
+		"mailerFormPostId": {
+			"type": "string"
+		},
+		"mailerDataTypeSelector": {
+			"type": "string"
+		},
+		"mailerFormAction": {
+			"type": "string"
+		}
+	}
+}

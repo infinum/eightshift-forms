@@ -1,10 +1,13 @@
 /* global esFormsLocalization */
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { select } from "@wordpress/data";
+import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
+import { MediaPlaceholder } from '@wordpress/block-editor';
+import { PanelBody, BaseControl, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import {
 	CustomSelect,
 	IconLabel,
@@ -16,8 +19,11 @@ import {
 	BlockIcon,
 	FancyDivider,
 	STORE_NAME,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import manifest from '../manifest.json';
+import { getSettingsJsonOptions } from '../../../components/utils';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const {
@@ -25,7 +31,12 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		settingsPageUrl
 	} = select(STORE_NAME).getSettings();
 
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const {
+		wpAdminUrl,
+		settings: {
+			successRedirectVariations,
+		}
+	} = esFormsLocalization;
 
 	const {
 		postType,
@@ -37,14 +48,15 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	} = preview;
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
-	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsStyle = checkAttr('formsStyle', attributes, manifest);
 	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
+	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
+	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
+	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [geoRepeater, setGeoRepeater] = useState(formsFormGeolocationAlternatives);
-	const [prevGeoRepeater, setPrevGeoRepeater] = useState([]);
+	const [formFields, setFormFields] = useState([]);
 
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
@@ -56,12 +68,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	}
 
 	// Is geolocation active.
-	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.useGeolocation) {
+	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.use?.geolocation) {
 		formsUseGeolocation = true;
 
-		if (esFormsLocalization?.geolocationApi) {
-			geolocationApi = esFormsLocalization.geolocationApi;
-		}
+		geolocationApi = `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.countriesGeolocation}`;
 	}
 
 	const formSelectOptions = getFetchWpApi(
@@ -71,30 +81,27 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		}
 	);
 
-	const geoLocationOptions = getFetchWpApi(
-		'geolocation-countries',
-		{
-			processLabel: ({ label }) => label,
-			processId: ({ value }) => value,
-			routePrefix: 'eightshift-forms/v1',
-			fields: 'label, value',
-			perPage: 500,
-		}
-	);
+	useEffect(() => {
+		apiFetch({ path: `${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.countriesGeolocation}` }).then((response) => {
+			if (response.code === 200) {
+				setFormFields(response.data);
+			}
+		});
+	}, []);
 
 	const GeoLocationModalItem = ({
 		index,
-		data,
-		removeItem,
-		handleChange,
 	}) => {
 		return (
 			<>
 				<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
 					<CustomSelect
-						value={data.formId}
+						value={formsFormGeolocationAlternatives?.[index]?.formId}
 						loadOptions={formSelectOptions}
-						onChange={(value) => handleChange(value.toString(), index, 'formId')}
+						onChange={(value) => {
+							formsFormGeolocationAlternatives[index].formId = value.toString();
+							setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: formsFormGeolocationAlternatives });
+						}}
 						isClearable={false}
 						reFetchOnSearch={true}
 						multiple={false}
@@ -102,92 +109,128 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					/>
 
 					<CustomSelect
-						value={data.geoLocation}
-						loadOptions={geoLocationOptions}
-						onChange={(value) => handleChange(value, index, 'geoLocation')}
+						value={formsFormGeolocationAlternatives?.[index]?.geoLocation}
+						options={formFields}
+						onChange={(value) => {
+							formsFormGeolocationAlternatives[index].geoLocation = value;
+							setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: formsFormGeolocationAlternatives });
+						}}
+						cacheOptions={false}
 						multiple={true}
-					/>
-
-					<Button
-						isLarge
-						icon={icons.trash}
-						onClick={removeItem}
-						label={__('Remove', 'eightshift-forms')}
-						style={{ marginTop: '0.2rem' }}
+						simpleValue
 					/>
 				</div>
 			</>
 		);
 	};
 
-	const addItem = () => {
-		setGeoRepeater([...geoRepeater, {
-			formId: '',
-			geoLocation: [],
-		}]);
-	};
-
 	return (
-		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
-			<CustomSelect
-				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
-				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-				value={parseInt(formsFormPostId)}
-				loadOptions={formSelectOptions}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
-				isClearable={false}
-				reFetchOnSearch={true}
-				multiple={false}
-				simpleValue
-			/>
-
-			{formsFormPostId &&
-				<div className='es-v-spaced es-has-wp-field-b-space'>
-					<Button
-						icon={icons.edit}
-						href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
-					>
-						{__('Edit fields', 'eightshift-forms')}
-					</Button>
-
-					<Button
-						icon={icons.options}
-						href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
-					>
-						{__('Form settings', 'eightshift-forms')}
-					</Button>
-				</div>
-			}
-
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-			<TextControl
-				label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
-				help={__('Additional data type selectors', 'eightshift-forms')}
-				value={formsFormDataTypeSelector}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
-			/>
-
-			{formsStyleOptions?.length > 0 &&
+		<>
+			<PanelBody title={__('Settings', 'eightshift-forms')}>
 				<CustomSelect
-					label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
-					value={formsStyle}
-					options={formsStyleOptions}
-					onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
-					simpleValue
-					isSearchable={false}
+					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
+					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+					value={parseInt(formsFormPostId)}
+					loadOptions={formSelectOptions}
+					onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
 					isClearable={false}
+					reFetchOnSearch={true}
+					multiple={false}
+					simpleValue
 				/>
-			}
+
+				{formsFormPostId &&
+					<div className='es-v-spaced es-has-wp-field-b-space'>
+						<Button
+							icon={icons.edit}
+							href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
+						>
+							{__('Edit fields', 'eightshift-forms')}
+						</Button>
+
+						<Button
+							icon={icons.options}
+							href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
+						>
+							{__('Form settings', 'eightshift-forms')}
+						</Button>
+					</div>
+				}
+
+				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+
+				<TextControl
+					label={<IconLabel icon={icons.code} label={__('Type selector', 'eightshift-forms')} />}
+					help={__('Additional data type selectors', 'eightshift-forms')}
+					value={formsFormDataTypeSelector}
+					onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
+				/>
+
+				<FancyDivider label={__('Thank you page', 'eightshift-forms')} />
+
+				<BaseControl label={<IconLabel icon={icons.design} label={__('Download', 'eightshift-forms')} />}>
+					<CustomSelect
+						value={formsSuccessRedirectVariation}
+						options={getSettingsJsonOptions(successRedirectVariations)}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
+						}}
+						cacheOptions={false}
+						multiple={false}
+						simpleValue
+					/>
+
+					<MediaPlaceholder
+						icon={icons.image}
+						multiple = {true}
+						onSelect={(value) => {
+							const items = value.map((item) => {
+								return {
+									title: item.filename,
+									id: item.id,
+								};
+							});
+							setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
+						}}
+					/>
+
+					{formsDownloads.map((item, index) => {
+						return (
+							<div key={index} className="es-forms-options-download">
+								<Button
+										onClick={() => {
+											delete formsDownloads[index];
+											const item = formsDownloads.filter((_, i) => i !== index);
+											setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
+										}}
+										icon={icons.trash}
+										className='es-button-icon-24 es-slight-button-border-cool-gray-300 es-rounded-1.0 es-nested-color-red-500'
+									></Button>
+									{item.id}<br/>{item.title}
+							</div>
+						);
+					})}
+				</BaseControl>
+
+				{formsStyleOptions?.length > 0 &&
+					<CustomSelect
+						label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
+						value={formsStyle}
+						options={formsStyleOptions}
+						onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
+						simpleValue
+						isSearchable={false}
+						isClearable={false}
+					/>
+				}
+			</PanelBody>
 
 			{formsUseGeolocation &&
-				<>
-					<FancyDivider label={__('Geolocation', 'eightshift-forms')} />
-
+				<PanelBody title={__('Geolocation', 'eightshift-forms')} initialOpen={false}>
 					<CustomSelect
 						label={<IconLabel icon={icons.locationAllow} label={__('Show form only if in countries', 'eightshift-forms')} />}
 						help={
-							geoRepeater?.length > 0
+							formsFormGeolocationAlternatives?.length > 0
 								? __('Overriden by geolocation rules.', 'eightshift-forms')
 								: (
 									<>
@@ -196,24 +239,23 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								)
 						}
 						value={formsFormGeolocation}
-						loadOptions={geoLocationOptions}
-						onChange={(value) => setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })}
+						options={formFields}
+						onChange={(value) => setAttributes({[getAttrKey('formsFormGeolocation', attributes, manifest)]: value})}
+						cacheOptions={false}
 						multiple={true}
-						disabled={geoRepeater?.length > 0}
+						simpleValue
+						disabled={formsFormGeolocationAlternatives?.length > 0}
 					/>
 
 					<Button
 						isSecondary
 						icon={icons.locationSettings}
-						onClick={() => {
-							setPrevGeoRepeater([...geoRepeater]);
-							setIsModalOpen(true);
-						}}
+						onClick={() => setIsModalOpen(true)}
 					>
 						{__('Geolocation rules', 'eightshift-forms')}
 					</Button>
 
-					{geoRepeater?.length > 0 &&
+					{formsFormGeolocationAlternatives?.length > 0 &&
 						<div className='es-has-wp-field-t-space'>
 							<Button
 								icon={icons.visible}
@@ -230,9 +272,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							overlayClassName='es-geolocation-modal'
 							className='es-modal-max-width-l'
 							title={__('Geolocation rules', 'eightshift-forms')}
-							shouldCloseOnClickOutside={false}
-							shouldCloseOnEsc={false}
-							isDismissible={false}
 							onRequestClose={() => setIsModalOpen(false)}
 						>
 							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
@@ -246,12 +285,12 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							<Button
 								isSecondary
 								icon={icons.add}
-								onClick={addItem}
+								onClick={() => setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [...formsFormGeolocationAlternatives, {formId: '', geoLocation: []} ]})}
 							>
 								{__('Add rule', 'eightshift-forms')}
 							</Button>
 
-							{geoRepeater?.length > 0 &&
+							{formsFormGeolocationAlternatives?.length > 0 &&
 								<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
 									<IconLabel icon={<BlockIcon iconName='esf-form' />} label={__('Form to display', 'eightshift-forms')} standalone />
 									<IconLabel icon={icons.locationAllow} label={__('Countries to show the form in', 'eightshift-forms')} standalone />
@@ -259,49 +298,41 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								</div>
 							}
 
-							{geoRepeater.map((_, index) => {
+							{formsFormGeolocationAlternatives?.map((_, index) => {
 								return (
-									<GeoLocationModalItem
-										key={index}
-										index={index}
-										data={geoRepeater[index]}
-										handleChange={(value, index, key) => {
-											geoRepeater[index][key] = value;
-											setGeoRepeater([...geoRepeater]);
-										}}
-										removeItem={(index) => {
-											geoRepeater.splice(index, 1);
-											setGeoRepeater([...geoRepeater]);
-										}}
-									/>
+									<div key={index}>
+										<GeoLocationModalItem index={index} />
+										<Button
+											isLarge
+											icon={icons.trash}
+											onClick={() => {
+												formsFormGeolocationAlternatives.splice(index, 1);
+												setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [...formsFormGeolocationAlternatives] });
+											}}
+											label={__('Remove', 'eightshift-forms')}
+											style={{ marginTop: '0.2rem' }}
+										/>
+									</div>
 								);
 							})}
 
-							{geoRepeater &&
-								<div className='es-h-end es-has-wp-field-t-space'>
-									<Button onClick={() => {
-										setGeoRepeater(prevGeoRepeater);
-										setAttributes({ formsFormGeolocationAlternatives: prevGeoRepeater });
-										setIsModalOpen(false);
-									}}>
-										{__('Cancel', 'eightshift-forms')}
-									</Button>
-
-									<Button
-										isPrimary
-										onClick={() => {
-											setIsModalOpen(false);
-											setAttributes({ formsFormGeolocationAlternatives: geoRepeater });
-										}}
-									>
-										{__('Save', 'eightshift-forms')}
-									</Button>
-								</div>
-							}
+							<div className='es-h-end es-has-wp-field-t-space'>
+								<Button onClick={() => setIsModalOpen(false)}>
+									{__('Cancel', 'eightshift-forms')}
+								</Button>
+							</div>
 						</Modal>
 					)}
-				</>
+				</PanelBody>
 			}
-		</PanelBody>
+
+			<ConditionalTagsFormsOptions
+				{...props('conditionalTags', attributes, {
+					setAttributes,
+					conditionalTagsPostId: formsFormPostId,
+				})}
+			/>
+
+		</>
 	);
 };

@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
@@ -27,17 +25,47 @@ abstract class AbstractFormBuilder
 	use SettingsHelper;
 
 	/**
-	 * Build public facing form.
+	 * Nested keys for inner blocks
 	 *
-	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, bool|string> $formAdditionalProps Additional attributes for form component.
-	 *
-	 * @return string
+	 * @var array<int, string>
 	 */
-	public function buildForm(array $formItems, array $formAdditionalProps = []): string
-	{
-		return $this->getForm($formItems, $formAdditionalProps);
-	}
+	public const NESTED_KEYS = [
+		'checkboxesContent',
+		'radiosContent',
+		'selectContent',
+		'groupContent',
+		'tabsContent',
+		'tabContent',
+		'layout',
+		'layoutContent',
+		'card',
+		'cardContent',
+	];
+
+	/**
+	 * Nested keys for inner blocks
+	 *
+	 * @var array<int, string>
+	 */
+	public const LAYOUT_KEYS = [
+		'group',
+		'tabs',
+		'tab',
+		'layout',
+		'card',
+	];
+
+	/**
+	 * Nested keys for inner blocks
+	 *
+	 * @var array<int, string>
+	 */
+	public const NESTED_KEYS_NEW = [
+		'checkboxes',
+		'radios',
+		'select',
+		...self::LAYOUT_KEYS,
+	];
 
 	/**
 	 * Build settings form.
@@ -72,78 +100,17 @@ abstract class AbstractFormBuilder
 		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = true;
 
 		// Build form.
-		return $this->getForm($formItems, $formAdditionalProps, $formContent);
+		return $this->getFormBuilder($formItems, $formAdditionalProps, $formContent);
 	}
 
 	/**
-	 * Returns the current admin page url for refresh.
-	 *
-	 * @return string
-	 */
-	protected function getAdminRefreshUrl(): string
-	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return \admin_url(\sprintf(\basename($request)));
-	}
-
-	/**
-	 * Get the actual form for the components.
-	 *
-	 * @param array<int, array<string, mixed>> $formItems Form array.
-	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
-	 * @param string $formContent For adding additional form components after every form.
-	 *
-	 * @return string
-	 */
-	private function getForm(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
-	{
-		$form = '';
-
-		// Build all top-level component.
-		foreach ($formItems as $item) {
-			$form .= $this->buildComponent($item);
-		}
-
-		// Append additional form components.
-		if (!empty($formContent)) {
-			$form .= $formContent;
-		}
-
-		// Populate form props.
-		$formProps = [
-			'formContent' => $form,
-		];
-
-		// Check if it is loaded on the front or the backend.
-		if (isset($formAdditionalProps['ssr'])) {
-			$formProps['formServerSideRender'] = $formAdditionalProps['ssr'];
-
-			unset($formAdditionalProps['ssr']);
-		}
-
-		// Add additional form props.
-		if ($formAdditionalProps) {
-			$formProps = \array_merge($formProps, $formAdditionalProps);
-		}
-
-		// Build form component.
-		return Components::render(
-			'form',
-			Components::props('form', [], $formProps),
-			'',
-			true
-		);
-	}
-
-	/**
-	 * Build components from arrya of items.
+	 * Build components from array of items.
 	 *
 	 * @param array<string, mixed> $attributes Array of form components.
 	 *
 	 * @return string
 	 */
-	public function buildComponent(array $attributes): string
+	protected function buildComponent(array $attributes): string
 	{
 		if (!$attributes) {
 			return '';
@@ -163,18 +130,7 @@ abstract class AbstractFormBuilder
 		) {
 			$output = '';
 
-			$nestedKeys = [
-				'checkboxesContent' => 0,
-				'radiosContent' => 1,
-				'selectOptions' => 2,
-				'groupContent' => 3,
-				'tabsContent' => 4,
-				'tabContent' => 5,
-				'layout' => 6,
-				'layoutItems' => 7,
-				'card' => 8,
-				'cardContent' => 9,
-			];
+			$nestedKeys = \array_flip(self::NESTED_KEYS);
 
 			foreach ($nestedKeys as $nestedKey => $value) {
 				if (isset($attributes[$nestedKey])) {
@@ -235,63 +191,79 @@ abstract class AbstractFormBuilder
 	}
 
 	/**
-	 * Return Integration form additional props
+	 * Prepare disabled options and remove empty items.
 	 *
-	 * @param string $formId Form ID.
-	 * @param string $type Form Type.
+	 * @param string $component Component name.
+	 * @param array<int, string> $options Options to check.
+	 * @param bool $useDefault Append default options.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, string>
 	 */
-	protected function getFormAdditionalProps(string $formId, string $type): array
+	protected function prepareDisabledOptions(string $component, array $options = [], bool $useDefault = true): array
 	{
-		$formAdditionalProps = [];
+		$component = Components::kebabToCamelCase($component);
 
-		// Tracking event name.
-		$formAdditionalProps['formTrackingEventName'] = $this->getAdditionalPropsItem(
-			$formId,
-			$type,
-			SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY,
-			'trackingEventName'
-		);
+		$default = [
+			"{$component}Name",
+		];
 
-		// Success redirect url.
-		$formAdditionalProps['formSuccessRedirect'] = $this->getAdditionalPropsItem(
-			$formId,
-			$type,
-			SettingsGeneral::SETTINGS_GENERAL_REDIRECTION_SUCCESS_KEY,
-			'successRedirectUrl'
-		);
-
-		return $formAdditionalProps;
+		return [
+			...($useDefault ? $default : []),
+			...\array_filter($options),
+		];
 	}
 
 	/**
-	 * Get additional props item details with filter.
+	 * Get the actual form for the components.
 	 *
-	 * @param string $formId Form Id.
-	 * @param string $type Form Type.
-	 * @param string $key Settings key.
-	 * @param string $filter Filter name.
+	 * @param array<int, array<string, mixed>> $formItems Form array.
+	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
+	 * @param string $formContent For adding additional form components after every form.
 	 *
 	 * @return string
 	 */
-	private function getAdditionalPropsItem(string $formId, string $type, string $key, string $filter): string
+	private function getFormBuilder(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
 	{
-		$output = $this->getSettingsValue(
-			$key,
-			$formId
-		);
+		$form = '';
 
-		$filterName = Filters::getBlockFilterName('form', $filter);
-		if (\has_filter($filterName)) {
-			$value = \apply_filters($filterName, $type, $formId) ?? '';
-
-			// Ignore filter if empty.
-			if (!empty($value)) {
-				$output = $value;
-			}
+		// Build all top-level component.
+		foreach ($formItems as $item) {
+			$form .= $this->buildComponent($item);
 		}
 
-		return $output ? $output : '';
+		// Append additional form components.
+		if (!empty($formContent)) {
+			$form .= $formContent;
+		}
+
+		// Populate form props.
+		$formProps = [
+			'formContent' => $form,
+		];
+
+		// Add additional form props.
+		if ($formAdditionalProps) {
+			$formProps = \array_merge($formProps, $formAdditionalProps);
+		}
+
+		// Build form component.
+		return Components::render(
+			'form',
+			Components::props('form', [], $formProps),
+			'',
+			true
+		);
+	}
+
+	/**
+	 * Returns the current admin page url for refresh.
+	 *
+	 * @return string
+	 */
+	private function getAdminRefreshUrl(): string
+	{
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return \admin_url(\sprintf(\basename($request)));
 	}
 }

@@ -1,5 +1,7 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "invalid",
 	"title": "Invalid",
-	"componentClass": "es-invalid"
+	"componentClass": "es-invalid",
+	"iconDefault": "<svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.71991 1.60974C3.11997 2.29956 2 3.89096 2 5.74394C2 7.70327 3.25221 9.37013 5 9.98788V17C5 17.8284 5.67157 18.5 6.5 18.5C7.32843 18.5 8 17.8284 8 17V9.98788C9.74779 9.37013 11 7.70327 11 5.74394C11 3.78461 9.74779 2.11775 8 1.5V5.74394C8 6.57237 7.32843 7.24394 6.5 7.24394C5.67157 7.24394 5 6.57237 5 5.74394V1.5C4.90514 1.53353 4.81173 1.57015 4.71991 1.60974Z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round'/><path d='M13 13V16C13 17.3807 14.1193 18.5 15.5 18.5V18.5C16.8807 18.5 18 17.3807 18 16V13M13 13V10.5H14M13 13H18M18 13V10.5H17M14 10.5V5.5L13.5 3.5L14 1.5H17L17.5 3.5L17 5.5V10.5M14 10.5H17' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>"
 }

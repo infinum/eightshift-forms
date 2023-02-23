@@ -1,4 +1,5 @@
 import { Utils } from "./utilities";
+import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
 /**
  * Enrichment class.
@@ -45,6 +46,60 @@ export class Enrichment {
 	}
 
 	/**
+	 * Filter all url params based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 *
+	 * @public
+	 */
+	getUrlAllowedParams(allowedTags) {
+		const output = {};
+
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
+			return output;
+		}
+
+		// Find url params.
+		const searchParams = new URLSearchParams(window.location.search);
+
+		allowedTags.forEach((element) => {
+			const item = searchParams.get(element);
+
+			if (item) {
+				output[element] = item;
+			}
+		});
+
+		return output;
+	}
+
+	/**
+	 * Filter all set cookies based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 *
+	 * @public
+	 */
+	getCookiesAllowedParams(allowedTags) {
+		const output = {};
+
+		allowedTags.forEach((element) => {
+			const item = cookies.getCookie(element);
+
+			if (item) {
+				output[element] = item;
+			}
+		});
+
+		return output;
+	}
+
+	/**
 	 * Set localStorage value.
 	 * 
 	 * @public
@@ -60,32 +115,11 @@ export class Enrichment {
 			return;
 		}
 
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
 		// Get storage from backend this is considered new by the page request.
-		const newStorage = {};
-
-		// Loop entries and get new storage values.
-		for (const [key, value] of searchParams.entries()) {
-			// Bailout if not allowed or empty
-			if (!allowedTags.includes(key) || value === '') {
-				continue;
-			}
-
-			// Add valid tag.
-			newStorage[key] = value;
-		}
-
-		// Bailout if nothing is set from allowed tags or everything is empty.
-		if (Object.keys(newStorage).length === 0) {
-			return;
-		}
+		const newStorage = {
+			...this.getUrlAllowedParams(allowedTags),
+			...this.getCookiesAllowedParams(allowedTags)
+		};
 
 		// Add current timestamp to new storage.
 		newStorage.timestamp = Date.now();
@@ -175,6 +209,12 @@ export class Enrichment {
 				},
 				isEnrichmentUsed: () => {
 					this.isEnrichmentUsed();
+				},
+				getUrlAllowedParams: (allowedTags) => {
+					this.getUrlAllowedParams(allowedTags);
+				},
+				getCookiesAllowedParams: (allowedTags) => {
+					this.getCookiesAllowedParams(allowedTags);
 				},
 				setLocalStorage: () => {
 					this.setLocalStorage();

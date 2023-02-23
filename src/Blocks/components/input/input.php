@@ -6,8 +6,8 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
@@ -15,7 +15,6 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$inputId = Components::checkAttr('inputId', $attributes, $manifest);
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
@@ -74,21 +73,16 @@ if ($inputAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = '';
-$filterName = Filters::getBlockFilterName('input', 'additionalContent');
-if (has_filter($filterName)) {
-	$additionalContent = apply_filters($filterName, $attributes ?? []);
-}
+$additionalContent = Helper::getBlockAdditionalContentViaFilter('input', $attributes);
 
-$isWpFiveNine = is_wp_version_compatible('5.9');
 $input = '
 	<input
 		class="' . esc_attr($inputClass) . '"
 		name="' . esc_attr($inputName) . '"
-		id="' . esc_attr($inputId) . '"
+		id="' . esc_attr($inputName) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
-		' . ($isWpFiveNine ? wp_readonly($inputIsReadOnly, true, false) : readonly($inputIsReadOnly, true, false)) . /* @phpstan-ignore-line */ '
+		' . wp_readonly($inputIsReadOnly, true, false) . '
 		' . $inputAttrsOutput . '
 	/>
 	' . $additionalContent . '
@@ -99,13 +93,16 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes, [
 			'fieldContent' => $input,
-			'fieldId' => $inputId,
+			'fieldId' => $inputName,
 			'fieldName' => $inputName,
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
-			'fieldHidden' => $inputType === 'hidden',
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
+			'fieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 			'fieldAttrs' => [
 				'data-input-type' => $inputType,
 			],

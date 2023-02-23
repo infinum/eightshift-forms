@@ -30,6 +30,11 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	use SettingsHelper;
 
 	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-captcha/';
+
+	/**
 	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
@@ -53,7 +58,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/form-submit-captcha';
+		return self::ROUTE_SLUG;
 	}
 
 	/**
@@ -83,37 +88,118 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	{
 		// Bailout if troubleshooting skip captcha is on.
 		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-			return \rest_ensure_response([
-				'status' => 'success',
-				'code' => 200,
-				'message' => \esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiSuccessOutput(
+					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms')
+				)
+			);
 		}
 
 		try {
 			$params = \json_decode($request->get_body(), true, 512, JSON_THROW_ON_ERROR); // phpcs:ignore
 		} catch (Throwable $t) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('captchaBadRequest'),
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('captchaBadRequest'),
+				)
+			);
 		}
 
 		$token = $params['token'] ?? '';
-		$formId = $params['formId'] ?? '';
+		$action = $params['action'] ?? '';
 
-		if (!$token || !$formId) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('captchaBadRequest', $formId),
-			]);
+		if (!$token) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('captchaBadRequest'),
+				)
+			);
 		}
 
+		switch ($params['payed'] ?? '') {
+			case 'enterprise':
+				$response = $this->onEnterprise($token, $action);
+				break;
+			case 'free':
+				$response = $this->onFree($token);
+				break;
+			default:
+				$response = [];
+				break;
+		}
+
+		// Generic error msg from WP.
+		if (\is_wp_error($response)) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('submitWpError')
+				)
+			);
+		}
+
+		// Get body from the response.
+		try {
+			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		} catch (Throwable $t) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('captchaBadRequest')
+				)
+			);
+		}
+
+		switch ($params['payed'] ?? '') {
+			case 'enterprise':
+				return $this->getEnterpriseOutput($responseBody, $action);
+			case 'free':
+				return $this->getFreeOutput($responseBody, $action);
+		}
+	}
+
+	/**
+	 * Get Enterprise response from api.
+	 *
+	 * @param string $token Token for captcha.
+	 * @param string $action Action name.
+	 *
+	 * @return mixed
+	 */
+	private function onEnterprise(string $token, string $action)
+	{
+		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$apiKey = !empty(Variables::getGoogleReCaptchaApiKey()) ? Variables::getGoogleReCaptchaApiKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = !empty(Variables::getGoogleReCaptchaProjectIdKey()) ? Variables::getGoogleReCaptchaProjectIdKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+
+		return \wp_remote_post(
+			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
+			[
+				'headers' => [
+					'Content-Type' => 'application/json; charset=utf-8'
+				],
+				'data_format' => 'body',
+				'body' => \wp_json_encode([
+					'event' => [
+						'siteKey' => $siteKey,
+						"token" => $token,
+						"expectedAction" => $action
+					]
+				]),
+			]
+		);
+	}
+
+	/**
+	 * Get Enterprise response from api.
+	 *
+	 * @param string $token Token for captcha.
+	 *
+	 * @return mixed
+	 */
+	private function onFree(string $token)
+	{
 		$secretKey = !empty(Variables::getGoogleReCaptchaSecretKey()) ? Variables::getGoogleReCaptchaSecretKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
 
-		$response = \wp_remote_post(
+		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",
 			[
 				'body' => [
@@ -122,27 +208,47 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 				],
 			]
 		);
+	}
 
-		// Generic error msg from WP.
-		if (\is_wp_error($response)) {
-			return [
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('submitWpError', $formId),
-			];
+	/**
+	 * Get enterprise output.
+	 *
+	 * @param mixed $responseBody Response body from API.
+	 * @param string $action Action name.
+	 *
+	 * @return mixed
+	 */
+	private function getEnterpriseOutput($responseBody, string $action)
+	{
+		// Check the status.
+		$error = $responseBody['error'] ?? [];
+
+		// If error status returns error.
+		if ($error) {
+			// Bailout on error.
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$error['message'] ?? '',
+					[
+						'response' => $responseBody,
+					]
+				)
+			);
 		}
 
-		// Get body from the response.
-		try {
-			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		} catch (Throwable $t) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('captchaBadRequest'),
-			]);
-		}
+		return $this->validate($responseBody, $action, $responseBody['tokenProperties']['action'] ?? '', $responseBody['riskAnalysis']['score'] ?? 0.0);
+	}
 
+	/**
+	 * Get free output.
+	 *
+	 * @param mixed $responseBody Response body from API.
+	 * @param string $action Action name.
+	 *
+	 * @return mixed
+	 */
+	private function getFreeOutput($responseBody, string $action)
+	{
 		// Check the status.
 		$success = $responseBody['success'] ?? false;
 
@@ -152,45 +258,64 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			$errorCode = $responseBody['error-codes'][0] ?? '';
 
 			// Bailout on error.
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode)), $formId),
-				'validation' => $responseBody,
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
+					[
+						'response' => $responseBody,
+					]
+				)
+			);
 		}
 
-		// Check the action.
-		$action = $responseBody['action'] ?? '';
+		return $this->validate($responseBody, $action, $responseBody['action'] ?? '', $responseBody['score'] ?? 0.0);
+	}
 
+	/**
+	 * Validate and return if issue.
+	 *
+	 * @param mixed $responseBody Response body from API.
+	 * @param string $action Action name.
+	 * @param string $actionResponse Action response from API.
+	 * @param float $score Score value Score value from API.
+	 *
+	 * @return mixed
+	 */
+	private function validate($responseBody, string $action, string $actionResponse, float $score)
+	{
 		// Bailout if action is not correct.
-		if ($action !== 'submit') {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('captchaWrongAction', $formId),
-				'validation' => $responseBody,
-			]);
+		if ($actionResponse !== $action) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('captchaWrongAction'),
+					[
+						'response' => $responseBody,
+					]
+				)
+			);
 		}
 
-		$score = $responseBody['score'] ?? 0.0;
 		$setScore = $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return \rest_ensure_response([
-				'status' => 'error',
-				'code' => 400,
-				'message' => $this->labels->getLabel('captchaScoreSpam', $formId),
-				'validation' => $responseBody,
-			]);
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					$this->labels->getLabel('captchaScoreSpam'),
+					[
+						'response' => $responseBody,
+					]
+				)
+			);
 		}
 
-		return \rest_ensure_response([
-			'status' => 'success',
-			'code' => 200,
-			'message' => '',
-			'validation' => $responseBody,
-		]);
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				'',
+				[
+					'response' => $responseBody,
+				]
+			)
+		);
 	}
 }

@@ -13,7 +13,7 @@ namespace EightshiftForms\Geolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsGeolocation class.
  */
-class SettingsGeolocation implements SettingInterface, ServiceInterface
+class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -75,24 +75,12 @@ class SettingsGeolocation implements SettingInterface, ServiceInterface
 		}
 
 		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
-		$filterName = Filters::getGeolocationFilterName('disable');
+		$filterName = Filters::getFilterName(['geolocation', 'disable']);
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			return false;
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
 	}
 
 	/**

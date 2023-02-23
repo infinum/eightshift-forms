@@ -5,5 +5,8 @@
  * Usage: `WordPress frontend screen`.
  */
 
+// Styles.
+import './styles/blocks-frontend.scss';
+
 // Scripts.
-import './scripts/application-blocks-frontend';
+import './scripts/blocks-frontend';

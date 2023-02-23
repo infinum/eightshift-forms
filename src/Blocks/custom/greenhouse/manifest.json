@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "greenhouse",
 	"title": "Greenhouse Form",
 	"description" : "A Greenhouse job application form",
@@ -11,13 +12,16 @@
 	],
 	"example": {
 	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
 	"attributes": {
-		"greenhouseFormPostId": {
+		"greenhouseIntegrationId": {
 			"type": "string"
 		},
-		"greenhouseFormServerSideRender": {
-			"type": "boolean",
-			"default": false
+		"greenhouseFormPostId": {
+			"type": "string"
 		},
 		"greenhouseFormDataTypeSelector": {
 			"type": "string"

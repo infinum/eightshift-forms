@@ -1,4 +1,5 @@
 {
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "forms",
 	"title": "Eightshift Forms",
 	"description" : "Allows selecting the form that should be displayed",
@@ -13,6 +14,9 @@
 		"formsFormPostId": {
 			"type": "string"
 		},
+		"formsConditionalTagsRules": {
+			"type": "array"
+		},
 		"formsFormGeolocation": {
 			"type": "array"
 		},
@@ -26,7 +30,17 @@
 		"formsStyle": {
 			"type": "string"
 		},
+		"formsDownloads": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
+		},
 		"formsFormDataTypeSelector": {
+			"type": "string"
+		},
+		"formsSuccessRedirectVariation": {
 			"type": "string"
 		},
 		"formsServerSideRender": {
@@ -34,5 +48,12 @@
 			"default": false
 		}
 	},
-	"postType": "eightshift-forms"
+	"components": {
+		"conditionalTags": "conditionalTags"
+	},
+	"postType": "eightshift-forms",
+	"attributesSsr": [
+		"formsFormPostId",
+		"formsStyle"
+	]
 }

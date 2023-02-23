@@ -21,25 +21,48 @@ abstract class AbstractValidation implements ValidatorInterface
 	/**
 	 * Check if string is url.
 	 *
-	 * @param string $string String to check.
+	 * @param string $url String to check.
 	 *
 	 * @return boolean
 	 */
-	public function isUrl(string $string): bool
+	public function isUrl(string $url): bool
 	{
-		return (bool) \preg_match('/(http:\/\/|https:\/\/|ftp:\/\/|mailto:)/', $string);
+		return (bool) \preg_match('/(http:\/\/|https:\/\/|ftp:\/\/|mailto:)/', $url);
 	}
 
 	/**
 	 * Check if string is email.
 	 *
-	 * @param string $string String to check.
+	 * @param string $email String to check.
 	 *
 	 * @return boolean
 	 */
-	public function isEmail(string $string): bool
+	public function isEmail(string $email): bool
 	{
-		return (bool) \filter_var($string, \FILTER_VALIDATE_EMAIL);
+		return (bool) \filter_var($email, \FILTER_VALIDATE_EMAIL);
+	}
+
+	/**
+	 * Check if emails top level domain is valid.
+	 *
+	 * @param string $email String to check.
+	 * @param array<int, string> $db Database to reference.
+	 *
+	 * @return boolean
+	 */
+	public function isEmailTlValid(string $email, array $db): bool
+	{
+		$email = \explode('.', $email);
+		$email = \end($email);
+
+		$check = \array_filter(
+			$db,
+			static function ($item) use ($email) {
+				return $item === $email;
+			}
+		);
+
+		return (bool) $check;
 	}
 
 	/**
@@ -95,7 +118,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isMimeTypeValid(array $file): bool
 	{
-		$denyIfFileIsNotUploaded = \apply_filters(Filters::getValidationFilterName('failMimetypeValidationWhenFileNotOnFS'), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+		$denyIfFileIsNotUploaded = \apply_filters(Filters::getFilterName(['validation', 'failMimetypeValidationWhenFileNotOnFS']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
 		if (\getenv('TEST')) {
 			$denyIfFileIsNotUploaded = \getenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
