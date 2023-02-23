@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Workable;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -25,6 +26,11 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter global settings key.
@@ -55,6 +61,11 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	 * File upload limit Key.
 	 */
 	public const SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY = 'workable-file-upload-limit';
+
+	/**
+	 * Redirection Success key.
+	 */
+	public const SETTINGS_WORKABLE_REDIRECT_SUCCESS_KEY = 'workable-redirection-success';
 
 	/**
 	 * File upload limit default. Defined in MB.
@@ -121,6 +132,8 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 		$apiKey = Variables::getApiKeyWorkable();
 		$subdomain = Variables::getSubdomainWorkable();
 
+		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '', self::SETTINGS_WORKABLE_REDIRECT_SUCCESS_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -149,6 +162,26 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 								'inputIsRequired' => true,
 								'inputValue' => !empty($subdomain) ? $subdomain : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
 								'inputIsDisabled' => !empty($subdomain),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('General', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_REDIRECT_SUCCESS_KEY),
+								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
+								// translators: %s will be replaced with forms field name and filter output copy.
+								'inputFieldHelp' => \sprintf(\__('
+									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
+									<br />
+									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
+								'inputType' => 'url',
+								'inputIsUrl' => true,
+								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
+								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
 						],
 					],

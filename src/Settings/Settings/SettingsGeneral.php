@@ -127,11 +127,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settings']),
+									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
-								'inputValue' => $successRedirectUrl['data'],
+								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],
+								'inputValue' => $successRedirectUrl['dataLocal'],
 							],
 							[
 								'component' => 'select',

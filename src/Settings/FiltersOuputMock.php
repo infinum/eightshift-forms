@@ -143,27 +143,56 @@ trait FiltersOuputMock
 	 *
 	 * @param string $type Type of field.
 	 * @param string $formId Form ID.
+	 * @param string $typeKey Key for global settings.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
+	public function getSuccessRedirectUrlFilterValue(string $type, string $formId, string $typeKey = ''): array
 	{
-		$settings = '';
+		$settingsGlobal = '';
+		$settingsLocal = '';
 		$data = '';
-		$filterUsed = false;
+		$dataGlobal = '';
+		$dataLocal = '';
+		$filterUsedGlobal = false;
+		$filterUsedLocal = false;
 
-		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
-		if (\has_filter($filterName)) {
-			$data = \apply_filters($filterName, $type, $formId);
-			$filterUsed = true;
+		// Find global settings per integration or filter data.
+		$filterNameGlobal = Filters::getFilterName([$type, 'successRedirectUrl']);
+		if (\has_filter($filterNameGlobal)) {
+			$dataGlobal = \apply_filters($filterNameGlobal, $type);
+			$filterUsedGlobal = true;
 		} else {
-			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+			$dataGlobal = $this->getOptionValue($typeKey);
+		}
+
+		// Populate final output.
+		$data = $dataGlobal;
+
+		// Find local settings per integration or filter data.
+		$filterNameLocal = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
+		if (\has_filter($filterNameLocal)) {
+			$dataLocal = \apply_filters($filterNameLocal, $type, $formId);
+			$filterUsedLocal = true;
+		} else {
+			$dataLocal = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		}
+
+		// If local data exists overrider final output.
+		if ($dataLocal) {
+			$data = $dataLocal;
 		}
 
 		return [
-			'settings' => $this->getSettingsDivWrap($settings, $filterUsed),
 			'data' => $data,
-			'filterUsed' => $filterUsed,
+
+			'settingsGlobal' => $this->getSettingsDivWrap($settingsGlobal, $filterUsedGlobal),
+			'dataGlobal' => $dataGlobal,
+			'filterUsedGlobal' => $filterUsedGlobal,
+
+			'settingsLocal' => $this->getSettingsDivWrap($settingsLocal, $filterUsedLocal),
+			'dataLocal' => $dataLocal,
+			'filterUsedLocal' => $filterUsedLocal,
 		];
 	}
 

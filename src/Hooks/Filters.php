@@ -339,34 +339,43 @@ class Filters
 		'integrations' => [
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 				'filesOptions' => 'files_options',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'successRedirectUrl' => 'success_redirect_url',
 			],
 		],
 		'enrichment' => [
