@@ -420,7 +420,6 @@ class Labels implements LabelsInterface
 	private function getWorkableLabels(): array
 	{
 		return [
-			'workableErrorSettingsMissing' => \__('Workable integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'workableBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
