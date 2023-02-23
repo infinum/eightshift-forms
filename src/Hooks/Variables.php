@@ -266,4 +266,24 @@ class Variables
 	{
 		return \defined('ES_API_PASSWORD_MOMENTS') ? \ES_API_PASSWORD_MOMENTS : '';
 	}
+
+	/**
+	 * Get API Key for Workable.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyWorkable(): string
+	{
+		return \defined('ES_API_KEY_WORKABLE') ? \ES_API_KEY_WORKABLE : '';
+	}
+
+	/**
+	 * Get Board token Key for Workable.
+	 *
+	 * @return string
+	 */
+	public static function getSubdomainWorkable(): string
+	{
+		return \defined('ES_SUBDOMAIN_WORKABLE') ? \ES_SUBDOMAIN_WORKABLE : '';
+	}
 }

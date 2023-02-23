@@ -154,7 +154,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 					$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
 					$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
 
-					$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"];
+					$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"] ?? '';
 
 					if (!$innerKeyValue) {
 						continue;

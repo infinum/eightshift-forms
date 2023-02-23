@@ -44,6 +44,9 @@ use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Integrations\Workable\Workable;
+use EightshiftForms\Integrations\Workable\WorkableClient;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsSettings;
@@ -208,6 +211,15 @@ class Filters
 				MomentsClient::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME,
 			],
 		],
+		SettingsWorkable::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME,
+			'fields' => Workable::FILTER_FORM_FIELDS_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+			'use' => SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
+			'cache' => [
+				WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
+			],
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
@@ -353,6 +365,9 @@ class Filters
 			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
 			],
+			SettingsWorkable::SETTINGS_TYPE_KEY => [
+				'data' => 'data',
+			],
 		],
 		'enrichment' => [
 			'manualMap' => 'manual_map',
@@ -468,6 +483,12 @@ class Filters
 				'desc' => \__('Moments integration settings.', 'eightshift-forms'),
 				'detail' => \__('Moments is about sending out relevant content derived from important customer information, their interests, and activities.', 'eightshift-forms'),
 				'externalLink' => 'https://www.infobip.com/moments/',
+			],
+			SettingsWorkable::SETTINGS_TYPE_KEY => [
+				'title' => \__('Workable', 'eightshift-forms'),
+				'desc' => \__('Workable integration settings (API key, file size limit, etc.).', 'eightshift-forms'),
+				'detail' => \__('Workable is a sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
+				'externalLink' => 'https://www.greenhouse.io/',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),

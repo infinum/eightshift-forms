@@ -316,6 +316,11 @@ export class Utils {
 		const data = {};
 
 		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
+			// Skip for files.
+			if (typeof value !== 'string') {
+				continue;
+			}
+
 			const itemValue = JSON.parse(value);
 			const item = element.querySelector(`${this.fieldSelector} [name="${itemValue.name}"]`);
 			const trackingValue = item?.getAttribute(this.DATA_ATTRIBUTES.tracking);
@@ -334,7 +339,7 @@ export class Utils {
 						data[trackingValue] = itemValue.value ? [itemValue.value] : [];
 						break;
 					case 'select-one':
-						data[trackingValue] = item.selectedOptions[0].label;
+						data[trackingValue] = item.selectedOptions[0]?.label;
 						break;
 					default:
 						data[trackingValue]= itemValue.value;

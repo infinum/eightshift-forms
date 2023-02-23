@@ -20,6 +20,8 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Helper class.
@@ -702,5 +704,28 @@ class Helper
 	public static function getProjectIcons(string $type): string
 	{
 		return Components::getComponent('utils')['icons'][Components::kebabToCamelCase($type)] ?? '';
+	}
+
+	/**
+	 * Find array value by key in recursive array.
+	 *
+	 * @param array<mixed> $array Array to find.
+	 * @param string $needle Key name to find.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function recursiveFind(array $array, string $needle): array
+	{
+		$iterator  = new RecursiveArrayIterator($array);
+		$recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+		$aHitList = [];
+
+		foreach ($recursive as $key => $value) {
+			if ($key === $needle) {
+				\array_push($aHitList, $value);
+			}
+		}
+
+		return $aHitList;
 	}
 }

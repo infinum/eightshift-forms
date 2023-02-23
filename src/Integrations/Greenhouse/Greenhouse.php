@@ -140,7 +140,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'phoneTracking' => $name,
 									'phoneFieldLabel' => $label,
 									'phoneMeta' => $description,
-									'phoneIsRequired' => (bool) $isRequired,
+									'phoneIsRequired' => $isRequired,
 									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 										$isRequired ? 'phoneIsRequired' : '',
 									]),
@@ -154,7 +154,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'inputFieldLabel' => $label,
 									'inputMeta' => $description,
 									'inputType' => 'email',
-									'inputIsRequired' => (bool) $isRequired,
+									'inputIsRequired' => $isRequired,
 									'inputIsEmail' => true,
 									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 										$isRequired ? 'inputIsRequired' : '',
@@ -170,7 +170,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'inputFieldLabel' => $label,
 									'inputMeta' => $description,
 									'inputType' => 'text',
-									'inputIsRequired' => (bool) $isRequired,
+									'inputIsRequired' => $isRequired,
 									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 										$isRequired ? 'inputIsRequired' : '',
 									]),
@@ -179,7 +179,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						}
 						break;
 					case 'input_file':
-						$maxFileSize = $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+						$maxFileSize = $this->getOptionValueWithFallback(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT);
 
 						$output[] = [
 							'component' => 'file',
@@ -187,10 +187,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'fileTracking' => $name,
 							'fileFieldLabel' => $label,
 							'fileMeta' => $description,
-							'fileIsRequired' => (bool) $isRequired,
+							'fileIsRequired' => $isRequired,
 							'fileAccept' => 'pdf,doc,docx,txt,rtf',
 							'fileMinSize' => '1',
-							'fileMaxSize' => \strval($maxFileSize * 1000),
+							'fileMaxSize' => \strval((int) $maxFileSize * 1000),
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
 								'fileAccept',
@@ -213,7 +213,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaMeta' => $description,
-							'textareaIsRequired' => (bool) $isRequired,
+							'textareaIsRequired' => $isRequired,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$isRequired ? 'textareaIsRequired' : '',
 							]),
@@ -225,7 +225,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'checkboxes',
 								'checkboxesName' => $name,
 								'checkboxesMeta' => $description,
-								'checkboxesIsRequired' => (bool) $isRequired,
+								'checkboxesIsRequired' => $isRequired,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -249,7 +249,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectTracking' => $name,
 								'selectMeta' => $description,
 								'selectFieldLabel' => $label,
-								'selectIsRequired' => (bool) $isRequired,
+								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_map(
 									function ($selectOption) {
 										return [

@@ -23,7 +23,8 @@
 				"eightshift-forms/goodbits",
 				"eightshift-forms/active-campaign",
 				"eightshift-forms/airtable",
-				"eightshift-forms/moments"
+				"eightshift-forms/moments",
+				"eightshift-forms/workable"
 			]
 		}
 	},
@@ -101,6 +102,11 @@
 			"label": "Moments",
 			"slug": "moments",
 			"blockName": "eightshift-forms/moments"
+		},
+		{
+			"label": "Workable",
+			"slug": "workable",
+			"blockName": "eightshift-forms/workable"
 		}
 	]
 }

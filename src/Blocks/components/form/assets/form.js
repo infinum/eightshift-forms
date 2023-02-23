@@ -687,7 +687,7 @@ export class Form {
 				},
 			});
 
-			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true).value);
+			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true)?.value);
 
 			Object.assign(choices, {
 				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),

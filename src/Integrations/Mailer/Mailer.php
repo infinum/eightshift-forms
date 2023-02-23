@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -127,18 +129,17 @@ class Mailer implements MailerInterface
 
 		$filesOutput = [];
 		if ($files) {
-			foreach ($files as $file) {
-				if ($file instanceof CURLFile) {
-					$filesOutput[] = $file->name;
-				}
-
-				if (\is_array($file)) {
-					foreach ($file as $fileItem) {
-						if (isset($fileItem['path'])) {
-							$filesOutput[] = $fileItem['path'];
+			switch ($integration) {
+				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					foreach ($files as $file) {
+						if ($file instanceof CURLFile) {
+							$filesOutput[] = $file->name;
 						}
 					}
-				}
+					break;
+				default:
+					$filesOutput = Helper::recursiveFind($files, 'path');
+					break;
 			}
 		}
 

@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\SettingsCaptcha;
 
@@ -45,6 +46,7 @@ class Labels implements LabelsInterface
 		'activeCampaignSuccess',
 		'airtableSuccess',
 		'momentsSuccess',
+		'workableSuccess',
 	];
 
 	/**
@@ -104,6 +106,11 @@ class Labels implements LabelsInterface
 		// Moments.
 		if ($this->isCheckboxOptionChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
 			$output = \array_merge($output, $this->getMomentsLabels());
+		}
+
+		// Workable.
+		if ($this->isCheckboxOptionChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
+			$output = \array_merge($output, $this->getWorkableLabels());
 		}
 
 		return $output;
@@ -181,6 +188,7 @@ class Labels implements LabelsInterface
 			'validationRequired' => \__('This field is required.', 'eightshift-forms'),
 			// translators: %s used for displaying required number.
 			'validationRequiredCount' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
+			'validationInvalid' => \__('This field is not valid.', 'eightshift-forms'),
 			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
 			'validationEmailTld' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
@@ -207,6 +215,8 @@ class Labels implements LabelsInterface
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
 			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
+			'validationWorkableMaxLength127' => \__('This field is too long. Max length is 127 characters.', 'eightshift-forms'),
+			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
 		];
 	}
 
@@ -399,6 +409,20 @@ class Labels implements LabelsInterface
 			'momentsErrorSettingsMissing' => \__('Moments integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'momentsBadRequestError' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
 			'momentsSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Workable
+	 *
+	 * @return array<string, string>
+	 */
+	private function getWorkableLabels(): array
+	{
+		return [
+			'workableErrorSettingsMissing' => \__('Workable integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'workableBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }
