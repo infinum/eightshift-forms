@@ -377,6 +377,9 @@ class Filters
 				'data' => 'data',
 				'successRedirectUrl' => 'success_redirect_url',
 			],
+			SettingsMailer::SETTINGS_TYPE_KEY => [
+				'successRedirectUrl' => 'success_redirect_url',
+			],
 		],
 		'enrichment' => [
 			'manualMap' => 'manual_map',
