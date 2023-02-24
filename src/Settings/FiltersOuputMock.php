@@ -143,11 +143,10 @@ trait FiltersOuputMock
 	 *
 	 * @param string $type Type of field.
 	 * @param string $formId Form ID.
-	 * @param string $typeKey Key for global settings.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSuccessRedirectUrlFilterValue(string $type, string $formId, string $typeKey = ''): array
+	public function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
 	{
 		$settingsGlobal = '';
 		$settingsLocal = '';
@@ -158,12 +157,12 @@ trait FiltersOuputMock
 		$filterUsedLocal = false;
 
 		// Find global settings per integration or filter data.
-		$filterNameGlobal = Filters::getFilterName([$type, 'successRedirectUrl']);
+		$filterNameGlobal = Filters::getFilterName(['integrations', $type, 'successRedirectUrl']);
 		if (\has_filter($filterNameGlobal)) {
 			$dataGlobal = \apply_filters($filterNameGlobal, $type);
 			$filterUsedGlobal = true;
 		} else {
-			$dataGlobal = $this->getOptionValue($typeKey);
+			$dataGlobal = $this->getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
 		}
 
 		// Populate final output.

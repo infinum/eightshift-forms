@@ -258,24 +258,23 @@ export class Form {
 					// Send GTM.
 					this.utils.gtmSubmit(element, formData, response.status);
 
+					// Dispatch event.
+					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
+
 					// Redirect on success.
 					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
-						// Dispatch event.
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_REDIRECT);
 
 						// Set global msg.
 						this.utils.setGlobalMsg(element, response.message, 'success');
 
 						// Redirect to url and update url params from from data.
 						if (singleSubmit) {
-							this.utils.redirectToUrlByRefference(window.location.href, true);
+							this.utils.redirectToUrlByRefference(window.location.href, element, true);
 						} else {
 							this.utils.redirectToUrl(element, formData);
 						}
 					} else {
 						// Do normal success without redirect.
-						// Dispatch event.
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
 
 						// Do the actual redirect after some time for custom form processed externally.
 						if (response?.data?.processExternaly) {

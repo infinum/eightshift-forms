@@ -111,7 +111,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			$this->getAssetsVersion(),
 			false
 		);
-
+		\wp_script_add_data($handle, 'defer', true);
 		\wp_enqueue_script($handle);
 	}
 

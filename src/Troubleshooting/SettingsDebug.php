@@ -131,6 +131,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('By skipping validation you will be able to directly submit form to the external integration.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -138,6 +139,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('After a form is submited it will not reset form fields to an empty state.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -145,6 +147,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('Skip captcha request after submiting form.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -152,6 +155,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('Output console logs to the wp-content folder on the server. This feauture requires server to be able to output logs.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -159,6 +163,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('Developer mode will output multiple options in you forms. Every listing will have ID before label.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -166,6 +171,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('Skipping forms sync will prevent auto sync form with integration when you open individual form in the block editor.', 'eightshift-forms'),
 									],
 								]
 							],

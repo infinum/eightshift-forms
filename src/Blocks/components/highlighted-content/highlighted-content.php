@@ -9,6 +9,7 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -25,12 +26,7 @@ $highlightedContentClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($highlightedContentClass); ?>">
-	<?php
-	if (!empty($highlightedContentIcon) && $manifest['icons'][$highlightedContentIcon]) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo wp_kses_post($manifest['icons'][$highlightedContentIcon]);
-	}
-	?>
+	<?php echo $highlightedContentIcon ? $manifestUtils['icons'][$highlightedContentIcon] : $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
 	<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
 		<?php echo esc_html($highlightedContentTitle); ?>

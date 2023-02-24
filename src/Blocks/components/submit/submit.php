@@ -12,6 +12,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -52,8 +53,8 @@ if ($submitAttrs) {
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attributes);
 
 $submitIconContent = '';
-if (!empty($submitIcon)) {
-	$submitIconContent = $manifest['icons'][$submitIcon] ?? $submitIcon;
+if ($submitIcon) {
+	$submitIconContent = $manifestUtils['icons'][$submitIcon];
 }
 
 

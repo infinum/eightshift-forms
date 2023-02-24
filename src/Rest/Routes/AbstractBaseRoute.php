@@ -80,6 +80,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'disabledDefaultStyles' => 'data-disabled-default-styles',
 		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
 		'globalMsgHeadingError' => 'data-msg-heading-error',
+		'hideCaptchaBadge' => 'data-hide-captcha-badge',
 	];
 
 	/**

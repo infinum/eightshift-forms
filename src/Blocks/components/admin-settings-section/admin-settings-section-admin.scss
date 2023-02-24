@@ -136,6 +136,11 @@
 			duration: 0.3s;
 		}
 
+		svg {
+			color: var(--global-colors-es-matisse);
+			margin-right: 0.25rem;
+		}
+
 		&:hover,
 		&:focus {
 			color: var(--global-colors-es-matisse);
@@ -155,7 +160,7 @@
 			color: var(--global-colors-es-white);
 			border-radius: 6px;
 
-			#{$this}__link-icon {
+			svg {
 				color: var(--global-colors-es-white);
 			}
 
@@ -169,11 +174,6 @@
 		> * {
 			pointer-events: none;
 		}
-	}
-
-	&__link-icon {
-		color: var(--global-colors-es-matisse);
-		margin-right: 0.25rem;
 	}
 
 	&__actions {

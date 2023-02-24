@@ -99,4 +99,10 @@
 		position: absolute;
 		left: -99999px;
 	}
+
+	@include field-styles('false');
+
+	&__help {
+		padding-left: calc(var(--es-checkbox-toggle-scoped-width) + var(--es-checkbox-toggle-scoped-label-spacing));
+	}
 }

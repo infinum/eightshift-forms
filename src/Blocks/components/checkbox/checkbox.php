@@ -29,6 +29,7 @@ $checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
 $checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $manifest);
 $checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
+$checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -91,4 +92,9 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 			<?php } ?>
 		</label>
 	</div>
+	<?php if ($checkboxHelp) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		</div>
+	<?php } ?>
 </div>

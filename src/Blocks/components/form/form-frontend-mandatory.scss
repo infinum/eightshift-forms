@@ -11,3 +11,9 @@
 		}
 	}
 }
+
+body[data-hide-captcha-badge='true'] {
+	.grecaptcha-badge {
+		display: none!important;
+	}
+}

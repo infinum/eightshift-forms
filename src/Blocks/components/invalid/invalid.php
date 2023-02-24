@@ -9,9 +9,9 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
-$iconDefault = $manifest['iconDefault'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $text = $attributes['text'] ?? '';
 $icon = $attributes['icon'] ?? '';
@@ -20,7 +20,7 @@ $icon = $attributes['icon'] ?? '';
 
 <div class="<?php echo esc_attr($componentClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-		<?php echo $icon ? $icon : $iconDefault; //phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $icon ? $manifestUtils['icons'][$icon] : $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php if ($heading) { ?>
