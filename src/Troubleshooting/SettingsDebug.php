@@ -163,7 +163,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Developer mode will output multiple options in you forms. Every listing will have ID before label.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Developer mode will output multiple options in your forms. Every listing will have ID before label.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
