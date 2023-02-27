@@ -11,9 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -25,6 +27,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter settings key.
@@ -346,12 +353,34 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return $this->getNoActiveFeatureOutput();
 		}
 
+		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,
 				'introSubtitle' => \__('Please keep in mind Mailer system uses the default WordPress mailing system. If you need to use something else, you need to configure it manually or use a plugin.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'tab',
+				'tabLabel' => \__('General', 'eightshift-forms'),
+				'tabContent' => [
+					[
+						'component' => 'input',
+						'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+						'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
+						// translators: %s will be replaced with forms field name and filter output copy.
+						'inputFieldHelp' => \sprintf(\__('
+							If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
+							<br />
+							%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
+						'inputType' => 'url',
+						'inputIsUrl' => true,
+						'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
+						'inputValue' => $successRedirectUrl['dataGlobal'],
+					],
+				],
 			],
 		];
 	}

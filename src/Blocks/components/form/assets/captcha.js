@@ -26,6 +26,9 @@ export class Captcha {
 
 		// Load captcha on init.
 		this.initCaptchaOnLoad();
+
+		// Hide badge.
+		this.initHideCaptchaBadge();
 	}
 
 	/**
@@ -90,6 +93,19 @@ export class Captcha {
 		});
 	}
 
+	/**
+	 * Hide captcha badge.
+	 *
+	 * @public
+	 */
+	initHideCaptchaBadge() {
+		if (!this.utils.isCaptchaUsed() || !this.utils.isCaptchaHideBadgeUsed()) {
+			return;
+		}
+
+		document.querySelector('body').setAttribute(this.utils.DATA_ATTRIBUTES.hideCaptchaBadge, this.utils.isCaptchaHideBadgeUsed());
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -111,6 +127,9 @@ export class Captcha {
 				formSubmitCaptchaInvisible: (token, type) => {
 					this.formSubmitCaptchaInvisible(token, type);
 				},
+				initHideCaptchaBadge: () => {
+					this.initHideCaptchaBadge();
+				}
 			};
 		}
 	}

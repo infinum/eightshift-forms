@@ -103,9 +103,10 @@ export class Utils {
 
 		// Settings options from the backend.
 		this.SETTINGS = {
-			FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR: options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError ?? true,
-			FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS: options.formDisableScrollToGlobalMessageOnSuccess ?? true,
-			FORM_RESET_ON_SUCCESS: Boolean(options.formResetOnSuccess ?? esFormsLocalization.formResetOnSuccess ?? false),
+			FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR: Boolean(options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError),
+			FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS: Boolean(options.formDisableScrollToGlobalMessageOnSuccess ?? esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess),
+			FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS: Boolean(options.formDisableNativeRedirectOnSuccess ?? esFormsLocalization.formDisableNativeRedirectOnSuccess),
+			FORM_RESET_ON_SUCCESS: Boolean(options.formResetOnSuccess ?? esFormsLocalization.formResetOnSuccess),
 			REDIRECTION_TIMEOUT: options.redirectionTimeout ?? esFormsLocalization.redirectionTimeout ?? 600,
 			HIDE_GLOBAL_MESSAGE_TIMEOUT: options.hideGlobalMessageTimeout ?? esFormsLocalization.hideGlobalMessageTimeout ?? 6000,
 			HIDE_LOADING_STATE_TIMEOUT: options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600,
@@ -119,7 +120,7 @@ export class Utils {
 		this.EVENTS = {
 			BEFORE_FORM_SUBMIT: `${this.prefix}BeforeFormSubmit`,
 			AFTER_FORM_SUBMIT: `${this.prefix}AfterFormSubmit`,
-			AFTER_FORM_SUBMIT_SUCCESS_REDIRECT: `${this.prefix}AfterFormSubmitSuccessRedirect`,
+			AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT: `${this.prefix}AfterFormSubmitSuccessBeforeRedirect`,
 			AFTER_FORM_SUBMIT_SUCCESS: `${this.prefix}AfterFormSubmitSuccess`,
 			AFTER_FORM_SUBMIT_RESET: `${this.prefix}AfterFormSubmitReset`,
 			AFTER_FORM_SUBMIT_ERROR: `${this.prefix}AfterFormSubmitError`,
@@ -243,7 +244,7 @@ export class Utils {
 		}
 
 		// Scroll to element if the condition is right.
-		if (fields.length > 0 && this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR !== '1') {
+		if (Object.entries(fields).length > 0 && !this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR) {
 			const firstItem = Object.keys(fields)[0];
 
 			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
@@ -281,7 +282,7 @@ export class Utils {
 
 		// Scroll to msg if the condition is right.
 		if (status === 'success') {
-			if (this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS !== '1') {
+			if (!this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS) {
 				this.scrollToElement(messageContainer);
 			}
 
@@ -508,19 +509,23 @@ export class Utils {
 			url.searchParams.append('es-variation', variation);
 		}
 
-		this.redirectToUrlByRefference(url.href);
+		this.redirectToUrlByRefference(url.href, element);
 	}
 
 	// Redirect to url by provided path.
-	redirectToUrlByRefference(redirectUrl, reload = false) {
-		// Do the actual redirect after some time.
-		setTimeout(() => {
-			window.location = redirectUrl;
+	redirectToUrlByRefference(redirectUrl, element, reload = false) {
+		this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
 
-			if (reload) {
-				window.location.reload();
-			}
-		}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
+		if (!this.SETTINGS.FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS) {
+			// Do the actual redirect after some time.
+			setTimeout(() => {
+				window.location = redirectUrl;
+
+				if (reload) {
+					window.location.reload();
+				}
+			}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
+		}
 	}
 
 	// Check if captcha is used.
@@ -530,6 +535,10 @@ export class Utils {
 
 	isCaptchaInitUsed() {
 		return Boolean(this.SETTINGS.CAPTCHA?.['loadOnInit']);
+	}
+
+	isCaptchaHideBadgeUsed() {
+		return Boolean(this.SETTINGS.CAPTCHA?.['hideBadge']);
 	}
 
 	isCaptchaEnterprise() {
@@ -703,14 +712,17 @@ export class Utils {
 				redirectToUrl: (element, formData) => {
 					this.redirectToUrl(element, formData);
 				},
-				redirectToUrlByRefference: (redirectUrl, reload) => {
-					this.redirectToUrlByRefference(redirectUrl, reload);
+				redirectToUrlByRefference: (redirectUrl, element, reload) => {
+					this.redirectToUrlByRefference(redirectUrl, element, reload);
 				},
 				isCaptchaUsed: () => {
 					this.isCaptchaUsed();
 				},
 				isCaptchaInitUsed: () => {
 					this.isCaptchaInitUsed();
+				},
+				isCaptchaHideBadgeUsed: () => {
+					this.isCaptchaHideBadgeUsed();
 				},
 				isCaptchaEnterprise: () => {
 					this.isCaptchaEnterprise();

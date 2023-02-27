@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Moments;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -433,10 +434,15 @@ class MomentsClient implements ClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
+		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMoments::SETTINGS_TYPE_KEY);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
+
+		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params) ?? [];
+		}
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';

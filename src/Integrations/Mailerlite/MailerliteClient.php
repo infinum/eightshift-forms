@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailerlite;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -332,10 +333,15 @@ class MailerliteClient implements ClientInterface
 	private function prepareParams(array $params): array
 	{
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
+		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMailerlite::SETTINGS_TYPE_KEY);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params, ['email']);
+
+		$filterName = Filters::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params) ?? [];
+		}
 
 		return Helper::prepareGenericParamsOutput($params);
 	}

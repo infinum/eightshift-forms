@@ -67,4 +67,10 @@
 		position: absolute;
 		left: -99999px;
 	}
+
+	@include field-styles('false');
+
+	&__help {
+		padding-left: calc(var(--es-checkbox-scoped-icon-size) + 10px);
+	}
 }

@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -425,10 +426,15 @@ class MailchimpClient implements MailchimpClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
+		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMailchimp::SETTINGS_TYPE_KEY);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
+
+		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params) ?? [];
+		}
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';

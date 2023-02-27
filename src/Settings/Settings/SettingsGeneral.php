@@ -52,6 +52,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 	public const SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY = 'general-redirection-success';
 
 	/**
+	 * Redirection Success key for each integration with type prefix.
+	 */
+	public const SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY = 'redirection-success';
+
+	/**
 	 * Tracking event name key.
 	 */
 	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
@@ -127,11 +132,11 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									If some tags are missing or you don\'t see any tags above, check that the <code>name</code> on the form field is set in the Form editor.<br />
 									These tags are detected from the form:
 									<br />
-									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settings']),
+									%1$s %2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
-								'inputValue' => $successRedirectUrl['data'],
+								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],
+								'inputValue' => $successRedirectUrl['dataLocal'],
 							],
 							[
 								'component' => 'select',

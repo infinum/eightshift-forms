@@ -1,5 +1,6 @@
 import React from 'react';
 import manifest from '../manifest.json';
+import manifestUtils from './../../utils/manifest.json';
 
 export const InvalidEditor = ({
 	icon,
@@ -8,13 +9,12 @@ export const InvalidEditor = ({
 }) => {
 	const {
 		componentClass,
-		iconDefault,
 	} = manifest;
 
 	return (
 		<div className={componentClass}>
 			<div className={`${componentClass}__icon`}>
-				<div dangerouslySetInnerHTML={{__html: icon ? icon : iconDefault}} />
+				<div dangerouslySetInnerHTML={{__html: icon ? manifestUtils.icons[icon] : manifestUtils.icons.warning}} />
 			</div>
 
 			{heading &&

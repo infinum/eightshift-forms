@@ -15,7 +15,8 @@ use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestInvalid = Components::getManifest(dirname(__DIR__, 2) . '/components/invalid');
+$manifestInvalid = Components::getComponent('invalid');
+$manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
@@ -33,6 +34,7 @@ $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationA
 $formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
 $formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
 $formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
+$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
 if (!$formsServerSideRender) {
@@ -87,13 +89,19 @@ if ($formsServerSideRender) {
 		<div class="<?php echo esc_attr("{$blockClass}__edit-wrap") ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formsFormPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
-					<span class="<?php echo esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-edit"); ?> "></span>
+					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
 				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formsFormPostId)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
-					<span class="<?php echo esc_attr("{$blockClass}__edit-link-icon dashicons dashicons-admin-settings"); ?> "></span>
+				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				</a>
+			<?php } ?>
+
+			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
+				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl()) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 		</div>
@@ -126,6 +134,7 @@ if ($formsServerSideRender) {
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
 
 					if (isset($innerBlock['innerBlocks'])) {

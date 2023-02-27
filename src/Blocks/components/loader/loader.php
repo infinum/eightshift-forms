@@ -9,6 +9,7 @@
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -26,5 +27,5 @@ $loaderClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($loaderClass); ?>">
-	<?php echo $manifest['resources']['loader']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $manifestUtils['icons']['loader']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 </div>

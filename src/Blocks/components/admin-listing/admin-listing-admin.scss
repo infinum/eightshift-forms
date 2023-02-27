@@ -79,13 +79,20 @@
 			duration: 0.3s;
 		}
 
+		svg {
+			color: var(--global-colors-es-matisse);
+			margin-right: 0.75rem;
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+
 		color: var(--global-colors-es-boulder);
 
 		&:focus,
 		&:hover {
 			color: var(--global-colors-es-blumine);
 
-			#{$this}__label-icon {
+			svg {
 				color: var(--global-colors-es-blumine);
 			}
 		}
@@ -101,13 +108,6 @@
 				font-weight: 500;
 			}
 		}
-	}
-
-	&__label-icon {
-		color: var(--global-colors-es-matisse);
-		margin-right: 0.75rem;
-		width: 1.5rem;
-		height: 1.5rem;
 	}
 
 	&__item-status {
@@ -134,24 +134,6 @@
 
 		color: var(--global-colors-es-matisse);
 		background: var(--global-colors-es-matisse-05);
-	}
-
-	&__integration {
-		display: flex;
-		align-items: center;
-		padding-left: 20px;
-
-		> * {
-			padding-right: 10px;
-
-			&:last-child {
-				padding-right: 0;
-			}
-		}
-
-		svg {
-			vertical-align: middle;
-		}
 	}
 
 	&__integration-inactive {

@@ -98,6 +98,11 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY = 'homepage';
 
 	/**
+	 * Hide badge key.
+	 */
+	public const SETTINGS_CAPTCHA_HIDE_BADGE_KEY = 'captcha-hide-badge';
+
+	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -249,6 +254,22 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('Advanced', 'eightshift-forms'),
 						'tabContent' => [
 							[
+								'component' => 'checkboxes',
+								'checkboxesFieldHideLabel' => true,
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide captcha badge', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+										'checkboxValue' => self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxHelp' => \__('We don\'t reccomend hiding the badge because it is against Google policy. Use at your own risk.', 'eightshift-forms'),
+									],
+								],
+							],
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
 								'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
@@ -268,6 +289,9 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
+							],
+							[
+								'component' => 'divider',
 							],
 							[
 								'component' => 'checkboxes',

@@ -18,6 +18,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use RecursiveArrayIterator;
@@ -104,7 +105,7 @@ class Helper
 	 *
 	 * @return string
 	 */
-	public static function getSettingsGlobalPageUrl(string $type = SettingsGeneral::SETTINGS_TYPE_KEY): string
+	public static function getSettingsGlobalPageUrl(string $type = SettingsDashboard::SETTINGS_TYPE_KEY): string
 	{
 		$page = FormGlobalSettingsAdminSubMenu::ADMIN_MENU_SLUG;
 		$typeKey = '';

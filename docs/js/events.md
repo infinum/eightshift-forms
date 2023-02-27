@@ -5,7 +5,7 @@ Here are events that you can trigger using JavaScript to hook you custom logic i
 ### Here are all available events:
 * **esFormsBeforeFormSubmit** - Triggers after you submit a form, but before any logic is triggered. Hook: `Form element`. 
 * **esFormsAfterFormSubmit** - Triggers after the form has done the ajax response but before any logic is triggered. Hook: `Form element`.
-* **esFormsAfterFormSubmitSuccessRedirect** - Triggers after the form has done the ajax response with redirect on success action. Hook: `Form element`.
+* **esFormsAfterFormSubmitSuccessBeforeRedirect** - Triggers after the form has done the ajax response with redirect on success action and before we trigger for redirection. Hook: `Form element`.
 * **esFormsAfterFormSubmitSuccess** - Triggers after the form has done the ajax response with default on success action. Hook: `Form element`.
 * **esFormsAfterFormSubmitReset** - Triggers after the form has done and filed values are cleared. Hook: `Form element`.
 * **esFormsAfterFormSubmitError** - Triggers after the form has done the ajax response with general error. Hook: `Form element`.

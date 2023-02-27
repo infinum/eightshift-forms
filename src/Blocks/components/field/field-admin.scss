@@ -9,39 +9,7 @@
 		display: block;
 	}
 
-	&__help {
-		color: var(--global-colors-es-dusty);
-		margin-top: 0.5rem;
-		max-width: var(--global-es-max-width);
-		font-size: 13px;
-		line-height: 1.6;
-
-		a {
-			color: var(--global-colors-es-matisse);
-			text-decoration-style: dotted;
-			text-underline-offset: 0.1em;
-			text-decoration-thickness: 1px;
-		}
-
-		code {
-			font-size: 0.95em;
-			padding: 0.15rem 0.25rem;
-			border-radius: 3px;
-			background: var(--global-colors-es-chalice-05);
-			color: var(--global-colors-es-dusty);
-			border: 1px solid var(--global-colors-es-chalice-10);
-			margin: 0;
-		}
-
-		ul {
-			margin: 5px 0 0;
-		}
-
-		li {
-			list-style: initial;
-			margin-left: 23px;
-		}
-	}
+	@include field-styles;
 
 	&__help,
 	&__before-content,

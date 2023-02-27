@@ -84,9 +84,12 @@ class Testfilters implements ServiceInterface
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Integrations filters.
-			'es_forms_integration_greenhouse_data' => ['getIntegrationData', 2], // Dynamic name based on the integration type.
-			'es_forms_integration_hubspot_files_options' => ['getFileUploadCustomOptions'],
-			'es_forms_integration_clearbit_map' => ['getClearbitFieldsMap'],
+			'es_forms_integrations_greenhouse_data' => ['getGreenhouseIntegrationData', 2], // Dynamic name based on the integration type.
+			'es_forms_integrations_workable_data' => ['getWorkableIntegrationData', 2], // Dynamic name based on the integration type.
+			'es_forms_integrations_workable_pre_post_params' => ['getWorkableIntegrationPrePostParams'], // Dynamic name based on the integration type.
+			'es_forms_integrations_hubspot_files_options' => ['getFileUploadCustomOptions'],
+			'es_forms_integrations_clearbit_map' => ['getClearbitFieldsMap'],
+			'es_forms_integrations_workable_success_redirect_url' => ['getWorkableSuccessRedirectUrl'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Enrichment filters.
@@ -528,11 +531,11 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $data Data provided from the forms.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getBlockSubmitComponent(array $data): string
+	public function getBlockSubmitComponent(array $data): array
 	{
-		return 'component content';
+		return [];
 	}
 
 	// -----------------------------------------------------------------------------------------------------------
@@ -724,9 +727,78 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIntegrationData(array $data, string $formId): array
+	public function getGreenhouseIntegrationData(array $data, string $formId): array
 	{
 		return $data;
+	}
+
+	/**
+	 * Change form fields data before output.
+	 *
+	 * This filter is used if you want to change form fields data before output. By changing the name of the filter you will target different integrations.
+	 *
+	 * @param array<string, mixed> $data Array of component/attributes data.
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getWorkableIntegrationData(array $data, string $formId): array
+	{
+		return \array_merge(
+			$data,
+			[
+				[
+					'component' => 'input',
+					'inputFieldHidden' => true,
+					'inputFieldLabel' => 'utm_source',
+					'inputName' => 'utm_source',
+					'inputDisabledOptions' => [
+						'inputName',
+						'inputType',
+						'inputFieldLabel',
+						'inputFieldHidden',
+					],
+				],
+				[
+					'component' => 'input',
+					'inputFieldHidden' => true,
+					'inputFieldLabel' => 'utm_medium',
+					'inputName' => 'utm_medium',
+					'inputDisabledOptions' => [
+						'inputName',
+						'inputType',
+						'inputFieldLabel',
+						'inputFieldHidden',
+					],
+				],
+			]
+		);
+	}
+
+	/**
+	 * Change form fields data before we send it to the external integration.
+	 *
+	 * @param array<string, mixed> $params Array of params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getWorkableIntegrationPrePostParams(array $params): array
+	{
+
+		$medium = isset($params['utm_source']['value']) ? \ucfirst($params['utm_source']['value']) : 'Unknown';
+		$source = isset($params['utm_medium']['value']) ? '(' . \ucfirst($params['utm_medium']['value']) . ')' : '';
+
+		$params['domain'] = [
+			'name' => 'domain',
+			'value' => "{$medium}{$source}",
+			'type' => 'text',
+			'internalType' => '',
+		];
+
+		unset($params['utm_source']);
+		unset($params['utm_medium']);
+
+		return $params;
 	}
 
 	/**
@@ -767,6 +839,16 @@ class Testfilters implements ServiceInterface
 		return $params;
 	}
 
+	/**
+	 * Set Workable integration global success redirect url.
+	 *
+	 * @return string
+	 */
+	public function getWorkableSuccessRedirectUrl(): string
+	{
+		return 'https://infinum.com/';
+	}
+
 	// -----------------------------------------------------------------------------------------------------------
 	// Enrichment filters.
 
@@ -780,15 +862,25 @@ class Testfilters implements ServiceInterface
 	public function getEnrichmentManualMap(): array
 	{
 		return [
-			'__IB_LT_ga_client_id' => [
-				'ga_client_id',
-				'miro',
-				'pero',
+			'workable' => [
+				'utm_source' => [
+					'utm_source',
+				],
+				'utm_medium' => [
+					'utm_medium',
+				],
 			],
-			'aaaa' => [
-				'ffff',
-				'vvv',
-				'rrr',
+			'moments' => [
+				'__IB_LT_ga_client_id' => [
+					'ga_client_id',
+					'miro',
+					'pero',
+				],
+				'aaaa' => [
+					'ffff',
+					'vvv',
+					'rrr',
+				],
 			],
 		];
 	}

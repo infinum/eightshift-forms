@@ -261,6 +261,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 			);
+			$output['formDisableNativeRedirectOnSuccess'] = $this->isCheckboxOptionChecked(
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
+				SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
+			);
 			$output['formDisableAutoInit'] = $this->isCheckboxOptionChecked(
 				SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 				SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
@@ -284,6 +288,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 					'initAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 					'loadOnInit' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'hideBadge' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				];
 			}
 		}

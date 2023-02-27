@@ -26,8 +26,9 @@ interface EnrichmentInterface
 	 * Map enrichment fields with forms fields.
 	 *
 	 * @param array<string, mixed> $params Params to match.
+	 * @param string $type Form integration type.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function mapEnrichmentFields(array $params): array;
+	public function mapEnrichmentFields(array $params, string $type): array;
 }
