@@ -163,7 +163,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Developer mode will output multiple options in you forms. Every listing will have ID before label.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Developer mode will output multiple options in your forms. Every listing will have ID before label.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -171,7 +171,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Skipping forms sync will prevent auto sync form with integration when you open individual form in the block editor.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Skipping forms sync will prevent form auto sync with integration when individual form is opened in the block editor.', 'eightshift-forms'),
 									],
 								]
 							],
