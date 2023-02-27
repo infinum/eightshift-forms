@@ -113,13 +113,14 @@ class Enrichment implements EnrichmentInterface
 	 * Map enrichment fields with forms fields.
 	 *
 	 * @param array<string, mixed> $params Params to match.
+	 * @param string $type Form integration type.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function mapEnrichmentFields(array $params): array
+	public function mapEnrichmentFields(array $params, string $type): array
 	{
 		// Get enrichment map.
-		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['data']['config'];
+		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig(), $type)['data']['config'];
 
 		if (!$enrichment) {
 			return $params;
@@ -131,7 +132,7 @@ class Enrichment implements EnrichmentInterface
 		$storage = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
 
 		// Map param values.
-		return \array_map(
+		$a =  \array_map(
 			static function ($item) use ($enrichment, $storage) {
 				// Check param name as a reference.
 				$name = $item['name'] ?? '';
@@ -157,5 +158,7 @@ class Enrichment implements EnrichmentInterface
 			},
 			$params
 		);
+
+		return $a;
 	}
 }

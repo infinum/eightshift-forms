@@ -146,7 +146,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 		// Change the final output if necesery.
 		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
-		if (\has_filter($filterName) && !\is_admin()) {
+		if (\has_filter($filterName) && \is_admin()) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 

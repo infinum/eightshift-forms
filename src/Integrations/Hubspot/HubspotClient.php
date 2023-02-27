@@ -738,10 +738,15 @@ class HubspotClient implements HubspotClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
+		$params = $this->enrichment->mapEnrichmentFields($params, SettingsHubspot::SETTINGS_TYPE_KEY);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
+
+		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params) ?? [];
+		}
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';

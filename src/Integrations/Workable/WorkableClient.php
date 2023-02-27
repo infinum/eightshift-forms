@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Workable;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -356,13 +357,19 @@ class WorkableClient implements ClientInterface
 	private function prepareParams(array $params): array
 	{
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
+		$params = $this->enrichment->mapEnrichmentFields($params, SettingsWorkable::SETTINGS_TYPE_KEY);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
 		$output = [];
 		$answers = [];
+
+		$filterName = Filters::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params) ?? [];
+		}
+
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			if (!$name) {
@@ -409,10 +416,9 @@ class WorkableClient implements ClientInterface
 						'choices' => \explode(',', $value),
 					];
 					break;
-				default:
-					$output[$name] = $value;
-					break;
 			}
+
+			$output[$name] = $value;
 		}
 
 		if ($answers) {

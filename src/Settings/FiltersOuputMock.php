@@ -27,10 +27,11 @@ trait FiltersOuputMock
 	 * Return enrichment manual map data filter output.
 	 *
 	 * @param array<string, mixed> $config getEnrichmentConfig output value.
+	 * @param string $type Type of integration.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getEnrichmentManualMapFilterValue(array $config): array
+	public function getEnrichmentManualMapFilterValue(array $config, string $type = ''): array
 	{
 		$settings = '';
 		$data = [
@@ -43,18 +44,25 @@ trait FiltersOuputMock
 		$filterName = Filters::getFilterName(['enrichment', 'manualMap']);
 
 		if (\has_filter($filterName)) {
-			$filterData = \apply_filters($filterName, []);
+			$filterData = \apply_filters($filterName, $type);
 			$filterUsed = true;
+
+			// Output map depending on the type.
+			if (isset($filterData[$type])) {
+				foreach ($filterData[$type] as $key => $value) {
+					$data['config']['allowed'][] = $key;
+					$data['config']['map'][$key] = \array_flip($value);
+				}
+			}
 
 			$settings .= \__('This field has a code filter applied to it, and the following items will be applied to your enrichment data:', 'eightshift-forms');
 			$settings .= '<ul>';
 			foreach ($filterData as $key => $value) {
-				$data['config']['allowed'][] = $key;
-				$data['config']['map'][$key] = \array_flip($value);
+				foreach ($value as $keyInner => $valueInner) {
+					$settingsValue = \implode(', ', $valueInner);
 
-				$settingsValue = \implode(', ', $value);
-
-				$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+					$settings .= "<li><code>{$keyInner}</code> : <code>{$settingsValue}</code></li>";
+				}
 			}
 			$settings .= '</ul>';
 		}
@@ -112,7 +120,7 @@ trait FiltersOuputMock
 	/**
 	 * Return success redirect variations data filter output.
 	 *
-	 * @param string $type Type of field.
+	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<string, mixed>
@@ -141,7 +149,7 @@ trait FiltersOuputMock
 	/**
 	 * Return success redirect url data filter output.
 	 *
-	 * @param string $type Type of field.
+	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<string, mixed>
@@ -198,7 +206,7 @@ trait FiltersOuputMock
 	/**
 	 * Return tracking event name data filter output.
 	 *
-	 * @param string $type Type of field.
+	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<string, mixed>
@@ -227,7 +235,7 @@ trait FiltersOuputMock
 	/**
 	 * Return tracking additional data filter output.
 	 *
-	 * @param string $type Type of field.
+	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<string, array<mixed>>
