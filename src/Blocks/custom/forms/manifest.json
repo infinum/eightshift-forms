@@ -13,6 +13,9 @@
 		"formsFormPostId": {
 			"type": "string"
 		},
+		"formsFormPostIdRaw": {
+			"type": "object"
+		},
 		"formsFormGeolocation": {
 			"type": "array"
 		},
