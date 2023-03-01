@@ -85,7 +85,7 @@ export const FormSelectorEditor = ({ attributes, clientId }) => {
 									className='esf-form-type-picker-button'
 									icon={<BlockIcon iconName={icon} />}
 									key={index}
-									isTertiary
+									variant='tertiary'
 									onClick={() => createFormType(slug)}
 								>
 									{sprintf(__('%s form', 'eightshift-forms'), label)}

@@ -21,7 +21,7 @@ export const ActiveCampaignOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=active-campaign`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open ActiveCampaign Form settings', 'eightshift-forms')}
 				</Button>

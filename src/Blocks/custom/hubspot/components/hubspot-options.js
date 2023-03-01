@@ -21,7 +21,7 @@ export const HubspotOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=hubspot`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open HubSpot Form Settings', 'eightshift-forms')}
 				</Button>

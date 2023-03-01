@@ -21,7 +21,7 @@ export const MailchimpOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=mailchimp`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open Mailchimp Form Settings', 'eightshift-forms')}
 				</Button>
