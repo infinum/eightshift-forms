@@ -8,7 +8,7 @@ import {
 	getAttrKey,
 	IconLabel,
 	Responsive,
-	CustomSlider,
+	Slider,
 } from '@eightshift/frontend-libs/scripts';
 import { TextControl, SelectControl, PanelBody, Button, BaseControl } from '@wordpress/components';
 import manifest from '../manifest.json';
@@ -67,16 +67,16 @@ export const FieldOptionsAdvanced = (attributes) => {
 					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
 
 					return (
-						<CustomSlider
+						<Slider
 							key={index}
-							label={<IconLabel icon={icons[`screen${_.capitalize(breakpoint)}`]} label={_.capitalize(breakpoint)} />}
+							icon={icons[`screen${_.capitalize(breakpoint)}`]}
+							label={_.capitalize(breakpoint)}
 							value={checkAttr(responsiveAttribute, attributes, manifest, true) ?? 12}
 							onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
 							min={options.fieldWidth.min}
 							max={options.fieldWidth.max}
 							step={options.fieldWidth.step}
 							marks={{ 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 }}
-							hasCompactMarks
 							rightAddition={
 								<Button
 									label={__('Reset', 'eightshift-forms')}

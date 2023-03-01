@@ -25,14 +25,15 @@ export const FieldOptions = (attributes) => {
 			{showFieldLabel &&
 				<BaseControl
 					label={(
-						<div className='es-flex-between'>
+						<div className='es-h-between es-w-full'>
 							<IconLabel icon={icons.fieldLabel} label={__('Field label', 'eightshift-forms')} />
 							<Button
 								icon={icons.hide}
 								isPressed={fieldHideLabel}
 								onClick={() => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !fieldHideLabel })}
-								content={__('Hide', 'eightshift-forms')}
-							/>
+							>
+								{__('Hide', 'eightshift-forms')}
+							</Button>
 
 						</div>
 					)}
