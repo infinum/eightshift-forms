@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [2.3.4]
+
+## Changed
+- updated FE Libs to v8.
+- updated other packages.
+
+## Fixed
+- fixed some Gutenberg button component prop changes. 
+
+## Note
+- Form picker has an auxiliary attribute now to store the full data (label & value) of the selected form - the current param is ID only. To keep everything functioning, the existing ID is used if the new attribute is not set, however that will lead to the form label being blank. This is expected, and the form will still work fine. You can re-select the form to fix this.
+- Feel free to ignore PHPCS/Stan for now, it'll be solved in the next release.
+
 ## [2.3.3]
 
 ### Fixed
@@ -175,6 +188,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.3.4]: https://github.com/infinum/eightshift-forms/compare/2.3.3...2.3.4
 [2.3.3]: https://github.com/infinum/eightshift-forms/compare/2.3.2...2.3.3
 [2.3.2]: https://github.com/infinum/eightshift-forms/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/infinum/eightshift-forms/compare/2.3.0...2.3.1
