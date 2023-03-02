@@ -6,7 +6,7 @@ import { select } from "@wordpress/data";
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import {
-	CustomSelect,
+	Select,
 	IconLabel,
 	icons,
 	getAttrKey,
@@ -16,6 +16,8 @@ import {
 	BlockIcon,
 	FancyDivider,
 	STORE_NAME,
+	AsyncMultiSelect,
+	AsyncSelect,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -37,6 +39,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	} = preview;
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
+	const formsFormPostIdRaw = checkAttr('formsFormPostIdRaw', attributes, manifest);
 	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsStyle = checkAttr('formsStyle', attributes, manifest);
 	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
@@ -91,21 +94,18 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		return (
 			<>
 				<div className='es-fifty-fifty-auto-h es-has-wp-field-t-space'>
-					<CustomSelect
+					<AsyncSelect
 						value={data.formId}
 						loadOptions={formSelectOptions}
 						onChange={(value) => handleChange(value.toString(), index, 'formId')}
-						isClearable={false}
-						reFetchOnSearch={true}
-						multiple={false}
 						simpleValue
 					/>
 
-					<CustomSelect
+					<AsyncMultiSelect
 						value={data.geoLocation}
 						loadOptions={geoLocationOptions}
 						onChange={(value) => handleChange(value, index, 'geoLocation')}
-						multiple={true}
+						noBottomSpacing
 					/>
 
 					<Button
@@ -129,16 +129,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 	return (
 		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
-			<CustomSelect
-				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
+			<AsyncSelect
+				icon={<BlockIcon iconName='esf-form-picker' />}
+				label={__('Form to display', 'eightshift-forms')}
 				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-				value={parseInt(formsFormPostId)}
+				value={formsFormPostIdRaw ?? (formsFormPostId ? {label: 'Selected item', id: parseInt(formsFormPostId ?? -1) } : null)}
 				loadOptions={formSelectOptions}
-				onChange={(value) => setAttributes({ [getAttrKey('formsFormPostId', attributes, manifest)]: value.toString() })}
-				isClearable={false}
-				reFetchOnSearch={true}
-				multiple={false}
-				simpleValue
+				onChange={(value) => setAttributes({
+					[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: value,
+					[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
+				 })}
 			/>
 
 			{formsFormPostId &&
@@ -169,8 +169,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 			/>
 
 			{formsStyleOptions?.length > 0 &&
-				<CustomSelect
-					label={<IconLabel icon={icons.paletteColor} label={__('Form style preset', 'eightshift-forms')} />}
+				<Select
+					icon={icons.paletteColor}
+					label={__('Form style preset', 'eightshift-forms')}
 					value={formsStyle}
 					options={formsStyleOptions}
 					onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
@@ -184,8 +185,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 				<>
 					<FancyDivider label={__('Geolocation', 'eightshift-forms')} />
 
-					<CustomSelect
-						label={<IconLabel icon={icons.locationAllow} label={__('Show form only if in countries', 'eightshift-forms')} />}
+					<AsyncMultiSelect
+						icon={icons.locationAllow}
+						label={__('Show form only if in countries', 'eightshift-forms')}
 						help={
 							geoRepeater?.length > 0
 								? __('Overriden by geolocation rules.', 'eightshift-forms')
@@ -198,12 +200,11 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						value={formsFormGeolocation}
 						loadOptions={geoLocationOptions}
 						onChange={(value) => setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })}
-						multiple={true}
 						disabled={geoRepeater?.length > 0}
 					/>
 
 					<Button
-						isSecondary
+						variant='secondary'
 						icon={icons.locationSettings}
 						onClick={() => {
 							setPrevGeoRepeater([...geoRepeater]);
@@ -237,14 +238,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						>
 							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
 							<p>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
-							{geolocationApi && 
+							{geolocationApi &&
 								<p>{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.</p>
 							}
 
 							<br />
 
 							<Button
-								isSecondary
+								variant='secondary'
 								icon={icons.add}
 								onClick={addItem}
 							>
@@ -288,7 +289,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 									</Button>
 
 									<Button
-										isPrimary
+										variant='primary'
 										onClick={() => {
 											setIsModalOpen(false);
 											setAttributes({ formsFormGeolocationAlternatives: geoRepeater });

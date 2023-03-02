@@ -21,7 +21,7 @@ export const MailerliteOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=mailerlite`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open Mailerlite Form Settings', 'eightshift-forms')}
 				</Button>

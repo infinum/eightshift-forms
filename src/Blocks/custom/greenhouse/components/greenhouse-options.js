@@ -21,7 +21,7 @@ export const GreenhouseOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=greenhouse`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open Greenhouse Form Settings', 'eightshift-forms')}
 				</Button>

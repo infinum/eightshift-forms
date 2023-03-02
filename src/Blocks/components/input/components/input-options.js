@@ -13,9 +13,9 @@ import {
 	IconLabel,
 	props,
 	FancyDivider,
-	SimpleVerticalSingleSelect,
-	CustomSlider,
-	CustomSelect
+	OptionSelector,
+	Slider,
+	Select,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -91,8 +91,9 @@ export const InputOptions = (attributes) => {
 				}
 
 				{showInputType &&
-					<CustomSelect
-						label={<IconLabel icon={icons.fieldType} label={__('Input value kind', 'eightshift-forms')} />}
+					<Select
+						icon={icons.fieldType}
+						label={__('Input value kind', 'eightshift-forms')}
 						value={inputType}
 						options={getOption('inputType', attributes, manifest)}
 						onChange={(value) => {
@@ -115,8 +116,7 @@ export const InputOptions = (attributes) => {
 							}
 						}}
 						simpleValue
-						isClearable={false}
-						isSearchable={false}
+						noSearch
 					/>
 				}
 
@@ -192,13 +192,12 @@ export const InputOptions = (attributes) => {
 									{showValidation &&
 										<Popover noArrow={false} onClose={() => setShowValidation(false)}>
 											<div className='es-popover-content'>
-												<SimpleVerticalSingleSelect
+												<OptionSelector
 													label={__('Validation pattern', 'eightshift-forms')}
-													options={inputValidationPatternOptions.map(({ label, value }) => ({
-														onClick: () => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value }),
-														label: label,
-														isActive: inputValidationPattern === value,
-													}))}
+													options={inputValidationPatternOptions}
+													value={inputValidationPattern}
+													onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
+													alignment='vertical'
 												/>
 											</div>
 										</Popover>
@@ -213,13 +212,14 @@ export const InputOptions = (attributes) => {
 
 						{showInputMinLength &&
 							<>
-								<CustomSlider
-									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed length', 'eightshift-forms')} />}
+								<Slider
+									icon={icons.rangeMin}
+									label={__('Smallest allowed length', 'eightshift-forms')}
 									value={inputMinLength ?? 0}
 									onChange={(value) => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: value })}
 									min={options.inputMinLength.min}
 									step={options.inputMinLength.step}
-									hasValueDisplay
+									valueDisplay
 									rightAddition={
 										<Button
 											label={__('Reset', 'eightshift-forms')}
@@ -229,19 +229,20 @@ export const InputOptions = (attributes) => {
 											className='es-small-square-icon-button'
 										/>
 									}
-									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMinLength ? parseInt(inputMinLength) : '--'}</span>)}
+									// valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMinLength ? parseInt(inputMinLength) : '--'}</span>)}
 								/>
 							</>
 						}
 
 						{showInputMaxLength &&
-							<CustomSlider
-								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed length', 'eightshift-forms')} />}
+							<Slider
+								icon={icons.rangeMax}
+								label={__('Largest allowed length', 'eightshift-forms')}
 								value={inputMaxLength ?? 0}
 								onChange={(value) => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: value })}
 								min={options.inputMaxLength.min}
 								step={options.inputMaxLength.step}
-								hasValueDisplay
+								valueDisplay
 								rightAddition={
 									<Button
 										label={__('Reset', 'eightshift-forms')}
@@ -251,7 +252,7 @@ export const InputOptions = (attributes) => {
 										className='es-small-square-icon-button'
 									/>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMaxLength ? parseInt(inputMaxLength) : '--'}</span>)}
+								// valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMaxLength ? parseInt(inputMaxLength) : '--'}</span>)}
 							/>
 						}
 
@@ -261,8 +262,9 @@ export const InputOptions = (attributes) => {
 
 						{(inputType === 'number' && showInputMin) &&
 							<>
-								<CustomSlider
-									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed number', 'eightshift-forms')} />}
+								<Slider
+									icon={icons.rangeMin}
+									label={__('Smallest allowed number', 'eightshift-forms')}
 									value={inputMin ?? 0}
 									onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
 									min={options.inputMin.min}
@@ -277,14 +279,15 @@ export const InputOptions = (attributes) => {
 											className='es-small-square-icon-button'
 										/>
 									}
-									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMin ? parseInt(inputMin) : '--'}</span>)}
+									// valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMin ? parseInt(inputMin) : '--'}</span>)}
 								/>
 							</>
 						}
 
 						{(inputType === 'number' && showInputMax) &&
-							<CustomSlider
-								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed number', 'eightshift-forms')} />}
+							<Slider
+								icon={icons.rangeMax}
+								label={__('Largest allowed number', 'eightshift-forms')}
 								value={inputMax ?? 0}
 								onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
 								min={options.inputMax.min}
@@ -299,13 +302,14 @@ export const InputOptions = (attributes) => {
 										className='es-small-square-icon-button'
 									/>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMax ? parseInt(inputMax) : '--'}</span>)}
+								// valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMax ? parseInt(inputMax) : '--'}</span>)}
 							/>
 						}
 
 						{(inputType === 'number' && showInputStep) &&
-							<CustomSlider
-								label={<IconLabel icon={icons.step} label={__('Increment step', 'eightshift-forms')} />}
+							<Slider
+								icon={icons.step}
+								label={__('Increment step', 'eightshift-forms')}
 								value={inputStep ?? 1}
 								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
 								min={options.inputStep.min}
@@ -320,7 +324,7 @@ export const InputOptions = (attributes) => {
 										className='es-small-square-icon-button'
 									/>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputStep ? parseInt(inputStep) : '--'}</span>)}
+								// valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputStep ? parseInt(inputStep) : '--'}</span>)}
 							/>
 						}
 					</>

@@ -8,10 +8,9 @@ import {
 	icons,
 	props,
 	checkAttr,
-	IconLabel,
 	getAttrKey,
 	getOption,
-	CustomSelect
+	Select
 } from '@eightshift/frontend-libs/scripts';
 import { SelectOptions } from '../../../components/select/components/select-options';
 import { CheckboxesOptions } from '../../../components/checkboxes/components/checkboxes-options';
@@ -39,24 +38,24 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<PanelBody title={__('Custom data', 'eightshift-forms')}>
-				<CustomSelect
-					label={<IconLabel icon={icons.fieldType} label={__('Field type', 'eightshift-forms')} />}
+				<Select
+					icon={icons.fieldType}
+					label={__('Field type', 'eightshift-forms')}
 					value={customDataFieldType}
 					options={getOption('customDataFieldType', attributes, manifest)}
 					onChange={(value) => setAttributes({ [getAttrKey('customDataFieldType', attributes, manifest)]: value })}
 					simpleValue
-					isSearchable={false}
-					isClearable={false}
+					noSearch
 				/>
 
-				<CustomSelect
-					label={<IconLabel icon={icons.data} label={__('Dataset', 'eightshift-forms')} />}
+				<Select
+					icon={icons.data}
+					label={__('Dataset', 'eightshift-forms')}
 					value={customDataData}
 					options={customDataDataOptions}
 					onChange={(value) => setAttributes({ [getAttrKey('customDataData', attributes, manifest)]: value })}
 					simpleValue
-					isSearchable={false}
-					isClearable={false}
+					noSearch
 				/>
 			</PanelBody>
 

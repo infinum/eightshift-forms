@@ -21,7 +21,7 @@ export const WorkableOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=workable`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open Workable Form Settings', 'eightshift-forms')}
 				</Button>

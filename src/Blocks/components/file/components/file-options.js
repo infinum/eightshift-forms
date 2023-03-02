@@ -89,13 +89,15 @@ export const FileOptions = (attributes) => {
 				<BaseControl
 					className={fileCustomInfoTextUse ? '' : 'es-no-field-spacing'}
 					label={
-						<div className='es-flex-between'>
+						<div className='es-h-between es-w-full'>
 							<IconLabel icon={icons.textSize} label={__('Prompt text', 'eightshift-forms')} />
 
 							<Button
 								icon={icons.visible}
 								isPressed={fileCustomInfoTextUse}
 								onClick={() => setAttributes({ [getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: !fileCustomInfoTextUse })}
+								label={__('Hide', 'eightshift-forms')}
+								showTooltip
 							/>
 						</div>
 					}

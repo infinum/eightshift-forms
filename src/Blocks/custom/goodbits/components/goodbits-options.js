@@ -12,7 +12,7 @@ export const GoodbitsOptions = ({ postId }) => {
 	} = select(STORE_NAME).getSettings();
 
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
-	
+
 	return (
 		<PanelBody title={__('Goodbits', 'eightshift-forms')}>
 			<BaseControl
@@ -21,7 +21,7 @@ export const GoodbitsOptions = ({ postId }) => {
 			>
 				<Button
 					href={`${wpAdminUrl}${settingsPageUrl}&formId=${postId}&type=goodbits`}
-					isSecondary
+					variant='secondary'
 				>
 					{__('Open Goodbits Form Settings', 'eightshift-forms')}
 				</Button>

@@ -10,8 +10,8 @@ import {
 	getAttrKey,
 	IconLabel,
 	props,
-	SimpleVerticalSingleSelect,
 	FancyDivider,
+	OptionSelector,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
@@ -74,13 +74,12 @@ export const TextareaOptions = (attributes) => {
 						{showValidation &&
 							<Popover noArrow={false} onClose={() => setShowValidation(false)}>
 								<div className='es-popover-content'>
-									<SimpleVerticalSingleSelect
+									<OptionSelector
 										label={__('Validation pattern', 'eightshift-forms')}
-										options={textareaValidationPatternOptions.map(({ label, value }) => ({
-											onClick: () => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value }),
-											label: label,
-											isActive: textareaValidationPattern === value,
-										}))}
+										options={textareaValidationPatternOptions}
+										value={textareaValidationPattern}
+										onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
+										alignment='vertical'
 									/>
 								</div>
 							</Popover>

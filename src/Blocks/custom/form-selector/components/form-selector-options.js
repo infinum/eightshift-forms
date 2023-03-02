@@ -17,7 +17,7 @@ export const FormSelectorOptions = () => {
 	return (
 		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
 			<Button
-				isPrimary
+				variant='primary'isPrimary
 				icon={icons.options}
 				href={`${wpAdminUrl}${settingsPageUrl}&formId=${formId}&type=general`}
 				style={{ height: '3rem', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
