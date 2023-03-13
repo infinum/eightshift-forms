@@ -58,7 +58,7 @@ export const IntegrationsEditor = ({
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks />
+					formContent: <InnerBlocks templateLock={false} />
 				})}
 			/>
 		);

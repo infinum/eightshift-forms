@@ -515,8 +515,22 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Loop diff of content and integration.
 		foreach ($diff['diff'] as $key => $block) {
-			// Do diff on one field.
-			$changes = $this->diffChange($block['integration'] ?? [], $block['content'] ?? [], $key);
+			$isExternal = $block['content']['isExternal'] ?? false;
+
+			if ($isExternal) {
+				// Output none forms blocks.
+				$changes = [
+					'removed' => [],
+					'added' => [],
+					'replaced' => [],
+					'changed' => [],
+					'output' => $block['content'],
+					'update' => false,
+				];
+			} else {
+				// Do diff on one field.
+				$changes = $this->diffChange($block['integration'] ?? [], $block['content'] ?? [], $key);
+			}
 
 			// Loop all outputs and prepare for the final output.
 			foreach ($changes as $changeKey => $changeValue) {
@@ -727,6 +741,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				'prefix' => $blockType . \ucfirst($blockType),
 				'attrs' => $this->prepareBlockAttributes($block, $blockType),
 				'parent' => '',
+				'inner' => [],
+				'isExternal' => false,
 			];
 
 			$innerBlocks = \array_intersect_key($block, $nestedKeys);
@@ -749,6 +765,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 						'prefix' => $innerPrefix,
 						'attrs' => $blockInnerAttributes,
 						'parent' => $name,
+						'inner' => [],
+						'isExternal' => false,
 					];
 				}
 			}
@@ -772,14 +790,36 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Used to preserver content order of the blocks.
 		$order = [];
 
-		foreach ($blocks as $block) {
+		foreach ($blocks as $index => $block) {
 			$blockTypeOriginal = $block['blockName'] ?? '';
 
 			if (!$blockTypeOriginal) {
 				continue;
 			}
 
+
 			$blockType = $this->getBlockAttributePrefixByFullBlockName($blockTypeOriginal);
+			$blockNamespace = $blockType['namespace'];
+
+			// Output block as is if it is not forms block.
+			if ($blockNamespace !== Components::getSettingsNamespace()) {
+				$noneFormsBlockName = "{$blockTypeOriginal}-{$index}";
+
+				$output[$noneFormsBlockName]['content']  = [
+					'namespace' => $blockNamespace,
+					'component' => $blockType['component'],
+					'prefix' => '',
+					'attrs' => $block['attrs'],
+					'parent' => '',
+					'inner' => $block['innerBlocks'],
+					'isExternal' => true,
+				];
+
+				$order[] = $noneFormsBlockName;
+
+				continue;
+			}
+
 			$blockName = $blockType['prefix'] . "Name";
 
 			if (!$block['attrs']) {
@@ -795,11 +835,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$block['attrs'] = \array_filter($block['attrs']);
 
 			$output[$name]['content']  = [
-				'namespace' => $blockType['namespace'],
+				'namespace' => $blockNamespace,
 				'component' => $blockType['component'],
 				'prefix' => $blockType['prefix'],
 				'attrs' => $block['attrs'],
 				'parent' => '',
+				'inner' => [],
+				'isExternal' => false,
 			];
 
 			$order[] = $name;
@@ -824,6 +866,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 						'prefix' => $innerPrefix,
 						'attrs' => $blockInnerAttributes,
 						'parent' => $name,
+						'inner' => [],
+						'isExternal' => false,
 					];
 
 					$order[] = $innerKeyValue;
@@ -899,15 +943,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				$fieldsOutput[$key] = [
 					$blockNameKey => $value['namespace'] . '/' . $value['component'],
 					$attrsKey => $value['attrs'],
-					$innerBlocksKey => [],
-					$innerContentKey => [],
+					$innerBlocksKey => $value['inner'],
+					$innerContentKey => $value['inner'],
 				];
 			} else {
 				$innerOutput = [
 					$blockNameKey => $value['namespace'] . '/' . $value['component'],
 					$attrsKey => $value['attrs'],
-					$innerBlocksKey => [],
-					$innerContentKey => [],
+					$innerBlocksKey => $value['inner'],
+					$innerContentKey => $value['inner'],
 				];
 
 				$fieldsOutput[$value['parent']][$innerBlocksKey][] = $innerOutput;
