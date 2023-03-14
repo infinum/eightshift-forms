@@ -1,11 +1,5 @@
 .es-form {
-	box-sizing: border-box;
-
-	*,
-	*::after,
-	*::before {
-		box-sizing: border-box;
-	}
+	@include form-reset;
 
 	&__fields {
 		display: grid;
