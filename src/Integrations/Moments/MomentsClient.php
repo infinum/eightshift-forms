@@ -301,7 +301,7 @@ class MomentsClient implements ClientInterface
 			$key = $matchesCountry[0][1] ?? '';
 
 			if ($key) {
-				$output[$key] = 'validationCountry';
+				$output[$key] = 'validationInvalid';
 			}
 		}
 

@@ -105,6 +105,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}PhoneSync"] = !$this->isCheckboxSettingsChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
 		}
 
+		$attributes["{$prefix}PhoneDisablePicker"] = $this->isCheckboxOptionChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+
 		return $attributes;
 	}
 }

@@ -38,6 +38,7 @@ $formSuccessRedirectVariation = Components::checkAttr('formSuccessRedirectVariat
 $formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
 $formTrackingAdditionalData = Components::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
 $formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
+$formPhoneDisablePicker = Components::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
 $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
@@ -81,6 +82,10 @@ if ($formTrackingAdditionalData) {
 
 if ($formPhoneSync) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneSync']] = esc_attr($formPhoneSync);
+}
+
+if ($formPhoneDisablePicker) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneDisablePicker']] = esc_attr($formPhoneDisablePicker);
 }
 
 if ($formPostId) {

@@ -425,10 +425,20 @@ export class Utils {
 				}
 				break;
 			case 'select': {
+				if (input.esFormsFieldType === 'phone') {
+					break;
+				}
+
 				const customSelect = input.config.choices;
 
 				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
 					input.passedElement.element.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
+				}
+				break;
+			}
+			case 'tel': {
+				if (input.value && input.value.length) {
+					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
 				}
 				break;
 			}

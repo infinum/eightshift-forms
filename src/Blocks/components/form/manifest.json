@@ -59,6 +59,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formPhoneDisablePicker": {
+			"type": "boolean",
+			"default": false
+		},
 		"formTrackingEventName": {
 			"type": "string"
 		},

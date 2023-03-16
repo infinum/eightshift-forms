@@ -138,7 +138,7 @@ export class Form {
 		);
 
 		// Setup phone sync.
-		this.setupPhoneSync(element, selects.length, formId);
+		this.setupPhoneSync(element, formId);
 	}
 
 	/**
@@ -463,6 +463,12 @@ export class Form {
 					formData.append(id, JSON.stringify(data));
 					break;
 				case 'tel':
+					const phoneDisablePicker = Boolean(element.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker)); // eslint-disable-line no-case-declarations
+					if (phoneDisablePicker) {
+						formData.append(id, JSON.stringify(data));
+						break;
+					}
+
 					const prefix = item.previousElementSibling.querySelector('select'); // eslint-disable-line no-case-declarations
 					const selectedPrefix = prefix.options[prefix.selectedIndex].value; // eslint-disable-line no-case-declarations
 
@@ -817,12 +823,16 @@ export class Form {
 	 * Sync phone and country fields on change.
 	 *
 	 * @param {object} form Form element
-	 * @param {number} selectsCount Total number of selects.
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns void
 	 */
-	setupPhoneSync(form, selectsCount, formId) {
+	setupPhoneSync(form, formId) {
+		const phoneDisablePicker = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker));
+		if (phoneDisablePicker) {
+			return;
+		}
+
 		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
 
 		if (!phoneSync) {
@@ -1068,8 +1078,8 @@ export class Form {
 				setupFileField: (file, formId, index) => {
 					this.setupFileField(file, formId, index);
 				},
-				setupPhoneSync: (form, selectsCount, formId) => {
-					this.setupPhoneSync(form, selectsCount, formId);
+				setupPhoneSync: (form, formId) => {
+					this.setupPhoneSync(form, formId);
 				},
 				onCustomFileWrapClickEvent: (event) => {
 					this.onCustomFileWrapClickEvent(event);

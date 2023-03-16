@@ -67,6 +67,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_KEY = 'block-phone-data-set';
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY . '-global';
 	public const SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY = 'block-phone-disable-sync';
+	public const SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY = 'block-phone-disable-picker';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY = 'block-phone-use-country-data';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
 
@@ -257,6 +258,21 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Phone', 'eightshift-forms'),
 						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable phone prefix picker', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
+										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
 							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
