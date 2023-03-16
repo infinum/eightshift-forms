@@ -12,6 +12,35 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
+export const FieldEditorExternalBlocks = (props) => {
+	const {
+		componentClass,
+	} = manifest;
+
+	const {
+		attributes,
+		children,
+		clientId
+	} = props;
+	const fieldClass = classnames([
+		selector(componentClass, componentClass),
+		selector(componentClass, componentClass, '', 'field'),
+	]);
+
+	return (
+		<div className={fieldClass}>
+			{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
+			<div className={`${componentClass}__inner`}>
+				<div className={`${componentClass}__content`}>
+					<div className={`${componentClass}__content-wrap`}>
+						{children}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
 export const FieldEditor = (attributes) => {
 	const {
 		componentClass,

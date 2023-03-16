@@ -21,7 +21,6 @@ $blockSsr = $attributes['blockSsr'] ?? false;
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
-
 $attributes = apply_filters(
 	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
 	$attributes

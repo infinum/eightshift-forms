@@ -19,6 +19,7 @@ export const MailerliteEditor = ({
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
+				allowedBlocks={checkAttr('mailerliteAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

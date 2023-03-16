@@ -13,6 +13,7 @@ export const IntegrationsEditor = ({
 	innerId,
 	clientId,
 	useInnerId = false,
+	allowedBlocks = [],
 }) => {
 
 	// Check if form selector has inner blocks.
@@ -58,7 +59,10 @@ export const IntegrationsEditor = ({
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks templateLock={false} />
+					formContent: <InnerBlocks
+						allowedBlocks={allowedBlocks}
+						templateLock={!allowedBlocks.length}
+					/>
 				})}
 			/>
 		);

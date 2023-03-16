@@ -25,6 +25,10 @@
 		},
 		"workableFormDataTypeSelector": {
 			"type": "string"
+		},
+		"workableAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

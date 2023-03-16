@@ -19,6 +19,7 @@ export const MailchimpEditor = ({
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
+				allowedBlocks={checkAttr('mailchimpAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

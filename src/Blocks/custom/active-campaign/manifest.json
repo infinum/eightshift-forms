@@ -28,6 +28,10 @@
 		},
 		"activeCampaignFormDataTypeSelector": {
 			"type": "string"
+		},
+		"activeCampaignAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

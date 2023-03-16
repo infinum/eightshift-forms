@@ -117,9 +117,11 @@ if ($formsServerSideRender) {
 		return;
 	}
 
+	$formsNamespace = Components::getSettingsNamespace();
+
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
-		if ($block['blockName'] === Components::getSettingsNamespace() . '/form-selector') {
+		if ($block['blockName'] === "{$formsNamespace}/form-selector") {
 			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
 			if (isset($block['innerBlocks'])) {
@@ -139,7 +141,9 @@ if ($formsServerSideRender) {
 
 					if (isset($innerBlock['innerBlocks'])) {
 						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
-							$name = Helper::getBlockNameDetails($inBlock['blockName'])['name'];
+							$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
+							$name = $nameDetails['name'];
+							$namespace = $nameDetails['namespace'];
 
 							switch ($name) {
 								case 'submit':
@@ -150,6 +154,33 @@ if ($formsServerSideRender) {
 								case 'country':
 									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
 									break;
+							}
+
+							// Add custom field block around none forms block to be able to use positioning.
+							if ($namespace !== $formsNamespace) {
+								$customUsedAttrsDiff = array_intersect_key(
+									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] ?? [],
+									Components::getComponent('field')['attributes']
+								);
+
+								$customUsedAttrs = [];
+
+								if ($customUsedAttrsDiff) {
+									foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
+										$customUsedAttrs["field" . ucfirst($customDiffKey)] = $customDiffValue;
+									}
+								}
+
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey] = [];
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['blockName'] = "{$formsNamespace}/field";
+								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] = array_merge(
+									[
+										'fieldFieldContent' => apply_filters('the_content', render_block($inBlock)),
+										'fieldFieldHideLabel' => true,
+										'fieldFieldUseError' => false,
+									],
+									$customUsedAttrs
+								);
 							}
 						}
 					}

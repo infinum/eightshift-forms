@@ -28,6 +28,10 @@
 		},
 		"airtableFormDataTypeSelector": {
 			"type": "string"
+		},
+		"airtableAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

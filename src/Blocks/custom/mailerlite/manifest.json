@@ -25,6 +25,10 @@
 		},
 		"mailerliteFormDataTypeSelector": {
 			"type": "string"
+		},
+		"mailerliteAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

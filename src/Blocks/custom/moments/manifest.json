@@ -25,6 +25,10 @@
 		},
 		"momentsFormDataTypeSelector": {
 			"type": "string"
+		},
+		"momentsAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

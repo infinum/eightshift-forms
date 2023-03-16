@@ -25,6 +25,10 @@
 		},
 		"mailchimpFormDataTypeSelector": {
 			"type": "string"
+		},
+		"mailchimpAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

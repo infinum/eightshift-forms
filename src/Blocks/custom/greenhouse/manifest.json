@@ -25,6 +25,10 @@
 		},
 		"greenhouseFormDataTypeSelector": {
 			"type": "string"
+		},
+		"greenhouseAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

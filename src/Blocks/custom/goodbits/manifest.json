@@ -25,6 +25,10 @@
 		},
 		"goodbitsFormDataTypeSelector": {
 			"type": "string"
+		},
+		"goodbitsAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

@@ -14,29 +14,19 @@ import { TextControl, SelectControl, PanelBody, Button, BaseControl } from '@wor
 import manifest from '../manifest.json';
 import _, { isObject } from 'lodash';
 
-export const FieldOptionsAdvanced = (attributes) => {
+export const FieldPanel = (props) => {
 	const {
-		blockName,
+		attributes,
 		setAttributes,
-	} = attributes;
-
-	const {
-		attributes: manifestAttributes,
-		responsiveAttributes: {
-			fieldWidth
+		fieldManifest: {
+			attributes: manifestAttributes,
+			responsiveAttributes: {
+				fieldWidth,
+			},
+			options,
 		},
-		options
-	} = manifest;
-
-	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
-	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
-	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
-
-	let fieldStyleOptions = [];
-
-	if (typeof esFormsLocalization !== 'undefined' && isObject(esFormsLocalization?.fieldBlockStyleOptions)) {
-		fieldStyleOptions = esFormsLocalization.fieldBlockStyleOptions[blockName];
-	}
+		children
+	} = props;
 
 	const mainFieldWidth = checkAttr(fieldWidth['large'], attributes, manifest, true);
 
@@ -50,18 +40,6 @@ export const FieldOptionsAdvanced = (attributes) => {
 				}
 			</span>
 		)} initialOpen={false}>
-
-
-			{fieldStyleOptions &&
-				<SelectControl
-					label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
-					help={__('Set what style type is your form.', 'eightshift-forms')}
-					value={fieldStyle}
-					options={fieldStyleOptions}
-					onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
-				/>
-			}
-
 			<Responsive label={<IconLabel icon={icons.fieldWidth} label={__('Width', 'eightshift-forms')} />}>
 				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
 					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
@@ -91,21 +69,60 @@ export const FieldOptionsAdvanced = (attributes) => {
 				})}
 			</Responsive>
 
-			<hr />
-
-			<BaseControl label={__('Additional content ', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
-					value={fieldBeforeContent}
-					onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
-				/>
-
-				<TextControl
-					label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
-					value={fieldAfterContent}
-					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
-				/>
-			</BaseControl>
+			{children}
 		</PanelBody>
+	);
+};
+
+export const FieldOptionsAdvanced = (attributes) => {
+	const {
+		blockName,
+		setAttributes,
+	} = attributes;
+
+	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
+	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
+	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
+
+	let fieldStyleOptions = [];
+
+	if (typeof esFormsLocalization !== 'undefined' && isObject(esFormsLocalization?.fieldBlockStyleOptions)) {
+		fieldStyleOptions = esFormsLocalization.fieldBlockStyleOptions[blockName];
+	}
+
+	return (
+		<FieldPanel
+			fieldManifest={manifest}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		>
+			<>
+				{fieldStyleOptions &&
+					<SelectControl
+						label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
+						help={__('Set what style type is your form.', 'eightshift-forms')}
+						value={fieldStyle}
+						options={fieldStyleOptions}
+						onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
+					/>
+				}
+
+				<hr />
+
+				<BaseControl label={__('Additional content ', 'eightshift-forms')}>
+					<TextControl
+						label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
+						value={fieldBeforeContent}
+						onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
+					/>
+
+					<TextControl
+						label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
+						value={fieldAfterContent}
+						onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
+					/>
+				</BaseControl>
+			</>
+		</FieldPanel>
 	);
 };

@@ -1,0 +1,16 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "field",
+	"title": "Field",
+	"description" : "A field blocks that is used as wrapper around custom blocks provided from external source. This block will never show in the editor.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-field"
+	},
+	"keywords": [
+		"field"
+	],
+	"parent": [
+		"eightshift-forms/form"
+	]
+}
