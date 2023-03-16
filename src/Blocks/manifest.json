@@ -6,8 +6,8 @@
 	"settingsPageUrl": "admin.php?page=es-settings",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
-		"outputCssGlobally": false,
-		"outputCssOptimize": false,
+		"outputCssGlobally": true,
+		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
 		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false
