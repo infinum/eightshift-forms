@@ -49,7 +49,19 @@ function esFormsDecryptor(string $value)
  *
  * @return array<int, array<string|array<int, string>>>
  */
-function esFormsGeolocationCountriesList()
+function esFormsGeolocationCountriesList(): array
 {
 	return (new Geolocation())->getCountriesList();
+}
+
+/**
+ * Output select options ass array from html string.
+ *
+ * @param string $options Options string.
+ *
+ * @return array<int, array<string, string>>
+ */
+function esFormsGetSelectOptionsArrayFromString(string $options): array
+{
+	return Helper::getSelectOptionsArrayFromString($options);
 }

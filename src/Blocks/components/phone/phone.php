@@ -72,8 +72,13 @@ $filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['settingsValuesOut
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);
+	$datasetList = 'default';
 
-	foreach ($settings['countries'][$settings['phone']['dataset']]['items'] as $option) {
+	if (isset($settings['countries'][$settings['phone']['dataset']]['items'])) {
+		$datasetList = $settings['phone']['dataset'];
+	}
+
+	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
 
