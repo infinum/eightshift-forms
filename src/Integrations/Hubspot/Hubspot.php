@@ -218,6 +218,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					continue;
 				}
 
+				if (!$placeholder) {
+					$placeholder = $field['unselectedLabel'] ?? '';
+				}
+
 				switch ($type) {
 					case 'text':
 						$item = [
@@ -348,7 +352,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									[
 										[
 											'component' => 'select-option',
-											'selectOptionLabel' => \__('Select option', 'eightshift-forms'),
+											'selectOptionLabel' => $placeholder ?? \__('Select option', 'eightshift-forms'),
 											'selectOptionValue' => ' ',
 											'selectOptionIsSelected' => true,
 											'selectOptionIsDisabled' => true,
