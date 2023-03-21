@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [2.3.5]
+
+## Fixed
+- ability for Hubspot select field to show placeholder.
+
 ## [2.3.4]
 
 ## Changed
@@ -188,6 +193,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.3.5]: https://github.com/infinum/eightshift-forms/compare/2.3.4...2.3.5
 [2.3.4]: https://github.com/infinum/eightshift-forms/compare/2.3.3...2.3.4
 [2.3.3]: https://github.com/infinum/eightshift-forms/compare/2.3.2...2.3.3
 [2.3.2]: https://github.com/infinum/eightshift-forms/compare/2.3.1...2.3.2
