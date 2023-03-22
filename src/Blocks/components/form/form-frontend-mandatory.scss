@@ -14,6 +14,10 @@
 
 body[data-hide-captcha-badge='true'] {
 	.grecaptcha-badge {
+<<<<<<< HEAD
 		display: none !important; // stylelint-disable-line declaration-no-important
+=======
+		visibility: hidden!important;
+>>>>>>> temp
 	}
 }
