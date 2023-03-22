@@ -149,6 +149,6 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return $tag;
 		}
 
-		return \str_replace(' src', ' defer async="async" src', $tag);
+		return \str_replace(' src', ' defer src', $tag);
 	}
 }

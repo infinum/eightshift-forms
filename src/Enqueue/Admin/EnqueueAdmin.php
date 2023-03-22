@@ -70,31 +70,35 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	}
 
 	/**
-	 * Get script localizations
+	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only admin.
 	 *
-	 * @return array<string, mixed>
+	 * @return void
 	 */
-	protected function getLocalizations(): array
+	public function enqueueScripts(): void
 	{
+		parent::enqueueScripts();
+
 		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
 		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
 
-		return [
-			'esFormsLocalization' => [
-				'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
-				'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-				'restPrefixProject' => $restRoutesPrefixProject,
-				'restPrefix' => $restRoutesPrefix,
-				'nonce' => \wp_create_nonce('wp_rest'),
-				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
-				'restRoutes' => [
-					'formSubmit' => FormSettingsSubmitRoute::ROUTE_SLUG,
-					'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
-					'migration' => MigrationRoute::ROUTE_SLUG,
-					'transform' => TransferRoute::ROUTE_SLUG,
-					'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
-				],
-			]
+		$output = [
+			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
+			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
+			'restPrefixProject' => $restRoutesPrefixProject,
+			'restPrefix' => $restRoutesPrefix,
+			'nonce' => \wp_create_nonce('wp_rest'),
+			'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+			'restRoutes' => [
+				'formSubmit' => FormSettingsSubmitRoute::ROUTE_SLUG,
+				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
+				'migration' => MigrationRoute::ROUTE_SLUG,
+				'transform' => TransferRoute::ROUTE_SLUG,
+				'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
+			],
 		];
+
+		$output = \wp_json_encode($output);
+
+		\wp_add_inline_script($this->getAdminScriptHandle(), "const esFormsLocalization = {$output}", 'before');
 	}
 }
