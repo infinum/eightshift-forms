@@ -15,4 +15,11 @@ select.es-select__select {
 		padding-bottom: 15px;
 		opacity: 0.5;
 	}
+
+	.block-editor-block-list__layout {
+		> * {
+			margin-top: 0;
+			padding-bottom: 0 !important; // stylelint-disable-line declaration-no-important
+		}
+	}
 }

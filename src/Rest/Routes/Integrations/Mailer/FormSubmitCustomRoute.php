@@ -133,7 +133,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				$this->getApiSuccessOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
-						'redirect' => true,
+						'processExternaly' => true,
 					]
 				)
 			);
@@ -171,9 +171,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				$this->labels->getLabel('customSuccess', $formId),
-				[
-					'processExternaly' => true,
-				]
 			)
 		);
 	}
