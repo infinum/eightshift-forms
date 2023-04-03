@@ -315,7 +315,7 @@ export class Form {
 				// Normal errors.
 				if (response.status === 'error') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR);
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -324,7 +324,7 @@ export class Form {
 				// Fatal errors, trigger bugsnag.
 				if (response.status === 'error_fatal') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_FATAL);
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_FATAL, response);
 
 					// Set global msg.
 					this.setGlobalMsg(element, response.message, 'error');
@@ -336,7 +336,7 @@ export class Form {
 				// Validate fields error.
 				if (response.status === 'error_validation') {
 					// Dispatch event.
-					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
+					this.dispatchFormEvent(element, FORM_EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
 
 					// Output field errors.
 					this.outputErrors(element, response.validation);
@@ -778,10 +778,16 @@ export class Form {
 	};
 
 	// Dispatch custom event.
-	dispatchFormEvent(element, name) {
-		const event = new CustomEvent(name, {
-			bubbles: true
-		});
+	dispatchFormEvent(element, name, detail) {
+		const options = {
+			bubbles: true,
+		};
+
+		if (detail) {
+			options['detail'] = detail;
+		}
+
+		const event = new CustomEvent(name, options);
 
 		element.dispatchEvent(event);
 	}
