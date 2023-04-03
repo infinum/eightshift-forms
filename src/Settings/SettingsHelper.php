@@ -514,6 +514,7 @@ trait SettingsHelper
 			}
 
 			// Iterate saved values and populate new fields.
+			$i = 0;
 			foreach ($dbSettingsValuePreparedItem as $itemKey => $itemValue) {
 				switch ($itemKey) {
 					case $this->integrationFieldStyle:

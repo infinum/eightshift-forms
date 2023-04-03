@@ -10,9 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use CURLFile;
-use EightshiftForms\General\General;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -195,6 +192,10 @@ class WorkableClient implements ClientInterface
 				return 'workableInvalidFirstNameError';
 			case 'Validation failed: Name can\'t be blank, Lastname can\'t be blank':
 				return 'workableInvalidLastNameError';
+			case 'Validation failed: Headline is too long (maximum is 255 characters)':
+				return 'workableInvaldHeadlineError';
+			case 'Validation failed: Custom attribute values body is too long (maximum is 128 characters)':
+				return 'workableInvaldLinkError';
 			default:
 				return 'submitWpError';
 		}
@@ -332,14 +333,14 @@ class WorkableClient implements ClientInterface
 				case 'boolean':
 					$answers[] = [
 						'question_key' => $key,
-						'checked' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+						'checked' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
 					];
 					break;
 				case 'multiple_choice':
 				case 'dropdown':
 					$answers[] = [
 						'question_key' => $key,
-						'choices' => explode(',', $value),
+						'choices' => \explode(',', $value),
 					];
 					break;
 				default:
@@ -384,18 +385,17 @@ class WorkableClient implements ClientInterface
 				if ($key === 'resume') {
 					$output[$id] = [
 						'name' => $fileName,
-						'data' => \base64_encode(\file_get_contents($path)),
+						'data' => \base64_encode(\file_get_contents($path)), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					];
 				} else {
 					$answers[] = [
 						'question_key' => $key,
 						'file' => [
 							'name' => $fileName,
-							'data' => \base64_encode(\file_get_contents($path)),
+							'data' => \base64_encode(\file_get_contents($path)), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 						]
 					];
 				}
-
 			}
 		}
 
