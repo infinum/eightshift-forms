@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Mailer;
 
 use CURLFile;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsTroubleshooting;
@@ -108,7 +109,7 @@ class Mailer implements MailerInterface
 
 		if ($params) {
 			$paramsOutput .= "<p><strong>Data sent to integration:</strong></p>";
-			$paramsOutput .= $this->fallbackEmailPrepareParams($params);
+			$paramsOutput .= $this->fallbackEmailPrepareParams($params, $integration);
 		}
 
 		if ($response) {
@@ -314,17 +315,23 @@ class Mailer implements MailerInterface
 	 * Prepare recursive params for fallback email.
 	 *
 	 * @param array<mixed> $params Params to check.
+	 * @param string $integration Integration type.
 	 *
 	 * @return string
 	 */
-	private function fallbackEmailPrepareParams(array $params): string
+	private function fallbackEmailPrepareParams(array $params, string $integration): string
 	{
 		$output = '';
 
 		foreach ($params as $paramKey => $paramValue) {
 			if (\is_array($paramValue)) {
+				// Workable sends files as a base encode so no need to show it in the response.
+				if ($integration === SettingsWorkable::SETTINGS_TYPE_KEY && ($paramKey === 'resume' || $paramKey === 'file')) {
+					$paramValue['data'] = \__('File attached', 'eightshift-forms');
+				}
+
 				$paramValueOutput = '<ul>';
-				$paramValueOutput .= $this->fallbackEmailPrepareParams($paramValue);
+				$paramValueOutput .= $this->fallbackEmailPrepareParams($paramValue, $integration);
 				$paramValueOutput .= '</ul>';
 
 				$paramValue = $paramValueOutput;

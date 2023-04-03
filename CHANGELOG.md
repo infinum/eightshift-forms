@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [2.3.6]
+
+## Fixed
+- Workable, custom body and heading max length field
+- Workable fallback email removed text base encoded file.
+
 ## [2.3.5]
 
 ## Fixed
@@ -193,6 +199,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.3.6]: https://github.com/infinum/eightshift-forms/compare/2.3.5...2.3.6
 [2.3.5]: https://github.com/infinum/eightshift-forms/compare/2.3.4...2.3.5
 [2.3.4]: https://github.com/infinum/eightshift-forms/compare/2.3.3...2.3.4
 [2.3.3]: https://github.com/infinum/eightshift-forms/compare/2.3.2...2.3.3

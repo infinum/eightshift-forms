@@ -321,6 +321,8 @@ class Labels implements LabelsInterface
 			'workableInvalidRequiredError' => \__('"First name", "Last name", "E-mail" must be provided.', 'eightshift-forms'),
 			'workableInvalidLastNameError' => \__('"Last name" must be provided.', 'eightshift-forms'),
 			'workableInvalidFirstNameError' => \__('"First name" must be provided.', 'eightshift-forms'),
+			'workableInvaldHeadlineError' => \__('The headline field if too long. Max length is 255 characters.', 'eightshift-forms'),
+			'workableInvaldLinkError' => \__('The link field is too long. Max length is 128 characters.', 'eightshift-forms'),
 			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

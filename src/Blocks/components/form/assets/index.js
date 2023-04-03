@@ -105,8 +105,8 @@ function initAll() {
 			scrollToElement: (event) => {
 				form.scrollToElement(event);
 			},
-			dispatchFormEvent: (event, name) => {
-				form.dispatchFormEvent(event, name);
+			dispatchFormEvent: (event, name, detail) => {
+				form.dispatchFormEvent(event, name, detail);
 			},
 			setupInputField: (input) => {
 				form.setupInputField(input);
