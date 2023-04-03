@@ -119,78 +119,140 @@ if ($formsServerSideRender) {
 
 	$formsNamespace = Components::getSettingsNamespace();
 
+	$output = [];
+
 	// Iterate blocks an children by passing them form ID.
 	foreach ($blocks as $key => $block) {
-		if ($block['blockName'] === "{$formsNamespace}/form-selector") {
-			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
+		if ($block['blockName'] !== "{$formsNamespace}/form-selector") {
+			continue;
+		}
 
-			if (isset($block['innerBlocks'])) {
-				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-					$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
+		$block['attrs']['formSelectorFormPostId'] = $formsFormPostId;
 
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
+		if (!isset($block['innerBlocks'])) {
+			continue;
+		}
 
-					if (isset($innerBlock['innerBlocks'])) {
-						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
-							$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
-							$name = $nameDetails['name'];
-							$namespace = $nameDetails['namespace'];
+		$steps = [];
+		foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+			$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
-							switch ($name) {
-								case 'submit':
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
-									break;
-								case 'phone':
-								case 'country':
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
-									break;
-							}
+			$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
+			$innerBlock['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
+			$innerBlock['attrs']["{$blockName}FormType"] = $blockName;
+			$innerBlock['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
+			$innerBlock['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
+			$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
+			$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
+			$innerBlock['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
+			$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
+			$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
-							// Add custom field block around none forms block to be able to use positioning.
-							if ($namespace !== $formsNamespace) {
-								$customUsedAttrsDiff = array_intersect_key(
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] ?? [],
-									Components::getComponent('field')['attributes']
-								);
+			if (!isset($innerBlock['innerBlocks'])) {
+				continue;
+			}
 
-								$customUsedAttrs = [];
+			$hasSteps = \array_search('eightshift-forms/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
+			$hasSteps = $hasSteps !== false;
 
-								if ($customUsedAttrsDiff) {
-									foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
-										$customUsedAttrs["field" . ucfirst($customDiffKey)] = $customDiffValue;
-									}
-								}
+			$stepCounter = 0;
+			foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
+				$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
+				$name = $nameDetails['name'];
+				$namespace = $nameDetails['namespace'];
 
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey] = [];
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['blockName'] = "{$formsNamespace}/field";
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] = array_merge(
-									[
-										'fieldFieldContent' => apply_filters('the_content', render_block($inBlock)),
-										'fieldFieldHideLabel' => true,
-										'fieldFieldUseError' => false,
-									],
-									$customUsedAttrs
-								);
-							}
+				switch ($name) {
+					case 'submit':
+						$inBlock['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
+						$inBlock['attrs']["blockSsr"] = $formsServerSideRender;
+						break;
+					case 'phone':
+					case 'country':
+						$inBlock['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
+						break;
+				}
+
+				// Add custom field block around none forms block to be able to use positioning.
+				if ($namespace !== $formsNamespace) {
+					$customUsedAttrsDiff = array_intersect_key(
+						$inBlock['attrs'] ?? [],
+						Components::getComponent('field')['attributes']
+					);
+
+					$customUsedAttrs = [];
+
+					if ($customUsedAttrsDiff) {
+						foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
+							$customUsedAttrs["field" . ucfirst($customDiffKey)] = $customDiffValue;
 						}
 					}
+
+					$inBlock = [];
+					$inBlock['blockName'] = "{$formsNamespace}/field";
+					$inBlock['attrs'] = array_merge(
+						[
+							'fieldFieldContent' => apply_filters('the_content', render_block($inBlock)),
+							'fieldFieldHideLabel' => true,
+							'fieldFieldUseError' => false,
+						],
+						$customUsedAttrs
+					);
 				}
+
+				// If the users don't add first step add it to the list.
+				// if ($inKey === 0 && $name !== 'step') {
+				// 	$steps[] = 0;
+				// }
+
+				// Populate the list of steps position in the original array.
+				if ($hasSteps) {
+					// if ($name === 'step') {
+					// 	$stepCounter ++;
+					// 	continue;
+					// }
+
+					$innerBlock['innerBlocks'][$stepCounter]['innerBlocks'][] = $inBlock;
+
+					// error_log( print_r( (  ), true ) );
+					
+
+						// error_log( print_r( (  $blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$stepCounter]), true ) );
+				} else {
+				}
+				$output[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey] = $inBlock;
+
+				// error_log( print_r( ( $blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'] ), true ) );
 			}
+
+			$output[$key]['innerBlocks'][$innerKey] = $innerBlock;
 		}
+
+		$output[$key] = $block;
+
+		// if ($steps) {
+		// 	error_log( print_r( ( $steps ), true ) );
+		// 	$i = 0;
+		// 	foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
+		// 		// if ()
+		// 	// 	$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
+		// 	// 	$name = $nameDetails['name'];
+
+		// 	// 	if ($hasFirstStep) {
+
+		// 	// 	} else {
+		// 	// 		$steps[$i] = $innerBlock;
+		// 	// 	}
+
+		// 	// 	$i++;
+		// 	}
+		// }
 	}
 
+	error_log( print_r( ( $output ), true ) );
+	
+
 	// Render blocks.
-	foreach ($blocks as $block) {
+	foreach ($output as $block) {
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo apply_filters('the_content', render_block($block));
 	}

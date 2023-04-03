@@ -1,0 +1,20 @@
+@import './step-style.scss';
+
+button.es-step {
+	&--global {
+		width: auto;
+	}
+
+	&--migration,
+	&--transfer {
+		width: fit-content;
+	}
+
+	&--with-icon {
+		.es-step__inner {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+	}
+}

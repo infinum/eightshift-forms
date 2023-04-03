@@ -30,7 +30,8 @@
 				"eightshift-forms/checkboxes",
 				"eightshift-forms/phone",
 				"eightshift-forms/date",
-				"eightshift-forms/country"
+				"eightshift-forms/country",
+				"eightshift-forms/step"
 			]
 		},
 		"mailerFormPostId": {

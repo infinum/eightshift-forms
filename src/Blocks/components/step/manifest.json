@@ -1,0 +1,11 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "step",
+	"title": "Step",
+	"componentClass": "es-step",
+	"attributes": {
+		"stepName": {
+			"type": "string"
+		}
+	}
+}

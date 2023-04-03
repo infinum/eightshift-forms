@@ -1,0 +1,20 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "step",
+	"title": "step",
+	"description" : "A form multistep option",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-step"
+	},
+	"keywords": [
+		"step",
+		"multistep"
+	],
+	"components": {
+		"step": "step"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	]
+}
