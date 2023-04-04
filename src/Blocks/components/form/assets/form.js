@@ -86,10 +86,10 @@ export class Form {
 		}
 
 		// Get form ID.
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId) || 0;
 
 		// Form loading started.
-		this.utils.FORMS[formId] = false;
+		this.utils.setFormStateInitial(formId);
 
 		// All fields selectors.
 		const inputs = element.querySelectorAll(this.utils.inputSelector);
@@ -98,7 +98,6 @@ export class Form {
 		const files = element.querySelectorAll(this.utils.fileSelector);
 
 		// Setup regular inputs.
-		this.utils.CUSTOM_DATES[formId] = [];
 		[...inputs].forEach((input) => {
 			switch (input.type) {
 				case 'date':
@@ -111,19 +110,16 @@ export class Form {
 		});
 
 		// Setup select inputs.
-		this.utils.CUSTOM_SELECTS[formId] = [];
 		[...selects].forEach((select) => {
 			this.setupSelectField(select, formId);
 		});
 
 		// Setup textarea inputs.
-		this.utils.CUSTOM_TEXTAREAS[formId] = [];
 		[...textareas].forEach((textarea) => {
 			this.setupTextareaField(textarea, formId);
 		});
 
 		// Setup file single inputs.
-		this.utils.CUSTOM_FILES[formId] = [];
 		[...files].forEach((file, index) => {
 			this.setupFileField(file, formId, index, element);
 		});
@@ -245,7 +241,7 @@ export class Form {
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT);
+				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT, response);
 
 				// Clear all errors.
 				this.utils.reset(element);
@@ -259,7 +255,7 @@ export class Form {
 					this.utils.gtmSubmit(element, formData, response.status);
 
 					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
+					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
 
 					// Redirect on success.
 					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
@@ -295,9 +291,9 @@ export class Form {
 
 					// Dispatch event.
 					if (isValidationError) {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
 					} else {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
 					}
 
 					this.utils.outputErrors(element, response?.data?.validation);
@@ -312,7 +308,7 @@ export class Form {
 				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 
 				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
+				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END, response);
 			});
 	}
 
@@ -435,7 +431,7 @@ export class Form {
 					break;
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.utils.FILES[formId][id] ?? []; // eslint-disable-line no-case-declarations
+					const fileList = this.utils.getFormStateByName('files', name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
 
 					// Loop files and append.
 					if (fileList.length) {
@@ -645,7 +641,7 @@ export class Form {
 				altInput: true,
 			});
 
-			this.utils.CUSTOM_DATES[formId].push(datePicker);
+			this.utils.setFormStateByKey('dates', datePicker, formId);
 		});
 	}
 
@@ -695,12 +691,13 @@ export class Form {
 			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true)?.value);
 
 			Object.assign(choices, {
-				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
+				esFormsFieldType: select?.closest(this.utils.fieldSelector)?.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
+				esFormsName: select?.name,
 			});
 
 			this.utils.preFillOnInit(choices, 'select');
 
-			this.utils.CUSTOM_SELECTS[formId].push(choices);
+			this.utils.setFormStateByKey('selects', choices, formId);
 
 			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
@@ -728,7 +725,7 @@ export class Form {
 
 			autosize.default(textarea);
 
-			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
+			this.utils.setFormStateByKey('textareas', autosize.default, formId);
 		});
 	}
 
@@ -742,15 +739,7 @@ export class Form {
 	 * @public
 	 */
 	setupFileField(file, formId, index) {
-		const fileId = file?.id;
-
-		if (typeof this.utils.FILES[formId] === 'undefined') {
-			this.utils.FILES[formId] = {};
-		}
-
-		if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
-			this.utils.FILES[formId][fileId] = [];
-		}
+		const fileId = file?.name;
 
 		import('dropzone').then((Dropzone) => {
 			// Init dropzone.
@@ -766,7 +755,11 @@ export class Form {
 				}
 			);
 
-			this.utils.CUSTOM_FILES[formId].push(myDropzone);
+			Object.assign(myDropzone, {
+				esFormsName: file?.name,
+			});
+
+			this.utils.setFormStateByKey('files', myDropzone, formId);
 
 			// On add one file.
 			myDropzone.on("addedfile", (file) => {
@@ -777,8 +770,6 @@ export class Form {
 				setTimeout(() => {
 					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
 				}, 1200);
-
-				this.utils.FILES[formId][fileId].push(file);
 			});
 
 			// On max file size reached.
@@ -788,22 +779,10 @@ export class Form {
 
 			// On error while upload.
 			myDropzone.on("error", (file) => {
+				file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
-				}, 1500);
-
-				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-				this.utils.FILES[formId][fileId] = [...itemsLeft];
-			});
-
-			// On remove files.
-			myDropzone.on("removedfile", (file) => {
-				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-				this.utils.FILES[formId][fileId] = [...itemsLeft];
-
-				myDropzone.setupEventListeners();
+					myDropzone.removeFile(file);
+				}, 2000);
 			});
 
 			// Trigger on wrap click.
@@ -841,10 +820,10 @@ export class Form {
 
 		// Set interval because of dynamic import of choices.
 		const interval = setInterval(() => {
-			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
+			if (this.utils.getFormStateByKey('selects', formId)) {
 				clearInterval(interval);
 
-				const selects = window[this.utils.prefix].utils.CUSTOM_SELECTS[formId];
+				const selects = this.utils.getFormStateByKey('selects', formId);
 
 				if (selects.length !== 0) {
 					// Find all countries.
@@ -910,9 +889,7 @@ export class Form {
 				switch (input.type) {
 					case 'date':
 					case 'datetime-local':
-						if (typeof this.utils.CUSTOM_DATES?.[formId] !== 'undefined') {
-							delete this.utils.CUSTOM_DATES[formId];
-						}
+						this.utils.deleteFormStateByKey('dates', formId);
 						break;
 				}
 
@@ -922,9 +899,7 @@ export class Form {
 			});
 
 			[...selects].forEach(() => {
-				if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_SELECTS[formId];
-				}
+				this.utils.deleteFormStateByKey('selects', formId);
 			});
 
 			// Setup textarea inputs.
@@ -933,16 +908,12 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_TEXTAREAS[formId];
-				}
+				this.utils.deleteFormStateByKey('textareas', formId);
 			});
 
 			// Setup file single inputs.
 			[...files].forEach((file) => {
-				if (typeof this.utils.CUSTOM_FILES?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_FILES[formId];
-				}
+				this.utils.deleteFormStateByKey('files', formId);
 
 				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
 
@@ -1016,7 +987,7 @@ export class Form {
 		const index = event.currentTarget.getAttribute('dropzone-index');
 		const formId = event.currentTarget.getAttribute('dropzone-form-id');
 
-		this.utils.CUSTOM_FILES[formId][index].hiddenFileInput.click();
+		this.utils.getFormStateByIndex('files', index, formId).hiddenFileInput.click();
 	};
 
 	/**
@@ -1043,8 +1014,8 @@ export class Form {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.form === 'undefined') {
-			window[this.utils.prefix].form = {
+		if (typeof window?.[this.utils.getPrefix()]?.form === 'undefined') {
+			window[this.utils.getPrefix()].form = {
 				init: () => {
 					this.init();
 				},
@@ -1054,20 +1025,20 @@ export class Form {
 				initOne: (element) => {
 					this.initOne(element);
 				},
-				onFormSubmitEvent: (event) => {
-					this.onFormSubmitEvent(event);
+				formSubmitCaptcha: (element, token, payed, action) => {
+					this.formSubmitCaptcha(element, token, payed, action);
 				},
-				formSubmitCaptcha: (element, token, type) => {
-					this.formSubmitCaptcha(element, token, type);
+				formSubmit: (element, singleSubmit = false) => {
+					this.formSubmit(element, singleSubmit);
 				},
-				formSubmit: (element) => {
-					this.formSubmit(element);
-				},
-				getFormData: (element) => {
-					this.getFormData(element);
+				getFormData: (element, singleSubmit = false) => {
+					this.getFormData(element, singleSubmit);
 				},
 				setupInputField: (input) => {
 					this.setupInputField(input);
+				},
+				setupDateField: (date, formId) => {
+					this.setupDateField(date, formId);
 				},
 				setupSelectField: (select, formId) => {
 					this.setupSelectField(select, formId);
@@ -1081,17 +1052,17 @@ export class Form {
 				setupPhoneSync: (form, formId) => {
 					this.setupPhoneSync(form, formId);
 				},
-				onCustomFileWrapClickEvent: (event) => {
-					this.onCustomFileWrapClickEvent(event);
-				},
 				removeEvents: () => {
 					this.removeEvents();
 				},
-				phoneSync: () => {
-					this.phoneSync();
-				},
-				runFormCaptcha: (element) => {
+				runFormCaptcha: (element = '') => {
 					this.runFormCaptcha(element);
+				},
+				onFormSubmitEvent: (event) => {
+					this.onFormSubmitEvent(event);
+				},
+				onCustomFileWrapClickEvent: (event) => {
+					this.onCustomFileWrapClickEvent(event);
 				},
 			};
 		}

@@ -467,6 +467,13 @@ class MomentsClient implements ClientInterface
 					break;
 			}
 
+			$internalType = $param['internalType'] ?? '';
+			switch ($internalType) {
+				case 'email':
+					$value = \strtolower($value);
+					break;
+			}
+
 			$output[$name] = $value;
 		}
 

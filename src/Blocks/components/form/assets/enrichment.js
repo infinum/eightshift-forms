@@ -201,26 +201,26 @@ export class Enrichment {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.enrichment === 'undefined') {
-			window[this.utils.prefix].enrichment = {
+		if (typeof window?.[this.utils.getPrefix()]?.enrichment === 'undefined') {
+			window[this.utils.getPrefix()].enrichment = {
 				STORAGE_NAME: this.STORAGE_NAME,
 				init: () => {
 					this.init();
 				},
 				isEnrichmentUsed: () => {
-					this.isEnrichmentUsed();
+					return this.isEnrichmentUsed();
 				},
 				getUrlAllowedParams: (allowedTags) => {
-					this.getUrlAllowedParams(allowedTags);
+					return this.getUrlAllowedParams(allowedTags);
 				},
 				getCookiesAllowedParams: (allowedTags) => {
-					this.getCookiesAllowedParams(allowedTags);
+					return this.getCookiesAllowedParams(allowedTags);
 				},
 				setLocalStorage: () => {
 					this.setLocalStorage();
 				},
 				getLocalStorage: () => {
-					this.getLocalStorage();
+					return this.getLocalStorage();
 				},
 			};
 		}

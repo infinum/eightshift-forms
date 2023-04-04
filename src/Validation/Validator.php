@@ -262,6 +262,9 @@ class Validator extends AbstractValidation
 						$patternValue = $pattern['value'] ?? '';
 
 						if ($patternValue) {
+							$inputValue = $this->fixMomentsEmailValidationPattern($inputValue, $pattern);
+
+							// Match pattern.
 							\preg_match_all("/$patternValue/", $inputValue, $matches, \PREG_SET_ORDER, 0);
 
 							$isMatch = isset($matches[0][0]) ? $matches[0][0] === $inputValue : false;
@@ -532,5 +535,24 @@ class Validator extends AbstractValidation
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Moments will not allow uppercase value for the email.
+	 *
+	 * @param mixed $inputValue Input value from the form field.
+	 * @param array<string, string> $pattern Validation pattern array.
+	 *
+	 * @return mixed
+	 */
+	private function fixMomentsEmailValidationPattern($inputValue, $pattern)
+	{
+		$label = $pattern['label'] ?? '';
+
+		if ($label === 'momentsEmail') {
+			return \strtolower($inputValue);
+		}
+
+		return $inputValue;
 	}
 }

@@ -189,13 +189,14 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'phoneTracking' => $name,
 							'phoneFieldLabel' => $label,
 							'phoneIsRequired' => $required,
-							'inputMaxLength' => 255,
+							'phoneMaxLength' => 255,
 							'phoneAttrs' => [
 								'data-type-internal' => 'phone',
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$required ? 'phoneIsRequired' : '',
-								'inputMaxLength',
+								'phoneMaxLength',
+								'phoneAttrs',
 							]),
 						];
 					} else {
@@ -213,6 +214,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
 								'inputMaxLength',
+								'inputAttrs',
 							]),
 						];
 					}
@@ -237,6 +239,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'fileAccept',
 							'fileMinSize',
 							'fileMaxSize',
+							'fileAttrs',
 						]),
 					];
 					break;
@@ -273,6 +276,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						],
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',
+							'selectAttrs',
 						]),
 					];
 					break;
@@ -288,6 +292,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
+								'textareaAttrs',
 							]),
 						];
 					break;
@@ -309,6 +314,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								],
 								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 									'checkboxValue',
+									'checkboxAttrs',
 								], false),
 							]
 						],

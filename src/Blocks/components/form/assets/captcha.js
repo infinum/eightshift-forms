@@ -116,16 +116,16 @@ export class Captcha {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.captcha === 'undefined') {
-			window[this.utils.prefix].captcha = {
+		if (typeof window?.[this.utils.getPrefix()]?.captcha === 'undefined') {
+			window[this.utils.getPrefix()].captcha = {
 				init: () => {
 					this.init();
 				},
 				initCaptchaOnLoad: () => {
 					this.initCaptchaOnLoad();
 				},
-				formSubmitCaptchaInvisible: (token, type) => {
-					this.formSubmitCaptchaInvisible(token, type);
+				formSubmitCaptchaInvisible: (token, payed, action) => {
+					this.formSubmitCaptchaInvisible(token, payed, action);
 				},
 				initHideCaptchaBadge: () => {
 					this.initHideCaptchaBadge();
