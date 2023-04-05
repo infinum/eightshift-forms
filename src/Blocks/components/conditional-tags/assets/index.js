@@ -76,7 +76,7 @@ export class ConditionalTags {
 	initOne(element) {
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 		const interval = setInterval(() => {
-			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
+			if (this.utils.getFormStateByKey('isLoaded', formId)) {
 				clearInterval(interval);
 
 				this.initForms(element);
@@ -416,8 +416,8 @@ export class ConditionalTags {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.conditionalTags === 'undefined') {
-			window[this.utils.prefix].conditionalTags = {
+		if (typeof window?.[this.utils.getPrefix()]?.conditionalTags === 'undefined') {
+			window[this.utils.getPrefix()].conditionalTags = {
 				DATA_FIELDS: this.DATA_FIELDS,
 				DATA_EVENT_ITEMS: this.DATA_EVENT_ITEMS,
 				DATA_REFERENCE: this.DATA_REFERENCE,
@@ -448,10 +448,10 @@ export class ConditionalTags {
 					this.setListeners();
 				},
 				areAllRulesValid: (logic, item) => {
-					this.areAllRulesValid(logic, item);
+					return this.areAllRulesValid(logic, item);
 				},
 				isRuleValid: (rule, inputValue, item, index) => {
-					this.isRuleValid(rule, inputValue, item, index);
+					return this.isRuleValid(rule, inputValue, item, index);
 				},
 				onChangeEvent: (event) => {
 					this.onChangeEvent(event);

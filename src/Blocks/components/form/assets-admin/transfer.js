@@ -46,8 +46,8 @@ export class Transfer {
 		formData.append('items', element.getAttribute('data-items'));
 
 		if (type === 'import') {
-			const upload = document.querySelector(this.uploadSelector);
-			formData.append('upload', upload.files[0]);
+			const uploadName = document.querySelector(this.uploadSelector).name;
+			formData.append('upload', this.utils.getFormStateByName('files', uploadName).files?.[0]);
 
 			const existing = document.querySelector(`${this.overrideExistingSelector} input`);
 			formData.append('override', existing.checked);

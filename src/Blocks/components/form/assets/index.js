@@ -51,8 +51,8 @@ if (!disableAutoInit) {
 	});
 } else {
 	// Load initAll method in window object for manual trigger.
-	window[utils.prefix] = {
-		...window[utils.prefix],
+	window[utils.getPrefix()] = {
+		...window[utils.getPrefix()],
 		initAll: () => {
 			initAll();
 		},

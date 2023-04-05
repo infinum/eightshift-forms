@@ -68,6 +68,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$params = $this->prepareParams($request->get_body_params());
 			$files = $request->get_file_params();
 
+			error_log( print_r( ( $files ), true ) );
+			
+
 			// Get form ID.
 			$formId = $this->getFormId($params);
 			$formType = $this->getFormType($params);
