@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -85,21 +86,24 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'tabs',
-				'tabsContent' => [
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Export global settings', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Export all global settings.', 'eightshift-forms'),
-							],
+						'component' => 'intro',
+						'introTitle' => \__('Export', 'eightshift-forms'),
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Global settings'),
+						'cardIcon' => Helper::getProjectIcons('settings'),
+						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitIcon' => 'down',
-								'submitValue' => \__('Export global settings', 'eightshift-forms'),
+								// 'submitIcon' => 'down',
+								'submitValue' => \__('Export', 'eightshift-forms'),
+								'submitVariant' => 'outline',
 								'submitAttrs' => [
 									'data-type' => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 								],
@@ -108,41 +112,18 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						],
 					],
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Export forms', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Export single or multiple forms with settings', 'eightshift-forms'),
-							],
-							$this->getFormsList(),
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Export selected forms', 'eightshift-forms'),
-								'submitIsDisabled' => true,
-								'submitIcon' => 'down',
-								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_FORMS,
-									'data-items' => '',
-								],
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
-							],
-						],
+						'component' => 'divider',
 					],
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Export all', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Export all forms and global settings.', 'eightshift-forms'),
-							],
+						'component' => 'card',
+						'cardTitle' => \__('Everything'),
+						'cardIcon' => Helper::getProjectIcons('allChecked'),
+						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Export all', 'eightshift-forms'),
-								'submitIcon' => 'down',
+								'submitValue' => \__('Export', 'eightshift-forms'),
+								'submitVariant' => 'outline',
 								'submitAttrs' => [
 									'data-type' => self::TYPE_EXPORT_ALL,
 								],
@@ -151,50 +132,90 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						],
 					],
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Import', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
-								'introSubtitle' => \__('Please backup your database before running any imports. This proces is not reversable.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('
-									Import all global settings or one of many forms with their settings. <br/>
-									<ul>
-									<li>Upload of global settings will <strong>override</strong> all global settings set in your project.</li>
-									<li>Upload of forms will <strong>not override</strong> existing forms. If forms slug exists in the project, upload process will create a new form entry.</li>
-									</ul>', 'eightshift-forms'),
-							],
-							[
-								'component' => 'file',
-								'fileIsRequired' => true,
-								'fileFieldLabel' =>  \__('Upload json file', 'eightshift-forms'),
-								'fileAccept' => 'json',
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesName' => 'override',
-								'checkboxesFieldLabel' => '',
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
-										'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
-										'additionalClass' => "{$manifestForm['componentTransferJsClass']}-existing",
-									],
-								],
-							],
+						'component' => 'divider',
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Forms', 'eightshift-forms'),
+						'cardIcon' => Helper::getProjectIcons('form'),
+					],
+					$this->getFormsList(),
+					[
+						'component' => 'card',
+						'cardVertical' => true,
+						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Upload', 'eightshift-forms'),
-								'submitIcon' => 'up',
+								'submitValue' => \__('Export selected', 'eightshift-forms'),
+								'submitIsDisabled' => true,
+								'submitVariant' => 'outline',
+								'submitAttrs' => [
+									'data-type' => self::TYPE_EXPORT_FORMS,
+									'data-items' => '',
+								],
+								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+							],
+						],
+					],
+				]
+			],
+			[
+				'component' => 'intro',
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+				'introTitleSize' => 'small',
+				'introSubtitle' => \__('Backup your database before running any imports.<br />This process is not reversible.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Import', 'eightshift-forms'),
+						'introSubtitle' => \__('
+						<span>Imported global settings will <strong>override</strong> all settings set in your project.</span>
+						<span>By default, imported forms will <strong>not override</strong> existing forms. This can be changed with the toggle below. In case slugs are the same, a new form will be created.</span>', 'eightshift-forms'),
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => 'true',
+					],
+					[
+						'component' => 'checkboxes',
+						'checkboxesName' => 'override',
+						'checkboxesFieldLabel' => '',
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxAsToggle' => true,
+								'checkboxAsToggleSize' => 'medium',
+								'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
+								'additionalClass' => "{$manifestForm['componentTransferJsClass']}-existing",
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => 'true',
+					],
+					[
+						'component' => 'file',
+						'fileIsRequired' => true,
+						'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
+						'fileAccept' => 'json',
+						'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
+					],
+					[
+						'component' => 'card',
+						'cardVertical' => 'true',
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Import JSON', 'eightshift-forms'),
+								'submitVariant' => 'outline',
 								'submitAttrs' => [
 									'data-type' => self::TYPE_IMPORT,
 								],
@@ -202,7 +223,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 							],
 						],
 					],
-				]
+				],
 			],
 		];
 	}
@@ -251,8 +272,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 		return [
 			'component' => 'checkboxes',
 			'checkboxesName' => 'form',
-			'checkboxesFieldLabel' => \__('Forms', 'eightshift-forms'),
 			'checkboxesContent' => $output,
+			'checkboxesFieldHideLabel' => true,
 		];
 	}
 }

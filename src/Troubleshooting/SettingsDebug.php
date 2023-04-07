@@ -109,75 +109,80 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'tabs',
-				'tabsContent' => [
+				'component' => 'intro',
+				'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			],
+			[
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'tabContent' => [
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Debugging', 'eightshift-forms'),
-						'tabContent' => [
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => '',
+						'checkboxesName' => $this->getSettingsName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
+						'checkboxesContent' => [
 							[
-								'component' => 'intro',
-								'introIsHighlighted' => true,
-								'introSubtitle' => \__('These options can stop your forms from working correctly, so please use them cautiously!', 'eightshift-forms'),
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
+								'checkboxAsToggle' => true,
 							],
 							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Skip validation', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('By skipping validation you will be able to directly submit form to the external integration.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Skip form reset after submit', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('After a form is submited it will not reset form fields to an empty state.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Skip captcha', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Skip captcha request after submiting form.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Output logs', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Output console logs to the wp-content folder on the server. This feauture requires server to be able to output logs.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Developer mode will output multiple options in your forms. Every listing will have ID before label.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Skip forms sync', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
-										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Skipping forms sync will prevent form auto sync with integration when individual form is opened in the block editor.', 'eightshift-forms'),
-									],
-								]
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
+								'checkboxAsToggle' => true,
 							],
-						],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
+								'checkboxAsToggle' => true,
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Output logs', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
+								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Logs are saved to the <code>wp-content</code> folder on the server. This feature requires the server to be able to output logs.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
+								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Outputs multiple options in forms. Every listing will have ID prepended to the label.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
+								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Prevents syncing with integrations when a form is opened in edit mode.', 'eightshift-forms'),
+							],
+						]
 					],
-				]
+				],
 			],
 		];
 	}
