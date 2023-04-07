@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
@@ -202,24 +203,22 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 								'inputIsDisabled' => !empty($apiKey),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
@@ -243,11 +242,12 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
-								'inputFieldLabel' => \__('Upload allowed types', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Allowed file types', 'eightshift-forms'),
 								// translators: %s will be replaced with the link.
-								'inputFieldHelp' => \sprintf(\__('
-									Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>.<br/>
-									Example: pdf,jpg,txt', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+								'inputFieldHelp' => \sprintf(
+									\__('Comma-separated list of <a href="%s" target="_blank">file type identifiers</a> (MIME types), e.g. <code>pdf</code>, <code>jpg</code>, <code>txt</code>.', 'eightshift-forms'),
+									'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
+								),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 							],
@@ -297,26 +297,27 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 			'tabLabel' => \__('Options', 'eightshift-forms'),
 			'tabContent' => [
 				[
-					'component' => 'intro',
-					'introSubtitle' => \__('In these settings, you can configure additional HubSpot specific options.', 'eightshift-forms'),
-				],
-				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
-					'inputFieldLabel' => \__('Folder', 'eightshift-forms'),
-					'inputFieldHelp' => \__('If you use file input field all files will be uploaded to the specified folder in your HubSpot file manager.', 'eightshift-forms'),
+					'inputFieldLabel' => \__('File uploads folder', 'eightshift-forms'),
+					'inputFieldHelp' => \__('All of the uploaded files will land inside this folder in the HubSpot file manager.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+				],
+				[
+					'component' => 'divider',
+					'dividerExtraVSpacing' => true,
 				],
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					// translators: %s will be replaced with the link.
-					'inputFieldHelp' => \sprintf(\__('
-						Limit what file types users can upload using your Hubspot forms. Each type must be written with a comma separator without dashes. You can find all <a href="%s" target="_blank">mime types here</a>. This field will override global settings. <br/>
-						Example: pdf,jpg,txt', 'eightshift-forms'), 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'),
+					'inputFieldHelp' => \sprintf(
+						\__('Comma-separated list of <a href="%s" target="_blank">file type identifiers</a> (MIME types), e.g. <code>pdf</code>, <code>jpg</code>, <code>txt</code>.', 'eightshift-forms'),
+						'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
+					),
 					'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputType' => 'text',
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),

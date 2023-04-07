@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -143,34 +144,36 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 								'inputIsDisabled' => !empty($apiKey),
 							],
 							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-								'inputFieldLabel' => \__('Job Board name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Job board', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($boardToken),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 								'inputIsDisabled' => !empty($boardToken),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
@@ -189,37 +192,44 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabLabel' => \__('Fields', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
-								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
+								'inputFieldAfterContent' => 'MB',
+								'inputFieldInlineBeforeAfterContent' => true,
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputIsRequired' => true,
+								'inputPlaceholder' => '5',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,
 							],
 							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('Disable default fields', 'eightshift-forms'),
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
-								'checkboxesFieldHelp' => \__('Disable Greenhouse fields on all forms.', 'eightshift-forms'),
+								// 'checkboxesFieldHelp' => \__('Disable Greenhouse fields on all forms.', 'eightshift-forms'),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable cover letter textarea', 'eightshift-forms'),
+										'checkboxLabel' => \__('Cover letter textarea', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,
 										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable resume textarea', 'eightshift-forms'),
+										'checkboxLabel' => \__('Resume textarea', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,
 										'checkboxAsToggle' => true,
@@ -234,37 +244,35 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'layout',
-								'layoutType' => 'layout-grid-2',
-								'layoutContent' => [
-									[
-										'component' => 'steps',
-										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
-										'stepsContent' => [
-											// translators: %s will be replaced with the link.
-											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
-												// translators: %s will be replaced with the link.
-											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
-											\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
-											\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
-											\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
-										],
-									],
-									[
-										'component' => 'steps',
-										'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-										'stepsContent' => [
-											// translators: %s will be replaced with the link.
-											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
-												// translators: %s will be replaced with the link.
-											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
-											\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
-											\__('Make the name all lowercase.', 'eightshift-forms'),
-											\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
-										],
-									],
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									// translators: %s will be replaced with the link.
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+										// translators: %s will be replaced with the link.
+									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/configure/dev_center/credentials'),
+									\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
+									\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
+						[
+							'component' => 'divider',
+							'dividerExtraVSpacing' => true,
+						],
+						[
+							'component' => 'steps',
+							'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
+							'stepsContent' => [
+								// translators: %s will be replaced with the link.
+								\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Greenhouse Account</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/'),
+									// translators: %s will be replaced with the link.
+								\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.greenhouse.io/jobboard'),
+								\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
+								\__('Make the name all lowercase.', 'eightshift-forms'),
+								\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
+							],
+						],
 						],
 					],
 				],
