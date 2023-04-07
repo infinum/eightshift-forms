@@ -55,7 +55,7 @@ trait FiltersOuputMock
 				}
 			}
 
-			$settings .= \__('This field has a code filter applied to it, and the following items will be applied to your enrichment data:', 'eightshift-forms');
+			$settings .= \__('Additional parameters were provided through code', 'eightshift-forms');
 			$settings .= '<ul>';
 			foreach ($filterData as $key => $value) {
 				foreach ($value as $keyInner => $valueInner) {
@@ -67,8 +67,10 @@ trait FiltersOuputMock
 			$settings .= '</ul>';
 		}
 
+		$settingsOutput = $this->getSettingsDivWrap($settings, $filterUsed, false);
+
 		return [
-			'settings' => $this->getSettingsDivWrap($settings, $filterUsed, false),
+			'settings' => $settingsOutput,
 			'data' => [
 				'original' => $config,
 				'config' => $data['config'],
@@ -279,7 +281,8 @@ trait FiltersOuputMock
 		}
 
 		if ($filterUsed) {
-			$settings .= \__('This field has a code filter applied to it, and the following items will be applied to the output:', 'eightshift-forms');
+			$settings .= '<details>';
+			$settings .= '<summary>' . \__('Additional parameters were provided through code', 'eightshift-forms') . '</summary>';
 
 			foreach ($trackingAdditionalDataFilterValue as $key => $value) {
 				$settingsDetails[$key] = "{$settings}<ul>";
@@ -290,6 +293,8 @@ trait FiltersOuputMock
 
 				$settingsDetails[$key] = $this->getSettingsDivWrap($settingsDetails[$key], true, false);
 			}
+
+			$settings .= '</details>';
 		}
 
 		return [
@@ -304,7 +309,7 @@ trait FiltersOuputMock
 	 *
 	 * @param string $data Data to wrap.
 	 * @param bool $used If false dont wrap.
-	 * @param bool $defaultPrefix Add defeult copy prefix.
+	 * @param bool $defaultPrefix Add default copy prefix.
 	 *
 	 * @return string
 	 */
@@ -314,8 +319,16 @@ trait FiltersOuputMock
 			return $data;
 		}
 
-		$prefix = $defaultPrefix ? \__("This field has a code filter applied to it so this field can't be changed.", 'eightshift-forms') : '';
+		$prefix = $defaultPrefix ? \__('Value set in code', 'eightshift-forms') : '';
 
-		return '<div class="is-filter-applied">' . $prefix . $data . '</div>';
+		if (empty($prefix)) {
+			return '<br /><div class="is-filter-applied">' . $data . '</div>';
+		}
+
+		if (empty($data)) {
+			return '<div class="is-filter-applied">' . $prefix . '</div>';
+		}
+
+		return '<br /><br /><details class="is-filter-applied"><summary>' . $prefix . '</summary>' . $data . '</details>';
 	}
 }
