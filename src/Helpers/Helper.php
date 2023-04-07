@@ -200,11 +200,11 @@ class Helper
 		// Populate output.
 		foreach ($items as $item) {
 			if (isset($item[1]) && !empty($item[1])) {
-				$output[] = "<code>{" . $item[1] . "}</code>";
+				$output[] = "<li><code>{" . $item[1] . "}</code></li>";
 			}
 		}
 
-		return \implode(', ', $output);
+		return \implode("\n", $output);
 	}
 
 	/**
@@ -728,5 +728,21 @@ class Helper
 		}
 
 		return $aHitList;
+	}
+
+	/**
+	 * Returns regular help text if the given string is empty, and "Set with a global variable" if not.
+	 *
+	 * @param string $value Value that is empty if set programmatically.
+	 *
+	 * @return string
+	 */
+	public static function getIsSetProgrammaticallyBadge(string $value): string
+	{
+		if(!empty($value)) {
+			return '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
+		}
+
+		return \__('Can also be provided from a global variable.', 'eightshift-forms');
 	}
 }
