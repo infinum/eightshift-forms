@@ -44,6 +44,10 @@ export class Captcha {
 		const actionName = this.utils.SETTINGS.CAPTCHA['initAction'];
 		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
 
+		if (typeof grecaptcha === 'undefined') {
+			return;
+		}
+
 		if (this.utils.isCaptchaEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {

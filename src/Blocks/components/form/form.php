@@ -22,7 +22,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $attributes = apply_filters(
-	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
+	Form::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS,
 	$attributes
 );
 

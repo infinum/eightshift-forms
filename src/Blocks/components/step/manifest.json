@@ -6,6 +6,9 @@
 	"attributes": {
 		"stepName": {
 			"type": "string"
+		},
+		"stepContent": {
+			"type": "string"
 		}
 	}
 }
