@@ -183,6 +183,23 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				$inBlockOutput = [];
 				$stepKey = 0;
+
+				// If the users don't add first step add it to the list.
+				if ($hasSteps && $innerBlock['innerBlocks'][0]['blockName'] !== "{$formsNamespace}/step") {
+					array_unshift(
+						$innerBlock['innerBlocks'],
+						[
+							'blockName' => "{$formsNamespace}/step",
+							'attrs' => [
+								'stepStepContent' => '',
+							],
+							'innerBlocks' => [],
+							'innerHTML' => '',
+							'innerContent' => [],
+						],
+					);
+				}
+
 				foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
 					// Get fields components details.
 					$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
@@ -228,22 +245,19 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						);
 					}
 
-					// If the users don't add first step add it to the list.
-					// if ($inKey === 0 && $name !== 'step') {
-					// 	$steps[] = 0;
-					// }
-
 					// Populate the list of steps position in the original array.
 					if ($hasSteps) {
+						// If block is step we need to just create block output and exit this loop.
 						if ($name === 'step') {
+							// Output key is insite the step key and this changes everytime we have step in the loop.
 							$stepKey = $inKey;
 
-							$inBlockOutput[$inKey] = [
+							$inBlockOutput[$stepKey] = [
 								'blockName' => $inBlock['blockName'],
 								'attrs' => array_merge(
 									$inBlock['attrs'],
 									[
-										'stepStepContent' => 'ivan',
+										'stepStepContent' => '',
 									]
 								),
 								'innerBlocks' => [],
@@ -253,8 +267,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							continue;
 						}
 
+						// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
 						$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . apply_filters('the_content', render_block($inBlock));
 					} else {
+						// Just populate normal blocks if there are no steps here.
 						$inBlockOutput[$inKey] = [
 							'blockName' => $inBlock['blockName'],
 							'attrs' => $inBlock['attrs'],
@@ -265,12 +281,27 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					}
 				}
 
+				if ($hasSteps) {
+					$inBlockOutput = \array_values($inBlockOutput);
+					$stepsTotalCount = \count($inBlockOutput) - 1;
+
+					$inBlockOutput = \array_map(
+						static function ($key, $item) use ($stepsTotalCount) {
+							$item['attrs']['stepStepId'] = $key; 
+							$item['attrs']['stepStepTotal'] = $stepsTotalCount; 
+							return $item;
+						},
+						\array_keys($inBlockOutput), 
+						$inBlockOutput
+					);
+				}
+
 				$innerBlockOutput[] = [
 					'blockName' => $innerBlock['blockName'],
 					'attrs' => $innerBlock['attrs'],
-					'innerBlocks' => \array_values($inBlockOutput),
+					'innerBlocks' => $inBlockOutput,
 					'innerHTML' => '',
-					'innerContent' => \array_values($inBlockOutput),
+					'innerContent' => $inBlockOutput,
 				];
 			}
 
@@ -282,8 +313,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				'innerContent' => $innerBlockOutput,
 			];
 		}
-
-		error_log( print_r( ( $output ), true ) );
 
 		return \array_values($output);
 	}

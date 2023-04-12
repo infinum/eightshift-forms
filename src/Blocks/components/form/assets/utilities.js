@@ -80,6 +80,7 @@ export class Utils {
 		// Specific selectors.
 		this.formSelector =  this.formSelectorPrefix;
 		this.submitSingleSelector =  `${this.formSelectorPrefix}-single-submit`;
+		this.stepSelector =  `${this.formSelectorPrefix}-step`;
 		this.errorSelector =  `${this.formSelectorPrefix}-error`;
 		this.loaderSelector =  `${this.formSelectorPrefix}-loader`;
 		this.globalMsgSelector =  `${this.formSelectorPrefix}-global-msg`;
@@ -629,6 +630,17 @@ export class Utils {
 		}, 100);
 	}
 
+	// Check if form is loaded in admin.
+	isFormAdmin() {
+		return this.formIsAdmin;
+	}
+
+	// Check if submit button is step change trigger or form submit.
+	isStepTrigger(element) {
+		console.log(element);
+		return false;
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -705,6 +717,7 @@ export class Utils {
 
 				formSelector: this.formSelector,
 				submitSingleSelector: this.submitSingleSelector,
+				stepSelector: this.stepSelector,
 				errorSelector: this.errorSelector,
 				loaderSelector: this.loaderSelector,
 				globalMsgSelector: this.globalMsgSelector,
@@ -811,6 +824,9 @@ export class Utils {
 				},
 				isFormLoaded: (formId, element, selectsLength, textareaLenght, filesLength) => {
 					this.isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength);
+				},
+				isFormAdmin: () => {
+					return this.isFormAdmin();
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

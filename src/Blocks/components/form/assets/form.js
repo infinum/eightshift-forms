@@ -2,6 +2,7 @@
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets';
+import { Step } from './../../step/assets';
 import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 
@@ -18,6 +19,9 @@ export class Form {
 
 		/** @type ConditionalTags */
 		this.conditionalTags = new ConditionalTags(this.utils);
+
+		/** @type Step */
+		this.step = new Step(this.utils);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -32,6 +36,9 @@ export class Form {
 	init() {
 		// Set all public methods.
 		this.publicMethods();
+
+		// Init step.
+		this.step.init();
 
 		// Init all forms.
 		this.initOnlyForms();
@@ -72,7 +79,7 @@ export class Form {
 		element.addEventListener('submit', this.onFormSubmitEvent);
 
 		// Single submit for admin settings.
-		if (this.utils.formIsAdmin) {
+		if (this.utils.isFormAdmin()) {
 			const items = element.querySelectorAll(this.utils.submitSingleSelector);
 
 			// Look all internal items for single submit option.
@@ -230,7 +237,7 @@ export class Form {
 		let url = `${this.utils.formSubmitRestApiUrl}-${formType}`;
 
 		// For admin settings use different url and add nonce.
-		if (this.utils.formIsAdmin) {
+		if (this.utils.isFormAdmin()) {
 			url = this.utils.formSubmitRestApiUrl;
 			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
 		}
@@ -310,6 +317,17 @@ export class Form {
 				// Dispatch event.
 				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END, response);
 			});
+	}
+
+	/**
+	 * Handle form submit in case of the step used and all logic.
+	 * 
+	 * @param {object} element Form element.
+	 *
+	 * @public
+	 */
+	formStepStubmit(element) {
+
 	}
 
 	/**
@@ -552,7 +570,7 @@ export class Form {
 		}));
 
 		// Add additional options for HubSpot only.
-		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
+		if (formType === 'hubspot' && !this.utils.isFormAdmin()) {
 			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
 				name: this.utils.FORM_PARAMS.hubspotCookie,
 				value: cookies.getCookie('hubspotutk'),
@@ -572,7 +590,7 @@ export class Form {
 			}));
 		}
 
-		if (this.utils.formIsAdmin) {
+		if (this.utils.isFormAdmin()) {
 			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
 				name: this.utils.FORM_PARAMS.settingsType,
 				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
@@ -965,11 +983,16 @@ export class Form {
 		event.preventDefault();
 
 		const element = event.target;
+		const stepButton = event.submitter;
 
-		if (this.utils.isCaptchaUsed()) {
-			this.runFormCaptcha(element);
+		if (this.utils.isStepTrigger(stepButton)) {
+			this.formStepStubmit(element);
 		} else {
-			this.formSubmit(element);
+			if (this.utils.isCaptchaUsed()) {
+				this.runFormCaptcha(element);
+			} else {
+				this.formSubmit(element);
+			}
 		}
 	};
 

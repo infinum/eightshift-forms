@@ -1,0 +1,9 @@
+@import './../form/form-style.scss';
+
+.es-step {
+	&__inner {
+		> .es-field {
+			@include form-fields-children-styles;
+		}
+	}
+}
