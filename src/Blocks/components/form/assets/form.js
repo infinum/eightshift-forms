@@ -764,9 +764,8 @@ export class Form {
 			const myDropzone = new Dropzone.default(
 				file.closest(this.utils.fieldSelector),
 				{
-					url: "/",
+					url: `${this.utils.formSubmitRestApiUrl}-files`,
 					addRemoveLinks: true,
-					autoProcessQueue: false,
 					autoDiscover: false,
 					maxFiles: !file.multiple ? 1 : null,
 					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
