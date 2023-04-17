@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -19,6 +20,7 @@ $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
 $introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
 $introIsHighlightedImportant = Components::checkAttr('introIsHighlightedImportant', $attributes, $manifest);
 $introIsHeading = Components::checkAttr('introIsHeading', $attributes, $manifest);
+$introIcon = Components::checkAttr('introIcon', $attributes, $manifest);
 
 $introClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -27,6 +29,7 @@ $introClass = Components::classnames([
 	Components::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
+	Components::selector($introIcon, $componentClass, '', 'with-icon'),
 ]);
 
 $titleClass = Components::classnames([
@@ -37,6 +40,16 @@ $titleClass = Components::classnames([
 ?>
 
 <div class="<?php echo esc_attr($introClass); ?>">
+	<?php
+	if ($introIsHighlightedImportant) {
+		echo Helper::getProjectIcons('warning');
+	}
+
+	if ($introIcon) {
+		echo Helper::getProjectIcons($introIcon);
+	}
+	?>
+
 	<?php if ($introTitle) { ?>
 		<div class="<?php echo esc_attr($titleClass); ?>">
 			<?php echo esc_html($introTitle); ?>
