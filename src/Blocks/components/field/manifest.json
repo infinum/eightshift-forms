@@ -102,6 +102,18 @@
 		},
 		"fieldDisabledOptions": {
 			"type": "array"
+		},
+		"fieldNoInnerSpace": {
+			"type": "boolean",
+			"default": false
+		},
+		"fieldInlineBeforeAfterContent": {
+			"type": "boolean",
+			"default": false
+		},
+		"fieldIsFiftyFiftyHorizontal": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"responsiveAttributes": {
@@ -117,10 +129,20 @@
 			{
 				"inverse": true,
 				"variable": {
-					"es-field-width": "calc((%value%/12)*100%)"
+					"es-field-width": "calc((%value% / 12) * 100%)"
 				}
 			}
-		]
+		],
+		"fieldNoInnerSpace": {
+			"true": [
+				{
+					"inverse": true,
+					"variable": {
+						"esf-field-space": "0"
+					}
+				}
+			]
+		}
 	},
 	"options": {
 		"fieldWidth": {

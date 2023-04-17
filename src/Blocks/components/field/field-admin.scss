@@ -2,11 +2,18 @@
 
 .es-field,
 .es-group {
+	$this: &;
+
 	&__label {
-		font-size: 17px;
+		font-size: 0.8125rem;
 		padding: 0;
-		margin-bottom: 0.625rem;
+		margin-bottom: 0.375rem;
 		display: block;
+	}
+
+	legend &__label-inner {
+		display: inline-block;
+		margin-bottom: var(--global-esf-spacing-s);
 	}
 
 	@include field-styles;
@@ -15,19 +22,33 @@
 	&__before-content,
 	&__after-content {
 		.is-filter-applied {
-			margin-top: 15px;
-			background-color: var(--global-colors-es-pome-10);
-			padding: 10px;
-			color: var(--global-colors-es-pome);
+			margin-top: var(--global-esf-spacing-xs);
+			background-color: var(--global-colors-esf-sky-50);
+			border: 1px solid var(--global-colors-esf-sky-100);
+			color: var(--global-colors-esf-sky-950);
+			border-radius: var(--global-esf-spacing-s);
+			padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
+
+			width: fit-content;
+
+			code {
+				background: var(--global-colors-esf-white);
+				color: var(--global-colors-esf-sky-950);
+				border-color: var(--global-colors-esf-sky-100);
+			}
+
+			&:is(span) {
+				display: inline-block;
+			}
 		}
 	}
 
 	&__before-content {
-		max-width: var(--global-es-max-width);
+		max-width: var(--global-esf-max-width);
 
 		> * {
-			padding-bottom: var(--global-es-spacing-horizontal-small);
-			color: var(--global-colors-es-boulder);
+			padding-bottom: var(--global-esf-spacing-l);
+			color: var(--global-colors-esf-gray-500);
 			font-size: 14px;
 			line-height: 1.7;
 
@@ -55,7 +76,7 @@
 	$this: &;
 
 	&__inner {
-		max-width: var(--global-es-max-width);
+		max-width: var(--global-esf-max-width);
 	}
 
 	&--hidden {
@@ -66,11 +87,126 @@
 	&--submit {
 		display: flex;
 		justify-content: flex-end;
+
+		max-width: var(--global-esf-max-width);
+	}
+
+	// Remove spacing if regular checkboxes are inside.
+	&--checkboxes:not(:has(.es-checkbox-toggle)) {
+		--esf-field-space: 0;
+	}
+
+	&__content-wrap {
+		display: flex;
+		flex-direction: column;
+		gap: var(--esf-field-space, 1rem);
 	}
 
 	&__submit {
 		#{$this}__content-wrap {
 			text-align: right;
+		}
+	}
+
+	&--inline-before-after-content {
+		#{$this}__content {
+			display: flex;
+			align-items: center;
+		}
+
+		#{$this}__content-wrap {
+			flex-grow: 1;
+		}
+
+		#{$this}__before-content,
+		#{$this}__after-content {
+			flex-shrink: 0;
+
+			padding: var(--global-esf-spacing-s);
+
+			border: 1px solid var(--global-colors-esf-gray-300);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			background-color: var(--global-colors-esf-gray-50);
+			color: var(--global-colors-esf-gray-500);
+
+			height: var(--esf-input-height);
+		}
+
+		#{$this}__before-content {
+			border-top-left-radius: var(--global-es-radius-8);
+			border-bottom-left-radius: var(--global-es-radius-8);
+		}
+
+		#{$this}__after-content {
+			border-top-right-radius: var(--global-es-radius-8);
+			border-bottom-right-radius: var(--global-es-radius-8);
+		}
+
+		@supports selector(:has(*)) {
+			&:has(.es-field__before-content):not(:has(.es-field__after-content)) {
+				// stylelint-disable-next-line max-nesting-depth
+				.es-input {
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+				}
+			}
+
+			&:has(.es-field__after-content):not(:has(.es-field__before-content)) {
+				// stylelint-disable-next-line max-nesting-depth
+				.es-input {
+					border-top-right-radius: 0;
+					border-bottom-right-radius: 0;
+				}
+			}
+
+			&:has(.es-field__after-content):has(.es-field__before-content) {
+				// stylelint-disable-next-line max-nesting-depth
+				.es-input {
+					border-radius: 0;
+				}
+			}
+		}
+
+		@supports not selector(:has(*)) {
+			#{$this}__content {
+				gap: 0.5rem;
+			}
+
+			#{$this}__before-content,
+			#{$this}__after-content {
+				border-radius: var(--global-es-radius-8);
+				border-color: var(--global-colors-esf-gray-50);
+			}
+		}
+	}
+
+	&--fifty-fifty-horizontal {
+		#{$this}__inner {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			align-items: center;
+		}
+
+		#{$this}__label {
+			margin: 0;
+		}
+
+		#{$this}__content {
+			display: flex;
+			align-items: center;
+			gap: var(--global-esf-spacing-s);
+		}
+
+		#{$this}__content-wrap {
+			flex-grow: 1;
+		}
+
+		#{$this}__before-content,
+		#{$this}__after-content {
+			flex-shrink: 0;
 		}
 	}
 }
