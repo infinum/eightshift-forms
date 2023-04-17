@@ -197,7 +197,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		$status = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$title = \esc_html__('All forms', 'eightshift-forms');
+		$title = \esc_html__('Forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
 		$listingLink = '';
 
