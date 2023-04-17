@@ -426,7 +426,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMailchimp::SETTINGS_TYPE_KEY);
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
