@@ -28,13 +28,13 @@ $highlightedContentClass = Components::classnames([
 <div class="<?php echo esc_attr($highlightedContentClass); ?>">
 	<?php echo $highlightedContentIcon ? $manifestUtils['icons'][$highlightedContentIcon] : $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
-	<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
+	<p class="<?php echo esc_attr("{$componentClass}__title"); ?>">
 		<?php echo esc_html($highlightedContentTitle); ?>
-	</div>
+	</p>
 
 	<?php if ($highlightedContentSubtitle) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+		<p class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
 			<?php echo wp_kses_post($highlightedContentSubtitle); ?>
-		</div>
+		</p>
 	<?php } ?>
 </div>
