@@ -15,128 +15,198 @@
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"esMaxCols": 12,
-		"esSpacingVertical": "25px",
-		"esSpacingHorizontal": "30px",
-		"esSpacingHorizontalSmall": "15px",
-		"esMaxWidth": "768px",
-		"esInputHeight": "42px",
+		"esfSpacingXs": "0.25rem",
+		"esfSpacingS": "0.5rem",
+		"esfSpacingM": "1rem",
+		"esfSpacingL": "1.5rem",
+		"esfSpacingXl": "2rem",
+		"esfEaseOutCubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",
+		"esfBoxShadow": "0 0 0.5rem rgb(0 0 0 / 0.04)",
+		"esfBoxShadowL": "0 0 0.125rem rgb(0 0 0 / 0.16), 0 0 0.5rem rgb(0 0 0 / 0.16)",
+		"esfMaxWidth": "36rem",
+		"esfInputHeight": "2.625rem",
 		"breakpoints": {
 			"mobile": 480,
 			"tablet": 960,
 			"desktop": 1920,
 			"large": 1921
 		},
-		
+
 		"colors": [
 			{
-				"name": "French",
-				"slug": "es-french",
-				"color": "#C3C4C7"
-			},
-			{
-				"name": "Black",
-				"slug": "es-black",
-				"color": "#000000"
-			},
-			{
-				"name": "Matisse",
-				"slug": "es-matisse",
+				"name": "Admin accent",
+				"slug": "esf-admin-accent",
 				"color": "#29A3A3"
 			},
 			{
-				"name": "Matisse 50%",
-				"slug": "es-matisse-50",
+				"name": "Admin accent 50%",
+				"slug": "esf-admin-accent-50",
 				"color": "#29A3A380"
 			},
 			{
-				"name": "Matisse 30%",
-				"slug": "es-matisse-30",
+				"name": "Admin accent 30%",
+				"slug": "esf-admin-accent-30",
 				"color": "#29a3a333"
 			},
 			{
-				"name": "Matisse 10%",
-				"slug": "es-matisse-10",
+				"name": "Admin accent 10%",
+				"slug": "esf-admin-accent-10",
 				"color": "#29A3A31A"
 			},
 			{
-				"name": "Matisse 5%",
-				"slug": "es-matisse-05",
+				"name": "Admin accent 5%",
+				"slug": "esf-admin-accent-05",
 				"color": "#29A3A30D"
 			},
 			{
-				"name": "Blumine",
-				"slug": "es-blumine",
+				"name": "Admin accent dark",
+				"slug": "esf-admin-accent-dark",
 				"color": "#218282"
 			},
 			{
-				"name": "White",
-				"slug": "es-white",
+				"name": "ESF border",
+				"slug": "esf-border",
+				"color": "#DEDEDE"
+			},
+			{
+				"name": "ESF black",
+				"slug": "esf-black",
+				"color": "#181818"
+			},
+			{
+				"name": "ESF white",
+				"slug": "esf-white",
 				"color": "#FFFFFF"
 			},
 			{
-				"name": "Alto",
-				"slug": "es-ebb",
-				"color": "#DBDBDB"
+				"name": "ESF gray",
+				"slug": "esf-gray",
+				"color": "#484848"
 			},
 			{
-				"name": "Alto",
-				"slug": "es-alto",
-				"color": "#F2F2F2"
+				"name": "ESF yellow 50",
+				"slug": "esf-yellow-50",
+				"color": "#FFFBEB"
 			},
 			{
-				"name": "Boulder",
-				"slug": "es-boulder",
-				"color": "#797878"
+				"name": "ESF yellow 100",
+				"slug": "esf-yellow-100",
+				"color": "#FEF3C7"
 			},
 			{
-				"name": "Ronchi",
-				"slug": "es-ronchi",
-				"color": "#E8B14E"
+				"name": "ESF yellow 200",
+				"slug": "esf-yellow-200",
+				"color": "#FDE68A"
 			},
 			{
-				"name": "Pome",
-				"slug": "es-pome",
-				"color": "#E84E4E"
+				"name": "ESF yellow 950",
+				"slug": "esf-yellow-950",
+				"color": "#451A03"
 			},
 			{
-				"name": "Pome 10%",
-				"slug": "es-pome-10",
-				"color": "#E84E4E1A"
+				"name": "ESF sky 50",
+				"slug": "esf-sky-50",
+				"color": "#F0F9FF"
 			},
 			{
-				"name": "Reef",
-				"slug": "es-reef",
-				"color": "#44AEDE"
+				"name": "ESF sky 100",
+				"slug": "esf-sky-100",
+				"color": "#E0F2FE"
 			},
 			{
-				"name": "Chalice",
-				"slug": "es-chalice",
-				"color": "#AFAFAF"
+				"name": "ESF sky 200",
+				"slug": "esf-sky-200",
+				"color": "#BAE6FD"
 			},
 			{
-				"name": "Chalice 50%",
-				"slug": "es-chalice-50",
-				"color": "#AFAFAF80"
+				"name": "ESF sky 500",
+				"slug": "esf-sky-500",
+				"color": "#0EA5E9"
 			},
 			{
-				"name": "Chalice 25%",
-				"slug": "es-chalice-25",
-				"color": "#AFAFAF40"
+				"name": "ESF sky 950",
+				"slug": "esf-sky-950",
+				"color": "#082F49"
 			},
 			{
-				"name": "Chalice 10%",
-				"slug": "es-chalice-10",
-				"color": "#AFAFAF1A"
+				"name": "ESF gray 50",
+				"slug": "esf-gray-50",
+				"color": "#F9FAFB"
 			},
 			{
-				"name": "Chalice 5%",
-				"slug": "es-chalice-05",
-				"color": "#AFAFAF0D"
+				"name": "ESF gray 100",
+				"slug": "esf-gray-100",
+				"color": "#F3F4F6"
 			},
 			{
-				"name": "Dusty",
-				"slug": "es-dusty",
-				"color": "#999999"
+				"name": "ESF gray 200",
+				"slug": "esf-gray-200",
+				"color": "#E5E7EB"
+			},
+			{
+				"name": "ESF gray 300",
+				"slug": "esf-gray-300",
+				"color": "#D1D5DB"
+			},
+			{
+				"name": "ESF gray 400",
+				"slug": "esf-gray-400",
+				"color": "#9CA3AF"
+			},
+			{
+				"name": "ESF gray 500",
+				"slug": "esf-gray-500",
+				"color": "#6B7280"
+			},
+			{
+				"name": "ESF gray 600",
+				"slug": "esf-gray-600",
+				"color": "#4B5563"
+			},
+			{
+				"name": "ESF gray 950",
+				"slug": "esf-gray-950",
+				"color": "#030712"
+			},
+			{
+				"name": "ESF red 50",
+				"slug": "esf-red-50",
+				"color": "#FEF2F2"
+			},
+			{
+				"name": "ESF red 100",
+				"slug": "esf-red-100",
+				"color": "#FEE2E2"
+			},
+			{
+				"name": "ESF red 200",
+				"slug": "esf-red-200",
+				"color": "#FECACA"
+			},
+			{
+				"name": "ESF red 500",
+				"slug": "esf-red-500",
+				"color": "#EF4444"
+			},
+			{
+				"name": "ESF red 400",
+				"slug": "esf-red-400",
+				"color": "#F87171"
+			},
+			{
+				"name": "ESF red 600",
+				"slug": "esf-red-600",
+				"color": "#DC2626"
+			},
+			{
+				"name": "ESF red 800",
+				"slug": "esf-red-800",
+				"color": "#991B1B"
+			},
+			{
+				"name": "ESF red 950",
+				"slug": "esf-red-950",
+				"color": "#450A0A"
 			}
 		]
 	}
