@@ -9,7 +9,7 @@
 		text-align: center;
 		max-width: 500px;
 		margin: 0 auto;
-		border: 1px solid var(--global-colors-es-ebb);
+		border: 1px solid var(--global-colors-esf-gray-300);
 		padding: 20px;
 
 		&-image {
@@ -20,7 +20,7 @@
 
 		&-text {
 			margin-top: 20px;
-			border-top: 1px solid var(--global-colors-es-ebb);
+			border-top: 1px solid var(--global-colors-esf-gray-300);
 			padding: 20px;
 			padding-bottom: 0;
 		}
@@ -36,5 +36,5 @@
 	padding-top: 10px;
 	margin-top: 10px;
 	font-size: 12px;
-	border-top: 1px solid var(--global-colors-es-ebb);
+	border-top: 1px solid var(--global-colors-esf-gray-300);
 }

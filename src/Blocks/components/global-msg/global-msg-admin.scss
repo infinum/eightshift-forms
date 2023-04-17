@@ -1,15 +1,17 @@
 .es-global-msg {
 	position: fixed;
-	right: 0;
+	right: 2rem;
 	bottom: 2rem;
 	z-index: 1;
 	max-width: 300px;
 
+	border-radius: 0.5rem;
+
 	padding: 0.75rem 1rem;
 
 	opacity: 0;
-	color: var(--global-colors-es-white);
-	background-color: var(--global-colors-es-reef);
+	color: var(--global-colors-esf-white);
+	background-color: var(--global-colors-esf-sky-500);
 	box-shadow: 0 0.25rem 0.75rem rgb(20 20 20 / 0.2);
 
 	transform: translateX(10rem);
@@ -21,11 +23,12 @@
 	}
 
 	&[data-status='error'] {
-		background-color: var(--global-colors-es-pome);
+		background-color: var(--global-colors-esf-red-500);
 	}
 
 	&[data-status='warning'] {
-		background-color: var(--global-colors-es-ronchi);
+		color: var(--global-colors-esf-yellow-950);
+		background-color: var(--global-colors-esf-yellow-500);
 	}
 
 	&.is-active {

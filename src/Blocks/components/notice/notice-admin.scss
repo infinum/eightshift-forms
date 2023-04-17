@@ -1,7 +1,7 @@
 .es-notice {
 	$this: &;
-	background-color: var(--global-colors-es-matisse);
-	color: var(--global-colors-es-white);
+	background-color: var(--global-colors-esf-admin-accent);
+	color: var(--global-colors-esf-white);
 	padding: 20px;
 	display: flex;
 	align-items: center;
@@ -21,10 +21,10 @@
 	}
 
 	&__text {
-		max-width: calc(var(--global-es-max-width) + 15rem);
+		max-width: calc(var(--global-esf-max-width) + 15rem);
 
 		a {
-			color: var(--global-colors-es-white);
+			color: var(--global-colors-esf-white);
 			text-decoration-style: dotted;
 			text-underline-offset: 0.1em;
 			text-decoration-thickness: 1px;

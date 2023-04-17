@@ -5,16 +5,15 @@
 		position: absolute;
 		right: 0;
 		z-index: 1;
-		box-shadow: 0 0 5px var(--global-colors-es-chalice-50);
 	}
 
 	&__edit-link {
 		text-decoration: none;
-		border: 1px solid var(--global-colors-es-ebb);
+		border: 1px solid var(--global-colors-esf-gray-300);
 		margin-top: -1px;
 		padding: 10px;
-		background-color: var(--global-colors-es-white);
-		color: var(--global-colors-es-matisse);
+		background-color: var(--global-colors-esf-white);
+		color: var(--global-colors-esf-admin-accent);
 		transition: {
 			property: color, background-color;
 			timing-function: ease-in-out;
@@ -22,7 +21,7 @@
 		}
 
 		&:hover {
-			background-color: var(--global-colors-es-alto);
+			background-color: var(--global-colors-esf-gray-100);
 		}
 	}
 

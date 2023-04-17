@@ -3,7 +3,7 @@
 		@include input-styles-disabled;
 		border: 1px solid var(--es-input-border-color);
 		padding: var(--es-input-spacing);
-		min-height: var(--es-input-height);
+		min-height: var(--esf-input-height);
 		display: flex;
 		align-items: center;
 	}

@@ -1,1 +1,23 @@
 @import './input-style.scss';
+
+input.es-input {
+	font-size: 0.825rem;
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+		box-shadow: none;
+		border-color: var(--global-colors-esf-white);
+	}
+
+	&:focus:focus-visible {
+		outline: none;
+		border-color: var(--global-colors-esf-white);
+		box-shadow: 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+	}
+
+	transition: {
+		property: border-color, box-shadow;
+		timing-function: var(--es-input-transition-timing);
+		duration: var(--es-input-transition-duration);
+	}
+}
