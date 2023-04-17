@@ -1,13 +1,22 @@
 @import './submit-style.scss';
 
+a.es-submit,
 button.es-submit {
+	display: flex;
+	align-items: center;
+	gap: var(--global-esf-spacing-s);
+
+	width: fit-content;
+
+	box-sizing: border-box;
+
+	height: 2.5rem;
+	font-weight: 500;
+	padding: 0.75rem 1rem;
+	border-radius: 0.5rem;
+
 	&--global {
 		width: auto;
-	}
-
-	&--migration,
-	&--transfer {
-		width: fit-content;
 	}
 
 	&--with-icon {
@@ -16,5 +25,45 @@ button.es-submit {
 			align-items: center;
 			gap: 10px;
 		}
+	}
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+		box-shadow: none;
+	}
+
+	&:focus:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 1px var(--global-colors-esf-white), 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+	}
+
+	&--ghost {
+		--esf-submit-focus-color: var(--global-colors-esf-admin-accent-30);
+
+		background: transparent;
+		color: var(--global-colors-esf-admin-accent);
+
+		&:hover {
+			background: var(--global-colors-esf-admin-accent-05);
+		}
+	}
+
+	&--outline {
+		background: transparent;
+		color: var(--global-colors-esf-admin-accent);
+		border: 1px solid var(--global-colors-esf-admin-accent);
+
+		&:hover {
+			background: var(--global-colors-esf-admin-accent-05);
+		}
+	}
+
+	&--fit-icon {
+		padding: 0.625rem 1rem;
+	}
+
+	&--mini {
+		padding: 0.5rem;
+		height: 1.875rem;
 	}
 }
