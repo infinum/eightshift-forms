@@ -2,5 +2,11 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
 	"componentName": "divider",
 	"title": "Divider",
-	"componentClass": "es-divider"
+	"componentClass": "es-divider",
+	"attributes": {
+		"dividerExtraVSpacing": {
+			"type": "boolean",
+			"default": false
+		}
+	}
 }

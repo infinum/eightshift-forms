@@ -1,7 +1,8 @@
 .es-divider {
-	border-bottom: 1px solid var(--global-colors-es-ebb);
-	margin: {
-		left: calc(var(--global-es-spacing-horizontal) * -1);
-		right: calc(var(--global-es-spacing-horizontal) * -1);
+	border-bottom: 1px solid var(--global-colors-esf-border);
+	margin: 0 calc(var(--global-esf-spacing-l) * -1);
+
+	&--extra-v-spacing {
+		margin: var(--global-esf-spacing-s) calc(var(--global-esf-spacing-l) * -1);
 	}
 }
