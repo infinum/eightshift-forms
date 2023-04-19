@@ -11,12 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
@@ -65,33 +62,18 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	{
 		// Try catch request.
 		try {
-			$params = $this->prepareParams($request->get_body_params());
-			$files = $request->get_file_params();
-
-			// Get form ID.
-			$formId = $this->getFormId($params);
-			$formType = $this->getFormType($params);
-			$formSettingsType = $this->getFormSettingsType($params);
-
-			if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
-				$formDataRefrerence = [
-					'formId' => $formId,
-					'type' => $formType,
-					'itemId' => '',
-					'innerId' => '',
-					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
-				];
-			} else {
-				$formDataRefrerence = Helper::getFormDetailsById($formId);
-			}
-
-			$formDataRefrerence['params'] = $params;
-			$formDataRefrerence['files'] = $files;
+			// Prepare all data.
+			$formDataReference = $this->getFormDataReference($request);
 
 			// Validate request.
 			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 				// @phpstan-ignore-next-line.
-				$validate = $this->getValidator()->validate($formDataRefrerence);
+				if (!$this->isFileUploadRoute()) {
+					$validate = $this->getValidator()->validateParams($formDataReference);
+				} else {
+					$validate = $this->getValidator()->validateFiles($formDataReference);
+				}
+
 				if ($validate) {
 					throw new UnverifiedRequestException(
 						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
@@ -100,28 +82,30 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				}
 			}
 
-			// Extract hidden params from localStorage set on the frontend.
-			$formDataRefrerence['params'] = $this->extractStorageParams($formDataRefrerence['params']);
+			if (!$this->isFileUploadRoute()) {
+				// Extract hidden params from localStorage set on the frontend.
+				$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
 
-			// Attach som special keys for specific types.
-			switch ($formType) {
-				// Attach sender email to output for mailer.
-				case SettingsMailer::SETTINGS_TYPE_KEY:
-					$formDataRefrerence['senderEmail'] = $this->getFormSenderEmailField($formDataRefrerence['params']);
-					break;
+				// Attach som special keys for specific types.
+				switch ($formDataReference['type']) {
+					// Attach sender email to output for mailer.
+					case SettingsMailer::SETTINGS_TYPE_KEY:
+						$formDataReference['senderEmail'] = $this->getFormSenderEmailField($formDataReference['params']);
+						break;
 
-				// Attach custom action and external action to custom mailer.
-				case SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY:
-					$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
-					$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
-					break;
+					// Attach custom action and external action to custom mailer.
+					case SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY:
+						$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
+						$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
+						break;
+				}
 			}
 
 			// Upload files to temp folder.
-			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);
+			$formDataReference['files'] = $this->uploadFile($formDataReference['files']);
 
 			// Do Action.
-			return $this->submitAction($formDataRefrerence);
+			return $this->submitAction($formDataReference);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
@@ -133,6 +117,15 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				)
 			);
 		}
+	}
+
+	/**
+	 * Detect if route is file upload or a regular submit.
+	 *
+	 * @return boolean
+	 */
+	protected function isFileUploadRoute(): bool {
+		return false;
 	}
 
 	/**
@@ -159,9 +152,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form refference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	abstract protected function submitAction(array $formDataRefrerence);
+	abstract protected function submitAction(array $formDataReference);
 }

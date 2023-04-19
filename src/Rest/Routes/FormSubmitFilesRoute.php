@@ -12,13 +12,13 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use Throwable;
-use WP_REST_Request;
+use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class FormSubmitFilesRoute
  */
-class FormSubmitFilesRoute extends AbstractBaseRoute
+class FormSubmitFilesRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use general helper trait.
@@ -38,12 +38,33 @@ class FormSubmitFilesRoute extends AbstractBaseRoute
 	protected $labels;
 
 	/**
+	 * Instance variable of ValidatorInterface data.
+	 *
+	 * @var ValidatorInterface
+	 */
+	protected $validator;
+
+	/**
+	 * Instance variable of ValidationPatternsInterface data.
+	 *
+	 * @var ValidationPatternsInterface
+	 */
+	protected $validationPatterns;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 */
-	public function __construct(LabelsInterface $labels)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		ValidationPatternsInterface $validationPatterns,
+		LabelsInterface $labels
+	) {
+		$this->validator = $validator;
+		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 	}
 
@@ -58,32 +79,64 @@ class FormSubmitFilesRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get callback arguments array
+	 * Returns validator class.
 	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return ValidatorInterface
 	 */
-	protected function getCallbackArguments(): array
+	protected function getValidator()
 	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
+		return $this->validator;
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Returns validator labels class.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return LabelsInterface
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function getValidatorLabels()
+	{
+		return $this->labels;
+	}
+
+	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return ValidationPatternsInterface
+	 */
+	protected function getValidatorPatterns()
+	{
+		return $this->validationPatterns;
+	}
+
+	/**
+	 * Detect if route is file upload or a regular submit.
+	 *
+	 * @return boolean
+	 */
+	protected function isFileUploadRoute(): bool {
+		return true;
+	}
+
+		/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 *
+	 * @return mixed
+	 */
+	protected function submitAction(array $formDataRefrerence)
 	{
 
-		error_log( print_r( ( $request ), true ) );
-		
+		$fieldName = $formDataRefrerence['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
+
+		// Finish.
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				__('File upload success', 'eightshift-forms'),
+				[
+					'file' => $formDataRefrerence['files'][$fieldName]['id'],
+				]
+			)
+		);
 	}
 }

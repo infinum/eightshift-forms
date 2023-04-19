@@ -10,6 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
+use EightshiftForms\Helpers\Encryption;
 
 /**
  * Outputs the forms custom unique name set in the settings by provided form ID.
@@ -41,7 +42,7 @@ function esFormsGetFormIdByName(string $formId): string
  */
 function esFormsDecryptor(string $value)
 {
-	return Helper::decryptor($value);
+	return Encryption::decryptor($value);
 }
 
 /**

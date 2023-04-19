@@ -454,7 +454,8 @@ export class Form {
 					// Loop files and append.
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
-							formData.append(`${id}[${key}]`, file);
+							data.value = file.upload.uuid;
+							formData.append(`${id}[${key}]`, JSON.stringify(data));
 						}
 					} else {
 						formData.append(`${id}[0]`, JSON.stringify({}));
@@ -541,20 +542,6 @@ export class Form {
 			}
 		}
 
-		// Add form ID field.
-		formData.append(this.utils.FORM_PARAMS.postId, JSON.stringify({
-			name: this.utils.FORM_PARAMS.postId,
-			value: formId,
-			type: 'hidden',
-		}));
-
-		// Add form type field.
-		formData.append(this.utils.FORM_PARAMS.type, JSON.stringify({
-			name: this.utils.FORM_PARAMS.type,
-			value: formType,
-			type: 'hidden',
-		}));
-
 		// Add form action field.
 		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
 			name: this.utils.FORM_PARAMS.action,
@@ -619,6 +606,10 @@ export class Form {
 				}));
 			}
 		}
+
+		this.utils.getCommonFormDataItems({formId, formType}).forEach((item) => {
+			formData.append(item.key, item.value);
+		});
 
 		return formData;
 	}
@@ -757,30 +748,62 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupFileField(file, formId, index) {
-		const fileId = file?.name;
+	setupFileField(fileField, formId, index) {
+		const fileName = fileField?.name;
 
 		import('dropzone').then((Dropzone) => {
 			// Init dropzone.
 			const myDropzone = new Dropzone.default(
-				file.closest(this.utils.fieldSelector),
+				fileField.closest(this.utils.fieldSelector),
 				{
 					url: `${this.utils.formSubmitRestApiUrl}-files`,
 					addRemoveLinks: true,
 					autoDiscover: false,
-					maxFiles: !file.multiple ? 1 : null,
+					parallelUploads: 1,
+					maxFiles: !fileField.multiple ? 1 : null,
 					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
 				}
 			);
 
+			// Add file input name to the dropzone object.
 			Object.assign(myDropzone, {
-				esFormsName: file?.name,
+				esFormsName: fileName,
 			});
 
+			// Set data to internal state.
 			this.utils.setFormStateByKey('files', myDropzone, formId);
 
-			// On add one file.
-			myDropzone.on("addedfile", (file) => {
+			// Add data formData to the api call for the file upload.
+			myDropzone.on("sending", (file, xhr, formData) => {
+				// Add common items like formID and type.
+				this.utils.getCommonFormDataItems({formId, formType: 'fileUpload'}).forEach((item) => {
+					formData.append(item.key, item.value);
+				});
+
+				// Add field name to know where whas this file upload to.
+				formData.append(this.utils.FORM_PARAMS.name, JSON.stringify({
+					name: this.utils.FORM_PARAMS.name,
+					value: fileName,
+					type: 'hidden',
+				}));
+
+				// Add file ID to know the file.
+				formData.append(this.utils.FORM_PARAMS.fileId, JSON.stringify({
+					name: this.utils.FORM_PARAMS.fileId,
+					value: file?.upload?.uuid,
+					type: 'hidden',
+				}));
+			});
+
+
+			myDropzone.on("success", (file, xhr, formData) => {
+				const response = JSON.parse(file.xhr.response);
+
+				console.log(response);
+			});
+
+			// On add one file add selectors for UX.
+			myDropzone.on("addedfile", (file, a) => {
 				setTimeout(() => {
 					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
 				}, 200);
@@ -790,12 +813,12 @@ export class Form {
 				}, 1200);
 			});
 
-			// On max file size reached.
+			// On max file size reached prevent further interactions.
 			myDropzone.on('maxfilesreached', () => {
-				myDropzone.removeEventListeners();
+				// myDropzone.removeEventListeners();
 			});
 
-			// On error while upload.
+			// On error while upload add UX selector and remove file.
 			myDropzone.on("error", (file) => {
 				file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
 				setTimeout(() => {
@@ -804,12 +827,12 @@ export class Form {
 			});
 
 			// Trigger on wrap click.
-			file.nextElementSibling.setAttribute('dropzone-index', index);
-			file.nextElementSibling.setAttribute('dropzone-form-id', formId);
-			file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
+			fileField.nextElementSibling.setAttribute('dropzone-index', index);
+			fileField.nextElementSibling.setAttribute('dropzone-form-id', formId);
+			fileField.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
 
 			// Button inside wrap element.
-			const button = file.parentNode.querySelector('a');
+			const button = fileField.parentNode.querySelector('a');
 
 			button.addEventListener('focus', this.utils.onFocusEvent);
 			button.addEventListener('blur', this.utils.onBlurEvent);

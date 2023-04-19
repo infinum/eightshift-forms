@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+
 /**
  * Trait UploadHelper
  */
@@ -22,11 +24,23 @@ trait UploadHelper
 	 *
 	 * @return array<string, array<int, array<string, mixed>>>
 	 */
-	protected function uploadFiles(array $files): array
+	protected function uploadFile(array $file): array
 	{
 		$output = [];
 
-		if (!$files) {
+		if (!$file) {
+			return $output;
+		}
+
+		$fieldName = $file['fieldName'] ?? '';
+
+		if (!$fieldName) {
+			return $output;
+		}
+
+		$fileId = $file['id'] ?? '';
+
+		if (!$fileId) {
 			return $output;
 		}
 
@@ -40,37 +54,30 @@ trait UploadHelper
 			\mkdir($folderPath);
 		}
 
-		foreach ($files as $fileKey => $fileValue) {
-			foreach ($fileValue['name'] as $key => $value) {
-				$error = $fileValue['error'][$key] ?? '';
+		$error = $file['error'] ?? '';
 
-				// If file is faulty return error.
-				if ($error !== \UPLOAD_ERR_OK) {
-					continue;
-				}
-
-				// Create hashed file name so there is no collision.
-				$originalName = $fileValue['name'][$key];
-				$name = \md5((string) \time()) . '-' . \basename($originalName);
-				$tmpName = $fileValue['tmp_name'][$key];
-				$type = $fileValue['type'][$key];
-
-				// Create final folder location path.
-				$finalFilePath = $folderPath . $name;
-
-				// Move the file to new location.
-				\move_uploaded_file($tmpName, $finalFilePath);
-
-				$output[$fileKey][] = [
-					'id' => $fileKey,
-					'index' => $key,
-					'fileName' => $originalName,
-					'name' => $name,
-					'path' => $finalFilePath,
-					'type' => $type,
-				];
-			}
+		// If file is faulty return error.
+		if ($error !== \UPLOAD_ERR_OK) {
+			return $output;
 		}
+
+		// Create hashed file name so there is no collision.
+		$ext = \explode('.', $file['name']);
+		$ext = \end($ext);
+		$name = "{$fileId}.{$ext}";
+
+		// Create final folder location path.
+		$finalFilePath = $folderPath . $name;
+
+		// Move the file to new location.
+		\move_uploaded_file($file['tmp_name'], $finalFilePath);
+
+		$output[$fieldName] = [
+			'id' => $fileId,
+			'name' => $name,
+			'path' => $finalFilePath,
+			'type' => $file['type'],
+		];
 
 		return $output;
 	}

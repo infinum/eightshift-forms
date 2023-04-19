@@ -16,13 +16,22 @@ namespace EightshiftForms\Validation;
 interface ValidatorInterface
 {
 	/**
-	 * Validate form and return error if it is not valid.
+	 * Validate params.
 	 *
-	 * @param array<string, mixed> $validationReference Reference of form data to check by.
+	 * @param array<string, mixed> $data Date to check from reference helper.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validate(array $validationReference): array;
+	public function validateParams(array $data): array;
+
+	/**
+	 * Validate files from the validation reference.
+	 *
+	 * @param array<string, mixed> $data Date to check from reference helper.
+	 *
+	 * @return array<int|string, string>
+	 */
+	public function validateFiles(array $data): array;
 
 	/**
 	 * Get validation label from cache or db on multiple items.

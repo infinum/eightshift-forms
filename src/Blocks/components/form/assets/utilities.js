@@ -365,7 +365,6 @@ export class Utils {
 	getGtmData(element, eventName, formData) {
 		const output = {};
 		const data = {};
-
 		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
 			// Skip for files.
 			if (typeof value !== 'string') {
@@ -637,8 +636,29 @@ export class Utils {
 
 	// Check if submit button is step change trigger or form submit.
 	isStepTrigger(element) {
-		console.log(element);
 		return false;
+	}
+
+	// Append common form data items.
+	getCommonFormDataItems(params) {
+		return [
+			{
+				key: this.FORM_PARAMS.postId,
+				value: JSON.stringify({
+					name: this.FORM_PARAMS.postId,
+					value: params?.formId,
+					type: 'hidden',
+				}),
+			},
+			{
+				key: this.FORM_PARAMS.type,
+				value: JSON.stringify({
+					name: this.FORM_PARAMS.type,
+					value: params?.formType,
+					type: 'hidden',
+				}),
+			}
+		];
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -827,6 +847,9 @@ export class Utils {
 				},
 				isFormAdmin: () => {
 					return this.isFormAdmin();
+				},
+				getCommonFormDataItems: (params) => {
+					return this.getCommonFormDataItems(params);
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

@@ -104,78 +104,26 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate form and return error if it is not valid.
+	 * Validate params.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
 	 *
-	 * @return array<int|string, mixed>
-	 */
-	public function validate(array $data): array
-	{
-		// Manualy build fields from settings components.
-		if ($data['type'] === Settings::SETTINGS_TYPE_NAME || $data['type'] === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
-			$data['fieldsOnly'] = $this->getValidationReferenceManual($data['fieldsOnly']);
-		}
-
-		$validationReference = $this->getValidationReference($data['fieldsOnly']);
-
-		return \array_merge(
-			$this->validateParams($data['params'], $validationReference, $data['formId']),
-			$this->validateFiles($data['files'], $validationReference, $data['formId']),
-		);
-	}
-
-	/**
-	 * Get validation label from cache or db on multiple items.
-	 *
-	 * @param array<string, string> $items Array of items to get label.
-	 * @param string $formId Form ID.
-	 *
-	 * @return array<string, string>
-	 */
-	public function getValidationLabelItems(array $items, string $formId): array
-	{
-		return \array_map(
-			function ($item) use ($formId) {
-				return $this->getValidationLabel($item, $formId);
-			},
-			$items
-		);
-	}
-
-	/**
-	 * Get validation label from cache or db.
-	 *
-	 * @param string $key Key to get data from.
-	 * @param string $formId Form ID.
-	 *
-	 * @return string
-	 */
-	private function getValidationLabel(string $key, string $formId): string
-	{
-		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		if (!$output) {
-			$output = $this->labels->getValidationLabelsOutput($formId);
-
-			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
-		}
-
-		return $output[$key] ?? '';
-	}
-
-	/**
-	 * Validate params.
-	 *
-	 * @param array<string, mixed> $params Params to check.
-	 * @param array<string, mixed> $validationReference Validation reference to check against.
-	 * @param string $formId Form Id.
-	 *
 	 * @return array<string, mixed>
 	 */
-	private function validateParams(array $params, array $validationReference, string $formId): array
+	public function validateParams(array $data): array
 	{
 		$output = [];
+		$formType = $data['type'];
+		$params = $data['params'];
+		$formId = $data['formId'];
+		$fieldsOnly = $data['fieldsOnly'];
+
+		// Manualy build fields from settings components.
+		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
+		}
+
+		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		$order = self::VALIDATION_FIELDS;
 
@@ -291,80 +239,99 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate files from the validation reference.
 	 *
-	 * @param array<string, mixed> $files Files to check.
-	 * @param array<int|string, mixed> $validationReference Validation reference to check against.
-	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $data Date to check from reference helper.
 	 *
 	 * @return array<int|string, string>
 	 */
-	private function validateFiles(array $files, array $validationReference, string $formId = ''): array
+	public function validateFiles(array $data): array
 	{
 		$output = [];
+		$file = $data['files'];
+		$formId = $data['formId'];
+		$fieldsOnly = $data['fieldsOnly'];
+		$validationReference = $this->getValidationReference($fieldsOnly);
 
-		// Check files.
-		foreach ($files as $fileKey => $fileValue) {
-			// Find validation reference by ID.
-			$reference = $validationReference[$fileKey] ?? [];
+		$fieldName = $file['fieldName'];
+		$id = $file['id'];
 
-			// Bailout if no validation is required.
-			if (!$reference) {
+		$fileSize = $file['size'];
+		$fileName = $file['name'];
+
+		// Find validation reference by ID.
+		$reference = $validationReference[$fieldName] ?? [];
+
+		// Loop all validations from the reference.
+		foreach ($reference as $dataKey => $dataValue) {
+			if (!$dataValue) {
 				continue;
 			}
 
-			// Loop all validations from the reference.
-			foreach ($reference as $dataKey => $dataValue) {
-				if (!$dataValue) {
-					continue;
-				}
-
-				// Check validation for accepted file types.
-				if ($dataKey === 'accept') {
-					$individualFiles = [];
-					for ($i = 0; $i < \count($fileValue['name']); $i++) {
-						$file = [
-							'name' => $fileValue['name'][$i],
-							'type' => $fileValue['type'][$i],
-							'tmp_name' => $fileValue['tmp_name'][$i],
-						];
-						$individualFiles[] = $file;
+			switch ($dataKey) {
+				case 'accept':
+					if (!$this->isMimeTypeValid($file)) {
+						$output[$id] = \sprintf($this->getValidationLabel('validationAcceptMime', $formId), $dataValue);
 					}
-
-					foreach ($individualFiles as $file) {
-						if (!$this->isMimeTypeValid($file)) {
-							$output[$fileKey] = \sprintf($this->getValidationLabel('validationAcceptMime', $formId), $dataValue);
-						}
+	
+					if (!$this->isFileTypeValid($fileName, $dataValue)) {
+						$output[$id] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
 					}
-
-					foreach ($fileValue['name'] as $file) {
-						if (!$this->isFileTypeValid($file, $dataValue)) {
-							$output[$fileKey] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
-							continue;
-						}
+					break;
+				case 'minSize':
+					if (!$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+						$output[$id] = \sprintf($this->getValidationLabel('validationMinSize', $formId), $dataValue / 1000);
 					}
-				}
-
-				// Check validation for size min/max.
-				foreach ($fileValue['size'] as $fileSize) {
-					// Check validation for min size. Calculations are in kB but outputted to MB.
-					if ($dataKey === 'minSize') {
-						if (!$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMinSize', $formId), $dataValue / 1000);
-							continue;
-						}
+					break;
+				case 'maxSize':
+					if (!$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
+						$output[$id] = \sprintf($this->getValidationLabel('validationMaxSize', $formId), $dataValue / 1000);
 					}
-
-					// Check validation for max size. Calculations are in kB but outputted to MB.
-					if ($dataKey === 'maxSize') {
-						if (!$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-							$output[$fileKey] = \sprintf($this->getValidationLabel('validationMaxSize', $formId), $dataValue / 1000);
-							continue;
-						}
-					}
-				}
+					break;
 			}
 		}
 
+		error_log( print_r( ( $output ), true ) );
+		
+
 		return $output;
+	}
+
+	/**
+	 * Get validation label from cache or db on multiple items.
+	 *
+	 * @param array<string, string> $items Array of items to get label.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getValidationLabelItems(array $items, string $formId): array
+	{
+		return \array_map(
+			function ($item) use ($formId) {
+				return $this->getValidationLabel($item, $formId);
+			},
+			$items
+		);
+	}
+
+	/**
+	 * Get validation label from cache or db.
+	 *
+	 * @param string $key Key to get data from.
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	private function getValidationLabel(string $key, string $formId): string
+	{
+		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if (!$output) {
+			$output = $this->labels->getValidationLabelsOutput($formId);
+
+			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
+		}
+
+		return $output[$key] ?? '';
 	}
 
 	/**

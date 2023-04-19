@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -69,7 +69,7 @@ if ($formSuccessRedirect) {
 }
 
 if ($formSuccessRedirectVariation) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Helper::encryptor($formSuccessRedirectVariation);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Encryption::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {
@@ -101,7 +101,7 @@ if ($formConditionalTags) {
 }
 
 if ($formDownloads) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode(array_map(fn ($item) => $item['id'], $formDownloads)));
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Encryption::encryptor(wp_json_encode(array_map(fn ($item) => $item['id'], $formDownloads)));
 }
 
 if ($formId) {

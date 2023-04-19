@@ -13,7 +13,10 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
@@ -34,12 +37,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const CUSTOM_FORM_PARAMS = [
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
+		'name' => 'es-form-field-name',
 		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
 		'action' => 'es-form-action',
 		'actionExternal' => 'es-form-action-external',
 		'conditionalTags' => 'es-form-conditional-tags',
+		'fileId' => 'es-form-file-id',
 		'hubspotCookie' => 'es-form-hubspot-cookie',
 		'hubspotPageName' => 'es-form-hubspot-page-name',
 		'hubspotPageUrl' => 'es-form-hubspot-page-url',
@@ -263,6 +268,35 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Prepare file from request for later usage. Attach custom data to file array.
+	 *
+	 * @param array<string, mixed> $file File array from reuqest.
+	 * @param array<string, mixed> $params Params to use.
+	 * @return array<string, mixed>
+	 */
+	protected function prepareFile(array $file, array $params): array
+	{
+		$fieldName = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
+
+		if (!$fieldName) {
+			return $file;
+		}
+
+		$fileId = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '';
+
+		if (!$fileId) {
+			return $file;
+		}
+
+		$file = $file['file'];
+
+		$file['id'] = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '';
+		$file['fieldName'] = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
+
+		return $file;
+	}
+
+	/**
 	 * Return form Type from form params.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
@@ -397,5 +431,50 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $this->getApiPermissionsErrorOutput();
+	}
+
+	/**
+	 * Prepare array for later check like validation and etc...
+	 *
+	 * @param WP_REST_Request $request Data got from endpoint url.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormDataReference($request) {
+		// Get params from request.
+		$params = $this->prepareParams($request->get_body_params());
+
+		// Get filess from request.
+		$file = $this->prepareFile($request->get_file_params(), $params);
+
+		// Get form id from params.
+		$formId = $this->getFormId($params);
+
+		// Get form type from params.
+		$formType = $this->getFormType($params);
+
+		// Get form settings for admin from params.
+		$formSettingsType = $this->getFormSettingsType($params);
+
+		// Manual populate output it admin settings our build it from form Id.
+		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+			$formDataReference = [
+				'formId' => $formId,
+				'type' => $formType,
+				'itemId' => '',
+				'innerId' => '',
+				'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
+			];
+		} else {
+			$formDataReference = Helper::getFormDetailsById($formId);
+		}
+
+		// Populare params.
+		$formDataReference['params'] = $params;
+
+		// Populare files.
+		$formDataReference['files'] = $file;
+
+		return $formDataReference;
 	}
 }
