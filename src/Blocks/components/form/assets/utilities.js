@@ -81,6 +81,7 @@ export class Utils {
 		this.formSelector =  this.formSelectorPrefix;
 		this.submitSingleSelector =  `${this.formSelectorPrefix}-single-submit`;
 		this.stepSelector =  `${this.formSelectorPrefix}-step`;
+		this.stepSubmitSelector =  `${this.formSelectorPrefix}-step-trigger`;
 		this.errorSelector =  `${this.formSelectorPrefix}-error`;
 		this.loaderSelector =  `${this.formSelectorPrefix}-loader`;
 		this.globalMsgSelector =  `${this.formSelectorPrefix}-global-msg`;
@@ -638,6 +639,10 @@ export class Utils {
 
 	// Check if submit button is step change trigger or form submit.
 	isStepTrigger(element) {
+		if (element.classList.contains(this.stepSubmitSelector.substring(1))) {
+			return true;
+		}
+
 		return false;
 	}
 

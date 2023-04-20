@@ -326,8 +326,22 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formStepStubmit(element) {
+	formStepStubmit(element, stepButton) {
+		console.log(element);
+		console.log(stepButton);
 
+		const fields = stepButton.closest(this.utils.stepSelector).querySelectorAll('input, select, textarea');
+
+		console.log(stepButton.closest(this.utils.stepSelector));
+		console.log(this.utils.stepSelector);
+		console.log(fields);
+
+		const formData = this.getFormData(element);
+
+		// Display the key/value pairs
+		for (const pair of formData.entries()) {
+			console.log(`${pair[0]}, ${pair[1]}`);
+		}
 	}
 
 	/**
@@ -335,10 +349,11 @@ export class Form {
 	 * 
 	 * @param {object} element Form element.
 	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 * @param {object} itemsElements Fields node list to validate.
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false) {
+	getFormData(element, singleSubmit = false, itemsElements = {}) {
 		const formData = new FormData();
 		const selectors = 'input, select, textarea';
 
@@ -346,6 +361,11 @@ export class Form {
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
 		let items = element.querySelectorAll(selectors);
+
+		// Provide external elements to process.
+		if (itemsElements) {
+			items = itemsElements;
+		}
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -396,6 +416,8 @@ export class Form {
 				}
 			}
 		}
+
+		console.log(items);
 
 		// Iterate all form items.
 		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
@@ -1016,7 +1038,7 @@ export class Form {
 		const stepButton = event.submitter;
 
 		if (this.utils.isStepTrigger(stepButton)) {
-			this.formStepStubmit(element);
+			this.formStepStubmit(element, stepButton);
 		} else {
 			if (this.utils.isCaptchaUsed()) {
 				this.runFormCaptcha(element);

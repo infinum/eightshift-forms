@@ -3,8 +3,8 @@
 	"componentName": "step",
 	"title": "Step",
 	"componentClass": "es-step",
-	"componentJsClass": "js-es-step",
-	"componentJsTriggerClass": "js-es-step-trigger",
+	"componentJsClass": "js-es-block-step",
+	"componentJsTriggerClass": "js-es-block-step-trigger",
 	"attributes": {
 		"stepId": {
 			"type": "integer"
