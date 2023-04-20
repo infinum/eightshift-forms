@@ -773,6 +773,17 @@ export class Form {
 			// Set data to internal state.
 			this.utils.setFormStateByKey('files', myDropzone, formId);
 
+			// On add one file add selectors for UX.
+			myDropzone.on("addedfile", (file, a) => {
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+				}, 200);
+
+				setTimeout(() => {
+					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
+				}, 1200);
+			});
+
 			// Add data formData to the api call for the file upload.
 			myDropzone.on("sending", (file, xhr, formData) => {
 				// Add common items like formID and type.
@@ -795,35 +806,31 @@ export class Form {
 				}));
 			});
 
-
-			myDropzone.on("success", (file, xhr, formData) => {
+			// Once data is outputed from uplaod.
+			myDropzone.on("success", (file) => {
 				const response = JSON.parse(file.xhr.response);
 
-				console.log(response);
+				// Output errors if ther is any.
+				if (response?.data?.validation !== undefined) {
+					const errorMsgOutput = file.previewTemplate.querySelector('.dz-error-message span');
+					errorMsgOutput.innerHTML = response?.data?.validation?.[file?.upload?.uuid];
+
+					// Remove faulty files.
+					setTimeout(() => {
+						myDropzone.removeFile(file);
+					}, 2500);
+				}
 			});
 
-			// On add one file add selectors for UX.
-			myDropzone.on("addedfile", (file, a) => {
-				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
-				}, 200);
-
-				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
-				}, 1200);
-			});
-
-			// On max file size reached prevent further interactions.
-			myDropzone.on('maxfilesreached', () => {
-				// myDropzone.removeEventListeners();
-			});
-
-			// On error while upload add UX selector and remove file.
-			myDropzone.on("error", (file) => {
-				file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
-				setTimeout(() => {
-					myDropzone.removeFile(file);
-				}, 2000);
+			// On max file size reached output error and remove files.
+			myDropzone.on('maxfilesreached', (files) => {
+				files.forEach((file) => {
+					if (file.status === 'error') {
+						setTimeout(() => {
+							myDropzone.removeFile(file);
+						}, 2500);
+					}
+				});
 			});
 
 			// Trigger on wrap click.

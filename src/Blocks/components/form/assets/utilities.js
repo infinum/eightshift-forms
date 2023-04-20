@@ -199,7 +199,7 @@ export class Utils {
 
 	// Delete state item by key
 	deleteFormStateByKey(key, formId = 0) {
-		this.utils.setFormStateByKey(key, [], formId);
+		this.setFormStateByKey(key, [], formId);
 	}
 
 	// Get state by index.
@@ -506,6 +506,8 @@ export class Utils {
 		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
+
+
 			// Unset the choices in the submitted form.
 			if (this.getFormStateByKey('selects', formId)) {
 				this.getFormStateByKey('selects', formId).forEach((item) => {
@@ -515,10 +517,10 @@ export class Utils {
 				});
 			}
 
-			// Unset the choices in the submitted form.
+			// Unset the files in the submitted form.
 			if (this.getFormStateByKey('files', formId)) {
 				this.getFormStateByKey('files', formId).forEach((item, index) => {
-					this.utils.getFormStateByIndex('files', index, formId).removeAllFiles();
+					item.removeAllFiles();
 				});
 			}
 

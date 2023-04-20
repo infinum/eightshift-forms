@@ -289,9 +289,6 @@ class Validator extends AbstractValidation
 			}
 		}
 
-		error_log( print_r( ( $output ), true ) );
-		
-
 		return $output;
 	}
 
