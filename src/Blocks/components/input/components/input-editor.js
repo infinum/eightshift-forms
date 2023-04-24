@@ -1,10 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import {
-	selector,
-	checkAttr,
-	props,
-} from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -46,13 +42,15 @@ export const InputEditor = (attributes) => {
 				readOnly
 			/>
 
-			<MissingName value={inputName} isEditor={true} />
+			<MissingName value={inputName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{inputName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 
