@@ -225,6 +225,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 				}
 			</PanelBody>
 
+			<ConditionalTagsFormsOptions
+				{...props('conditionalTags', attributes, {
+					setAttributes,
+					conditionalTagsPostId: formsFormPostId,
+				})}
+			/>
+
 			{formsUseGeolocation &&
 				<PanelBody title={__('Geolocation', 'eightshift-forms')} initialOpen={false}>
 					<MultiSelect
@@ -353,13 +360,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					)}
 				</PanelBody>
 			}
-
-			<ConditionalTagsFormsOptions
-				{...props('conditionalTags', attributes, {
-					setAttributes,
-					conditionalTagsPostId: formsFormPostId,
-				})}
-			/>
 		</>
 	);
 };
