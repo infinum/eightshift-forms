@@ -310,6 +310,20 @@ class WorkableClient implements ClientInterface
 				}
 			}
 
+			if ($key === 'es-form-storage') {
+				$domain = '';
+				if (isset($param['value']['utm_source'])) {
+					$domain .= \ucfirst($param['value']['utm_source']);
+				}
+				if (isset($param['value']['utm_medium'])) {
+					$domain .= '(' . \ucfirst($param['value']['utm_medium']) . ')';
+				}
+
+				if ($domain) {
+					$output['domain'] = $domain;
+				}
+			}
+
 			// Remove unecesery fields.
 			if (isset($customFields[$key])) {
 				continue;

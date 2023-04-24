@@ -142,7 +142,7 @@ class Helper
 	 */
 	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
 	{
-		return \get_delete_post_link((int) $formId, '', $permanent);
+		return \get_delete_post_link((int) $formId, '', $permanent) ?? '';
 	}
 
 	/**

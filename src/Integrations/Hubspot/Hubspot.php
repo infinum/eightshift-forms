@@ -252,6 +252,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						$output[] = $item;
 						break;
 					case 'number':
+					case 'phonenumber':
 						$item = [
 							'component' => 'input',
 							'inputFieldHidden' => $hidden,

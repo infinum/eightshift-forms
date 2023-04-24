@@ -6,25 +6,34 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [2.3.6]
 
-## Fixed
+### Added
+- Workable, domain data from source and medium.
+- Hubspot phonenumber field.
+
+### Fixed
+- Trash url bug fix.
+
+## [2.3.6]
+
+### Fixed
 - Workable, custom body and heading max length field
 - Workable fallback email removed text base encoded file.
 
 ## [2.3.5]
 
-## Fixed
+### Fixed
 - ability for Hubspot select field to show placeholder.
 
 ## [2.3.4]
 
-## Changed
+### Changed
 - updated FE Libs to v8.
 - updated other packages.
 
-## Fixed
+### Fixed
 - fixed some Gutenberg button component prop changes. 
 
-## Note
+### Note
 - Form picker has an auxiliary attribute now to store the full data (label & value) of the selected form - the current param is ID only. To keep everything functioning, the existing ID is used if the new attribute is not set, however that will lead to the form label being blank. This is expected, and the form will still work fine. You can re-select the form to fix this.
 - Feel free to ignore PHPCS/Stan for now, it'll be solved in the next release.
 
