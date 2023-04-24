@@ -70,6 +70,8 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 				changed: response?.data?.data?.changed,
 			};
 		}
+
+		return null;
 	});
 };
 
