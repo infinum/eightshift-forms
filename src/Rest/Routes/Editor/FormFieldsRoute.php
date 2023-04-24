@@ -141,11 +141,11 @@ class FormFieldsRoute extends AbstractBaseRoute
 				'label' => $label,
 				'value' => $name,
 				'type' => $blockName['name'],
-				'options' => [],
+				'subItems' => [],
 			];
 
 			if ($value['innerBlocks']) {
-				$outputItem['options'][] = [
+				$outputItem['subItems'][] = [
 					'label' => \__('Empty', 'eightshift-forms'),
 					'value' => '',
 				];
@@ -160,7 +160,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 						continue;
 					}
 
-					$outputItem['options'][] = [
+					$outputItem['subItems'][] = [
 						'label' => $valueInner['attrs']["{$prefixInner}Label"] ?? $innerKeyValue,
 						'value' => $innerKeyValue,
 					];
