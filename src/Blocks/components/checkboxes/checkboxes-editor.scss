@@ -1,8 +1,8 @@
 .es-field--checkboxes {
 	.es-field__content-wrap {
 		padding: var(--es-input-spacing);
-		border: 1px solid var(--es-input-border-color);
+		border: 1px dashed var(--es-input-border-color);
 
-		@include input-styles-disabled;
+		border-radius: var(--global-esf-spacing-s);
 	}
 }

@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
-import { TextControl, Button, PanelBody } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	props,
-	IconLabel,
-	icons,
-	FancyDivider,
-} from '@eightshift/frontend-libs/scripts';
+import { __, _n } from '@wordpress/i18n';
+import { TextControl, PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedContentVisibility } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, MissingName } from './../../utils';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxesOptions = (attributes) => {
@@ -53,31 +46,28 @@ export const CheckboxesOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: checkboxesDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				<FancyDivider label={__('Validation', 'eightshift-forms')} />
+				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.required}
+						label={__('Required', 'eightshift-forms')}
+						checked={checkboxesIsRequired}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
 
-				<Button
-					icon={icons.fieldRequired}
-					isPressed={checkboxesIsRequired}
-					onClick={() => {
-						const value = !checkboxesIsRequired;
+							if (!value) {
+								setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
+							}
+						}}
+						reducedBottomSpacing={checkboxesIsRequired}
+						noBottomSpacing={!checkboxesIsRequired}
+					/>
 
-						setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
-
-						if (!value) {
-							setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
-						}
-					}}
-					disabled={isOptionDisabled(getAttrKey('checkboxesIsRequired', attributes, manifest), checkboxesDisabledOptions)}
-				>
-					{__('Required', 'eightshift-forms')}
-				</Button>
-
-				{checkboxesIsRequired &&
-					<>
-						<div className='es-h-spaced es-has-wp-field-t-space'>
-							<span>Min.</span>
+					<AnimatedContentVisibility showIf={checkboxesIsRequired}>
+						<div className='es-h-spaced'>
+							<span>{__('At least', 'eightshift-forms')}</span>
 							<TextControl
 								value={checkboxesIsRequiredCount}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
@@ -87,27 +77,22 @@ export const CheckboxesOptions = (attributes) => {
 								className='es-no-field-spacing'
 								disabled={isOptionDisabled(getAttrKey('checkboxesIsRequiredCount', attributes, manifest), checkboxesDisabledOptions)}
 							/>
-							<span>{checkboxesIsRequiredCount > 1 ? __('items need to be selected', 'eightshift-forms') : __('item needs to be checked', 'eightshift-forms')}</span>
+							<span>{_n(__('item needs to be checked', 'eightshift-forms'), __('items need to be checked', 'eightshift-forms'), checkboxesIsRequiredCount, 'eightshift-forms')}</span>
 						</div>
-					</>
-				}
+					</AnimatedContentVisibility>
+				</Section>
 
-				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-					value={checkboxesName}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
-				/>
-
-				<MissingName value={checkboxesName} />
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<NameFieldLabel value={checkboxesName} />}
+						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						value={checkboxesName}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
