@@ -320,7 +320,7 @@ class AirtableClient implements ClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params, SettingsAirtable::SETTINGS_TYPE_KEY);
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);

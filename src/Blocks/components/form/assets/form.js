@@ -596,6 +596,7 @@ export class Form {
 		// Set localStorage to hidden field.
 		if (this.enrichment.isEnrichmentUsed()) {
 			const storage = this.enrichment.getLocalStorage();
+
 			if (storage) {
 				formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
 					name: this.utils.FORM_PARAMS.storage,

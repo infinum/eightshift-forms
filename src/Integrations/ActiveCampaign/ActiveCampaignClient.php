@@ -585,7 +585,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params, SettingsActiveCampaign::SETTINGS_TYPE_KEY);
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);

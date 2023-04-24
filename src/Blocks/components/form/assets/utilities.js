@@ -382,19 +382,19 @@ export class Utils {
 			const gtmData = this.getGtmData(element, eventName, formData);
 
 			const additionalData = JSON.parse(element.getAttribute(this.DATA_ATTRIBUTES.trackingAdditionalData));
-			let additionalDataItems = additionalData.general;
+			let additionalDataItems = additionalData?.general;
 
 			if (status === 'success') {
 				additionalDataItems = {
 					...additionalDataItems,
-					...additionalData.success,
+					...additionalData?.success,
 				};
 			}
 
 			if (status === 'error') {
 				additionalDataItems = {
 					...additionalDataItems,
-					...additionalData.error,
+					...additionalData?.error,
 				};
 			}
 
@@ -576,6 +576,10 @@ export class Utils {
 		}, 100);
 	}
 
+	getSelectObject(formId, select) {
+		return this.CUSTOM_SELECTS[formId].find((item) => item.passedElement.element === select);
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -708,7 +712,7 @@ export class Utils {
 					this.hideGlobalMsg(element);
 				},
 				getGtmData: (element, eventName, formData) => {
-					this.getGtmData(element, eventName, formData);
+					return this.getGtmData(element, eventName, formData);
 				},
 				gtmSubmit: (element, formData, errors) => {
 					this.gtmSubmit(element, formData, errors);
@@ -729,13 +733,16 @@ export class Utils {
 					this.isCaptchaUsed();
 				},
 				isCaptchaInitUsed: () => {
-					this.isCaptchaInitUsed();
+					return this.isCaptchaInitUsed();
 				},
 				isCaptchaHideBadgeUsed: () => {
-					this.isCaptchaHideBadgeUsed();
+					return this.isCaptchaHideBadgeUsed();
 				},
 				isCaptchaEnterprise: () => {
-					this.isCaptchaEnterprise();
+					return this.isCaptchaEnterprise();
+				},
+				getSelectObject: (formId, select) => {
+					return this.getSelectObject(formId, select);
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

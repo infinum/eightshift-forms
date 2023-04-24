@@ -434,7 +434,7 @@ class MomentsClient implements ClientInterface
 		$output = [];
 
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMoments::SETTINGS_TYPE_KEY);
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);

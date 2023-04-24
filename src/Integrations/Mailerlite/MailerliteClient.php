@@ -333,7 +333,7 @@ class MailerliteClient implements ClientInterface
 	private function prepareParams(array $params): array
 	{
 		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params, SettingsMailerlite::SETTINGS_TYPE_KEY);
+		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params, ['email']);

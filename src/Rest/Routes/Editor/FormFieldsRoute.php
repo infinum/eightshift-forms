@@ -135,7 +135,11 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			$label = $value['attrs']["{$prefix}FieldLabel"] ?? $name;
+			$label = $value['attrs']["{$prefix}FieldLabel"] ?? '';
+
+			if (!$label) {
+				$label = $name;
+			}
 
 			$outputItem = [
 				'label' => $label,
@@ -160,8 +164,14 @@ class FormFieldsRoute extends AbstractBaseRoute
 						continue;
 					}
 
+					$innerLabel = $valueInner['attrs']["{$prefixInner}Label"] ?? '';
+
+					if (!$innerLabel) {
+						$innerLabel = $innerKeyValue;
+					}
+
 					$outputItem['subItems'][] = [
-						'label' => $valueInner['attrs']["{$prefixInner}Label"] ?? $innerKeyValue,
+						'label' => $innerLabel,
 						'value' => $innerKeyValue,
 					];
 				}

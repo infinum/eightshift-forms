@@ -731,6 +731,42 @@ class Helper
 	}
 
 	/**
+	 * Output select options ass array from html string.
+	 *
+	 * @param string $options Options string.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public static function getSelectOptionsArrayFromString(string $options): array
+	{
+		$output = \wp_json_encode($options);
+		$output = \str_replace('\n\t\t\t', '', $output);
+		$output = \str_replace('>\n\t', '>', $output);
+		$output = \str_replace('\n\t', ' ', $output);
+		$output = \str_replace('\n\t', ' ', $output);
+		$output = \trim(\json_decode($output));
+
+		\preg_match_all('/<option value="(.*?)">(.*?)<\/option>/m', $output, $matches, \PREG_SET_ORDER, 0);
+
+		return \array_values(\array_filter(\array_map(
+			static function ($item) {
+				$slug = $item[1] ?? '';
+				$label = $item[2] ?? '';
+
+				if (!$slug || !$label) {
+					return false;
+				}
+
+				return [
+					'slug' => $slug,
+					'label' => $label,
+				];
+			},
+			$matches
+		)));
+	}
+
+	/**
 	 * Returns regular help text if the given string is empty, and "Set with a global variable" if not.
 	 *
 	 * @param string $value Value that is empty if set programmatically.
