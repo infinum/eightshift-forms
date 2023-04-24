@@ -20,24 +20,31 @@ export const FileEditor = (attributes) => {
 	} = attributes;
 
 	const fileName = checkAttr('fileName', attributes, manifest);
+	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
+	const fileCustomInfoTextUse = checkAttr('fileCustomInfoTextUse', attributes, manifest);
+	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
 
 	const file = (
 		<>
 			<div className={`${componentClass}__custom-wrap`}>
-			{__('Drag and drop files here', 'eightshift-forms')}
+				{fileCustomInfoTextUse && fileCustomInfoText}
+				{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
+
 
 				<div className={`${componentClass}__button`}>
-					{__('Add files', 'eightshift-forms')}
+					{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}
 				</div>
 			</div>
 
-			<MissingName value={fileName} isEditor={true} />
+			<MissingName value={fileName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{fileName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 
