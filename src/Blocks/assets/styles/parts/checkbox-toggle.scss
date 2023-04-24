@@ -90,7 +90,13 @@
 
 	&__input:disabled + #{$this}__label::before,
 	&__input:disabled:checked + #{$this}__label::before {
-		background-color: var(--global-colors-esf-admin-accent-30);
+		background-color: var(--global-colors-esf-gray-100);
+		border-color: var(--global-colors-esf-gray-200);
+	}
+
+	&__input:disabled + #{$this}__label::after,
+	&__input:disabled:checked + #{$this}__label::after {
+		background-color: var(--global-colors-esf-gray-400);
 	}
 
 	&__input {
