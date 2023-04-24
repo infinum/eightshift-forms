@@ -1,7 +1,7 @@
 {
 	"namespace": "eightshift-forms",
-	"background": "#29A3A3",
-	"foreground": "#FBF9FF",
+	"background": "#F4FAFA",
+	"foreground": "#29A3A3",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "admin.php?page=es-settings",
 	"editFormUrl": "post.php?action=edit",
