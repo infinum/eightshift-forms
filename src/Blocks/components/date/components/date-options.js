@@ -3,22 +3,13 @@
 import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl, PanelBody, Button, Popover } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	FancyDivider,
-	SimpleVerticalSingleSelect,
-} from '@eightshift/frontend-libs/scripts';
+import { TextControl, PanelBody } from '@wordpress/components';
+import { icons, checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
-import { isOptionDisabled, MissingName } from '../../utils';
+import { isOptionDisabled, NameFieldLabel } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import manifest from '../manifest.json';
 
 export const DateOptions = (attributes) => {
 	const {
@@ -36,8 +27,6 @@ export const DateOptions = (attributes) => {
 	const dateValidationPattern = checkAttr('dateValidationPattern', attributes, manifest);
 	const dateDisabledOptions = checkAttr('dateDisabledOptions', attributes, manifest);
 
-	const [showValidation, setShowValidation] = useState(false);
-
 	let dateValidationPatternOptions = [];
 
 	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
@@ -47,109 +36,92 @@ export const DateOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={title}>
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={datePlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: dateDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				<TextControl
-					label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-					help={__('Shown when the field is empty', 'eightshift-forms')}
-					value={datePlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
-				/>
-
-				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-					value={dateName}
-					onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
-				/>
-				<MissingName value={dateName} />
-
-				<TextControl
-					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
-					value={dateValue}
-					onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
-				/>
-
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldReadonly}
-						isPressed={dateIsReadOnly}
-						onClick={() => setAttributes({ [getAttrKey('dateIsReadOnly', attributes, manifest)]: !dateIsReadOnly })}
-						disabled={isOptionDisabled(getAttrKey('dateIsReadOnly', attributes, manifest), dateDisabledOptions)}
-					>
-						{__('Read-only', 'eightshift-forms')}
-					</Button>
-
-
-					<Button
-						icon={icons.fieldDisabled}
-						isPressed={dateIsDisabled}
-						onClick={() => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: !dateIsDisabled })}
-						disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
-					>
-						{__('Disabled', 'eightshift-forms')}
-					</Button>
-				</div>
-
-				<FancyDivider label={__('Validation', 'eightshift-forms')} />
-
-				<div className='es-h-spaced-wrap'>
-					<Button
-						icon={icons.fieldRequired}
-						isPressed={dateIsRequired}
-						onClick={() => setAttributes({ [getAttrKey('dateIsRequired', attributes, manifest)]: !dateIsRequired })}
+				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.required}
+						label={__('Required', 'eightshift-forms')}
+						checked={dateIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('dateIsRequired', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('dateIsRequired', attributes, manifest), dateDisabledOptions)}
-					>
-						{__('Required', 'eightshift-forms')}
-					</Button>
+					/>
 
-					<Button
+					<Select
 						icon={icons.regex}
-						isPressed={dateValidationPattern?.length > 0}
-						onClick={() => setShowValidation(true)}
-					>
-						{__('Pattern validation', 'eightshift-forms')}
+						label={__('Match pattern', 'eightshift-forms')}
+						options={dateValidationPatternOptions}
+						value={dateValidationPattern}
+						onChange={(value) => setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
+						placeholder='–'
+						additionalSelectClasses='es-w-32'
+						noBottomSpacing
+						inlineLabel
+						clearable
+					/>
+				</Section>
 
-						{showValidation &&
-							<Popover noArrow={false} onClose={() => setShowValidation(false)}>
-								<div className='es-popover-content'>
-									<SimpleVerticalSingleSelect
-										label={__('Validation pattern', 'eightshift-forms')}
-										options={dateValidationPatternOptions.map(({ label, value }) => ({
-											onClick: () => setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value }),
-											label: label,
-											isActive: dateValidationPattern === value,
-										}))}
-										disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
-									/>
-								</div>
-							</Popover>
-						}
-					</Button>
-				</div>
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={dateName} />}
+						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						value={dateName}
+						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
+					/>
 
-				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
+					<TextControl
+						label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+						value={dateValue}
+						onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
+					/>
 
-				<TextControl
-					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={dateTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('dateTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}
-				/>
+					<IconToggle
+						icon={icons.readOnly}
+						label={__('Read-only', 'eightshift-forms')}
+						checked={dateIsReadOnly}
+						onChange={(value) => setAttributes({ [getAttrKey('dateIsReadOnly', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateIsReadOnly', attributes, manifest), dateDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={dateIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
+						noBottomSpacing
+					/>
+				</Section>
+
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={dateTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('dateTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {

@@ -41,13 +41,15 @@ export const DateEditor = (attributes) => {
 				readOnly
 			/>
 
-			<MissingName value={dateName} isEditor={true} />
+			<MissingName value={dateName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{dateName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 
