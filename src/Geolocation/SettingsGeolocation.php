@@ -127,10 +127,11 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 						'introIcon' => 'warning',
 					],
 					($use || $useRocket) ? [
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					] : [],
+					($use || $useRocket) ? [
 						'component' => 'intro',
-						'introIsHighlighted' => true,
-						'introIsHighlightedImportant' => true,
-						'introTitleSize' => 'medium',
 						// translators: %s will be replaced with the link.
 						'introSubtitle' => $outputConstants,
 					] : [],

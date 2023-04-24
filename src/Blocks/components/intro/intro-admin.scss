@@ -131,4 +131,26 @@
 		height: 1.75rem;
 		width: 1.7rem;
 	}
+
+	.is-filter-applied {
+		background-color: var(--global-colors-esf-sky-50);
+		border: 1px solid var(--global-colors-esf-sky-100);
+		color: var(--global-colors-esf-sky-950);
+		border-radius: var(--global-esf-spacing-s);
+		padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
+
+		width: fit-content;
+
+		code {
+			background: var(--global-colors-esf-white);
+			color: var(--global-colors-esf-sky-950);
+
+			font-size: 0.85em;
+			padding: 0.1rem 0.15rem;
+			border-radius: 3px;
+			border: 1px solid var(--global-colors-esf-sky-100);
+			margin: 0;
+			vertical-align: middle;
+		}
+	}
 }

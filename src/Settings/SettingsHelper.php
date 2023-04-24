@@ -378,7 +378,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Applied Global Contant settings output.
+	 * Applied Global constant settings output.
 	 *
 	 * @param string $name Variable name.
 	 *
@@ -387,7 +387,7 @@ trait SettingsHelper
 	private function getAppliedGlobalConstantOutput(string $name): string
 	{
 		// translators: %s replaces global variable name.
-		return \sprintf(\__('Global variable "%s" is active.', 'eightshift-forms'), $name);
+		return '<span class="is-filter-applied">' . \sprintf(\__('Enabled with a global variable <code>%s</code>', 'eightshift-forms'), $name) . '</span>';
 	}
 
 	/**
