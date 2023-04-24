@@ -34,7 +34,7 @@ if (!$stepContent) {
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" data-id="<?php echo esc_attr($stepId); ?>">
+<div class="<?php echo esc_attr($stepClass); ?>" data-id="step-<?php echo esc_attr($stepId); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>" data-id="<?php echo esc_attr($stepId); ?>">
 		<?php echo $stepContent; ?>
 
@@ -72,6 +72,7 @@ if (!$stepContent) {
 					'submitValue' => esc_html__('Next', 'eightshift-form'),
 					'submitAttrs' => [
 						'data-step' => 'next',
+						'data-current-step' => "step-{$stepId}",
 					],
 				]),
 				[

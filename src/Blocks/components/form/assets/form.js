@@ -327,16 +327,10 @@ export class Form {
 	 * @public
 	 */
 	formStepStubmit(element, stepButton) {
-		console.log(element);
-		console.log(stepButton);
+		const id = stepButton.getAttribute('data-current-step');
+		const fields = element.querySelector(`${this.utils.stepSelector}[data-id="${id}"]`).querySelectorAll('input, select, textarea');
 
-		const fields = stepButton.closest(this.utils.stepSelector).querySelectorAll('input, select, textarea');
-
-		console.log(stepButton.closest(this.utils.stepSelector));
-		console.log(this.utils.stepSelector);
-		console.log(fields);
-
-		const formData = this.getFormData(element);
+		const formData = this.getFormData(element, false, fields);
 
 		// Display the key/value pairs
 		for (const pair of formData.entries()) {
@@ -353,7 +347,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false, itemsElements = {}) {
+	getFormData(element, singleSubmit = false, itemsElements = {},) {
 		const formData = new FormData();
 		const selectors = 'input, select, textarea';
 
