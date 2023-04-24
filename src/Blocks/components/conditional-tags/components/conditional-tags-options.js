@@ -178,7 +178,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				additionalClasses='es-font-weight-500'
 			/>
 
-			<Section showIf={conditionalTagsUse}>
+			<Section showIf={conditionalTagsUse} noBottomSpacing>
 				<Control
 					icon={icons.conditionH}
 					label={__('Rules', 'eightshift-forms')}
