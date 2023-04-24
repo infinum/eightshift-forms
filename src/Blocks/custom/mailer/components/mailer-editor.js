@@ -1,11 +1,10 @@
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, BlockInserter } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from '../../../components/form/components/form-editor';
 import manifest from '../manifest.json';
 
-export const MailerEditor = ({ attributes, setAttributes }) => {
-
+export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
 	const {
 		blockClass,
 	} = attributes;
@@ -17,10 +16,12 @@ export const MailerEditor = ({ attributes, setAttributes }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-													allowedBlocks={(typeof mailerAllowedBlocks === 'undefined') || mailerAllowedBlocks}
-													templateLock={false}
-												/>
+					formContent:
+						<InnerBlocks
+							allowedBlocks={(typeof mailerAllowedBlocks === 'undefined') || mailerAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
 				})}
 			/>
 		</div>

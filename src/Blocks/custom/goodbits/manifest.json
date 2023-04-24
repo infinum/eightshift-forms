@@ -1,8 +1,8 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "goodbits",
-	"title": "Goodbits Form",
-	"description" : "A Goodbits subscription form",
+	"title": "Goodbits form",
+	"description" : "Goodbits subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-goodbits"

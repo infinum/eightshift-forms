@@ -1,8 +1,8 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "mailerlite",
-	"title": "Mailerlite Form",
-	"description" : "A MailerLite subscription form",
+	"title": "MailerLite form",
+	"description" : "MailerLite subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-mailerlite"
