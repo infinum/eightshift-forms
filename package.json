@@ -33,10 +33,10 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^7.2.0",
-		"autosize": "^5.0.1",
-		"choices.js": "^10.1.0",
-		"dropzone": "^6.0.0-beta.1",
+		"@eightshift/frontend-libs": "git+https://github.com/infinum/eightshift-frontend-libs.git#release/8.2.0",
+		"autosize": "^6.0.1",
+		"choices.js": "^10.2.0",
+		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13"
 	},
 	"husky": {
