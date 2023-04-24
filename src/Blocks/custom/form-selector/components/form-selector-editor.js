@@ -1,9 +1,9 @@
 import React from 'react';
 import { camelCase } from 'lodash';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { checkAttr, BlockIcon } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, icons } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
 import manifest from './../manifest.json';
 import utilsManifest from './../../../components/utils/manifest.json';
@@ -23,29 +23,23 @@ export const FormSelectorEditor = ({
 		<>
 			{!hasInnerBlocks &&
 				<Placeholder
-					icon={<BlockIcon iconName='esf-form' />}
-					label={__('Eightshift Forms', 'productive')}
-					instructions={__('Select a form type below to start.', 'productive')}
-					className={attributes.blockClass}
+					icon={icons.form}
+					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'productive')}</span>}
+					className='es-max-w-108 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
 				>
-					<div className='esf-form-type-picker-group'>
+					<h4 className='es-mb-0! es-mx-0! es-mt-1! es-text-5 es-font-weight-500 es-color-pure-black'>{__('Create a form', 'productive')}</h4>
+					<div className='es-h-spaced-wrap es-gap-2!'>
 						{forms.map((form, index) => {
-							const {
-								label,
-								slug,
-							} = form;
+							const { label, slug } = form;
 
 							return (
 								<Button
-									className='esf-form-type-picker-button'
 									key={index}
-									isTertiary
-									onClick={() => {
-										createBlockFromTemplate(clientId, slug, forms);
-									}}
+									className='es-v-spaced es-content-center! es-m-0! es-nested-w-8 es-nested-h-8 es-h-auto es-w-32 es-h-24 es-rounded-1.5 es-border es-border-cool-gray-100 es-hover-border-cool-gray-400 es-transition'
+									onClick={() => createBlockFromTemplate(clientId, slug, forms)}
+									icon={<div dangerouslySetInnerHTML={{ __html: utilsManifest.icons[camelCase(slug)] }} />}
 								>
-									<div dangerouslySetInnerHTML={{__html: utilsManifest.icons[camelCase(slug)]}} />
-									{sprintf(__('%s form', 'eightshift-forms'), label)}
+									{label}
 								</Button>
 							);
 						})}
@@ -53,7 +47,7 @@ export const FormSelectorEditor = ({
 				</Placeholder>
 			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent('formSelector')}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent('formSelector') }} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}
