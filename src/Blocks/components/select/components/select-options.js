@@ -1,19 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	FancyDivider,
-} from '@eightshift/frontend-libs/scripts';
+import { TextControl, PanelBody } from '@wordpress/components';
+import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
-import { isOptionDisabled, MissingName } from './../../utils';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import manifest from '../manifest.json';
 
 export const SelectOptions = (attributes) => {
 	const {
@@ -31,79 +24,72 @@ export const SelectOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Select', 'eightshift-forms')}>
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={selectPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: selectDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				<TextControl
-					label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-					help={__('Shown when the field is empty', 'eightshift-forms')}
-					value={selectPlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
-				/>
-
-				<FancyDivider label={__('Validation', 'eightshift-forms')} />
-
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldRequired}
-						isPressed={selectIsRequired}
-						onClick={() => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: !selectIsRequired })}
+				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.required}
+						label={__('Required', 'eightshift-forms')}
+						checked={selectIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('selectIsRequired', attributes, manifest), selectDisabledOptions)}
-					>
-						{__('Required', 'eightshift-forms')}
-					</Button>
-				</div>
+						noBottomSpacing
+					/>
+				</Section>
 
-				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={selectName} />}
+						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						value={selectName}
+						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
+					/>
 
-				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-					value={selectName}
-					onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
-				/>
-				<MissingName value={selectName} />
-
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldDisabled}
-						isPressed={selectIsDisabled}
-						onClick={() => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: !selectIsDisabled })}
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={selectIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('selectIsDisabled', attributes, manifest), selectDisabledOptions)}
-					>
-						{__('Disabled', 'eightshift-forms')}
-					</Button>
-				</div>
+					/>
 
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldRequired}
-						isPressed={selectUseSearch}
-						onClick={() => setAttributes({ [getAttrKey('selectUseSearch', attributes, manifest)]: !selectUseSearch })}
+					<IconToggle
+						icon={icons.search}
+						label={__('Search', 'eightshift-forms')}
+						checked={selectUseSearch}
+						onChange={(value) => setAttributes({ [getAttrKey('selectUseSearch', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('selectUseSearch', attributes, manifest), selectDisabledOptions)}
-					>
-						{__('Allow search', 'eightshift-forms')}
-					</Button>
-				</div>
+						noBottomSpacing
+					/>
+				</Section>
 
-				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
-
-				<TextControl
-					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={selectTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}
-				/>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={selectTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {

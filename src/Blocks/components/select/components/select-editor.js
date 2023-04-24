@@ -26,9 +26,11 @@ export const SelectEditor = (attributes) => {
 	const selectName = checkAttr('selectName', attributes, manifest);
 	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 
+	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
+
 	const selectClass = classnames([
 		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', 'disabled'),
+		selector(selectIsDisabled, componentClass, '', 'disabled'),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -48,14 +50,16 @@ export const SelectEditor = (attributes) => {
 
 				{selectContent}
 
-				<MissingName value={selectName} isEditor={true} />
+				<MissingName value={selectName} />
 
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
+				{selectName &&
+					<ConditionalTagsEditor
+						{...props('conditionalTags', attributes)}
+					/>
+				}
 			</div>
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 
