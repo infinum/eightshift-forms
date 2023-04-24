@@ -1,18 +1,19 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { TextControl, PanelBody } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
 	props,
-	FancyDivider,
+	Section,
+	IconToggle,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, MissingName } from '../../utils';
+import { isOptionDisabled, NameFieldLabel } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CountryOptions = (attributes) => {
@@ -34,67 +35,57 @@ export const CountryOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: countryDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				<FancyDivider label={__('Validation', 'eightshift-forms')} />
-
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldRequired}
-						isPressed={countryIsRequired}
-						onClick={() => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: !countryIsRequired })}
+				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.required}
+						label={__('Required', 'eightshift-forms')}
+						checked={countryIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
-					>
-						{__('Required', 'eightshift-forms')}
-					</Button>
-				</div>
+						noBottomSpacing
+					/>
+				</Section>
 
-				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={countryName} />}
+						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						value={countryName}
+						onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
+					/>
 
-				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-					value={countryName}
-					onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
-				/>
-				<MissingName value={countryName} />
-
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldDisabled}
-						isPressed={countryIsDisabled}
-						onClick={() => setAttributes({ [getAttrKey('countryIsDisabled', attributes, manifest)]: !countryIsDisabled })}
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={countryIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('countryIsDisabled', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('countryIsDisabled', attributes, manifest), countryDisabledOptions)}
-					>
-						{__('Disabled', 'eightshift-forms')}
-					</Button>
-				</div>
+					/>
 
-				<div className='es-h-spaced'>
-					<Button
-						icon={icons.fieldRequired}
-						isPressed={countryUseSearch}
-						onClick={() => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: !countryUseSearch })}
+					<IconToggle
+						icon={icons.search}
+						label={__('Search', 'eightshift-forms')}
+						checked={countryUseSearch}
+						onChange={(value) => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('countryUseSearch', attributes, manifest), countryDisabledOptions)}
-					>
-						{__('Allow search', 'eightshift-forms')}
-					</Button>
-				</div>
+						noBottomSpacing
+					/>
+				</Section>
 
-				<FancyDivider label={__('Tracking', 'eightshift-forms')} />
-
-				<TextControl
-					label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={countryTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('countryTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('countryTracking', attributes, manifest), countryDisabledOptions)}
-				/>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={countryTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('countryTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('countryTracking', attributes, manifest), countryDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
