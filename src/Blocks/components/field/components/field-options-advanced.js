@@ -7,19 +7,22 @@ import {
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	Responsive,
-	CustomSlider,
+	ResponsiveNumberPicker,
+	getDefaultBreakpointNames,
+	ucfirst,
+	Select,
+	Section,
+	Collapsable,
 } from '@eightshift/frontend-libs/scripts';
-import { TextControl, SelectControl, PanelBody, Button, BaseControl } from '@wordpress/components';
+import { TextControl } from '@wordpress/components';
 import manifest from '../manifest.json';
-import _, { isObject } from 'lodash';
+import { isObject } from 'lodash';
 
 export const FieldPanel = (props) => {
 	const {
 		attributes,
 		setAttributes,
 		fieldManifest: {
-			attributes: manifestAttributes,
 			responsiveAttributes: {
 				fieldWidth,
 			},
@@ -28,49 +31,36 @@ export const FieldPanel = (props) => {
 		children
 	} = props;
 
-	const mainFieldWidth = checkAttr(fieldWidth['large'], attributes, manifest, true);
-
 	return (
-		<PanelBody title={(
-			<span>
-				{__('Form field', 'eightshift-forms')}
+		<Collapsable icon={icons.moreH} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
+			<ResponsiveNumberPicker
+				value={getDefaultBreakpointNames().reduce((all, current) => {
+					return {
+						...all,
+						[current]: checkAttr(fieldWidth[current], attributes, manifest, true),
+					};
+				}, {})}
+				onChange={(value) => {
+					const newData = Object.entries(value).reduce((all, [breakpoint, currentValue]) => {
+						return {
+							...all,
+							[getAttrKey(`fieldWidth${ucfirst(breakpoint)}`, attributes, manifest)]: currentValue,
+						};
+					}, {});
 
-				{mainFieldWidth !== undefined && mainFieldWidth < 12 &&
-					<span className='es-panel-body-muted'> - {__('width', 'eightshift-forms')} {mainFieldWidth}</span>
-				}
-			</span>
-		)} initialOpen={false}>
-			<Responsive label={<IconLabel icon={icons.fieldWidth} label={__('Width', 'eightshift-forms')} />}>
-				{Object.entries(fieldWidth).map(([breakpoint, responsiveAttribute], index) => {
-					const { default: defaultWidth } = manifestAttributes[responsiveAttribute];
+					setAttributes(newData);
+				}}
 
-					return (
-						<CustomSlider
-							key={index}
-							label={<IconLabel icon={icons[`screen${_.capitalize(breakpoint)}`]} label={_.capitalize(breakpoint)} />}
-							value={checkAttr(responsiveAttribute, attributes, manifest, true) ?? 0}
-							onChange={(value) => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: value })}
-							min={options.fieldWidth.min}
-							max={options.fieldWidth.max}
-							step={options.fieldWidth.step}
-							marks={{ 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 }}
-							hasCompactMarks
-							rightAddition={
-								<Button
-									label={__('Reset', 'eightshift-forms')}
-									icon={icons.rotateLeft}
-									onClick={() => setAttributes({ [getAttrKey(responsiveAttribute, attributes, manifest)]: defaultWidth })}
-									isSmall
-									className='es-small-square-icon-button'
-								/>
-							}
-						/>
-					);
-				})}
-			</Responsive>
+				min={options.fieldWidth.min}
+				max={options.fieldWidth.max}
+				step={options.fieldWidth.step}
+
+				icon={icons.width}
+				label={__('Width', 'eightshift-forms')}
+			/>
 
 			{children}
-		</PanelBody>
+		</Collapsable>
 	);
 };
 
@@ -98,18 +88,19 @@ export const FieldOptionsAdvanced = (attributes) => {
 		>
 			<>
 				{fieldStyleOptions &&
-					<SelectControl
-						label={<IconLabel icon={icons.color} label={__('Style', 'eightshift-forms')} />}
-						help={__('Set what style type is your form.', 'eightshift-forms')}
+					<Select
+						inlineLabel
+						icon={icons.color}
+						label={__('Style', 'eightshift-forms')}
 						value={fieldStyle}
 						options={fieldStyleOptions}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
+						additionalSelectClasses='es-w-40'
+						simpleValue
 					/>
 				}
 
-				<hr />
-
-				<BaseControl label={__('Additional content ', 'eightshift-forms')}>
+				<Section icon={icons.textAbc} label={__('Additional content ', 'eightshift-forms')} noBottomSpacing>
 					<TextControl
 						label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
 						value={fieldBeforeContent}
@@ -120,8 +111,9 @@ export const FieldOptionsAdvanced = (attributes) => {
 						label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
 						value={fieldAfterContent}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
+						className='es-no-field-spacing'
 					/>
-				</BaseControl>
+				</Section>
 			</>
 		</FieldPanel>
 	);

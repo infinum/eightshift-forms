@@ -67,14 +67,14 @@
 			"default": false
 		},
 		"fieldWidthLarge": {
-			"type": "integer"
+			"type": "integer",
+			"default": 12
 		},
 		"fieldWidthDesktop": {
 			"type": "integer"
 		},
 		"fieldWidthTablet": {
-			"type": "integer",
-			"default": 12
+			"type": "integer"
 		},
 		"fieldWidthMobile": {
 			"type": "integer"
