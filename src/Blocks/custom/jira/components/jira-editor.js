@@ -4,12 +4,12 @@ import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from '../../../components/form/components/form-editor';
 import manifest from '../manifest.json';
 
-export const MailerEditor = ({ attributes, setAttributes }) => {
+export const JiraEditor = ({ attributes, setAttributes }) => {
 	const {
 		blockClass,
 	} = attributes;
 
-	const mailerAllowedBlocks = checkAttr('mailerAllowedBlocks', attributes, manifest);
+	const jiraAllowedBlocks = checkAttr('jiraAllowedBlocks', attributes, manifest);
 
 	return (
 		<div className={blockClass}>
@@ -17,7 +17,7 @@ export const MailerEditor = ({ attributes, setAttributes }) => {
 				{...props('form', attributes, {
 					setAttributes,
 					formContent: <InnerBlocks
-													allowedBlocks={(typeof mailerAllowedBlocks === 'undefined') || mailerAllowedBlocks}
+													allowedBlocks={(typeof jiraAllowedBlocks === 'undefined') || jiraAllowedBlocks}
 													templateLock={false}
 												/>
 				})}

@@ -1,35 +1,37 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
-	"blockName": "mailer",
-	"title": "Mailer form",
-	"description" : "A form with mailer",
+	"blockName": "jira",
+	"title": "Jira Form",
+	"description" : "A Jira form issues",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form"
+		"src": "esf-form-jira"
 	},
 	"keywords": [
-		"form"
+		"jira"
 	],
-	"hasInnerBlocks": true,
+	"example": {
+	},
 	"components": {
 		"form": "form"
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	],
+	"hasInnerBlocks": true,
 	"attributes": {
-		"mailerAllowedBlocks": {
+		"jiraAllowedBlocks": {
 			"type": "array",
 			"default": []
 		},
-		"mailerFormPostId": {
+		"jiraIntegrationId": {
 			"type": "string"
 		},
-		"mailerDataTypeSelector": {
+		"jiraFormPostId": {
 			"type": "string"
 		},
-		"mailerFormAction": {
+		"jiraFormDataTypeSelector": {
 			"type": "string"
 		}
-	}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
 }

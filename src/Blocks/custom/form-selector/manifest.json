@@ -24,7 +24,8 @@
 				"eightshift-forms/active-campaign",
 				"eightshift-forms/airtable",
 				"eightshift-forms/moments",
-				"eightshift-forms/workable"
+				"eightshift-forms/workable",
+				"eightshift-forms/jira"
 			]
 		}
 	},
@@ -107,6 +108,11 @@
 			"label": "Workable",
 			"slug": "workable",
 			"blockName": "eightshift-forms/workable"
+		},
+		{
+			"label": "Jira",
+			"slug": "jira",
+			"blockName": "eightshift-forms/jira"
 		}
 	]
 }
