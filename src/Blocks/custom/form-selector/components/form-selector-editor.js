@@ -35,7 +35,7 @@ export const FormSelectorEditor = ({
 							return (
 								<Button
 									key={index}
-									className='es-v-spaced es-content-center! es-m-0! es-nested-w-8 es-nested-h-8 es-h-auto es-w-32 es-h-24 es-rounded-1.5 es-border es-border-cool-gray-100 es-hover-border-cool-gray-400 es-transition'
+									className='es-v-spaced es-content-center! es-m-0! es-nested-w-8 es-nested-h-8 es-h-auto es-w-32 es-h-24 es-rounded-1.5 es-border es-border-cool-gray-100 es-hover-border-cool-gray-400 es-transition es-nested-m-0!'
 									onClick={() => createBlockFromTemplate(clientId, slug, forms)}
 									icon={<div dangerouslySetInnerHTML={{ __html: utilsManifest.icons[camelCase(slug)] }} />}
 								>
