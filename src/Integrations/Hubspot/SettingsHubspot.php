@@ -243,8 +243,8 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Allowed file types', 'eightshift-forms'),
-								// translators: %s will be replaced with the link.
 								'inputFieldHelp' => \sprintf(
+									// Translators: %s will be replaced with the link.
 									\__('Comma-separated list of <a href="%s" target="_blank">file type identifiers</a> (MIME types), e.g. <code>pdf</code>, <code>jpg</code>, <code>txt</code>.', 'eightshift-forms'),
 									'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
 								),
@@ -313,8 +313,8 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
-					// translators: %s will be replaced with the link.
 					'inputFieldHelp' => \sprintf(
+						// Translators: %s will be replaced with the link.
 						\__('Comma-separated list of <a href="%s" target="_blank">file type identifiers</a> (MIME types), e.g. <code>pdf</code>, <code>jpg</code>, <code>txt</code>.', 'eightshift-forms'),
 						'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
 					),

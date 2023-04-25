@@ -775,7 +775,7 @@ class Helper
 	 */
 	public static function getIsSetProgrammaticallyBadge(string $value): string
 	{
-		if(!empty($value)) {
+		if (!empty($value)) {
 			return '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
 		}
 

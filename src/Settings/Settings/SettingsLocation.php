@@ -64,10 +64,10 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 					'layoutType' => 'layout-v-stack-card',
 					'layoutContent' => [
 						[
-						'component' => 'highlighted-content',
-						'highlightedContentTitle' => \__('The form is not used anywhere', 'eightshift-forms'),
-						'highlightedContentIcon' => 'emptyStateLocations',
-					],
+							'component' => 'highlighted-content',
+							'highlightedContentTitle' => \__('The form is not used anywhere', 'eightshift-forms'),
+							'highlightedContentIcon' => 'emptyStateLocations',
+						],
 					],
 				],
 			];

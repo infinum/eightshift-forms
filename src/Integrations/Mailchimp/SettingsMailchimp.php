@@ -203,7 +203,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 
 		$apiKeyFieldHelp = \__('Can also be provided via a global variable.', 'eightshift-forms');
 
-		if(!empty($apiKey)) {
+		if (!empty($apiKey)) {
 			$apiKeyFieldHelp = '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
 		}
 

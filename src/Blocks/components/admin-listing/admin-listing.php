@@ -49,7 +49,7 @@ if ($adminListingForms) {
 		$trashRestoreLink = $form['trashRestoreLink'] ?? '';
 		$settingsLink = $form['settingsLink'] ?? '';
 		$settingsLocationLink = $form['settingsLocationLink'] ?? '';
-		$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$formTitle = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$useSync = $form['useSync'] ?? false;
 		$activeIntegration = $form['activeIntegration'] ?? [];
@@ -104,9 +104,9 @@ if ($adminListingForms) {
 			}
 		}
 
-		if (!$title) {
+		if (!$formTitle) {
 			// Translators: %s is the form ID.
-			$title = sprintf(__('Form %s', 'eightshift-forms'), $id);
+			$formTitle = sprintf(__('Form %s', 'eightshift-forms'), $id);
 		}
 
 		$cardIcon = $activeIntegration['icon'] ?? $manifestUtils['icons']['listingGeneric'];
@@ -128,7 +128,7 @@ if ($adminListingForms) {
 				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
 				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
 			],
-			'cardTitle' => ($isFormValid ? '<a href="' . $editLink . '">' . $title . '</a>' : $title) . ($adminListingIsDeveloperMode ? " ({$id})" : ''),
+			'cardTitle' => ($isFormValid ? '<a href="' . $editLink . '">' . $formTitle . '</a>' : $formTitle) . ($adminListingIsDeveloperMode ? " ({$id})" : ''),
 			'cardSubTitle' => $errorText . $subtitle,
 			'cardShowButtonsOnHover' => true,
 			'cardIcon' => $cardIcon,
@@ -232,7 +232,6 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 						'href' => $adminListingTrashLink,
 					],
 					'containerContent' => Components::ensureString([
-						// Helper::getProjectIcons('trash'),
 						esc_html__('Deleted', 'eightshift-forms'),
 					]),
 				]),

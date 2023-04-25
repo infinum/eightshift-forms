@@ -11,7 +11,6 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Manifest\Manifest;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 
 $manifest = Components::getManifest(__DIR__);

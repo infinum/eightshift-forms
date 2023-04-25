@@ -72,7 +72,7 @@ export class Utils {
 		this.formIsAdmin = options.formIsAdmin ?? false;
 
 		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}` ?? '';
+		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}`;
 
 		// Selectors.
 		this.formSelectorPrefix = options.formSelectorPrefix ?? `.${componentJsClass}`;
@@ -169,11 +169,11 @@ export class Utils {
 	// Unset global message.
 	unsetGlobalMsg(element) {
 		const messageContainer = element.querySelector(this.globalMsgSelector);
-	
+
 		if (!messageContainer) {
 			return;
 		}
-	
+
 		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
@@ -638,7 +638,7 @@ export class Utils {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @private
 	 */
 	 publicMethods() {

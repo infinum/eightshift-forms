@@ -101,7 +101,7 @@ if ($formConditionalTags) {
 	$rawConditionalTagData = $formConditionalTags;
 
 	if (str_contains($formConditionalTags, 'subItems')) {
-		$rawConditionalTagData = json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
+		$rawConditionalTagData = wp_json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($rawConditionalTagData);
@@ -143,8 +143,10 @@ if ($formAttrs) {
 
 ?>
 
-<<?php echo $formServerSideRender ? 'div' : 'form'; ?> class="<?php echo esc_attr($formClass); ?>" <?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-																									?>>
+<<?php echo $formServerSideRender ? 'div' : 'form'; ?>
+	class="<?php echo esc_attr($formClass); ?>"
+	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+>
 	<?php
 	echo Components::render(
 		'global-msg',

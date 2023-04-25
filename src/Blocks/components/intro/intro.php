@@ -42,10 +42,12 @@ $titleClass = Components::classnames([
 <div class="<?php echo esc_attr($introClass); ?>">
 	<?php
 	if ($introIsHighlightedImportant) {
+		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo Helper::getProjectIcons('warning');
 	}
 
 	if ($introIcon) {
+		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo Helper::getProjectIcons($introIcon);
 	}
 	?>

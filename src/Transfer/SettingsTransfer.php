@@ -101,7 +101,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								// 'submitIcon' => 'down',
 								'submitValue' => \__('Export', 'eightshift-forms'),
 								'submitVariant' => 'outline',
 								'submitAttrs' => [

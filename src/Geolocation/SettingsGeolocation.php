@@ -114,7 +114,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('<span>We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.</span>', 'eightshift-forms'), 'https://www.maxmind.com'),
+				'introSubtitle' => '<span>' . \sprintf(\__('We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.', 'eightshift-forms'), 'https://www.maxmind.com') . '</span>',
 			],
 			[
 				'component' => 'layout',

@@ -68,7 +68,7 @@ class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 						'cardListItem' => true,
 						'cardTrailingButtons' => [
 							[
-								'label' => __('Learn more', 'eightshift-forms'),
+								'label' => \__('Learn more', 'eightshift-forms'),
 								'url' => $url,
 							]
 						]

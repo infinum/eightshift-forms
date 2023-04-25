@@ -128,7 +128,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			$commonSvgParams,
 		);
 
-		$svg['rect'] = array_merge($commonSvgParams, [
+		$svg['rect'] = \array_merge($commonSvgParams, [
 			'x' => true,
 			'y' => true,
 			'width' => true,

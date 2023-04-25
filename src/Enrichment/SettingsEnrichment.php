@@ -184,8 +184,8 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'field',
-								'fieldLabel' => '<b>' . __('URL parameter', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . __('Field name', 'eightshift-forms') . '</b>',
+								'fieldLabel' => '<b>' . \__('URL parameter', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('Field name', 'eightshift-forms') . '</b>',
 								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
 								'fieldIsFiftyFiftyHorizontal' => true,
 							],

@@ -311,8 +311,8 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'groupContent' => [
 							[
 								'component' => 'field',
-								'fieldLabel' => '<b>' . __('Clearbit field', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . __('HubSpot property', 'eightshift-forms') . '</b>',
+								'fieldLabel' => '<b>' . \__('Clearbit field', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('HubSpot property', 'eightshift-forms') . '</b>',
 								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
 								'fieldIsFiftyFiftyHorizontal' => true,
 							],
