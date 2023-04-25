@@ -57,14 +57,6 @@ if (!$formsServerSideRender && (!$formsFormPostId || get_post_status($formsFormP
 if ($formsServerSideRender) {
 	// Missing form ID.
 	if (!$formsFormPostId) {
-		$formsClassNotSet = Components::selector($blockClass, $blockClass, 'not-set');
-		?>
-			<div class="<?php echo esc_attr($formsClass); ?> <?php echo esc_attr($formsClassNotSet); ?>">
-				<img class="<?php echo esc_attr("{$blockClass}__not-set-image") ?>" src="<?php echo esc_url(apply_filters(Manifest::MANIFEST_ITEM, 'cover.jpg')); ?>" />
-				<div class="<?php echo esc_attr("{$blockClass}__not-set-text") ?>"><?php esc_html_e('Please select form to show from the blocks sidebar.', 'eightshift-forms'); ?></div>
-			</div>
-		<?php
-
 		return;
 	}
 

@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
-import { select } from "@wordpress/data";
+import { select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
@@ -101,8 +101,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		<>
 			<PanelBody title={__('Form', 'eightshift-forms')}>
 				<AsyncSelect
-					// icon={icons.formAlt}
-					// label={__('Form to display', 'eightshift-forms')}
 					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
 					value={formsFormPostIdRaw ?? (formsFormPostId ? { label: 'Selected item', id: parseInt(formsFormPostId ?? -1) } : null)}
 					loadOptions={formSelectOptions}
@@ -128,7 +126,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
 								className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 							>
-								{__('Form settings', 'eightshift-forms')}
+								{__('Settings', 'eightshift-forms')}
 							</Button>
 						</div>
 					</Control>
