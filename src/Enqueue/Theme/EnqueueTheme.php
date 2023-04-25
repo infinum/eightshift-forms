@@ -45,7 +45,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']); // @phpstan-ignore-line.
 		\add_filter('script_loader_tag', [$this, 'enqueueScriptsCaptchaDefer'], 10, 2);
 	}
 
