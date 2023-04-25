@@ -32,7 +32,7 @@ export const FieldPanel = (props) => {
 	} = props;
 
 	return (
-		<Collapsable icon={icons.moreH} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
+		<Collapsable icon={icons.moreH} label={__('More options', 'eightshift-forms')} noBottomSpacing>
 			<ResponsiveNumberPicker
 				value={getDefaultBreakpointNames().reduce((all, current) => {
 					return {
