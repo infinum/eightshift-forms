@@ -71,6 +71,7 @@ export const FormsEditor = ({ attributes, setAttributes, preview }) => {
 
 			<ConditionalTagsEditor
 				{...props('conditionalTags', attributes)}
+				isFormPicker
 			/>
 
 			{isGeoPreview &&

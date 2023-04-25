@@ -91,7 +91,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 		);
 	};
 
-	const hasSubFields = conditionalTagsRules.map(([fieldData]) => fieldData).some(({ subItems }) => subItems?.length > 0);
+	const hasSubFields = conditionalTagsRules?.map(([fieldData]) => fieldData).some(({ subItems }) => subItems?.length > 0) ?? [];
 
 	return (
 		<PanelBody>
