@@ -1,4 +1,6 @@
-button.es-submit,
-a.es-submit {
-	@include submit-styles;
+a,
+button {
+	&.es-submit {
+		@include submit-styles;
+	}
 }
