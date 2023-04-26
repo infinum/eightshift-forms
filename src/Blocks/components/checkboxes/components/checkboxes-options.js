@@ -85,7 +85,7 @@ export const CheckboxesOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
 					<TextControl
 						label={<NameFieldLabel value={checkboxesName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={checkboxesName}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}

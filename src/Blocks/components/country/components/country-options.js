@@ -52,7 +52,7 @@ export const CountryOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<TextControl
 						label={<NameFieldLabel value={countryName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={countryName}
 						onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}

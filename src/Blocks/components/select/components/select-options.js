@@ -56,7 +56,7 @@ export const SelectOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<TextControl
 						label={<NameFieldLabel value={selectName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={selectName}
 						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}

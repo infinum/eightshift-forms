@@ -44,7 +44,7 @@ $cardClass = Components::classnames([
 
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
+		if (!(empty($key) || empty($value))) {
 			echo wp_kses_post("{$key}=" . $value . " ");
 		}
 	}

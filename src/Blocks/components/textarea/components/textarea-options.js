@@ -163,7 +163,7 @@ export const TextareaOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<TextControl
 						label={<NameFieldLabel value={textareaName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={textareaName}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}

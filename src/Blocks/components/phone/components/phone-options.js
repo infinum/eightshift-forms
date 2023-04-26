@@ -58,7 +58,7 @@ export const PhoneOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<TextControl
 						label={<NameFieldLabel value={phoneName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={phoneName}
 						onChange={(value) => setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}

@@ -135,7 +135,7 @@ export const InputOptions = (attributes) => {
 					{showInputName &&
 						<TextControl
 							label={<NameFieldLabel value={inputName} />}
-							help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+							help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 							value={inputName}
 							onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}

@@ -163,7 +163,9 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 							return (
 								<div key={index} className='es-h-spaced'>
-									<ConditionalTagsItem index={index} />
+									<ConditionalTagsItem
+										 index={index}
+									/>
 
 									<Button
 										icon={icons.trash}

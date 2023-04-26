@@ -81,7 +81,7 @@ export const DateOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<TextControl
 						label={<NameFieldLabel value={dateName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={dateName}
 						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}

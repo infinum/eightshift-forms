@@ -41,7 +41,7 @@ export const RadiosOptions = (attributes) => {
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
 					<TextControl
 						label={<NameFieldLabel value={radiosName} />}
-						help={__('Identifies the field within form submission data. Should be unique.', 'eightshift-forms')}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={radiosName}
 						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
