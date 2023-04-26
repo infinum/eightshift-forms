@@ -179,85 +179,101 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 
 		return [
+			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'select',
-				'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_PROJECT_KEY),
-				'selectFieldLabel' => \__('Select a project', 'eightshift-forms'),
-				'selectSingleSubmit' => true,
-				'selectContent' => \array_merge(
+				'component' => 'tabs',
+				'tabsContent' => [
 					[
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => '',
-							'selectOptionValue' => '',
+						'component' => 'tab',
+						'tabLabel' => \__('Settings', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'select',
+								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_PROJECT_KEY),
+								'selectFieldLabel' => \__('Select a project', 'eightshift-forms'),
+								'selectSingleSubmit' => true,
+								'selectContent' => \array_merge(
+									[
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => '',
+											'selectOptionValue' => '',
+										],
+									],
+									\array_map(
+										static function ($option) use ($selectedProject) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $option['title'],
+												'selectOptionValue' => $option['key'],
+												'selectOptionIsSelected' => $selectedProject === $option['key'],
+											];
+										},
+										$this->jiraClient->getProjects()
+									)
+								),
+							],
+							$selectedProject ? [
+								'component' => 'select',
+								'selectSingleSubmit' => true,
+								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
+								'selectFieldLabel' => \__('Select a issue type', 'eightshift-forms'),
+								'selectContent' => \array_merge(
+									[
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => '',
+											'selectOptionValue' => '',
+										],
+									],
+									\array_map(
+										static function ($option) use ($selectedIssueType) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $option['title'],
+												'selectOptionValue' => $option['id'],
+												'selectOptionIsSelected' => $selectedIssueType === $option['id'],
+											];
+										},
+										$this->jiraClient->getIssueType($selectedProject)
+									)
+								),
+							] : [],
 						],
 					],
-					\array_map(
-						static function ($option) use ($selectedProject) {
-							return [
-								'component' => 'select-option',
-								'selectOptionLabel' => $option['title'],
-								'selectOptionValue' => $option['key'],
-								'selectOptionIsSelected' => $selectedProject === $option['key'],
-							];
-						},
-						$this->jiraClient->getProjects()
-					)
-				),
+					$selectedIssueType ? [
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_TITLE_KEY),
+								'inputFieldLabel' => \__('Issue title', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputIsRequired' => true,
+								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_DESC_KEY),
+								'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputIsRequired' => true,
+								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
+							],
+							// Epic type.
+							$selectedIssueType === JiraClient::ISSUE_TYPE_EPIC ? [
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_EPIC_NAME_KEY),
+								'inputFieldLabel' => \__('Epic name', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputIsRequired' => true,
+								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_EPIC_NAME_KEY, $formId),
+							] : [],
+						],
+					] : [],
+				],
 			],
-			$selectedProject ? [
-				'component' => 'select',
-				'selectSingleSubmit' => true,
-				'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
-				'selectFieldLabel' => \__('Select a issue type', 'eightshift-forms'),
-				'selectContent' => \array_merge(
-					[
-						[
-							'component' => 'select-option',
-							'selectOptionLabel' => '',
-							'selectOptionValue' => '',
-						],
-					],
-					\array_map(
-						static function ($option) use ($selectedIssueType) {
-							return [
-								'component' => 'select-option',
-								'selectOptionLabel' => $option['title'],
-								'selectOptionValue' => $option['id'],
-								'selectOptionIsSelected' => $selectedIssueType === $option['id'],
-							];
-						},
-						$this->jiraClient->getIssueType($selectedProject)
-					)
-				),
-			] : [],
-			...($selectedIssueType ? [
-				[
-					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_TITLE_KEY),
-					'inputFieldLabel' => \__('Issue title', 'eightshift-forms'),
-					'inputType' => 'text',
-					'inputIsRequired' => true,
-					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
-				],
-				[
-					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_DESC_KEY),
-					'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
-					'inputType' => 'text',
-					'inputIsRequired' => true,
-					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
-				],
-				// Epic type.
-				$selectedIssueType === JiraClient::ISSUE_TYPE_EPIC ? [
-					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_EPIC_NAME_KEY),
-					'inputFieldLabel' => \__('Epic name', 'eightshift-forms'),
-					'inputType' => 'text',
-					'inputIsRequired' => true,
-					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_EPIC_NAME_KEY, $formId),
-				] : [],
-			] : []),
 		];
 	}
 

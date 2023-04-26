@@ -1,3 +1,4 @@
-.es-submit:is(a, button) {
+button.es-submit,
+a.es-submit {
 	@include submit-styles;
 }
