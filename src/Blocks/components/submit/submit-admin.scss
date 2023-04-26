@@ -1,68 +1,72 @@
 @import './submit-style.scss';
 
-.es-submit:is(a, button) {
-	display: flex;
-	align-items: center;
-	gap: var(--global-esf-spacing-s);
+a,
+button {
+	&.es-submit {
+		display: flex;
+		align-items: center;
+		gap: var(--global-esf-spacing-s);
 
-	width: fit-content;
+		width: fit-content;
 
-	box-sizing: border-box;
+		box-sizing: border-box;
 
-	height: 2.5rem;
-	font-weight: 500;
-	padding: 0.75rem 1rem;
-	border-radius: 0.5rem;
+		height: 2.5rem;
+		font-weight: 500;
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
 
-	&--global {
-		width: auto;
-	}
-
-	&--with-icon {
-		.es-submit__inner {
-			display: flex;
-			align-items: center;
-			gap: 10px;
+		&--global {
+			width: auto;
 		}
-	}
 
-	&:focus:not(:focus-visible) {
-		outline: none;
-		box-shadow: none;
-	}
-
-	&:focus:focus-visible {
-		outline: none;
-		box-shadow: 0 0 0 1px var(--global-colors-esf-white), 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
-	}
-
-	&--ghost {
-		--esf-submit-focus-color: var(--global-colors-esf-admin-accent-30);
-
-		background: transparent;
-		color: var(--global-colors-esf-admin-accent);
-
-		&:hover {
-			background: var(--global-colors-esf-admin-accent-05);
+		&--with-icon {
+			.es-submit__inner {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
 		}
-	}
 
-	&--outline {
-		background: transparent;
-		color: var(--global-colors-esf-admin-accent);
-		border: 1px solid var(--global-colors-esf-admin-accent);
-
-		&:hover {
-			background: var(--global-colors-esf-admin-accent-05);
+		&:focus:not(:focus-visible) {
+			outline: none;
+			box-shadow: none;
 		}
-	}
 
-	&--fit-icon {
-		padding: 0.625rem 1rem;
-	}
+		&:focus:focus-visible {
+			outline: none;
+			box-shadow: 0 0 0 1px var(--global-colors-esf-white),
+				0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+		}
 
-	&--mini {
-		padding: 0.5rem;
-		height: 1.875rem;
+		&--ghost {
+			--esf-submit-focus-color: var(--global-colors-esf-admin-accent-30);
+
+			background: transparent;
+			color: var(--global-colors-esf-admin-accent);
+
+			&:hover {
+				background: var(--global-colors-esf-admin-accent-05);
+			}
+		}
+
+		&--outline {
+			background: transparent;
+			color: var(--global-colors-esf-admin-accent);
+			border: 1px solid var(--global-colors-esf-admin-accent);
+
+			&:hover {
+				background: var(--global-colors-esf-admin-accent-05);
+			}
+		}
+
+		&--fit-icon {
+			padding: 0.625rem 1rem;
+		}
+
+		&--mini {
+			padding: 0.5rem;
+			height: 1.875rem;
+		}
 	}
 }
