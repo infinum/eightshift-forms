@@ -25,11 +25,9 @@ $errorClass = Components::classnames([
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
+// The content of the div is one-lined to prevent generation of spaces, which breaks the :empty pseudoselector.
 ?>
-
 <div
 	class="<?php echo esc_attr($errorClass); ?>"
 	data-id="<?php echo esc_attr($errorId); ?>"
->
-	<?php echo esc_html($errorValue); ?>
-</div>
+><?php echo esc_html($errorValue); ?></div>

@@ -1,2 +1,18 @@
 @import './select-frontend-mandatory.scss';
 @import './select-frontend.scss';
+
+.es-select {
+	--es-input-radius: var(--global-es-radius-8);
+
+	&.is-open {
+		--es-input-radius: var(--global-es-radius-8) var(--global-es-radius-8) 0 0;
+
+		box-shadow: var(--global-esf-box-shadow-l);
+	}
+
+	.choices__list--dropdown {
+		border-radius: 0 0 var(--global-es-radius-8) var(--global-es-radius-8);
+
+		box-shadow: var(--global-esf-box-shadow-l);
+	}
+}

@@ -1,11 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, Button, BaseControl } from '@wordpress/components';
+import { TextControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
+	IconToggle,
+	Section,
+	AnimatedContentVisibility,
 } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
 import manifest from '../manifest.json';
@@ -15,6 +18,8 @@ export const FieldOptions = (attributes) => {
 		setAttributes,
 
 		showFieldLabel = true,
+
+		additionalControls,
 	} = attributes;
 
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
@@ -24,49 +29,47 @@ export const FieldOptions = (attributes) => {
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 
 	return (
-		<>
+		<Section icon={icons.buttonOutline} label={__('Field', 'eightshift-forms')}>
 			{showFieldLabel &&
-				<BaseControl
-					label={(
-						<div className='es-flex-between'>
-							<IconLabel icon={icons.fieldLabel} label={__('Field label', 'eightshift-forms')} />
-							<Button
-								icon={icons.hide}
-								isPressed={fieldHideLabel}
-								onClick={() => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !fieldHideLabel })}
-								content={__('Hide', 'eightshift-forms')}
-							/>
+				<>
+					<IconToggle
+						icon={icons.tag}
+						label={__('Label', 'eightshift-forms')}
+						checked={!fieldHideLabel}
+						onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !value })}
+						reducedBottomSpacing
+					/>
 
-						</div>
-					)}
-					help={fieldHideLabel ? __('Hiding the label might impact accessibility!', 'eightshift-forms') : null}
-				>
 					{!fieldHideLabel &&
 						<TextControl
 							value={fieldLabel}
 							onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
+							disabled={fieldHideLabel}
 						/>
 					}
 
-				</BaseControl>
+					<AnimatedContentVisibility showIf={fieldHideLabel}>
+						<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+					</AnimatedContentVisibility>
+				</>
 			}
 
 			<TextControl
-				label={<IconLabel icon={icons.fieldHelp} label={__('Help text', 'eightshift-forms')} />}
+				label={<IconLabel icon={icons.help} label={__('Help text', 'eightshift-forms')} />}
 				value={fieldHelp}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 			/>
 
-			<Button
-				icon={icons.fieldReadonly}
-				isPressed={fieldHidden}
-				onClick={() => setAttributes({ [getAttrKey('fieldHidden', attributes, manifest)]: !fieldHidden })}
+			<IconToggle
+				icon={icons.hide}
+				label={__('Hide', 'eightshift-forms')}
+				checked={fieldHidden}
+				onChange={(value) => setAttributes({ [getAttrKey('fieldHidden', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('fieldHidden', attributes, manifest), fieldDisabledOptions)}
-			>
-				{__('Is hidden', 'eightshift-forms')}
-			</Button>
+				noBottomSpacing={!additionalControls}
+			/>
 
-			<br/><br/>
-		</>
+			{additionalControls}
+		</Section>
 	);
 };

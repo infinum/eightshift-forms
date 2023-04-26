@@ -1,5 +1,4 @@
 import React from 'react';
-import { __, sprintf } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
 import { checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
@@ -19,7 +18,7 @@ export const AirtableOptions = ({
 	} = manifest;
 
 	return (
-		<PanelBody title={sprintf(__('%s form', 'eightshift-forms'), title)}>
+		<PanelBody title={title}>
 			<IntegrationsOptions
 				block={blockName}
 				setAttributes={setAttributes}

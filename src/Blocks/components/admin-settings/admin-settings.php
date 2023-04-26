@@ -6,6 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -44,36 +45,31 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
 			<?php
-				echo Components::render(
-					'notice',
-					[
-						'noticeContent' => $adminSettingsNotice,
-					],
-					'',
-					true
-				);
+			echo Components::render('notice', [
+				'noticeContent' => $adminSettingsNotice,
+			], '', true);
 			?>
 		</div>
 	<?php } ?>
 	<div class="<?php echo esc_attr("{$sectionClass}__sidebar"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__section {$sectionClass}__section--clean"); ?>">
-			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-				<?php echo $manifestUtils['icons']['arrowLeft']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-				<?php echo esc_html__('All forms', 'eightshift-forms'); ?>
+			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__menu-link {$sectionClass}__menu-link--fit"); ?>">
+				<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
+					<?php
+					echo Helper::getProjectIcons('arrowLeft'),
+					esc_html__('Forms', 'eightshift-forms');
+					?>
+				</span>
 			</a>
 		</div>
 
 		<?php
-		echo Components::renderPartial( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-			'component',
-			$componentName,
-			'sidebar-section',
-			[
-				'items' => $adminSettingsSidebar,
-				'sectionClass' => $sectionClass,
-				'adminSettingsType' => $adminSettingsType,
-			]
-		);
+		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		echo Components::renderPartial('component', $componentName, 'sidebar-section', [
+			'items' => $adminSettingsSidebar,
+			'sectionClass' => $sectionClass,
+			'adminSettingsType' => $adminSettingsType,
+		]);
 		?>
 	</div>
 	<div class="<?php echo esc_attr("{$sectionClass}__main"); ?>">
@@ -87,8 +83,11 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 					<?php if (!$adminSettingsIsGlobal) { ?>
 						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
-								<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-								<?php echo esc_html__('Edit form', 'eightshift-forms'); ?>
+								<?php
+									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									echo $manifestUtils['icons']['edit'],
+									esc_html__('Edit form', 'eightshift-forms');
+								?>
 							</a>
 						</div>
 					<?php } ?>
@@ -101,7 +100,8 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				<?php } ?>
 			</div>
 			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				?>
 			</div>
 		</div>
 	</div>

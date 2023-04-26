@@ -97,7 +97,14 @@ if ($formType) {
 }
 
 if ($formConditionalTags) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($formConditionalTags);
+	// Extract just the field name from the given data, if needed.
+	$rawConditionalTagData = $formConditionalTags;
+
+	if (str_contains($formConditionalTags, 'subItems')) {
+		$rawConditionalTagData = wp_json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
+	}
+
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($rawConditionalTagData);
 }
 
 if ($formDownloads) {
@@ -148,7 +155,8 @@ if ($formAttrs) {
 	?>
 
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
-		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		?>
 	</div>
 
 	<?php

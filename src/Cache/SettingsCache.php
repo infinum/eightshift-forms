@@ -76,13 +76,13 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					return [
 						'component' => 'card',
 						'cardTitle' => Filters::getSettingsLabels($key),
-						'cardSubTitle' => Filters::getSettingsLabels($key),
 						'cardIcon' => $icon,
 						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitValue' => \__('Clear', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									'data-type' => $key,
 									'data-reload' => 'false',
@@ -101,18 +101,24 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					...$output,
 					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
 						'component' => 'card',
-						'cardTitle' => 'All cache',
+						'cardTitle' => 'All caches',
 						'cardSubTitle' => 'Use with caution!',
-						'cardIcon' => '',
+						'cardIcon' => Helper::getProjectIcons('allChecked'),
 						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Clear cache', 'eightshift-forms'),
+								'submitValue' => \__('Clear', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									'data-type' => 'all',
 									'data-reload' => 'false',

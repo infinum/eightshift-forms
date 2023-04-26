@@ -1,0 +1,166 @@
+// Create a color scheme for the WP admin.
+.wp-admin {
+	// Default ("Fresh").
+	--global-colors-esf-admin-accent: #2271B1;
+	--global-colors-esf-admin-accent-50: #2271B180;
+	--global-colors-esf-admin-accent-30: #2271B133;
+	--global-colors-esf-admin-accent-10: #2271B11A;
+	--global-colors-esf-admin-accent-05: #2271B10D;
+	--global-colors-esf-admin-accent-dark: #135E96;
+	--es-input-focus-border-color: #2271B1;
+
+	background-color: var(--esf-main-bg-color, var(--global-colors-esf-gray-100));
+}
+
+// stylelint-disable-next-line selector-max-specificity
+#adminmenu a.wp-has-current-submenu::after,
+#adminmenu > li.current > a.current::after {
+	border-right-color: var(--esf-main-bg-color, var(--global-colors-esf-gray-100));
+}
+
+.admin-color {
+	&-light {
+		--global-colors-esf-admin-accent: #0073AA;
+		--global-colors-esf-admin-accent-50: #0073AA80;
+		--global-colors-esf-admin-accent-30: #0073AA33;
+		--global-colors-esf-admin-accent-10: #0073AA1A;
+		--global-colors-esf-admin-accent-05: #0073AA0D;
+		--global-colors-esf-admin-accent-dark: #0096DD;
+		--es-input-focus-border-color: #0073AA;
+	}
+
+	&-modern {
+		--global-colors-esf-admin-accent: #3858E9;
+		--global-colors-esf-admin-accent-50: #3858E980;
+		--global-colors-esf-admin-accent-30: #3858E933;
+		--global-colors-esf-admin-accent-10: #3858E91A;
+		--global-colors-esf-admin-accent-05: #3858E90D;
+		--global-colors-esf-admin-accent-dark: #183AD6;
+		--es-input-focus-border-color: #3858E9;
+	}
+
+	&-blue {
+		--global-colors-esf-admin-accent: #4796B3;
+		--global-colors-esf-admin-accent-50: #4796B380;
+		--global-colors-esf-admin-accent-30: #4796B333;
+		--global-colors-esf-admin-accent-10: #4796B31A;
+		--global-colors-esf-admin-accent-05: #4796B30D;
+		--global-colors-esf-admin-accent-dark: #096484;
+		--es-input-focus-border-color: #4796B3;
+	}
+
+	&-coffee {
+		--global-colors-esf-admin-accent: #9D816B;
+		--global-colors-esf-admin-accent-50: #9D816B80;
+		--global-colors-esf-admin-accent-30: #9D816B33;
+		--global-colors-esf-admin-accent-10: #9D816B1A;
+		--global-colors-esf-admin-accent-05: #9D816B0D;
+		--global-colors-esf-admin-accent-dark: #46403C;
+		--es-input-focus-border-color: #9D816B;
+	}
+
+	&-ectoplasm {
+		--global-colors-esf-admin-accent: #6E5395;
+		--global-colors-esf-admin-accent-50: #6E539580;
+		--global-colors-esf-admin-accent-30: #6E539533;
+		--global-colors-esf-admin-accent-10: #6E53951A;
+		--global-colors-esf-admin-accent-05: #6E53950D;
+		--global-colors-esf-admin-accent-dark: #413256;
+		--es-input-focus-border-color: #6E5395;
+	}
+
+	&-midnight {
+		--global-colors-esf-admin-accent: #69A8BB;
+		--global-colors-esf-admin-accent-50: #69A8BB80;
+		--global-colors-esf-admin-accent-30: #69A8BB33;
+		--global-colors-esf-admin-accent-10: #69A8BB1A;
+		--global-colors-esf-admin-accent-05: #69A8BB0D;
+		--global-colors-esf-admin-accent-dark: #4F7D8B;
+		--es-input-focus-border-color: #69A8BB;
+	}
+
+	&-ocean {
+		--global-colors-esf-admin-accent: #738E96;
+		--global-colors-esf-admin-accent-50: #738E9680;
+		--global-colors-esf-admin-accent-30: #738E9633;
+		--global-colors-esf-admin-accent-10: #738E961A;
+		--global-colors-esf-admin-accent-05: #738E960D;
+		--global-colors-esf-admin-accent-dark: #627C83;
+		--es-input-focus-border-color: #738E96;
+	}
+
+	&-sunrise {
+		--global-colors-esf-admin-accent: #CF4944;
+		--global-colors-esf-admin-accent-50: #CF494480;
+		--global-colors-esf-admin-accent-30: #CF494433;
+		--global-colors-esf-admin-accent-10: #CF49441A;
+		--global-colors-esf-admin-accent-05: #CF49440D;
+		--global-colors-esf-admin-accent-dark: #BE3631;
+		--es-input-focus-border-color: #CF4944;
+	}
+
+	// Gray color adjustments.
+
+	// Neutral grays ("Neutral").
+	// stylelint-disable-next-line no-duplicate-selectors
+	&-light {
+		--global-colors-esf-gray-50: #FAFAFA;
+		--global-colors-esf-gray-100: #F5F5F5;
+		--global-colors-esf-gray-200: #E5E5E5;
+		--global-colors-esf-gray-300: #D4D4D4;
+		--global-colors-esf-gray-400: #A3A3A3;
+		--global-colors-esf-gray-500: #737373;
+		--global-colors-esf-gray-600: #525252;
+		--global-colors-esf-gray-950: #0A0A0A;
+	}
+
+	// Warm grays ("Stone").
+	&-coffee,
+	&-midnight,
+	&-sunrise {
+		--global-colors-esf-gray-50: #FAFAF9;
+		--global-colors-esf-gray-100: #F5F5F4;
+		--global-colors-esf-gray-200: #E7E5E4;
+		--global-colors-esf-gray-300: #D6D3D1;
+		--global-colors-esf-gray-400: #A8A29E;
+		--global-colors-esf-gray-500: #78716C;
+		--global-colors-esf-gray-600: #57534E;
+		--global-colors-esf-gray-950: #0C0A09;
+	}
+
+	// Bluer grays ("Slate").
+	// stylelint-disable-next-line no-duplicate-selectors
+	&-blue {
+		--global-colors-esf-gray-50: #F8FAFC;
+		--global-colors-esf-gray-100: #F1F5F9;
+		--global-colors-esf-gray-200: #E2E8F0;
+		--global-colors-esf-gray-300: #CBD5E1;
+		--global-colors-esf-gray-400: #94A3B8;
+		--global-colors-esf-gray-500: #64748B;
+		--global-colors-esf-gray-600: #475569;
+		--global-colors-esf-gray-950: #020617;
+	}
+
+	// Blue (sky) color adjustments.
+
+	// Sky -> Blue
+	&-fresh,
+	&-modern {
+		--global-colors-esf-sky-50: #EFF6FF;
+		--global-colors-esf-sky-100: #DBEAFE;
+		--global-colors-esf-sky-200: #BFDBFE;
+		--global-colors-esf-sky-500: #3B82F6;
+		--global-colors-esf-sky-950: #172554;
+	}
+
+	// Sky -> Indigo
+	&-ectoplasm,
+	&-sunrise,
+	&-coffee {
+		--global-colors-esf-sky-50: #EEF2FF;
+		--global-colors-esf-sky-100: #E0E7FF;
+		--global-colors-esf-sky-200: #C7D2FE;
+		--global-colors-esf-sky-500: #6366F1;
+		--global-colors-esf-sky-950: #1E1B4B;
+	}
+}

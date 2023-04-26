@@ -70,6 +70,8 @@ $fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
 $fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
+$fieldInlineBeforeAfterContent = Components::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
+$fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -80,6 +82,8 @@ $fieldClass = Components::classnames([
 	Components::selector($blockJsClass, $blockJsClass),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
+	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
+	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 ]);
 
 $labelClass = Components::classnames([
@@ -139,7 +143,7 @@ $additionalContent = Helper::getBlockAdditionalContentViaFilter('field', $attrib
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
 				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-					<?php echo esc_html($fieldLabel); ?>
+					<?php echo wp_kses_post($fieldLabel); ?>
 
 					<?php
 					if ($fieldUseTooltip) {

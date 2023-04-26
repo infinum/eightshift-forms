@@ -79,13 +79,13 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Scripts & Styles', 'eightshift-forms'),
+						'tabLabel' => \__('Scripts and styles', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('Built-in scripts and styles', 'eightshift-forms'),
-								'checkboxesFieldHelp' => \__('Don\'t forget to provide your own scripts and styles if you disable the built-in ones.', 'eightshift-forms'),
+								'checkboxesFieldHideLabel' => true,
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+								'checkboxesIsToggles' => true,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -93,7 +93,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Disable default styles will disable all the frontend and block editor styles.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Includes all frontend and block editor styles.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'checkbox',
@@ -101,7 +101,11 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('Disable default scripts will remove all the frontend logic, including validation and form submission.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Includes all frontend logic, e.g. validation and form submission.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -117,35 +121,37 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Actions', 'eightshift-forms'),
+						'tabLabel' => \__('After form submit', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('After submitting the form', 'eightshift-forms'),
+								'checkboxesFieldHideLabel' => true,
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-								'checkboxesFieldHelp' => \__('If checked, forms will not use these features.', 'eightshift-forms'),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable scroll to first field with an error', 'eightshift-forms'),
+										'checkboxLabel' => \__('Don\'t scroll to the first field with an error', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable scroll to top of the form to see the success message', 'eightshift-forms'),
+										'checkboxLabel' => \__('Don\'t scroll to the top of the form (to reveal the success message)', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 										'checkboxAsToggle' => true,
 									],
 									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => true,
+									],
+									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable native redirect', 'eightshift-forms'),
+										'checkboxLabel' => \__('Use JavaScript for redirects', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('This option is used to provide custom redirect using JavaScript events.', 'eightshift-forms'),
 									],
 								],
 							],

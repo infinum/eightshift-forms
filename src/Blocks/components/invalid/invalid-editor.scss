@@ -1,14 +1,14 @@
 .es-invalid {
 	$this: &;
 
-	background-color: var(--global-colors-es-pome);
+	background-color: var(--global-colors-esf-red-500);
 	padding: 50px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-flow: column wrap;
-	color: var(--global-colors-es-white);
-	border: 2px solid var(--global-colors-es-pome);
+	color: var(--global-colors-esf-white);
+	border: 2px solid var(--global-colors-esf-red-500);
 
 	&__icon {
 		margin-bottom: 15px;
@@ -16,7 +16,7 @@
 		svg {
 			width: 36px;
 			height: 36px;
-			color: var(--global-colors-es-white);
+			color: var(--global-colors-esf-white);
 		}
 	}
 

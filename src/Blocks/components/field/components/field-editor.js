@@ -3,12 +3,15 @@
 import React from 'react';
 import classnames from 'classnames';
 import { isObject } from 'lodash';
+import { __ } from '@wordpress/i18n';
+import { Tooltip } from '@wordpress/components';
 import { dispatch } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
 	outputCssVariables,
 	STORE_NAME,
+	icons,
 } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
@@ -89,11 +92,19 @@ export const FieldEditor = (attributes) => {
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
 	]);
 
+	const hideIndicator = fieldHidden && (
+		<div className='es-position-absolute es-right-7 es-top-4 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
+			<Tooltip text={__('Field is hidden', 'eightshift-forms')}>
+				{icons.hide}
+			</Tooltip>
+		</div>
+	);
+
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
 				<label className={`${componentClass}__label`} htmlFor="id">
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: fieldLabel}} />
+					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</label>
 			}
 		</>
@@ -103,7 +114,7 @@ export const FieldEditor = (attributes) => {
 		<>
 			{!fieldHideLabel &&
 				<legend className={`${componentClass}__label`}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: fieldLabel}} />
+					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</legend>
 			}
 		</>
@@ -134,7 +145,7 @@ export const FieldEditor = (attributes) => {
 	);
 
 	const DivContent = () => {
-		return(
+		return (
 			<div className={fieldClass}>
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
@@ -145,12 +156,14 @@ export const FieldEditor = (attributes) => {
 					<Content />
 					<Help />
 				</div>
+
+				{hideIndicator}
 			</div>
 		);
 	};
 
 	const FieldsetContent = () => {
-		return(
+		return (
 			<fieldset className={fieldClass}>
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
@@ -161,13 +174,11 @@ export const FieldEditor = (attributes) => {
 					<Content />
 					<Help />
 				</div>
+
+				{hideIndicator}
 			</fieldset>
 		);
 	};
 
-	return (
-		<>
-		{fieldType === 'div' ? <DivContent /> : <FieldsetContent />}
-		</>
-	);
+	return fieldType === 'div' ? <DivContent /> : <FieldsetContent />;
 };

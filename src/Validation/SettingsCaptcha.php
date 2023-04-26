@@ -183,30 +183,33 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('reCAPTCHA is a free service from Google that helps protect websites from spam and abuse. A “CAPTCHA” is a Turing test to tell human and bots apart.', 'eightshift-forms'),
+				'introSubtitle' => \__('Protect your website from spam and abuse using Google\'s reCAPTCHA.<br />A captcha is a simple task that is easy for humans to do, but difficult for bots.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('Captcha type', 'eightshift-forms'),
+								'checkboxesFieldHideLabel' => true,
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Is enterprise', 'eightshift-forms'),
+										'checkboxLabel' => \__('Use reCAPTCHA Enterprise', 'eightshift-forms'),
 										'checkboxIsChecked' => $isEnterprise,
 										'checkboxValue' => self::SETTINGS_CAPTCHA_ENTERPRISE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'input',
@@ -231,7 +234,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								[
 									'component' => 'input',
 									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
-									'inputFieldLabel' => \__('Project Id', 'eightshift-forms'),
+									'inputFieldLabel' => \__('Project ID', 'eightshift-forms'),
 									'inputType' => 'password',
 									'inputIsRequired' => true,
 									'inputValue' => !empty($secretProjectId) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
@@ -240,7 +243,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								[
 									'component' => 'input',
 									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_API_KEY),
-									'inputFieldLabel' => \__('Api key', 'eightshift-forms'),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 									'inputType' => 'password',
 									'inputIsRequired' => true,
 									'inputValue' => !empty($secretApiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY),
@@ -260,20 +263,24 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Hide captcha badge', 'eightshift-forms'),
+										'checkboxLabel' => \__('Hide badge', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 										'checkboxValue' => self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxHelp' => \__('We don\'t reccomend hiding the badge because it is against Google policy. Use at your own risk.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Not recommended, as it is against Google\'s terms of use.', 'eightshift-forms'),
 									],
 								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SCORE_KEY),
 								'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
-								'inputFieldHelp' => \__('This number determines the level above which a submission is <strong>not</strong> considered spam. In general, normal users will get a score of around 0.8-0.9. The value should be between 0.1 and 1.0 (default is 0.5).', 'eightshift-forms'),
+								'inputFieldHelp' => \__('The level above which a submission is <strong>not</strong> considered spam. Should be between 0.1 and 1.0.<br />In most cases, a user will receive as core between 0.8 and 0.9.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
 								'inputMin' => 0,
@@ -282,16 +289,21 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
 							],
 							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
-								'inputFieldLabel' => \__('Submit action name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('This is the action name that will be sent to Google reCaptcha on form submit.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('"On submit" action name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA on form submission.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
 							],
 							[
 								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -300,7 +312,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Load on init', 'eightshift-forms'),
+										'checkboxLabel' => \__('Load after form ', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
 										'checkboxValue' => self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY,
 										'checkboxSingleSubmit' => true,
@@ -312,8 +324,8 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							$isInit ? [
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
-								'inputFieldLabel' => \__('Init action name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('This is the action name that will be sent to Google reCaptcha on form init.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('"After initialization" action name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA when the form is loaded.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY,

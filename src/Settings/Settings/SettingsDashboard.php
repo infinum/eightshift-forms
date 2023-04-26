@@ -85,16 +85,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				'component' => 'card',
 				'cardTitle' => Filters::getSettingsLabels($key),
 				'cardIcon' => $icon,
-				'cardLinks' => [
-					[
-						'label' => \__('Settings', 'eightshift-forms'),
-						'url' => Helper::getSettingsGlobalPageUrl($key),
-					],
-					[
-						'label' => \__('Website', 'eightshift-forms'),
-						'url' => Filters::getSettingsLabels($key, 'externalLink'),
-					]
-				],
 				'cardContent' => [
 					[
 						'component' => 'checkboxes',
@@ -124,13 +114,17 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 
 		foreach ($filtered as $key => $value) {
 			$output[] = [
-					'component' => 'intro',
-					'introTitle' => Filters::getSettingsLabels($key),
-					'introIsHeading' => true,
-			];
-			$output[] = [
 				'component' => 'layout',
-				'layoutContent' => $value,
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => Filters::getSettingsLabels($key),
+						'introIsHeading' => false,
+						'introTitleSize' => 'small',
+					],
+					...$value,
+				],
+				'layoutType' => 'layout-v-stack-card',
 			];
 		}
 

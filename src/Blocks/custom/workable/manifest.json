@@ -1,8 +1,8 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "workable",
-	"title": "Workable Form",
-	"description" : "A Workable job application form",
+	"title": "Workable form",
+	"description" : "Workable job application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-workable"

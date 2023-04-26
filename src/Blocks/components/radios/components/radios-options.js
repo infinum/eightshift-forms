@@ -1,18 +1,11 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	props,
-	icons,
-	IconLabel,
-	FancyDivider,
-} from '@eightshift/frontend-libs/scripts';
+import { TextControl, PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, icons, Section, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, MissingName } from './../../utils';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
@@ -31,35 +24,31 @@ export const RadiosOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: radiosDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				<FancyDivider label={__('Validation', 'eightshift-forms')} />
+				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')} >
+					<IconToggle
+						icon={icons.required}
+						label={__('Required', 'eightshift-forms')}
+						checked={radiosIsRequired}
+						onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
+						noBottomSpacing
+					/>
+				</Section>
 
-				<Button
-					icon={icons.fieldRequired}
-					isPressed={radiosIsRequired}
-					onClick={() => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: !radiosIsRequired })}
-					disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
-				>
-					{__('Required', 'eightshift-forms')}
-				</Button>
-
-				<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-				<TextControl
-					label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-					help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-					value={radiosName}
-					onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
-				/>
-				<MissingName value={radiosName} />
-
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<NameFieldLabel value={radiosName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={radiosName}
+						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {

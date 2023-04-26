@@ -84,8 +84,7 @@ abstract class AbstractFormBuilder
 			'submit',
 			Components::props('submit', [
 				'additionalClass' => 'es-submit--global',
-				'submitValue' => \__('Save settings', 'eightshift-forms'),
-				'submitIcon' => 'save',
+				'submitValue' => \__('Save changes', 'eightshift-forms'),
 			]),
 			'',
 			true

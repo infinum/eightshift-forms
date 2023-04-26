@@ -4,10 +4,10 @@ div.es-select {
 	font-size: initial;
 
 	.choices__inner {
-		font-size: initial;
+		font-size: 0.85rem;
 		border-radius: var(--es-input-radius);
 		background-color: transparent;
-		height: var(--es-input-height);
+		height: var(--esf-input-height);
 		border: 1px solid var(--es-input-border-color);
 		padding: var(--es-input-spacing);
 		min-height: auto;
@@ -20,7 +20,7 @@ div.es-select {
 
 	.choices__list {
 		&--dropdown {
-			font-size: initial;
+			font-size: 0.85rem;
 			transition: {
 				property: border-color;
 				timing-function: var(--es-input-transition-timing);
@@ -28,7 +28,7 @@ div.es-select {
 			}
 
 			.choices__item {
-				font-size: initial;
+				font-size: 0.85rem;
 				padding: var(--es-input-spacing);
 				display: flex;
 				align-items: center;
@@ -44,10 +44,11 @@ div.es-select {
 	}
 
 	.choices__item {
-		font-size: initial;
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+
+		font-size: 0.85rem;
 	}
 
 	.choices__input {

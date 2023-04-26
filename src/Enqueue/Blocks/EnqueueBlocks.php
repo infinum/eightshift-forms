@@ -89,8 +89,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49); // @phpstan-ignore-line.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50); // @phpstan-ignore-line.
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript'], 11);

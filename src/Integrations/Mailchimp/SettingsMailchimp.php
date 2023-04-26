@@ -201,6 +201,12 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 		$apiKey = Variables::getApiKeyMailchimp();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
+		$apiKeyFieldHelp = \__('Can also be provided via a global variable.', 'eightshift-forms');
+
+		if (!empty($apiKey)) {
+			$apiKeyFieldHelp = '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
+		}
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -208,28 +214,26 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => $apiKeyFieldHelp,
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 								'inputIsDisabled' => !empty($apiKey),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Redirect to URL after form submit', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
 									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.

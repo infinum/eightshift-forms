@@ -31,6 +31,10 @@
 		},
 		"checkboxesDisabledOptions": {
 			"type": "array"
+		},
+		"checkboxesIsToggles": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

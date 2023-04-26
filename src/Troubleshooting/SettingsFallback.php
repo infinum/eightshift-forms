@@ -95,17 +95,21 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Emails', 'eightshift-forms'),
+						'tabLabel' => \__('E-mail', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('In the event of an error on the forms, Eightshift Forms can send an email notification containing all the form submission data as a fallback. The email can be used to debug or allow manual data processing.', 'eightshift-forms'),
+								'introSubtitle' => \__('In case a form submission fails, Eightshift Forms can send a plain-text e-mail with all the submitted data as a fallback. The data can then be used for debugging and manual processing.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 							],
@@ -127,17 +131,21 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	{
 		return $this->isSettingsGlobalValid() ? [
 			'component' => 'tab',
-			'tabLabel' => \__('Fallback', 'eightshift-forms'),
+			'tabLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 			'tabContent' => [
 				[
 					'component' => 'intro',
-					'introSubtitle' => \__('In the event of an error on the forms, Eightshift Forms can send an email notification containing all the form submission data as a fallback. The email can be used to debug or allow manual data processing.', 'eightshift-forms'),
+					'introSubtitle' => \__('In case a form submission fails, Eightshift Forms can send a plain-text e-mail with all the submitted data as a fallback. The data can then be used for debugging and manual processing.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'divider',
+					'dividerExtraVSpacing' => true,
 				],
 				[
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
-					'inputFieldHelp' => \__('Set the email where the integration fallback emails will be sent. This field will be used as the "cc" field. The main "from" field will be used from the main fallback global setting page. Use commas to separate multiple emails.', 'eightshift-forms'),
+					'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputValue' => $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 				],

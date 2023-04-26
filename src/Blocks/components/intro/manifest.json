@@ -25,6 +25,9 @@
 		"introIsHeading": {
 			"type": "boolean",
 			"default": false
+		},
+		"introIcon": {
+			"type": "string"
 		}
 	}
 }

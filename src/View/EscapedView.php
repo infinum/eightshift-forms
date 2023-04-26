@@ -69,36 +69,66 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	{
 		$svg = self::SVG;
 
+		$commonSvgParams = [
+			'begin' => true,
+			'calcMode' => true,
+			'clip-rule' => true,
+			'cx' => true,
+			'cy' => true,
+			'd' => true,
+			'dur' => true,
+			'fill' => true,
+			'fill-opacity' => true,
+			'fill-rule' => true,
+			'height' => true,
+			'keySplines' => true,
+			'keyTimes' => true,
+			'r' => true,
+			'repeatCount' => true,
+			'rx' => true,
+			'ry' => true,
+			'stroke' => true,
+			'stroke-dasharray' => true,
+			'stroke-linecap' => true,
+			'stroke-linejoin' => true,
+			'stroke-opacity' => true,
+			'stroke-width' => true,
+			'transform' => true,
+			'values' => true,
+			'viewBox' => true,
+			'width' => true,
+			'xmlns' => true,
+			'y' => true,
+			'style' => true,
+			'class' => true,
+		];
+
 		$svg['circle'] = \array_merge(
 			$svg['circle'],
-			[
-				'stroke-width' => true,
-				'fill-opacity' => true,
-			]
+			$commonSvgParams,
+		);
+
+		$svg['svg'] = \array_merge(
+			$svg['svg'],
+			$commonSvgParams,
 		);
 
 		$svg['path'] = \array_merge(
 			$svg['path'],
-			[
-				'opacity' => true,
-			]
+			$commonSvgParams,
 		);
 
 		$svg['ellipse'] = \array_merge(
 			$svg['ellipse'],
-			[
-				'fill-opacity' => true,
-			]
+			$commonSvgParams,
 		);
 
 		$svg['g'] = \array_merge(
 			$svg['g'],
-			[
-				'stroke-width' => true,
-			]
+			$commonSvgParams,
 		);
 
-		$svg['rect'] = [
+		$svg['rect'] = \array_merge($commonSvgParams, [
 			'x' => true,
 			'y' => true,
 			'width' => true,
@@ -107,12 +137,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			'path' => true,
 			'fill' => true,
 			'd' => true,
-			'stroke' => true,
-			'stroke-width' => true,
-			'stroke-linecap' => true,
-			'stroke-linejoin' => true,
-			'stroke-fill' => true,
-		];
+		]);
 
 		return $svg;
 	}

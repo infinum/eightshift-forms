@@ -1,6 +1,6 @@
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, BlockInserter } from '@eightshift/frontend-libs/scripts';
 import { SelectEditor as SelectEditorComponent } from '../../../components/select/components/select-editor';
 import manifest from './../manifest.json';
 
@@ -17,9 +17,10 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 				setAttributes,
 				clientId,
 				selectContent: <InnerBlocks
-												allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
-												template={template}
-											/>
+					allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
+					template={template}
+					renderAppender={() => <BlockInserter clientId={clientId} small />}
+				/>
 			})}
 		/>
 	);

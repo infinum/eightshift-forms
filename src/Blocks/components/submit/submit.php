@@ -29,6 +29,7 @@ $submitServerSideRender = Components::checkAttr('submitServerSideRender', $attri
 $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
 $submitIsLayoutFree = Components::checkAttr('submitIsLayoutFree', $attributes, $manifest);
+$submitVariant = Components::checkAttr('submitVariant', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -36,6 +37,7 @@ $submitClass = Components::classnames([
 	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Components::selector($submitIsLayoutFree, $componentClass, '', 'layout-free'),
+	Components::selector($submitVariant, $componentClass, '', $submitVariant),
 ]);
 
 if ($submitTracking) {

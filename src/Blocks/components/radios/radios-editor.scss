@@ -1,9 +1,11 @@
-.es-field--radios {
-	.es-field__content-wrap {
-		padding: var(--es-input-spacing);
-		border: 1px solid var(--es-input-border-color);
+.wp-block[data-type='eightshift-forms/radios'] {
+	.es-field {
+		.es-field__content-wrap {
+			padding: var(--es-input-spacing);
+			border: 1px dashed var(--es-input-border-color);
 
-		@include input-styles-disabled;
+			border-radius: var(--global-esf-spacing-s);
+		}
 
 		.block-editor-block-list__layout {
 			> * {

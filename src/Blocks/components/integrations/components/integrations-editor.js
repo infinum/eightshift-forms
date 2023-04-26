@@ -26,8 +26,7 @@ export const IntegrationsEditor = ({
 	const InvalidPlaceholder = () => {
 		return (
 			<InvalidEditor
-				heading={__('You need to select the form from the dropdown.', 'eightshift-forms')}
-				text={__('Check the forms sidebar and select the integration form your want to use.', 'eightshift-forms')}
+				heading={__('Form not selected', 'eightshift-forms')}
 			/>
 		);
 	};
@@ -35,7 +34,7 @@ export const IntegrationsEditor = ({
 	const OutputDefault = () => {
 		return (
 			<>
-				{itemId ? 
+				{itemId ?
 					<Output /> :
 					<InvalidPlaceholder />
 				}
@@ -46,7 +45,7 @@ export const IntegrationsEditor = ({
 	const OutputWithInner = () => {
 		return (
 			<>
-				{(itemId && innerId) ? 
+				{(itemId && innerId) ?
 					<Output /> :
 					<InvalidPlaceholder />
 				}
@@ -68,18 +67,13 @@ export const IntegrationsEditor = ({
 		);
 	};
 
+	if (hasInnerBlocks) {
+		return (
+			useInnerId ? <OutputWithInner /> : <OutputDefault />
+		);
+	}
+
 	return (
-		<>
-			{hasInnerBlocks ? 
-				<>
-					{useInnerId ?
-						<OutputWithInner /> :
-						<OutputDefault />
-					}
-				</> :
-				<InvalidPlaceholder />
-			}
-			
-		</>
+		<InvalidPlaceholder />
 	);
 };

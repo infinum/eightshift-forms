@@ -1,10 +1,12 @@
 /* global esFormsLocalization */
 
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
+import { Tooltip } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { camelize, STORE_NAME, InlineNotification, InlineNotificationType } from '@eightshift/frontend-libs/scripts';
+import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -68,6 +70,8 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 				changed: response?.data?.data?.changed,
 			};
 		}
+
+		return null;
 	});
 };
 
@@ -82,7 +86,7 @@ export const clearTransientCache = (type) => {
 	return apiFetch({
 		path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.cacheClear}/`,
 		method: 'POST',
-		data: {type},
+		data: { type },
 	}).then((response) => {
 		return response.message;
 	});
@@ -140,7 +144,7 @@ export const createBlockFromTemplate = (clientId, name, templates) => {
  * @returns {void}
  */
 export const updateInnerBlocks = (clientId, blocks) => {
-	dispatch( 'core/block-editor' ).replaceInnerBlocks( clientId, blocks);
+	dispatch('core/block-editor').replaceInnerBlocks(clientId, blocks);
 };
 
 /**
@@ -185,7 +189,7 @@ export const getFormFields = () => {
 			let label = attributes[camelize(`${blockName}-${blockName}-field-label`)];
 
 			if (value === 'submit') {
-				return;
+				return null;
 			}
 
 			if (label === 'Label') {
@@ -253,9 +257,9 @@ export const getAdditionalContentFilterContent = (blockName) => {
 /**
  * Output select options from array.
  *
- * @param {object} options 
- * @param {*} useEmpty 
- * @returns 
+ * @param {object} options
+ * @param {*} useEmpty
+ * @returns
  */
 export const getConstantsOptions = (options, useEmpty = false) => {
 	const empty = {
@@ -279,9 +283,9 @@ export const getConstantsOptions = (options, useEmpty = false) => {
 /**
  * Output select options from array.
  *
- * @param {object} options 
- * @param {bool} useEmpty 
- * @returns 
+ * @param {object} options
+ * @param {bool} useEmpty
+ * @returns
  */
 export const getSettingsJsonOptions = (options, useEmpty = false) => {
 	const empty = {
@@ -309,24 +313,37 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  *
  * @returns Component
  */
-export const MissingName = ({value, isEditor = false}) => {
+export const MissingName = ({ value }) => {
+	if (value) {
+		return null;
+	}
+
 	return (
-		<>
-			{!value &&
-				<>
-				{isEditor &&
-					<><br/><br/></>
-				}
-				<InlineNotification
-					text={
-						isEditor ? 
-						__('Name field is mandatory and your form will not work correctly it\'s not set. Please fill it in the sidebar.', 'eightshift-forms'):
-						__('Name field is mandatory and your form will not work correctly it\'s not set.', 'eightshift-forms')
-					}
-					type={InlineNotificationType.ERROR}
-				/>
-				</>
-			}
-		</>
+		<div className='es-position-absolute es-right-2 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
+		<Tooltip text={__('Name not set!', 'eightshift-forms')}>
+			{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
+		</Tooltip>
+	</div>
+	);
+};
+
+/**
+ * "Name" option label with optional "Required" notification.
+ *
+ * @param {string} value Field value.
+ *
+ * @returns Component
+ */
+export const NameFieldLabel = ({ value }) => {
+	return (
+		<div className='es-h-between es-w-full'>
+			<IconLabel icon={icons.idCard} label={__('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+
+			<AnimatedContentVisibility showIf={!value}>
+				<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
+					<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span>
+				</Tooltip>
+			</AnimatedContentVisibility>
+		</div>
 	);
 };

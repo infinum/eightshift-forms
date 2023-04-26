@@ -18,7 +18,7 @@
 	}
 
 	&[data-layout-type='layout-grid-2'] {
-		#{$this}__wrap {
+		> #{$this}__wrap {
 			@include media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
@@ -32,7 +32,7 @@
 	}
 
 	&[data-layout-type='layout-grid-3'] {
-		#{$this}__wrap {
+		> #{$this}__wrap {
 			@include media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
@@ -50,7 +50,7 @@
 	}
 
 	&[data-layout-type='layout-grid-4'] {
-		#{$this}__wrap {
+		> #{$this}__wrap {
 			@include media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
@@ -63,6 +63,68 @@
 				@include media(large up) { // stylelint-disable-line max-nesting-depth
 					grid-column-end: span 3;
 				}
+			}
+		}
+	}
+
+	&[data-layout-type='layout-v-stack'] {
+		> #{$this}__wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+	}
+
+	&[data-layout-type='layout-v-stack-card'] {
+		> #{$this}__wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+
+			background-color: var(--global-colors-esf-white);
+			border-radius: 0.5rem;
+			border: 1px solid var(--global-colors-esf-border);
+			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+			padding: 1.5rem;
+
+			max-width: var(--global-esf-max-width);
+
+			> *:first-child:not(:last-child):is(.es-intro):not(:has(+ .es-divider)) {
+				margin-bottom: 1rem;
+			}
+		}
+	}
+
+	&[data-layout-type='layout-v-stack-card-fullwidth'] {
+		margin-right: var(--global-esf-spacing-l);
+
+		max-width: 80rem; // 1280px
+
+		> #{$this}__wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+
+			background-color: var(--global-colors-esf-white);
+			border-radius: 0.5rem;
+			border: 1px solid var(--global-colors-esf-border);
+			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+			padding: 1.5rem;
+
+			> *:first-child:not(:last-child):is(.es-intro):not(:has(+ .es-divider)) {
+				margin-bottom: 1rem;
+			}
+		}
+	}
+
+	&[data-layout-type='first-left-others-right'] {
+		> #{$this}__wrap {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+
+			> *:first-child:not(:last-child) {
+				margin-right: auto;
 			}
 		}
 	}

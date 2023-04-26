@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Moments;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -139,13 +140,13 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_URL_KEY),
 								'inputFieldLabel' => \__('API url', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiUrl),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_MOMENTS_API_URL_KEY),
@@ -155,7 +156,7 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
@@ -165,7 +166,7 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
 								'inputFieldLabel' => \__('API username', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiUsername),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiUsername) ? $apiUsername : $this->getOptionValue(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
@@ -175,18 +176,16 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
 								'inputFieldLabel' => \__('API password', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiPassword),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiPassword) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
 								'inputIsDisabled' => !empty($apiPassword),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),

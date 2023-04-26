@@ -90,7 +90,6 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		if (!$params) {
 			$params = $request->get_json_params();
 
-			// @phpstan-ignore-next-line.
 			if (\is_string($params)) {
 				$params = \json_decode($params, true);
 			}
