@@ -18,6 +18,29 @@
 		},
 		"cardContent": {
 			"type": "string"
+		},
+		"cardPadded": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardVertical": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListItem": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardShowLinksOnHover": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardShowButtonsOnHover": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardTrailingButtons": {
+			"type": "array"
 		}
 	}
 }

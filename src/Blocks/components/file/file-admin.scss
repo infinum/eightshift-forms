@@ -1,1 +1,12 @@
 @import './file-style.scss';
+
+.es-file {
+	&__button {
+		font-weight: normal;
+		font-size: 0.825rem;
+	}
+
+	&__custom-wrap {
+		border-radius: var(--global-esf-spacing-s);
+	}
+}

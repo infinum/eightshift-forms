@@ -24,13 +24,15 @@ export const CheckboxesEditor = (attributes) => {
 		<>
 			{checkboxesContent}
 
-			<MissingName value={checkboxesName} isEditor={true} />
+			<MissingName value={checkboxesName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
-			
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			{checkboxesName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
+
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

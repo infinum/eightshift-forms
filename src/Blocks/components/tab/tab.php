@@ -32,9 +32,9 @@ if (!$tabLabel || !$tabContent) {
 
 ?>
 
-<div class="<?php echo esc_attr($tabLabelClass); ?>" data-hash="<?php echo rawurlencode($tabLabel); ?>">
+<button type="button" class="<?php echo esc_attr($tabLabelClass); ?>" data-hash="<?php echo rawurlencode($tabLabel); ?>">
 	<?php echo esc_html($tabLabel); ?>
-</div>
+</button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
 	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Airtable;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -118,24 +119,22 @@ class SettingsAirtable implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_AIRTABLE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_AIRTABLE_API_KEY_KEY),
 								'inputIsDisabled' => !empty($apiKey),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),

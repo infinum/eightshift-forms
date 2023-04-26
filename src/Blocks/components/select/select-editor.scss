@@ -5,7 +5,9 @@ select.es-select__select {
 
 .es-select {
 	padding: var(--es-input-spacing);
-	border: 1px solid var(--es-input-border-color);
+	border: 1px dashed var(--es-input-border-color);
+
+	border-radius: var(--global-esf-spacing-s);
 
 	&--disabled {
 		@include input-styles-disabled;

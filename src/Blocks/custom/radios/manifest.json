@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "radios",
 	"title": "Radio buttons",
-	"description" : "A group of radio buttons",
+	"description" : "Group of radio buttons",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-radios"

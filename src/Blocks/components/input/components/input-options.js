@@ -3,8 +3,7 @@
 import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TextControl, PanelBody, Button, Popover } from '@wordpress/components';
+import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
 	getOption,
@@ -12,15 +11,16 @@ import {
 	getAttrKey,
 	IconLabel,
 	props,
-	FancyDivider,
-	SimpleVerticalSingleSelect,
-	CustomSlider,
-	CustomSelect,
+	Select,
+	Section,
+	NumberPicker,
+	IconToggle,
+	Control,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
-import { isOptionDisabled, MissingName } from './../../utils';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const InputOptions = (attributes) => {
@@ -69,8 +69,6 @@ export const InputOptions = (attributes) => {
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
 
-	const [showValidation, setShowValidation] = useState(false);
-
 	let inputValidationPatternOptions = [];
 
 	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
@@ -80,292 +78,293 @@ export const InputOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={title}>
+				<Section showIf={showInputPlaceholder || showInputType} icon={icons.options} label={__('General', 'eightshift-forms')}>
+					{showInputType &&
+						<Select
+							icon={icons.optionListAlt}
+							label={__('Type', 'eightshift-forms')}
+							value={inputType}
+							options={getOption('inputType', attributes, manifest)}
+							disabled={isOptionDisabled(getAttrKey('inputType', attributes, manifest), inputDisabledOptions)}
+							onChange={(value) => {
+								setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value });
+
+								setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: false });
+								setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: false });
+								setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: false });
+
+								if (value === 'email') {
+									setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: true });
+								}
+
+								if (value === 'number') {
+									setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: true });
+								}
+
+								if (value === 'url') {
+									setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: true });
+								}
+							}}
+							additionalSelectClasses='es-w-32'
+							simpleValue
+							inlineLabel
+							noSearch
+						/>
+					}
+
+					{showInputPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={inputPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: inputDisabledOptions,
 					})}
+					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
-				{showInputPlaceholder &&
-					<TextControl
-						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={inputPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
-					/>
-				}
+				<Section showIf={showInputAdvancedOptions} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					{showInputName &&
+						<TextControl
+							label={<NameFieldLabel value={inputName} />}
+							help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+							value={inputName}
+							onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
+						/>
+					}
 
-				{showInputType &&
-					<CustomSelect
-						label={<IconLabel icon={icons.fieldType} label={__('Input value kind', 'eightshift-forms')} />}
-						value={inputType}
-						options={getOption('inputType', attributes, manifest)}
-						disabled={isOptionDisabled(getAttrKey('inputType', attributes, manifest), inputDisabledOptions)}
-						onChange={(value) => {
-							setAttributes({ [getAttrKey('inputType', attributes, manifest)]: value });
+					{showInputValue &&
+						<TextControl
+							label={<IconLabel icon={icons.titleGeneric} label={__('Initial value', 'eightshift-forms')} />}
+							value={inputValue}
+							onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputValue', attributes, manifest), inputDisabledOptions)}
+						/>
+					}
 
-							setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: false });
-							setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: false });
-							setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: false });
+					{showInputIsReadOnly &&
+						<IconToggle
+							icon={icons.readOnly}
+							label={__('Read-only', 'eightshift-forms')}
+							checked={inputIsReadOnly}
+							onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputIsReadOnly', attributes, manifest), inputDisabledOptions)}
+						/>
+					}
 
-							if (value === 'email') {
-								setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: true });
-							}
+					{showInputIsDisabled &&
+						<IconToggle
+							icon={icons.cursorDisabled}
+							label={__('Disabled', 'eightshift-forms')}
+							checked={inputIsDisabled}
+							onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputIsDisabled', attributes, manifest), inputDisabledOptions)}
+							noBottomSpacing
+						/>
+					}
+				</Section>
 
-							if (value === 'number') {
-								setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: true });
-							}
+				<Section showIf={showInputValidationOptions} icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+					{showInputIsRequired &&
+						<IconToggle
+							icon={icons.required}
+							label={__('Required', 'eightshift-forms')}
+							checked={inputIsRequired}
+							onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputIsRequired', attributes, manifest), inputDisabledOptions)}
+						/>
+					}
 
-							if (value === 'url') {
-								setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: true });
-							}
-						}}
-						simpleValue
-						isClearable={false}
-						isSearchable={false}
-					/>
-				}
-
-				{showInputAdvancedOptions &&
-					<>
-						<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-						{showInputName &&
-						<>
-							<TextControl
-								label={<IconLabel icon={icons.fieldName} label={__('Name', 'eightshift-forms')} />}
-								help={__('Should be unique! Used to identify the field within form submission data.', 'eightshift-forms')}
-								value={inputName}
-								onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
-							/>
-							<MissingName value={inputName} />
-							</>
-						}
-
-						{showInputValue &&
-							<TextControl
-								label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
-								value={inputValue}
-								onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(getAttrKey('inputValue', attributes, manifest), inputDisabledOptions)}
-							/>
-						}
-
-						<div className='es-h-spaced'>
-							{showInputIsReadOnly &&
-								<Button
-									icon={icons.fieldReadonly}
-									isPressed={inputIsReadOnly}
-									onClick={() => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: !inputIsReadOnly })}
-									disabled={isOptionDisabled(getAttrKey('inputIsReadOnly', attributes, manifest), inputDisabledOptions)}
-								>
-									{__('Read-only', 'eightshift-forms')}
-								</Button>
-							}
-
-							{showInputIsDisabled &&
-
-								<Button
-									icon={icons.fieldDisabled}
-									isPressed={inputIsDisabled}
-									onClick={() => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: !inputIsDisabled })}
-									disabled={isOptionDisabled(getAttrKey('inputIsDisabled', attributes, manifest), inputDisabledOptions)}
-								>
-									{__('Disabled', 'eightshift-forms')}
-								</Button>
-							}
-						</div>
-					</>
-				}
-
-				{showInputValidationOptions &&
-					<>
-						<FancyDivider label={__('Validation', 'eightshift-forms')} />
-
-						<div className='es-h-spaced-wrap'>
-							{showInputIsRequired &&
-								<Button
-									icon={icons.fieldRequired}
-									isPressed={inputIsRequired}
-									onClick={() => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: !inputIsRequired })}
-									disabled={isOptionDisabled(getAttrKey('inputIsRequired', attributes, manifest), inputDisabledOptions)}
-								>
-									{__('Required', 'eightshift-forms')}
-								</Button>
-							}
-
-							{(showInputValidationPattern && !inputIsUrl && !inputIsEmail) &&
-								<Button
-									icon={icons.regex}
-									isPressed={inputValidationPattern?.length > 0}
-									onClick={() => setShowValidation(true)}
-								>
-									{__('Pattern validation', 'eightshift-forms')}
-
-									{showValidation &&
-										<Popover noArrow={false} onClose={() => setShowValidation(false)}>
-											<div className='es-popover-content'>
-												<SimpleVerticalSingleSelect
-													label={__('Validation pattern', 'eightshift-forms')}
-													options={inputValidationPatternOptions.map(({ label, value }) => ({
-														onClick: () => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value }),
-														label: label,
-														isActive: inputValidationPattern === value,
-													}))}
-													disabled={isOptionDisabled(getAttrKey('inputValidationPattern', attributes, manifest), inputDisabledOptions)}
-												/>
-											</div>
-										</Popover>
-									}
-								</Button>
-							}
-						</div>
-
-						{(showInputMinLength || showInputMaxLength) &&
-							<FancyDivider label={__('Entry length', 'eightshift-forms')} />
-						}
-
-						{showInputMinLength &&
-							<>
-								<CustomSlider
-									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed length', 'eightshift-forms')} />}
-									value={inputMinLength ?? 0}
-									onChange={(value) => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: value })}
-									min={options.inputMinLength.min}
-									step={options.inputMinLength.step}
-									hasValueDisplay
-									rightAddition={
-										<Button
-											label={__('Reset', 'eightshift-forms')}
-											icon={icons.rotateLeft}
-											onClick={() => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: undefined })}
-											isSmall
-											className='es-small-square-icon-button'
+					{(showInputMinLength || showInputMaxLength) &&
+						<Control
+							icon={icons.textLength}
+							label={__('Entry length', 'eightshift-forms')}
+							additionalLabelClasses='es-mb-0!'
+						>
+							<div className='es-h-spaced es-gap-5!'>
+								{showInputMinLength &&
+									<div className='es-display-flex es-items-end es-gap-2'>
+										<NumberPicker
+											label={__('Min', 'eightshift-forms')}
+											value={inputMinLength}
+											onChange={(value) => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: value })}
+											min={options.inputMinLength.min}
+											step={options.inputMinLength.step}
+											disabled={isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions)}
+											placeholder='–'
+											fixedWidth={3}
+											noBottomSpacing
 										/>
-									}
-									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMinLength ? parseInt(inputMinLength) : '--'}</span>)}
-									disabled={isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions)}
-								/>
-							</>
-						}
 
-						{showInputMaxLength &&
-							<CustomSlider
-								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed length', 'eightshift-forms')} />}
-								value={inputMaxLength ?? 0}
-								onChange={(value) => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: value })}
-								min={options.inputMaxLength.min}
-								step={options.inputMaxLength.step}
-								hasValueDisplay
-								rightAddition={
-									<Button
-										label={__('Reset', 'eightshift-forms')}
-										icon={icons.rotateLeft}
-										onClick={() => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: undefined })}
-										isSmall
-										className='es-small-square-icon-button'
-									/>
+										{inputMinLength > 0 && !isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions) &&
+											<Button
+												label={__('Disable', 'eightshift-forms')}
+												icon={icons.clear}
+												onClick={() => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: undefined })}
+												className='es-button-square-32 es-button-icon-24'
+												showTooltip
+												isSmall
+											/>
+										}
+									</div>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMaxLength ? parseInt(inputMaxLength) : '--'}</span>)}
-								disabled={isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions)}
-							/>
-						}
 
-						{inputType === 'number' &&
-							<FancyDivider label={__('Number entry', 'eightshift-forms')} />
-						}
-
-						{(inputType === 'number' && showInputMin) &&
-							<>
-								<CustomSlider
-									label={<IconLabel icon={icons.rangeMin} label={__('Smallest allowed number', 'eightshift-forms')} />}
-									value={inputMin ?? 0}
-									onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
-									min={options.inputMin.min}
-									step={options.inputMin.step}
-									hasValueDisplay
-									rightAddition={
-										<Button
-											label={__('Reset', 'eightshift-forms')}
-											icon={icons.rotateLeft}
-											onClick={() => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: undefined })}
-											isSmall
-											className='es-small-square-icon-button'
+								{showInputMaxLength &&
+									<div className='es-display-flex es-items-end es-gap-2'>
+										<NumberPicker
+											label={__('Max', 'eightshift-forms')}
+											value={inputMaxLength}
+											onChange={(value) => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: value })}
+											min={options.inputMaxLength.min}
+											step={options.inputMaxLength.step}
+											disabled={isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions)}
+											placeholder='–'
+											fixedWidth={3}
+											noBottomSpacing
 										/>
-									}
-									valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMin ? parseInt(inputMin) : '--'}</span>)}
-									disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
-								/>
-							</>
-						}
 
-						{(inputType === 'number' && showInputMax) &&
-							<CustomSlider
-								label={<IconLabel icon={icons.rangeMax} label={__('Largest allowed number', 'eightshift-forms')} />}
-								value={inputMax ?? 0}
-								onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
-								min={options.inputMax.min}
-								step={options.inputMax.step}
-								hasValueDisplay
-								rightAddition={
-									<Button
-										label={__('Reset', 'eightshift-forms')}
-										icon={icons.rotateLeft}
-										onClick={() => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: undefined })}
-										isSmall
-										className='es-small-square-icon-button'
-									/>
+										{inputMaxLength > 0 && !isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions) &&
+											<Button
+												label={__('Disable', 'eightshift-forms')}
+												icon={icons.clear}
+												onClick={() => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: undefined })}
+												className='es-button-square-32 es-button-icon-24'
+												showTooltip
+											/>
+										}
+									</div>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputMax ? parseInt(inputMax) : '--'}</span>)}
-								disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
-							/>
-						}
+							</div>
+						</Control>
+					}
 
-						{(inputType === 'number' && showInputStep) &&
-							<CustomSlider
-								label={<IconLabel icon={icons.step} label={__('Increment step', 'eightshift-forms')} />}
-								value={inputStep ?? 1}
-								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
-								min={options.inputStep.min}
-								step={options.inputStep.step}
-								hasValueDisplay
-								rightAddition={
+					{inputType === 'number' && (showInputMin || showInputMax) &&
+						<Control
+							icon={icons.range}
+							label={__('Value range', 'eightshift-forms')}
+							additionalLabelClasses='es-mb-0!'
+						>
+							<div className='es-h-spaced es-gap-5!'>
+								{showInputMin &&
+									<div className='es-display-flex es-items-end es-gap-2'>
+										<NumberPicker
+											label={__('Min', 'eightshift-forms')}
+											value={inputMin}
+											onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
+											min={options.inputMin.min}
+											step={options.inputMin.step}
+											disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
+											placeholder='–'
+											fixedWidth={3}
+											noBottomSpacing
+										/>
+
+										{inputMin > 0 && !isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions) &&
+											<Button
+												label={__('Disable', 'eightshift-forms')}
+												icon={icons.clear}
+												onClick={() => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: undefined })}
+												className='es-button-square-32 es-button-icon-24'
+												showTooltip
+											/>
+										}
+									</div>
+								}
+
+								{showInputMax &&
+									<div className='es-display-flex es-items-end es-gap-2'>
+										<NumberPicker
+											label={__('Max', 'eightshift-forms')}
+											value={inputMax}
+											onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
+											min={options.inputMax.min}
+											step={options.inputMax.step}
+											disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
+											placeholder='–'
+											fixedWidth={3}
+											noBottomSpacing
+										/>
+
+										{inputMax > 0 && !isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions) &&
+											<Button
+												label={__('Disable', 'eightshift-forms')}
+												icon={icons.clear}
+												onClick={() => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: undefined })}
+												className='es-button-square-32 es-button-icon-24'
+												showTooltip
+											/>
+										}
+									</div>
+								}
+							</div>
+						</Control>
+					}
+
+					{inputType === 'number' && showInputStep &&
+						<Control label={__('Increment step', 'eightshift-forms')} additionalLabelClasses='es-mb-0!'>
+							<div className='es-display-flex es-items-end es-gap-2'>
+								<NumberPicker
+									value={inputStep}
+									onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
+									min={options.inputStep.min}
+									step={options.inputStep.step}
+									disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
+									fixedWidth={3}
+									noBottomSpacing
+									placeholder='1'
+								/>
+
+								{inputStep > 0 && !isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions) &&
 									<Button
-										label={__('Reset', 'eightshift-forms')}
-										icon={icons.rotateLeft}
+										label={__('Disable', 'eightshift-forms')}
+										icon={icons.clear}
 										onClick={() => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: undefined })}
-										isSmall
-										className='es-small-square-icon-button'
+										className='es-button-square-32 es-button-icon-24'
+										showTooltip
 									/>
 								}
-								valueDisplayElement={(<span className='es-custom-slider-current-value'>{inputStep ? parseInt(inputStep) : '--'}</span>)}
-								disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
-							/>
-						}
-					</>
-				}
+							</div>
+						</Control>
+					}
 
-				{showInputAdvancedOptions &&
-					<>
-						<FancyDivider label={__('Tracking', 'eightshift-forms')} />
+					{showInputValidationPattern && !inputIsUrl && !inputIsEmail &&
+						<Select
+							icon={icons.regex}
+							label={__('Match pattern', 'eightshift-forms')}
+							options={inputValidationPatternOptions}
+							value={inputValidationPattern}
+							onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputValidationPattern', attributes, manifest), inputDisabledOptions)}
+							placeholder='–'
+							additionalSelectClasses='es-w-32'
+							noBottomSpacing
+							inlineLabel
+							clearable
+						/>
+					}
+				</Section>
 
-						{showInputTracking &&
-							<TextControl
-								label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
-								value={inputTracking}
-								onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(getAttrKey('inputTracking', attributes, manifest), inputDisabledOptions)}
-							/>
-						}
-					</>
-				}
+				<Section showIf={showInputAdvancedOptions} icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					{showInputTracking &&
+						<TextControl
+							label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+							value={inputTracking}
+							onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputTracking', attributes, manifest), inputDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+				</Section>
 			</PanelBody>
-
-			<FieldOptionsAdvanced
-				{...props('field', attributes)}
-			/>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {

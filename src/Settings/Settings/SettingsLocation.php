@@ -56,17 +56,30 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 	{
 		$locations = $this->getBlockLocations($formId);
 
+		if (!$locations) {
+			return [
+				$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+				[
+					'component' => 'layout',
+					'layoutType' => 'layout-v-stack-card',
+					'layoutContent' => [
+						[
+							'component' => 'highlighted-content',
+							'highlightedContentTitle' => \__('The form is not used anywhere', 'eightshift-forms'),
+							'highlightedContentIcon' => 'emptyStateLocations',
+						],
+					],
+				],
+			];
+		}
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			!$locations ? [
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Nothing to see here...', 'eightshift-forms'),
-				'highlightedContentSubtitle' => \__('The form isn\'t used anywhere on this website.', 'eightshift-forms'),
-				'highlightedContentIcon' => 'empty',
-			] : [
+			[
 				'component' => 'admin-listing',
 				'adminListingForms' => $this->getBlockLocations($formId),
-			]
+				'adminListingType' => 'locations',
+			],
 		];
 	}
 

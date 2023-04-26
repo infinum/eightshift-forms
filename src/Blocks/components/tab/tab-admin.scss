@@ -4,29 +4,56 @@
 	$this: &;
 
 	&__label {
-		border-top: 1px solid var(--global-colors-es-ebb);
-		border-bottom: 1px solid var(--global-colors-es-ebb);
-		padding: 1rem 2rem;
+		@extend %button-reset;
+
+		padding: 1rem 1.25rem;
+
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		cursor: pointer;
-		font-weight: bold;
-		margin-bottom: -1px;
-		font-size: 15px;
+		font-size: 0.9rem;
+
 		transition: {
 			property: background-color, color;
 			timing-function: ease-in-out;
 			duration: 0.3s;
 		}
 
+		@include media(tablet down) {
+			width: 100%;
+			background: var(--global-colors-esf-white);
+
+			border: 1px solid var(--global-colors-esf-border);
+			border-bottom-width: 0;
+
+			border-radius: var(--global-esf-spacing-s);
+
+			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+		}
+
 		@include media(desktop up) {
 			order: 1;
 			display: block;
-			border-top: none;
-			border-right: 1px solid var(--global-colors-es-ebb);
 			position: relative;
 			margin: 0;
+
+			padding: 0.5rem 0.3rem;
+
+			background: none;
+		}
+
+		&:not(:first-child) {
+			margin-top: var(--global-esf-spacing-l);
+
+			@include media(desktop up) {
+				margin-top: 0;
+			}
+		}
+
+		// Hide if only 1 tab is visible.
+		&:only-of-type {
+			display: none;
 		}
 
 		// Line on the bottom for mask.
@@ -34,29 +61,24 @@
 			@include media(desktop up) {
 				content: '';
 				width: 100%;
-				height: 1px;
-				background-color: var(--global-colors-es-white);
+				height: 0.125rem;
+				background-color: var(--global-colors-esf-admin-accent);
 				position: absolute;
 				left: 0;
-				bottom: -1px;
+				right: 0;
+				bottom: 0;
 				opacity: 0;
 				z-index: 1;
-			}
-		}
+				border-radius: 100rem;
 
-		&:hover {
-			background-color: var(--global-colors-es-matisse);
-			color: var(--global-colors-es-white);
-
-			&::after {
-				border-color: var(--global-colors-es-white);
+				box-shadow: 0 0 0.125rem var(--global-colors-esf-admin-accent-50);
 			}
 		}
 
 		// Down arrow on mobile only for accordion.
 		&::after {
 			content: '';
-			border: solid var(--global-colors-es-french);
+			border: solid var(--global-colors-esf-gray);
 			border-width: 0 3px 3px 0;
 			display: inline-block;
 			padding: 3px;
@@ -73,25 +95,9 @@
 			}
 		}
 
-		&:first-child {
-			&::after {
-				@include media(desktop up) {
-					content: '';
-					display: block;
-					padding: 0;
-					transform: initial;
-					border: none;
-					width: 100vw;
-					height: 1px;
-					background-color: var(--global-colors-es-ebb);
-					position: absolute;
-					left: 0;
-					bottom: -1px;
-				}
-			}
-		}
-
 		&.is-active {
+			border-radius: var(--global-esf-spacing-s) var(--global-esf-spacing-s) 0 0;
+
 			&::before {
 				@include media(desktop up) {
 					opacity: 1;
@@ -99,7 +105,13 @@
 			}
 
 			& + #{$this}__content {
-				display: grid;
+				display: flex;
+
+				margin-bottom: var(--global-esf-spacing-l);
+
+				@include media(desktop up) {
+					margin-bottom: 0;
+				}
 			}
 
 			&::after {
@@ -114,11 +126,22 @@
 
 	&__content {
 		display: none;
-		padding: var(--global-es-spacing-vertical) var(--global-es-spacing-horizontal);
-		border-top: 1px solid var(--global-colors-es-ebb);
-		border-bottom: 1px solid var(--global-colors-es-ebb);
+		padding: var(--global-esf-spacing-l);
+		border-top: 1px solid var(--global-colors-esf-gray-300);
+		border-bottom: 1px solid var(--global-colors-esf-gray-300);
 		margin-bottom: -1px;
-		row-gap: var(--global-es-spacing-horizontal);
+		row-gap: var(--global-esf-spacing-l);
+
+		background-color: var(--global-colors-esf-white);
+		border-radius: 0 0 var(--global-esf-spacing-s) var(--global-esf-spacing-s);
+		border: 1px solid var(--global-colors-esf-border);
+		box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+
+		:only-of-type + & {
+			border-radius: var(--global-esf-spacing-s);
+		}
+
+		flex-direction: column;
 
 		@include media(desktop up) {
 			order: 99;
@@ -126,6 +149,10 @@
 			width: 100%;
 			border-top: none;
 			margin: 0;
+
+			row-gap: 1rem;
+
+			border-radius: var(--global-esf-spacing-s);
 		}
 	}
 }

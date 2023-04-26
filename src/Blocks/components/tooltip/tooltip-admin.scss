@@ -5,7 +5,7 @@
 	display: inline-flex;
 
 	&__inner {
-		background-color: var(--global-colors-es-matisse);
+		background-color: var(--global-colors-esf-admin-accent);
 		border-radius: 3px;
 		display: none;
 		padding: 5px 10px;
@@ -17,7 +17,7 @@
 		line-height: 1.4;
 
 		&::before {
-			background-color: var(--global-colors-es-matisse);
+			background-color: var(--global-colors-esf-admin-accent);
 			content: '';
 			display: none;
 			position: absolute;
@@ -28,12 +28,12 @@
 	}
 
 	&:hover {
-		color: var(--global-colors-es-matisse);
+		color: var(--global-colors-esf-admin-accent);
 
 		#{$this}__inner,
 		#{$this}__inner::before {
 			display: block;
-			color: var(--global-colors-es-white);
+			color: var(--global-colors-esf-white);
 		}
 	}
 

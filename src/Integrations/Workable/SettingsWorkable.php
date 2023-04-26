@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -137,13 +138,13 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_WORKABLE_API_KEY_KEY),
@@ -153,18 +154,16 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
 								'inputFieldLabel' => \__('Subdomain', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($subdomain),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($subdomain) ? $subdomain : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
 								'inputIsDisabled' => !empty($subdomain),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
@@ -188,10 +187,12 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
-								'inputFieldLabel' => \__('File size upload limit', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Limit the size of files users can send via upload files. 5 MB by default, 25 MB maximum.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputIsNumber' => true,
+								'inputFieldAfterContent' => 'MB',
+								'inputFieldInlineBeforeAfterContent' => true,
 								'inputPlaceholder' => self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputValue' => $this->getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
@@ -206,35 +207,33 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'layout',
-								'layoutType' => 'layout-grid-2',
-								'layoutContent' => [
-									[
-										'component' => 'steps',
-										'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
-										'stepsContent' => [
-											// translators: %s will be replaced with the link.
-											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Workable Account</a>.', 'eightshift-forms'), 'https://app.workable.io/'),
-												// translators: %s will be replaced with the link.
-											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.workable.io/configure/dev_center/credentials'),
-											\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
-											\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
-											\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
-										],
-									],
-									[
-										'component' => 'steps',
-										'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-										'stepsContent' => [
-											// translators: %s will be replaced with the link.
-											\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Workable Account</a>.', 'eightshift-forms'), 'https://app.workable.io/'),
-												// translators: %s will be replaced with the link.
-											\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.workable.io/jobboard'),
-											\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
-											\__('Make the name all lowercase.', 'eightshift-forms'),
-											\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
-										],
-									],
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									// translators: %s will be replaced with the link.
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Workable Account</a>.', 'eightshift-forms'), 'https://app.workable.io/'),
+									// translators: %s will be replaced with the link.
+									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.workable.io/configure/dev_center/credentials'),
+									\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
+									\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
+								'stepsContent' => [
+									// translators: %s will be replaced with the link.
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Workable Account</a>.', 'eightshift-forms'), 'https://app.workable.io/'),
+									// translators: %s will be replaced with the link.
+									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.workable.io/jobboard'),
+									\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
+									\__('Make the name all lowercase.', 'eightshift-forms'),
+									\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
 						],

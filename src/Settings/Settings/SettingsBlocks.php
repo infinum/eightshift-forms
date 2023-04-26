@@ -122,10 +122,6 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('Country', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('These settings are used in country blocks.', 'eightshift-forms'),
-							],
-							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY),
@@ -143,6 +139,10 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 							],
 							...($overrideGlobalSettingsCountry ? [
 								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => 'true',
+								],
+								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => $this->getSettingsName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
@@ -158,10 +158,6 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Phone', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('These settings are used in phone blocks.', 'eightshift-forms'),
-							],
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
@@ -189,6 +185,10 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 									),
 								],
 							] : []),
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
@@ -229,10 +229,6 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('Country', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('These settings are used in country blocks.', 'eightshift-forms'),
-							],
-							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 								'selectName' => $this->getSettingsName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
@@ -243,10 +239,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'textarea',
-								'textareaFieldLabel' => \__('Countries list', 'eightshift-forms'),
+								'textareaFieldLabel' => \__('Countries in dataset', 'eightshift-forms'),
 								'selectFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
 								'textareaValue' => \wp_json_encode($this->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
@@ -265,13 +262,17 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable phone prefix picker', 'eightshift-forms'),
+										'checkboxLabel' => \__('Disable area code picker', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],
 								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'select',

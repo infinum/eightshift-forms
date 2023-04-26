@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "form-selector",
 	"title": "Form selector",
-	"description" : "Allows selecting the form that should be displayed",
+	"description" : "Choose the form you want to display",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-picker"
@@ -30,7 +30,7 @@
 	},
 	"forms": [
 		{
-			"label": "Simple contact",
+			"label": "Contact form",
 			"slug": "mailer",
 			"blockName": "eightshift-forms/mailer",
 			"innerBlocks": [

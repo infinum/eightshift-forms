@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -126,13 +127,13 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
-								'inputFieldLabel' => \__('API url', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('API URL', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiUrl),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
@@ -142,18 +143,16 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
 								'inputIsDisabled' => !empty($apiKey),
-							]
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),

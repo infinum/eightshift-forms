@@ -29,8 +29,10 @@ $headings = [
 	'success' => '',
 	'error' => '',
 ];
+
 $filterName = Filters::getFilterName(['block', 'form', 'globalMsgHeadings']);
-if (has_filter($filterName)) {
+
+if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);
 
 	if (isset($headings['success'])) {

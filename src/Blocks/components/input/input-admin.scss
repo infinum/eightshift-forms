@@ -1,1 +1,72 @@
 @import './input-style.scss';
+
+input.es-input {
+	font-size: 0.825rem;
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+		box-shadow: none;
+		border-color: var(--global-colors-esf-white);
+	}
+
+	&:focus:focus-visible {
+		outline: none;
+		border-color: var(--global-colors-esf-white);
+		box-shadow: 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+	}
+
+	transition: {
+		property: border-color, box-shadow;
+		timing-function: var(--es-input-transition-timing);
+		duration: var(--es-input-transition-duration);
+	}
+}
+
+// stylelint-disable selector-max-specificity
+
+// If the browser supports :has, also include after content if it exists.
+.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible) {
+	.es-field__after-content {
+		box-shadow: 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+
+		clip-path: inset(-100vw -100vw -100vw 0);
+	}
+
+	.es-input {
+		clip-path: inset(-100vw 1px -100vw -100vw);
+	}
+}
+
+.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible) {
+	.es-field__before-content {
+		box-shadow: 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+
+		clip-path: inset(-100vw 0 -100vw -100vw);
+	}
+
+	.es-input {
+		clip-path: inset(-100vw -100vw -100vw 1px);
+	}
+}
+
+
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible) {
+	.es-field__after-content,
+	.es-field__before-content {
+		box-shadow: 0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
+	}
+
+	.es-field__before-content {
+		clip-path: inset(-100vw 0 -100vw -100vw);
+	}
+
+	.es-field__after-content {
+		clip-path: inset(-100vw -100vw -100vw 0);
+	}
+
+	.es-input {
+		clip-path: inset(-100vw 1px -100vw 1px);
+	}
+}
+
+// stylelint-enable selector-max-specificity

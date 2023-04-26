@@ -1,8 +1,19 @@
 @mixin field-styles($useSpacing: 'true') {
+	code {
+		font-size: 0.85em;
+		padding: 0.1rem 0.15rem;
+		border-radius: 3px;
+		background: var(--global-colors-esf-gray-50);
+		color: var(--global-colors-esf-gray-500);
+		border: 1px solid var(--global-colors-esf-gray-100);
+		margin: 0;
+		vertical-align: text-top;
+	}
+
 	&__help {
-		color: var(--global-colors-es-dusty);
-		max-width: var(--global-es-max-width);
-		font-size: 12px;
+		color: var(--global-colors-esf-gray-400);
+		max-width: var(--global-esf-max-width);
+		font-size: 0.725rem;
 		line-height: 1.6;
 
 		@if $useSpacing == 'true' {
@@ -10,20 +21,14 @@
 		}
 
 		a {
-			color: var(--global-colors-es-matisse);
+			color: var(--global-colors-esf-admin-accent);
 			text-decoration-style: dotted;
 			text-underline-offset: 0.1em;
 			text-decoration-thickness: 1px;
 		}
 
 		code {
-			font-size: 0.95em;
-			padding: 0.15rem 0.25rem;
-			border-radius: 3px;
-			background: var(--global-colors-es-chalice-05);
-			color: var(--global-colors-es-dusty);
-			border: 1px solid var(--global-colors-es-chalice-10);
-			margin: 0;
+			padding: 0.1rem 0.2rem;
 		}
 
 		ul {

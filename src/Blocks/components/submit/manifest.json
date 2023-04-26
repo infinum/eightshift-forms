@@ -59,6 +59,10 @@
 		},
 		"submitDisabledOptions": {
 			"type": "array"
+		},
+		"submitVariant": {
+			"type": "string",
+			"default": "default"
 		}
 	}
 }

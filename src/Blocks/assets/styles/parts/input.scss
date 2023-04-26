@@ -1,13 +1,13 @@
 :root {
-	--es-input-border-color: var(--global-colors-es-ebb);
-	--es-input-disabled-background-color: var(--global-colors-es-alto);
-	--es-input-readonly-background-color: var(--global-colors-es-alto);
+	--es-input-border-color: var(--global-colors-esf-gray-300);
+	--es-input-disabled-background-color: var(--global-colors-esf-gray-100);
+	--es-input-readonly-background-color: var(--global-colors-esf-gray-100);
 	--es-input-spacing: 10px;
-	--es-input-height: 42px;
-	--es-input-focus-border-color: var(--global-colors-es-matisse);
+	--esf-input-height: 42px;
+	--es-input-focus-border-color: var(--global-colors-esf-admin-accent);
 	--es-input-transition-timing: ease-in-out;
 	--es-input-transition-duration: 0.3s;
-	--es-input-radius: 0;
+	--es-input-radius: var(--global-esf-spacing-s);
 	--es-input-background-color: transparent;
 }
 
@@ -21,7 +21,7 @@
 	border: 1px solid var(--es-input-border-color);
 	cursor: text;
 	background-color: var(--es-input-background-color);
-	height: var(--es-input-height);
+	height: var(--esf-input-height);
 	padding: 0 var(--es-input-spacing);
 	border-radius: var(--es-input-radius);
 	transition: {

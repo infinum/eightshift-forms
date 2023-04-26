@@ -70,20 +70,22 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 				'component' => 'intro',
 				'introIsHighlighted' => true,
 				'introIsHighlightedImportant' => true,
-				'introSubtitle' => \__('Please backup your database before running any migrations. This proces is not reversable.', 'eightshift-forms'),
+				'introSubtitle' => \__('Backup the database before running a migration.<br /> The process is not reversible.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'card',
-						'cardTitle' => \__('Version 2 to 3'),
-						'cardSubTitle' => \__('In this version we have changed the option and custom meta name for the fallback emails. This migration will remove your old options and custom meta keys and update them to the new ones.', 'eightshift-forms'),
+						'cardTitle' => \__('Version 2 &rarr; Version 3', 'eightshift-forms'),
+						'cardSubTitle' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
 						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									'data-type' => self::VERSION_2_3,
 								],
@@ -92,14 +94,19 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						],
 					],
 					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
 						'component' => 'card',
-						'cardTitle' => \__('Version 3 to 4'),
-						'cardSubTitle' => \__('In this version we have changed everything, the way we configure integration forms, all integration settings and much more.', 'eightshift-forms'),
+						'cardTitle' => \__('Version 3 &rarr; Version 4', 'eightshift-forms'),
+						'cardSubTitle' => \__('Major changes to integrations, settings and form editing.', 'eightshift-forms'),
 						'cardContent' => [
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									'data-type' => self::VERSION_3_4,
 								],
@@ -107,13 +114,19 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 							],
 						],
 					]
-				]
+				],
 			],
 			[
-				'component' => 'textarea',
-				'textareaFieldLabel' => \__('Migration output log', 'eightshift-forms'),
-				'textareaIsReadOnly' => true,
-				'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
+					[
+						'component' => 'textarea',
+						'textareaFieldLabel' => \__('Log output', 'eightshift-forms'),
+						'textareaIsReadOnly' => true,
+						'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
+					],
+				],
 			],
 		];
 	}

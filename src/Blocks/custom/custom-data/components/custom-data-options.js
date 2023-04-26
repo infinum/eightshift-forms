@@ -4,15 +4,7 @@ import React from 'react';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
-import {
-	icons,
-	props,
-	checkAttr,
-	IconLabel,
-	getAttrKey,
-	getOption,
-	CustomSelect
-} from '@eightshift/frontend-libs/scripts';
+import { icons, props, checkAttr, IconLabel, getAttrKey, getOption, Select } from '@eightshift/frontend-libs/scripts';
 import { SelectOptions } from '../../../components/select/components/select-options';
 import { CheckboxesOptions } from '../../../components/checkboxes/components/checkboxes-options';
 import { RadiosOptions } from '../../../components/radios/components/radios-options';
@@ -39,8 +31,9 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<PanelBody title={__('Custom data', 'eightshift-forms')}>
-				<CustomSelect
-					label={<IconLabel icon={icons.fieldType} label={__('Field type', 'eightshift-forms')} />}
+				<Select
+					icon={icons.fieldType}
+					label={__('Field type', 'eightshift-forms')}
 					value={customDataFieldType}
 					options={getOption('customDataFieldType', attributes, manifest)}
 					onChange={(value) => setAttributes({ [getAttrKey('customDataFieldType', attributes, manifest)]: value })}
@@ -49,7 +42,7 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 					isClearable={false}
 				/>
 
-				<CustomSelect
+				<Select
 					label={<IconLabel icon={icons.data} label={__('Dataset', 'eightshift-forms')} />}
 					value={customDataData}
 					options={customDataDataOptions}

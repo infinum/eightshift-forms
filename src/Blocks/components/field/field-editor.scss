@@ -7,8 +7,16 @@
 		}
 	}
 
-	&--hidden,
-	&.is-hidden {
-		opacity: 0.5;
+	&__inner {
+		transition: {
+			property: opacity;
+			timing-function: ease-out;
+			duration: 0.3s;
+		}
+	}
+
+	&--hidden &__inner,
+	&.is-hidden &__inner {
+		opacity: 0.4;
 	}
 }
