@@ -40,6 +40,10 @@
 			&:is(span) {
 				display: inline-block;
 			}
+
+			summary {
+				cursor: pointer;
+			}
 		}
 	}
 
@@ -133,11 +137,19 @@
 			color: var(--global-colors-esf-gray-500);
 
 			height: var(--esf-input-height);
+
+			transition: {
+				property: border-color, box-shadow;
+				timing-function: var(--es-input-transition-timing);
+				duration: var(--es-input-transition-duration);
+			}
 		}
 
 		#{$this}__before-content {
 			border-top-left-radius: var(--global-es-radius-8);
 			border-bottom-left-radius: var(--global-es-radius-8);
+
+			margin-right: -2px; // To align it with the input field.
 		}
 
 		#{$this}__after-content {

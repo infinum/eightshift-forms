@@ -397,22 +397,27 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 				],
 			],
 			[
-				'component' => 'tab',
-				'tabLabel' => \__('General', 'eightshift-forms'),
-				'tabContent' => [
+				'component' => 'tabs',
+				'tabsContent' => [
 					[
-						'component' => 'input',
-						'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-						'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-						// translators: %s will be replaced with forms field name and filter output copy.
-						'inputFieldHelp' => \sprintf(\__('
-							If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
-							<br />
-							%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
-						'inputType' => 'url',
-						'inputIsUrl' => true,
-						'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
-						'inputValue' => $successRedirectUrl['dataGlobal'],
+						'component' => 'tab',
+						'tabLabel' => \__('General', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
+								// translators: %s will be replaced with forms field name and filter output copy.
+								'inputFieldHelp' => \sprintf(\__('
+									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
+									<br />
+									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
+								'inputType' => 'url',
+								'inputIsUrl' => true,
+								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
+								'inputValue' => $successRedirectUrl['dataGlobal'],
+							],
+						],
 					],
 				],
 			],
