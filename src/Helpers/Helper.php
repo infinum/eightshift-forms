@@ -190,15 +190,10 @@ class Helper
 		// Find all name values.
 		\preg_match_all('/Name":"(.*?)"/m', $content, $matches, \PREG_SET_ORDER);
 
-		// Find custom predefined names.
-		\preg_match_all('/\/(sender-email) {(.*?)} \/-->/m', $content, $matchesCustom, \PREG_SET_ORDER);
-
-		$items = \array_merge($matches, $matchesCustom);
-
 		$output = [];
 
 		// Populate output.
-		foreach ($items as $item) {
+		foreach ($matches as $item) {
 			if (isset($item[1]) && !empty($item[1])) {
 				$output[] = "<code>{" . $item[1] . "}</code>";
 			}
@@ -479,6 +474,18 @@ class Helper
 				}
 				break;
 		}
+
+		$output['fieldNames'] = array_values(array_filter(array_map(
+			static function ($item) {
+				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+				$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+
+				if ($value) {
+					return $value;
+				}
+			},
+			$output['fieldsOnly']
+		)));
 
 		return $output;
 	}

@@ -69,6 +69,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public const SETTINGS_MAILER_USE_KEY = 'mailer-use';
 
 	/**
+	 * Email field key.
+	 */
+	public const SETTINGS_MAILER_EMAIL_FIELD_KEY = 'mailer-email-field';
+
+	/**
 	 * Sender Name key.
 	 */
 	public const SETTINGS_MAILER_SENDER_NAME_KEY = 'mailer-sender-name';
@@ -134,13 +139,14 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
+		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
 		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
-		if (!$name || !$email || !$to || !$subject || !$template) {
+		if (!$name || !$email || !$to || !$subject || !$template || !$emailField) {
 			return false;
 		}
 
@@ -160,13 +166,14 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
+		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
 		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
 		$template = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
 
-		if (!$isUsed || !$name || !$email || !$subject || !$template) {
+		if (!$isUsed || !$name || !$email || !$subject || !$template || !$emailField) {
 			return false;
 		}
 
@@ -206,10 +213,37 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$formNames = Helper::getFormFieldNames($formId);
 
 		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
+				'component' => 'select',
+				'selectSingleSubmit' => true,
+				'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
+				'selectFieldLabel' => \__('Select a email field', 'eightshift-forms'),
+				'selectContent' => \array_merge(
+					[
+						[
+							'component' => 'select-option',
+							'selectOptionLabel' => '',
+							'selectOptionValue' => '',
+						],
+					],
+					\array_map(
+						static function ($option) use ($emailField) {
+							return [
+								'component' => 'select-option',
+								'selectOptionLabel' => $option,
+								'selectOptionValue' => $option,
+								'selectOptionIsSelected' => $emailField === $option,
+							];
+						},
+						Helper::getFormDetailsById($formId)['fieldNames']
+					)
+				),
+			],
+			$emailField ? [
 				'component' => 'tabs',
 				'tabsContent' => [
 					[
@@ -337,7 +371,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 						],
 					],
 				],
-			],
+			] : [],
 		];
 	}
 

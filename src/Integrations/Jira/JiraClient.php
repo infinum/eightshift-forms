@@ -487,9 +487,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getFieldsErrors(array $body): array
 	{
-		$output = [];
-
-		return $output;
+		return [];
 	}
 
 	/**

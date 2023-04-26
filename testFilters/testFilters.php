@@ -384,7 +384,6 @@ class Testfilters implements ServiceInterface
 	 * - textarea
 	 * - checkboxes
 	 * - radios
-	 * - sender-email
 	 * - select
 	 * - file
 	 * - submit

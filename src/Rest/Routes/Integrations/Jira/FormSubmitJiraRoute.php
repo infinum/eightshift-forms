@@ -15,6 +15,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -58,23 +59,33 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	protected $jiraClient;
 
 	/**
+	 * Instance variable of FormSubmitMailerInterface data.
+	 *
+	 * @var FormSubmitMailerInterface
+	 */
+	public $formSubmitMailer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
-		JiraClientInterface $jiraClient
+		JiraClientInterface $jiraClient,
+		FormSubmitMailerInterface $formSubmitMailer
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->jiraClient = $jiraClient;
+		$this->formSubmitMailer = $formSubmitMailer;
 	}
 
 	/**
@@ -136,11 +147,15 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		error_log( print_r( ( $response ), true ) );
+		// Send email if it is configured in the backend.
+		$a = $this->formSubmitMailer->sendEmails($formDataRefrerence);
+
+		error_log( print_r( ( $a ), true ) );
 		
+
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			// $this->mailer->fallbackEmail($response);
+			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
 
 		// Finish.

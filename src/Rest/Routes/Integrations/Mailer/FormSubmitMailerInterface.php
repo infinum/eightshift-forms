@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * The class used to send all emails that is used in multiple integrations.
+ *
+ * @package EightshiftForms\Rest\Route\Integrations\Mailer
+ */
+
+declare(strict_types=1);
+
+namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
+
+/**
+ * Class FormSubmitMailer
+ */
+interface FormSubmitMailerInterface
+{
+
+	/**
+	 * Send emails method.
+	 *
+	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function sendEmails(array $formDataRefrerence): array;
+
+	/**
+	 * Send fallback email.
+	 *
+	 * @param array<mixed> $data Data to extract data from.
+	 *
+	 * @return boolean
+	 */
+	public function sendFallbackEmail(array $response): bool;
+}
