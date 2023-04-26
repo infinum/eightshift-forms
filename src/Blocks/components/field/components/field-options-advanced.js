@@ -28,7 +28,7 @@ export const FieldPanel = (props) => {
 			},
 			options,
 		},
-		children
+		children,
 	} = props;
 
 	return (
@@ -57,6 +57,8 @@ export const FieldPanel = (props) => {
 
 				icon={icons.width}
 				label={__('Width', 'eightshift-forms')}
+
+				additionalProps={{ fixedWidth: 2 }}
 			/>
 
 			{children}
