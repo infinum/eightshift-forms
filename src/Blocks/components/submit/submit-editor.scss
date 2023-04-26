@@ -1,6 +1,5 @@
 @import './submit-style.scss';
 
-a.es-submit,
-button.es-submit {
+.es-submit:is(a, button) {
 	width: fit-content;
 }

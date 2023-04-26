@@ -1,7 +1,6 @@
 @import './submit-style.scss';
 
-a.es-submit,
-button.es-submit {
+.es-submit:is(a, button) {
 	display: flex;
 	align-items: center;
 	gap: var(--global-esf-spacing-s);
