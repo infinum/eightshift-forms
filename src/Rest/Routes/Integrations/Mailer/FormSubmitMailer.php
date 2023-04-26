@@ -147,26 +147,20 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
+		$senderEmail = $params[$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
+
+		if (!$senderEmail) {
+			return false;
+		}
+
 		// Send email.
-		$a = $this->mailer->sendFormEmail(
+		return $this->mailer->sendFormEmail(
 			$formId,
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId),
+			$senderEmail,
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
 			$params
 		);
-
-
-
-		error_log( print_r( ( $formId ), true ) );
-		error_log( print_r( ( $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId) ), true ) );
-		error_log( print_r( ( $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId) ), true ) );
-		error_log( print_r( ( $this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId) ), true ) );
-		error_log( print_r( ( $files ), true ) );
-		error_log( print_r( ( $params ), true ) );
-		
-
-		return $a;
 	}
 }

@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Jira;
 
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
@@ -147,16 +146,15 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		// Send email if it is configured in the backend.
-		$a = $this->formSubmitMailer->sendEmails($formDataRefrerence);
-
-		error_log( print_r( ( $a ), true ) );
-		
-
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
+
+		// Send email if it is configured in the backend.
+		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+
+		error_log( print_r( ( $response ), true ) );
 
 		// Finish.
 		return \rest_ensure_response(
@@ -168,86 +166,5 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 				]
 			)
 		);
-		
-
-	// 	$files = $formDataRefrerence['files'];
-	// 	$senderEmail = $formDataRefrerence['senderEmail'];
-
-	// 	// Check if Jira data is set and valid.
-	// 	$isSettingsValid = \apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-	// 	// Bailout if settings are not ok.
-	// 	if (!$isSettingsValid) {
-	// 		return \rest_ensure_response(
-	// 			$this->getApiErrorOutput(
-	// 				$this->labels->getLabel('jiraErrorSettingsMissing', $formId),
-	// 			)
-	// 		);
-	// 	}
-
-	// 	// Send email.
-	// 	$response = $this->jira->sendFormEmail(
-	// 		$formId,
-	// 		$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_TO_KEY, $formId),
-	// 		$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_SUBJECT_KEY, $formId),
-	// 		$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_TEMPLATE_KEY, $formId),
-	// 		$files,
-	// 		$params
-	// 	);
-
-	// 	// If email fails.
-	// 	if (!$response) {
-	// 		// Always delete the files from the disk.
-	// 		if ($files) {
-	// 			$this->deleteFiles($files);
-	// 		}
-
-	// 		return \rest_ensure_response(
-	// 			$this->getApiErrorOutput(
-	// 				$this->labels->getLabel('jiraErrorEmailSend', $formId),
-	// 			)
-	// 		);
-	// 	}
-
-	// 	// Check if Jira data is set and valid.
-	// 	$isConfirmationValid = \apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
-
-	// 	if ($isConfirmationValid && $senderEmail) {
-	// 		// Send email.
-	// 		$jiraConfirmation = $this->jira->sendFormEmail(
-	// 			$formId,
-	// 			$senderEmail,
-	// 			$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_SENDER_SUBJECT_KEY, $formId),
-	// 			$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_SENDER_TEMPLATE_KEY, $formId),
-	// 			$files,
-	// 			$params
-	// 		);
-
-	// 		// If email fails.
-	// 		if (!$jiraConfirmation) {
-	// 			// Always delete the files from the disk.
-	// 			if ($files) {
-	// 				$this->deleteFiles($files);
-	// 			}
-
-	// 			return \rest_ensure_response(
-	// 				$this->getApiErrorOutput(
-	// 					$this->labels->getLabel('jiraErrorEmailConfirmationSend', $formId),
-	// 				)
-	// 			);
-	// 		}
-	// 	}
-
-	// 	// Always delete the files from the disk.
-	// 	if ($files) {
-	// 		$this->deleteFiles($files);
-	// 	}
-
-	// 	// Finish.
-	// 	return \rest_ensure_response(
-	// 		$this->getApiSuccessOutput(
-	// 			$this->labels->getLabel('jiraSuccess', $formId),
-	// 		)
-	// 	);
 	}
 }

@@ -210,7 +210,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return $this->getNoActiveFeatureOutput();
 		}
 
-		$formNames = Helper::getFormFieldNames($formId);
+		$formDetails = Helper::getFormDetailsById($formId);
+
+		$fieldNames = $formDetails['fieldNames'];
+		$fieldNameTags = Helper::getFormFieldNames($fieldNames);
+		$formResponseTags = Helper::getFormResponseTags($formDetails['typeFilter']);
 
 		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
@@ -247,7 +251,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 												'selectOptionIsSelected' => $emailField === $option,
 											];
 										},
-										Helper::getFormDetailsById($formId)['fieldNames']
+										$fieldNames
 									)
 								),
 							],
@@ -294,8 +298,8 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
 										The e-mail will be sent to this address.<br /><br />
-										Use template tags to use submitted form data (e.g. <code>{field-name}</code>)<br />
-										<b>Make sure the field connected to the tag contains a valid e-mail address!</b>', 'eightshift-forms'), $formNames),
+										<b>Make sure the field connected to the tag contains a valid e-mail address!</b><br />
+										%s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags)),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
 									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
@@ -309,7 +313,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
 									'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
-									'inputFieldHelp' => \sprintf(\__('Use template tags to use submitted form data (e.g. <code>{field-name}</code>)%s', 'eightshift-forms'), $formNames),
+									'inputFieldHelp' => $this->getFieldTagsOutput($fieldNameTags),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
 									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
@@ -323,17 +327,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
-									'textareaFieldHelp' => \sprintf(\__('
-										Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-										<details class="is-filter-applied">
-											<summary>Available tags</summary>
-											<ul>
-												%1$s
-											</ul>
-	
-											<br />
-											Tag missing? Make sure its field has a <b>Name</b> set!
-										</details>', 'eightshift-forms'), $formNames),
+									'textareaFieldHelp' => \sprintf('%1$s %2$s', $this->getFieldTagsOutput($fieldNameTags), $this->getResponseTagsOutput($formResponseTags)),
 									'textareaIsRequired' => true,
 									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
@@ -376,7 +370,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
 										'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
-										'inputFieldHelp' => \sprintf(\__('Use template tags to use submitted form data (e.g. <code>{field-name}</code>)', 'eightshift-forms'), $formNames),
+										'inputFieldHelp' => $this->getFieldTagsOutput($fieldNameTags),
 										'inputType' => 'text',
 										'inputIsRequired' => true,
 										'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
@@ -390,17 +384,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 										'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
-										'textareaFieldHelp' => \sprintf(\__('
-										Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-										<details class="is-filter-applied">
-											<summary>Available tags</summary>
-											<ul>
-												%1$s
-											</ul>
-	
-											<br />
-											Tag missing? Make sure its field has a <b>Name</b> set!
-										</details>', 'eightshift-forms'), $formNames),
+										'textareaFieldHelp' => \sprintf('%1$s %2$s', $this->getFieldTagsOutput($fieldNameTags), $this->getResponseTagsOutput($formResponseTags)),
 										'textareaIsRequired' => true,
 										'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 									],
@@ -465,5 +449,54 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 				],
 			],
 		];
+	}
+
+	/**
+	 * Get response tags output copy.
+	 *
+	 * @param string $formResponseTags Response tags to output.
+	 *
+	 * @return string
+	 */
+	private function getFieldTagsOutput(string $formFieldTags): string
+	{
+		if (!$formFieldTags) {
+			return '';
+		}
+
+		return \sprintf(\__('
+			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
+			<details class="is-filter-applied">
+				<summary>Available tags</summary>
+				<ul>
+					%s
+				</ul>
+				<br />
+				Tag missing? Make sure its field has a <b>Name</b> set!
+			</details>', 'eightshift-forms'), $formFieldTags);
+	}
+
+	/**
+	 * Get response tags output copy.
+	 *
+	 * @param string $formResponseTags Response tags to output.
+	 *
+	 * @return string
+	 */
+	private function getResponseTagsOutput(string $formResponseTags): string
+	{
+		if (!$formResponseTags) {
+			return '';
+		}
+
+		return \sprintf(\__('
+			<details class="is-filter-applied">
+				<summary>Response tags</summary>
+				<ul>
+					%s
+				</ul>
+				<br />
+				Special response tags are used to provide dynamic content from the integration response!
+			</details>', 'eightshift-forms'), $formResponseTags);
 	}
 }

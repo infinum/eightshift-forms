@@ -104,13 +104,16 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 			\array_keys(Filters::getSpecialConstants('tracking'))
 		);
 
-		$formType = Helper::getFormDetailsById($formId)['type'] ?? '';
+		$formDetails = Helper::getFormDetailsById($formId);
+		$formType = $formDetails['type'] ?? '';
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
 		$successRedirectVariation = $this->getSuccessRedirectVariationFilterValue($formType, $formId);
 		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
+
+		$fieldNameTags = Helper::getFormFieldNames($formDetails['fieldNames']);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -138,7 +141,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), $fieldNameTags, $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],
