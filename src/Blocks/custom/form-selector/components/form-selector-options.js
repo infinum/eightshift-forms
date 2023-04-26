@@ -108,13 +108,12 @@ export const FormSelectorOptions = ({
 						onClick={() => {
 							// Sync integration blocks.
 							syncIntegrationBlocks(clientId, postId).then((val) => {
-								console.log(val);
 								setModalContent(val);
 
-								createNotice(val?.updated ? 'success' : 'info', val?.updated ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'), {
+								createNotice(val?.update ? 'success' : 'info', val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'), {
 									type: 'snackbar',
-									explicitDismiss: val?.updated,
-									actions: val?.updated ? [
+									explicitDismiss: val?.update,
+									actions: val?.update ? [
 										{
 											label: __('View report', 'eightshift-forms'),
 											onClick: () => setIsModalOpen(true),
