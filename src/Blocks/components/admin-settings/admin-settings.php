@@ -83,9 +83,11 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 					<?php if (!$adminSettingsIsGlobal) { ?>
 						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
-								<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+								<?php
+									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									echo $manifestUtils['icons']['edit'],
+									esc_html__('Edit form', 'eightshift-forms');
 								?>
-								<?php echo esc_html__('Edit', 'eightshift-forms'); ?>
 							</a>
 						</div>
 					<?php } ?>
