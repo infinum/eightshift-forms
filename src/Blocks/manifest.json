@@ -99,6 +99,11 @@
 				"color": "#FDE68A"
 			},
 			{
+				"name": "ESF yellow 500",
+				"slug": "esf-yellow-500",
+				"color": "#EAB308"
+			},
+			{
 				"name": "ESF yellow 950",
 				"slug": "esf-yellow-950",
 				"color": "#451A03"
@@ -207,6 +212,31 @@
 				"name": "ESF red 950",
 				"slug": "esf-red-950",
 				"color": "#450A0A"
+			},
+			{
+				"name": "ESF green 50",
+				"slug": "esf-green-50",
+				"color": "#F0FDF4"
+			},
+			{
+				"name": "ESF green 100",
+				"slug": "esf-green-100",
+				"color": "#DCFCE7"
+			},
+			{
+				"name": "ESF green 200",
+				"slug": "esf-green-200",
+				"color": "#BBF7D0"
+			},
+			{
+				"name": "ESF green 500",
+				"slug": "esf-green-500",
+				"color": "#22C55E"
+			},
+			{
+				"name": "ESF green 950",
+				"slug": "esf-green-950",
+				"color": "#052E16"
 			}
 		]
 	}
