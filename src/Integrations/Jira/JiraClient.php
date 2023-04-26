@@ -328,6 +328,59 @@ class JiraClient implements JiraClientInterface
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
+		$formTitle = \get_the_title((int) $formId);
+
+		$contentOutput = [];
+
+		$i = 0;
+		foreach ($params as $param) {
+			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
+
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
+			}
+
+			$contentOutput[] = [
+				'type' => 'tableRow',
+				'content' => [
+					[
+						'type' => 'tableCell',
+						'content' => [
+							[
+								'type' => 'paragraph',
+								'content' => [
+									[
+										'type' => 'text',
+										'text' => esc_html($name),
+									],
+								],
+							],
+						],
+					],
+					[
+						'type' => 'tableCell',
+						'content' => [
+							[
+								'type' => 'paragraph',
+								'content' => [
+									[
+										'type' => 'text',
+										'text' => esc_html($value),
+									],
+								],
+							],
+						],
+					],
+				],
+			];
+
+			$i++;
+		}
+
 		$output = [
 			'project' => [
 				'key' => $selectedProject,
@@ -336,18 +389,91 @@ class JiraClient implements JiraClientInterface
 				'id' => $selectedIssueType,
 			],
 			'summary' => $title,
+			'description' => [
+				'type' => 'doc',
+				'version' => 1,
+				'content' => [
+					[
+						'type' => 'paragraph',
+						'content' => [
+							[
+								'type' => 'text',
+								'text' => sprintf(__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), esc_html($formTitle)),
+							],
+						],
+					],
+					[
+						'type' => 'table',
+						'attrs' => [
+							'isNumberColumnEnabled' => false,
+							'layout' => 'default',
+						],
+						'content' => array_merge(
+							[
+								[
+									'type' => 'tableRow',
+									'content' => [
+										[
+											'type' => 'tableCell',
+											'attrs' => [
+												'background' => 'lavender',
+											],
+											'content' => [
+												[
+													'type' => 'paragraph',
+													'content' => [
+														[
+															'type' => 'text',
+															'text' => __('Field Name', 'eightshift-forms'),
+														],
+													],
+												],
+											],
+										],
+										[
+											'type' => 'tableCell',
+											'attrs' => [
+												'background' => 'lavender',
+											],
+											'content' => [
+												[
+													'type' => 'paragraph',
+													'content' => [
+														[
+															'type' => 'text',
+															'text' => __('Field Value', 'eightshift-forms'),
+														],
+													],
+												],
+											],
+										],
+									],
+								],
+							],
+							$contentOutput
+						),
+					],
+				],
+			],
 		];
+
+		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+
+		if ($additionalDescription) {
+			\array_unshift($output['description']['content'], [
+				'type' => 'paragraph',
+				'content' => [
+					[
+						'type' => 'text',
+						'text' => $additionalDescription,
+					],
+				],
+			]);
+		}
 
 		if ($selectedIssueType === self::ISSUE_TYPE_EPIC) {
 			$output['customfield_10011'] = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_EPIC_NAME_KEY, $formId);
 		}
-
-		// foreach ($params as $param) {
-		// 	$value = $param['value'] ?? '';
-		// 	if (!$value) {
-		// 		continue;
-		// 	}
-		// }
 
 		return $output;
 	}

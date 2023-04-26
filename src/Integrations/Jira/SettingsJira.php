@@ -92,6 +92,11 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 	public const SETTINGS_JIRA_EPIC_NAME_KEY = 'jira-epic-name';
 
 	/**
+	 * Jira description key.
+	 */
+	public const SETTINGS_JIRA_DESC_KEY = 'jira-desc';
+
+	/**
 	 * Instance variable for Jira data.
 	 *
 	 * @var JiraClientInterface
@@ -235,11 +240,19 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 					'inputIsRequired' => true,
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
 				],
+				[
+					'component' => 'input',
+					'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_DESC_KEY),
+					'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
+					'inputType' => 'text',
+					'inputIsRequired' => true,
+					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
+				],
 				// Epic type.
 				$selectedIssueType === JiraClient::ISSUE_TYPE_EPIC ? [
 					'component' => 'input',
 					'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_EPIC_NAME_KEY),
-					'inputFieldLabel' => \__('Epic name ', 'eightshift-forms'),
+					'inputFieldLabel' => \__('Epic name', 'eightshift-forms'),
 					'inputType' => 'text',
 					'inputIsRequired' => true,
 					'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_EPIC_NAME_KEY, $formId),
