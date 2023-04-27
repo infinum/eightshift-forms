@@ -78,7 +78,7 @@ export const InputOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={title}>
-				<Section showIf={showInputPlaceholder || showInputType} icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<Section showIf={showInputPlaceholder || showInputType || showInputName} icon={icons.options} label={__('General', 'eightshift-forms')}>
 					{showInputName &&
 						<TextControl
 							label={<NameFieldLabel value={inputName} />}
