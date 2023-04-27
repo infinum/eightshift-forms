@@ -14,7 +14,6 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
@@ -282,19 +281,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $formType['value'] ?? '';
-	}
-
-	/**
-	 * Return mailer for sender email field params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
-	protected function getFormSenderEmailField(array $params): string
-	{
-		$senderEmailManifest = Components::getBlock('sender-email')['blockName'];
-		return $params[$senderEmailManifest]['value'] ?? '';
 	}
 
 	/**

@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
+use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
@@ -47,6 +48,7 @@ class Labels implements LabelsInterface
 		'airtableSuccess',
 		'momentsSuccess',
 		'workableSuccess',
+		'jiraSuccess',
 	];
 
 	/**
@@ -111,6 +113,11 @@ class Labels implements LabelsInterface
 		// Workable.
 		if ($this->isCheckboxOptionChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getWorkableLabels());
+		}
+
+		// Jira.
+		if ($this->isCheckboxOptionChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
+			$output = \array_merge($output, $this->getJiraLabels());
 		}
 
 		return $output;
@@ -421,6 +428,23 @@ class Labels implements LabelsInterface
 		return [
 			'workableBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Jira
+	 *
+	 * @return array<string, string>
+	 */
+	private function getJiraLabels(): array
+	{
+		return [
+			'jiraMissingProject' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
+			'jiraMissingIssueType' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
+			'jiraMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
+			'jiraMissingEpicName' => \__('Your form is missing epic name key. Please try again.', 'eightshift-forms'),
+			'jiraBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'jiraSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

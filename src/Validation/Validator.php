@@ -398,7 +398,6 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$senderEmailManifest = Components::getBlock('sender-email');
 		$blockDetails = Helper::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
@@ -408,44 +407,34 @@ class Validator extends AbstractValidation
 			return $output;
 		}
 
-		switch ($name) {
-			case $senderEmailManifest['blockName']:
-				$output[$senderEmailManifest['blockName']] = [
-					'isRequired' => true,
-					'isEmail' => true,
-				];
-				break;
-			default:
-				foreach ($block['attrs'] as $attributeKey => $attributeValue) {
-					switch ($name) {
-						// TODO: test this.
-						case 'custom-data':
-							$type = $block['attrs']['customDataFieldType'] ?? '';
-							$attrName = Components::kebabToCamelCase("{$name}-{$type}");
-							$id = $block['attrs']["{$name}Name"] ?? '';
-							break;
-						default:
-							$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
-							$id = $block['attrs']["{$attrName}Name"] ?? '';
-							break;
-					}
+		foreach ($block['attrs'] as $attributeKey => $attributeValue) {
+			switch ($name) {
+				// TODO: test this.
+				case 'custom-data':
+					$type = $block['attrs']['customDataFieldType'] ?? '';
+					$attrName = Components::kebabToCamelCase("{$name}-{$type}");
+					$id = $block['attrs']["{$name}Name"] ?? '';
+					break;
+				default:
+					$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
+					$id = $block['attrs']["{$attrName}Name"] ?? '';
+					break;
+			}
 
-					// Get all validation fields with the correct prefix.
-					$valid = \array_flip(
-						\array_map(
-							static function ($item) use ($attrName) {
-								return Components::kebabToCamelCase("{$attrName}-{$item}");
-							},
-							self::VALIDATION_FIELDS
-						)
-					);
+			// Get all validation fields with the correct prefix.
+			$valid = \array_flip(
+				\array_map(
+					static function ($item) use ($attrName) {
+						return Components::kebabToCamelCase("{$attrName}-{$item}");
+					},
+					self::VALIDATION_FIELDS
+				)
+			);
 
-					// Output validation items with correct value for the matching ID.
-					if (isset($valid[$attributeKey]) && !empty($id)) {
-						$output[$id][\lcfirst(\str_replace($attrName, '', $attributeKey))] = $attributeValue;
-					}
-				}
-				break;
+			// Output validation items with correct value for the matching ID.
+			if (isset($valid[$attributeKey]) && !empty($id)) {
+				$output[$id][\lcfirst(\str_replace($attrName, '', $attributeKey))] = $attributeValue;
+			}
 		}
 
 		return $output;

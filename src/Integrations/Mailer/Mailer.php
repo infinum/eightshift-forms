@@ -37,6 +37,7 @@ class Mailer implements MailerInterface
 	 * @param string $template Email template.
 	 * @param array<string, mixed> $files Email files.
 	 * @param array<string, mixed> $fields Email fields.
+	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 *
 	 * @return bool
 	 */
@@ -46,26 +47,20 @@ class Mailer implements MailerInterface
 		string $subject,
 		string $template = '',
 		array $files = [],
-		array $fields = []
+		array $fields = [],
+		array $responseFields = []
 	): bool {
-		// Get header options from form settings.
-		$headers = $this->getHeader(
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
-		);
-
-		// Generate HTML form for sending with form fields.
-		$templateHtml = $this->getTemplate(
-			$fields,
-			$template
-		);
-
-		$files = $this->prepareFiles($files);
-		$to = $this->getFieldValue($fields, $to);
-		$subject = $this->getFieldValue($fields, $subject);
-
 		// Send email.
-		return \wp_mail($to, $subject, $templateHtml, $headers, $files);
+		return \wp_mail(
+			$this->getTemplate($fields, $to),
+			$this->getTemplate($fields, $subject),
+			$this->getTemplate($fields, $template, $responseFields),
+			$this->getHeader(
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+			),
+			$this->prepareFiles($files)
+		);
 	}
 
 	/**
@@ -214,39 +209,22 @@ class Mailer implements MailerInterface
 	 *
 	 * @param array<string, mixed> $items All items to output.
 	 * @param string $template Additional description.
+	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(array $items, string $template): string
+	protected function getTemplate(array $items, string $template = '', array $responseFields = []): string
 	{
-		foreach ($this->prepareFields($items) as $item) {
-			$name = $item['name'] ?? '';
-			$value = $item['value'] ?? '';
+		$params = \array_merge(
+			$this->prepareFields($items),
+			$responseFields
+		);
 
+		foreach ($params as $name => $value) {
 			$template = \str_replace("{" . $name . "}", $value, $template);
 		}
 
 		return \str_replace("\n", '<br />', $template);
-	}
-
-	/**
-	 * Replace form field templates with values from form.
-	 *
-	 * @param array<string, mixed> $items All items to output.
-	 * @param string $fieldValue String template of the field which value will be extracted.
-	 *
-	 * @return string
-	 */
-	protected function getFieldValue(array $items = [], string $fieldValue = ''): string
-	{
-		foreach ($this->prepareFields($items) as $item) {
-			$name = $item['name'] ?? '';
-			$value = $item['value'] ?? '';
-
-			$fieldValue = \str_replace("{" . $name . "}", $value, $fieldValue);
-		}
-
-		return $fieldValue;
 	}
 
 	/**
@@ -268,10 +246,14 @@ class Mailer implements MailerInterface
 				continue;
 			}
 
-			$output[] = [
-				'name' => $param['name'] ?? '',
-				'value' => $param['value'] ?? '',
-			];
+			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
+
+			if (!$name || !$value) {
+				continue;
+			}
+
+			$output[$name] = $value;
 		}
 
 		return $output;

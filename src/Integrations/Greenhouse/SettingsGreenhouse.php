@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
@@ -150,7 +149,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_GREENHOUSE', !empty($apiKey)),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
@@ -164,7 +163,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 								'inputFieldLabel' => \__('Job board', 'eightshift-forms'),
-								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($boardToken),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_BOARD_TOKEN_GREENHOUSE', !empty($boardToken)),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),

@@ -89,8 +89,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49); // @phpstan-ignore-line.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50); // @phpstan-ignore-line.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript'], 11);
@@ -119,9 +119,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleMandatory()
+	public function enqueueBlockFrontendStyleMandatory(): void
 	{
 		$handle = "{$this->getAssetsPrefix()}-block-frontend-mandatory-style";
 
@@ -139,12 +139,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleLocal()
+	public function enqueueBlockFrontendStyleLocal(): void
 	{
 		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
-			return null;
+			return;
 		}
 
 		$this->enqueueBlockFrontendStyle();

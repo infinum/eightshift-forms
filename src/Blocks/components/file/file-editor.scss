@@ -3,8 +3,10 @@
 		display: none;
 
 		&__custom-wrap {
+			@include input-styles-disabled;
 			padding: 20px;
-			border: 1px dashed var(--es-input-border-color);
+			border-radius: var(--global-esf-spacing-s);
+			border: 1px solid var(--es-input-border-color);
 			display: flex;
 			align-items: center;
 			justify-content: center;

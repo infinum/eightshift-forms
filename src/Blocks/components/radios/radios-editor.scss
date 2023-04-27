@@ -1,9 +1,10 @@
 .wp-block[data-type='eightshift-forms/radios'] {
 	.es-field {
 		.es-field__content-wrap {
-			padding: var(--es-input-spacing);
-			border: 1px dashed var(--es-input-border-color);
+			@include input-styles-disabled;
 
+			padding: var(--es-input-spacing);
+			border: 1px solid var(--es-input-border-color);
 			border-radius: var(--global-esf-spacing-s);
 		}
 

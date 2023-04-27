@@ -38,6 +38,14 @@ export const DateOptions = (attributes) => {
 			<PanelBody title={title}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 					<TextControl
+						label={<NameFieldLabel value={dateName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={dateName}
+						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
+					/>
+
+					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={datePlaceholder}
@@ -79,14 +87,6 @@ export const DateOptions = (attributes) => {
 				</Section>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={dateName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={dateName}
-						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
-					/>
-
 					<TextControl
 						label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
 						value={dateValue}

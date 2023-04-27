@@ -12,9 +12,9 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -58,11 +58,11 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	protected $goodbitsClient;
 
 	/**
-	 * Instance variable of MailerInterface data.
+	 * Instance variable of FormSubmitMailerInterface data.
 	 *
-	 * @var MailerInterface
+	 * @var FormSubmitMailerInterface
 	 */
-	public $mailer;
+	public $formSubmitMailer;
 
 	/**
 	 * Create a new instance that injects classes
@@ -71,20 +71,20 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
-	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		ClientInterface $goodbitsClient,
-		MailerInterface $mailer
+		FormSubmitMailerInterface $formSubmitMailer
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->goodbitsClient = $goodbitsClient;
-		$this->mailer = $mailer;
+		$this->formSubmitMailer = $formSubmitMailer;
 	}
 
 	/**
@@ -156,8 +156,11 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response);
+			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
+
+		// Send email if it is configured in the backend.
+		$this->formSubmitMailer->sendEmails($formDataRefrerence);
 
 		// Finish.
 		return \rest_ensure_response(

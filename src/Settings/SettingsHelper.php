@@ -417,4 +417,32 @@ trait SettingsHelper
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
 	}
+
+	/**
+	 * Get global variable copy output.
+	 *
+	 * @param string $variableName Variable name to output.
+	 * @param bool $usedVariable Is global variable used.
+	 *
+	 * @return string
+	 */
+	private function getGlobalVariableOutput(string $variableName, bool $usedVariable = false): string
+	{
+		// translators: %s will be replaced with global variable name.
+		$output = \sprintf(\__('
+			<details class="is-filter-applied">
+				<summary>Available global variables</summary>
+				<ul>
+					<li>%s</li>
+				</ul>
+				<br />
+				This field value can also be set using a global variable via code.
+			</details>', 'eightshift-forms'), $variableName);
+
+		if ($usedVariable) {
+			$output = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+		}
+
+		return $output;
+	}
 }

@@ -20,6 +20,17 @@ export const RadiosOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Radio buttons', 'eightshift-forms')}>
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={radiosName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={radiosName}
+						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: radiosDisabledOptions,
@@ -35,17 +46,6 @@ export const RadiosOptions = (attributes) => {
 						onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
 						noBottomSpacing
-					/>
-				</Section>
-
-				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
-					<TextControl
-						label={<NameFieldLabel value={radiosName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={radiosName}
-						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
-						className='es-no-field-spacing'
 					/>
 				</Section>
 			</PanelBody>

@@ -24,7 +24,8 @@
 				"eightshift-forms/active-campaign",
 				"eightshift-forms/airtable",
 				"eightshift-forms/moments",
-				"eightshift-forms/workable"
+				"eightshift-forms/workable",
+				"eightshift-forms/jira"
 			]
 		}
 	},
@@ -35,27 +36,37 @@
 			"blockName": "eightshift-forms/mailer",
 			"innerBlocks": [
 				[
-					"eightshift-forms/sender-email",
+					"eightshift-forms/input",
 					{
-						"senderEmailInputFieldLabel": "E-mail"
+						"inputInputFieldLabel": "E-mail",
+						"inputInputType": "email",
+						"inputInputName": "email",
+						"inputInputIsRequired": true,
+						"inputInputDisabledOptions": [
+							"inputInputIsRequired",
+							"inputInputName"
+						]
 					}
 				],
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "Name"
+						"inputInputFieldLabel": "Name",
+						"inputInputIsRequired": true
 					}
 				],
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "Subject"
+						"inputInputFieldLabel": "Subject",
+						"inputInputIsRequired": true
 					}
 				],
 				[
 					"eightshift-forms/textarea",
 					{
-						"textareaTextareaFieldLabel": "Message"
+						"textareaTextareaFieldLabel": "Message",
+						"inputInputIsRequired": true
 					}
 				],
 				[
@@ -107,6 +118,11 @@
 			"label": "Workable",
 			"slug": "workable",
 			"blockName": "eightshift-forms/workable"
+		},
+		{
+			"label": "Jira",
+			"slug": "jira",
+			"blockName": "eightshift-forms/jira"
 		}
 	]
 }

@@ -286,4 +286,34 @@ class Variables
 	{
 		return \defined('ES_SUBDOMAIN_WORKABLE') ? \ES_SUBDOMAIN_WORKABLE : '';
 	}
+
+	/**
+	 * Get API Key for Jira.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getApiKeyJira()
+	{
+		return \defined('ES_API_KEY_JIRA') ? \ES_API_KEY_JIRA : '';
+	}
+
+	/**
+	 * Get API Board for Jira.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getApiBoardJira()
+	{
+		return \defined('ES_API_BOARD_JIRA') ? \ES_API_BOARD_JIRA : '';
+	}
+
+	/**
+	 * Get API User for Jira.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getApiUserJira()
+	{
+		return \defined('ES_API_USER_JIRA') ? \ES_API_USER_JIRA : '';
+	}
 }

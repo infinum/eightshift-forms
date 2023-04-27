@@ -207,7 +207,6 @@ class MigrationRoute extends AbstractBaseRoute
 			return $this->getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 
-		// @phpstan-ignore-next-line.
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();
 
@@ -300,7 +299,6 @@ class MigrationRoute extends AbstractBaseRoute
 			\delete_option($this->getSettingsName("{$type}-integration-fields"));
 		}
 
-		// @phpstan-ignore-next-line.
 		\wp_reset_postdata();
 
 		$outputFatal = [];
@@ -347,14 +345,12 @@ class MigrationRoute extends AbstractBaseRoute
 		if (!$outputFinal['items']) {
 			return $this->getApiErrorOutput(
 				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
-				400,
 				$outputFinal,
 			);
 		}
 
 		return $this->getApiSuccessOutput(
 			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
-			200,
 			$outputFinal
 		);
 	}

@@ -44,6 +44,8 @@ use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsDocumentation;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
+use EightshiftForms\Integrations\Jira\JiraClient;
+use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Integrations\Workable\WorkableClient;
@@ -220,6 +222,21 @@ class Filters
 				WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
 			],
 		],
+		SettingsJira::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsJira::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsJira::FILTER_SETTINGS_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+			'use' => SettingsJira::SETTINGS_JIRA_USE_KEY,
+			'cache' => [
+				JiraClient::CACHE_JIRA_PROJECTS_TRANSIENT_NAME,
+				JiraClient::CACHE_JIRA_ISSUE_TYPE_TRANSIENT_NAME,
+			],
+			'emailTemplateTags' => [
+				'jiraIssueId',
+				'jiraIssueKey',
+				'jiraIssueUrl',
+			]
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
@@ -385,6 +402,9 @@ class Filters
 				'prePostParams' => 'pre_post_params',
 				'successRedirectUrl' => 'success_redirect_url',
 			],
+			SettingsJira::SETTINGS_TYPE_KEY => [
+				'map' => 'map',
+			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'successRedirectUrl' => 'success_redirect_url',
 			],
@@ -432,7 +452,7 @@ class Filters
 			],
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'title' => \__('Enrichment', 'eightshift-forms'),
-				'desc' => \__('Using saved URL parameters, track users even when they leave the site.', 'eightshift-forms'),
+				'desc' => \__('Using saved URL parameters and cookies track users even when they leave the site.', 'eightshift-forms'),
 			],
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'title' => \__('Blocks', 'eightshift-forms'),
@@ -505,6 +525,13 @@ class Filters
 				'detail' => \__('Sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
 				'externalLink' => 'https://www.greenhouse.io/',
 				'icon' => 'workable',
+			],
+			SettingsJira::SETTINGS_TYPE_KEY => [
+				'title' => \__('Jira', 'eightshift-forms'),
+				'desc' => \__('Jira integration settings.', 'eightshift-forms'),
+				'detail' => \__('Jira is a marketing intelligence tool that you can use to effectively get quality B2B data for understanding customers, identifying prospects, and creating personalised marketing and sales exchanges.', 'eightshift-forms'),
+				'externalLink' => 'https://jira.atlassian.com/',
+				'icon' => 'jira',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),

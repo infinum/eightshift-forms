@@ -137,7 +137,8 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
-								'inputFieldLabel' => \__('Clear after', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Clear storage after', 'eightshift-forms'),
+								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 0,
 								'inputMax' => 100,
@@ -176,7 +177,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Map the URL parameters to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
+								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',

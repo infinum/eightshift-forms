@@ -104,13 +104,16 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 			\array_keys(Filters::getSpecialConstants('tracking'))
 		);
 
-		$formType = Helper::getFormDetailsById($formId)['type'] ?? '';
+		$formDetails = Helper::getFormDetailsById($formId);
+		$formType = $formDetails['type'] ?? '';
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
 		$successRedirectVariation = $this->getSuccessRedirectVariationFilterValue($formType, $formId);
 		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
+
+		$fieldNameTags = Helper::getFormFieldNames($formDetails['fieldNames']);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -138,7 +141,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), Helper::getFormFieldNames($formId), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), $fieldNameTags, $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],
@@ -156,7 +159,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'selectIsDisabled' => $successRedirectVariation['filterUsed'],
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'selectFieldHelp' => \sprintf(\__('
-									Will be appended to the redirect URL as a parameter to allow "Thank you" page variations.
+									Variation value will be appended to the redirect URL as a parameter to allow you to privide different version of the "Thank you" page.
 									<br />
 									%s', 'eightshift-forms'), $successRedirectVariation['settings']),
 								'selectContent' => \array_values(
@@ -260,7 +263,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
 								'inputId' => $this->getSettingsName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
-								'inputFieldLabel' => \__('Custom name', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),

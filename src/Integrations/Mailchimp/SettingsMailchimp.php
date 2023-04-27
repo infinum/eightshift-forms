@@ -201,12 +201,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 		$apiKey = Variables::getApiKeyMailchimp();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
-		$apiKeyFieldHelp = \__('Can also be provided via a global variable.', 'eightshift-forms');
-
-		if (!empty($apiKey)) {
-			$apiKeyFieldHelp = '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
-		}
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -220,7 +214,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $apiKeyFieldHelp,
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MAILCHIMP', !empty($apiKey)),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),

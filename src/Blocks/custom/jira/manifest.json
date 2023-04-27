@@ -1,0 +1,37 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "jira",
+	"title": "Jira form",
+	"description" : "A Jira form issues",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-jira"
+	},
+	"keywords": [
+		"jira"
+	],
+	"example": {
+	},
+	"components": {
+		"form": "form"
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"jiraAllowedBlocks": {
+			"type": "array",
+			"default": []
+		},
+		"jiraIntegrationId": {
+			"type": "string"
+		},
+		"jiraFormPostId": {
+			"type": "string"
+		},
+		"jiraFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

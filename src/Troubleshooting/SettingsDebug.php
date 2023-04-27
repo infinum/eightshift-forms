@@ -129,6 +129,11 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
 								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Disable form validation and go directly to the integrations form submission. This way, you can debug the validation errors from the integration.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
 							],
 							[
 								'component' => 'checkbox',
@@ -136,6 +141,11 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Allows sending the form without CAPTCHA validation, with the feature still enabled.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
 							],
 							[
 								'component' => 'checkbox',
@@ -143,6 +153,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
 								'checkboxAsToggle' => true,
+								'checkboxHelp' => \__('Disable form reset after successful submission for easier debugging.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',
@@ -166,7 +177,11 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 								'checkboxAsToggle' => true,
-								'checkboxHelp' => \__('Outputs multiple options in forms. Every listing will have ID prepended to the label.', 'eightshift-forms'),
+								'checkboxHelp' => \__('
+									Outputs multiple developers options in forms. Available outputs:<br/><br/>
+									<ul>
+										<li>Every listing will have ID prepended to the label.</li>
+									</ul>', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',

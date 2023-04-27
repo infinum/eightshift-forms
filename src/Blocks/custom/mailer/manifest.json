@@ -20,18 +20,7 @@
 	"attributes": {
 		"mailerAllowedBlocks": {
 			"type": "array",
-			"default": [
-				"eightshift-forms/file",
-				"eightshift-forms/input",
-				"eightshift-forms/radios",
-				"eightshift-forms/select",
-				"eightshift-forms/submit",
-				"eightshift-forms/textarea",
-				"eightshift-forms/checkboxes",
-				"eightshift-forms/phone",
-				"eightshift-forms/date",
-				"eightshift-forms/country"
-			]
+			"default": []
 		},
 		"mailerFormPostId": {
 			"type": "string"

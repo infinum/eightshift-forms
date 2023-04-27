@@ -78,7 +78,17 @@ export const InputOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={title}>
-				<Section showIf={showInputPlaceholder || showInputType} icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<Section showIf={showInputPlaceholder || showInputType || showInputName} icon={icons.options} label={__('General', 'eightshift-forms')}>
+					{showInputName &&
+						<TextControl
+							label={<NameFieldLabel value={inputName} />}
+							help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+							value={inputName}
+							onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
+						/>
+					}
+
 					{showInputType &&
 						<Select
 							icon={icons.optionListAlt}
@@ -132,16 +142,6 @@ export const InputOptions = (attributes) => {
 				/>
 
 				<Section showIf={showInputAdvancedOptions} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					{showInputName &&
-						<TextControl
-							label={<NameFieldLabel value={inputName} />}
-							help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-							value={inputName}
-							onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
-						/>
-					}
-
 					{showInputValue &&
 						<TextControl
 							label={<IconLabel icon={icons.titleGeneric} label={__('Initial value', 'eightshift-forms')} />}

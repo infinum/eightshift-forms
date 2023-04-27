@@ -57,6 +57,14 @@ export const TextareaOptions = (attributes) => {
 			<PanelBody title={__('Multiline text', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 					<TextControl
+						label={<NameFieldLabel value={textareaName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={textareaName}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
+					/>
+
+					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={textareaPlaceholder}
@@ -161,14 +169,6 @@ export const TextareaOptions = (attributes) => {
 				</Section>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={textareaName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={textareaName}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
-					/>
-
 					<TextControl
 						label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
 						value={textareaValue}

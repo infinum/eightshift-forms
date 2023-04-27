@@ -69,12 +69,11 @@ class ValidationPatterns implements ValidationPatternsInterface
 		return \array_map(
 			static function ($item) {
 				$label = $item['label'] ?? '';
-				$value = $item['value'] ?? '';
 
 				// Output label as value for enum.
 				return [
 					'label' => $label,
-					'value' => $value === '-' ? '' : $label,
+					'value' => $label,
 				];
 			},
 			$this->getValidationPatterns()
@@ -118,11 +117,6 @@ class ValidationPatterns implements ValidationPatternsInterface
 	private function getValidationPatterns(): array
 	{
 		$output = [
-			[
-				'value' => '',
-				'label' => '-',
-				'name' => '',
-			],
 			...self::VALIDATION_PATTERNS,
 			...self::VALIDATION_PATTERNS_PRIVATE,
 		];
