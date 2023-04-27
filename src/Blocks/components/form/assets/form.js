@@ -328,14 +328,17 @@ export class Form {
 	 */
 	formStepStubmit(element, stepButton) {
 		const id = stepButton.getAttribute('data-current-step');
-		const fields = element.querySelector(`${this.utils.stepSelector}[data-id="${id}"]`).querySelectorAll('input, select, textarea');
+		const fields = element.querySelectorAll(`
+			${this.utils.stepSelector}[data-id="${id}"] input,
+			${this.utils.stepSelector}[data-id="${id}"] select,
+			${this.utils.stepSelector}[data-id="${id}"] textarea`);
 
-		const formData = this.getFormData(element, false, fields);
+		const formData = this.getFormData(element, false, `${this.utils.stepSelector}[data-id="${id}"]`);
 
 		// Display the key/value pairs
-		for (const pair of formData.entries()) {
-			console.log(`${pair[0]}, ${pair[1]}`);
-		}
+		// for (const pair of formData.entries()) {
+		// 	console.log(`${pair[0]}, ${pair[1]}`);
+		// }
 	}
 
 	/**
@@ -343,24 +346,20 @@ export class Form {
 	 * 
 	 * @param {object} element Form element.
 	 * @param {boolean} singleSubmit Is form single submit, used in admin.
-	 * @param {object} itemsElements Fields node list to validate.
+	 * @param {string} prefix Prefix to add to the selectors.
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false, itemsElements = {}) {
+	getFormData(element, singleSubmit = false, prefix = '') {
 		const formData = new FormData();
-		const selectors = 'input, select, textarea';
+		const selectors = `${prefix} input, ${prefix} select, ${prefix} textarea`;
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
 		let items = element.querySelectorAll(selectors);
 
-		// Provide external elements to process.
-		if (itemsElements) {
-			items = itemsElements;
-		}
-		console.log(itemsElements);
+		console.log(items);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {

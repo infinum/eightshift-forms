@@ -42,6 +42,7 @@
 						"inputInputType": "email",
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
+						"inputInputIsEmail": true,
 						"inputInputDisabledOptions": [
 							"inputInputIsRequired",
 							"inputInputName"
@@ -52,21 +53,23 @@
 					"eightshift-forms/input",
 					{
 						"inputInputFieldLabel": "Name",
-						"inputInputIsRequired": true
+						"inputInputIsRequired": true,
+						"inputInputName": "name"
 					}
 				],
 				[
 					"eightshift-forms/input",
 					{
 						"inputInputFieldLabel": "Subject",
-						"inputInputIsRequired": true
+						"inputInputIsRequired": true,
+						"inputInputName": "subject"
 					}
 				],
 				[
 					"eightshift-forms/textarea",
 					{
 						"textareaTextareaFieldLabel": "Message",
-						"inputInputIsRequired": true
+						"textareaTextareaName": "message"
 					}
 				],
 				[

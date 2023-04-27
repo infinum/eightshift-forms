@@ -156,9 +156,6 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		// Send email if it is configured in the backend.
 		$this->formSubmitMailer->sendEmails($formDataRefrerence);
 
-		error_log( print_r( ( $formDataRefrerence ), true ) );
-		
-
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
