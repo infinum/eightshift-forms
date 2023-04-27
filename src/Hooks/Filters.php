@@ -452,7 +452,7 @@ class Filters
 			],
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'title' => \__('Enrichment', 'eightshift-forms'),
-				'desc' => \__('Using saved URL parameters and cookies to track users even when they leave the site.', 'eightshift-forms'),
+				'desc' => \__('Using saved URL parameters and cookies track users even when they leave the site.', 'eightshift-forms'),
 			],
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'title' => \__('Blocks', 'eightshift-forms'),

@@ -233,7 +233,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								'selectSingleSubmit' => true,
 								'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
 								'selectFieldHelp' => \__('You must select what field is used as an email.', 'eightshift-forms'),
-								'selectFieldLabel' => \__('Select a email field', 'eightshift-forms'),
+								'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 								'selectContent' => \array_merge(
 									[
 										[
@@ -266,7 +266,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'component' => 'input',
 									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 									'inputFieldLabel' => \__('Email client sender name', 'eightshift-forms'),
-									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the e-mail address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
 									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
@@ -279,7 +279,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'component' => 'input',
 									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 									'inputFieldLabel' => \__('Email client from email', 'eightshift-forms'),
-									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the senders email and will use it when the user clicks on the respond to button. Make this something like: `info@infinum.com`.', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender email (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsEmail' => true,
 									'inputIsRequired' => true,
@@ -344,7 +344,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							'tabContent' => [
 								[
 									'component' => 'intro',
-									'introSubtitle' => \__('Provide the best UX experience for you users by creating a confirmation e-mail like a "thank you" message.', 'eightshift-forms'),
+									'introSubtitle' => \__('Send your users a "thank you" message after they submit the form.', 'eightshift-forms'),
 								],
 								[
 									'component' => 'divider',
@@ -357,7 +357,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
-											'checkboxLabel' => \__('Use confirmation email', 'eightshift-forms'),
+											'checkboxLabel' => \__('Send a confirmation email', 'eightshift-forms'),
 											'checkboxIsChecked' => $isSenderUsed,
 											'checkboxValue' => self::SETTINGS_MAILER_SENDER_USE_KEY,
 											'checkboxSingleSubmit' => true,
@@ -507,7 +507,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 					%s
 				</ul>
 				<br />
-				Special response tags are used to provide dynamic content from the integration response!
+				Use response tags to populate the content with the data that the integration sends back.
 			</details>', 'eightshift-forms'), $formResponseTags);
 	}
 }

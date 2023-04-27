@@ -1,10 +1,10 @@
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, BlockInserter } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from '../../../components/form/components/form-editor';
 import manifest from '../manifest.json';
 
-export const JiraEditor = ({ attributes, setAttributes }) => {
+export const JiraEditor = ({ attributes, setAttributes, clientId }) => {
 	const {
 		blockClass,
 	} = attributes;
@@ -19,6 +19,7 @@ export const JiraEditor = ({ attributes, setAttributes }) => {
 					formContent: <InnerBlocks
 						allowedBlocks={(typeof jiraAllowedBlocks === 'undefined') || jiraAllowedBlocks}
 						templateLock={false}
+						renderAppender={() => <BlockInserter clientId={clientId} />}
 					/>
 				})}
 			/>

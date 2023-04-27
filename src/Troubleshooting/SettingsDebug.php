@@ -141,7 +141,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 								'checkboxAsToggle' => true,
-								'checkboxHelp' => \__('Disable captcha validation before form submission without turning off the captcha feature.', 'eightshift-forms'),
+								'checkboxHelp' => \__('Allows sending the form without CAPTCHA validation, with the feature still enabled.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',

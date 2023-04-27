@@ -431,7 +431,7 @@ trait SettingsHelper
 		// translators: %s will be replaced with global variable name.
 		$output = \sprintf(\__('
 			<details class="is-filter-applied">
-				<summary>Available global variable</summary>
+				<summary>Available global variables</summary>
 				<ul>
 					<li>%s</li>
 				</ul>
