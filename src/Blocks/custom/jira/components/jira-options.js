@@ -11,13 +11,15 @@ export const JiraOptions = ({ attributes, setAttributes }) => {
 
 	return (
 		<PanelBody title={__('Jira form', 'eightshift-forms')}>
-			<Button
-				href={getSettingsPageUrl(postId)}
-				variant="secondary"
-				icon={icons.options}
-			>
-				{__('Open form settings', 'eightshift-forms')}
-			</Button>
+			<Control>
+				<Button
+					href={getSettingsPageUrl(postId)}
+					icon={icons.options}
+					className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+				>
+					{__('Form settings', 'eightshift-forms')}
+				</Button>
+			</Control>
 
 			<hr />
 
