@@ -196,8 +196,6 @@ class Validator extends AbstractValidation
 			\uksort($reference, function ($key1, $key2) use ($order) {
 				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
-			error_log( print_r( ( $reference ), true ) );
-			
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
@@ -220,9 +218,6 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for email params.
 					case 'isEmail':
-						error_log( print_r( ( $inputValue ), true ) );
-						error_log( print_r( ( $this->isCheckboxOptionChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY) ), true ) );
-						
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
