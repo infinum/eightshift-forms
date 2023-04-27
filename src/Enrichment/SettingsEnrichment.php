@@ -138,7 +138,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 								'inputFieldLabel' => \__('Clear storage after', 'eightshift-forms'),
-								'inputFieldHelp' => \__('You can change how long will the enrichment data be stored in the uses computer.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 0,
 								'inputMax' => 100,
