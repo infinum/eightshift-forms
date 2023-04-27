@@ -17,9 +17,9 @@ export const JiraEditor = ({ attributes, setAttributes }) => {
 				{...props('form', attributes, {
 					setAttributes,
 					formContent: <InnerBlocks
-													allowedBlocks={(typeof jiraAllowedBlocks === 'undefined') || jiraAllowedBlocks}
-													templateLock={false}
-												/>
+						allowedBlocks={(typeof jiraAllowedBlocks === 'undefined') || jiraAllowedBlocks}
+						templateLock={false}
+					/>
 				})}
 			/>
 		</div>
