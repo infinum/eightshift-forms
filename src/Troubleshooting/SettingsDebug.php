@@ -178,7 +178,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxHelp' => \__('
-									Outputs multiple developers options in forms. Here is the list of all the outputs:<br/><br/>
+									Outputs multiple developers options in forms. Available outputs:<br/><br/>
 									<ul>
 										<li>Every listing will have ID prepended to the label.</li>
 									</ul>', 'eightshift-forms'),
