@@ -325,19 +325,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @return string
 	 */
-	protected function getFormSenderEmailField(array $params): string
-	{
-		$senderEmailManifest = Components::getBlock('sender-email')['blockName'];
-		return $params[$senderEmailManifest]['value'] ?? '';
-	}
-
-	/**
-	 * Return mailer for sender email field params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
 	protected function getFormCustomAction(array $params): string
 	{
 		return $params[self::CUSTOM_FORM_PARAMS['action']]['value'] ?? '';

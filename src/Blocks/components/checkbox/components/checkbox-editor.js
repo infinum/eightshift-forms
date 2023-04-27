@@ -45,7 +45,7 @@ export const CheckboxEditor = (attributes) => {
 			<div className={`${componentClass}__content`}>
 				<input
 					className={`${componentClass}__input`}
-					type={'checkbox'}
+					type='checkbox'
 					readOnly
 					checked={checkboxIsChecked}
 				/>

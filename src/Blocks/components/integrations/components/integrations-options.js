@@ -5,8 +5,8 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { select } from "@wordpress/data";
-import { BaseControl, Button } from '@wordpress/components';
-import { icons, CustomSelect, BlockIcon, IconLabel, FancyDivider } from '@eightshift/frontend-libs/scripts';
+import { Button } from '@wordpress/components';
+import { icons, Select, Section } from '@eightshift/frontend-libs/scripts';
 import { updateIntegrationBlocks, getSettingsPageUrl, resetInnerBlocks } from '../../utils';
 
 export const IntegrationsOptions = ({
@@ -18,23 +18,26 @@ export const IntegrationsOptions = ({
 	innerId,
 	innerIdKey,
 }) => {
-
 	const postId = select('core/editor').getCurrentPostId();
 
 	const [formItems, setFormItems] = useState([]);
 	const [formInnerItems, setFormInnerItems] = useState([]);
 
-	useEffect( () => {
-		apiFetch({ path:
-			`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItems}-${block}` }).then((response) => {
+	useEffect(() => {
+		apiFetch({
+			path:
+				`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItems}-${block}`
+		}).then((response) => {
 			if (response.code === 200) {
 				setFormItems(response.data);
 			}
 		});
 
 		if (innerIdKey && itemId) {
-			apiFetch({ path: 
-				`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}` }).then((response) => {
+			apiFetch({
+				path:
+					`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}`
+			}).then((response) => {
 				if (response.code === 200) {
 					setFormInnerItems(response.data);
 				}
@@ -44,9 +47,10 @@ export const IntegrationsOptions = ({
 
 	return (
 		<>
-			<CustomSelect
-				label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Select a form to display', 'eightshift-forms')} />}
-				help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+			<Select
+				icon={icons.formAlt}
+				label={__('Form to display', 'eightshift-forms')}
+				help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
 				value={itemId}
 				options={formItems}
 				onChange={(value) => {
@@ -58,47 +62,35 @@ export const IntegrationsOptions = ({
 						updateIntegrationBlocks(clientId, postId, block, value.toString());
 						setAttributes({ [itemIdKey]: value.toString() });
 					}
-				} }
-				isClearable={false}
-				cacheOptions={false}
-				reFetchOnSearch={true}
-				multiple={false}
-				closeMenuOnSelect={true}
+				}}
+				reducedBottomSpacing={innerIdKey && itemId}
+				closeMenuAfterSelect
 				simpleValue
 			/>
 
 			{(innerIdKey && itemId) &&
-				<CustomSelect
-					label={<IconLabel icon={<BlockIcon iconName='esf-form-picker' />} label={__('Form to display', 'eightshift-forms')} />}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+				<Select
+					help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
 					value={innerId}
 					options={formInnerItems}
 					onChange={(value) => {
 						updateIntegrationBlocks(clientId, postId, block, itemId, value.toString());
 						setAttributes({ [innerIdKey]: value.toString() });
 					}}
-					isClearable={false}
-					cacheOptions={false}
-					reFetchOnSearch={true}
-					multiple={false}
-					closeMenuOnSelect={true}
+					closeMenuAfterSelect
 					simpleValue
 				/>
 			}
 
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
-
-			<BaseControl
-				help={__('On form settings page you can setup all additional settings regarding you form.', 'eightshift-forms')}
-			>
+			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
 				<Button
 					href={getSettingsPageUrl(postId)}
-					variant="secondary"
 					icon={icons.options}
+					className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 				>
-					{__('Open form settings', 'eightshift-forms')}
+					{__('Form settings', 'eightshift-forms')}
 				</Button>
-			</BaseControl>
+			</Section>
 		</>
 	);
 };

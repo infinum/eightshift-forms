@@ -12,9 +12,9 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -58,11 +58,11 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	protected $momentsClient;
 
 	/**
-	 * Instance variable of MailerInterface data.
+	 * Instance variable of FormSubmitMailerInterface data.
 	 *
-	 * @var MailerInterface
+	 * @var FormSubmitMailerInterface
 	 */
-	public $mailer;
+	public $formSubmitMailer;
 
 	/**
 	 * Create a new instance that injects classes
@@ -71,20 +71,20 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
-	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		ClientInterface $momentsClient,
-		MailerInterface $mailer
+		FormSubmitMailerInterface $formSubmitMailer
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->momentsClient = $momentsClient;
-		$this->mailer = $mailer;
+		$this->formSubmitMailer = $formSubmitMailer;
 	}
 
 	/**
@@ -156,7 +156,15 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response);
+			$this->formSubmitMailer->sendFallbackEmail($response);
+		}
+
+		// Send email if it is configured in the backend.
+		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+
+		// Always delete the files from the disk.
+		if ($files) {
+			$this->deleteFiles($files);
 		}
 
 		// Finish.

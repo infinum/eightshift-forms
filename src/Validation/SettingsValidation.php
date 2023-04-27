@@ -146,7 +146,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 		$messagesOutput = [
 			[
 				'component' => 'intro',
-				'introSubtitle' => \__('In these settings, you can change all validation messages. These settings will be used on all forms.', 'eightshift-forms'),
+				'introSubtitle' => \__('Validation messages are shared between all forms.', 'eightshift-forms'),
 			],
 		];
 		// List all labels for settings override.
@@ -171,35 +171,6 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Patterns', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'textarea',
-								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
-								'textareaIsMonospace' => true,
-								'textareaSaveAsJson' => true,
-								'textareaFieldLabel' => \__('Validation patterns', 'eightshift-forms'),
-								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
-									Custom validation patterns that are defined in this field can be selected inside the Form editor.<br />
-									If you need help with writing regular expressions (<i>regex</i>), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
-									One validation pattern should be provided per line, in the following format:<br />
-									<code>pattern-name : pattern : output </code><br /><br />
-									Here are some examples:
-									<ul>
-									%2\$s
-									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
-							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabContent' => $messagesOutput,
-					],
-					[
-						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
@@ -217,7 +188,34 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 									]
 								]
 							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+									Patterns defined in this field can be selected in the Form editor.<br />
+									If you need help with writing regular expressions (regex), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
+									Enter one pattern per line, in the following format:<br />
+									<code>pattern-name : pattern : output</code><br /><br />
+									Example:
+									<ul>
+									%2\$s
+									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
+								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
+							],
 						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabContent' => $messagesOutput,
 					],
 				]
 			],

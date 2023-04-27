@@ -16,6 +16,7 @@ use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
@@ -142,32 +143,38 @@ class Helper
 	/**
 	 * Get all field names from the form.
 	 *
-	 * @param string $formId Form ID.
+	 * @param array<int, string> $fieldNames Form field IDs.
 	 *
 	 * @return string
 	 */
-	public static function getFormFieldNames(string $formId): string
+	public static function getFormFieldNames(array $fieldNames): string
 	{
-		$content = \get_the_content(null, false, (int) $formId);
-
-		// Find all name values.
-		\preg_match_all('/Name":"(.*?)"/m', $content, $matches, \PREG_SET_ORDER);
-
-		// Find custom predefined names.
-		\preg_match_all('/\/(sender-email) {(.*?)} \/-->/m', $content, $matchesCustom, \PREG_SET_ORDER);
-
-		$items = \array_merge($matches, $matchesCustom);
-
 		$output = [];
 
 		// Populate output.
-		foreach ($items as $item) {
-			if (isset($item[1]) && !empty($item[1])) {
-				$output[] = "<code>{" . $item[1] . "}</code>";
-			}
+		foreach ($fieldNames as $item) {
+			$output[] = "<li><code>{" . $item . "}</code></li>";
 		}
 
-		return \implode(', ', $output);
+		return \implode("\n", $output);
+	}
+
+	/**
+	 * Get all field names from the form.
+	 *
+	 * @param string $formType Form type to check.
+	 *
+	 * @return string
+	 */
+	public static function getFormResponseTags(string $formType): string
+	{
+		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
+
+		if ($tags) {
+			return self::getFormFieldNames($tags);
+		}
+
+		return '';
 	}
 
 	/**
@@ -424,6 +431,7 @@ class Helper
 				}
 				break;
 			case SettingsMailer::SETTINGS_TYPE_KEY:
+			case SettingsJira::SETTINGS_TYPE_KEY:
 				if ($output['type']) {
 					$output['isValid'] = true;
 
@@ -442,6 +450,18 @@ class Helper
 				}
 				break;
 		}
+
+		$output['fieldNames'] = \array_values(\array_filter(\array_map(
+			static function ($item) {
+				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+				$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+
+				if ($value) {
+					return $value;
+				}
+			},
+			$output['fieldsOnly']
+		)));
 
 		return $output;
 	}

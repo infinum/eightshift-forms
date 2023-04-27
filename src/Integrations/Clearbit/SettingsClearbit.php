@@ -163,13 +163,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('API', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_CLEARBIT', !empty($apiKey)),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
@@ -179,12 +179,11 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					],
 					self::isSettingsGlobalValid() ? [
 						'component' => 'tab',
-						'tabLabel' => \__('Fields', 'eightshift-forms'),
+						'tabLabel' => \__('Available fields', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => \__('Available fields', 'eightshift-forms'),
-								'checkboxesFieldHelp' => \__('Select fields that you want to use in your forms.', 'eightshift-forms'),
+								'checkboxesFieldHideLabel' => true,
 								'checkboxesName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 								'checkboxesIsRequired' => true,
 								'checkboxesContent' => \array_map(
@@ -249,13 +248,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'checkboxesContent' => [
 					[
 						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Clearbit integration', 'eightshift-forms'),
+						'checkboxLabel' => \__('Clearbit integration', 'eightshift-forms'),
 						'checkboxIsChecked' => $isUsed,
 						'checkboxValue' => $key,
 						'checkboxSingleSubmit' => true,
 						'checkboxAsToggle' => true,
 						'checkboxAsToggleSize' => 'medium',
-					]
+					],
 				]
 			],
 		];
@@ -297,46 +296,59 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 				'tabContent' => [
 					[
 						'component' => 'intro',
-						'introSubtitle' => \__('
-							Control which fields from Clearbit are connected to the HubSpot properties.<br/>
-							Label is a Clearbit field, and the input is a HubSpot field to map to.', 'eightshift-forms'),
+						'introSubtitle' => \__('Map Clearbit fields to HubSpot properties.', 'eightshift-forms'),
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
 					],
 					$clearbitAvailableKeys ? [
 						'component' => 'group',
 						'groupName' => $this->getSettingsName($mapKey),
 						'groupSaveOneField' => true,
 						'groupStyle' => 'default-listing',
-						'groupContent' => \array_map(
-							static function ($item) use ($clearbitMapValue, $properties) {
-								$selectedValue = $clearbitMapValue[$item] ?? '';
-								return [
-									'component' => 'select',
-									'selectName' => $item,
-									'selectFieldLabel' => $item,
-									'selectContent' => \array_merge(
-										[
+						'groupContent' => [
+							[
+								'component' => 'field',
+								'fieldLabel' => '<b>' . \__('Clearbit field', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('HubSpot property', 'eightshift-forms') . '</b>',
+								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+								'fieldIsFiftyFiftyHorizontal' => true,
+							],
+							...\array_map(
+								static function ($item) use ($clearbitMapValue, $properties) {
+									$selectedValue = $clearbitMapValue[$item] ?? '';
+									return [
+										'component' => 'select',
+										'selectName' => $item,
+										'selectFieldLabel' => '<code>' . $item . '</code>',
+										'selectFieldBeforeContent' => '&rarr;',
+										'selectFieldIsFiftyFiftyHorizontal' => true,
+										'selectContent' => \array_merge(
 											[
-												'component' => 'select-option',
-												'selectOptionLabel' => '',
-												'selectOptionValue' => '',
-											],
-										],
-										\array_map(
-											static function ($option) use ($selectedValue) {
-												return [
+												[
 													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $selectedValue === $option,
-												];
-											},
-											$properties
-										)
-									),
-								];
-							},
-							$clearbitAvailableKeys
-						),
+													'selectOptionLabel' => '',
+													'selectOptionValue' => '',
+												],
+											],
+											\array_map(
+												static function ($option) use ($selectedValue) {
+													return [
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $selectedValue === $option,
+													];
+												},
+												$properties
+											)
+										),
+									];
+								},
+								$clearbitAvailableKeys
+							),
+						],
 					] : [],
 				],
 		];

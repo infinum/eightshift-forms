@@ -17,9 +17,9 @@ use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -70,11 +70,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected $clearbitClient;
 
 	/**
-	 * Instance variable of MailerInterface data.
+	 * Instance variable of FormSubmitMailerInterface data.
 	 *
-	 * @var MailerInterface
+	 * @var FormSubmitMailerInterface
 	 */
-	public $mailer;
+	public $formSubmitMailer;
 
 	/**
 	 * Create a new instance that injects classes
@@ -84,7 +84,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
-	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -92,14 +92,14 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient,
-		MailerInterface $mailer
+		FormSubmitMailerInterface $formSubmitMailer
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
-		$this->mailer = $mailer;
+		$this->formSubmitMailer = $formSubmitMailer;
 	}
 
 	/**
@@ -193,15 +193,18 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 					);
 				} else {
 					// Send fallback email.
-					$this->mailer->fallbackEmail($clearbitResponse);
+					$this->formSubmitMailer->sendFallbackEmail($clearbitResponse);
 				}
 			}
 		}
 
 		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
-			$this->mailer->fallbackEmail($response);
+			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
+
+		// Send email if it is configured in the backend.
+		$this->formSubmitMailer->sendEmails($formDataRefrerence);
 
 		// Always delete the files from the disk.
 		if ($files) {

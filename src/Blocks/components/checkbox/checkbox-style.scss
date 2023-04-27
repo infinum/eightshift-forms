@@ -3,6 +3,6 @@
 	@include conditional-tags-styles;
 
 	&__label::before {
-		border-radius: 0;
+		border-radius: 0.25rem;
 	}
 }

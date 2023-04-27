@@ -1,14 +1,11 @@
 .es-tabs {
-	margin: 0 calc(-1 * var(--global-es-spacing-horizontal));
 	position: relative;
 
 	@include media(desktop up) {
 		display: flex;
 		flex-wrap: wrap;
-		border-top: 1px solid var(--global-colors-es-ebb);
-	}
+		max-width: var(--global-esf-max-width);
 
-	&--first {
-		border-top: none;
+		gap: var(--global-esf-spacing-m);
 	}
 }

@@ -6,7 +6,7 @@ import { SelectOptionOptions as SelectOptionOptionsComponent } from '../../../co
 
 export const SelectOptionOptions = ({ attributes, setAttributes }) => {
 	return (
-		<PanelBody title={__('Select option', 'eightshift-forms')}>
+		<PanelBody title={__('Option', 'eightshift-forms')}>
 			<SelectOptionOptionsComponent
 				{...props('selectOption', attributes, {
 					setAttributes,

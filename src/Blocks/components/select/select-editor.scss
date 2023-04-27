@@ -6,10 +6,9 @@ select.es-select__select {
 .es-select {
 	padding: var(--es-input-spacing);
 	border: 1px solid var(--es-input-border-color);
+	border-radius: var(--global-esf-spacing-s);
 
-	&--disabled {
-		@include input-styles-disabled;
-	}
+	@include input-styles-disabled;
 
 	&__placeholder {
 		padding-bottom: 15px;

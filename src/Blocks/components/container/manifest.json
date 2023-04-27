@@ -1,0 +1,22 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "container",
+	"title": "Container",
+	"componentClass": "es-container",
+	"attributes": {
+		"containerClass": {
+			"type": "string"
+		},
+		"containerContent": {
+			"type": "string"
+		},
+		"containerTag": {
+			"type": "string",
+			"default": "div"
+		},
+		"containerUse": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

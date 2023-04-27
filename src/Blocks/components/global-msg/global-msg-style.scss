@@ -1,10 +1,10 @@
 .es-global-msg {
-	background-color: var(--global-colors-es-reef);
-	color: var(--global-colors-es-white);
+	color: var(--global-colors-esf-white);
+	background-color: var(--global-colors-esf-admin-accent);
 	display: none;
 
 	&[data-status='error'] {
-		background-color: var(--global-colors-es-pome);
+		background-color: var(--global-colors-esf-red-500);
 	}
 
 	span {

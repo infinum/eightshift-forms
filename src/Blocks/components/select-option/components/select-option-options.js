@@ -1,15 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, Button } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	icons,
-	IconLabel,
-	FancyDivider,
-} from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
+import { TextControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
+import manifest from '../manifest.json';
 
 export const SelectOptionOptions = (attributes) => {
 	const {
@@ -24,44 +18,42 @@ export const SelectOptionOptions = (attributes) => {
 
 	return (
 		<>
-			<TextControl
-				label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
-				value={selectOptionLabel}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
-			/>
+			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<TextControl
+					label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
+					value={selectOptionLabel}
+					onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
+				/>
 
-			<div className='es-h-spaced'>
-				<Button
+				<IconToggle
 					icon={icons.checkSquare}
-					isPressed={selectOptionIsSelected}
-					onClick={() => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: !selectOptionIsSelected })}
+					label={__('Selected', 'eightshift-forms')}
+					checked={selectOptionIsSelected}
+					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsSelected', attributes, manifest), selectOptionDisabledOptions)}
-				>
-					{__('Select by default', 'eightshift-forms')}
-				</Button>
-			</div>
+					noBottomSpacing
+				/>
+			</Section>
 
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
+				<TextControl
+					label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
+					help={__('Internal value, sent if the option is selected', 'eightshift-forms')}
+					value={selectOptionValue}
+					onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectOptionValue', attributes, manifest), selectOptionDisabledOptions)}
+				/>
 
-			<TextControl
-				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-				help={__('Internal value, sent if the option is selected', 'eightshift-forms')}
-				value={selectOptionValue}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('selectOptionValue', attributes, manifest), selectOptionDisabledOptions)}
-			/>
-
-			<div className='es-h-spaced'>
-				<Button
-					icon={icons.fieldDisabled}
-					isPressed={selectOptionIsDisabled}
-					onClick={() => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: !selectOptionIsDisabled })}
+				<IconToggle
+					icon={icons.cursorDisabled}
+					label={__('Disabled', 'eightshift-forms')}
+					checked={selectOptionIsDisabled}
+					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsDisabled', attributes, manifest), selectOptionDisabledOptions)}
-				>
-					{__('Disabled', 'eightshift-forms')}
-				</Button>
-			</div>
+					noBottomSpacing
+				/>
+			</Section>
 		</>
 	);
 };

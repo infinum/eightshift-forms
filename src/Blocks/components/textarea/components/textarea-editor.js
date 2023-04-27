@@ -40,13 +40,15 @@ export const TextareaEditor = (attributes) => {
 				{textareaValue}
 			</textarea>
 
-			<MissingName value={textareaName} isEditor={true} />
+			<MissingName value={textareaName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{textareaName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

@@ -86,19 +86,10 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				// Extract hidden params from localStorage set on the frontend.
 				$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
 
-				// Attach som special keys for specific types.
-				switch ($formDataReference['type']) {
-					// Attach sender email to output for mailer.
-					case SettingsMailer::SETTINGS_TYPE_KEY:
-						$formDataReference['senderEmail'] = $this->getFormSenderEmailField($formDataReference['params']);
-						break;
-
-					// Attach custom action and external action to custom mailer.
-					case SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY:
-						$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
-						$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
-						break;
-				}
+			// Attach some special keys for specific types.
+			if ($formType === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
+				$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
+				$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
 			}
 
 			// Upload files to temp folder.

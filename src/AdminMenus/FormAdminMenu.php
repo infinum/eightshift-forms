@@ -65,7 +65,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_ICON = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity=".6" fill-rule="evenodd" clip-rule="evenodd" d="M6.75 11.75A.75.75 0 0 1 7.5 11h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75zm0 3A.75.75 0 0 1 7.5 14h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 8.75A.75.75 0 0 1 4.5 8h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75z" fill="black"/><path d="M6 11.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm0 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" fill="black"/><path opacity=".3" d="M1 2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4H1V2z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M.25 2.5A2.25 2.25 0 0 1 2.5.25h15a2.25 2.25 0 0 1 2.25 2.25v15a2.25 2.25 0 0 1-2.25 2.25h-15A2.25 2.25 0 0 1 .25 17.5v-15zm2.25-.75a.75.75 0 0 0-.75.75v15c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75v-15a.75.75 0 0 0-.75-.75h-15z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 3.75A.75.75 0 0 1 4.5 3h8a.75.75 0 0 1 0 1.5h-8a.75.75 0 0 1-.75-.75z" fill="black"/></svg>';
+	public const ADMIN_MENU_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 0A1.5 1.5 0 0 0 0 1.5v17A1.5 1.5 0 0 0 1.5 20h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 18.5 0h-17ZM3 2a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3ZM2 7.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1Zm9 7.5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-6Z" fill="#000"/><rect x="12" y="16.25" width="4" height="0.5" rx="0.25" fill="#000"/></svg>';
 
 	/**
 	 * Menu position for this admin menu.
@@ -197,7 +197,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		$status = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$title = \esc_html__('All forms', 'eightshift-forms');
+		$title = \esc_html__('Forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
 		$listingLink = '';
 

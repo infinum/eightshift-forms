@@ -24,13 +24,15 @@ export const RadiosEditor = (attributes) => {
 		<>
 			{radiosContent}
 
-			<MissingName value={radiosName} isEditor={true} />
+			<MissingName value={radiosName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{radiosName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

@@ -378,7 +378,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Applied Global Contant settings output.
+	 * Applied Global constant settings output.
 	 *
 	 * @param string $name Variable name.
 	 *
@@ -387,7 +387,7 @@ trait SettingsHelper
 	private function getAppliedGlobalConstantOutput(string $name): string
 	{
 		// translators: %s replaces global variable name.
-		return \sprintf(\__('Global variable "%s" is active.', 'eightshift-forms'), $name);
+		return '<span class="is-filter-applied">' . \sprintf(\__('Enabled with a global variable <code>%s</code>', 'eightshift-forms'), $name) . '</span>';
 	}
 
 	/**
@@ -416,5 +416,33 @@ trait SettingsHelper
 			'isValid' => $integrationDetails['isValid'],
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
+	}
+
+	/**
+	 * Get global variable copy output.
+	 *
+	 * @param string $variableName Variable name to output.
+	 * @param bool $usedVariable Is global variable used.
+	 *
+	 * @return string
+	 */
+	private function getGlobalVariableOutput(string $variableName, bool $usedVariable = false): string
+	{
+		// translators: %s will be replaced with global variable name.
+		$output = \sprintf(\__('
+			<details class="is-filter-applied">
+				<summary>Available global variable</summary>
+				<ul>
+					<li>%s</li>
+				</ul>
+				<br />
+				This field value can also be set using a global variable via code.
+			</details>', 'eightshift-forms'), $variableName);
+
+		if ($usedVariable) {
+			$output = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+		}
+
+		return $output;
 	}
 }

@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\AdminMenus\FormAdminMenu;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -36,228 +37,242 @@ $layoutClass = Components::classnames([
 	Components::selector($sectionClass, $sectionClass),
 ]);
 
-?>
+$formCardsToDisplay = [];
 
-<div class="<?php echo esc_attr($layoutClass); ?>">
-	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
-		<?php if ($adminListingPageTitle || $adminListingSubTitle) { ?>
-			<div class="<?php echo esc_attr("{$sectionClass}__heading"); ?>">
-				<div class="<?php echo esc_attr("{$sectionClass}__heading-wrap"); ?>">
-					<div class="<?php echo esc_attr("{$sectionClass}__heading-inner-wrap"); ?>">
-						<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
-							<?php echo esc_html($adminListingPageTitle); ?>
-						</div>
+if ($adminListingForms) {
+	foreach ($adminListingForms as $form) {
+		$id = $form['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$editLink = $form['editLink'] ?? '';
+		$postType = $form['postType'] ?? '';
+		$viewLink = $form['viewLink'] ?? '';
+		$trashLink = $form['trashLink'] ?? '';
+		$trashRestoreLink = $form['trashRestoreLink'] ?? '';
+		$settingsLink = $form['settingsLink'] ?? '';
+		$settingsLocationLink = $form['settingsLocationLink'] ?? '';
+		$formTitle = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$useSync = $form['useSync'] ?? false;
+		$activeIntegration = $form['activeIntegration'] ?? [];
 
-						<div class="<?php echo esc_attr("{$sectionClass}__heading-filter {$componentJsFilterClass}"); ?>">
-							<?php
-							if ($adminListingIntegrations) {
-								echo wp_kses_post($adminListingIntegrations);
-							}
-							?>
-						</div>
+		$activeIntegrationIsActive = $activeIntegration['isActive'] ?? false;
+		$activeIntegrationIsValid = $activeIntegration['isValid'] ?? false;
+		$activeIntegrationIsApiValid = $activeIntegration['isApiValid'] ?? false;
 
-						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
-							<a href="#" class="<?php echo esc_attr("{$sectionClass}__link {$componentJsSyncClass}"); ?>" data-id="all">
-								<?php echo $manifestUtils['icons']['sync']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-								<?php echo esc_html__('Sync all forms', 'eightshift-forms'); ?>
-							</a>
-						<?php } ?>
-					</div>
+		$isFormValid = $activeIntegrationIsActive && $activeIntegrationIsValid && $activeIntegrationIsApiValid;
 
-					<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
-						<?php if ($adminListingType !== 'trash' && $adminListingTrashLink) { ?>
-							<a href="<?php echo esc_url($adminListingTrashLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-								<?php echo $manifestUtils['icons']['trash']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-								<?php echo esc_html__('Deleted forms', 'eightshift-forms'); ?>
-							</a>
-						<?php } ?>
-						
-						<?php if ($adminListingType === 'trash' && $adminListingListingLink) { ?>
-							<a href="<?php echo esc_url($adminListingListingLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-								<?php echo $manifestUtils['icons']['arrowLeft']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-								<?php echo esc_html__('All forms', 'eightshift-forms'); ?>
-							</a>
-						<?php } ?>
+		$slug = $editLink;
 
-						<?php if ($adminListingNewFormLink) { ?>
-							<a href="<?php echo esc_url($adminListingNewFormLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
-								<?php echo $manifestUtils['icons']['plusCircle']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-								<?php echo esc_html__('New form', 'eightshift-forms'); ?>
-							</a>
-						<?php } ?>
-					</div>
-				</div>
+		if (!$editLink) {
+			$slug = '#';
+		}
 
-				<?php if ($adminListingSubTitle) { ?>
-					<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
-						<?php echo esc_html($adminListingSubTitle); ?>
-					</div>
-				<?php } ?>
-			</div>
-		<?php } ?>
-		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-			<?php if (!$adminListingForms) {
-				$emptyStateSubtitle = __('No forms (yet).', 'eightshift-forms');
+		$subtitle = null;
+		$errorText = '';
 
-				if ($adminListingType === 'trash') {
-					$emptyStateSubtitle = __('Trash is empty.', 'eightshift-forms');
+		if ($status !== 'publish' && $status !== 'trash') {
+			$subtitle = ucfirst($status);
+		}
+
+		if ($subtitle && $postType) {
+			$subtitle .= ' ' . ucfirst($postType);
+		} else {
+			$subtitle .= ucfirst($postType);
+		}
+
+		if (!$isFormValid && $adminListingType !== 'trash') {
+			$errorText = '';
+
+			if (!$activeIntegrationIsActive) {
+				$errorText .= esc_html__('Integration not enabled.', 'eightshift-forms') . ' ';
+			}
+
+			if (!$activeIntegrationIsValid) {
+				$errorText .= esc_html__('Form configuration not valid.', 'eightshift-forms') . ' ';
+			}
+
+			if (!$activeIntegrationIsApiValid) {
+				$errorText .= esc_html__('Missing form fields.', 'eightshift-forms');
+			}
+
+			if (!empty($errorText)) {
+				$errorText = implode(', ', array_map(fn ($item) => lcfirst($item), explode('. ', $errorText)));
+				$errorText = '<span class="error-text">' . ucfirst($errorText) . '</span>';
+
+				if (!empty($subtitle)) {
+					$errorText = $errorText . ' &mdash; ';
 				}
+			}
+		}
 
-				echo Components::render('highlighted-content', [
-					'highlightedContentTitle' => __('Nothing to see here', 'eightshift-forms'),
-					'highlightedContentSubtitle' => $emptyStateSubtitle,
-					'highlightedContentIcon' => 'empty',
-				]);
-			} ?>
-			<?php if ($adminListingForms) { ?>
-				<ul class="<?php echo esc_attr("{$componentClass}__list"); ?>">
-					<?php foreach ($adminListingForms as $form) { ?>
-						<?php
-						$id = $form['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$editLink = $form['editLink'] ?? '';
-						$postType = $form['postType'] ?? '';
-						$viewLink = $form['viewLink'] ?? '';
-						$trashLink = $form['trashLink'] ?? '';
-						$trashRestoreLink = $form['trashRestoreLink'] ?? '';
-						$settingsLink = $form['settingsLink'] ?? '';
-						$settingsLocationLink = $form['settingsLocationLink'] ?? '';
-						$title = $form['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$status = $form['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-						$useSync = $form['useSync'] ?? false;
-						$activeIntegration = $form['activeIntegration'] ?? [];
+		if (!$formTitle) {
+			// Translators: %s is the form ID.
+			$formTitle = sprintf(__('Form %s', 'eightshift-forms'), $id);
+		}
 
-						$activeIntegrationIsActive = $activeIntegration['isActive'] ?? false;
-						$activeIntegrationIsValid = $activeIntegration['isValid'] ?? false;
-						$activeIntegrationIsApiValid = $activeIntegration['isApiValid'] ?? false;
+		$cardIcon = $activeIntegration['icon'] ?? $manifestUtils['icons']['listingGeneric'];
 
-						$slug = $editLink;
-						if (!$editLink) {
-							$slug = '#';
-						}
-						?>
-						<li
-							class="<?php echo esc_attr("{$componentClass}__list-item {$componentJsItemClass}"); ?>"
-							data-integration-type="<?php echo esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED) ?>"
-							data-integration-is-active="<?php echo wp_json_encode($activeIntegrationIsActive); ?>"
-							data-integration-is-valid="<?php echo wp_json_encode($activeIntegrationIsValid); ?>"
-							data-integration-is-api-valid="<?php echo wp_json_encode($activeIntegrationIsApiValid); ?>"
-						>
-							<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-								<div class="<?php echo esc_attr("{$componentClass}__item-intro"); ?>">
-									<a href="<?php echo esc_url($slug); ?>" class="<?php echo esc_attr("{$componentClass}__label"); ?>">
-										<?php echo $activeIntegration['icon'] ?? $manifestUtils['icons']['listingGeneric']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-										<span>
-											<?php
-											if ($adminListingIsDeveloperMode) {
-												echo esc_html("{$id} - {$title}");
-											} else {
-												echo $title ? esc_html($title) : esc_html($id);
-											}
-											?>
-										</span>
+		if ($postType === 'post') {
+			$cardIcon = Helper::getProjectIcons('post');
+		} elseif ($postType === 'page') {
+			$cardIcon = Helper::getProjectIcons('page');
+		}
 
-										<?php if ($status !== 'publish') { ?>
-											<span class="<?php echo esc_attr("{$componentClass}__item-status"); ?>">
-												<?php echo esc_html($status); ?>
-											</span>
-										<?php } ?>
+		$formCardsToDisplay[] = Components::render('card', [
+			'additionalClass' => Components::classnames([
+				'js-es-admin-listing-item',
+				!$isFormValid && $adminListingType !== 'trash' ? 'has-error' : '',
+			]),
+			'additionalAttributes' => [
+				'data-integration-type' => esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED),
+				'data-integration-is-active' => wp_json_encode($activeIntegrationIsActive),
+				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
+				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
+			],
+			'cardTitle' => ($isFormValid ? '<a href="' . $editLink . '">' . $formTitle . '</a>' : $formTitle) . ($adminListingIsDeveloperMode ? " ({$id})" : ''),
+			'cardSubTitle' => $errorText . $subtitle,
+			'cardShowButtonsOnHover' => true,
+			'cardIcon' => $cardIcon,
+			'cardTrailingButtons' => [
+				...($adminListingType === 'trash' ? [
+					[
+						'label' => __('Delete permanently', 'eightshift-forms'),
+						'url' => $trashLink,
+						'internal' => true,
+					],
+					[
+						'label' => __('Restore', 'eightshift-forms'),
+						'url' => $trashRestoreLink,
+						'internal' => true,
+					],
+				] : [
+					[
+						'label' => __('Delete', 'eightshift-forms'),
+						'url' => $trashLink,
+						'internal' => true,
+					],
+				]),
+				...($isFormValid ? [
+					$adminListingType !== 'trash' && $adminListingType !== 'locations' ? [
+						'label' => __('Sync', 'eightshift-forms'),
+						'internal' => true,
+						'isButton' => true,
+						'additionalAttrs' => ['data-id' => $id],
+						'additionalClass' => $componentJsSyncClass,
+					] : [],
+					[
+						'label' => __('Locations', 'eightshift-forms'),
+						'url' => $settingsLocationLink,
+						'internal' => true,
+					],
+					[
+						'label' => __('Settings', 'eightshift-forms'),
+						'url' => $settingsLink,
+						'internal' => true,
+					],
+					[
+						'label' => __('Edit', 'eightshift-forms'),
+						'url' => $editLink,
+						'internal' => true,
+					],
+					[
+						'label' => __('View', 'eightshift-forms'),
+						'url' => $viewLink,
+						'internal' => true,
+					],
+				] : [
+					[
+						'label' => __('Settings', 'eightshift-forms'),
+						'url' => $settingsLink,
+						'internal' => true,
+					]
+				]),
+			],
+		]);
+	}
+}
 
-										<?php if ($postType) { ?>
-											<span class="<?php echo esc_attr("{$componentClass}__item-post-type"); ?>">
-												<?php echo esc_html($postType); ?>
-											</span>
-										<?php } ?>
-									</a>
-								</div>
 
-								<div class="<?php echo esc_attr("{$sectionClass}__actions {$componentClass}__actions"); ?>">
-									<?php if ($editLink) { ?>
-										<a href="<?php echo esc_url($editLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('Edit', 'eightshift-forms'); ?>
-										</a>
-									<?php } ?>
+if (!empty($adminListingPageTitle)) {
+	echo Components::render('intro', [
+		'introTitle' => $adminListingPageTitle,
+		'introSubtitle' => $adminListingSubTitle,
+		'introIsHeading' => true,
+	]);
+}
 
-									<?php if ($trashLink) { ?>
-										<a href="<?php echo esc_url($trashLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['trash']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php
-											if ($adminListingType === 'trash') {
-												echo esc_html__('Delete permanently', 'eightshift-forms');
-											} else {
-												echo esc_html__('Delete', 'eightshift-forms');
-											}
-											?>
-										</a>
-									<?php } ?>
+$topBar = [];
 
-									<?php if ($adminListingType === 'trash') { ?>
-										<a href="<?php echo esc_url($trashRestoreLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['restore']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('Restore', 'eightshift-forms'); ?>
-										</a>
-									<?php } ?>
+if ($adminListingPageTitle || $adminListingSubTitle) {
+	$topBar = [
+		Components::render('layout', [
+			'layoutType' => 'first-left-others-right',
+			'layoutContent' => Components::ensureString([
+				Components::render('container', [
+					'containerUse' => $adminListingType === 'trash' && $adminListingListingLink,
+					'containerClass' => 'es-submit es-submit--ghost',
+					'containerTag' => 'a',
+					'additionalAttributes' => [
+						'href' => $adminListingListingLink,
+					],
+					'containerContent' => Components::ensureString([
+						Helper::getProjectIcons('arrowLeft'),
+						esc_html__('Back', 'eightshift-forms'),
+					]),
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingIntegrations,
+					'containerClass' => "{$sectionClass}__heading-filter {$componentJsFilterClass}",
+					'containerContent' => wp_kses_post($adminListingIntegrations),
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
+					'containerClass' => 'es-submit es-submit--outline',
+					'containerTag' => 'a',
+					'additionalAttributes' => [
+						'href' => $adminListingTrashLink,
+					],
+					'containerContent' => Components::ensureString([
+						esc_html__('Deleted', 'eightshift-forms'),
+					]),
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
+					'containerClass' => "es-submit es-submit--outline {$componentJsSyncClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Sync all', 'eightshift-forms'),
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash' && $adminListingNewFormLink,
+					'containerClass' => 'es-submit es-submit--fit-icon',
+					'containerTag' => 'a',
+					'additionalAttributes' => [
+						'href' => $adminListingNewFormLink,
+					],
+					'containerContent' => Components::ensureString([
+						Helper::getProjectIcons('addHighContrast'),
+						esc_html__('Create', 'eightshift-forms'),
+					]),
+				]),
+			]),
+		]),
+		Components::render('divider', [
+			'dividerExtraVSpacing' => true,
+		]),
+	];
+}
 
-									<?php if ($settingsLink) { ?>
-										<a href="<?php echo esc_url($settingsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('Settings', 'eightshift-forms'); ?>
-										</a>
-									<?php } ?>
+echo Components::render('layout', [
+	'layoutType' => 'layout-v-stack-card-fullwidth',
+	'layoutContent' => Components::ensureString([
+		...$topBar,
+		empty($formCardsToDisplay)
+			? Components::render('highlighted-content', [
+				'highlightedContentTitle' => $adminListingType === 'trash' ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
+				'highlightedContentSubtitle' => $adminListingType === 'trash' ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
+				'highlightedContentIcon' => $adminListingType === 'trash' ? 'emptyStateTrash' : 'emptyStateFormList',
+			])
+			: Components::ensureString($formCardsToDisplay),
+	]),
+]),
 
-									<?php if ($settingsLocationLink) { ?>
-										<a href="<?php echo esc_url($settingsLocationLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['locations']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('Locations', 'eightshift-forms'); ?>
-										</a>
-									<?php } ?>
-
-									<?php if ($useSync) { ?>
-										<button class="<?php echo esc_attr("{$sectionClass}__link {$componentJsSyncClass}"); ?>" data-id="<?php echo esc_attr($id); ?>">
-											<?php echo $manifestUtils['icons']['sync']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('Sync', 'eightshift-forms'); ?>
-										</button>
-									<?php } ?>
-
-									<?php if ($viewLink) { ?>
-										<a href="<?php echo esc_url($viewLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?>">
-											<?php echo $manifestUtils['icons']['view']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-											<?php echo esc_html__('View', 'eightshift-forms'); ?>
-										</a>
-									<?php } ?>
-								</div>
-							</div>
-
-							<div class="<?php echo esc_attr("{$componentClass}__errors"); ?>">
-								<?php if (!$activeIntegrationIsActive) { ?>
-									<span class="<?php echo esc_attr("{$componentClass}__error"); ?>" title="<?php echo esc_html__('This form has inactive form type set. Go to global settings and turn on this form type.', 'eightshift-forms'); ?>">
-										<?php echo $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-										<?php echo esc_html__('Inactive integration', 'eightshift-forms'); ?>
-									</span>
-								<?php }?>
-								<?php if (!$activeIntegrationIsValid) { ?>
-									<span class="<?php echo esc_attr("{$componentClass}__error"); ?>" title="<?php echo esc_html__('This form has invalid or missing configuration. Open the form and check your settings.', 'eightshift-forms'); ?>">
-										<?php echo $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-										<?php echo esc_html__('Invalid form config', 'eightshift-forms'); ?>
-									</span>
-								<?php }?>
-								<?php if (!$activeIntegrationIsApiValid) { ?>
-									<span class="<?php echo esc_attr("{$componentClass}__error"); ?>" title="<?php echo esc_html__('This form has missing form fields, this can be and inactive form integration or some other error. Open the form and check your settings.', 'eightshift-forms'); ?>">
-										<?php echo $manifestUtils['icons']['warning']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-										<?php echo esc_html__('Missing form fields', 'eightshift-forms'); ?>
-									</span>
-								<?php }?>
-							</div>
-						</li>
-					<?php } ?>
-				</ul>
-			<?php } ?>
-		</div>
-	</div>
-</div>
-
-<?php
-echo Components::render(
-	'global-msg',
-	Components::props('globalMsg', $attributes)
-);
+Components::render('global-msg', Components::props('globalMsg', $attributes));

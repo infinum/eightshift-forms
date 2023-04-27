@@ -1,15 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl, Button } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	icons,
-	IconLabel,
-	FancyDivider,
-} from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
+import { TextControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
+import manifest from '../manifest.json';
 
 export const CheckboxOptions = (attributes) => {
 	const {
@@ -26,62 +20,57 @@ export const CheckboxOptions = (attributes) => {
 
 	return (
 		<>
-			<TextControl
-				label={<IconLabel icon={icons.textUppercase} label={__('Checkbox label', 'eightshift-forms')} />}
-				value={checkboxLabel}
-				onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
-			/>
+			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<TextControl
+					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
+					value={checkboxLabel}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
+				/>
 
-			<div className='es-h-spaced'>
-				<Button
+				<IconToggle
 					icon={icons.checkSquare}
-					isPressed={checkboxIsChecked}
-					onClick={() => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: !checkboxIsChecked })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
-				>
-					{__('Check by default', 'eightshift-forms')}
-				</Button>
-			</div>
+					label={__('Checked', 'eightshift-forms')}
+					checked={checkboxIsChecked}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
+					noBottomSpacing
+				/>
+			</Section>
 
-			<FancyDivider label={__('Advanced', 'eightshift-forms')} />
+			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+				<TextControl
+					label={<IconLabel icon={icons.textWrite} label={__('Value', 'eightshift-forms')} />}
+					help={__('Internal value, sent if checked.', 'eightshift-forms')}
+					value={checkboxValue}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
+				/>
 
-			<TextControl
-				label={<IconLabel icon={icons.fieldValue} label={__('Value', 'eightshift-forms')} />}
-				help={__('Internal value, sent if checked.', 'eightshift-forms')}
-				value={checkboxValue}
-				onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
-			/>
+				<IconToggle
+					icon={icons.readOnly}
+					label={__('Read-only', 'eightshift-forms')}
+					checked={checkboxIsReadOnly}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
+				/>
 
-			<div className='es-h-spaced'>
-				<Button
-					icon={icons.fieldReadonly}
-					isPressed={checkboxIsReadOnly}
-					onClick={() => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: !checkboxIsReadOnly })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
-				>
-					{__('Read-only', 'eightshift-forms')}
-				</Button>
+				<IconToggle
+					icon={icons.cursorDisabled}
+					label={__('Disabled', 'eightshift-forms')}
+					checked={checkboxIsDisabled}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
+					noBottomSpacing
+				/>
+			</Section>
 
-				<Button
-					icon={icons.fieldDisabled}
-					isPressed={checkboxIsDisabled}
-					onClick={() => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: !checkboxIsDisabled })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
-				>
-					{__('Disabled', 'eightshift-forms')}
-				</Button>
-			</div>
-
-			<FancyDivider label={__('Tracking', 'eightshift-forms')} />
-
-			<TextControl
-				label={<IconLabel icon={icons.code} label={__('GTM tracking code', 'eightshift-forms')} />}
-				value={checkboxTracking}
-				onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
-			/>
+			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<TextControl
+					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					value={checkboxTracking}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
+					className='es-no-field-spacing'
+				/>
+			</Section>
 		</>
 	);
 };

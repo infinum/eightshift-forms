@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Integrations\Mailer\MailerInterface;
-use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -43,11 +41,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected $validationPatterns;
 
 	/**
-	 * Instance variable of MailerInterface data.
+	 * Instance variable of FormSubmitMailerInterface data.
 	 *
-	 * @var MailerInterface
+	 * @var FormSubmitMailerInterface
 	 */
-	public $mailer;
+	public $formSubmitMailer;
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -61,18 +59,18 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
-	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
-		MailerInterface $mailer,
+		FormSubmitMailerInterface $formSubmitMailer,
 		LabelsInterface $labels
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
-		$this->mailer = $mailer;
+		$this->formSubmitMailer = $formSubmitMailer;
 		$this->labels = $labels;
 	}
 
@@ -125,86 +123,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataRefrerence)
 	{
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
-		$senderEmail = $formDataRefrerence['senderEmail'];
-
-		// Check if Mailer data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
-		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-				)
-			);
-		}
-
-		// Send email.
-		$response = $this->mailer->sendFormEmail(
-			$formId,
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
-			$files,
-			$params
-		);
-
-		// If email fails.
-		if (!$response) {
-			// Always delete the files from the disk.
-			if ($files) {
-				$this->deleteFiles($files);
-			}
-
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('mailerErrorEmailSend', $formId),
-				)
-			);
-		}
-
-		// Check if Mailer data is set and valid.
-		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
-
-		if ($isConfirmationValid && $senderEmail) {
-			// Send email.
-			$mailerConfirmation = $this->mailer->sendFormEmail(
-				$formId,
-				$senderEmail,
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
-				$files,
-				$params
-			);
-
-			// If email fails.
-			if (!$mailerConfirmation) {
-				// Always delete the files from the disk.
-				if ($files) {
-					$this->deleteFiles($files);
-				}
-
-				return \rest_ensure_response(
-					$this->getApiErrorOutput(
-						$this->labels->getLabel('mailerErrorEmailConfirmationSend', $formId),
-					)
-				);
-			}
-		}
-
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
-		}
-
-		// Finish.
-		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
-				$this->labels->getLabel('mailerSuccess', $formId),
-			)
-		);
+		return $this->formSubmitMailer->sendEmails($formDataRefrerence);
 	}
 }

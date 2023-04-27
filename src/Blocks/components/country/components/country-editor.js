@@ -27,13 +27,15 @@ export const CountryEditor = (attributes) => {
 				{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
 			</div>
 
-			<MissingName value={countryName} isEditor={true} />
+			<MissingName value={countryName} />
 
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-			/>
+			{countryName &&
+				<ConditionalTagsEditor
+					{...props('conditionalTags', attributes)}
+				/>
+			}
 
-			<div dangerouslySetInnerHTML={{__html: getAdditionalContentFilterContent(componentName)}} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, BlockInserter } from '@eightshift/frontend-libs/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
 import manifest from '../manifest.json';
 
@@ -16,10 +16,12 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('radios', attributes, {
 				setAttributes,
 				clientId,
-				radiosContent: <InnerBlocks
-												allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
-												template={template}
-											/>
+				radiosContent:
+					<InnerBlocks
+						allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
+						template={template}
+						renderAppender={() => <BlockInserter clientId={clientId} small />}
+					/>
 			})}
 		/>
 	);

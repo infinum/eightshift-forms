@@ -6,7 +6,7 @@
  * Description: Eightshift Forms is a complete form builder plugin that utilizes modern Block editor features with multiple third-party integrations, bringing your project to a new level.
  * Author: WordPress team @Infinum
  * Author URI: https://eightshift.com/
- * Version: 4.0.25
+ * Version: 4.0.26
  * Text Domain: eightshift-forms
  *
  * @package EightshiftForms

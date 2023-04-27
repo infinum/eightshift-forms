@@ -137,43 +137,58 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
-								'inputFieldLabel' => \__('Expiration time', 'eightshift-forms'),
-								// translators: %s will be replaced with expiration number default.
-								'inputFieldHelp' => \sprintf(\__('Set the storage expiration time in days. Default: %s', 'eightshift-forms'), Enrichment::ENRICHMENT_EXPIRATION),
+								'inputFieldLabel' => \__('Clear storage after', 'eightshift-forms'),
+								'inputFieldHelp' => \__('You can change how long will the enrichment data be stored in the uses computer.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 0,
 								'inputMax' => 100,
 								'inputStep' => 1,
-								'inputPlaceholder' => $expiration,
+								'inputPlaceholder' => Enrichment::ENRICHMENT_EXPIRATION,
+								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
 						],
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Mapping', 'eightshift-forms'),
+						'tabLabel' => \__('Custom parameters', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'textarea',
 								'textareaName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
+								'textareaFieldLabel' => \__('Custom parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSingleSubmit' => true,
 								'textareaSaveAsJson' => true,
-								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('
-									List all URL parameters you want to allow for enrichment. We will store these parameters in browser storage for later processing. <br />
-									We provided some defaults, but in this field you can add additional tags you want to use. <br />
-									Allowed parameters are provided one per line. %s', 'eightshift-forms'), $enrichment['settings']),
+									Enter one URL parameter per line.
+									<br/><br />
+									Parameters are stored in browser storage for optional additional processing later.<br />
+									Some commonly used parameters are included by default.%s', 'eightshift-forms'), $enrichment['settings']),
 								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Parameter mapping', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
 							],
 							[
-								'component' => 'intro',
-								'introTitle' => \__('Map your parameters', 'eightshift-forms'),
-								'introSubtitle' => \__('Here you can map all your enrichment parameters with field names. We will match your parameters with the field names during the form submission and enrich your data. Note you can add multiple field names separated by a comma.', 'eightshift-forms'),
+								'component' => 'field',
+								'fieldLabel' => '<b>' . \__('URL parameter', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('Field name', 'eightshift-forms') . '</b>',
+								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+								'fieldIsFiftyFiftyHorizontal' => true,
 							],
 							...\array_map(
 								function ($item) {
@@ -182,6 +197,8 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 										'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldLabel' => $item,
 										'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+										'inputFieldIsFiftyFiftyHorizontal' => true,
+										'inputFieldBeforeContent' => '&rarr;',
 									];
 								},
 								$allowed

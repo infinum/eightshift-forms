@@ -1,7 +1,7 @@
 @mixin submit-styles($size: 'default') {
 	$this: &;
 
-	--submit-scoped-background-color: var(--global-colors-es-matisse);
+	--submit-scoped-background-color: var(--global-colors-esf-admin-accent);
 	--submit-scoped-spacing: calc(var(--es-input-spacing) * 1.5);
 
 	@if $size == 'medium' {
@@ -11,7 +11,7 @@
 	font-weight: bold;
 	width: 100%;
 	background-color: var(--submit-scoped-background-color);
-	color: var(--global-colors-es-white);
+	color: var(--global-colors-esf-white);
 	padding: var(--submit-scoped-spacing, var(--es-input-spacing)) 20px;
 	border: var(--submit-scoped-background-color);
 	border-radius: var(--es-input-radius);
@@ -19,13 +19,13 @@
 	text-decoration: none;
 
 	transition: {
-		property: background-color;
+		property: background-color, box-shadow;
 		timing-function: var(--es-input-transition-timing);
 		duration: var(--es-input-transition-duration);
 	}
 
 	&:hover:not(:disabled) {
-		--submit-scoped-background-color: var(--global-colors-es-blumine);
+		--submit-scoped-background-color: var(--global-colors-esf-admin-accent-dark);
 	}
 
 	&:disabled {

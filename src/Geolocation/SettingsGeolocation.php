@@ -114,24 +114,29 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 			[
 				'component' => 'intro',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('This product includes GeoLite2 data created by MaxMind, available on this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.maxmind.com'),
+				'introSubtitle' => '<span>' . \sprintf(\__('We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.', 'eightshift-forms'), 'https://www.maxmind.com') . '</span>',
 			],
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introTitle' => \__('Caching'),
-				'introTitleSize' => 'medium',
-				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('Please keep in mind that Geolocation will not work correctly if you have caching on the user\'s side of your website such as WP Rocket, Cloudflare, etc. If you are using caching, please refer to our <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
-			],
-			($use || $useRocket) ? [
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-				'introTitleSize' => 'medium',
-				// translators: %s will be replaced with the link.
-				'introSubtitle' => $outputConstants,
-			] : [],
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						// translators: %s will be replaced with the link.
+						'introSubtitle' => \sprintf(\__('<b>Geolocation will not work correctly if caching is enabled!</b><span>If using caching (with plugins like WP Rocket, or via a service like Cloudflare),<br />refer to the <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.</span>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
+						'introIcon' => 'warning',
+					],
+					($use || $useRocket) ? [
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					] : [],
+					($use || $useRocket) ? [
+						'component' => 'intro',
+						// translators: %s will be replaced with the link.
+						'introSubtitle' => $outputConstants,
+					] : [],
+				],
+			]
 		];
 	}
 }

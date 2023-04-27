@@ -4,7 +4,7 @@
 	$this: &;
 
 	> #{$this}__before-content {
-		margin-bottom: var(--global-es-spacing-horizontal);
+		margin-bottom: var(--global-esf-spacing-xl);
 
 		> * {
 			margin: 0;
@@ -13,14 +13,14 @@
 
 	> #{$this}__label,
 	> #{$this}__content {
-		max-width: var(--global-es-max-width);
+		max-width: var(--global-esf-max-width);
 	}
 
 	// Default listing for fields.
 	&--default-listing {
 		> #{$this}__content {
 			display: grid;
-			row-gap: var(--global-es-spacing-horizontal);
+			row-gap: var(--global-esf-spacing-m);
 		}
 	}
 }
