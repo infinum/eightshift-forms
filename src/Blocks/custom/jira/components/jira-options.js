@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import { PanelBody, Button } from '@wordpress/components';
-import { icons, props } from '@eightshift/frontend-libs/scripts';
+import { Control, icons, props } from '@eightshift/frontend-libs/scripts';
 import { FormOptions } from '../../../components/form/components/form-options';
 import { getSettingsPageUrl } from '../../../components/utils';
 
