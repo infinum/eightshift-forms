@@ -125,9 +125,6 @@ class Validator extends AbstractValidation
 
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
-		error_log( print_r( ( $validationReference ), true ) );
-		
-
 		$order = self::VALIDATION_FIELDS;
 
 		// Check params.

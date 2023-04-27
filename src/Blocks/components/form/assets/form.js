@@ -347,7 +347,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false, itemsElements = {},) {
+	getFormData(element, singleSubmit = false, itemsElements = {}) {
 		const formData = new FormData();
 		const selectors = 'input, select, textarea';
 
@@ -360,6 +360,7 @@ export class Form {
 		if (itemsElements) {
 			items = itemsElements;
 		}
+		console.log(itemsElements);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {

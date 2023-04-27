@@ -85,11 +85,12 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			if (!$this->isFileUploadRoute()) {
 				// Extract hidden params from localStorage set on the frontend.
 				$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
+			}
 
 			// Attach some special keys for specific types.
-			if ($formType === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
-				$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
-				$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
+			if ($formDataReference['type'] === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
+				$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
+				$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
 			}
 
 			// Upload files to temp folder.
