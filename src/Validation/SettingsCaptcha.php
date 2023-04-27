@@ -215,6 +215,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
 								'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_SITE_KEY', !empty($siteKey)),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
@@ -227,6 +228,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 									'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
 									'inputType' => 'password',
 									'inputIsRequired' => true,
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_SECRET_KEY', !empty($secretKey)),
 									'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
 									'inputIsDisabled' => !empty($secretKey),
 								]
@@ -237,6 +239,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 									'inputFieldLabel' => \__('Project ID', 'eightshift-forms'),
 									'inputType' => 'password',
 									'inputIsRequired' => true,
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY', !empty($secretProjectId)),
 									'inputValue' => !empty($secretProjectId) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
 									'inputIsDisabled' => !empty($secretProjectId),
 								],
@@ -246,6 +249,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
 									'inputType' => 'password',
 									'inputIsRequired' => true,
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_API_KEY', !empty($secretApiKey)),
 									'inputValue' => !empty($secretApiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY),
 									'inputIsDisabled' => !empty($secretApiKey),
 								]

@@ -205,16 +205,13 @@ class Helper
 	 */
 	public static function getFormResponseTags(string $type): string
 	{
-		switch ($type) {
-			case SettingsJira::SETTINGS_TYPE_KEY:
-				return self::getFormFieldNames([
-					'jiraIssueId',
-					'jiraIssueKey',
-					'jiraIssueUrl',
-				]);
-			default:
-				return '';
+		$tags = Filters::ALL[$type]['emailTemplateTags'] ?? [];
+
+		if ($tags) {
+			return self::getFormFieldNames($tags);
 		}
+
+		return '';
 	}
 
 	/**
@@ -787,21 +784,5 @@ class Helper
 			},
 			$matches
 		)));
-	}
-
-	/**
-	 * Returns regular help text if the given string is empty, and "Set with a global variable" if not.
-	 *
-	 * @param string $value Value that is empty if set programmatically.
-	 *
-	 * @return string
-	 */
-	public static function getIsSetProgrammaticallyBadge(string $value): string
-	{
-		if (!empty($value)) {
-			return '<span class="is-filter-applied">' . \__('Set with a global variable', 'eightshift-forms') . '</span>';
-		}
-
-		return \__('Can also be provided from a global variable.', 'eightshift-forms');
 	}
 }

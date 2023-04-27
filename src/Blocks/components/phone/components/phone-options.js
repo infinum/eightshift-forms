@@ -39,6 +39,14 @@ export const PhoneOptions = (attributes) => {
 			<PanelBody title={title}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 					<TextControl
+						label={<NameFieldLabel value={phoneName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={phoneName}
+						onChange={(value) => setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
+					/>
+
+					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={phonePlaceholder}
@@ -56,14 +64,6 @@ export const PhoneOptions = (attributes) => {
 				/>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={phoneName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={phoneName}
-						onChange={(value) => setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
-					/>
-
 					<TextControl
 						label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
 						value={phoneValue}

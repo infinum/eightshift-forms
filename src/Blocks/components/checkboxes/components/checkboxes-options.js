@@ -42,6 +42,17 @@ export const CheckboxesOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Checkboxes', 'eightshift-forms')}>
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={checkboxesName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={checkboxesName}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: checkboxesDisabledOptions,
@@ -80,17 +91,6 @@ export const CheckboxesOptions = (attributes) => {
 							<span>{_n(__('item needs to be checked', 'eightshift-forms'), __('items need to be checked', 'eightshift-forms'), checkboxesIsRequiredCount, 'eightshift-forms')}</span>
 						</div>
 					</AnimatedContentVisibility>
-				</Section>
-
-				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} noBottomSpacing>
-					<TextControl
-						label={<NameFieldLabel value={checkboxesName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={checkboxesName}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
-						className='es-no-field-spacing'
-					/>
 				</Section>
 			</PanelBody>
 

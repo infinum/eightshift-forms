@@ -231,6 +231,11 @@ class Filters
 				JiraClient::CACHE_JIRA_PROJECTS_TRANSIENT_NAME,
 				JiraClient::CACHE_JIRA_ISSUE_TYPE_TRANSIENT_NAME,
 			],
+			'emailTemplateTags' => [
+				'jiraIssueId',
+				'jiraIssueKey',
+				'jiraIssueUrl',
+			]
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
@@ -447,7 +452,7 @@ class Filters
 			],
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'title' => \__('Enrichment', 'eightshift-forms'),
-				'desc' => \__('Using saved URL parameters, track users even when they leave the site.', 'eightshift-forms'),
+				'desc' => \__('Using saved URL parameters and cookies to track users even when they leave the site.', 'eightshift-forms'),
 			],
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'title' => \__('Blocks', 'eightshift-forms'),
@@ -526,6 +531,7 @@ class Filters
 				'desc' => \__('Jira integration settings.', 'eightshift-forms'),
 				'detail' => \__('Jira is a marketing intelligence tool that you can use to effectively get quality B2B data for understanding customers, identifying prospects, and creating personalised marketing and sales exchanges.', 'eightshift-forms'),
 				'externalLink' => 'https://jira.atlassian.com/',
+				'icon' => 'jira',
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),

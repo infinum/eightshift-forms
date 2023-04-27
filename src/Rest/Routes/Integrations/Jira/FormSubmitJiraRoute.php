@@ -151,10 +151,10 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
 
+		$formDataRefrerence['emailResponseTags'] = $this->getEmailResponseTags($response);
+
 		// Send email if it is configured in the backend.
 		$this->formSubmitMailer->sendEmails($formDataRefrerence);
-
-		error_log( print_r( ( $response ), true ) );
 
 		// Finish.
 		return \rest_ensure_response(
@@ -166,5 +166,36 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 				]
 			)
 		);
+	}
+
+	/**
+	 * Prepare email response tags from the API response.
+	 *
+	 * @param array<mixed> $response Response data to extract data from.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getEmailResponseTags(array $response): array
+	{
+		$body = $response['body'] ?? [];
+		$output = [];
+
+		if (!$body) {
+			return $output;
+		}
+
+		$id = $body['id'] ?? '';
+		$key = $body['key'] ?? '';
+
+		if ($id) {
+			$output['jiraIssueId'] = $id;
+		}
+
+		if ($key) {
+			$output['jiraIssueKey'] = $key;
+			$output['jiraIssueUrl'] = $this->jiraClient->getBaseUrlPrefix() . "browse/{$key}/";
+		}
+
+		return $output;
 	}
 }

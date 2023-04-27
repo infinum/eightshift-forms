@@ -26,6 +26,14 @@ export const SelectOptions = (attributes) => {
 			<PanelBody title={__('Select', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 					<TextControl
+						label={<NameFieldLabel value={selectName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={selectName}
+						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
+					/>
+
+					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={selectPlaceholder}
@@ -54,14 +62,6 @@ export const SelectOptions = (attributes) => {
 				</Section>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={selectName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={selectName}
-						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
-					/>
-
 					<IconToggle
 						icon={icons.cursorDisabled}
 						label={__('Disabled', 'eightshift-forms')}

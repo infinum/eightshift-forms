@@ -14,12 +14,14 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsJira class.
  */
-class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, SettingGlobalInterface
+class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingInterface
 {
 	/**
 	 * Use general helper trait.
@@ -104,13 +106,24 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 	protected $jiraClient;
 
 	/**
+	 * Instance variable for Fallback settings.
+	 *
+	 * @var SettingsFallbackDataInterface
+	 */
+	protected $settingsFallback;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
+	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(JiraClientInterface $jiraClient)
-	{
+	public function __construct(
+		JiraClientInterface $jiraClient,
+		SettingsFallbackDataInterface $settingsFallback
+	) {
 		$this->jiraClient = $jiraClient;
+		$this->settingsFallback = $settingsFallback;
 	}
 
 	/**
@@ -325,7 +338,10 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey)),
+								'inputFieldHelp' => \sprintf(\__('
+									This value will be provided by the Jira users token, you can find the steps in the <b>Help</b> tab.<br/><br/>
+									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey))),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
@@ -335,9 +351,11 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_BOARD_KEY),
 								'inputFieldLabel' => \__('API Board', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
+								'inputFieldHelp' => \sprintf(\__('
+									This value will be provided in your Jira board url. For example board url is https://infinum-wordpress.atlassian.net/ and your board name is <b>infinum-wordpress</b>.<br/><br/>
+									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
 								'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
 								'inputIsDisabled' => !empty($apiBoard),
 							],
@@ -345,14 +363,18 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputFieldLabel' => \__('API User', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Can also be provided via a global variable.', 'eightshift-forms'),
-								'inputType' => 'text',
+								'inputFieldHelp' => \sprintf(\__('
+									This value will be the user email for the connected user token.<br/><br/>
+									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
+								'inputType' => 'email',
 								'inputIsRequired' => true,
+								'inputIsEmail' => true,
 								'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputIsDisabled' => !empty($apiUser),
 							],
 						],
 					],
+					$this->settingsFallback->getOutputGlobalFallback(SettingsJira::SETTINGS_TYPE_KEY),
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Help', 'eightshift-forms'),
@@ -371,126 +393,6 @@ class SettingsJira implements SettingsJiraDataInterface, ServiceInterface, Setti
 					],
 				],
 			],
-		];
-	}
-
-	/**
-	 * Output array settings for form.
-	 *
-	 * @param string $formId Form ID.
-	 * @param string $key Key for use toggle.
-	 *
-	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
-	 */
-	public function getOutputJira(string $formId, string $key): array
-	{
-		$useJira = \apply_filters(SettingsJira::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $formId);
-
-		if (!$useJira) {
-			return [];
-		}
-
-		$isUsed = $this->isCheckboxSettingsChecked($key, $key, $formId);
-
-		$output = [
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingsName($key),
-				'checkboxesIsRequired' => false,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use Jira integration', 'eightshift-forms'),
-						'checkboxIsChecked' => $isUsed,
-						'checkboxValue' => $key,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					]
-				]
-			],
-		];
-
-		return [
-			'component' => 'tab',
-			'tabLabel' => \__('Jira', 'eightshift-forms'),
-			'tabContent' => [
-				...$output,
-			],
-		];
-	}
-
-	/**
-	 * Output array settings for form.
-	 *
-	 * @param array<string, string> $properties Array of properties from integration.
-	 * @param array<string, string> $keys Array of keys to get data from.
-	 *
-	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, array<int|string, array<string, bool|string>>|string>>|bool|string>>|string>>|string>
-	 */
-	public function getOutputGlobalJira(array $properties, array $keys): array
-	{
-		$mapKey = $keys['map'] ?? '';
-
-		$isValid = $this->isSettingsGlobalValid();
-
-		if (!$isValid) {
-			return [];
-		}
-
-		$jiraAvailableKeys = $this->getOptionCheckboxValues(SettingsJira::SETTINGS_JIRA_AVAILABLE_KEYS_KEY);
-
-		$jiraMapValue = $this->getOptionValueGroup($mapKey);
-
-		return [
-			'component' => 'tab',
-				'tabLabel' => \__('Jira', 'eightshift-forms'),
-				'tabContent' => [
-					[
-						'component' => 'intro',
-						'introSubtitle' => \__('
-							Control which fields from Jira are connected to the HubSpot properties.<br/>
-							Label is a Jira field, and the input is a HubSpot field to map to.', 'eightshift-forms'),
-					],
-					$jiraAvailableKeys ? [
-						'component' => 'group',
-						'groupName' => $this->getSettingsName($mapKey),
-						'groupSaveOneField' => true,
-						'groupStyle' => 'default-listing',
-						'groupContent' => \array_map(
-							static function ($item) use ($jiraMapValue, $properties) {
-								$selectedValue = $jiraMapValue[$item] ?? '';
-								return [
-									'component' => 'select',
-									'selectName' => $item,
-									'selectFieldLabel' => $item,
-									'selectContent' => \array_merge(
-										[
-											[
-												'component' => 'select-option',
-												'selectOptionLabel' => '',
-												'selectOptionValue' => '',
-											],
-										],
-										\array_map(
-											static function ($option) use ($selectedValue) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $selectedValue === $option,
-												];
-											},
-											$properties
-										)
-									),
-								];
-							},
-							$jiraAvailableKeys
-						),
-					] : [],
-				],
 		];
 	}
 }

@@ -28,6 +28,15 @@ export const FileOptions = (attributes) => {
 		<>
 			<PanelBody title={__('File', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={fileName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={fileName}
+						onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+
 					<IconToggle
 						icon={icons.files}
 						label={__('Allow multi-file upload', 'eightshift-forms')}
@@ -107,17 +116,6 @@ export const FileOptions = (attributes) => {
 						placeholder={__('Add files', 'eightshift-forms')}
 						onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
-						className='es-no-field-spacing'
-					/>
-				</Section>
-
-				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={fileName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={fileName}
-						onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
 				</Section>

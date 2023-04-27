@@ -31,6 +31,16 @@ export const CountryOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Country', 'eightshift-forms')}>
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={countryName} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={countryName}
+						onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
+					/>
+				</Section>
+
 				<FieldOptions
 					{...props('field', attributes, {
 						fieldDisabledOptions: countryDisabledOptions,
@@ -50,14 +60,6 @@ export const CountryOptions = (attributes) => {
 				</Section>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={countryName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-						value={countryName}
-						onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
-					/>
-
 					<IconToggle
 						icon={icons.cursorDisabled}
 						label={__('Disabled', 'eightshift-forms')}

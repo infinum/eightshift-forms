@@ -40,4 +40,11 @@ interface JiraClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function postIssue(array $params, string $formId): array;
+
+	/**
+	 * Return base url prefix.
+	 *
+	 * @return string
+	 */
+	public function getBaseUrlPrefix(): string;
 }

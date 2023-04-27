@@ -125,7 +125,7 @@ class SettingsMailerlite implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => Helper::getIsSetProgrammaticallyBadge($apiKey),
+								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MAILERLITE', !empty($apiKey)),
 								'inputType' => 'password',
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),

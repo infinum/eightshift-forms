@@ -71,6 +71,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$formId = $formDataRefrerence['formId'];
 		$params = $formDataRefrerence['params'];
 		$files = $formDataRefrerence['files'];
+		$responseTags = $formDataRefrerence['emailResponseTags'];
 
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
@@ -89,7 +90,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
 			$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
-			$params
+			$params,
+			$responseTags
 		);
 
 		// If email fails.
@@ -120,7 +122,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $data Data to extract data from.
+	 * @param array<mixed> $response Response data to extract data from.
 	 *
 	 * @return boolean
 	 */

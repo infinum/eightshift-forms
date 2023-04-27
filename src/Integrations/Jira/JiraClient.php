@@ -209,6 +209,18 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
+	 * Return base url prefix.
+	 *
+	 * @return string
+	 */
+	public function getBaseUrlPrefix(): string
+	{
+		$board = $this->getApiBoard();
+
+		return "https://{$board}.atlassian.net/";
+	}
+
+	/**
 	 * Get projects from the api.
 	 *
 	 * @return array
@@ -552,9 +564,9 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getBaseUrl(): string
 	{
-		$board = $this->getApiBoard();
+		$prefix = $this->getBaseUrlPrefix();
 
-		return "https://{$board}.atlassian.net/rest/api/3/";
+		return "{$prefix}rest/api/3/";
 	}
 
 	/**
