@@ -193,7 +193,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 					);
 				} else {
 					// Send fallback email.
-					$this->mailer->fallbackEmail($clearbitResponse);
+					$this->formSubmitMailer->sendFallbackEmail($clearbitResponse);
 				}
 			}
 		}

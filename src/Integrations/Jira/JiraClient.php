@@ -114,7 +114,6 @@ class JiraClient implements JiraClientInterface
 		}
 
 		return $output;
-
 	}
 
 	/**
@@ -153,7 +152,6 @@ class JiraClient implements JiraClientInterface
 		}
 
 		return $output[$projectId]['issueTypes'] ?? [];
-
 	}
 
 	/**
@@ -223,7 +221,7 @@ class JiraClient implements JiraClientInterface
 	/**
 	 * Get projects from the api.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	private function getJiraProjects()
 	{
@@ -258,7 +256,7 @@ class JiraClient implements JiraClientInterface
 	 *
 	 * @param string $itemId Item ID to search by.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	private function getJiraIssueTypes(string $itemId)
 	{
@@ -314,7 +312,7 @@ class JiraClient implements JiraClientInterface
 	 *
 	 * @return array<string, string>
 	 */
-	private function prepareParams(array $params = [], string $formId): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
@@ -367,7 +365,7 @@ class JiraClient implements JiraClientInterface
 								'content' => [
 									[
 										'type' => 'text',
-										'text' => esc_html($name),
+										'text' => \esc_html($name),
 									],
 								],
 							],
@@ -381,7 +379,7 @@ class JiraClient implements JiraClientInterface
 								'content' => [
 									[
 										'type' => 'text',
-										'text' => esc_html($value),
+										'text' => \esc_html($value),
 									],
 								],
 							],
@@ -410,7 +408,8 @@ class JiraClient implements JiraClientInterface
 						'content' => [
 							[
 								'type' => 'text',
-								'text' => sprintf(__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), esc_html($formTitle)),
+								// translators: %s will be replaced with the form title name.
+								'text' => \sprintf(\__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), \esc_html($formTitle)),
 							],
 						],
 					],
@@ -420,7 +419,7 @@ class JiraClient implements JiraClientInterface
 							'isNumberColumnEnabled' => false,
 							'layout' => 'default',
 						],
-						'content' => array_merge(
+						'content' => \array_merge(
 							[
 								[
 									'type' => 'tableRow',
@@ -436,7 +435,7 @@ class JiraClient implements JiraClientInterface
 													'content' => [
 														[
 															'type' => 'text',
-															'text' => __('Field Name', 'eightshift-forms'),
+															'text' => \__('Field Name', 'eightshift-forms'),
 														],
 													],
 												],
@@ -453,7 +452,7 @@ class JiraClient implements JiraClientInterface
 													'content' => [
 														[
 															'type' => 'text',
-															'text' => __('Field Value', 'eightshift-forms'),
+															'text' => \__('Field Value', 'eightshift-forms'),
 														],
 													],
 												],
@@ -490,7 +489,7 @@ class JiraClient implements JiraClientInterface
 		return $output;
 	}
 
-		/**
+	/**
 	 * Map service messages for fields with our own.
 	 *
 	 * @param array<mixed> $body API response body.
@@ -549,7 +548,7 @@ class JiraClient implements JiraClientInterface
 		$key = $this->getApiKey();
 		$user = $this->getApiUser();
 
-		$token = \base64_encode("{$user}:{$key}");
+		$token = \base64_encode("{$user}:{$key}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',

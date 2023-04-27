@@ -428,6 +428,7 @@ trait SettingsHelper
 	 */
 	private function getGlobalVariableOutput(string $variableName, bool $usedVariable = false): string
 	{
+		// translators: %s will be replaced with global variable name.
 		$output = \sprintf(\__('
 			<details class="is-filter-applied">
 				<summary>Available global variable</summary>
@@ -439,7 +440,7 @@ trait SettingsHelper
 			</details>', 'eightshift-forms'), $variableName);
 
 		if ($usedVariable) {
-			$output = \__('<span class="is-filter-applied">This field value is set with a global variable via code.</span>', 'eightshift-forms');
+			$output = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
 		}
 
 		return $output;

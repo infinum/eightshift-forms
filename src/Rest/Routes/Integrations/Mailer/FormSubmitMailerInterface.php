@@ -15,7 +15,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
  */
 interface FormSubmitMailerInterface
 {
-
 	/**
 	 * Send emails method.
 	 *
@@ -28,7 +27,7 @@ interface FormSubmitMailerInterface
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $data Data to extract data from.
+	 * @param array<mixed> $response API response data.
 	 *
 	 * @return boolean
 	 */

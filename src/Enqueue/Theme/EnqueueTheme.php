@@ -45,7 +45,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']); // @phpstan-ignore-line.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
 		\add_filter('script_loader_tag', [$this, 'enqueueScriptsCaptchaDefer'], 10, 2);
 	}
 
@@ -80,9 +80,9 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	/**
 	 * Method that returns frontend script for captcha if settings are correct.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function enqueueScriptsCaptcha()
+	public function enqueueScriptsCaptcha(): void
 	{
 		// Check if Captcha data is set and valid.
 		$isSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);

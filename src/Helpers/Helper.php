@@ -199,13 +199,13 @@ class Helper
 	/**
 	 * Get all field names from the form.
 	 *
-	 * @param array<int, string> $fieldNames Form field IDs.
+	 * @param string $formType Form type to check.
 	 *
 	 * @return string
 	 */
-	public static function getFormResponseTags(string $type): string
+	public static function getFormResponseTags(string $formType): string
 	{
-		$tags = Filters::ALL[$type]['emailTemplateTags'] ?? [];
+		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
 
 		if ($tags) {
 			return self::getFormFieldNames($tags);
@@ -488,7 +488,7 @@ class Helper
 				break;
 		}
 
-		$output['fieldNames'] = array_values(array_filter(array_map(
+		$output['fieldNames'] = \array_values(\array_filter(\array_map(
 			static function ($item) {
 				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
 				$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';

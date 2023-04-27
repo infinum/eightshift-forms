@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Jira;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
@@ -153,21 +152,15 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 			return false;
 		}
 
-		$typeItems = Filters::ALL[self::SETTINGS_TYPE_KEY]['integration'];
+		$selectedProject = $this->getSettingsValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
-		if (!isset($typeItems[$type])) {
+		if (!$selectedProject) {
 			return false;
 		}
 
-		$useJira = $this->getSettingsValue($typeItems[$type]['use'], $formId);
+		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 
-		if (empty($useJira)) {
-			return false;
-		}
-
-		$mapSet = $this->getOptionValueGroup($typeItems[$type]['map']);
-
-		if (empty($mapSet)) {
+		if (!$selectedIssueType) {
 			return false;
 		}
 
@@ -338,7 +331,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
 								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey)),
+								// translators: %s will be replaced with global variable name.
 								'inputFieldHelp' => \sprintf(\__('
 									This value will be provided by the Jira users token, you can find the steps in the <b>Help</b> tab.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey))),
@@ -353,6 +346,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputFieldLabel' => \__('API Board', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
+								// translators: %s will be replaced with global variable name.
 								'inputFieldHelp' => \sprintf(\__('
 									This value will be provided in your Jira board url. For example board url is https://infinum-wordpress.atlassian.net/ and your board name is <b>infinum-wordpress</b>.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
@@ -363,6 +357,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputFieldLabel' => \__('API User', 'eightshift-forms'),
+								// translators: %s will be replaced with global variable name.
 								'inputFieldHelp' => \sprintf(\__('
 									This value will be the user email for the connected user token.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),

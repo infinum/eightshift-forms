@@ -51,6 +51,12 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 */
 	public $mailer;
 
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
+	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 */
 	public function __construct(
 		MailerInterface $mailer,
 		LabelsInterface $labels
@@ -135,8 +141,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send confirmation email.
 	 *
 	 * @param string $formId Form ID.
-	 * @param array $params Params array.
-	 * @param array $files Files array.
+	 * @param array<mixed> $params Params array.
+	 * @param array<mixed> $files Files array.
 	 *
 	 * @return boolean
 	 */

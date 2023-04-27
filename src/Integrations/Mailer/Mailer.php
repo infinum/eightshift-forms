@@ -59,7 +59,8 @@ class Mailer implements MailerInterface
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
-			$this->prepareFiles($files));
+			$this->prepareFiles($files)
+		);
 	}
 
 	/**
@@ -214,11 +215,11 @@ class Mailer implements MailerInterface
 	 */
 	protected function getTemplate(array $items, string $template = '', array $responseFields = []): string
 	{
-		$params = array_merge(
+		$params = \array_merge(
 			$this->prepareFields($items),
 			$responseFields
 		);
-		
+
 		foreach ($params as $name => $value) {
 			$template = \str_replace("{" . $name . "}", $value, $template);
 		}

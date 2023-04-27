@@ -121,7 +121,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerContentKey = $keys['innerContent'];
 
 		// Create block grammar from array.
-		// @phpstan-ignore-next-line.
 		$blocksGrammar = \serialize_blocks([
 			[
 				$blockNameKey => "{$namespace}/form-selector",

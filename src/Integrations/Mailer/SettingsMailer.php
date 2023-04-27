@@ -463,7 +463,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	/**
 	 * Get response tags output copy.
 	 *
-	 * @param string $formResponseTags Response tags to output.
+	 * @param string $formFieldTags Response tags to output.
 	 *
 	 * @return string
 	 */
@@ -473,6 +473,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return '';
 		}
 
+		// translators: %s will be replaced with form field names.
 		return \sprintf(\__('
 			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
 			<details class="is-filter-applied">
@@ -498,6 +499,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return '';
 		}
 
+		// translators: %s will be replaced with integration response tags.
 		return \sprintf(\__('
 			<details class="is-filter-applied">
 				<summary>Response tags</summary>

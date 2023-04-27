@@ -14,7 +14,7 @@ parameters:
 		- src/**/*Example.php
 	ignoreErrors:
 		# Block templates
-		- '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
 		- '#^Variable \$attributes might not be defined\.#'
 		- '#^Variable \$innerBlockContent might not be defined\.#'
 		- '#^Variable \$this might not be defined\.#'
+	checkGenericClassInNonGenericObjectType: false
