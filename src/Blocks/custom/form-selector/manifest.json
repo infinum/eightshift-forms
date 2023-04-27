@@ -42,6 +42,7 @@
 						"inputInputType": "email",
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
+						"inputInputIsEmail": true,
 						"inputInputDisabledOptions": [
 							"inputInputIsRequired",
 							"inputInputName"
