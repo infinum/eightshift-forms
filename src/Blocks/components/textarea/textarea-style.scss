@@ -12,6 +12,7 @@ textarea.es-textarea {
 		timing-function: var(--es-input-transition-timing);
 		duration: var(--es-input-transition-duration);
 	}
+	resize: vertical;
 
 	&:focus {
 		@include input-styles-focus;

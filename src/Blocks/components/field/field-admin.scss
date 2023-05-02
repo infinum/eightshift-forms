@@ -75,13 +75,13 @@
 
 	// Remove spacing if regular checkboxes are inside.
 	&--checkboxes:not(:has(.es-checkbox-toggle)) {
-		--esf-field-space: 0;
+		--es-field-space: 0;
 	}
 
 	&__content-wrap {
 		display: flex;
 		flex-direction: column;
-		gap: var(--esf-field-space, 1rem);
+		gap: var(--es-field-space, 1rem);
 	}
 
 	&__submit {
