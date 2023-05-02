@@ -77,7 +77,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$formId = $formDataRefrerence['formId'];
 		$params = $formDataRefrerence['params'];
 		$files = $formDataRefrerence['files'];
-		$responseTags = $formDataRefrerence['emailResponseTags'];
+		$responseTags = $formDataRefrerence['emailResponseTags'] ?? [];
 
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);

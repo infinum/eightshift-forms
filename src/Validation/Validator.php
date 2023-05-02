@@ -259,9 +259,16 @@ class Validator extends AbstractValidation
 						break;
 					case 'validationPattern':
 						$pattern = $this->validationPatterns->getValidationPatternOutput($dataValue);
+
 						$patternValue = $pattern['value'] ?? '';
+						$patternLabel = $pattern['label'] ?? '';
 
 						if ($patternValue) {
+							// Override validation pattern from moments.
+							if ($patternLabel === 'momentsEmail') {
+								$inputValue = \strtolower($inputValue);
+							}
+
 							\preg_match_all("/$patternValue/", $inputValue, $matches, \PREG_SET_ORDER, 0);
 
 							$isMatch = isset($matches[0][0]) ? $matches[0][0] === $inputValue : false;
@@ -270,7 +277,7 @@ class Validator extends AbstractValidation
 								$patternOutput = $pattern['output'] ?? '';
 
 								if (!$patternOutput) {
-									$patternOutput = $pattern['label'] ?? '';
+									$patternOutput = $patternLabel;
 								}
 
 								$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $patternOutput);

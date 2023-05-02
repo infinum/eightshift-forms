@@ -131,7 +131,7 @@ class Enrichment implements EnrichmentInterface
 		$storage = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
 
 		// Map param values.
-		$a =  \array_map(
+		return \array_map(
 			static function ($item) use ($enrichment, $storage) {
 				// Check param name as a reference.
 				$name = $item['name'] ?? '';
@@ -157,7 +157,5 @@ class Enrichment implements EnrichmentInterface
 			},
 			$params
 		);
-
-		return $a;
 	}
 }
