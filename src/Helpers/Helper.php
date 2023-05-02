@@ -178,43 +178,6 @@ class Helper
 	}
 
 	/**
-	 * Get all field names from the form.
-	 *
-	 * @param array<int, string> $fieldNames Form field IDs.
-	 *
-	 * @return string
-	 */
-	public static function getFormFieldNames(array $fieldNames): string
-	{
-		$output = [];
-
-		// Populate output.
-		foreach ($fieldNames as $item) {
-			$output[] = "<li><code>{" . $item . "}</code></li>";
-		}
-
-		return \implode("\n", $output);
-	}
-
-	/**
-	 * Get all field names from the form.
-	 *
-	 * @param string $formType Form type to check.
-	 *
-	 * @return string
-	 */
-	public static function getFormResponseTags(string $formType): string
-	{
-		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
-
-		if ($tags) {
-			return self::getFormFieldNames($tags);
-		}
-
-		return '';
-	}
-
-	/**
 	 * Provide error log output to a custom log file.
 	 *
 	 * @param array<mixed> $data Data array to output.

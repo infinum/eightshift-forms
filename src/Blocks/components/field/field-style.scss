@@ -12,6 +12,13 @@
 			timing-function: ease-in-out;
 			duration: 0.3s;
 		}
+
+		&--is-required::after {
+			content: '*';
+			font-size: 0.75rem;
+			color: var(--global-colors-esf-red-500);
+			vertical-align: top;
+		}
 	}
 
 	&.is-active {

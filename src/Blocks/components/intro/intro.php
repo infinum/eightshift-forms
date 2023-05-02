@@ -17,6 +17,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
 $introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
 $introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
+$introHelp = Components::checkAttr('introHelp', $attributes, $manifest);
 $introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
 $introIsHighlightedImportant = Components::checkAttr('introIsHighlightedImportant', $attributes, $manifest);
 $introIsHeading = Components::checkAttr('introIsHeading', $attributes, $manifest);
@@ -61,6 +62,12 @@ $titleClass = Components::classnames([
 	<?php if ($introSubtitle) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
 			<?php echo wp_kses_post($introSubtitle); ?>
+		</div>
+	<?php } ?>
+
+	<?php if ($introHelp) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<?php echo wp_kses_post($introHelp); ?>
 		</div>
 	<?php } ?>
 </div>

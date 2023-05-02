@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Jira;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
@@ -88,14 +89,19 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public const SETTINGS_JIRA_TITLE_KEY = 'jira-title';
 
 	/**
-	 * Jira epic name key.
-	 */
-	public const SETTINGS_JIRA_EPIC_NAME_KEY = 'jira-epic-name';
-
-	/**
 	 * Jira description key.
 	 */
 	public const SETTINGS_JIRA_DESC_KEY = 'jira-desc';
+
+	/**
+	 * Jira params map key.
+	 */
+	public const SETTINGS_JIRA_PARAMS_MAP_KEY = 'jira-params-map';
+
+	/**
+	 * Jira params manual map key.
+	 */
+	public const SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY = 'jira-params-manual-map';
 
 	/**
 	 * Instance variable for Jira data.
@@ -181,8 +187,12 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 			return $this->getNoActiveFeatureOutput();
 		}
 
+		$formDetails = Helper::getFormDetailsById($formId);
+
 		$selectedProject = $this->getSettingsValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$manualMapParams = $this->isCheckboxSettingsChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
+		$mapParams = $this->getSettingsValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -249,7 +259,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 					],
 					$selectedIssueType ? [
 						'component' => 'tab',
-						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabLabel' => \__('Parameter mapping', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
@@ -264,18 +274,72 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_DESC_KEY),
 								'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputIsRequired' => true,
 								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
 							],
-							// Epic type.
-							$selectedIssueType === JiraClient::ISSUE_TYPE_EPIC ? [
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_EPIC_NAME_KEY),
-								'inputFieldLabel' => \__('Epic name', 'eightshift-forms'),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_EPIC_NAME_KEY, $formId),
-							] : [],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
+								'introHelp' => SettingsHelper::getFieldTagsOutput(SettingsHelper::getFormFieldNames($formDetails['fieldNames'])),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable auto output to description table.', 'eightshift-forms'),
+										'checkboxIsChecked' => $manualMapParams,
+										'checkboxValue' => self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'field',
+								'fieldLabel' => '<b>' . \__('Jira field', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('Value', 'eightshift-forms') . '</b>',
+								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+								'fieldIsFiftyFiftyHorizontal' => true,
+							],
+							[
+								'component' => 'group',
+								'groupName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
+								'groupSaveOneField' => true,
+								'groupStyle' => 'default-listing',
+								'groupContent' => [
+									...\array_map(
+										function ($item) use ($mapParams) {
+											$id  = $item['id'] ?? '';
+											if ($id) {
+												return [
+													'component' => 'input',
+													'inputName' => $id,
+													'inputFieldLabel' => $item['title'],
+													'inputValue' => $mapParams[$id] ?? '',
+													'inputFieldIsFiftyFiftyHorizontal' => true,
+													'inputFieldBeforeContent' => '&rarr;',
+												];
+											}
+										},
+										$this->jiraClient->getProjectsCustomFields($selectedProject)
+									),
+								]
+							]
 						],
 					] : [],
 				],

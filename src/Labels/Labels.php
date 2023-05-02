@@ -442,7 +442,6 @@ class Labels implements LabelsInterface
 			'jiraMissingProject' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
 			'jiraMissingIssueType' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
 			'jiraMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
-			'jiraMissingEpicName' => \__('Your form is missing epic name key. Please try again.', 'eightshift-forms'),
 			'jiraBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'jiraSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];

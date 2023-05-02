@@ -10,6 +10,35 @@
 		vertical-align: text-top;
 	}
 
+	&__help,
+	&__before-content,
+	&__after-content {
+		.is-filter-applied {
+			margin-top: var(--global-esf-spacing-xs);
+			background-color: var(--global-colors-esf-sky-50);
+			border: 1px solid var(--global-colors-esf-sky-100);
+			color: var(--global-colors-esf-sky-950);
+			border-radius: var(--global-esf-spacing-s);
+			padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
+		
+			width: fit-content;
+		
+			code {
+				background: var(--global-colors-esf-white);
+				color: var(--global-colors-esf-sky-950);
+				border-color: var(--global-colors-esf-sky-100);
+			}
+		
+			&:is(span) {
+				display: inline-block;
+			}
+		
+			summary {
+				cursor: pointer;
+			}
+		}
+	}
+
 	&__help {
 		color: var(--global-colors-esf-gray-400);
 		max-width: var(--global-esf-max-width);
