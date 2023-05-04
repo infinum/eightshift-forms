@@ -113,8 +113,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
 
-		$fieldNameTags = Helper::getFormFieldNames($formDetails['fieldNames']);
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -141,7 +139,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), $fieldNameTags, $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), SettingsHelper::getFormFieldNames($formDetails['fieldNames']), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],

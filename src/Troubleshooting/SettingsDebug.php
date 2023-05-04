@@ -181,6 +181,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									Outputs multiple developers options in forms. Available outputs:<br/><br/>
 									<ul>
 										<li>Every listing will have ID prepended to the label.</li>
+										<li>Integration api response will have a `debug` key with all the details. You can check it out using inspector network tab.</li>
 									</ul>', 'eightshift-forms'),
 							],
 							[

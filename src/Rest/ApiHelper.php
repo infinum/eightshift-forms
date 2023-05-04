@@ -150,6 +150,13 @@ trait ApiHelper
 		$status = $details['status'] ?? AbstractBaseRoute::STATUS_ERROR;
 
 		$additionalOutput = [];
+
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		if ($isDeveloperMode) {
+			$additionalOutput['debug'] = $details;
+		}
+
 		foreach ($additional as $value) {
 			if (isset($details[$value])) {
 				$additionalOutput[$value] = $details[$value];

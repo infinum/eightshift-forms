@@ -207,7 +207,9 @@ class Validator extends AbstractValidation
 						break;
 					case 'validationPattern':
 						$pattern = $this->validationPatterns->getValidationPatternOutput($dataValue);
+
 						$patternValue = $pattern['value'] ?? '';
+						$patternLabel = $pattern['label'] ?? '';
 
 						if ($patternValue) {
 							$inputValue = $this->fixMomentsEmailValidationPattern($inputValue, $pattern);
@@ -221,7 +223,7 @@ class Validator extends AbstractValidation
 								$patternOutput = $pattern['output'] ?? '';
 
 								if (!$patternOutput) {
-									$patternOutput = $pattern['label'] ?? '';
+									$patternOutput = $patternLabel;
 								}
 
 								$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $patternOutput);

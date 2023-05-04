@@ -109,6 +109,8 @@
 		gap: 0.5rem;
 	}
 
+	@include field-styles;
+
 	a {
 		color: var(--global-colors-esf-admin-accent);
 		text-decoration-style: dotted;

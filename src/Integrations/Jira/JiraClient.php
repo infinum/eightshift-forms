@@ -97,6 +97,7 @@ class JiraClient implements JiraClientInterface
 						'key' => $item['key'] ?? '',
 						'title' => $item['name'] ?? '',
 						'issueTypes' => [],
+						'customFields' => $this->getJiraCustomFields(),
 					];
 				}
 
@@ -219,6 +220,34 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
+	 * Get projects custom fields list.
+	 *
+	 * @param string $projectId Project Id to get fields from.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getProjectsCustomFields(string $projectId): array
+	{
+		$ignoreKeys = [
+			'project' => 0,
+			'issuetype' => 1,
+			'description' => 2,
+			'parent' => 2,
+		];
+
+		$projectId = $this->getProjectIdByKey($projectId);
+
+		return \array_map(
+			static function ($item) use ($ignoreKeys) {
+				if (!isset($ignoreKeys[$item['id']])) {
+					return $item;
+				}
+			},
+			$this->getProjects()[$projectId]['customFields'] ?? [],
+		);
+	}
+
+	/**
 	 * Get projects from the api.
 	 *
 	 * @return array<mixed>
@@ -288,6 +317,48 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
+	 * Get custom fields from the api.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getJiraCustomFields()
+	{
+
+		$url = $this->getBaseUrl() . "field";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		$details = $this->getIntegrationApiReponseDetails(
+			SettingsJira::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return \array_map(
+				static function ($item) {
+					return [
+						'id' => $item['id'],
+						'title' => $item['name'],
+					];
+				},
+				$body
+			);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Output project Id by project key.
 	 *
 	 * @param string $projectId Project Id from API.
@@ -340,57 +411,6 @@ class JiraClient implements JiraClientInterface
 
 		$formTitle = \get_the_title((int) $formId);
 
-		$contentOutput = [];
-
-		$i = 0;
-		foreach ($params as $param) {
-			$value = $param['value'] ?? '';
-			if (!$value) {
-				continue;
-			}
-
-			$name = $param['name'] ?? '';
-			if (!$name) {
-				continue;
-			}
-
-			$contentOutput[] = [
-				'type' => 'tableRow',
-				'content' => [
-					[
-						'type' => 'tableCell',
-						'content' => [
-							[
-								'type' => 'paragraph',
-								'content' => [
-									[
-										'type' => 'text',
-										'text' => \esc_html($name),
-									],
-								],
-							],
-						],
-					],
-					[
-						'type' => 'tableCell',
-						'content' => [
-							[
-								'type' => 'paragraph',
-								'content' => [
-									[
-										'type' => 'text',
-										'text' => \esc_html($value),
-									],
-								],
-							],
-						],
-					],
-				],
-			];
-
-			$i++;
-		}
-
 		$output = [
 			'project' => [
 				'key' => $selectedProject,
@@ -402,58 +422,113 @@ class JiraClient implements JiraClientInterface
 			'description' => [
 				'type' => 'doc',
 				'version' => 1,
-				'content' => [
-					[
-						'type' => 'paragraph',
-						'content' => [
-							[
-								'type' => 'text',
-								// translators: %s will be replaced with the form title name.
-								'text' => \sprintf(\__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), \esc_html($formTitle)),
+				'content' => [],
+			],
+		];
+
+		if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			$contentOutput = [];
+
+			$i = 0;
+			foreach ($params as $param) {
+				$value = $param['value'] ?? '';
+				if (!$value) {
+					continue;
+				}
+
+				$name = $param['name'] ?? '';
+				if (!$name) {
+					continue;
+				}
+
+				$contentOutput[] = [
+					'type' => 'tableRow',
+					'content' => [
+						[
+							'type' => 'tableCell',
+							'content' => [
+								[
+									'type' => 'paragraph',
+									'content' => [
+										[
+											'type' => 'text',
+											'text' => \esc_html($name),
+										],
+									],
+								],
+							],
+						],
+						[
+							'type' => 'tableCell',
+							'content' => [
+								[
+									'type' => 'paragraph',
+									'content' => [
+										[
+											'type' => 'text',
+											'text' => \esc_html($value),
+										],
+									],
+								],
 							],
 						],
 					],
-					[
-						'type' => 'table',
-						'attrs' => [
-							'isNumberColumnEnabled' => false,
-							'layout' => 'default',
+				];
+
+				$i++;
+			}
+
+			$output['description']['content'] = [
+				[
+					'type' => 'paragraph',
+					'content' => [
+						[
+							'type' => 'text',
+							// translators: %s will be replaced with the form title name.
+							'text' => \sprintf(\__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), \esc_html($formTitle)),
 						],
-						'content' => \array_merge(
+					],
+				],
+				[
+					'type' => 'table',
+					'attrs' => [
+						'isNumberColumnEnabled' => false,
+						'layout' => 'default',
+					],
+					'content' => \array_merge(
+						[
 							[
-								[
-									'type' => 'tableRow',
-									'content' => [
-										[
-											'type' => 'tableCell',
-											'attrs' => [
-												'background' => 'lavender',
-											],
-											'content' => [
-												[
-													'type' => 'paragraph',
-													'content' => [
-														[
-															'type' => 'text',
-															'text' => \__('Field Name', 'eightshift-forms'),
-														],
+								'type' => 'tableRow',
+								'content' => [
+									[
+										'type' => 'tableCell',
+										'attrs' => [
+											'background' => 'lavender',
+										],
+										'content' => [
+											[
+												'type' => 'paragraph',
+												'content' => [
+													[
+														'type' => 'text',
+														'text' => \__('Field Name', 'eightshift-forms'),
 													],
 												],
 											],
 										],
-										[
-											'type' => 'tableCell',
-											'attrs' => [
-												'background' => 'lavender',
-											],
-											'content' => [
-												[
-													'type' => 'paragraph',
-													'content' => [
-														[
-															'type' => 'text',
-															'text' => \__('Field Value', 'eightshift-forms'),
-														],
+									],
+									[
+										'type' => 'tableCell',
+										'attrs' => [
+											'background' => 'lavender',
+										],
+										'content' => [
+											[
+												'type' => 'paragraph',
+												'content' => [
+													[
+														'type' => 'text',
+														'text' => \__('Field Value', 'eightshift-forms'),
 													],
 												],
 											],
@@ -461,12 +536,12 @@ class JiraClient implements JiraClientInterface
 									],
 								],
 							],
-							$contentOutput
-						),
-					],
+						],
+						$contentOutput
+					),
 				],
-			],
-		];
+			];
+		}
 
 		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
 
@@ -482,8 +557,15 @@ class JiraClient implements JiraClientInterface
 			]);
 		}
 
-		if ($selectedIssueType === self::ISSUE_TYPE_EPIC) {
-			$output['customfield_10011'] = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_EPIC_NAME_KEY, $formId);
+		$mapParams = $this->getSettingsValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+		if ($mapParams) {
+			foreach ($mapParams as $key => $value) {
+				if (!$value) {
+					continue;
+				}
+
+				$output[$key] = $value;
+			}
 		}
 
 		return $output;

@@ -47,4 +47,13 @@ interface JiraClientInterface
 	 * @return string
 	 */
 	public function getBaseUrlPrefix(): string;
+
+	/**
+	 * Get projects custom fields list.
+	 *
+	 * @param string $projectId Project Id to get fields from.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getProjectsCustomFields(string $projectId): array;
 }

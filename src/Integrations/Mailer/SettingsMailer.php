@@ -213,8 +213,8 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$formDetails = Helper::getFormDetailsById($formId);
 
 		$fieldNames = $formDetails['fieldNames'];
-		$fieldNameTags = Helper::getFormFieldNames($fieldNames);
-		$formResponseTags = Helper::getFormResponseTags($formDetails['typeFilter']);
+		$fieldNameTags = SettingsHelper::getFormFieldNames($fieldNames);
+		$formResponseTags = SettingsHelper::getFormResponseTags($formDetails['typeFilter']);
 
 		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
@@ -299,7 +299,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'inputFieldHelp' => \sprintf(\__('
 										This e-mail address will be used to sent the form data to.<br />
 										You can use multiple e-mails here by separating them by comma.<br /><br />
-										%s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags)),
+										%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 									'inputType' => 'text',
 									'inputPlaceholder' => 'info@infinum.com',
 									'inputIsRequired' => true,
@@ -316,7 +316,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
 										Specify e-mail subject with this field.<br /><br />
-										%s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags)),
+										%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
 									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
@@ -332,7 +332,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									// translators: %s will be replaced with forms field name.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text of simple HTML tags.<br /><br />
-										%1$s %2$s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags), $this->getResponseTagsOutput($formResponseTags)),
+										%1$s %2$s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 									'textareaIsRequired' => true,
 									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
@@ -377,7 +377,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										// translators: %s will be replaced with forms field name.
 										'inputFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail subject with this field.<br /><br />
-											%s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags)),
+											%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 										'inputType' => 'text',
 										'inputIsRequired' => true,
 										'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
@@ -393,7 +393,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										// translators: %s will be replaced with forms field name.
 										'textareaFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail body template with this field. You can use plain text of simple HTML tags.<br /><br />
-											%1$s %2$s', 'eightshift-forms'), $this->getFieldTagsOutput($fieldNameTags), $this->getResponseTagsOutput($formResponseTags)),
+											%1$s %2$s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 										'textareaIsRequired' => true,
 										'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 									],
@@ -458,56 +458,5 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 				],
 			],
 		];
-	}
-
-	/**
-	 * Get response tags output copy.
-	 *
-	 * @param string $formFieldTags Response tags to output.
-	 *
-	 * @return string
-	 */
-	private function getFieldTagsOutput(string $formFieldTags): string
-	{
-		if (!$formFieldTags) {
-			return '';
-		}
-
-		// translators: %s will be replaced with form field names.
-		return \sprintf(\__('
-			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-			<details class="is-filter-applied">
-				<summary>Available tags</summary>
-				<ul>
-					%s
-				</ul>
-				<br />
-				Tag missing? Make sure its field has a <b>Name</b> set!
-			</details>', 'eightshift-forms'), $formFieldTags);
-	}
-
-	/**
-	 * Get response tags copy output.
-	 *
-	 * @param string $formResponseTags Response tags to output.
-	 *
-	 * @return string
-	 */
-	private function getResponseTagsOutput(string $formResponseTags): string
-	{
-		if (!$formResponseTags) {
-			return '';
-		}
-
-		// translators: %s will be replaced with integration response tags.
-		return \sprintf(\__('
-			<details class="is-filter-applied">
-				<summary>Response tags</summary>
-				<ul>
-					%s
-				</ul>
-				<br />
-				Use response tags to populate the content with the data that the integration sends back.
-			</details>', 'eightshift-forms'), $formResponseTags);
 	}
 }

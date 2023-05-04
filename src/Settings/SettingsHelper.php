@@ -445,4 +445,92 @@ trait SettingsHelper
 
 		return $output;
 	}
+
+	/**
+	 * Get response tags output copy.
+	 *
+	 * @param string $formFieldTags Response tags to output.
+	 *
+	 * @return string
+	 */
+	public static function getFieldTagsOutput(string $formFieldTags): string
+	{
+		if (!$formFieldTags) {
+			return '';
+		}
+
+		// translators: %s will be replaced with form field names.
+		return \sprintf(\__('
+			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
+			<details class="is-filter-applied">
+				<summary>Available tags</summary>
+				<ul>
+					%s
+				</ul>
+				<br />
+				Tag missing? Make sure its field has a <b>Name</b> set!
+			</details>', 'eightshift-forms'), $formFieldTags);
+	}
+
+	/**
+	 * Get response tags copy output.
+	 *
+	 * @param string $formResponseTags Response tags to output.
+	 *
+	 * @return string
+	 */
+	public static function getResponseTagsOutput(string $formResponseTags): string
+	{
+		if (!$formResponseTags) {
+			return '';
+		}
+
+		// translators: %s will be replaced with integration response tags.
+		return \sprintf(\__('
+			<details class="is-filter-applied">
+				<summary>Response tags</summary>
+				<ul>
+					%s
+				</ul>
+				<br />
+				Use response tags to populate the content with the data that the integration sends back.
+			</details>', 'eightshift-forms'), $formResponseTags);
+	}
+
+	/**
+	 * Get all field names from the form.
+	 *
+	 * @param array<int, string> $fieldNames Form field IDs.
+	 *
+	 * @return string
+	 */
+	public static function getFormFieldNames(array $fieldNames): string
+	{
+		$output = [];
+
+		// Populate output.
+		foreach ($fieldNames as $item) {
+			$output[] = "<li><code>{" . $item . "}</code></li>";
+		}
+
+		return \implode("\n", $output);
+	}
+
+	/**
+	 * Get all field names from the form.
+	 *
+	 * @param string $formType Form type to check.
+	 *
+	 * @return string
+	 */
+	public static function getFormResponseTags(string $formType): string
+	{
+		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
+
+		if ($tags) {
+			return self::getFormFieldNames($tags);
+		}
+
+		return '';
+	}
 }

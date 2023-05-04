@@ -122,7 +122,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 
 		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
-		$expiration = $enrichment['expiration'] ?? '';
 		$allowed = $enrichment['data']['original']['allowed'] ?? '';
 
 		return [

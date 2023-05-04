@@ -4,7 +4,7 @@
 }
 
 @mixin form-width-limit-styles() {
-	max-width: var(--esf-max-width);
+	max-width: var(--es-max-width);
 	padding: 0 var(--es-grid-spacing);
 }
 
