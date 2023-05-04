@@ -145,16 +145,16 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$itemId = $formDataRefrerence['itemId'];
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
+		$itemId = $formDataReference['itemId'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
@@ -204,7 +204,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		}
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		$this->formSubmitMailer->sendEmails($formDataReference);
 
 		// Always delete the files from the disk.
 		if ($files) {

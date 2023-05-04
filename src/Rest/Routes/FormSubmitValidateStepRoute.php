@@ -1,32 +1,41 @@
 <?php
 
 /**
- * The class register route for Form Settings endpoint
+ * The class register route for public form submiting endpoint - validating step
  *
- * @package EightshiftForms\Rest\Routes\Settings
+ * @package EightshiftForms\Rest\Routes
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Settings;
+namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
- * Class FormSettingsSubmitRoute
+ * Class FormSubmitValidateStepRoute
  */
-class FormSettingsSubmitRoute extends AbstractFormSubmit
+class FormSubmitValidateStepRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Route slug.
+	 */
+	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-validate-step/';
+
+	/**
+	 * Instance variable of LabelsInterface data.
+	 *
+	 * @var LabelsInterface
+	 */
+	protected $labels;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -41,13 +50,6 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	 * @var ValidationPatternsInterface
 	 */
 	protected $validationPatterns;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
 
 	/**
 	 * Create a new instance that injects classes
@@ -65,11 +67,6 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 	}
-
-	/**
-	 * Route slug.
-	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-submit/';
 
 	/**
 	 * Get the base url of the route
@@ -92,16 +89,6 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
 	 * Returns validator labels class.
 	 *
 	 * @return LabelsInterface
@@ -112,6 +99,25 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns validator patterns class.
+	 *
+	 * @return ValidationPatternsInterface
+	 */
+	protected function getValidatorPatterns()
+	{
+		return $this->validationPatterns;
+	}
+
+	/**
+	 * Detect what type of route it is.
+	 *
+	 * @return string
+	 */
+	protected function routeGetType(): string {
+		return self::ROUTE_TYPE_STEP_VALIDATION;
+	}
+
+		/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
@@ -120,42 +126,16 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
 
-		// Remove unnecessary internal params before continue.
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-
-		// Remove unnecessary params.
-		foreach ($params as $key => $value) {
-			if (isset($customFields[$key])) {
-				unset($params[$key]);
-			}
-		}
-
-		// If form ID is not set this is considered an global setting.
-		// Save all fields in the settings.
-		foreach ($params as $key => $value) {
-			// Check if key needs updating or deleting.
-			if ($value['value']) {
-				if (!$formId) {
-					\update_option($key, $value['value']);
-				} else {
-					\update_post_meta((int) $formId, $key, $value['value']);
-				}
-			} else {
-				if (!$formId) {
-					\delete_option($key);
-				} else {
-					\delete_post_meta((int) $formId, $key);
-				}
-			}
-		}
+		$fieldName = $formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				\esc_html__('Changes saved!', 'eightshift-forms')
+				__('File upload success', 'eightshift-forms'),
+				[
+					'file' => $formDataReference['files'][$fieldName]['id'],
+				]
 			)
 		);
 	}

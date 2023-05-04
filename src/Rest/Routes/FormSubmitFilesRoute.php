@@ -109,32 +109,33 @@ class FormSubmitFilesRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Detect if route is file upload or a regular submit.
+	 * Detect what type of route it is.
 	 *
-	 * @return boolean
+	 * @return string
 	 */
-	protected function isFileUploadRoute(): bool {
-		return true;
+	protected function routeGetType(): string {
+		return self::ROUTE_TYPE_FILE;
 	}
+
 
 		/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
 
-		$fieldName = $formDataRefrerence['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
+		$fieldName = $formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataRefrerence['files'][$fieldName]['id'],
+					'file' => $formDataReference['files'][$fieldName]['id'],
 				]
 			)
 		);

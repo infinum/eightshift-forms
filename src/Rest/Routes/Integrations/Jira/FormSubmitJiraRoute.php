@@ -130,15 +130,15 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
 
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
 
 		// Send application to Hubspot.
 		$response = $this->jiraClient->postIssue(
@@ -151,10 +151,10 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
 
-		$formDataRefrerence['emailResponseTags'] = $this->getEmailResponseTags($response);
+		$formDataReference['emailResponseTags'] = $this->getEmailResponseTags($response);
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		$this->formSubmitMailer->sendEmails($formDataReference);
 
 		// Finish.
 		return \rest_ensure_response(

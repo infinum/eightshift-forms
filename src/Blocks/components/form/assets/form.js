@@ -2,7 +2,7 @@
 
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets';
-import { Step } from './../../step/assets';
+import { Steps } from './../../step/assets';
 import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
 
@@ -20,8 +20,8 @@ export class Form {
 		/** @type ConditionalTags */
 		this.conditionalTags = new ConditionalTags(this.utils);
 
-		/** @type Step */
-		this.step = new Step(this.utils);
+		/** @type Steps */
+		this.steps = new Steps(this.utils);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ export class Form {
 		this.publicMethods();
 
 		// Init step.
-		this.step.init();
+		this.steps.init();
 
 		// Init all forms.
 		this.initOnlyForms();
@@ -153,9 +153,6 @@ export class Form {
 	 * @public
 	 */
 	formSubmitCaptcha(element, token, payed, action) {
-		// Loader show.
-		this.utils.showLoader(element);
-
 		// Populate body data.
 		const body = {
 			method: element.getAttribute('method'),
@@ -203,22 +200,21 @@ export class Form {
 	 * Handle form submit and all logic.
 	 * 
 	 * @param {object} element Form element.
-	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 * @param {boolean|object} singleSubmit Is form single submit, used in admin if yes pass element.
+	 * @param {boolean} isStepValidation Is form single submit, used in admin.
+	 * @param {boolean|object} step Event submitter object or false.
 	 *
 	 * @public
 	 */
-	formSubmit(element, singleSubmit = false) {
+	formSubmit(element, singleSubmit = false, stepId = 'none') {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
-		// Loader show.
-		if (!this.utils.isCaptchaUsed()) {
-			this.utils.showLoader(element);
-		}
-
-		const formData = this.getFormData(element, singleSubmit);
+		const formData = this.getFormData(element, singleSubmit, stepId);
 
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+
+		const isStepValidation = stepId !== 'none';
 
 		// Populate body data.
 		const body = {
@@ -258,55 +254,63 @@ export class Form {
 
 				// On success state.
 				if (response.status === 'success') {
-					// Send GTM.
-					this.utils.gtmSubmit(element, formData, response.status);
-
-					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
-
 					// Redirect on success.
-					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
-
-						// Set global msg.
-						this.utils.setGlobalMsg(element, response.message, 'success');
-
-						// Redirect to url and update url params from from data.
-						if (singleSubmit) {
-							this.utils.redirectToUrlByRefference(window.location.href, element, true);
-						} else {
-							this.utils.redirectToUrl(element, formData);
-						}
+					if (isStepValidation) {
+						this.steps.formStepStubmit(element, response, stepId);
 					} else {
-						// Do normal success without redirect.
+						// Send GTM.
+						this.utils.gtmSubmit(element, formData, response.status);
 
-						// Do the actual redirect after some time for custom form processed externally.
-						if (response?.data?.processExternaly) {
-							setTimeout(() => {
-								element.submit();
-							}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+						// Dispatch event.
+						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
+
+						if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
+							// Set global msg.
+							this.utils.setGlobalMsg(element, response.message, 'success');
+
+							// Redirect to url and update url params from from data.
+							if (singleSubmit) {
+								this.utils.redirectToUrlByRefference(window.location.href, element, true);
+							} else {
+								this.utils.redirectToUrl(element, formData);
+							}
+						} else {
+							// Do normal success without redirect.
+
+							// Do the actual redirect after some time for custom form processed externally.
+							if (response?.data?.processExternaly) {
+								setTimeout(() => {
+									element.submit();
+								}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+							}
+
+							// Set global msg.
+							this.utils.setGlobalMsg(element, response.message, 'success');
+
+							// Clear form values.
+							this.utils.resetForm(element);
 						}
-
-						// Set global msg.
-						this.utils.setGlobalMsg(element, response.message, 'success');
-
-						// Clear form values.
-						this.utils.resetForm(element);
 					}
 				} else {
-					this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
-					const isValidationError = response?.data?.validation !== undefined;
-
-					// Dispatch event.
-					if (isValidationError) {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
-					} else {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
-					}
-
-					this.utils.outputErrors(element, response?.data?.validation);
-
 					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'error');
+					if (isStepValidation) {
+						this.steps.formStepStubmit(element, response, stepId);
+					} else {
+						this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
+
+						const isValidationError = response?.data?.validation !== undefined;
+
+						// Dispatch event.
+						if (isValidationError) {
+							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
+
+							this.utils.outputErrors(element, response?.data?.validation);
+						} else {
+							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
+						}
+
+						this.utils.setGlobalMsg(element, response.message, 'error');
+					}
 				}
 
 				// Hide global msg in any case after some time.
@@ -320,46 +324,22 @@ export class Form {
 	}
 
 	/**
-	 * Handle form submit in case of the step used and all logic.
-	 * 
-	 * @param {object} element Form element.
-	 *
-	 * @public
-	 */
-	formStepStubmit(element, stepButton) {
-		const id = stepButton.getAttribute('data-current-step');
-		const fields = element.querySelectorAll(`
-			${this.utils.stepSelector}[data-id="${id}"] input,
-			${this.utils.stepSelector}[data-id="${id}"] select,
-			${this.utils.stepSelector}[data-id="${id}"] textarea`);
-
-		const formData = this.getFormData(element, false, `${this.utils.stepSelector}[data-id="${id}"]`);
-
-		// Display the key/value pairs
-		// for (const pair of formData.entries()) {
-		// 	console.log(`${pair[0]}, ${pair[1]}`);
-		// }
-	}
-
-	/**
 	 * Build form data object.
 	 * 
 	 * @param {object} element Form element.
 	 * @param {boolean} singleSubmit Is form single submit, used in admin.
-	 * @param {string} prefix Prefix to add to the selectors.
+	 * @param {string} step Step number.
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false, prefix = '') {
+	getFormData(element, singleSubmit = false, stepId = 'none') {
 		const formData = new FormData();
-		const selectors = `${prefix} input, ${prefix} select, ${prefix} textarea`;
+		const selectors = `input, select, textarea`;
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
 		let items = element.querySelectorAll(selectors);
-
-		console.log(items);
 
 		// If single submit override items and pass only one item to submit.
 		if (singleSubmit) {
@@ -410,8 +390,6 @@ export class Form {
 				}
 			}
 		}
-
-		console.log(items);
 
 		// Iterate all form items.
 		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
@@ -623,6 +601,26 @@ export class Form {
 			}
 		}
 
+		// Output fields to validate if we are validating steps only.
+		if (stepId !== 'none') {
+			// Find all fields by name in the step.
+			const fieldsInStep = element.querySelectorAll(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${stepId}"] ${this.utils.fieldSelector}`);
+
+			if (fieldsInStep) {
+				// Find all field names and remove null ones (submit).
+				const outputStepFields = Array.from(fieldsInStep, (stepField) => stepField.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName)).filter(n => n);
+
+				// Append the data as a custom field.
+				if (outputStepFields) {
+					formData.append(this.utils.FORM_PARAMS.stepFields, JSON.stringify({
+						name: this.utils.FORM_PARAMS.stepFields,
+						value: outputStepFields,
+						type: 'hidden',
+					}));
+				}
+			}
+		}
+
 		this.utils.getCommonFormDataItems({formId, formType}).forEach((item) => {
 			formData.append(item.key, item.value);
 		});
@@ -764,7 +762,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupFileField(fileField, formId, index) {
+	setupFileField(fileField, formId, index, element) {
 		const fileName = fileField?.name;
 
 		import('dropzone').then((Dropzone) => {
@@ -798,6 +796,9 @@ export class Form {
 				setTimeout(() => {
 					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
 				}, 1200);
+
+				// Remove main filed validation error.
+				this.utils.removeFieldErrorByName(element, fileName);
 			});
 
 			// Add data formData to the api call for the file upload.
@@ -1031,12 +1032,28 @@ export class Form {
 		const element = event.target;
 		const stepButton = event.submitter;
 
-		if (this.utils.isStepTrigger(stepButton)) {
-			this.formStepStubmit(element, stepButton);
+		if (this.steps.isStepTrigger(stepButton)) {
+			const stepId = stepButton.getAttribute('data-current-step');
+
+			if (stepButton.getAttribute('data-step') === 'prev') {
+				// Just go back a step.
+				this.steps.formGoBackAStep(element, stepId);
+			} else {
+				// Loader show.
+				this.utils.showLoader(element);
+
+				// Submit for next.
+				this.formSubmit(element, false, stepId);
+			}
 		} else {
+			// Loader show.
+			this.utils.showLoader(element);
+
 			if (this.utils.isCaptchaUsed()) {
+				// Use captcha.
 				this.runFormCaptcha(element);
 			} else {
+				// No captcha.
 				this.formSubmit(element);
 			}
 		}
@@ -1097,11 +1114,11 @@ export class Form {
 				formSubmitCaptcha: (element, token, payed, action) => {
 					this.formSubmitCaptcha(element, token, payed, action);
 				},
-				formSubmit: (element, singleSubmit = false) => {
-					this.formSubmit(element, singleSubmit);
+				formSubmit: (element, singleSubmit = false, isStepValidation = false, step = 'none') => {
+					this.formSubmit(element, singleSubmit, isStepValidation, step);
 				},
-				getFormData: (element, singleSubmit = false) => {
-					this.getFormData(element, singleSubmit);
+				getFormData: (element, singleSubmit = false, step = 'none') => {
+					this.getFormData(element, singleSubmit, step);
 				},
 				setupInputField: (input) => {
 					this.setupInputField(input);
@@ -1115,8 +1132,8 @@ export class Form {
 				setupTextareaField: (textarea, formId) => {
 					this.setupTextareaField(textarea, formId);
 				},
-				setupFileField: (file, formId, index) => {
-					this.setupFileField(file, formId, index);
+				setupFileField: (file, formId, index, element) => {
+					this.setupFileField(file, formId, index, element);
 				},
 				setupPhoneSync: (form, formId) => {
 					this.setupPhoneSync(form, formId);

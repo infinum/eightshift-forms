@@ -68,16 +68,16 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	/**
 	 * Send emails method.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDataRefrerence): array
+	public function sendEmails(array $formDataReference): array
 	{
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
-		$responseTags = $formDataRefrerence['emailResponseTags'] ?? [];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
+		$responseTags = $formDataReference['emailResponseTags'] ?? [];
 
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);

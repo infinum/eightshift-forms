@@ -32,10 +32,14 @@ if (!$stepContent) {
 	return;
 }
 
+error_log( print_r( ( $stepTotal ), true ) );
+error_log( print_r( ( $stepId ), true ) );
+
+
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" data-id="step-<?php echo esc_attr($stepId); ?>">
-	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>" data-id="<?php echo esc_attr($stepId); ?>">
+<div class="<?php echo esc_attr($stepClass); ?>" data-step-id="step-<?php echo esc_attr($stepId); ?>">
+	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo $stepContent; ?>
 
 		<?php
@@ -48,6 +52,7 @@ if (!$stepContent) {
 						'submitValue' => esc_html__('Previous', 'eightshift-form'),
 						'submitAttrs' => [
 							'data-step' => 'prev',
+							'data-current-step' => "step-{$stepId}",
 						],
 					]),
 					[
@@ -64,27 +69,29 @@ if (!$stepContent) {
 		?>
 
 		<?php
-		echo Components::render(
-			'submit',
-			array_merge(
-				Components::props('submit', $attributes, [
-					'submitFieldHideLabel' => true,
-					'submitValue' => esc_html__('Next', 'eightshift-form'),
-					'submitAttrs' => [
-						'data-step' => 'next',
-						'data-current-step' => "step-{$stepId}",
-					],
-				]),
-				[
-					'additionalFieldClass' => Components::classnames([
-						Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
+		if ($stepId < $stepTotal) {
+			echo Components::render(
+				'submit',
+				array_merge(
+					Components::props('submit', $attributes, [
+						'submitFieldHideLabel' => true,
+						'submitValue' => esc_html__('Next', 'eightshift-form'),
+						'submitAttrs' => [
+							'data-step' => 'next',
+							'data-current-step' => "step-{$stepId}",
+						],
 					]),
-					'additionalClass' => Components::classnames([
-						Components::selector($componentJsTriggerClass, $componentJsTriggerClass),
-					]),
-				]
-			)
-		);
+					[
+						'additionalFieldClass' => Components::classnames([
+							Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
+						]),
+						'additionalClass' => Components::classnames([
+							Components::selector($componentJsTriggerClass, $componentJsTriggerClass),
+						]),
+					]
+				)
+			);
+		}
 		?>
 	</div>
 </div>

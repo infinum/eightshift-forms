@@ -108,16 +108,16 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$action = $formDataRefrerence['action'];
-		$actionExternal = $formDataRefrerence['actionExternal'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$action = $formDataReference['action'];
+		$actionExternal = $formDataReference['actionExternal'];
 
 		// If form action is not set or empty.
 		if (!$action) {

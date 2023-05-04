@@ -230,16 +230,35 @@ export class Utils {
 		messageContainer.innerHTML = '';
 	}
 
-	// Reset for in general.
+	// Reset form in general.
 	reset(element) {
-		const items = element.querySelectorAll(this.errorSelector);
-
-		Array.from(items, item => item.innerHTML = '');
-
 		// Reset all error classes on fields.
-		element.querySelectorAll(`.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((element) => element.classList.remove(this.SELECTORS.CLASS_HAS_ERROR));
+		element.querySelectorAll(`${this.fieldSelector}.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
+			item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+
+			const value = item.querySelector(this.errorSelector);
+
+			if (value) {
+				value.innerHTML = ''
+			}
+		});
 
 		this.unsetGlobalMsg(element);
+	}
+
+	// Remove one field error by name.
+	removeFieldErrorByName(element, name) {
+		const item = element.querySelector(`${this.fieldSelector}.${this.SELECTORS.CLASS_HAS_ERROR}[${this.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+
+		if (item) {
+			item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+
+			const value = item.querySelector(this.errorSelector);
+
+			if (value) {
+				value.innerHTML = ''
+			}
+		}
 	}
 
 	// Dispatch custom event.
@@ -507,8 +526,6 @@ export class Utils {
 		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
-
-
 			// Unset the choices in the submitted form.
 			if (this.getFormStateByKey('selects', formId)) {
 				this.getFormStateByKey('selects', formId).forEach((item) => {
@@ -635,15 +652,6 @@ export class Utils {
 	// Check if form is loaded in admin.
 	isFormAdmin() {
 		return this.formIsAdmin;
-	}
-
-	// Check if submit button is step change trigger or form submit.
-	isStepTrigger(element) {
-		if (element.classList.contains(this.stepSubmitSelector.substring(1))) {
-			return true;
-		}
-
-		return false;
 	}
 
 	// Append common form data items.
@@ -797,6 +805,9 @@ export class Utils {
 				},
 				reset: (element) => {
 					this.reset(element);
+				},
+				removeFieldErrorByName: (element, name) => {
+					this.removeFieldErrorByName(element, name);
 				},
 				dispatchFormEvent: (element, name) => {
 					this.dispatchFormEvent(element, name);

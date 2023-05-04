@@ -117,12 +117,12 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		return $this->formSubmitMailer->sendEmails($formDataRefrerence);
+		return $this->formSubmitMailer->sendEmails($formDataReference);
 	}
 }

@@ -34,6 +34,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	use SettingsHelper;
 
 	/**
+	 * Route types.
+	 */
+	protected const ROUTE_TYPE_DEFAULT = 'default';
+	protected const ROUTE_TYPE_FILE = 'file';
+	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
+
+	/**
 	 * Get callback arguments array
 	 *
 	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
@@ -65,36 +72,62 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Prepare all data.
 			$formDataReference = $this->getFormDataReference($request);
 
-			// Validate request.
-			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				// @phpstan-ignore-next-line.
-				if (!$this->isFileUploadRoute()) {
-					$validate = $this->getValidator()->validateParams($formDataReference);
-				} else {
-					$validate = $this->getValidator()->validateFiles($formDataReference);
-				}
+			$isStepValidation = $this->isStepValidation($formDataReference);
 
-				if ($validate) {
-					throw new UnverifiedRequestException(
-						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-						$validate
-					);
-				}
+			switch ($this->routeGetType()) {
+				case self::ROUTE_TYPE_FILE:
+					// Validate files.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateFiles($formDataReference);
+
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
+					}
+
+					// Upload files to temp folder.
+					$formDataReference['files'] = $this->uploadFile($formDataReference['files']);
+					break;
+				default:
+					// Validate params.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateParams($formDataReference);
+
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
+					}
+
+					if (!$isStepValidation) {
+						// Extract hidden params from localStorage set on the frontend.
+						$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
+
+						// Attach some special keys for specific types.
+						if ($formDataReference['type'] === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
+							$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
+							$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
+						}
+					}
+
+					break;
 			}
 
-			if (!$this->isFileUploadRoute()) {
-				// Extract hidden params from localStorage set on the frontend.
-				$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
+			if ($this->isStepValidation($formDataReference)) {
+				return \rest_ensure_response(
+					$this->getApiSuccessOutput(
+						\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
+						[
+							'nextStep' => 'step-1',
+						]
+					)
+				);
 			}
-
-			// Attach some special keys for specific types.
-			if ($formDataReference['type'] === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
-				$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
-				$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
-			}
-
-			// Upload files to temp folder.
-			$formDataReference['files'] = $this->uploadFile($formDataReference['files']);
 
 			// Do Action.
 			return $this->submitAction($formDataReference);
@@ -112,12 +145,12 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Detect if route is file upload or a regular submit.
+	 * Detect what type of route it is.
 	 *
-	 * @return boolean
+	 * @return string
 	 */
-	protected function isFileUploadRoute(): bool {
-		return false;
+	protected function routeGetType(): string {
+		return self::ROUTE_TYPE_DEFAULT;
 	}
 
 	/**
@@ -144,7 +177,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */

@@ -117,6 +117,7 @@ class Validator extends AbstractValidation
 		$params = $data['params'];
 		$formId = $data['formId'];
 		$fieldsOnly = $data['fieldsOnly'];
+		$stepFields = $data['stepFields'] ?? [];
 
 		// Manualy build fields from settings components.
 		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
@@ -124,6 +125,20 @@ class Validator extends AbstractValidation
 		}
 
 		$validationReference = $this->getValidationReference($fieldsOnly);
+
+		// Output only step params to validate.
+		if ($stepFields) {
+			$stepParams = [];
+			foreach ($stepFields as $value) {
+				if (isset($params[$value])) {
+					$stepParams[$value] = $params[$value];
+				}
+			}
+
+			if ($stepParams) {
+				$params = $stepParams;
+			}
+		}
 
 		$order = self::VALIDATION_FIELDS;
 

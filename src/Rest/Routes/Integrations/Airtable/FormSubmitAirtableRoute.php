@@ -129,17 +129,17 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$itemId = $formDataRefrerence['itemId'];
-		$innerId = $formDataRefrerence['innerId'];
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
+		$itemId = $formDataReference['itemId'];
+		$innerId = $formDataReference['innerId'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to Airtable.
 		$delimiter = AbstractBaseRoute::DELIMITER;
@@ -157,7 +157,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		}
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		$this->formSubmitMailer->sendEmails($formDataReference);
 
 		// Finish.
 		return \rest_ensure_response(

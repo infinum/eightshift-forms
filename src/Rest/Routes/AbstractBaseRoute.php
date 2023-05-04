@@ -37,6 +37,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
 		'name' => 'es-form-field-name',
+		'stepFields' => 'es-form-step-fields',
 		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
@@ -55,7 +56,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
 		'formType' => 'data-form-type',
+		'formStepsFlow' => 'data-form-steps-flow',
 		'formPostId' => 'data-form-post-id',
+		'fieldStepId' => 'data-step-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',
@@ -330,6 +333,18 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Return form step fields params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<int, string>
+	 */
+	protected function getFormStepFields(array $params): array
+	{
+		return $params[self::CUSTOM_FORM_PARAMS['stepFields']]['value'] ?? [];
+	}
+
+	/**
 	 * Return mailer for sender email field params.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
@@ -461,6 +476,27 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		// Populare files.
 		$formDataReference['files'] = $file;
 
+		// Output step fields.
+		$stepFields = $this->getFormStepFields($params);
+
+		if ($stepFields) {
+			$formDataReference['stepFields'] = $this->getFormStepFields($params);
+
+			// No need for this field to be in the params after the data is extracted.
+			unset($formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['stepFields']]);
+		}
+
 		return $formDataReference;
+	}
+
+	/**
+	 * Check if route is step validation
+	 *
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @return boolean
+	 */
+	protected function isStepValidation(array $formDataReference): bool
+	{
+		return !empty($formDataReference['stepFields'] ?? []);
 	}
 }
