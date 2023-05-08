@@ -26,10 +26,8 @@ export class Enrichment {
 		// Set all public methods.
 		this.publicMethods();
 
-		// Check if enrichment is used.
-		if (this.isEnrichmentUsed()) {
-			this.setLocalStorage();
-		}
+		// Set local storage data.
+		this.setLocalStorage();
 	}
 
 	/**
@@ -105,6 +103,12 @@ export class Enrichment {
 	 * @public
 	 */
 	setLocalStorage() {
+		// Check if enrichment is used.
+		if (!this.isEnrichmentUsed()) {
+			return
+		}
+
+		// Get config data.
 		const config = JSON.parse(this.utils.SETTINGS.ENRICHMENT_CONFIG);
 
 		const allowedTags = config?.allowed;
