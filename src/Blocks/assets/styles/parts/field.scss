@@ -20,19 +20,18 @@
 			color: var(--global-colors-esf-sky-950);
 			border-radius: var(--global-esf-spacing-s);
 			padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
-		
 			width: fit-content;
-		
+
 			code {
 				background: var(--global-colors-esf-white);
 				color: var(--global-colors-esf-sky-950);
 				border-color: var(--global-colors-esf-sky-100);
 			}
-		
+
 			&:is(span) {
 				display: inline-block;
 			}
-		
+
 			summary {
 				cursor: pointer;
 			}
