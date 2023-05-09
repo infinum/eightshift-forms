@@ -18,6 +18,9 @@ Adding new integration steps:
 
 Version: **v1**
 
+Type:
+* form builder provided by the service.
+
 Supported fields:
 * Email
 * First name
@@ -28,6 +31,9 @@ Supported fields:
 [API](https://developers.greenhouse.io/job-board.html)
 
 Version: **v1**
+
+Type:
+* form builder provided by the service.
 
 Supported fields:
 * Short textbox
@@ -46,6 +52,9 @@ Supported fields:
 
 Version Submit: **v3**
 Version Items: **v2**
+
+Type:
+* form builder provided by the service.
 
 Supported fields:
 * Text
@@ -66,6 +75,9 @@ Supported fields:
 
 Version: **v3**
 
+Type:
+* form builder provided by the service.
+
 Supported fields:
 * Text
 * Address - partially
@@ -80,6 +92,9 @@ Supported fields:
 
 Version: **v2**
 
+Type:
+* form builder provided by the service.
+
 Supported fields:
 * Text
 * Date
@@ -91,14 +106,20 @@ Supported fields:
 
 Version: **v2**
 
-Supported fields:
-* All
+Type:
+* connection made with Hubspot integration and the ability to map individual field.
+
+Supported integrations:
+* Hubspot
 
 # ActiveCampaign
 
 [API](https://developers.activecampaign.com/reference/overview)
 
 Version: **v3**
+
+Type:
+* form builder provided by the service.
 
 Supported fields:
 * All
@@ -108,6 +129,9 @@ Supported fields:
 [API](https://airtable.com/developers/web/api/introduction)
 
 Version: **v0 - beta**
+
+Type:
+* form builder provided by the service.
 
 Supported fields:
 * Input
@@ -119,3 +143,17 @@ Supported fields:
 * Single Select
 * Multiple Choices
 * Checkbox
+
+# Jira
+
+[API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/#version)
+[Description nodes](https://developer.atlassian.com/cloud/jira/platform/apis/document/nodes/table_cell/)
+
+Version: **v3**
+
+Type:
+* form builder **not** provided by the service.
+* the form is created using our forms fields and connected to Jira custom fields using form settings.
+
+Supported fields:
+* all
