@@ -105,7 +105,7 @@ export class Enrichment {
 	setLocalStorage() {
 		// Check if enrichment is used.
 		if (!this.isEnrichmentUsed()) {
-			return
+			return;
 		}
 
 		// Get config data.

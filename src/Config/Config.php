@@ -37,7 +37,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return '1.0.0';
+		return \get_plugin_data(\dirname(__FILE__, 3) . '/eightshift-forms.php')['Version'];
 	}
 
 	/**
