@@ -7,6 +7,9 @@ export class Steps {
 	constructor(options) {
 		/** @type Utils */
 		this.utils = options.utils ?? new Utils();
+
+		this.STEP_DIRECTION_PREV = 'prev';
+		this.STEP_DIRECTION_NEXT = 'next';
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -23,6 +26,27 @@ export class Steps {
 		this.publicMethods();
 	}
 
+	isMultiStepForm(element) {
+		return element.hasAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow);
+	}
+
+	getCurrentStep(element) {
+		return element.getAttribute(this.utils.DATA_ATTRIBUTES.formStepsCurrent);
+	}
+
+	getAllFieldsInStep(element, stepId) {
+		return element.querySelectorAll(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${stepId}"] ${this.utils.fieldSelector}`);
+	}
+
+	getStepById(element, stepId) {
+		return element.querySelector(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${stepId}"]`)
+	}
+
+	// Return step ID by field name.
+	getStepIdByFieldName(element, name) {
+		return this.utils.getFieldByName(element, name)?.closest(this.utils.stepSelector)?.getAttribute(this.utils.DATA_ATTRIBUTES.fieldStepId);
+	}
+
 	// Check if submit button is step change trigger or form submit.
 	isStepTrigger(element) {
 		if (element.classList.contains(this.utils.stepSubmitSelector.substring(1))) {
@@ -32,18 +56,33 @@ export class Steps {
 		return false;
 	}
 
-	formGoBackAStep(element, currentId) {
+	goBackAStep(element) {
 		this.utils.hideLoader(element);
 
 		const flow = JSON.parse(element.getAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow));
 
-		this.formChangeStepById(element, flow.pop(), currentId, 'prev');
+		this.changeStepById(element, flow.pop(), this.STEP_DIRECTION_PREV);
 	}
 
-	formChangeStepById(element, nextId, currentId, direction) {
-		// Find next and current step element.
-		const nextStepElement = element.querySelector(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${nextId}"]`);
-		const currentStepElement = element.querySelector(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${currentId}"]`);
+	goBackToFirstValidationErrorStep(element, fields) {
+		if (typeof fields === 'undefined') {
+			return;
+		}
+
+		if (Object.entries(fields).length > 0) {
+			const firstItem = Object.keys(fields)[0];
+
+			const stepId = this.getStepIdByFieldName(element, firstItem);
+			console.log(stepId);
+
+			if (stepId) {
+				this.changeStepById(element, stepId, this.STEP_DIRECTION_PREV);
+			}
+		}
+	}
+
+	changeStepById(element, stepId, direction) {
+		const currentId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formStepsCurrent);
 
 		const flow = JSON.parse(element.getAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow));
 		if (direction === 'next') {
@@ -51,16 +90,21 @@ export class Steps {
 		} else {
 			flow.pop();
 		}
+		element.setAttribute(this.utils.DATA_ATTRIBUTES.formStepsCurrent, stepId);
 		element.setAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow, JSON.stringify(flow));
 
-		// Activate next step.
-		if (nextStepElement) {
-			nextStepElement.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+		// Deactivate all steps.
+		const allStepsElement = element.querySelectorAll(`${this.utils.stepSelector}`);
+		if (allStepsElement) {
+			[...allStepsElement].forEach((step) => {
+				step.classList.remove(this.utils.SELECTORS.CLASS_ACTIVE);
+			})
 		}
 
-		// Deactivate current step.
-		if (currentStepElement) {
-			currentStepElement.classList.remove(this.utils.SELECTORS.CLASS_ACTIVE);
+		// Activate next step.
+		const nextStepElement = this.getStepById(element, stepId);
+		if (nextStepElement) {
+			nextStepElement.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
 		}
 	}
 
@@ -71,13 +115,8 @@ export class Steps {
 	 *
 	 * @public
 	 */
-	formStepStubmit(element, response, currentId) {
+	formStepStubmit(element, response) {
 		const isValidationError = response?.data?.validation !== undefined;
-
-		// Add flow data attribute so we know where to go back.
-		if (!element.hasAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow)) {
-			element.setAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow, JSON.stringify([]));
-		}
 
 		// If error just output errors.
 		if (isValidationError) {
@@ -88,7 +127,7 @@ export class Steps {
 
 			// If next step exists value exists do something.
 			if (nextId) {
-				this.formChangeStepById(element, nextId, currentId, 'next');
+				this.changeStepById(element, nextId, this.STEP_DIRECTION_NEXT);
 			}
 		}
 	}

@@ -109,6 +109,26 @@ trait UploadHelper
 	}
 
 	/**
+	 * Delete all items in the tem upload folder
+	 *
+	 * @return void
+	 */
+	protected function deleteUploadFolderContent(): void
+	{
+		if (!\defined('WP_CONTENT_DIR')) {
+			return;
+		}
+
+		$folderPath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR;
+
+		if (!\is_dir($folderPath)) {
+			return;
+		}
+
+		\array_map('unlink', \array_filter((array) \glob($folderPath)));
+	}
+
+	/**
 	 * Check if there is a faulty file in the array.
 	 *
 	 * @param array<string, mixed> $files Files to check.

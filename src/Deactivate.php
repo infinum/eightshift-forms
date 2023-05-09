@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
+use EightshiftForms\CronJobs\FileUploadJob;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
@@ -48,6 +49,9 @@ class Deactivate implements HasDeactivationInterface
 				\delete_transient($item);
 			}
 		}
+
+		// Remove cron job.
+		\wp_clear_scheduled_hook(FileUploadJob::JOB_NAME);
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

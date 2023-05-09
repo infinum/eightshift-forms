@@ -44,6 +44,7 @@ $formServerSideRender = Components::checkAttr('formServerSideRender', $attribute
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 $formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
+$formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -94,6 +95,11 @@ if ($formPostId) {
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
+}
+
+if ($formHasSteps) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formStepsFlow']] = '[]';
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formStepsCurrent']] = 'step-0';
 }
 
 if ($formConditionalTags) {

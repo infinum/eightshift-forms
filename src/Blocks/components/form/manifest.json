@@ -39,6 +39,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formHasSteps": {
+			"type": "boolean",
+			"default": false
+		},
 		"formMethod": {
 			"type": "string",
 			"default": "post"

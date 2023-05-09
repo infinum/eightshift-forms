@@ -202,19 +202,17 @@ export class Form {
 	 * @param {object} element Form element.
 	 * @param {boolean|object} singleSubmit Is form single submit, used in admin if yes pass element.
 	 * @param {boolean} isStepValidation Is form single submit, used in admin.
-	 * @param {boolean|object} step Event submitter object or false.
+	 * @param {boolean} isStepSubmit Check if is step submit.
 	 *
 	 * @public
 	 */
-	formSubmit(element, singleSubmit = false, stepId = 'none') {
+	formSubmit(element, singleSubmit = false, isStepSubmit = false) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
 
-		const formData = this.getFormData(element, singleSubmit, stepId);
+		const formData = this.getFormData(element, singleSubmit, isStepSubmit);
 
 		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
-
-		const isStepValidation = stepId !== 'none';
 
 		// Populate body data.
 		const body = {
@@ -255,8 +253,8 @@ export class Form {
 				// On success state.
 				if (response.status === 'success') {
 					// Redirect on success.
-					if (isStepValidation) {
-						this.steps.formStepStubmit(element, response, stepId);
+					if (isStepSubmit) {
+						this.steps.formStepStubmit(element, response);
 					} else {
 						// Send GTM.
 						this.utils.gtmSubmit(element, formData, response.status);
@@ -276,7 +274,6 @@ export class Form {
 							}
 						} else {
 							// Do normal success without redirect.
-
 							// Do the actual redirect after some time for custom form processed externally.
 							if (response?.data?.processExternaly) {
 								setTimeout(() => {
@@ -293,8 +290,8 @@ export class Form {
 					}
 				} else {
 					// Set global msg.
-					if (isStepValidation) {
-						this.steps.formStepStubmit(element, response, stepId);
+					if (isStepSubmit) {
+						this.steps.formStepStubmit(element, response);
 					} else {
 						this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
 
@@ -304,6 +301,7 @@ export class Form {
 						if (isValidationError) {
 							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
 
+							this.steps.goBackToFirstValidationErrorStep(element, response?.data?.validation);
 							this.utils.outputErrors(element, response?.data?.validation);
 						} else {
 							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
@@ -328,11 +326,10 @@ export class Form {
 	 * 
 	 * @param {object} element Form element.
 	 * @param {boolean} singleSubmit Is form single submit, used in admin.
-	 * @param {string} step Step number.
 	 *
 	 * @public
 	 */
-	getFormData(element, singleSubmit = false, stepId = 'none') {
+	getFormData(element, singleSubmit = false, isStepSubmit = false) {
 		const formData = new FormData();
 		const selectors = `input, select, textarea`;
 
@@ -448,8 +445,13 @@ export class Form {
 					// Loop files and append.
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
-							data.value = file.upload.uuid;
-							formData.append(`${id}[${key}]`, JSON.stringify(data));
+							const status = file?.xhr?.response ? JSON.parse(file.xhr.response) : 'error';
+
+							// Check if the file is ok.
+							if (status === 'success') {
+								data.value = file.upload.uuid;
+								formData.append(`${id}[${key}]`, JSON.stringify(data));
+							}
 						}
 					} else {
 						formData.append(`${id}[0]`, JSON.stringify({}));
@@ -602,9 +604,10 @@ export class Form {
 		}
 
 		// Output fields to validate if we are validating steps only.
-		if (stepId !== 'none') {
+		const stepId = this.steps.getCurrentStep(element);
+		if (stepId && isStepSubmit) {
 			// Find all fields by name in the step.
-			const fieldsInStep = element.querySelectorAll(`${this.utils.stepSelector}[${this.utils.DATA_ATTRIBUTES.fieldStepId}="${stepId}"] ${this.utils.fieldSelector}`);
+			const fieldsInStep = this.steps.getAllFieldsInStep(element, stepId);
 
 			if (fieldsInStep) {
 				// Find all field names and remove null ones (submit).
@@ -1032,20 +1035,7 @@ export class Form {
 		const element = event.target;
 		const stepButton = event.submitter;
 
-		if (this.steps.isStepTrigger(stepButton)) {
-			const stepId = stepButton.getAttribute('data-current-step');
-
-			if (stepButton.getAttribute('data-step') === 'prev') {
-				// Just go back a step.
-				this.steps.formGoBackAStep(element, stepId);
-			} else {
-				// Loader show.
-				this.utils.showLoader(element);
-
-				// Submit for next.
-				this.formSubmit(element, false, stepId);
-			}
-		} else {
+		if (!this.steps.isMultiStepForm(element)) {
 			// Loader show.
 			this.utils.showLoader(element);
 
@@ -1055,6 +1045,30 @@ export class Form {
 			} else {
 				// No captcha.
 				this.formSubmit(element);
+			}
+		} else {
+			if (this.steps.isStepTrigger(stepButton)) {
+				if (stepButton.getAttribute(this.utils.DATA_ATTRIBUTES.submitdStepDirection) === this.steps.STEP_DIRECTION_PREV) {
+					// Just go back a step.
+					this.steps.goBackAStep(element);
+				} else {
+					// Loader show.
+					this.utils.showLoader(element);
+	
+					// Submit for next.
+					this.formSubmit(element, false, true);
+				}
+			} else {
+				// Loader show.
+				this.utils.showLoader(element);
+
+				if (this.utils.isCaptchaUsed()) {
+					// Use captcha.
+					this.runFormCaptcha(element);
+				} else {
+					// No captcha.
+					this.formSubmit(element);
+				}
 			}
 		}
 	};
@@ -1114,11 +1128,11 @@ export class Form {
 				formSubmitCaptcha: (element, token, payed, action) => {
 					this.formSubmitCaptcha(element, token, payed, action);
 				},
-				formSubmit: (element, singleSubmit = false, isStepValidation = false, step = 'none') => {
-					this.formSubmit(element, singleSubmit, isStepValidation, step);
+				formSubmit: (element, singleSubmit = false, isStepSubmit = false) => {
+					this.formSubmit(element, singleSubmit, isStepSubmit);
 				},
-				getFormData: (element, singleSubmit = false, step = 'none') => {
-					this.getFormData(element, singleSubmit, step);
+				getFormData: (element, singleSubmit = false) => {
+					this.getFormData(element, singleSubmit);
 				},
 				setupInputField: (input) => {
 					this.setupInputField(input);

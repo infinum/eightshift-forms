@@ -57,8 +57,10 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
 		'formType' => 'data-form-type',
 		'formStepsFlow' => 'data-form-steps-flow',
-		'formPostId' => 'data-form-post-id',
+		'formStepsCurrent' => 'data-form-steps-current',
 		'fieldStepId' => 'data-step-id',
+		'submitdStepDirection' => 'data-step-direction',
+		'formPostId' => 'data-form-post-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',

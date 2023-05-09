@@ -676,6 +676,11 @@ export class Utils {
 		];
 	}
 
+	// Return field element by name.
+	getFieldByName(element, name) {
+		return element.querySelector(`${this.fieldSelector}[${this.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -868,6 +873,9 @@ export class Utils {
 				},
 				getCommonFormDataItems: (params) => {
 					return this.getCommonFormDataItems(params);
+				},
+				getFieldByName: (element, name) => {
+					return this.getFieldByName(element, name);
 				},
 				onFocusEvent: (event) => {
 					this.onFocusEvent(event);

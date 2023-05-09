@@ -163,6 +163,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					continue;
 				}
 
+				$hasSteps = \array_search('eightshift-forms/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
+				$hasSteps = $hasSteps !== false;
+
 				// Get block name details.
 				$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
@@ -177,9 +180,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
-
-				$hasSteps = \array_search('eightshift-forms/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
-				$hasSteps = $hasSteps !== false;
 
 				$inBlockOutput = [];
 				$stepKey = 0;
@@ -282,6 +282,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				}
 
 				if ($hasSteps) {
+					// Add attribute to form component.
+					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
+
 					$inBlockOutput = \array_values($inBlockOutput);
 					$stepsTotalCount = \count($inBlockOutput) - 1;
 

@@ -32,10 +32,6 @@ if (!$stepContent) {
 	return;
 }
 
-error_log( print_r( ( $stepTotal ), true ) );
-error_log( print_r( ( $stepId ), true ) );
-
-
 ?>
 
 <div class="<?php echo esc_attr($stepClass); ?>" data-step-id="step-<?php echo esc_attr($stepId); ?>">
@@ -51,8 +47,7 @@ error_log( print_r( ( $stepId ), true ) );
 						'submitFieldHideLabel' => true,
 						'submitValue' => esc_html__('Previous', 'eightshift-form'),
 						'submitAttrs' => [
-							'data-step' => 'prev',
-							'data-current-step' => "step-{$stepId}",
+							'data-step-direction' => 'prev',
 						],
 					]),
 					[
@@ -77,8 +72,7 @@ error_log( print_r( ( $stepId ), true ) );
 						'submitFieldHideLabel' => true,
 						'submitValue' => esc_html__('Next', 'eightshift-form'),
 						'submitAttrs' => [
-							'data-step' => 'next',
-							'data-current-step' => "step-{$stepId}",
+							'data-step-direction' => 'next',
 						],
 					]),
 					[
