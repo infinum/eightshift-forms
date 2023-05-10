@@ -12,7 +12,8 @@
 	],
 	"hasInnerBlocks": true,
 	"components": {
-		"form": "form"
+		"form": "form",
+		"step": "step"
 	},
 	"parent": [
 		"eightshift-forms/form-selector"

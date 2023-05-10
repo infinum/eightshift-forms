@@ -310,16 +310,17 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  * Outputs notification if name is missing.
  *
  * @param {string} value Field name value.
+ * @param {string} className Additional class name to add.
  *
  * @returns Component
  */
-export const MissingName = ({ value }) => {
+export const MissingName = ({ value, className }) => {
 	if (value) {
 		return null;
 	}
 
 	return (
-		<div className='es-position-absolute es-right-2 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
+		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
 		<Tooltip text={__('Name not set!', 'eightshift-forms')}>
 			{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
 		</Tooltip>

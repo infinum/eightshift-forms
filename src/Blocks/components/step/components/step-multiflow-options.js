@@ -6,33 +6,33 @@ import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
 import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_ACTIONS_INTERNAL } from './conditional-tags-utils';
+import { CONDITIONAL_TAGS_ACTIONS_INTERNAL } from './../../conditional-tags/components/conditional-tags-utils';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 
-export const ConditionalTagsFormsOptions = (attributes) => {
+export const StepMultiflowOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
 
-	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
-	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
-	const conditionalTagsPostId = checkAttr('conditionalTagsPostId', attributes, manifest);
+	const stepMultiflowUse = checkAttr('stepMultiflowUse', attributes, manifest);
+	const stepMultiflowRules = checkAttr('stepMultiflowRules', attributes, manifest);
+	const stepMultiflowPostId = checkAttr('stepMultiflowPostId', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${conditionalTagsPostId}` }).then((response) => {
+		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${stepMultiflowPostId}&useMultiflow=true` }).then((response) => {
 			if (response.code === 200 && response.data) {
-				setFormFields(response.data.fields);
+				setFormFields(response.data);
 			}
 		});
-	}, [conditionalTagsPostId, isModalOpen]);
+	}, [stepMultiflowPostId, isModalOpen]);
 
-	const ConditionalTagsItem = ({ index }) => {
-		const fieldValue = conditionalTagsRules?.[index]?.[0];
+	const MultiflowItem = ({ index }) => {
+		const fieldValue = stepMultiflowRules?.[index]?.[0];
 
 		const optionsItem = fieldValue?.subItems ?? [];
 
@@ -42,9 +42,9 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					value={fieldValue}
 					options={formFields}
 					onChange={(value) => {
-						const newData = [...conditionalTagsRules];
+						const newData = [...stepMultiflowRules];
 						newData[index][0] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: newData });
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: newData });
 					}}
 					additionalSelectClasses='es-w-40'
 					noBottomSpacing
@@ -52,7 +52,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 				{optionsItem?.length > 0 &&
 					<Select
-						value={conditionalTagsRules?.[index]?.[2]}
+						value={stepMultiflowRules?.[index]?.[2]}
 						options={optionsItem.map((item) => {
 							if (item.value === '') {
 								return {
@@ -63,9 +63,9 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 							return item;
 						})}
 						onChange={(value) => {
-							const newData = [...conditionalTagsRules];
+							const newData = [...stepMultiflowRules];
 							newData[index][2] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: newData });
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: newData });
 						}}
 						additionalSelectClasses='es-w-40'
 						noBottomSpacing
@@ -74,50 +74,50 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 				{hasSubFields && optionsItem?.length < 1 && <span className='es-w-40'>&nbsp;</span>}
 
-				<OptionSelector
-					value={conditionalTagsRules?.[index]?.[1]}
+				{/* <OptionSelector
+					value={stepMultiflowRules?.[index]?.[1]}
 					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
 					onChange={(value) => {
-						const newData = [...conditionalTagsRules];
+						const newData = [...stepMultiflowRules];
 						newData[index][1] = value;
-						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: newData });
+						// setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: newData });
 					}}
 					additionalContainerClass='es-w-40'
 					additionalButtonClass='es-h-7.5'
 					noBottomSpacing
-				/>
+				/> */}
 			</>
 		);
 	};
 
-	const hasSubFields = conditionalTagsRules?.map(([fieldData]) => fieldData).some(({ subItems }) => subItems?.length > 0) ?? [];
+	const hasSubFields = stepMultiflowRules?.map(([fieldData]) => fieldData).some(({ subItems }) => subItems?.length > 0) ?? [];
 
 	return (
 		<PanelBody>
 			<IconToggle
 				icon={icons.visibilityAlt}
-				label={__('Field visibility overrides', 'eightshift-forms')}
-				checked={conditionalTagsUse}
+				label={__('Use steps multi-flow', 'eightshift-forms')}
+				checked={stepMultiflowUse}
 				onChange={(value) => {
-					setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
+					setAttributes({ [getAttrKey('stepMultiflowUse', attributes, manifest)]: value });
 
 					if (!value) {
-						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined });
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
+						// setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined });
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: undefined });
 					} else {
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [] });
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
 					}
 				}}
-				noBottomSpacing={!conditionalTagsUse}
+				noBottomSpacing={!stepMultiflowUse}
 				additionalClasses='es-font-weight-500'
 			/>
 
-			<Section showIf={conditionalTagsUse} noBottomSpacing>
+			<Section showIf={stepMultiflowUse} noBottomSpacing>
 				<Control
 					icon={icons.conditionH}
 					label={__('Rules', 'eightshift-forms')}
 					// Translators: %d refers to the number of active rules
-					subtitle={conditionalTagsRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), conditionalTagsRules.length)}
+					subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
 					noBottomSpacing
 					inlineLabel
 				>
@@ -126,12 +126,12 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						onClick={() => setIsModalOpen(true)}
 						className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
 					>
-						{conditionalTagsRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
+						{stepMultiflowRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 					</Button>
 				</Control>
 			</Section>
 
-			{conditionalTagsUse && isModalOpen &&
+			{stepMultiflowUse && isModalOpen &&
 				<Modal
 					overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 					className='es-modal-max-width-xxl es-rounded-3!'
@@ -148,30 +148,30 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					</div>
 
 					<div className='es-v-spaced'>
-						{conditionalTagsRules?.map((_, index) => {
+						{stepMultiflowRules?.map((_, index) => {
 							const itemExists = formFields.filter((item) => {
-								return conditionalTagsRules?.[index]?.[0] === item?.value && item?.value !== '';
+								return stepMultiflowRules?.[index]?.[0] === item?.value && item?.value !== '';
 							});
 
 							if (itemExists.length < 0 && !isNewRuleAdded) {
-								const newData = [...conditionalTagsRules];
+								const newData = [...stepMultiflowRules];
 								newData.splice(index, 1);
-								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: newData });
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: newData });
 								return null;
 							}
 
 							return (
 								<div key={index} className='es-h-spaced'>
-									<ConditionalTagsItem
+									<MultiflowItem
 										 index={index}
 									/>
 
 									<Button
 										icon={icons.trash}
 										onClick={() => {
-											const newData = [...conditionalTagsRules];
+											const newData = [...stepMultiflowRules];
 											newData.splice(index, 1);
-											setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: newData });
+											setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: newData });
 										}}
 										label={__('Remove', 'eightshift-forms')}
 										className='es-ml-auto es-rounded-1!'
@@ -184,7 +184,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					<Button
 						icon={icons.plusCircleFillAlt}
 						onClick={() => {
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules, [formFields?.[0]?.value ?? '', 'show', '']] });
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', 'show', '']] });
 							setIsNewRuleAdded(true);
 						}}
 						className='es-rounded-1 es-mt-4'
@@ -215,4 +215,4 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 			}
 		</PanelBody>
 	);
-};
+}

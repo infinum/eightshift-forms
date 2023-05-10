@@ -26,6 +26,7 @@ trait UploadHelper
 	 */
 	protected function uploadFile(array $file): array
 	{
+		$this->deleteUploadFolderContent();
 		$output = [];
 
 		if (!$file) {
@@ -111,9 +112,11 @@ trait UploadHelper
 	/**
 	 * Delete all items in the tem upload folder
 	 *
+	 * @param int $numberOfHours Number of hours used.
+	 *
 	 * @return void
 	 */
-	protected function deleteUploadFolderContent(): void
+	protected function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
 		if (!\defined('WP_CONTENT_DIR')) {
 			return;
@@ -125,7 +128,21 @@ trait UploadHelper
 			return;
 		}
 
-		\array_map('unlink', \array_filter((array) \glob($folderPath)));
+		$files = \glob("{$folderPath}*");
+
+		if (!$files) {
+			return;
+		}
+
+		foreach ($files as $file) {
+			// file is younger than x hours skip it.
+			if (time()-filemtime($file) < $numberOfHours * \HOUR_IN_SECONDS) {
+				continue;
+			}
+
+			// Remove old files.
+			\unlink($file);
+		}
 	}
 
 	/**

@@ -29,9 +29,8 @@ export const ConditionalTagsOptions = (attributes) => {
 
 	useEffect(() => {
 		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
-
 			if (response.code === 200 && response.data) {
-				setFormFields(response.data);
+				setFormFields(response.data.fields);
 			}
 		});
 	}, [isModalOpen, postId]);
@@ -41,7 +40,7 @@ export const ConditionalTagsOptions = (attributes) => {
 			<PanelBody>
 				<Control
 					icon={icons.conditionalVisibility}
-					label={__('Conditional visibility', 'eightshift-frontend-libs')}
+					label={__('Conditional visibility', 'eightshift-forms')}
 					additionalLabelClasses='es-font-weight-500'
 					noBottomSpacing
 				>
@@ -161,7 +160,7 @@ export const ConditionalTagsOptions = (attributes) => {
 		<PanelBody>
 			<IconToggle
 				icon={icons.conditionalVisibility}
-				label={__('Conditional visibility', 'eightshift-frontend-libs')}
+				label={__('Conditional visibility', 'eightshift-forms')}
 				checked={conditionalTagsUse}
 				onChange={(value) => {
 					setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });

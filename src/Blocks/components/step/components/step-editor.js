@@ -1,8 +1,35 @@
 import React from 'react';
-import { ServerSideRender } from '@eightshift/frontend-libs/scripts';
+import classnames from 'classnames';
+import {
+	selector,
+	checkAttr,
+} from '@eightshift/frontend-libs/scripts';
+import { MissingName } from './../../utils';
+import manifest from '../manifest.json';
 
-export const StepEditor = () => {
+export const StepEditor = (attributes) => {
+	const {
+		componentClass,
+	} = manifest;
+
+	const {
+		additionalClass,
+	} = attributes;
+
+	const stepName = checkAttr('stepName', attributes, manifest);
+
+	const stepClass = classnames([
+		selector(componentClass, componentClass),
+		selector(additionalClass, additionalClass),
+	]);
+
 	return (
-		<div>Step divider</div>
+		<div className={stepClass}>
+			<div className={`${componentClass}__inner`}>
+				Step - {stepName ? stepName : '?'}
+			</div>
+
+			<MissingName value={stepName} className={`${componentClass}__missing`} />
+		</div>
 	);
 };

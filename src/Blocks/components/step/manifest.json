@@ -9,11 +9,24 @@
 		"stepId": {
 			"type": "integer"
 		},
+		"stepName": {
+			"type": "string"
+		},
 		"stepTotal": {
 			"type": "integer"
 		},
 		"stepContent": {
 			"type": "string"
+		},
+		"stepMultiflowPostId": {
+			"type": "string"
+		},
+		"stepMultiflowUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"stepMultiflowRules": {
+			"type": "array"
 		}
 	}
 }

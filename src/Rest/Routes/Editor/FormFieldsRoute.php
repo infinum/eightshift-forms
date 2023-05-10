@@ -96,10 +96,11 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
+		$useMultiflow = $request->get_param('useMultiflow') ?? false;
 
 		if (!$formId) {
 			return \rest_ensure_response(
@@ -119,7 +120,8 @@ class FormFieldsRoute extends AbstractBaseRoute
 			);
 		}
 
-		$output = [];
+		$outputFields = [];
+		$outputSteps = [];
 
 		foreach ($data['fieldsOnly'] as $value) {
 			$blockName = Helper::getBlockNameDetails($value['blockName']);
@@ -131,7 +133,20 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			if ($blockName['name'] === 'submit') {
+			$type = $blockName['name'];
+
+			if ($type === 'submit') {
+				continue;
+			}
+
+			if ($type === 'step' && !$useMultiflow) {
+				$outputSteps[] = [
+					// 'label' => $label,
+					'value' => $name,
+					'type' => $type,
+					'subItems' => [],
+				];
+
 				continue;
 			}
 
@@ -144,7 +159,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 			$outputItem = [
 				'label' => $label,
 				'value' => $name,
-				'type' => $blockName['name'],
+				'type' => $type,
 				'subItems' => [],
 			];
 
@@ -177,13 +192,16 @@ class FormFieldsRoute extends AbstractBaseRoute
 				}
 			}
 
-			$output[] = $outputItem;
+			$outputFields[] = $outputItem;
 		}
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				\esc_html__('Success.', 'eightshift-forms'),
-				$output
+				[
+					'fields' => $outputFields,
+					'steps' => $outputSteps,
+				]
 			)
 		);
 	}
