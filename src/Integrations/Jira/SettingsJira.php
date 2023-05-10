@@ -425,9 +425,8 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputFieldHelp' => \sprintf(\__('
 									E-mail or user name of the user connected to the user token.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
-								'inputType' => 'email',
+								'inputType' => 'text',
 								'inputIsRequired' => true,
-								'inputIsEmail' => true,
 								'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputIsDisabled' => !empty($apiUser),
 							],
