@@ -15,7 +15,6 @@ export class TestApi {
 	init() {
 		const elements = document.querySelectorAll(this.selector);
 
-		console.log(elements);
 		[...elements].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
@@ -52,8 +51,6 @@ export class TestApi {
 				return response.json();
 			})
 			.then((response) => {
-
-				console.log();
 				const formElement = element.closest(this.utils.formSelector);
 				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
