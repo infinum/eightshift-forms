@@ -542,11 +542,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	}
 
 	/**
-	 * API request to get all lists from ActiveCampaign.
+	 * Get test api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
-	private function getActiveCampaignLists()
+	public function getTestApi(): array
 	{
 		$url = "{$this->getBaseUrl()}forms";
 
@@ -558,11 +558,21 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
 		);
+	}
+
+	/**
+	 * API request to get all lists from ActiveCampaign.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getActiveCampaignLists()
+	{
+		$details = $this->getTestApi();
 
 		$body = $details['body'];
 

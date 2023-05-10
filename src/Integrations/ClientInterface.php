@@ -47,4 +47,11 @@ interface ClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array;
+
+	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array;
 }

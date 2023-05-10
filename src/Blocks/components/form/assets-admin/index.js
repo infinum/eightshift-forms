@@ -14,6 +14,7 @@ domReady(() => {
 		componentCacheJsClass,
 		componentMigrationJsClass,
 		componentTransferJsClass,
+		componentTestApiJsClass,
 	} = manifest;
 
 	const selector = `.${componentJsClass}`;
@@ -79,6 +80,21 @@ domReady(() => {
 			});
 
 			transfer.init();
+		});
+	}
+
+	const selectorTestApi = `.${componentTestApiJsClass}`;
+	const elementsTestApi = document.querySelectorAll(selectorTestApi);
+
+	if (elementsTestApi.length) {
+		import('./test-api').then(({ TestApi }) => {
+			const testApi = new TestApi({
+				utils: new Utils(),
+				selector: selectorTestApi,
+				testApiRestUrl: `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.testApi}`,
+			});
+
+			testApi.init();
 		});
 	}
 });

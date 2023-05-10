@@ -282,11 +282,11 @@ class GreenhouseClient implements ClientInterface
 	}
 
 	/**
-	 * API request to get all jobs from Greenhouse.
+	 * Get test api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
-	private function getGreenhouseItems()
+	public function getTestApi(): array
 	{
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs";
 
@@ -298,11 +298,21 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * API request to get all jobs from Greenhouse.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getGreenhouseItems()
+	{
+		$details = $this->getTestApi();
 
 		$code = $details['code'];
 		$body = $details['body'];

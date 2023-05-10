@@ -290,11 +290,11 @@ class MailerliteClient implements ClientInterface
 	}
 
 	/**
-	 * API request to get all lists from Mailerlite.
+	 * Get test api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
-	private function getMailerliteLists()
+	public function getTestApi(): array
 	{
 		$url = self::BASE_URL . "groups";
 
@@ -306,11 +306,21 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * API request to get all lists from Mailerlite.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getMailerliteLists()
+	{
+		$details = $this->getTestApi();
 
 		$code = $details['code'];
 		$body = $details['body'];

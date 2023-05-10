@@ -18,6 +18,7 @@ use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -219,6 +220,22 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 								'dividerExtraVSpacing' => true,
 							],
 							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Test api connection', 'eightshift-forms'),
+								'submitVariant' => 'outline',
+								'submitAttrs' => [
+									'data-type' => self::SETTINGS_TYPE_KEY,
+								],
+								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
@@ -232,12 +249,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
 								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Options', 'eightshift-forms'),
-						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
@@ -252,12 +263,13 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							],
 						],
 					],
-					$this->settingsClearbit->getOutputGlobalClearbit(
-						$this->hubspotClient->getContactProperties(),
-						[
-							'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
-						]
-					),
+					$this->isSettingsGlobalValid() ?
+						$this->settingsClearbit->getOutputGlobalClearbit(
+							$this->hubspotClient->getContactProperties(),
+							[
+								'map' => self::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
+							]
+						) : [],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsHubspot::SETTINGS_TYPE_KEY),
 					[
 						'component' => 'tab',

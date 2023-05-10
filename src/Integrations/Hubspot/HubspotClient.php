@@ -577,11 +577,11 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
-	 * API request to get all items from Hubspot.
+	 * Get test api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
-	private function getHubspotItems()
+	public function getTestApi(): array
 	{
 		$url = $this->getBaseUrl('forms/v2/forms', true);
 
@@ -593,11 +593,21 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * API request to get all items from Hubspot.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getHubspotItems()
+	{
+		$details = $this->getTestApi();
 
 		$code = $details['code'];
 		$body = $details['body'];
