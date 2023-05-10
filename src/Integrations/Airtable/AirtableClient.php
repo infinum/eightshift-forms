@@ -275,11 +275,11 @@ class AirtableClient implements ClientInterface
 	}
 
 	/**
-	 * API request to get all lists from Airtable.
+	 * Get test api.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
-	private function getAirtableLists()
+	public function getTestApi(): array
 	{
 		$url = self::BASE_URL . "meta/bases";
 
@@ -291,11 +291,21 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * API request to get all lists from Airtable.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getAirtableLists()
+	{
+		$details = $this->getTestApi();
 
 		$code = $details['code'];
 		$body = $details['body'];

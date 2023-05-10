@@ -56,4 +56,11 @@ interface JiraClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function getProjectsCustomFields(string $projectId): array;
+
+	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array;
 }

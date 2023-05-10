@@ -357,6 +357,32 @@ class MomentsClient implements ClientInterface
 	}
 
 	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array
+	{
+		$token = $this->getIbssoToken();
+
+		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=1";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders('ibsso', $token),
+			]
+		);
+
+		// Structure response details.
+		return $this->getIntegrationApiReponseDetails(
+			SettingsMoments::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+	}
+
+	/**
 	 * API request to get all lists from Moments.
 	 *
 	 * @return array<string, mixed>

@@ -16,6 +16,7 @@ use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -174,6 +175,22 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'dividerExtraVSpacing' => true,
 							],
 							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Test api connection', 'eightshift-forms'),
+								'submitVariant' => 'outline',
+								'submitAttrs' => [
+									'data-type' => self::SETTINGS_TYPE_KEY,
+								],
+								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
@@ -187,12 +204,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
 								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Fields', 'eightshift-forms'),
-						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),

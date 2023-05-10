@@ -381,6 +381,30 @@ class MailchimpClient implements MailchimpClientInterface
 	}
 
 	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array
+	{
+		$url = "{$this->getBaseUrl()}lists?count=1";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		// Structure response details.
+		return $this->getIntegrationApiReponseDetails(
+			SettingsMailchimp::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+	}
+
+	/**
 	 * API request to get all lists from Mailchimp.
 	 *
 	 * @return array<string, mixed>

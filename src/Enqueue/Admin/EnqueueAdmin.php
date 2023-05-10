@@ -12,6 +12,7 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractTestApi;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncDirectRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\Settings\FormSettingsSubmitRoute;
@@ -94,6 +95,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'migration' => MigrationRoute::ROUTE_SLUG,
 				'transform' => TransferRoute::ROUTE_SLUG,
 				'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
+				'testApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
 			],
 		];
 

@@ -168,6 +168,30 @@ class GoodbitsClient implements ClientInterface
 	}
 
 	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array
+	{
+		$url = self::BASE_URL . "newsletter";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders($this->getItems()[0]['id'] ?? ''),
+			]
+		);
+
+		// Structure response details.
+		return $this->getIntegrationApiReponseDetails(
+			SettingsGoodbits::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+	}
+
+	/**
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.

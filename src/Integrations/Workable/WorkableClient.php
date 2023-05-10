@@ -264,6 +264,29 @@ class WorkableClient implements ClientInterface
 	}
 
 	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array
+	{
+		$url = "{$this->getBaseUrl()}jobs?limit=1";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		// Structure response details.
+		return $this->getIntegrationApiReponseDetails(
+			SettingsWorkable::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+	}
+	/**
 	 * API request to get all jobs from Workable.
 	 *
 	 * @return array<string, mixed>

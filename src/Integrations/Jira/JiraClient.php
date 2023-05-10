@@ -248,11 +248,11 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
-	 * Get projects from the api.
+	 * Get test api.
 	 *
 	 * @return array<mixed>
 	 */
-	private function getJiraProjects()
+	public function getTestApi(): array
 	{
 		$url = $this->getBaseUrl() . "project/search";
 
@@ -263,11 +263,21 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		return $this->getIntegrationApiReponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * Get projects from the api.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getJiraProjects()
+	{
+		$details = $this->getTestApi();
 
 		$code = $details['code'];
 		$body = $details['body'];

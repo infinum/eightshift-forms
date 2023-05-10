@@ -13,9 +13,12 @@ namespace EightshiftForms\Integrations\Jira;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -27,6 +30,11 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Filter settings key.
@@ -382,6 +390,8 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 		$apiBoard = Variables::getApiBoardJira();
 		$apiUser = Variables::getApiUserJira();
 
+		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -429,6 +439,40 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputIsDisabled' => !empty($apiUser),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'submit',
+								'submitFieldSkip' => true,
+								'submitValue' => \__('Test api connection', 'eightshift-forms'),
+								'submitVariant' => 'outline',
+								'submitAttrs' => [
+									'data-type' => self::SETTINGS_TYPE_KEY,
+								],
+								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
+								// translators: %s will be replaced with forms field name and filter output copy.
+								'inputFieldHelp' => \sprintf(\__('
+									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
+									<br />
+									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
+								'inputType' => 'url',
+								'inputIsUrl' => true,
+								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
+								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
 						],
 					],
