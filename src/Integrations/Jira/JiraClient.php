@@ -216,7 +216,7 @@ class JiraClient implements JiraClientInterface
 	{
 		$board = $this->getApiBoard();
 
-		return "https://{$board}.atlassian.net/";
+		return "https://{$board}/";
 	}
 
 	/**

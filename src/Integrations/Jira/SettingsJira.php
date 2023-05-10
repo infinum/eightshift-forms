@@ -412,7 +412,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputIsRequired' => true,
 								// translators: %s will be replaced with global variable name.
 								'inputFieldHelp' => \sprintf(\__('
-									Provided in the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress</b>.<br/><br/>
+									Provided in the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
 								'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
 								'inputIsDisabled' => !empty($apiBoard),
@@ -423,7 +423,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputFieldLabel' => \__('User', 'eightshift-forms'),
 								// translators: %s will be replaced with global variable name.
 								'inputFieldHelp' => \sprintf(\__('
-									E-mail of the user connected to the user token.<br/><br/>
+									E-mail or user name of the user connected to the user token.<br/><br/>
 									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
 								'inputType' => 'email',
 								'inputIsRequired' => true,
