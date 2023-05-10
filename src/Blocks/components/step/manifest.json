@@ -27,6 +27,14 @@
 		},
 		"stepMultiflowRules": {
 			"type": "array"
+		},
+		"stepMultiflowAction": {
+			"type": "string",
+			"default": "show"
+		},
+		"stepMultiflowLogic": {
+			"type": "string",
+			"default": "all"
 		}
 	}
 }

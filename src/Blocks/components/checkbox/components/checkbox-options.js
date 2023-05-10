@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { TextControl } from '@wordpress/components';
+import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
 import manifest from '../manifest.json';
@@ -19,7 +19,7 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
 
 	return (
-		<>
+		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
 			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 				<TextControl
 					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
@@ -71,6 +71,6 @@ export const CheckboxOptions = (attributes) => {
 					className='es-no-field-spacing'
 				/>
 			</Section>
-		</>
+		</PanelBody>
 	);
 };

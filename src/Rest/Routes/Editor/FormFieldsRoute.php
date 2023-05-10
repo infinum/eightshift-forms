@@ -96,11 +96,11 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			// return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission); // TODO
 		}
 
 		$formId = $request->get_param('id') ?? '';
-		$useMultiflow = $request->get_param('useMultiflow') ?? false;
+		$useMultiflow = $request->get_param('useMultiflow') ? \filter_var($request->get_param('useMultiflow'), \FILTER_VALIDATE_BOOLEAN) : false;
 
 		if (!$formId) {
 			return \rest_ensure_response(
@@ -139,60 +139,58 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			if ($type === 'step' && !$useMultiflow) {
+			if ($type === 'step' && $useMultiflow) {
 				$outputSteps[] = [
-					// 'label' => $label,
+					'label' => $name,
 					'value' => $name,
 					'type' => $type,
 					'subItems' => [],
 				];
+			} else {
+				$label = $value['attrs']["{$prefix}FieldLabel"] ?? '';
 
-				continue;
-			}
-
-			$label = $value['attrs']["{$prefix}FieldLabel"] ?? '';
-
-			if (!$label) {
-				$label = $name;
-			}
-
-			$outputItem = [
-				'label' => $label,
-				'value' => $name,
-				'type' => $type,
-				'subItems' => [],
-			];
-
-			if ($value['innerBlocks']) {
-				$outputItem['subItems'][] = [
-					'label' => \__('Empty', 'eightshift-forms'),
-					'value' => '',
-				];
-
-				foreach ($value['innerBlocks'] as $valueInner) {
-					$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
-					$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
-
-					$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"] ?? '';
-
-					if (!$innerKeyValue) {
-						continue;
-					}
-
-					$innerLabel = $valueInner['attrs']["{$prefixInner}Label"] ?? '';
-
-					if (!$innerLabel) {
-						$innerLabel = $innerKeyValue;
-					}
-
-					$outputItem['subItems'][] = [
-						'label' => $innerLabel,
-						'value' => $innerKeyValue,
-					];
+				if (!$label) {
+					$label = $name;
 				}
-			}
+	
+				$outputItem = [
+					'label' => $label,
+					'value' => $name,
+					'type' => $type,
+					'subItems' => [],
+				];
+	
+				if ($value['innerBlocks']) {
+					$outputItem['subItems'][] = [
+						'label' => \__('Empty', 'eightshift-forms'),
+						'value' => '',
+					];
+	
+					foreach ($value['innerBlocks'] as $valueInner) {
+						$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
+						$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
+	
+						$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"] ?? '';
+	
+						if (!$innerKeyValue) {
+							continue;
+						}
+	
+						$innerLabel = $valueInner['attrs']["{$prefixInner}Label"] ?? '';
+	
+						if (!$innerLabel) {
+							$innerLabel = $innerKeyValue;
+						}
+	
+						$outputItem['subItems'][] = [
+							'label' => $innerLabel,
+							'value' => $innerKeyValue,
+						];
+					}
+				}
 
-			$outputFields[] = $outputItem;
+				$outputFields[] = $outputItem;
+			}
 		}
 
 		return \rest_ensure_response(

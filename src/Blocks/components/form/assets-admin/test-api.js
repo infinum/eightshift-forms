@@ -15,7 +15,6 @@ export class TestApi {
 	init() {
 		const elements = document.querySelectorAll(this.selector);
 
-		console.log(elements);
 		[...elements].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});

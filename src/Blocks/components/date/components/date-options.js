@@ -124,9 +124,7 @@ export const DateOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: dateName,
-				})}
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

@@ -132,9 +132,7 @@ export const FileOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: fileName,
-				})}
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

@@ -92,9 +92,7 @@ export const SelectOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: selectName,
-				})}
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);

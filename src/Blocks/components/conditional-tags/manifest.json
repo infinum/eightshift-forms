@@ -21,9 +21,6 @@
 		},
 		"conditionalTagsPostId": {
 			"type": "string"
-		},
-		"conditionalTagsParentName": {
-			"type": "string"
 		}
 	}
 }

@@ -133,9 +133,7 @@ export const PhoneOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: phoneName,
-				})}
+				{...props('conditionalTags', attributes)}
 			/>
 		</>
 	);
