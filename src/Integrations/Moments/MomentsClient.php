@@ -250,6 +250,17 @@ class MomentsClient implements ClientInterface
 			}
 		}
 
+		// Validate invalid phone field.
+		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumberic, \PREG_SET_ORDER, 0);
+
+		if ($matchesPhoneIsNumberic) {
+			$key = $matchesPhoneIsNumberic[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationPhone';
+			}
+		}
+
 		// Validate invalid phone length field.
 		\preg_match_all("/(\w*) (number has invalid length for network)/", $msg, $matchesPhoneLength, \PREG_SET_ORDER, 0);
 
@@ -302,6 +313,17 @@ class MomentsClient implements ClientInterface
 
 			if ($key) {
 				$output[$key] = 'validationInvalid';
+			}
+		}
+
+		// Validate invalid phone length field.
+		\preg_match_all("/(\w*) (contains forbidden special characters)/", $msg, $matchesForbiddenCharacters, \PREG_SET_ORDER, 0);
+
+		if ($matchesForbiddenCharacters) {
+			$key = $matchesForbiddenCharacters[0][1] ?? '';
+
+			if ($key) {
+				$output[$key] = 'validationMomentsInvalidSpecialCharacters';
 			}
 		}
 
