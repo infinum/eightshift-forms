@@ -51,8 +51,6 @@ export class TestApi {
 				return response.json();
 			})
 			.then((response) => {
-
-				console.log();
 				const formElement = element.closest(this.utils.formSelector);
 				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
