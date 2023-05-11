@@ -8,14 +8,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"conditionalTagsAction": {
-			"type": "string",
-			"default": "show"
-		},
-		"conditionalTagsLogic": {
-			"type": "string",
-			"default": "all"
-		},
 		"conditionalTagsRules": {
 			"type": "array"
 		},

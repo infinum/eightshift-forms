@@ -5,9 +5,29 @@ import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_
  */
 const data = {
 	"first_name": [
-		CONDITIONAL_TAGS_ACTIONS.HIDE,
-		CONDITIONAL_TAGS_LOGIC.ALL,
-		[
+		
+		[ // Show.
+			[ // And
+				[
+					"email",
+					CONDITIONAL_TAGS_OPERATORS.IS,
+					"ivan@gmail.com"
+				],
+				[
+					"last_name",
+					CONDITIONAL_TAGS_OPERATORS.IS,
+					"ivan"
+				],
+			],
+			[ // or.
+				[
+					"last_name",
+					CONDITIONAL_TAGS_OPERATORS.IS,
+					"ivan"
+				],
+			]
+		],
+		[ // Hide.
 			[
 				"email",
 				CONDITIONAL_TAGS_OPERATORS.IS,
