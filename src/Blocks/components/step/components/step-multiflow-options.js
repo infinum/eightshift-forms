@@ -44,6 +44,10 @@ export const StepMultiflowOptions = (attributes) => {
 			return null;
 		}
 
+		if (!formSteps) {
+			return null;
+		}
+
 		const operatorValue = stepMultiflowRules?.[index]?.[1] ?? 'is';
 		const fieldValue = stepMultiflowRules?.[index]?.[0];
 
@@ -51,107 +55,124 @@ export const StepMultiflowOptions = (attributes) => {
 		const [inputCheck, setInputCheck] = useState(stepMultiflowRules?.[index]?.[2]);
 
 		const options = formFields?.find((item) => item.value === stepMultiflowRules[index][0])?.subItems ?? [];
-		const optionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
 
 		const showRuleValuePicker = options?.length > 0 && (operatorValue === 'is' || operatorValue === 'isn');
 
 		return (
 			<>
-				<Select
-					value={fieldValue}
-					options={formFields}
-					onChange={(value) => {
-						stepMultiflowRules[index][0] = value;
-						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-					}}
-					noBottomSpacing
-					simpleValue
-					noSearch
-					additionalSelectClasses='es-w-40'
-				/>
-
-				<Select
-					value={operatorValue}
-					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
-					onChange={(value) => {
-						stepMultiflowRules[index][1] = value;
-						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-					}}
-					noBottomSpacing
-					simpleValue
-					noSearch
-					additionalSelectClasses='es-w-40'
-				/>
-
-				{!showRuleValuePicker &&
-					<TextControl
-						value={inputCheck}
-						onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
-						onChange={(value) => {
-							stepMultiflowRules[index][2] = value;
-							setInputCheck(value);
-						}}
-						className='es-w-40 es-m-0-bcf!'
-					/>
-				}
-
-				{showRuleValuePicker &&
+				<div className='es-display-flex es-items-baseline es-gap-2 es-mb-6'>
+					<span>{__('Go to', 'eightshift-forms')}</span>
 					<Select
-						value={stepMultiflowRules?.[index]?.[2]}
-						options={options}
+						value={stepMultiflowAction}
+						options={formSteps}
 						onChange={(value) => {
-							stepMultiflowRules[index][2] = value;
+							stepMultiflowRules[index][0] = value;
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 						}}
 						noBottomSpacing
 						simpleValue
 						noSearch
-						additionalSelectClasses='es-w-40'
 					/>
-				}
+					<span>{__('step if ', 'eightshift-forms')}</span>
 
-				{optionsItem.length > 0 &&
-					<Select
-						value={stepMultiflowRules?.[index]?.[3]}
-						options={optionsItem.map((item) => {
-							if (item.value === '') {
-								return {
-									...item,
-									label: __('All fields', 'eightshift-forms'),
-								};
-							}
-							return item;
-						})}
-						onChange={(value) => {
-							stepMultiflowRules[index][3] = value;
-							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-						}}
-						noBottomSpacing
-						simpleValue
-						noSearch
-						additionalSelectClasses='es-w-40'
-					/>
-				}
+					<span>{__('of the following match:', 'eightshift-forms')}</span>
+				</div>
+
+				<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
+					<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
+					<span className='es-w-40'>{__('Condition', 'eightshift-forms')}</span>
+					<span className='es-w-40'>{__('Value', 'eightshift-forms')}</span>
+					<span className='es-w-40'>{__('Operator', 'eightshift-forms')}</span>
+				</div>
+
+				{stepMultiflowRules?.map((_, index) => {
+					return(
+						<div>
+						<Select
+							value={fieldValue}
+							options={formFields}
+							onChange={(value) => {
+								stepMultiflowRules[index][0] = value;
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+							}}
+							noBottomSpacing
+							simpleValue
+							noSearch
+							additionalSelectClasses='es-w-40'
+						/>
+
+						<Select
+							value={operatorValue}
+							options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
+							onChange={(value) => {
+								stepMultiflowRules[index][1] = value;
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+							}}
+							noBottomSpacing
+							simpleValue
+							noSearch
+							additionalSelectClasses='es-w-40'
+						/>
+
+						{!showRuleValuePicker &&
+							<TextControl
+								value={inputCheck}
+								onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
+								onChange={(value) => {
+									stepMultiflowRules[index][2] = value;
+									setInputCheck(value);
+								}}
+								className='es-w-40 es-m-0-bcf!'
+							/>
+						}
+
+						{showRuleValuePicker &&
+							<Select
+								value={stepMultiflowRules?.[index]?.[2]}
+								options={options}
+								onChange={(value) => {
+									stepMultiflowRules[index][2] = value;
+									setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+								}}
+								noBottomSpacing
+								simpleValue
+								noSearch
+								additionalSelectClasses='es-w-40'
+							/>
+						}
+
+						<Select
+							value={stepMultiflowLogic}
+							options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
+							onChange={(value) => {
+								stepMultiflowRules[index][3] = value;
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+							}}
+							noBottomSpacing
+							simpleValue
+							noSearch
+						/>
+					</div>
+					);
+				})}
 			</>
 		);
 	};
-
-	const optionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
 
 	return (
 		<>
 		{(formFields?.length < 1) ? 
 			<PanelBody>
 				<Control
-					icon={icons.conditionalVisibility}
-					label={__('Conditional visibility', 'eightshift-forms')}
+					icon={icons.anchor}
+					label={__('Multi-flow setup', 'eightshift-forms')}
 					additionalLabelClasses='es-font-weight-500'
 					noBottomSpacing
 				>
 					<IconLabel
 						icon={icons.warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
-						subtitle={__('No fields have a name set', 'eightshift-forms')}
+						subtitle={__('No fields have a name set or you are missing step blocks.', 'eightshift-forms')}
 						additionalClasses='es-nested-color-yellow-500!'
 						addSubtitleGap
 						standalone
@@ -160,7 +181,7 @@ export const StepMultiflowOptions = (attributes) => {
 			</PanelBody> :
 			<PanelBody>
 				<IconToggle
-					icon={icons.visibilityAlt}
+					icon={icons.anchor}
 					label={__('Use steps multi-flow', 'eightshift-forms')}
 					checked={stepMultiflowUse}
 					onChange={(value) => {
@@ -199,46 +220,17 @@ export const StepMultiflowOptions = (attributes) => {
 				{isModalOpen &&
 					<Modal
 						overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-						className='es-modal-max-width-xxl es-rounded-3!'
-						title={<IconLabel icon={icons.conditionalVisibility} label={__('Conditional visibility', 'eightshift-forms')} standalone />}
+						className='es-modal-max-width-3xl es-rounded-3!'
+						title={<IconLabel icon={icons.anchor} label={__('Multi-flow setup', 'eightshift-forms')} standalone />}
 						onRequestClose={() => {
 							setIsModalOpen(false);
 							setIsNewRuleAdded(false);
 						}}
-						isDismissible={false}
 					>
-						<div className='es-display-flex es-items-baseline es-gap-2 es-mb-6'>
-							<Select
-								value={stepMultiflowAction}
-								options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('stepMultiflowAction', attributes, manifest)]: value })}
-								noBottomSpacing
-								simpleValue
-								noSearch
-							/>
-							<span>{__('this field if', 'eightshift-forms')}</span>
-							<Select
-								value={stepMultiflowLogic}
-								options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
-								onChange={(value) => setAttributes({ [getAttrKey('stepMultiflowLogic', attributes, manifest)]: value })}
-								noBottomSpacing
-								simpleValue
-								noSearch
-							/>
-							<span>{__('of the following match:', 'eightshift-forms')}</span>
-						</div>
-
-						<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
-							<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
-							<span className='es-w-40'>{__('Condition', 'eightshift-forms')}</span>
-							<span className='es-w-40'>{__('Value', 'eightshift-forms')}</span>
-							{optionsItem.length > 0 &&
-								<span className='es-w-40'>{__('Apply to inner field', 'eightshift-forms')}</span>
-							}
-						</div>
-
 						<div className='es-v-spaced'>
 							{stepMultiflowRules?.map((_, index) => {
+
+								// Remove condition if field value is missing.
 								const itemExists = formFields?.filter((item) => {
 									return stepMultiflowRules?.[index]?.[0] === item?.value && item?.value !== '';
 								});
@@ -250,7 +242,7 @@ export const StepMultiflowOptions = (attributes) => {
 								}
 
 								return (
-									<div key={index} className='es-h-spaced'>
+									<div key={index}>
 										<ConditionalTagsItem index={index} />
 
 										<Button

@@ -201,7 +201,6 @@ export const ConditionalTagsOptions = (attributes) => {
 								setIsModalOpen(false);
 								setIsNewRuleAdded(false);
 							}}
-							isDismissible={false}
 						>
 							<div className='es-display-flex es-items-baseline es-gap-2 es-mb-6'>
 								<Select
