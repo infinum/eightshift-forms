@@ -35,6 +35,13 @@ class FormsListing implements FormListingInterface
 	 */
 	public function getFormsList(string $status): array
 	{
+		// Do not execute inside block editor or wpml will make you regret it.
+		if (\function_exists('get_current_screen')) {
+			if (\get_current_screen()->is_block_editor()) {
+				return [];
+			}
+		}
+
 		// Prepare query args.
 		$args = [
 			'post_type' => Forms::POST_TYPE_SLUG,
