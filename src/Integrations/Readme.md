@@ -146,14 +146,22 @@ Supported fields:
 
 # Jira
 
-[API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/#version)
-[Description nodes](https://developer.atlassian.com/cloud/jira/platform/apis/document/nodes/table_cell/)
-
-Version: **v3**
-
 Type:
 * form builder **not** provided by the service.
 * the form is created using our forms fields and connected to Jira custom fields using form settings.
 
 Supported fields:
 * all
+
+## Cloud solution
+
+[API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/#version)
+[Description nodes](https://developer.atlassian.com/cloud/jira/platform/apis/document/nodes/table_cell/)
+
+Version: **v3**
+
+## Self-hosted
+
+[API](https://docs.atlassian.com/software/jira/docs/api/REST/9.8.0/#api/2)
+
+Version: **v2**

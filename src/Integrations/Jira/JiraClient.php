@@ -89,6 +89,8 @@ class JiraClient implements JiraClientInterface
 			$items = $this->getJiraProjects();
 
 			if ($items) {
+				$fields = $this->getJiraCustomFields();
+
 				foreach ($items as $item) {
 					$id = $item['id'] ?? '';
 
@@ -97,7 +99,7 @@ class JiraClient implements JiraClientInterface
 						'key' => $item['key'] ?? '',
 						'title' => $item['name'] ?? '',
 						'issueTypes' => [],
-						'customFields' => $this->getJiraCustomFields(),
+						'customFields' => $fields,
 					];
 				}
 
@@ -136,7 +138,7 @@ class JiraClient implements JiraClientInterface
 
 			if ($items) {
 				foreach ($items as $item) {
-					if ($item['hierarchyLevel'] === -1) {
+					if (isset($item['hierarchyLevel']) && $item['hierarchyLevel'] === -1) {
 						continue;
 					}
 
@@ -256,6 +258,10 @@ class JiraClient implements JiraClientInterface
 	{
 		$url = $this->getBaseUrl() . "project/search";
 
+		if ($this->isSelfHosted()) {
+			$url = $this->getBaseUrl() . "project";
+		}
+
 		$response = \wp_remote_get(
 			$url,
 			[
@@ -268,6 +274,16 @@ class JiraClient implements JiraClientInterface
 			$response,
 			$url,
 		);
+	}
+
+	/**
+	 * Use self-hosted or cloud version.
+	 *
+	 * @return bool
+	 */
+	public function isSelfHosted(): bool
+	{
+		return (bool) $this->getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
 	}
 
 	/**
@@ -284,7 +300,11 @@ class JiraClient implements JiraClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $body['values'] ?? [];
+			if ($this->isSelfHosted()) {
+				return $body ?? [];
+			} else {
+				return $body['values'] ?? [];
+			}
 		}
 
 		return [];
@@ -301,6 +321,10 @@ class JiraClient implements JiraClientInterface
 	{
 
 		$url = $this->getBaseUrl() . "issuetype/project?projectId={$itemId}";
+
+		if ($this->isSelfHosted()) {
+			$url = $this->getBaseUrl() . "project/{$itemId}";
+		}
 
 		$response = \wp_remote_get(
 			$url,
@@ -320,7 +344,11 @@ class JiraClient implements JiraClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $body ?? [];
+			if ($this->isSelfHosted()) {
+				return $body['issueTypes'] ?? [];
+			} else {
+				return $body ?? [];
+			}
 		}
 
 		return [];
@@ -335,6 +363,10 @@ class JiraClient implements JiraClientInterface
 	{
 
 		$url = $this->getBaseUrl() . "field";
+
+		if ($this->isSelfHosted()) {
+			$url = $this->getBaseUrl() . "customFields";
+		}
 
 		$response = \wp_remote_get(
 			$url,
@@ -421,6 +453,8 @@ class JiraClient implements JiraClientInterface
 
 		$formTitle = \get_the_title((int) $formId);
 
+		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+
 		$output = [
 			'project' => [
 				'key' => $selectedProject,
@@ -429,153 +463,191 @@ class JiraClient implements JiraClientInterface
 				'id' => $selectedIssueType,
 			],
 			'summary' => $title,
-			'description' => [
+		];
+
+		if (!$this->isSelfHosted()) {
+			$output['description'] = [
 				'type' => 'doc',
 				'version' => 1,
 				'content' => [],
-			],
-		];
+			];
 
-		if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
-			$contentOutput = [];
+			// Standard fields output.
+			if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+				$contentOutput = [];
 
-			$i = 0;
-			foreach ($params as $param) {
-				$value = $param['value'] ?? '';
-				if (!$value) {
-					continue;
-				}
+				$i = 0;
+				foreach ($params as $param) {
+					$value = $param['value'] ?? '';
+					if (!$value) {
+						continue;
+					}
 
-				$name = $param['name'] ?? '';
-				if (!$name) {
-					continue;
-				}
+					$name = $param['name'] ?? '';
+					if (!$name) {
+						continue;
+					}
 
-				$contentOutput[] = [
-					'type' => 'tableRow',
-					'content' => [
-						[
-							'type' => 'tableCell',
-							'content' => [
-								[
-									'type' => 'paragraph',
-									'content' => [
-										[
-											'type' => 'text',
-											'text' => \esc_html($name),
+					$contentOutput[] = [
+						'type' => 'tableRow',
+						'content' => [
+							[
+								'type' => 'tableCell',
+								'content' => [
+									[
+										'type' => 'paragraph',
+										'content' => [
+											[
+												'type' => 'text',
+												'text' => \esc_html($name),
+											],
+										],
+									],
+								],
+							],
+							[
+								'type' => 'tableCell',
+								'content' => [
+									[
+										'type' => 'paragraph',
+										'content' => [
+											[
+												'type' => 'text',
+												'text' => \esc_html($value),
+											],
 										],
 									],
 								],
 							],
 						],
-						[
-							'type' => 'tableCell',
-							'content' => [
-								[
-									'type' => 'paragraph',
-									'content' => [
-										[
-											'type' => 'text',
-											'text' => \esc_html($value),
-										],
-									],
-								],
+					];
+
+					$i++;
+				}
+
+				$output['description']['content'] = [
+					[
+						'type' => 'paragraph',
+						'content' => [
+							[
+								'type' => 'text',
+								// translators: %s will be replaced with the form title name.
+								'text' => \sprintf(\__('Data populated from the WordPress "%1$s" form:', 'eightshift-forms'), \esc_html($formTitle)),
 							],
 						],
 					],
+					[
+						'type' => 'table',
+						'attrs' => [
+							'isNumberColumnEnabled' => false,
+							'layout' => 'default',
+						],
+						'content' => \array_merge(
+							[
+								[
+									'type' => 'tableRow',
+									'content' => [
+										[
+											'type' => 'tableCell',
+											'attrs' => [
+												'background' => 'lavender',
+											],
+											'content' => [
+												[
+													'type' => 'paragraph',
+													'content' => [
+														[
+															'type' => 'text',
+															'text' => \__('Field Name', 'eightshift-forms'),
+														],
+													],
+												],
+											],
+										],
+										[
+											'type' => 'tableCell',
+											'attrs' => [
+												'background' => 'lavender',
+											],
+											'content' => [
+												[
+													'type' => 'paragraph',
+													'content' => [
+														[
+															'type' => 'text',
+															'text' => \__('Field Value', 'eightshift-forms'),
+														],
+													],
+												],
+											],
+										],
+									],
+								],
+							],
+							$contentOutput
+						),
+					],
 				];
-
-				$i++;
 			}
 
-			$output['description']['content'] = [
-				[
+			// Additional desc.
+			if ($additionalDescription) {
+				\array_unshift($output['description']['content'], [
 					'type' => 'paragraph',
 					'content' => [
 						[
 							'type' => 'text',
-							// translators: %s will be replaced with the form title name.
-							'text' => \sprintf(\__('Data populated from the WordPress "%s" form:', 'eightshift-forms'), \esc_html($formTitle)),
+							'text' => \esc_html($additionalDescription),
 						],
 					],
-				],
-				[
-					'type' => 'table',
-					'attrs' => [
-						'isNumberColumnEnabled' => false,
-						'layout' => 'default',
-					],
-					'content' => \array_merge(
-						[
-							[
-								'type' => 'tableRow',
-								'content' => [
-									[
-										'type' => 'tableCell',
-										'attrs' => [
-											'background' => 'lavender',
-										],
-										'content' => [
-											[
-												'type' => 'paragraph',
-												'content' => [
-													[
-														'type' => 'text',
-														'text' => \__('Field Name', 'eightshift-forms'),
-													],
-												],
-											],
-										],
-									],
-									[
-										'type' => 'tableCell',
-										'attrs' => [
-											'background' => 'lavender',
-										],
-										'content' => [
-											[
-												'type' => 'paragraph',
-												'content' => [
-													[
-														'type' => 'text',
-														'text' => \__('Field Value', 'eightshift-forms'),
-													],
-												],
-											],
-										],
-									],
-								],
-							],
-						],
-						$contentOutput
-					),
-				],
-			];
-		}
+				]);
+			}
 
-		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+			// Custom fields maps output.
+			$mapParams = $this->getSettingsValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+			if ($mapParams) {
+				foreach ($mapParams as $key => $value) {
+					if (!$value) {
+						continue;
+					}
 
-		if ($additionalDescription) {
-			\array_unshift($output['description']['content'], [
-				'type' => 'paragraph',
-				'content' => [
-					[
-						'type' => 'text',
-						'text' => $additionalDescription,
-					],
-				],
-			]);
-		}
+					$output[$key] = $value;
+				}
+			}
+		} else {
+			// Add header.
+			// translators: %1$s will be replaced with form name, and %2$s with new line break.
+			$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
 
-		$mapParams = $this->getSettingsValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
-		if ($mapParams) {
-			foreach ($mapParams as $key => $value) {
-				if (!$value) {
-					continue;
+			// Standard fields output.
+			if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+				$i = 0;
+				foreach ($params as $param) {
+					$value = $param['value'] ?? '';
+					if (!$value) {
+						continue;
+					}
+
+					$name = $param['name'] ?? '';
+					if (!$name) {
+						continue;
+					}
+
+					$descriptionOutput .= \esc_html($name) . ':' . \PHP_EOL . \esc_html($value) . \PHP_EOL . \PHP_EOL;
+
+					$i++;
 				}
 
-				$output[$key] = $value;
+				// Additional desc.
+				if ($additionalDescription) {
+					$descriptionOutput .= \PHP_EOL . \PHP_EOL . \esc_html($additionalDescription);
+				}
+
+				// Custom fields maps is not suported.
 			}
+
+			// Populate output desc.
+			$output['description'] = $descriptionOutput;
 		}
 
 		return $output;
@@ -640,11 +712,15 @@ class JiraClient implements JiraClientInterface
 		$key = $this->getApiKey();
 		$user = $this->getApiUser();
 
-		$token = \base64_encode("{$user}:{$key}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		if ($this->isSelfHosted()) {
+			$auth = "Bearer {$key}";
+		} else {
+			$auth = 'Basic ' . \base64_encode("{$user}:{$key}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		}
 
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',
-			'Authorization' => "Basic {$token}",
+			'Authorization' => $auth,
 		];
 	}
 
@@ -657,7 +733,13 @@ class JiraClient implements JiraClientInterface
 	{
 		$prefix = $this->getBaseUrlPrefix();
 
-		return "{$prefix}rest/api/3/";
+		$apiVersion = '3';
+
+		if ($this->isSelfHosted()) {
+			$apiVersion = '2';
+		}
+
+		return "{$prefix}rest/api/{$apiVersion}/";
 	}
 
 	/**
