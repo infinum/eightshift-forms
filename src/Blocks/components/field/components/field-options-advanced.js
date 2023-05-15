@@ -11,14 +11,13 @@ import {
 	getDefaultBreakpointNames,
 	ucfirst,
 	Select,
-	Section,
 	Collapsable,
 } from '@eightshift/frontend-libs/scripts';
-import { TextControl } from '@wordpress/components';
+import { TextControl, PanelBody } from '@wordpress/components';
 import manifest from '../manifest.json';
 import { isObject } from 'lodash';
 
-export const FieldPanel = (props) => {
+const FieldPanelItem = ({props}) => {
 	const {
 		attributes,
 		setAttributes,
@@ -32,7 +31,7 @@ export const FieldPanel = (props) => {
 	} = props;
 
 	return (
-		<Collapsable icon={icons.moreH} label={__('More options', 'eightshift-forms')} noBottomSpacing>
+		<>
 			<ResponsiveNumberPicker
 				value={getDefaultBreakpointNames().reduce((all, current) => {
 					return {
@@ -58,11 +57,32 @@ export const FieldPanel = (props) => {
 				icon={icons.width}
 				label={__('Width', 'eightshift-forms')}
 
-				additionalProps={{ fixedWidth: 2 }}
+				additionalProps={{ fixedWidth: 4 }}
 			/>
 
-			{children}
-		</Collapsable>
+			{children &&
+				<Collapsable icon={icons.moreH} label={__('More options', 'eightshift-forms')} noBottomSpacing>
+					{children}
+				</Collapsable>
+			}
+		</>
+	);
+};
+
+export const FieldPanel = (props) => {
+	const {
+		showPanel = false,
+	} = props;
+
+	return (
+		<>
+			{showPanel ?
+				<PanelBody title={__('Field', 'eightshift-forms')}>
+					<FieldPanelItem props={props} />
+				</PanelBody> :
+				<FieldPanelItem props={props} />
+			}
+		</>
 	);
 };
 
@@ -102,20 +122,18 @@ export const FieldOptionsAdvanced = (attributes) => {
 					/>
 				}
 
-				<Section icon={icons.textAbc} label={__('Additional content ', 'eightshift-forms')} noBottomSpacing>
-					<TextControl
-						label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
-						value={fieldBeforeContent}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
-					/>
+				<TextControl
+					label={<IconLabel icon={icons.fieldBeforeText} label={__('Below the field label', 'eightshift-forms')} />}
+					value={fieldBeforeContent}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
+				/>
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
-						value={fieldAfterContent}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
-						className='es-no-field-spacing'
-					/>
-				</Section>
+				<TextControl
+					label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
+					value={fieldAfterContent}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
+					className='es-no-field-spacing'
+				/>
 			</>
 		</FieldPanel>
 	);

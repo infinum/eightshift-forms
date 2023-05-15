@@ -121,7 +121,7 @@ export const TextareaOptions = (attributes) => {
 											step={options.textareaMinLength.step}
 											disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
@@ -148,7 +148,7 @@ export const TextareaOptions = (attributes) => {
 											step={options.textareaMaxLength.step}
 											disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
