@@ -48,6 +48,10 @@ class FormsListing implements FormListingInterface
 
 		$permanent = $status === 'trash';
 
+		if (!$theQuery->have_posts()) {
+			return [];
+		}
+
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();
 
