@@ -40,7 +40,8 @@ export const RadiosEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: radios
+					fieldContent: radios,
+					fieldIsRequired: checkAttr('radiosIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

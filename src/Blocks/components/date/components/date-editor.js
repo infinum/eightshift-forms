@@ -58,6 +58,7 @@ export const DateEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: date,
+					fieldIsRequired: checkAttr('dateIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

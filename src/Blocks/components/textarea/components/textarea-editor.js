@@ -57,6 +57,7 @@ export const TextareaEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: textarea,
+					fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

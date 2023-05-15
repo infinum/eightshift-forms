@@ -332,7 +332,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									// translators: %s will be replaced with forms field name.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text of simple HTML tags.<br /><br />
-										%1$s %2$s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
+										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 									'textareaIsRequired' => true,
 									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
@@ -393,7 +393,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										// translators: %s will be replaced with forms field name.
 										'textareaFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail body template with this field. You can use plain text of simple HTML tags.<br /><br />
-											%1$s %2$s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
+											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 										'textareaIsRequired' => true,
 										'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 									],
@@ -458,5 +458,17 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 				],
 			],
 		];
+	}
+
+	/**
+	 * Provide additional markdown copy to help.
+	 *
+	 * @return string
+	 */
+	private function getContentHelpOutput(): string
+	{
+		return Helper::minifyString(\sprintf(\__("
+			You can use markdown to provide additional styling to your email.
+			If you need help with writing markdown, <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at this link</a>.<br /><br />", 'eightshift-forms'), 'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'));
 	}
 }

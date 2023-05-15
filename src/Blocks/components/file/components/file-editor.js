@@ -53,6 +53,7 @@ export const FileEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: file,
+					fieldIsRequired: checkAttr('fileIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

@@ -65,6 +65,7 @@ export const PhoneEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: phone,
+					fieldIsRequired: checkAttr('phoneIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

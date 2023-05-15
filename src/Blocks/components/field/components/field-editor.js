@@ -57,6 +57,7 @@ export const FieldEditor = (attributes) => {
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
+	const fieldIsRequired = checkAttr('fieldIsRequired', attributes, manifest);
 
 	// Enable option to skip field and just render content.
 	if (fieldSkip) {
@@ -92,6 +93,11 @@ export const FieldEditor = (attributes) => {
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
 	]);
 
+	const labelClass = classnames([
+		selector(componentClass, componentClass, 'label'),
+		selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'),
+	]);
+
 	const hideIndicator = fieldHidden && (
 		<div className='es-position-absolute es-right-7 es-top-4 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
 			<Tooltip text={__('Field is hidden', 'eightshift-forms')}>
@@ -103,7 +109,7 @@ export const FieldEditor = (attributes) => {
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<label className={`${componentClass}__label`} htmlFor="id">
+				<label className={labelClass} htmlFor="id">
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</label>
 			}
@@ -113,7 +119,7 @@ export const FieldEditor = (attributes) => {
 	const LegendDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<legend className={`${componentClass}__label`}>
+				<legend className={labelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</legend>
 			}

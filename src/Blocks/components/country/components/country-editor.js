@@ -43,7 +43,8 @@ export const CountryEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: country
+					fieldContent: country,
+					fieldIsRequired: checkAttr('countryIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

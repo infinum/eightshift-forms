@@ -17,6 +17,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use Parsedown;
 
 /**
  * Class Mailer
@@ -50,11 +51,12 @@ class Mailer implements MailerInterface
 		array $fields = [],
 		array $responseFields = []
 	): bool {
+
 		// Send email.
 		return \wp_mail(
-			$this->getTemplate($fields, $to),
-			$this->getTemplate($fields, $subject),
-			$this->getTemplate($fields, $template, $responseFields),
+			$this->getTemplate('to', $fields, $to),
+			$this->getTemplate('subject', $fields, $subject),
+			$this->getTemplate('message', $fields, $template, $responseFields),
 			$this->getHeader(
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
@@ -207,13 +209,14 @@ class Mailer implements MailerInterface
 	/**
 	 * HTML template for email.
 	 *
+	 * @param string $type Type for the template. Available: to, subject, message.
 	 * @param array<string, mixed> $items All items to output.
 	 * @param string $template Additional description.
 	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(array $items, string $template = '', array $responseFields = []): string
+	protected function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
 	{
 		$params = \array_merge(
 			$this->prepareFields($items),
@@ -224,7 +227,13 @@ class Mailer implements MailerInterface
 			$template = \str_replace("{" . $name . "}", $value, $template);
 		}
 
-		return \str_replace("\n", '<br />', $template);
+		if ($type === 'message') {
+			$parsedown = new Parsedown();
+
+			return $parsedown->text($template);
+		}
+
+		return $template;
 	}
 
 	/**
@@ -249,7 +258,7 @@ class Mailer implements MailerInterface
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
-			if (!$name || !$value) {
+			if (!$name) {
 				continue;
 			}
 
