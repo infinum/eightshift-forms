@@ -712,4 +712,14 @@ class Helper
 			$matches
 		)));
 	}
+
+	/**
+	 * Is block editor page.
+	 *
+	 * @return boolean
+	 */
+	public static function isBlockEditor(): bool
+	{
+		return \function_exists('get_current_screen') && \get_current_screen()->is_block_editor();
+	}
 }

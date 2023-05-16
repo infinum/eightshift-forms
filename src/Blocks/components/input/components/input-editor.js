@@ -59,6 +59,7 @@ export const InputEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: input,
+					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

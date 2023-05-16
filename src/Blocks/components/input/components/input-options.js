@@ -201,7 +201,7 @@ export const InputOptions = (attributes) => {
 											step={options.inputMinLength.step}
 											disabled={isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
@@ -228,7 +228,7 @@ export const InputOptions = (attributes) => {
 											step={options.inputMaxLength.step}
 											disabled={isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
@@ -264,7 +264,7 @@ export const InputOptions = (attributes) => {
 											step={options.inputMin.step}
 											disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
@@ -290,7 +290,7 @@ export const InputOptions = (attributes) => {
 											step={options.inputMax.step}
 											disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
 											placeholder='–'
-											fixedWidth={3}
+											fixedWidth={4}
 											noBottomSpacing
 										/>
 
@@ -318,7 +318,7 @@ export const InputOptions = (attributes) => {
 									min={options.inputStep.min}
 									step={options.inputStep.step}
 									disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
-									fixedWidth={3}
+									fixedWidth={4}
 									noBottomSpacing
 									placeholder='1'
 								/>

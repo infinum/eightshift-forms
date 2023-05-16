@@ -63,4 +63,11 @@ interface JiraClientInterface
 	 * @return array<mixed>
 	 */
 	public function getTestApi(): array;
+
+	/**
+	 * Use self-hosted or cloud version.
+	 *
+	 * @return bool
+	 */
+	public function isSelfHosted(): bool;
 }

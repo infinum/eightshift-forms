@@ -112,6 +112,11 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public const SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY = 'jira-params-manual-map';
 
 	/**
+	 * Jira api is self hosted version.
+	 */
+	public const SETTINGS_JIRA_SELF_HOSTED_KEY = 'jira-self-hosted';
+
+	/**
 	 * Instance variable for Jira data.
 	 *
 	 * @var JiraClientInterface
@@ -201,6 +206,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 		$manualMapParams = $this->isCheckboxSettingsChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
 		$mapParams = $this->getSettingsValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+		$customFields = $this->jiraClient->getProjectsCustomFields($selectedProject);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -313,41 +319,43 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 									],
 								],
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('Jira field', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('Value', 'eightshift-forms') . '</b>',
-								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-								'fieldIsFiftyFiftyHorizontal' => true,
-							],
-							[
-								'component' => 'group',
-								'groupName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
-								'groupContent' => [
-									...\array_map(
-										function ($item) use ($mapParams) {
-											$id  = $item['id'] ?? '';
-											if ($id) {
-												return [
-													'component' => 'input',
-													'inputName' => $id,
-													'inputFieldLabel' => $item['title'],
-													'inputValue' => $mapParams[$id] ?? '',
-													'inputFieldIsFiftyFiftyHorizontal' => true,
-													'inputFieldBeforeContent' => '&rarr;',
-												];
-											}
-										},
-										$this->jiraClient->getProjectsCustomFields($selectedProject)
-									),
-								]
-							]
+							...(($customFields && !$this->jiraClient->isSelfHosted()) ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'field',
+									'fieldLabel' => '<b>' . \__('Jira field', 'eightshift-forms') . '</b>',
+									'fieldContent' => '<b>' . \__('Value', 'eightshift-forms') . '</b>',
+									'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+									'fieldIsFiftyFiftyHorizontal' => true,
+								],
+								[
+									'component' => 'group',
+									'groupName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
+									'groupSaveOneField' => true,
+									'groupStyle' => 'default-listing',
+									'groupContent' => [
+										...\array_map(
+											function ($item) use ($mapParams) {
+												$id  = $item['id'] ?? '';
+												if ($id) {
+													return [
+														'component' => 'input',
+														'inputName' => $id,
+														'inputFieldLabel' => $item['title'],
+														'inputValue' => $mapParams[$id] ?? '',
+														'inputFieldIsFiftyFiftyHorizontal' => true,
+														'inputFieldBeforeContent' => '&rarr;',
+													];
+												}
+											},
+											$this->jiraClient->getProjectsCustomFields($selectedProject)
+										),
+									],
+								],
+							] : []),
 						],
 					] : [],
 				],
@@ -439,6 +447,21 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputIsRequired' => true,
 								'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
 								'inputIsDisabled' => !empty($apiUser),
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use self-hosted version', 'eightshift-forms'),
+										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+										'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								],
 							],
 							[
 								'component' => 'divider',

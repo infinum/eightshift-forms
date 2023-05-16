@@ -66,6 +66,10 @@ class FormAdminBarMenu implements ServiceInterface
 	 */
 	public function getTopBarMenu(WP_Admin_Bar $adminBar): void
 	{
+		if (Helper::isBlockEditor()) {
+			return;
+		}
+
 		if (!\current_user_can(Forms::POST_CAPABILITY_TYPE)) {
 			return;
 		}

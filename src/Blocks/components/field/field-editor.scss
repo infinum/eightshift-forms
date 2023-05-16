@@ -5,6 +5,14 @@
 		a {
 			pointer-events: none;
 		}
+
+		&--is-required::after {
+			content: '*';
+			font-size: 0.75rem;
+			color: var(--global-colors-esf-red-500);
+			vertical-align: top;
+			margin-left: 0.3125rem;
+		}
 	}
 
 	&__inner {

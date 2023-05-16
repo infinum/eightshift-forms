@@ -67,7 +67,8 @@ export const SelectEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: select
+					fieldContent: select,
+					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}

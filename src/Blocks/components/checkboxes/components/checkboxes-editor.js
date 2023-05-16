@@ -41,6 +41,7 @@ export const CheckboxesEditor = (attributes) => {
 			<FieldEditor
 				{...props('field', attributes, {
 					fieldContent: checkboxes,
+					fieldIsRequired: checkAttr('checkboxesIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
 				selectorClass={componentName}
