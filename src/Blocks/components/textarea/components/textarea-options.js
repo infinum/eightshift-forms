@@ -206,7 +206,9 @@ export const TextareaOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: textareaName,
+				})}
 			/>
 		</>
 	);

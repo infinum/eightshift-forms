@@ -52,12 +52,12 @@ export const CONDITIONAL_TAGS_ACTIONS = {
 /**
  * Conditional tags logic constants.
  *
- * all - activate condition if all conditions in rules array are met.
- * any - activate condition if at least one condition in rules array is met.
+ * or - activate condition if at least one condition in rules array is met.
+ * and - activate condition if all conditions in rules array are met.
  */
 export const CONDITIONAL_TAGS_LOGIC = {
-	ALL: 'all',
-	ANY: 'any',
+	OR: 'or',
+	AND: 'and',
 };
 
 /**

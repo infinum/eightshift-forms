@@ -16,6 +16,9 @@
 		},
 		"conditionalTagsPostId": {
 			"type": "string"
+		},
+		"conditionalTagsBlockName": {
+			"type": "string"
 		}
 	}
 }

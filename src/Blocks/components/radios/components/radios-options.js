@@ -51,7 +51,9 @@ export const RadiosOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: radiosName,
+				})}
 			/>
 		</>
 	);

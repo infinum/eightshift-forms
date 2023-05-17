@@ -95,7 +95,9 @@ export const CheckboxesOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: checkboxesName,
+				})}
 			/>
 		</>
 	);

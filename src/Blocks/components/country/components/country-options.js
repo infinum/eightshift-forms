@@ -90,7 +90,9 @@ export const CountryOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: countryName,
+				})}
 			/>
 		</>
 	);

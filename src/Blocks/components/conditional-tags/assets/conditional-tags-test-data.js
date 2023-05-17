@@ -61,7 +61,7 @@ const data = {
 	// Checkbox test.
 	"question_29244283": [ // education.
 		CONDITIONAL_TAGS_ACTIONS.HIDE,
-		CONDITIONAL_TAGS_LOGIC.ANY,
+		CONDITIONAL_TAGS_LOGIC.OR,
 		[
 			[
 				"question_29244288", // gdpr - checkbox.
@@ -74,7 +74,7 @@ const data = {
 	// Select test.
 	"question_29244285": [ // links.
 		CONDITIONAL_TAGS_ACTIONS.HIDE,
-		CONDITIONAL_TAGS_LOGIC.ANY,
+		CONDITIONAL_TAGS_LOGIC.OR,
 		[
 			[
 				"question_29244287", // how did you hear.

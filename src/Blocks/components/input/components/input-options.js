@@ -367,7 +367,9 @@ export const InputOptions = (attributes) => {
 			</PanelBody>
 
 			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes)}
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: inputName,
+				})}
 			/>
 		</>
 	);

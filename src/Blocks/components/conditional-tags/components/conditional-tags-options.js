@@ -7,7 +7,7 @@ import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
 import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_LOGIC_INTERNAL } from './conditional-tags-utils';
+import { CONDITIONAL_TAGS_OPERATORS_INTERNAL } from './conditional-tags-utils';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../../form/assets/utilities';
@@ -22,6 +22,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
+	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
@@ -54,10 +55,10 @@ export const ConditionalTagsOptions = (attributes) => {
 					<div className={`es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300 ${type === CONDITIONAL_TAGS_ACTIONS.HIDE && 'es-mt-10'}`}>
 						{(formFieldOptionsItem.length > 0) ?
 							<>
-								<span className='es-w-40'>{sprintf(__('%1$s "%2$s"', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), blockName)}</span>
+								<span className='es-w-40'>{sprintf(__('%1$s "%2$s"', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), conditionalTagsBlockName)}</span>
 								<span className='es-w-40'>{__('if field', 'eightshift-forms')}</span>
 							</> :
-							<span className='es-w-40'>{sprintf(__('%1$s "%2$s" if field', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), blockName)}</span>
+							<span className='es-w-40'>{sprintf(__('%1$s "%2$s" if field', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), conditionalTagsBlockName)}</span>
 						}
 						<span className='es-w-40'>{__('with operator', 'eightshift-forms')}</span>
 						<span className='es-w-40'>{__('value', 'eightshift-forms')}</span>
@@ -142,7 +143,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					<Select
 						value={conditionalTagsRules?.[type]?.[parent]?.[index]?.[3]}
 						options={formFieldOptionsItem.map((item) => {
-							if (item.value === '') {
+							if (item.value === '' ) {
 								return {
 									...item,
 									label: __('All fields', 'eightshift-forms'),
@@ -163,7 +164,12 @@ export const ConditionalTagsOptions = (attributes) => {
 
 				<Select
 					value={fieldValue}
-					options={formFields}
+					options={formFields.filter((item) => {
+						// Remove current field from selection.
+						if (item.value !== conditionalTagsBlockName) {
+							return item
+						}
+					})}
 					onChange={(value) => {
 						conditionalTagsRules[type][parent][index][0] = value;
 						conditionalTagsRules[type][parent][index][2] = '';
@@ -246,13 +252,8 @@ export const ConditionalTagsOptions = (attributes) => {
 		);
 	};
 
-	console.log(conditionalTagsRules);
 	const hideCount = conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.HIDE]?.length && conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.HIDE]?.flat()?.length;
 	const showCount = conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.SHOW]?.length && conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.SHOW]?.flat()?.length;
-
-	console.log(showCount);
-	console.log(hideCount);
-	
 
 	return (
 		<>

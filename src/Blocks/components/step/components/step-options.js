@@ -5,7 +5,6 @@ import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle } f
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import { isOptionDisabled, NameFieldLabel } from './../../utils';
-import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
 export const StepOptions = (attributes) => {

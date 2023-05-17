@@ -19,6 +19,6 @@ export const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
 };
 
 export const CONDITIONAL_TAGS_LOGIC_INTERNAL = {
-	[CONDITIONAL_TAGS_LOGIC.ALL]: __('all', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_LOGIC.ANY]: __('any', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_LOGIC.OR]: __('or', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_LOGIC.AND]: __('and', 'eightshift-forms'),
 };

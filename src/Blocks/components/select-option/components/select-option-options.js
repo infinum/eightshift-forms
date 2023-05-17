@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
-import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
 export const SelectOptionOptions = (attributes) => {

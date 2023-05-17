@@ -331,7 +331,7 @@ export class Form {
 	 */
 	getFormData(element, singleSubmit = false, isStepSubmit = false) {
 		const formData = new FormData();
-		const selectors = `input, select, textarea`;
+		const selectors = 'input, select, textarea';
 
 		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
 		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
