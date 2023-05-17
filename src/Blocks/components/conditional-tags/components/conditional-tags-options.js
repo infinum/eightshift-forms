@@ -1,6 +1,7 @@
 /* global esFormsLocalization */
 
 import React, { useState, useEffect } from 'react';
+import { isEmpty } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
@@ -9,6 +10,7 @@ import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, S
 import { CONDITIONAL_TAGS_OPERATORS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_LOGIC_INTERNAL } from './conditional-tags-utils';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
+import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../../form/assets/utilities';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const {
@@ -25,6 +27,12 @@ export const ConditionalTagsOptions = (attributes) => {
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
+	// Reset old conditional tags to new one, object based.
+	if (isEmpty(conditionalTagsRules)) {
+		setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: false });
+		setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
+	}
+
 	useEffect(() => {
 		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
 			if (response.code === 200 && response.data) {
@@ -38,36 +46,56 @@ export const ConditionalTagsOptions = (attributes) => {
 			return null;
 		}
 
-		console.log(conditionalTagsRules);
-		
+		const formFieldOptionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
 
 		return (
 			<>
+				{conditionalTagsRules[type].length > 0 &&
+					<div className={`es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300 ${type === CONDITIONAL_TAGS_ACTIONS.HIDE && 'es-mt-10'}`}>
+						{(formFieldOptionsItem.length > 0) ?
+							<>
+								<span className='es-w-40'>{sprintf(__('%1$s "%2$s"', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), blockName)}</span>
+								<span className='es-w-40'>{__('if field', 'eightshift-forms')}</span>
+							</> :
+							<span className='es-w-40'>{sprintf(__('%1$s "%2$s" if field', 'eightshift-forms'), type[0].toUpperCase() + type.slice(1), blockName)}</span>
+						}
+						<span className='es-w-40'>{__('with operator', 'eightshift-forms')}</span>
+						<span className='es-w-40'>{__('value', 'eightshift-forms')}</span>
+					</div>
+				}
+
 				{conditionalTagsRules?.[type]?.map((_, index) => {
-					// const itemExists = formFields?.filter((item) => {
-					// 	return conditionalTagsRules?.[type]?.[index]?.[0] === item?.value && item?.value !== '';
-					// });
-
-					// if (!itemExists.length && !isNewRuleAdded) {
-					// 	conditionalTagsRules.splice(index, 1);
-					// 	setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-					// 	return null;
-					// }
-
 					return (
-						<div key={index} className='es-h-spaced'>
-							<ConditionalTagsItem index={index} type={type} />
+						<>
+							{(conditionalTagsRules?.[type]?.length > 1 && index > 0) &&
+								<div className='es-font-weight-700 es-mt-3'>
+									{__('OR', 'eightshift-forms')}
+								</div>
+							}
 
-							<Button
-								icon={icons.trash}
-								onClick={() => {
-									conditionalTagsRules[type].splice(index, 1);
-									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-								}}
-								label={__('Remove', 'eightshift-forms')}
-								className='es-ml-auto es-rounded-1!'
-							/>
-						</div>
+							{conditionalTagsRules?.[type]?.[index]?.map((_, innerIndex) => {
+								const itemExists = formFields?.filter((item) => {
+									return conditionalTagsRules?.[type]?.[index]?.[innerIndex]?.[0] === item?.value && item?.value !== '';
+								});
+
+								if (!itemExists.length && !isNewRuleAdded) {
+									conditionalTagsRules[type][index].splice(innerIndex, 1);
+
+									if (conditionalTagsRules[type][index].length === 0) {
+										conditionalTagsRules[type].splice(index, 1);
+									}
+
+									setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
+									return null;
+								}
+
+								return (
+									<div className='es-h-spaced'>
+										<ConditionalTagsItem parent={index} index={innerIndex} type={type} total={conditionalTagsRules[type][index].length} />
+									</div>
+								);
+							})}
+						</>
 					);
 				})}
 
@@ -78,73 +106,69 @@ export const ConditionalTagsOptions = (attributes) => {
 							...conditionalTagsRules,
 							[type]: [
 								...conditionalTagsRules[type],
-								[formFields?.[0]?.value ?? '', 'is', '', '']
+								[
+									[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '', '']
+								],
 							]
 						}});
 						setIsNewRuleAdded(true);
 					}}
 					className='es-rounded-1 es-mt-4'
 				>
-					{__('Add rules', 'eightshift-forms')}
+					{sprintf(__('Add "%s" rule', 'eightshift-forms'), type)}
 				</Button>
 			</>
 		);
 	}
 
-	const ConditionalTagsItem = ({ index, type }) => {
+	const ConditionalTagsItem = ({ parent, index, type, total }) => {
 		if (!formFields) {
 			return null;
 		}
 
-		const operatorValue = conditionalTagsRules?.[type]?.[index]?.[1] ?? 'is';
-		const fieldValue = conditionalTagsRules?.[type]?.[index]?.[0];
+		const operatorValue = conditionalTagsRules?.[type]?.[parent]?.[index]?.[1] ?? CONDITIONAL_TAGS_OPERATORS.IS;
+		const fieldValue = conditionalTagsRules?.[type]?.[parent]?.[index]?.[0];
 
 		// Internal state due to rerendering issue.
-		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[type]?.[index]?.[2]);
+		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[type]?.[parent]?.[index]?.[2]);
 
-		const options = formFields?.find((item) => item.value === conditionalTagsRules[type][index][0])?.subItems ?? [];
-		const optionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
-
-		const showRuleValuePicker = options?.length > 0 && (operatorValue === 'is' || operatorValue === 'isn');
+		const formFieldOptions = formFields?.find((item) => item.value === conditionalTagsRules[type][parent][index][0])?.subItems ?? [];
+		const formFieldOptionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
+		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
 
 		return (
 			<>
-				<div className='es-display-flex es-items-baseline es-gap-2 es-mb-6'>
+				{formFieldOptionsItem.length > 0 &&
 					<Select
-						value={conditionalTagsAction}
-						options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
-						onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: value })}
+						value={conditionalTagsRules?.[type]?.[parent]?.[index]?.[3]}
+						options={formFieldOptionsItem.map((item) => {
+							if (item.value === '') {
+								return {
+									...item,
+									label: __('All fields', 'eightshift-forms'),
+								};
+							}
+							return item;
+						})}
+						onChange={(value) => {
+							conditionalTagsRules[type][parent][index][3] = value;
+							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
+						}}
 						noBottomSpacing
 						simpleValue
 						noSearch
+						additionalSelectClasses='es-w-40'
 					/>
-					<span>{__('this field if', 'eightshift-forms')}</span>
-					<Select
-						value={conditionalTagsLogic}
-						options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
-						onChange={(value) => setAttributes({ [getAttrKey('conditionalTagsLogic', attributes, manifest)]: value })}
-						noBottomSpacing
-						simpleValue
-						noSearch
-					/>
-					<span>{__('of the following match:', 'eightshift-forms')}</span>
-				</div>
-
-				<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
-					<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
-					<span className='es-w-40'>{__('Condition', 'eightshift-forms')}</span>
-					<span className='es-w-40'>{__('Value', 'eightshift-forms')}</span>
-					{optionsItem.length > 0 &&
-						<span className='es-w-40'>{__('Apply to inner field', 'eightshift-forms')}</span>
-					}
-				</div>
+				}
 
 				<Select
 					value={fieldValue}
 					options={formFields}
 					onChange={(value) => {
-						conditionalTagsRules[type][index][0] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						conditionalTagsRules[type][parent][index][0] = value;
+						conditionalTagsRules[type][parent][index][2] = '';
+						conditionalTagsRules[type][parent][index][3] = '';
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
 					}}
 					noBottomSpacing
 					simpleValue
@@ -156,8 +180,8 @@ export const ConditionalTagsOptions = (attributes) => {
 					value={operatorValue}
 					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
 					onChange={(value) => {
-						conditionalTagsRules[type][index][1] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						conditionalTagsRules[type][parent][index][1] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
 					}}
 					noBottomSpacing
 					simpleValue
@@ -165,25 +189,23 @@ export const ConditionalTagsOptions = (attributes) => {
 					additionalSelectClasses='es-w-40'
 				/>
 
-				{!showRuleValuePicker &&
+
+				{!showRuleValuePicker ?
 					<TextControl
 						value={inputCheck}
-						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
+						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} })}
 						onChange={(value) => {
-							conditionalTagsRules[type][index][2] = value;
+							conditionalTagsRules[type][parent][index][2] = value;
 							setInputCheck(value);
 						}}
 						className='es-w-40 es-m-0-bcf!'
-					/>
-				}
-
-				{showRuleValuePicker &&
+					/> :
 					<Select
-						value={conditionalTagsRules?.[type]?.[index]?.[2]}
-						options={options}
+						value={conditionalTagsRules?.[type]?.[parent]?.[index]?.[2]}
+						options={formFieldOptions}
 						onChange={(value) => {
-							conditionalTagsRules[type][index][2] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							conditionalTagsRules[type][parent][index][2] = value;
+							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
 						}}
 						noBottomSpacing
 						simpleValue
@@ -192,33 +214,45 @@ export const ConditionalTagsOptions = (attributes) => {
 					/>
 				}
 
-				{optionsItem.length > 0 &&
-					<Select
-						value={conditionalTagsRules?.[type]?.[index]?.[3]}
-						options={optionsItem.map((item) => {
-							if (item.value === '') {
-								return {
-									...item,
-									label: __('All fields', 'eightshift-forms'),
-								};
-							}
-							return item;
-						})}
-						onChange={(value) => {
-							conditionalTagsRules[type][index][3] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+				{(total === index + 1) &&
+					<Button
+						icon={icons.plusCircleFillAlt}
+						onClick={() => {
+							conditionalTagsRules[type][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '', ''];
+							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
+
+							setIsNewRuleAdded(true);
 						}}
-						noBottomSpacing
-						simpleValue
-						noSearch
-						additionalSelectClasses='es-w-40'
-					/>
+						className='es-rounded-1'
+					>
+						{sprintf(__('AND', 'eightshift-forms'), type)}
+					</Button>
 				}
+
+				<Button
+					icon={icons.trash}
+					onClick={() => {
+						conditionalTagsRules[type][parent].splice(index, 1);
+
+						if (conditionalTagsRules[type][parent].length === 0) {
+							conditionalTagsRules[type].splice(parent, 1);
+						}
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {...conditionalTagsRules} });
+					}}
+					label={__('Remove', 'eightshift-forms')}
+					className='es-ml-auto es-rounded-1!'
+				/>
 			</>
 		);
 	};
 
-	const optionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
+	console.log(conditionalTagsRules);
+	const hideCount = conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.HIDE]?.length && conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.HIDE]?.flat()?.length;
+	const showCount = conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.SHOW]?.length && conditionalTagsRules?.[CONDITIONAL_TAGS_ACTIONS.SHOW]?.flat()?.length;
+
+	console.log(showCount);
+	console.log(hideCount);
+	
 
 	return (
 		<>
@@ -252,8 +286,8 @@ export const ConditionalTagsOptions = (attributes) => {
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
 						} else {
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: {
-								show: [],
-								hide: [],
+								[CONDITIONAL_TAGS_ACTIONS.SHOW]: [],
+								[CONDITIONAL_TAGS_ACTIONS.HIDE]: [],
 							}});
 						}
 					}}
@@ -266,7 +300,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						icon={icons.conditionH}
 						label={__('Rules', 'eightshift-forms')}
 						// Translators: %d refers to the number of active rules
-						subtitle={conditionalTagsRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), conditionalTagsRules.length)}
+						subtitle={(showCount > 0 || hideCount > 0) && sprintf(__('%1$d show, %2$d hide', 'eightshift-forms'), showCount, hideCount)}
 						noBottomSpacing
 						inlineLabel
 					>
@@ -275,14 +309,14 @@ export const ConditionalTagsOptions = (attributes) => {
 							onClick={() => setIsModalOpen(true)}
 							className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
 						>
-							{conditionalTagsRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
+							{(showCount > 0 || hideCount > 0) ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 						</Button>
 					</Control>
 	
 					{isModalOpen &&
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-							className='es-modal-max-width-xxl es-rounded-3!'
+							className='es-modal-max-width-3xl es-rounded-3!'
 							title={<IconLabel icon={icons.conditionalVisibility} label={__('Conditional visibility', 'eightshift-forms')} standalone />}
 							onRequestClose={() => {
 								setIsModalOpen(false);
@@ -290,8 +324,8 @@ export const ConditionalTagsOptions = (attributes) => {
 							}}
 						>
 							<div className='es-v-spaced'>
-								<ConditionalTagsType type={'show'} />
-								<ConditionalTagsType type={'hide'} />
+								<ConditionalTagsType type={CONDITIONAL_TAGS_ACTIONS.SHOW} />
+								<ConditionalTagsType type={CONDITIONAL_TAGS_ACTIONS.HIDE} />
 							</div>
 
 							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>

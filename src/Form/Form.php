@@ -139,7 +139,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
 		$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 		$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-		$formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
+		$formsConditionalTagsRulesForms = Components::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 
 		$checkStyleEnqueue = $this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
@@ -177,7 +177,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
-				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
+				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRulesForms);
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 

@@ -9,6 +9,9 @@
 			"default": false
 		},
 		"conditionalTagsRules": {
+			"type": "object"
+		},
+		"conditionalTagsRulesForms": {
 			"type": "array"
 		},
 		"conditionalTagsPostId": {

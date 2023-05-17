@@ -10,16 +10,13 @@ export class ConditionalTags {
 		this.utils = options.utils ?? new Utils();
 
 		// Internal data constants.
-		this.DATA_FIELDS = 'fields';
 		this.DATA_EVENT_ITEMS = 'eventItems';
 		this.DATA_REFERENCE = 'reference';
+		this.DATA_SHOW = this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW;
+		this.DATA_HIDE = this.utils.CONDITIONAL_TAGS_ACTIONS.HIDE;
 
 		// Internal Data.
-		this.INTERNAL_DATA = {
-			[this.DATA_FIELDS]: {},
-			[this.DATA_EVENT_ITEMS]: {},
-			[this.DATA_REFERENCE]: {},
-		};
+		this.INTERNAL_DATA = {};
 
 		// Map all conditional logic as a object.
 		this.CONDITIONAL_LOGIC = {
@@ -126,58 +123,56 @@ export class ConditionalTags {
 	}
 
 	initFields(element) {
-		const elements = element.querySelectorAll(`[${this.utils.DATA_ATTRIBUTES.conditionalTags}]`);
+		const fields = element.querySelectorAll(`[${this.utils.DATA_ATTRIBUTES.conditionalTags}]`);
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
-		const data = {};
+		this.INTERNAL_DATA = {
+			[formId]: {
+				[this.DATA_SHOW]: {},
+				[this.DATA_HIDE]: {},
+				[this.DATA_EVENT_ITEMS]: [],
+				[this.DATA_REFERENCE]: [],
+			}
+		};
 
-		[...elements].forEach((element) => {
-			const name = element.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
-			const tags = element.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+		console.log(fields);
+
+		[...fields].forEach((field) => {
+			const name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
+			const tags = field.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
 
 			if (tags && name) {
-				data[name] = JSON.parse(tags);
+				const tag = JSON.parse(tags);
+
+				this.INTERNAL_DATA[formId][this.DATA_SHOW][name] = tag?.[0]?.[this.DATA_SHOW];
+				this.INTERNAL_DATA[formId][this.DATA_HIDE][name] = tag?.[0]?.[this.DATA_HIDE];
 			}
 		});
 
-		if (data) {
-			this.setData(data);
-			this.setInit();
-			this.setListeners();
-		}
+		this.setData();
+
+		// Init all items that has condition to show, they are hidden by initial state.
+		this.setInitShow(element);
+
+		// Init all items that has condition to hide, they are visible by default but if the value is populated after from refresh the conditions should apply.
+		// this.setInitHide(element);
+
+		// this.setListeners(element);
 	}
 
-	/**
-	 * Prepare data for later usage.
-	 * 
-	 * @param {string} data Tags data array from each field.
-	 *
-	 * @public
-	 */
-	setData(data) {
-		Object.entries(data).forEach(([key, value]) => {
-			this.INTERNAL_DATA[this.DATA_REFERENCE][key] = [];
+	setData() {
 
-			this.INTERNAL_DATA[this.DATA_FIELDS][key] = {
-				'action': value[0],
-				'logic': value[1],
-				'rules': value[2].map((innerItem) => {
+		console.log(this.INTERNAL_DATA);
 
-					if (!(innerItem[0] in this.INTERNAL_DATA[this.DATA_EVENT_ITEMS])) {
-						this.INTERNAL_DATA[this.DATA_EVENT_ITEMS][innerItem[0]] = [];
-					}
 
-					this.INTERNAL_DATA[this.DATA_EVENT_ITEMS][innerItem[0]].push(key);
-					this.INTERNAL_DATA[this.DATA_REFERENCE][key].push(false);
+		// if (name in object) {
+		// }
 
-					return {
-						'id': innerItem[0],
-						'operator': innerItem[1],
-						'value': innerItem[2],
-						'inner': innerItem[3],
-					};
-				})
-			};
-		});
+		// this.INTERNAL_DATA[formId][this.DATA_REFERENCE][name].push(false);
+
+		// if (!this.INTERNAL_DATA[formId][this.DATA_EVENT_ITEMS].includes(name)) {
+		// 	this.INTERNAL_DATA[formId][this.DATA_EVENT_ITEMS].push(name);
+		// }
 	}
 
 	/**
@@ -185,39 +180,131 @@ export class ConditionalTags {
 	 *
 	 * @public
 	 */
-	setInit() {
-		for (const [key, value] of Object.entries(this.INTERNAL_DATA[this.DATA_FIELDS])) {
-			const input = document.querySelector(`${this.utils.formSelector} [name="${key}"]`);
+	setInitHide(element) {
+		// TODO
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
 
-			if (!input) {
+		// Loop all items to hide.
+		for (const [name, value] of Object.entries(this.INTERNAL_DATA?.[formId]?.[this.DATA_HIDE])) {
+			if (value.length === 0) {
 				continue;
 			}
 
-			const {
-				action,
-			} = value;
+			const field = this.utils.getFieldByName(element, name);
 
-			const isEmptyRule = value.rules.some((element) => element.value === '');
-			const isInner = value.rules.filter((element) => element.inner !== '');
-
-			let field = '';
-
-			if (isInner.length) {
-				if (input.type === 'select-one') {
-					// select.
-					field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${isInner?.[0]?.inner}"]`);
-				} else {
-					// checkbox/radio.
-					field = input.parentNode.parentNode;
-				}
-			} else {
-				// input/textarea.
-				field = input.closest(this.utils.fieldSelector);
+			if (!field) {
+				continue;
 			}
 
-			if (field && action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW && !isEmptyRule) {
-				// If action is to show the initial state is hide.
-				field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			// Find field type.
+			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
+
+			// Find all items that have inner items.
+			const innerOptions = value.flat().map((item) => item?.[3] !== '' && item[3]).filter(item => item);
+
+			switch (type) {
+				case 'select':
+					innerOptions.forEach((inner) => {
+						const innerItem = field.querySelector(`.choices__item--choice[data-value="${inner}"]`);
+
+						if (innerItem) {
+							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						}
+					});
+					break;
+				case 'checkboxes':
+					case 'radios':
+						innerOptions.forEach((inner) => {
+							const innerItem = field.querySelector(`input[value="${inner}"]`)?.parentNode?.parentNode;
+
+							if (innerItem) {
+								innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+							}
+						});
+					break;
+				default:
+					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+					break;
+			}
+		}
+		// const {
+			// 	action,
+			// } = value;
+
+			// const isEmptyRule = value.rules.some((element) => element.value === '');
+			// const isInner = value.rules.filter((element) => element.inner !== '');
+
+			// let field = '';
+
+			// if (isInner.length) {
+			// 	if (input.type === 'select-one') {
+			// 		// select.
+			// 		field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${isInner?.[0]?.inner}"]`);
+			// 	} else {
+			// 		// checkbox/radio.
+			// 		field = input.parentNode.parentNode;
+			// 	}
+			// } else {
+			// 	// input/textarea.
+			// 	field = input.closest(this.utils.fieldSelector);
+			// }
+
+			// if (field && action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW && !isEmptyRule) {
+			// 	// If action is to show the initial state is hide.
+			// 	field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			// }
+	}
+
+	/**
+	 * Set init state of fields on page load.
+	 *
+	 * @public
+	 */
+	setInitShow(element) {
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+
+		// Loop all items to hide.
+		for (const [name, value] of Object.entries(this.INTERNAL_DATA?.[formId]?.[this.DATA_SHOW])) {
+
+			if (value.length === 0) {
+				continue;
+			}
+
+			const field = this.utils.getFieldByName(element, name);
+
+			if (!field) {
+				continue;
+			}
+
+			// Find field type.
+			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
+
+			// Find all items that have inner items.
+			const innerOptions = value.flat().map((item) => item?.[3] !== '' && item[3]).filter(item => item);
+
+			switch (type) {
+				case 'select':
+					innerOptions.forEach((inner) => {
+						const innerItem = field.querySelector(`.choices__item--choice[data-value="${inner}"]`);
+
+						if (innerItem) {
+							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						}
+					});
+					break;
+				case 'checkboxes':
+				case 'radios':
+					innerOptions.forEach((inner) => {
+						const innerItem = field.querySelector(`input[value="${inner}"]`)?.parentNode?.parentNode;
+
+						if (innerItem) {
+							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+						}
+					});
+					break;
+				default:
+					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+					break;
 			}
 		}
 	}
@@ -227,25 +314,22 @@ export class ConditionalTags {
 	 *
 	 * @public
 	 */
-	setListeners() {
-		// Loop items from all rules mapped earlier.
-		Object.entries(this.INTERNAL_DATA[this.DATA_EVENT_ITEMS]).forEach(([key]) => {
-			// Find that item by ID.
-			const items = document.querySelectorAll(`${this.utils.formSelector} [name="${key}"]`);
+	setListeners(element) {
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+
+		this.INTERNAL_DATA?.[formId]?.[this.DATA_EVENT_ITEMS].forEach((name) => {
+			const input = element.querySelector(`${this.utils.formSelector} [${this.utils.DATA_ATTRIBUTES.fieldName}="${name}"]`);
 
 			// Bailout if non existing.
-			if (!items) {
+			if (!input) {
 				return;
 			}
 
-			[...items].forEach((element) => {
-				// Add event.
-				if (element.localName === 'select') {
-					element.addEventListener('change', this.onChangeEvent);
-				} else {
-					element.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
-				}
-			});
+			if (input.localName === 'select') {
+				input.addEventListener('change', this.onChangeEvent);
+			} else {
+				input.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
+			}
 		});
 	}
 
@@ -272,6 +356,8 @@ export class ConditionalTags {
 
 		return false;
 	}
+
+
 
 	/**
 	 * Test if one rule is valid.
@@ -322,21 +408,26 @@ export class ConditionalTags {
 	 */
 	onFieldChangeEvent = (event) => {
 		// Map all current input data.
-		const inputName = event.target.name;
-		const inputType = event.target.type;
-		let inputValue = event.target.value;
+		const inputElement = event.target;
+		const inputName = inputElement.name;
+		const inputType = inputElement.type;
+		let inputValue = inputElement.value;
 
 		switch (inputType) {
 			case 'checkbox':
 			case 'radio':
-				if (!event.target.checked) {
+				if (!inputElement.checked) {
 					inputValue = '';
 				}
 				break;
 		}
 
+		const element = inputElement.closest(this.utils.formSelector);
+		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+		console.log(this.INTERNAL_DATA?.[formId]?.[this.DATA_EVENT_ITEMS]);
+
 		// Check mapped data of items that needs to have event listener attached to it.
-		this.INTERNAL_DATA[this.DATA_EVENT_ITEMS][inputName].map((item) => {
+		this.INTERNAL_DATA?.[formId]?.[this.DATA_EVENT_ITEMS]?.[inputName].map((item) => {
 			// Find all conditional tags for this input.
 			const tags = this.INTERNAL_DATA[this.DATA_FIELDS][item];
 
@@ -438,11 +529,8 @@ export class ConditionalTags {
 				initFields: (element) => {
 					this.initFields(element);
 				},
-				setData: (data) => {
-					this.setData(data);
-				},
-				setInit: () => {
-					this.setInit();
+				setInit: (element) => {
+					this.setInit(element);
 				},
 				setListeners: () => {
 					this.setListeners();

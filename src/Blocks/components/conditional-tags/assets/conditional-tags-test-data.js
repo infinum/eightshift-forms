@@ -4,7 +4,24 @@ import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_
  * Data set used for testing.
  */
 const data = {
-	"first_name": [
+	"first_name": {
+		"show": [
+			[
+				"email",
+				CONDITIONAL_TAGS_OPERATORS.IS,
+				"ivan@gmail.com",
+				'',
+				[
+					[
+						"email",
+						CONDITIONAL_TAGS_OPERATORS.IS,
+						"ivan@gmail.com",
+						'',
+					],
+				]
+			],
+		]
+	}
 		
 		[ // Show.
 			[ // And

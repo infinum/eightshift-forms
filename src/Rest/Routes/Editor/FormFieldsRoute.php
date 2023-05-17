@@ -96,7 +96,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			// return \rest_ensure_response($premission); // TODO
+			return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
@@ -139,7 +139,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			if ($type === 'step' && $useMultiflow) {
+			if ($type === 'step') {
 				$outputSteps[] = [
 					'label' => $name,
 					'value' => $name,
