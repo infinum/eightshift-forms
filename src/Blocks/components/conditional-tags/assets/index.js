@@ -139,20 +139,22 @@ export class ConditionalTags {
 			},
 		};
 
-		this.setValues(element);
 		this.setInternalData(element);
+		this.setValues(element);
+
+		for (const [item] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
+			console.log(item);
+			// this.setInitFields(element, item);
+
+			// this.setFields(element, item);
+		}
 
 		console.log(this.INTERNAL_DATA);
-
-		// Init all items that has condition to show, they are hidden by initial state.
-		// this.setInitShow(element);
-
-		// Init all items that has condition to hide, they are visible by default but if the value is populated after from refresh the conditions should apply.
-		// this.setInitHide(element);
 
 		this.setListeners(element);
 	}
 
+	// Set internal state for input values.
 	setValues(element) {
 		let items = element.querySelectorAll('input, select, textarea');
 
@@ -172,6 +174,7 @@ export class ConditionalTags {
 		}
 	}
 
+	// Set internal data state.
 	setInternalData(element) {
 		const fields = element.querySelectorAll(`[${this.utils.DATA_ATTRIBUTES.conditionalTags}]`);
 
@@ -204,6 +207,7 @@ export class ConditionalTags {
 		});
 	}
 
+	// Set data for show/hide options.
 	setData(data, name, type) {
 		const tag = JSON.parse(data);
 
@@ -211,182 +215,26 @@ export class ConditionalTags {
 
 		if (dataItem.length > 0) {
 			this.INTERNAL_DATA[this.FORM_ID].fields[name][type] = dataItem;
-			this.INTERNAL_DATA[this.FORM_ID].reference[name][type] = this.getDataReference(dataItem, name);
+			this.setInnerData(dataItem, name, type);
 		}
 	}
 
-	getDataReference(items, name) {
+	// Set inner data and events for show/hide options depending on the or/and operators.
+	setInnerData(items, name, type) {
 		const output = [];
 
-		items.forEach((item) => {
+		items.forEach((item, parent) => {
+			output[parent] = Array(item.length).fill(false);
+
 			item.forEach((inner) => {
-
-				const itemName = inner[0];
-
-				output.push(false);
-
-				this.INTERNAL_DATA[this.FORM_ID].events[itemName] = [
-					...this.INTERNAL_DATA[this.FORM_ID].events[itemName] ?? [],
+				this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] = [
+					...this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] ?? [],
 					name,
 				];
-
-				// this.INTERNAL_DATA[this.FORM_ID].events = {
-				// 	...this.INTERNAL_DATA[this.FORM_ID].events,
-				// 	[item[0][0]]: [
-				// 		...this.INTERNAL_DATA[this.FORM_ID].events[item[0][0]],
-				// 		name,
-				// 	],
-				// }
-				// console.log(inner);
 			});
-			// if (item.length === 1) {
-			// 	this.INTERNAL_DATA[this.FORM_ID].events = {
-			// 		...this.INTERNAL_DATA[this.FORM_ID].events,
-			// 		[item[0][0]]: 
-			// 	}
-			// 	output.push([false]);
-			// } else {
-			// 	item.forEach((inner) => {
-			// 		this.INTERNAL_DATA[this.FORM_ID].events.push(inner[0]);
-			// 	});
-			// }
 		});
 
-		return output;
-	}
-
-	/**
-	 * Set init state of fields on page load.
-	 *
-	 * @public
-	 */
-	setInitHide(element) {
-		// TODO
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-
-		// Loop all items to hide.
-		for (const [name, value] of Object.entries(this.INTERNAL_DATA?.[formId]?.[this.HIDE])) {
-			if (value.length === 0) {
-				continue;
-			}
-
-			const field = this.utils.getFieldByName(element, name);
-
-			if (!field) {
-				continue;
-			}
-
-			// Find field type.
-			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
-
-			// Find all items that have inner items.
-			const innerOptions = value.flat().map((item) => item?.[3] !== '' && item[3]).filter(item => item);
-
-			switch (type) {
-				case 'select':
-					innerOptions.forEach((inner) => {
-						const innerItem = field.querySelector(`.choices__item--choice[data-value="${inner}"]`);
-
-						if (innerItem) {
-							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-						}
-					});
-					break;
-				case 'checkboxes':
-					case 'radios':
-						innerOptions.forEach((inner) => {
-							const innerItem = field.querySelector(`input[value="${inner}"]`)?.parentNode?.parentNode;
-
-							if (innerItem) {
-								innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-							}
-						});
-					break;
-				default:
-					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-					break;
-			}
-		}
-		// const {
-			// 	action,
-			// } = value;
-
-			// const isEmptyRule = value.rules.some((element) => element.value === '');
-			// const isInner = value.rules.filter((element) => element.inner !== '');
-
-			// let field = '';
-
-			// if (isInner.length) {
-			// 	if (input.type === 'select-one') {
-			// 		// select.
-			// 		field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${isInner?.[0]?.inner}"]`);
-			// 	} else {
-			// 		// checkbox/radio.
-			// 		field = input.parentNode.parentNode;
-			// 	}
-			// } else {
-			// 	// input/textarea.
-			// 	field = input.closest(this.utils.fieldSelector);
-			// }
-
-			// if (field && action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW && !isEmptyRule) {
-			// 	// If action is to show the initial state is hide.
-			// 	field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-			// }
-	}
-
-	/**
-	 * Set init state of fields on page load.
-	 *
-	 * @public
-	 */
-	setInitShow(element) {
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-
-		// Loop all items to hide.
-		for (const [name, value] of Object.entries(this.INTERNAL_DATA?.[formId]?.[this.SHOW])) {
-
-			if (value.length === 0) {
-				continue;
-			}
-
-			const field = this.utils.getFieldByName(element, name);
-
-			if (!field) {
-				continue;
-			}
-
-			// Find field type.
-			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
-
-			// Find all items that have inner items.
-			const innerOptions = value.flat().map((item) => item?.[3] !== '' && item[3]).filter(item => item);
-
-			switch (type) {
-				case 'select':
-					innerOptions.forEach((inner) => {
-						const innerItem = field.querySelector(`.choices__item--choice[data-value="${inner}"]`);
-
-						if (innerItem) {
-							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-						}
-					});
-					break;
-				case 'checkboxes':
-				case 'radios':
-					innerOptions.forEach((inner) => {
-						const innerItem = field.querySelector(`input[value="${inner}"]`)?.parentNode?.parentNode;
-
-						if (innerItem) {
-							innerItem.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-						}
-					});
-					break;
-				default:
-					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-					break;
-			}
-		}
+		this.INTERNAL_DATA[this.FORM_ID].reference[name][type] = output;
 	}
 
 	/**
@@ -395,7 +243,7 @@ export class ConditionalTags {
 	 * @public
 	 */
 	setListeners(element) {
-		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
+		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].events)) {
 			const input = element.querySelector(`${this.utils.formSelector} [${this.utils.DATA_ATTRIBUTES.fieldName}="${name}"]`);
 
 			// Bailout if non existing.
@@ -411,47 +259,64 @@ export class ConditionalTags {
 		}
 	}
 
-	/**
-	 * Test if one or all rules are valid.
-	 *
-	 * @param {string} logic Logic operator.
-	 * @param {string} item Conditional tag one item.
-	 *
-	 * @public
-	 */
-	areAllRulesValid(logic, item) {
-		const ref = this.INTERNAL_DATA[this.DATA_REFERENCE][item];
-
-		if (logic === this.utils.CONDITIONAL_TAGS_LOGIC.OR) {
-			if (ref.includes(true)) {
-				return true;
-			}
-		} else {
-			if (ref.every((element) => element === true)) {
-				return true;
-			}
+	checkValidationRules(name, type, values) {
+		if (!values.length) {
+			return;
 		}
 
-		return false;
+		values.forEach((items, parent) => {
+			items.forEach((inner, index) => {
+				const value = this.INTERNAL_DATA[this.FORM_ID].values[inner[0]];
+
+				this.INTERNAL_DATA[this.FORM_ID].reference[name][type][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[inner[1]](value, inner[2]);
+			});
+		});
 	}
 
+	setInitFields(element, item) {
+		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].reference[item])) {
+			if (type === 'show' && values.length > 0) {
+				const fieldElement = this.utils.getFieldByName(element, item);
 
+				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			}
+		}
+	}
 
-	/**
-	 * Test if one rule is valid.
-	 *
-	 * @param {object} rule One rule object.
-	 * @param {string} inputValue Value from input.
-	 * @param {string} item Conditional tag one item.
-	 * @param {number} index Loop index number.
-	 *
-	 * @public
-	 */
-	isRuleValid(rule, value, name, type, parent, index) {
-		console.log(rule, value, name, type, parent, index);
-		// Used for all type of action.
-		// Push true for each valid rule and later compare number of rules with the length of this array.
-		this.INTERNAL_DATA[this.FORM_ID].reference[name][type][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[rule[1]](value, rule[2]);
+	setFields(element, item) {
+		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields[item])) {
+			values.forEach((items, parent) => {
+				items.forEach((inner, index) => {
+					this.INTERNAL_DATA[this.FORM_ID].reference[item][type][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[inner[1]]( this.INTERNAL_DATA[this.FORM_ID].values[inner[0]], inner[2]);
+				});
+			});
+		}
+
+		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].reference[item])) {
+
+			// Check if conditions are valid or not. This is where the magic happens.
+			const isValid = values.map((validItem) => validItem.every(Boolean)).some(Boolean);
+
+			
+			const fieldElement = this.utils.getFieldByName(element, item);
+			console.log(isValid, type, values);
+
+			if (values.length) {
+				if (type === 'hide') {
+					fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+	
+					if (isValid) {
+						fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+					}
+				} else {
+					fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+	
+					if (isValid) {
+						fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+					}
+				}
+			}
+		}
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -477,121 +342,13 @@ export class ConditionalTags {
 	 * @public
 	 */
 	onFieldChangeEvent = (event) => {
-		// Map all current input data.
 		const inputElement = event.target;
-		const inputName = inputElement.name;
-		const inputType = inputElement.type;
-		let inputValue = inputElement.value;
+		const formElement = inputElement.closest(this.utils.formSelector);
 
-		switch (inputType) {
-			case 'checkbox':
-			case 'radio':
-				if (!inputElement.checked) {
-					inputValue = '';
-				}
-				break;
-		}
+		this.setValues(formElement);
 
-		const element = inputElement.closest(this.utils.formSelector);
-		this.setValues(element);
-
-		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields[inputName])) {
-			if (!values.length) {
-				continue;
-			}
-
-			values.forEach((items, index) => {
-				this.runDataType(inputName, type, items, parent);
-			});
-		};
-
-		// Check mapped data of items that needs to have event listener attached to it.
-		// this.INTERNAL_DATA?.[formId]?.[this.DATA_EVENT_ITEMS]?.[inputName].map((item) => {
-		// 	// Find all conditional tags for this input.
-		// 	const tags = this.INTERNAL_DATA[this.DATA_FIELDS][item];
-
-		// 	// Find that input item but ID.
-		// 	const input = document.querySelector(`${this.utils.formSelector} [name="${item}"]`);
-
-		// 	// Bailout if non existing.
-		// 	if (!input) {
-		// 		return;
-		// 	}
-
-		// 	const {
-		// 		action,
-		// 		logic,
-		// 		rules,
-		// 	} = tags;
-
-		// 	// Loop all rules on this input.
-		// 	rules.map((rule, index) => {
-		// 		const {
-		// 			id,
-		// 			inner,
-		// 		} = rule;
-
-		// 		// Find only rules applied to this this input.
-		// 		if (id !== inputName) {
-		// 			return;
-		// 		}
-
-		// 		// Find input field selector.
-		// 		let field = '';
-
-		// 		if (inner) {
-		// 			if (input.type === 'select-one') {
-		// 				// select.
-		// 				field = input.closest(this.utils.fieldSelector).querySelector(`.choices__item--choice[data-value="${inner}"]`);
-		// 			} else {
-		// 				// checkbox/radio.
-		// 				field = input.parentNode.parentNode;
-		// 			}
-		// 		} else {
-		// 			// input/textarea.
-		// 			field = input.closest(this.utils.fieldSelector);
-		// 		}
-
-		// 		if (field) {
-		// 			this.Or(rule, inputValue, item, index);
-
-		// 		// Validate rule by checking input value.
-		// 			if (this.areAllRulesValid(logic, item)) {
-		// 				// If rule is valid do action.
-		// 				if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
-		// 					field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				} else {
-		// 					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				}
-		// 			} else {
-		// 				// If rule is not valid do action by resting the field to the original state.
-		// 				if (action === this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW) {
-		// 					field.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				} else {
-		// 					field.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				}
-		// 			}
-		// 		}
-		// 	});
-		// });
-	};
-
-	runDataType(name, type, values, parent) {
-		console.log(name, type, values);
-
-		if (!values.length) {
-			return;
-		}
-
-		values.forEach((rule, index) => {
-			if (rule.length > 1) {
-			} else {
-				const value = this.INTERNAL_DATA[this.FORM_ID].values[name];
-
-				if (value) {
-					this.isRuleValid(rule, name, value, type, parent, index);
-				}
-			}
+		this.INTERNAL_DATA[this.FORM_ID].events[inputElement.name].forEach((item) => {
+			this.setFields(formElement, item);
 		});
 	}
 
