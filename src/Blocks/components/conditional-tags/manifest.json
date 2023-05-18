@@ -9,7 +9,7 @@
 			"default": false
 		},
 		"conditionalTagsRules": {
-			"type": "object"
+			"type": "array"
 		},
 		"conditionalTagsRulesForms": {
 			"type": "array"

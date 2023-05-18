@@ -14,8 +14,18 @@ export const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
 };
 
 export const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
-	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('Show', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('Hide', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('visible', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hidden', 'eightshift-forms'),
+};
+
+export const CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL = {
+	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('Hide', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('Show', 'eightshift-forms'),
+};
+
+export const CONDITIONAL_TAGS_ACTIONS_SHORT_INTERNAL = {
+	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('show', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hide', 'eightshift-forms'),
 };
 
 export const CONDITIONAL_TAGS_LOGIC_INTERNAL = {

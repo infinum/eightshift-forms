@@ -1,5 +1,5 @@
 import { debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { CONDITIONAL_TAGS_LOGIC, Utils } from './../../form/assets/utilities';
+import { Utils } from './../../form/assets/utilities';
 
 /**
  * Main conditon tags class.
@@ -15,8 +15,8 @@ export class ConditionalTags {
 		this.SHOW = this.utils.CONDITIONAL_TAGS_ACTIONS.SHOW;
 		this.HIDE = this.utils.CONDITIONAL_TAGS_ACTIONS.HIDE;
 
-		this.OR = CONDITIONAL_TAGS_LOGIC.OR;
-		this.AND = CONDITIONAL_TAGS_LOGIC.AND;
+		this.OR = this.utils.CONDITIONAL_TAGS_LOGIC.OR;
+		this.AND = this.utils.CONDITIONAL_TAGS_LOGIC.AND;
 
 		this.FORM_ID = '';
 
@@ -134,6 +134,7 @@ export class ConditionalTags {
 			[this.FORM_ID]: {
 				fields: {},
 				values: {},
+				defaults: {},
 				events: [],
 				reference: {},
 			},
@@ -142,14 +143,13 @@ export class ConditionalTags {
 		this.setInternalData(element);
 		this.setValues(element);
 
+		console.log(this.INTERNAL_DATA[this.FORM_ID]);
+
 		for (const [item] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
 			console.log(item);
-			// this.setInitFields(element, item);
-
-			// this.setFields(element, item);
+			this.setInitFields(element, item);
+			this.setFields(element, item);
 		}
-
-		console.log(this.INTERNAL_DATA);
 
 		this.setListeners(element);
 	}
@@ -185,42 +185,36 @@ export class ConditionalTags {
 			if (tags && name) {
 				this.INTERNAL_DATA[this.FORM_ID] = {
 					...this.INTERNAL_DATA[this.FORM_ID],
+					defaults: {
+						...this.INTERNAL_DATA[this.FORM_ID].defaults,
+						[name]: this.HIDE,
+					},
 					fields: {
 						...this.INTERNAL_DATA[this.FORM_ID].fields,
-						[name]: {
-							[this.SHOW]: [],
-							[this.HIDE]: [],
-						}
+						[name]: [],
 					},
 					reference: {
 						...this.INTERNAL_DATA[this.FORM_ID].reference,
-						[name]: {
-							[this.SHOW]: [],
-							[this.HIDE]: [],
-						}
+						[name]: [],
 					},
 				}
 
-				this.setData(tags, name, this.SHOW);
-				this.setData(tags, name, this.HIDE);
+				const tag = JSON.parse(tags);
+
+				const dataItem = tag?.[0];
+
+				if (dataItem.length > 0) {
+					this.INTERNAL_DATA[this.FORM_ID].defaults[name] = dataItem[0];
+					this.INTERNAL_DATA[this.FORM_ID].fields[name] = dataItem[1];
+
+					this.setInnerData(dataItem[1], name);
+				}
 			}
 		});
 	}
 
-	// Set data for show/hide options.
-	setData(data, name, type) {
-		const tag = JSON.parse(data);
-
-		const dataItem = tag?.[0]?.[type];
-
-		if (dataItem.length > 0) {
-			this.INTERNAL_DATA[this.FORM_ID].fields[name][type] = dataItem;
-			this.setInnerData(dataItem, name, type);
-		}
-	}
-
 	// Set inner data and events for show/hide options depending on the or/and operators.
-	setInnerData(items, name, type) {
+	setInnerData(items, name) {
 		const output = [];
 
 		items.forEach((item, parent) => {
@@ -234,7 +228,7 @@ export class ConditionalTags {
 			});
 		});
 
-		this.INTERNAL_DATA[this.FORM_ID].reference[name][type] = output;
+		this.INTERNAL_DATA[this.FORM_ID].reference[name] = output;
 	}
 
 	/**
@@ -259,61 +253,44 @@ export class ConditionalTags {
 		}
 	}
 
-	checkValidationRules(name, type, values) {
-		if (!values.length) {
-			return;
-		}
-
-		values.forEach((items, parent) => {
-			items.forEach((inner, index) => {
-				const value = this.INTERNAL_DATA[this.FORM_ID].values[inner[0]];
-
-				this.INTERNAL_DATA[this.FORM_ID].reference[name][type][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[inner[1]](value, inner[2]);
-			});
-		});
-	}
-
 	setInitFields(element, item) {
-		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].reference[item])) {
-			if (type === 'show' && values.length > 0) {
-				const fieldElement = this.utils.getFieldByName(element, item);
+		const values = this.INTERNAL_DATA[this.FORM_ID].reference[item];
+		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[item];
 
-				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-			}
+		if (defaults === this.HIDE && values.length > 0) {
+			const fieldElement = this.utils.getFieldByName(element, item);
+
+			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 		}
 	}
 
 	setFields(element, item) {
-		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields[item])) {
-			values.forEach((items, parent) => {
-				items.forEach((inner, index) => {
-					this.INTERNAL_DATA[this.FORM_ID].reference[item][type][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[inner[1]]( this.INTERNAL_DATA[this.FORM_ID].values[inner[0]], inner[2]);
-				});
+		this.INTERNAL_DATA[this.FORM_ID].fields[item].forEach((items, parent) => {
+			items.forEach((inner, index) => {
+				this.INTERNAL_DATA[this.FORM_ID].reference[item][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[inner[1]]( this.INTERNAL_DATA[this.FORM_ID].values[inner[0]], inner[2]);
 			});
-		}
+		});
 
-		for (const [type, values] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].reference[item])) {
+		const values = this.INTERNAL_DATA[this.FORM_ID].reference[item];
+		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[item];
 
-			// Check if conditions are valid or not. This is where the magic happens.
-			const isValid = values.map((validItem) => validItem.every(Boolean)).some(Boolean);
+		// Check if conditions are valid or not. This is where the magic happens.
+		const isValid = values.map((validItem) => validItem.every(Boolean)).some(Boolean);
 
-			
-			const fieldElement = this.utils.getFieldByName(element, item);
-			console.log(isValid, type, values);
+		const fieldElement = this.utils.getFieldByName(element, item);
 
-			if (values.length) {
-				if (type === 'hide') {
+		if (values.length) {
+			if (defaults !== this.HIDE) {
+				if (isValid) {
+					fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+				} else {
 					fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-	
-					if (isValid) {
-						fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-					}
+				}
+			} else {
+				if (isValid) {
+					fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 				} else {
 					fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-	
-					if (isValid) {
-						fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-					}
 				}
 			}
 		}
