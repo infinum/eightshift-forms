@@ -165,7 +165,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 						'label' => \__('Empty', 'eightshift-forms'),
 						'value' => '',
 					];
-	
+
 					foreach ($value['innerBlocks'] as $valueInner) {
 						$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
 						$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
