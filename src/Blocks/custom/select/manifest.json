@@ -57,13 +57,15 @@
 		[
 			"eightshift-forms/select-option",
 			{
-				"selectOptionSelectOptionLabel": "Option 1"
+				"selectOptionSelectOptionLabel": "Option 1",
+				"selectOptionSelectOptionValue": "option-1"
 			}
 		],
 		[
 			"eightshift-forms/select-option",
 			{
-				"selectOptionSelectOptionLabel": "Option 2"
+				"selectOptionSelectOptionLabel": "Option 2",
+				"selectOptionSelectOptionValue": "option-2"
 			}
 		]
 	]

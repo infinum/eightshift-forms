@@ -73,7 +73,6 @@ export class Steps {
 			const firstItem = Object.keys(fields)[0];
 
 			const stepId = this.getStepIdByFieldName(element, firstItem);
-			console.log(stepId);
 
 			if (stepId) {
 				this.changeStepById(element, stepId, this.STEP_DIRECTION_PREV);

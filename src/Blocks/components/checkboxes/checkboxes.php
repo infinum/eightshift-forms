@@ -11,8 +11,12 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
-$checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesName = Components::checkAttr('checkboxesName', $attributes, $manifest);
+if (!$checkboxesName) {
+	return;
+}
+
+$checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
 
 // Add internal counter name key.

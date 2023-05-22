@@ -17,6 +17,10 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
+if (!$selectName) {
+	return;
+}
+
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
 $selectContent = Components::checkAttr('selectContent', $attributes, $manifest);

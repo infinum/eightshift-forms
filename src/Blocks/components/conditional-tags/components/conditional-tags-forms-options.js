@@ -23,8 +23,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
-	console.log(conditionalTagsRulesForms);
-
 	useEffect(() => {
 		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${conditionalTagsPostId}` }).then((response) => {
 			if (response.code === 200 && response.data) {

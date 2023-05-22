@@ -8,13 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$selectName = $attributes['selectSelectName'] ?? '';
-$props = [];
-
-if (empty($selectName)) {
-	$props['selectName'] = Components::getUnique();
-}
-
 $props['selectContent'] = $innerBlockContent;
 
 echo Components::render(

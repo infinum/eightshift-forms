@@ -5,7 +5,8 @@
 	"componentClass": "es-checkbox",
 	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"components": {
-		"error": "error"
+		"error": "error",
+		"conditionalTags": "conditionalTags"
 	},
 	"example": {
 		"attributes": {
@@ -63,6 +64,9 @@
 			"default": false
 		},
 		"checkboxAttrs": {
+			"type": "object"
+		},
+		"checkboxFieldAttrs": {
 			"type": "object"
 		},
 		"checkboxAsToggle": {

@@ -11,8 +11,12 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
-$radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
+if (!$radiosName) {
+	return;
+}
+
+$radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
 
 // Add internal counter name key.

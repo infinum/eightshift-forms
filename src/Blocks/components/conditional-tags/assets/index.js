@@ -154,6 +154,7 @@ export class ConditionalTags {
 				events: [],
 				reference: {},
 				checkboxes: {},
+				types: {},
 			},
 		};
 
@@ -161,124 +162,21 @@ export class ConditionalTags {
 		this.setInternalData(element);
 
 		// Set field values preset data.
-		this.setInitValues(element);
 		this.setValues(element);
 
 		// Loop all fields and set data.
 		for (const [name, rules] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
-			// Hide initial fields that are set to bi hidden.
+			// Hide initial fields that are set to hidden.
 			this.setInitFields(element, name);
-
-			console.log(name, rules);
 
 			// Check initial state of fields and set conditional logic. This applies if you set values to fields.
 			this.setFields(element, name);
 		}
 
+		console.log(this.INTERNAL_DATA[this.FORM_ID]);
+
 		// Set event listeners.
 		this.setListeners(element);
-	}
-
-	/**
-	 * Init fields initial values data.
-	 *
-	 * @param {object} element Form element.
-	 *
-	 * @returns void
-	 */
-	setInitValues(element) {
-		// Find all fields.
-		let items = element.querySelectorAll('input, select, textarea');
-
-		// Loop all fields.
-		for (const [key, item] of Object.entries(items)) {
-			const itemValue = item.value;
-			const itemName = item.name;
-			const itemId = item.id;
-
-			// Skip search field of the select.
-			if (itemName === 'search_terms') {
-				continue;
-			}
-
-			switch (item.type) {
-				case 'checkbox':
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemId]: '',
-					}
-
-					// Set checkboxes array
-					this.INTERNAL_DATA[this.FORM_ID].checkboxes = {
-						...this.INTERNAL_DATA[this.FORM_ID].checkboxes,
-						[itemName]: [
-							...this.INTERNAL_DATA[this.FORM_ID].checkboxes[itemName] ?? [],
-							itemId,
-						],
-					}
-					break;
-				case 'radio':
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemName]: '',
-					}
-					break;
-				default:
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemName]: itemValue,
-					}
-					break;
-			}
-		}
-	}
-
-	/**
-	 * Init fields initial values data.
-	 *
-	 * @param {object} element Form element.
-	 *
-	 * @returns void
-	 */
-	setValues(element) {
-		// Find all fields.
-		let items = element.querySelectorAll('input, select, textarea');
-
-		// Loop all fields.
-		for (const [key, item] of Object.entries(items)) {
-			const itemValue = item.value;
-			const itemName = item.name;
-			const itemId = item.id;
-			const itemChecked = item.checked;
-
-			// Skip search field of the select.
-			if (itemName === 'search_terms') {
-				continue;
-			}
-
-			switch (item.type) {
-				case 'radio':
-					if (itemChecked) {
-						this.INTERNAL_DATA[this.FORM_ID].values = {
-							...this.INTERNAL_DATA[this.FORM_ID].values,
-							[itemName]: itemValue,
-						}
-					}
-					break;
-				case 'checkbox':
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemId]: itemChecked ? itemValue : '',
-					}
-					break;
-				default:
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemName]: itemValue,
-					}
-					break;
-			}
-		}
 	}
 
 	/**
@@ -297,6 +195,7 @@ export class ConditionalTags {
 			// Get field name and tags.
 			const name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
 			const tags = field.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
 
 			// Bailout if missing data.
 			if (tags && name) {
@@ -315,6 +214,10 @@ export class ConditionalTags {
 						...this.INTERNAL_DATA[this.FORM_ID].reference,
 						[name]: [],
 					},
+					types: {
+						...this.INTERNAL_DATA[this.FORM_ID].types,
+						[name]: '',
+					},
 				}
 
 				// Decode json data.
@@ -326,38 +229,68 @@ export class ConditionalTags {
 				if (dataItem.length > 0) {
 					this.INTERNAL_DATA[this.FORM_ID].defaults[name] = dataItem[0];
 					this.INTERNAL_DATA[this.FORM_ID].fields[name] = dataItem[1];
+					this.INTERNAL_DATA[this.FORM_ID].types[name] = type;
 
 					// Set init data for one field.
-					this.setInnerData(dataItem[1], name);
+					const output = [];
+
+					// Loop fields.
+					dataItem[1].forEach((item, parent) => {
+						// Create initial state for logic for or/and.
+						output[parent] = Array(item.length).fill(false);
+
+						// Loop inner fields.
+						item.forEach((inner) => {
+							this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] = [
+								...this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] ?? [],
+								name,
+							];
+						});
+					});
+
+					this.INTERNAL_DATA[this.FORM_ID].reference[name] = output;
 				}
 			}
 		});
 	}
 
 	/**
-	 * Set inner data and events for show/hide options depending on the or/and operators.
+	 * Init fields initial values data.
 	 *
-	 * @param {object} items Items of field.
-	 * @param {string} name Field name.
+	 * @param {object} element Form element.
+	 *
+	 * @returns void
 	 */
-	setInnerData(items, name) {
-		const output = [];
+	setValues(element) {
+		// Find all fields.
+		let items = element.querySelectorAll('input, select, textarea');
 
-		// Loop fields.
-		items.forEach((item, parent) => {
-			// Create initial state for logic for or/and.
-			output[parent] = Array(item.length).fill(false);
+		// Loop all fields.
+		for (const [key, item] of Object.entries(items)) {
+			const itemValue = item.value;
+			const itemName = item.name;
 
-			// Loop inner fields.
-			item.forEach((inner) => {
-				this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] = [
-					...this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] ?? [],
-					name,
-				];
-			});
-		});
+			// Skip search field of the select.
+			if (itemName === 'search_terms') {
+				continue;
+			}
 
-		this.INTERNAL_DATA[this.FORM_ID].reference[name] = output;
+			switch (item.type) {
+				case 'radio':
+				case 'checkbox':
+					this.INTERNAL_DATA[this.FORM_ID].values = {
+						...this.INTERNAL_DATA[this.FORM_ID].values,
+						[itemValue]: item.checked ? itemValue : '',
+					}
+					break;
+				default:
+					this.INTERNAL_DATA[this.FORM_ID].values = {
+						...this.INTERNAL_DATA[this.FORM_ID].values,
+						[itemName]: itemValue,
+					}
+					break;
+			}
+		}
 	}
 
 	/**
@@ -400,7 +333,7 @@ export class ConditionalTags {
 
 		// Find if field is hidden by default and add class.
 		if (defaults === this.HIDE && values.length > 0) {
-			const fieldElement = this.utils.getFieldByName(element, item);
+			const fieldElement = this.getItemByName(element, item);
 
 			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 		}
@@ -473,7 +406,9 @@ export class ConditionalTags {
 			innerItem = this.INTERNAL_DATA[this.FORM_ID].fields?.[name]?.[validIndex]?.[0]?.[3] ?? [];
 		}
 
-		const fieldElement = this.utils.getFieldByName(element, name);
+		const fieldElement = this.getItemByName(element, name);
+
+		console.log(fieldElement);
 
 		this.resetFieldConditions(defaults, fieldElement);
 
@@ -485,59 +420,64 @@ export class ConditionalTags {
 	}
 
 	setFieldConditions(type, fieldElement, innerItem, name) {
-		let items = [];
+		// switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
+		// 	case 'radios':
+		// 	case 'checkboxes':
+		// 		if (innerItem) {
+		// 			innerItem.forEach((item) => {
+		// 				const itemElement = fieldElement.querySelector(`input[name=${name}][value="${item}"]`)?.parentNode?.parentNode;
+		// 				console.log(itemElement, `input[name=${name}][value="${item}"]`);
 
-		switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
-			case 'radios':
-			case 'checkboxes':
-				if (innerItem) {
-					innerItem.forEach((item) => {
-						items = fieldElement.querySelectorAll(`input[name=${name}][value="${item}"]`)?.parentNode?.parentNode;
-					})
-				}
-				break;
-		}
+		// 				if (itemElement && type !== this.HIDE) {
+		// 						itemElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 					} else {
+		// 						itemElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 					}
+		// 			})
+		// 		}
+		// 		break;
+		// }
 
-		console.log(innerItem);
+		// console.log(innerItem);
 
-		if (innerItem === -1) {
+		// if (innerItem === -1) {
 			if (type !== this.HIDE) {
 				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			} else {
 				fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
-		}
+		// }
 
-		if (items) {
-			items.forEach((item) => {
-				if (type !== this.HIDE) {
-					item.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-				} else {
-					item.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-				}
-			});
-		}
+		// if (items) {
+		// 	items.forEach((item) => {
+		// 		if (type !== this.HIDE) {
+		// 			item.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 		} else {
+		// 			item.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 		}
+		// 	});
+		// }
 	}
 
 	resetFieldConditions(type, fieldElement) {
 		let items = [];
 
-		switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
-			case 'radios':
-			case 'checkboxes':
-				items = fieldElement.querySelectorAll('input');
+		// switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
+		// 	case 'radios':
+		// 	case 'checkboxes':
+		// 		items = fieldElement.querySelectorAll('input');
 
-				if (items) {
-					items.forEach((item) => {
-						if (type !== this.HIDE) {
-							item?.parentNode?.parentNode.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-						} else {
-							item?.parentNode?.parentNode.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-						}
-					})
-				}
-				break;
-		}
+		// 		if (items) {
+		// 			items.forEach((item) => {
+		// 				if (type !== this.HIDE) {
+		// 					item?.parentNode?.parentNode.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 				} else {
+		// 					item?.parentNode?.parentNode.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+		// 				}
+		// 			})
+		// 		}
+		// 		break;
+		// }
 
 
 		if (type !== this.HIDE) {
@@ -545,6 +485,11 @@ export class ConditionalTags {
 		} else {
 			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 		}
+	}
+
+	// Return field element by name.
+	getItemByName(element, name) {
+		return element.querySelector(`[${this.utils.DATA_ATTRIBUTES.fieldName}="${name}"]`);
 	}
 
 	////////////////////////////////////////////////////////////////

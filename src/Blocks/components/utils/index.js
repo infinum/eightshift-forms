@@ -314,8 +314,8 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  *
  * @returns Component
  */
-export const MissingName = ({ value, className }) => {
-	if (value) {
+export const MissingName = ({ value, asPlaceholder, className }) => {
+	if (value || asPlaceholder) {
 		return null;
 	}
 
@@ -335,10 +335,10 @@ export const MissingName = ({ value, className }) => {
  *
  * @returns Component
  */
-export const NameFieldLabel = ({ value }) => {
+export const NameFieldLabel = ({ value, label }) => {
 	return (
 		<div className='es-h-between es-w-full'>
-			<IconLabel icon={icons.idCard} label={__('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+			<IconLabel icon={icons.idCard} label={label ?? __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
 
 			<AnimatedContentVisibility showIf={!value}>
 				<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>

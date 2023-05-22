@@ -16,6 +16,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
+if (!$inputName) {
+	return;
+}
+
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
 $inputType = Components::checkAttr('inputType', $attributes, $manifest);

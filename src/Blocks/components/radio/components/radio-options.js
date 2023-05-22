@@ -1,9 +1,10 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
-import { isOptionDisabled } from './../../utils';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
 
 export const RadioOptions = (attributes) => {
 	const {
@@ -18,8 +19,16 @@ export const RadioOptions = (attributes) => {
 	const radioDisabledOptions = checkAttr('radioDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Radio button', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<>
+			<PanelBody title={__('Radio button', 'eightshift-forms')}>
+				<TextControl
+					label={<NameFieldLabel value={radioValue} label={__('Value', 'eightshift-forms')} />}
+					help={__('Internal value, sent if selected.', 'eightshift-forms')}
+					value={radioValue}
+					onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
+				/>
+
 				<TextControl
 					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
 					value={radioLabel}
@@ -33,17 +42,6 @@ export const RadioOptions = (attributes) => {
 					checked={radioIsChecked}
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsChecked', attributes, manifest), radioDisabledOptions)}
-					noBottomSpacing
-				/>
-			</Section>
-
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.textWrite} label={__('Value', 'eightshift-forms')} />}
-					help={__('Internal value, sent if selected.', 'eightshift-forms')}
-					value={radioValue}
-					onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
 				/>
 
 				<IconToggle
@@ -52,19 +50,24 @@ export const RadioOptions = (attributes) => {
 					checked={radioIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
-					noBottomSpacing
 				/>
-			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={radioTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioTracking', attributes, manifest), radioDisabledOptions)}
-					className='es-no-field-spacing'
-				/>
-			</Section>
-		</PanelBody>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={radioTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radioTracking', attributes, manifest), radioDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+			</PanelBody>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: radioValue,
+				})}
+			/>
+		</>
 	);
 };

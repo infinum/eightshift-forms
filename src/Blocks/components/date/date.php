@@ -16,6 +16,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $dateName = Components::checkAttr('dateName', $attributes, $manifest);
+if (!$dateName) {
+	return;
+}
+
 $dateValue = Components::checkAttr('dateValue', $attributes, $manifest);
 $datePlaceholder = Components::checkAttr('datePlaceholder', $attributes, $manifest);
 $dateIsDisabled = Components::checkAttr('dateIsDisabled', $attributes, $manifest);

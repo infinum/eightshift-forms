@@ -8,17 +8,10 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$fieldName = $attributes['fieldFieldName'] ?? '';
-$props = [];
-
-if (empty($fieldName)) {
-	$props['fieldName'] = Components::getUnique();
-}
-
 echo Components::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, $props),
+		Components::props('field', $attributes),
 		[
 			'selectorClass' => 'field'
 		]

@@ -20,6 +20,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $countryName = Components::checkAttr('countryName', $attributes, $manifest);
+if (!$countryName) {
+	return;
+}
+
 $countryIsDisabled = Components::checkAttr('countryIsDisabled', $attributes, $manifest);
 $countryIsRequired = Components::checkAttr('countryIsRequired', $attributes, $manifest);
 $countryTracking = Components::checkAttr('countryTracking', $attributes, $manifest);

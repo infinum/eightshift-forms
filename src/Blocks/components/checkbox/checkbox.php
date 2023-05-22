@@ -11,14 +11,19 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
+$checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
+if (!$checkboxValue) {
+	return;
+}
+
 $checkboxLabel = Components::checkAttr('checkboxLabel', $attributes, $manifest);
 $checkboxName = Components::checkAttr('checkboxName', $attributes, $manifest);
-$checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
 $checkboxUncheckedValue = Components::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
 $checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $manifest);
 $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
@@ -30,6 +35,7 @@ $checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $mani
 $checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
 $checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
+$checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -67,9 +73,33 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
 }
 
+$conditionalTags = Components::render(
+	'conditional-tags',
+	Components::props('conditionalTags', $attributes)
+);
+
+if ($conditionalTags) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+}
+
+if ($checkboxValue) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $checkboxValue;
+}
+
+if ($componentName) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+}
+
+$checkboxFieldAttrsOutput = '';
+if ($checkboxFieldAttrs) {
+	foreach ($checkboxFieldAttrs as $key => $value) {
+		$checkboxFieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>">
+<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"

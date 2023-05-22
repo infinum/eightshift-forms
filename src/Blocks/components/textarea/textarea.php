@@ -18,6 +18,9 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
+if (!$textareaName) {
+	return;
+}
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
 $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);

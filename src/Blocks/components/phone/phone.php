@@ -19,6 +19,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $phoneName = Components::checkAttr('phoneName', $attributes, $manifest);
+if (!$phoneName) {
+	return;
+}
+
 $phoneValue = Components::checkAttr('phoneValue', $attributes, $manifest);
 $phonePlaceholder = Components::checkAttr('phonePlaceholder', $attributes, $manifest);
 $phoneIsDisabled = Components::checkAttr('phoneIsDisabled', $attributes, $manifest);

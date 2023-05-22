@@ -1,7 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const RadioEditor = (attributes) => {
@@ -16,6 +18,7 @@ export const RadioEditor = (attributes) => {
 	} = attributes;
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
+	const radioValue = checkAttr('radioValue', attributes, manifest);
 
 	const radioClass = classnames([
 		selector(componentClass, componentClass),
@@ -28,23 +31,20 @@ export const RadioEditor = (attributes) => {
 		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
 	]);
 
-	const Label = () => {
-		return (
-			<label className={radioLabelClass} htmlFor="id">
-				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
-			</label>
-		);
-	};
-
 	return (
 		<div className={radioClass}>
 			<div className={`${componentClass}__content`}>
-				<input
-					className={`${componentClass}__input`}
-					type={'radio'}
-					readOnly
-				/>
-				<Label />
+				<label className={radioLabelClass} htmlFor="id">
+					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
+				</label>
+
+				<MissingName value={radioValue} />
+
+				{radioValue &&
+					<ConditionalTagsEditor
+						{...props('conditionalTags', attributes)}
+					/>
+				}
 			</div>
 		</div>
 	);

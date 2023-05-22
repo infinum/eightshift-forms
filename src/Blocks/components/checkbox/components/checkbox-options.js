@@ -1,8 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
-import { isOptionDisabled } from './../../utils';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
+import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
 export const CheckboxOptions = (attributes) => {
@@ -19,8 +20,16 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<>
+			<PanelBody title={__('Checkbox', 'eightshift-forms')}>
+				<TextControl
+					label={<NameFieldLabel value={checkboxValue} label={__('Value', 'eightshift-forms')} />}
+					help={__('Internal value, sent if checked.', 'eightshift-forms')}
+					value={checkboxValue}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
+				/>
+
 				<TextControl
 					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
 					value={checkboxLabel}
@@ -33,17 +42,6 @@ export const CheckboxOptions = (attributes) => {
 					label={__('Checked', 'eightshift-forms')}
 					checked={checkboxIsChecked}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
-					noBottomSpacing
-				/>
-			</Section>
-
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.textWrite} label={__('Value', 'eightshift-forms')} />}
-					help={__('Internal value, sent if checked.', 'eightshift-forms')}
-					value={checkboxValue}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
 				<IconToggle
@@ -58,19 +56,24 @@ export const CheckboxOptions = (attributes) => {
 					label={__('Disabled', 'eightshift-forms')}
 					checked={checkboxIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
-					noBottomSpacing
 				/>
-			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={checkboxTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
-					className='es-no-field-spacing'
-				/>
-			</Section>
-		</PanelBody>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={checkboxTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
+			</PanelBody>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes, {
+					conditionalTagsBlockName: checkboxValue,
+				})}
+			/>
+		</>
 	);
 };

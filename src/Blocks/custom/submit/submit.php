@@ -8,14 +8,7 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$submitName = $attributes['submitSubmitName'] ?? '';
-$props = [];
-
-if (empty($submitName)) {
-	$props['submitName'] = Components::getUnique();
-}
-
 echo Components::render(
 	'submit',
-	Components::props('submit', $attributes, $props)
+	Components::props('submit', $attributes)
 );

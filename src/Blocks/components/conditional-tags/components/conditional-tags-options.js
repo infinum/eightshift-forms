@@ -48,8 +48,6 @@ export const ConditionalTagsOptions = (attributes) => {
 			return null;
 		}
 
-		const formFieldOptionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
-
 		return (
 			<>
 				<div>{sprintf(__('This field will be %s by default, but you can provide exception to this rule.', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INTERNAL[conditionalTagsRules[0]])}</div>
@@ -70,10 +68,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					{__('Set fields exception rules', 'eightshift-forms')}
 				</div>
 
-				{formFieldOptionsItem.length > 0 ?
-					<span className='es-mb-2'>{sprintf(__('%s "%s":', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL[conditionalTagsRules[0]], conditionalTagsBlockName)}</span>:
-					<div className='es-mb-2'>{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL[conditionalTagsRules[0]], conditionalTagsBlockName)}</div>
-				}
+				<div className='es-mb-2'>{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL[conditionalTagsRules[0]], conditionalTagsBlockName)}</div>
 
 				{conditionalTagsRules?.[1]?.map((_, index) => {
 					const total = conditionalTagsRules[1].length;
@@ -113,7 +108,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				<Button
 					icon={icons.plusCircleFillAlt}
 					onClick={() => {
-						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '', []]]);
+						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 						setIsNewRuleAdded(true);
 					}}
@@ -137,39 +132,10 @@ export const ConditionalTagsOptions = (attributes) => {
 		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[1]?.[parent]?.[index]?.[2]);
 
 		const formFieldOptions = formFields?.find((item) => item.value === conditionalTagsRules[1][parent][index][0])?.subItems ?? [];
-		const formFieldOptionsItem = formFields?.find((item) => item.type === blockName)?.subItems ?? [];
 		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
-
-		const innerFieldsValue = conditionalTagsRules?.[1]?.[parent]?.[index]?.[3];
 
 		return (
 			<>
-				{(index === 0 && formFieldOptionsItem.length > 0) && 
-					<div className='es-h-spaced'>
-						<MultiSelect
-							value={Array.isArray(innerFieldsValue) ? innerFieldsValue : []}
-							options={formFieldOptionsItem.map((item) => {
-								if (item.value === '') {
-									return {
-										...item,
-										label: __('All fields', 'eightshift-forms'),
-									};
-								}
-								return item;
-							})}
-							onChange={(value) => {
-								conditionalTagsRules[1][parent][index][3] = value;
-								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-							}}
-							noBottomSpacing
-							simpleValue
-							noSearch
-							additionalSelectClasses='es-w-40'
-						/>
-						<span>{__('if', 'eightshift-forms')}</span>
-					</div>
-				}
-
 				<div className='es-h-spaced'>
 
 					<Select
@@ -234,7 +200,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						<Button
 							icon={icons.plusCircleFillAlt}
 							onClick={() => {
-								conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '', []];
+								conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
 								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 
 								setIsNewRuleAdded(true);

@@ -32,13 +32,15 @@
 		[
 			"eightshift-forms/checkbox",
 			{
-				"checkboxCheckboxLabel": "Checkbox 1"
+				"checkboxCheckboxLabel": "Checkbox 1",
+				"checkboxCheckboxValue": "checkbox-1"
 			}
 		],
 		[
 			"eightshift-forms/checkbox",
 			{
-				"checkboxCheckboxLabel": "Checkbox 2"
+				"checkboxCheckboxLabel": "Checkbox 2",
+				"checkboxCheckboxValue": "checkbox-2"
 			}
 		]
 	]
