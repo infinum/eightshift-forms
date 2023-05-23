@@ -72,14 +72,19 @@ if (has_filter($filterName)) {
 	}
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
+
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
 
+		$customProperties = [
+			'country' => $code,
+		];
+
 		$options[] = '
 			<option
 				value="' . $label . '"
-				data-custom-properties="' . $code . '"
+				data-custom-properties=\'' . \wp_json_encode($customProperties) . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
 	}

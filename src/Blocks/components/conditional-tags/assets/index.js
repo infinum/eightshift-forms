@@ -161,7 +161,7 @@ export class ConditionalTags {
 		// Set internal preset data.
 		this.setInternalData(element);
 
-		// // Loop all fields and set data.
+		// Loop all fields and set data.
 		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
 			// Hide initial fields that are set to hidden.
 			this.setInitFields(element, name);
@@ -169,6 +169,8 @@ export class ConditionalTags {
 
 		// Set event listeners.
 		this.setListeners(element);
+
+		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 	}
 
 	/**
@@ -187,7 +189,6 @@ export class ConditionalTags {
 			// Get field name and tags.
 			const name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
 			const tags = field.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
-			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
 
 			// Bailout if missing data.
 			if (tags && name) {

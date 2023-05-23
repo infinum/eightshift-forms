@@ -702,11 +702,29 @@ export class Form {
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 
-							// Implement changes for phone picker.
+							// Implement changes for phone/country picker.
 							if (selectShowCountryIcons) {
-								const findItem = this.config.choices.find((item) => item.label === element.innerHTML).customProperties;
-								element.dataset.customProperties = findItem;
-								return element;
+								const findItem = args?.[1]?.customProperties;
+
+								if (findItem) {
+									element.dataset.customProperties = findItem?.country;
+									return element;
+								}
+							}
+
+							return element;
+						},
+						item: (...args) => {
+							const element = Choices.default.defaults.templates.choice.call(this, ...args);
+
+							// Implement changes for phone/country picker.
+							if (selectShowCountryIcons) {
+								const findItem = args?.[1]?.customProperties;
+
+								if (findItem) {
+									element.dataset.customProperties = findItem?.country;
+									return element;
+								}
 							}
 
 							return element;
