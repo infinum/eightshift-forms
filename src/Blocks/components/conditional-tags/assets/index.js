@@ -153,7 +153,7 @@ export class ConditionalTags {
 				defaults: {},
 				events: [],
 				reference: {},
-				checkboxes: {},
+				customTypes: {},
 				types: {},
 			},
 		};
@@ -161,19 +161,11 @@ export class ConditionalTags {
 		// Set internal preset data.
 		this.setInternalData(element);
 
-		// Set field values preset data.
-		this.setValues(element);
-
-		// Loop all fields and set data.
+		// // Loop all fields and set data.
 		for (const [name, rules] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
 			// Hide initial fields that are set to hidden.
 			this.setInitFields(element, name);
-
-			// Check initial state of fields and set conditional logic. This applies if you set values to fields.
-			this.setFields(element, name);
 		}
-
-		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 
 		// Set event listeners.
 		this.setListeners(element);
@@ -214,10 +206,6 @@ export class ConditionalTags {
 						...this.INTERNAL_DATA[this.FORM_ID].reference,
 						[name]: [],
 					},
-					types: {
-						...this.INTERNAL_DATA[this.FORM_ID].types,
-						[name]: '',
-					},
 				}
 
 				// Decode json data.
@@ -229,7 +217,6 @@ export class ConditionalTags {
 				if (dataItem.length > 0) {
 					this.INTERNAL_DATA[this.FORM_ID].defaults[name] = dataItem[0];
 					this.INTERNAL_DATA[this.FORM_ID].fields[name] = dataItem[1];
-					this.INTERNAL_DATA[this.FORM_ID].types[name] = type;
 
 					// Set init data for one field.
 					const output = [];
@@ -252,6 +239,9 @@ export class ConditionalTags {
 				}
 			}
 		});
+
+
+		this.setValues(element, true);
 	}
 
 	/**
@@ -261,7 +251,7 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setValues(element) {
+	setValues(element, isInit=false) {
 		// Find all fields.
 		let items = element.querySelectorAll('input, select, textarea');
 
@@ -269,18 +259,30 @@ export class ConditionalTags {
 		for (const [key, item] of Object.entries(items)) {
 			const itemValue = item.value;
 			const itemName = item.name;
+			const itemType = item.type;
 
-			// Skip search field of the select.
-			if (itemName === 'search_terms') {
-				continue;
-			}
-
-			switch (item.type) {
+			switch (itemType) {
 				case 'radio':
 				case 'checkbox':
 					this.INTERNAL_DATA[this.FORM_ID].values = {
 						...this.INTERNAL_DATA[this.FORM_ID].values,
 						[itemValue]: item.checked ? itemValue : '',
+					}
+
+					// Do this only on init once.
+					if (isInit) {
+						this.INTERNAL_DATA[this.FORM_ID].types = {
+							...this.INTERNAL_DATA[this.FORM_ID].types,
+							[itemValue]: itemType,
+					}
+
+						this.INTERNAL_DATA[this.FORM_ID].customTypes = {
+							...this.INTERNAL_DATA[this.FORM_ID].customTypes,
+							[itemName]: [
+								...this.INTERNAL_DATA[this.FORM_ID].customTypes[itemName] ?? [],
+								itemValue,
+							],
+						}
 					}
 					break;
 				default:
@@ -288,9 +290,19 @@ export class ConditionalTags {
 						...this.INTERNAL_DATA[this.FORM_ID].values,
 						[itemName]: itemValue,
 					}
+
+					// Do this only on init once.
+					if (isInit) {
+						this.INTERNAL_DATA[this.FORM_ID].types = {
+							...this.INTERNAL_DATA[this.FORM_ID].types,
+							[itemName]: itemType,
+						}
+					}
 					break;
 			}
 		}
+
+		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 	}
 
 	/**
@@ -323,20 +335,25 @@ export class ConditionalTags {
 	 * Init fields logic to hide fields that are hidden by default.
 	 *
 	 * @param {object} element Form element.
-	 * @param {string} item Field name.
+	 * @param {string} name Field name.
 	 *
 	 * @returns void
 	 */
-	setInitFields(element, item) {
-		const values = this.INTERNAL_DATA[this.FORM_ID].reference[item];
-		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[item];
-
+	setInitFields(element, name) {
 		// Find if field is hidden by default and add class.
-		if (defaults === this.HIDE && values.length > 0) {
-			const fieldElement = this.getItemByName(element, item);
+		if (
+			this.INTERNAL_DATA[this.FORM_ID].defaults[name] === this.HIDE &&
+			this.INTERNAL_DATA[this.FORM_ID].reference[name].length > 0
+		) {
+			const fieldElement = this.getItemByName(element, name);
 
-			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			if (fieldElement) {
+				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+			}
 		}
+
+		// Check initial state of fields and set conditional logic. This applies if you set values to fields.
+		this.setFields(element, name);
 	}
 
 	/**
@@ -350,31 +367,39 @@ export class ConditionalTags {
 		// Loop all fields.
 		this.INTERNAL_DATA[this.FORM_ID].fields[item].forEach((items, parent) => {
 			items.forEach((inner, index) => {
-				const name = inner[0];
-				const operator = inner[1];
-				const value = inner[2];
+				const ruleName = inner[0];
+				const ruleOperator = inner[1];
+				const ruleValue = inner[2];
 
-				let condition = false;
+				let inputValue = '';
 
-				// Checkboxes are different.
-				if (name in this.INTERNAL_DATA[this.FORM_ID].checkboxes) {
-					// Set internal state.
-					let internalCheckboxesState = [];
+				let type = this.INTERNAL_DATA[this.FORM_ID].types[ruleValue];
 
-					// Loop all checkboxes with this name and push to internal state if the condition is true.
-					this.INTERNAL_DATA[this.FORM_ID].checkboxes[name].forEach((checkbox) => {
-						internalCheckboxesState.push(this.CONDITIONAL_TAGS_OPERATORS[operator](this.INTERNAL_DATA[this.FORM_ID].values[checkbox], value));
-						return;
-					});
-
-					// If checkboxes state contains true the rule is valid.
-					condition = internalCheckboxesState.includes(true);
-				} else {
-					// Do the normal operation for all other field types.
-					condition = this.CONDITIONAL_TAGS_OPERATORS[operator](this.INTERNAL_DATA[this.FORM_ID].values[name], value);
+				if (!type) {
+					type = this.INTERNAL_DATA[this.FORM_ID].types[this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName]?.[0]];
 				}
 
-				this.INTERNAL_DATA[this.FORM_ID].reference[item][parent][index] = condition;
+				switch (type) {
+					case 'radio':
+					case 'checkbox':
+						if (ruleValue === '') {
+							const checkIfAllEmpty = this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName].every((key) => this.INTERNAL_DATA[this.FORM_ID].values[key] === '');
+
+							if (checkIfAllEmpty) {
+								inputValue = '';
+							} else {
+								inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
+							}
+						} else {
+							inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
+						}
+						break;
+					default:
+						inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleName];
+						break;
+				}
+
+				this.INTERNAL_DATA[this.FORM_ID].reference[item][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[ruleOperator](inputValue, ruleValue);
 			});
 		});
 	}
@@ -388,98 +413,31 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	setFields(element, name) {
-
 		this.setFieldsRules(name);
 
-		const values = this.INTERNAL_DATA[this.FORM_ID].reference[name];
 		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[name];
 
 		// Check if conditions are valid or not. This is where the magic happens.
-		const ruleIndex = values.map((validItem) => validItem.every(Boolean));
-		const isValid = ruleIndex.some(Boolean);
-		const validIndex = ruleIndex.indexOf(true);
-		let innerItem = '';
-
-		console.log(ruleIndex, isValid);
-
-		if (validIndex !== -1) {
-			innerItem = this.INTERNAL_DATA[this.FORM_ID].fields?.[name]?.[validIndex]?.[0]?.[3] ?? [];
-		}
+		const isValid = this.INTERNAL_DATA[this.FORM_ID].reference[name].map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 		const fieldElement = this.getItemByName(element, name);
-
-		console.log(fieldElement);
 
 		this.resetFieldConditions(defaults, fieldElement);
 
 		if (isValid) {
-			this.setFieldConditions(defaults, fieldElement, innerItem, name);
+			this.setFieldConditions(defaults, fieldElement, name);
 		}
-
-		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 	}
 
-	setFieldConditions(type, fieldElement, innerItem, name) {
-		// switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
-		// 	case 'radios':
-		// 	case 'checkboxes':
-		// 		if (innerItem) {
-		// 			innerItem.forEach((item) => {
-		// 				const itemElement = fieldElement.querySelector(`input[name=${name}][value="${item}"]`)?.parentNode?.parentNode;
-		// 				console.log(itemElement, `input[name=${name}][value="${item}"]`);
-
-		// 				if (itemElement && type !== this.HIDE) {
-		// 						itemElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 					} else {
-		// 						itemElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 					}
-		// 			})
-		// 		}
-		// 		break;
-		// }
-
-		// console.log(innerItem);
-
-		// if (innerItem === -1) {
-			if (type !== this.HIDE) {
-				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-			} else {
-				fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-			}
-		// }
-
-		// if (items) {
-		// 	items.forEach((item) => {
-		// 		if (type !== this.HIDE) {
-		// 			item.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 		} else {
-		// 			item.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 		}
-		// 	});
-		// }
+	setFieldConditions(type, fieldElement, name) {
+		if (type !== this.HIDE) {
+			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
+		} else {
+			fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
+		}
 	}
 
 	resetFieldConditions(type, fieldElement) {
-		let items = [];
-
-		// switch (fieldElement.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType)) {
-		// 	case 'radios':
-		// 	case 'checkboxes':
-		// 		items = fieldElement.querySelectorAll('input');
-
-		// 		if (items) {
-		// 			items.forEach((item) => {
-		// 				if (type !== this.HIDE) {
-		// 					item?.parentNode?.parentNode.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				} else {
-		// 					item?.parentNode?.parentNode.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
-		// 				}
-		// 			})
-		// 		}
-		// 		break;
-		// }
-
-
 		if (type !== this.HIDE) {
 			fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
 		} else {

@@ -149,7 +149,6 @@ export const ConditionalTagsOptions = (attributes) => {
 						onChange={(value) => {
 							conditionalTagsRules[1][parent][index][0] = value;
 							conditionalTagsRules[1][parent][index][2] = '';
-							conditionalTagsRules[1][parent][index][3] = [];
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 						}}
 						noBottomSpacing
