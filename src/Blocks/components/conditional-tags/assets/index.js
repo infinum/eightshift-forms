@@ -162,7 +162,7 @@ export class ConditionalTags {
 		this.setInternalData(element);
 
 		// // Loop all fields and set data.
-		for (const [name, rules] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
+		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
 			// Hide initial fields that are set to hidden.
 			this.setInitFields(element, name);
 		}
@@ -182,7 +182,7 @@ export class ConditionalTags {
 		// Find all fields and all conditional logic data.
 		const fields = element.querySelectorAll(`[${this.utils.DATA_ATTRIBUTES.conditionalTags}]`);
 
-		// Loop all items.
+		// Loop all items with conditional tags.
 		[...fields].forEach((field) => {
 			// Get field name and tags.
 			const name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
@@ -240,7 +240,7 @@ export class ConditionalTags {
 			}
 		});
 
-
+		// Set initial values of fields.
 		this.setValues(element, true);
 	}
 
@@ -248,6 +248,7 @@ export class ConditionalTags {
 	 * Init fields initial values data.
 	 *
 	 * @param {object} element Form element.
+	 * @param {bool} isInit If this method is used in initial state or on every change.
 	 *
 	 * @returns void
 	 */
@@ -261,9 +262,11 @@ export class ConditionalTags {
 			const itemName = item.name;
 			const itemType = item.type;
 
+			// Make changes depending on the field type.
 			switch (itemType) {
 				case 'radio':
 				case 'checkbox':
+					// Set values based on the input value not the name depeneding on the check state.
 					this.INTERNAL_DATA[this.FORM_ID].values = {
 						...this.INTERNAL_DATA[this.FORM_ID].values,
 						[itemValue]: item.checked ? itemValue : '',
@@ -271,11 +274,13 @@ export class ConditionalTags {
 
 					// Do this only on init once.
 					if (isInit) {
+						// Add types data.
 						this.INTERNAL_DATA[this.FORM_ID].types = {
 							...this.INTERNAL_DATA[this.FORM_ID].types,
 							[itemValue]: itemType,
-					}
+						}
 
+						// Add custom types data.
 						this.INTERNAL_DATA[this.FORM_ID].customTypes = {
 							...this.INTERNAL_DATA[this.FORM_ID].customTypes,
 							[itemName]: [
@@ -286,6 +291,7 @@ export class ConditionalTags {
 					}
 					break;
 				default:
+					// Set values based on the input name depeneding on the value.
 					this.INTERNAL_DATA[this.FORM_ID].values = {
 						...this.INTERNAL_DATA[this.FORM_ID].values,
 						[itemName]: itemValue,
@@ -293,6 +299,7 @@ export class ConditionalTags {
 
 					// Do this only on init once.
 					if (isInit) {
+						// Add types data.
 						this.INTERNAL_DATA[this.FORM_ID].types = {
 							...this.INTERNAL_DATA[this.FORM_ID].types,
 							[itemName]: itemType,
@@ -301,8 +308,6 @@ export class ConditionalTags {
 					break;
 			}
 		}
-
-		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 	}
 
 	/**
@@ -366,15 +371,19 @@ export class ConditionalTags {
 	setFieldsRules(item) {
 		// Loop all fields.
 		this.INTERNAL_DATA[this.FORM_ID].fields[item].forEach((items, parent) => {
+			// Loop all inner fields.
 			items.forEach((inner, index) => {
 				const ruleName = inner[0];
 				const ruleOperator = inner[1];
 				const ruleValue = inner[2];
 
+				// Prepare temp input value.
 				let inputValue = '';
 
+				// Find field type from the state.
 				let type = this.INTERNAL_DATA[this.FORM_ID].types[ruleValue];
 
+				// If type is undefined this can be a custom field type like radios, checkboxes.
 				if (!type) {
 					type = this.INTERNAL_DATA[this.FORM_ID].types[this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName]?.[0]];
 				}
@@ -382,23 +391,30 @@ export class ConditionalTags {
 				switch (type) {
 					case 'radio':
 					case 'checkbox':
+						// This can be a empty rule value this is a checkboxes or radios empty value selection.
 						if (ruleValue === '') {
+							// We need to check all checkboxes or radios in this field to see if all are empty.
 							const checkIfAllEmpty = this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName].every((key) => this.INTERNAL_DATA[this.FORM_ID].values[key] === '');
 
+							// If all are empty just provide empty and this will be true.
 							if (checkIfAllEmpty) {
 								inputValue = '';
 							} else {
+								// If not all are empty output normal.
 								inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
 							}
 						} else {
+							// Find value of the item in the values object based on the value item.
 							inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
 						}
 						break;
 					default:
+						// Find value of the item in the values object based on the value name.
 						inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleName];
 						break;
 				}
 
+				// Do the check based on the operator and set reference data with the correct state.
 				this.INTERNAL_DATA[this.FORM_ID].reference[item][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[ruleOperator](inputValue, ruleValue);
 			});
 		});
@@ -413,23 +429,36 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	setFields(element, name) {
+		// Set reference data based on the condtions.
 		this.setFieldsRules(name);
 
+		// Find defaults to know what direction to use.
 		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[name];
 
 		// Check if conditions are valid or not. This is where the magic happens.
 		const isValid = this.INTERNAL_DATA[this.FORM_ID].reference[name].map((validItem) => validItem.every(Boolean)).some(Boolean);
 
+		// Find field or inner item to toggle.
 		const fieldElement = this.getItemByName(element, name);
 
+		// Reset to original state.
 		this.resetFieldConditions(defaults, fieldElement);
 
 		if (isValid) {
-			this.setFieldConditions(defaults, fieldElement, name);
+			// Change state.
+			this.setFieldConditions(defaults, fieldElement);
 		}
 	}
 
-	setFieldConditions(type, fieldElement, name) {
+	/**
+	 * Set new field state.
+	 *
+	 * @param {string} type Type show/hide.
+	 * @param {object} fieldElement Field element to toggle.
+	 *
+	 * @returns void
+	 */
+	setFieldConditions(type, fieldElement) {
 		if (type !== this.HIDE) {
 			fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 		} else {
@@ -437,6 +466,14 @@ export class ConditionalTags {
 		}
 	}
 
+	/**
+	 * Reset field to original state.
+	 *
+	 * @param {string} type Type show/hide.
+	 * @param {object} fieldElement Field element to toggle.
+	 *
+	 * @returns void
+	 */
 	resetFieldConditions(type, fieldElement) {
 		if (type !== this.HIDE) {
 			fieldElement.classList.remove(this.utils.SELECTORS.CLASS_HIDDEN);
@@ -445,7 +482,14 @@ export class ConditionalTags {
 		}
 	}
 
-	// Return field element by name.
+	/**
+	 * Return field element by name.
+	 *
+	 * @param {object} element Form element.
+	 * @param {string} name Name of the field.
+	 *
+	 * @returns {object} Item element.
+	 */
 	getItemByName(element, name) {
 		return element.querySelector(`[${this.utils.DATA_ATTRIBUTES.fieldName}="${name}"]`);
 	}
