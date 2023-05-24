@@ -27,9 +27,18 @@ $conditionalTags = Components::render(
 	Components::props('conditionalTags', $attributes)
 );
 
+$customAttributes = [];
+
+$customAttributes = [
+	AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName'] => $selectOptionValue,
+	AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType'] => 'option',
+];
+
 if ($conditionalTags) {
-	$selectOptionAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+	$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
 }
+
+$selectOptionAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties']] = wp_json_encode($customAttributes);
 
 $selectOptionAttrsOutput = '';
 if ($selectOptionAttrs) {

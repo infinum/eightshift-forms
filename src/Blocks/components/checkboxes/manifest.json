@@ -4,8 +4,7 @@
 	"title": "checkboxes",
 	"componentClass": "es-checkboxes",
 	"components": {
-		"field": "field",
-		"conditionalTags": "conditionalTags"
+		"field": "field"
 	},
 	"attributes": {
 		"checkboxesContent": {

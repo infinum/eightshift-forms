@@ -18,9 +18,6 @@ export class ConditionalTags {
 		// Define this forms ID.
 		this.FORM_ID = '';
 
-		// Internal Data.
-		this.INTERNAL_DATA = {};
-
 		// Map all conditional logic as a object.
 		this.CONDITIONAL_TAGS_OPERATORS = {
 			[this.utils.CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
@@ -78,7 +75,7 @@ export class ConditionalTags {
 
 		const interval = setInterval(() => {
 			// Wait until everything is fully loaded.
-			if (this.utils.getFormStateByKey('isLoaded', this.FORM_ID)) {
+			if (this.utils.getFormStateByKeys([this.utils.STATE_NAMES.ISLOADED], this.FORM_ID)) {
 				clearInterval(interval);
 
 				// Set forms logic.
@@ -145,32 +142,17 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	initFields(element) {
-		// Preset store object.
-		this.INTERNAL_DATA = {
-			[this.FORM_ID]: {
-				fields: {},
-				values: {},
-				defaults: {},
-				events: [],
-				reference: {},
-				customTypes: {},
-				types: {},
-			},
-		};
-
 		// Set internal preset data.
 		this.setInternalData(element);
 
 		// Loop all fields and set data.
-		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].fields)) {
+		for (const [name] of Object.entries(this.utils.getFormStateByKeys([this.utils.STATE_NAMES.FIELDS], this.FORM_ID))) {
 			// Hide initial fields that are set to hidden.
-			this.setInitFields(element, name);
+			this.setInitFields(name, element);
 		}
 
 		// Set event listeners.
 		this.setListeners(element);
-
-		console.log(this.INTERNAL_DATA[this.FORM_ID]);
 	}
 
 	/**
@@ -187,27 +169,24 @@ export class ConditionalTags {
 		// Loop all items with conditional tags.
 		[...fields].forEach((field) => {
 			// Get field name and tags.
-			const name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
+			let name = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName);
 			const tags = field.getAttribute(this.utils.DATA_ATTRIBUTES.conditionalTags);
+			const type = field.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType);
+
+			switch (type) {
+				case 'checkbox':
+				case 'radio':
+				case 'option':
+					name = `${field.closest(`${this.utils.fieldSelector}`).getAttribute(this.utils.DATA_ATTRIBUTES.fieldName)}---${name}`;
+					break;
+			}
 
 			// Bailout if missing data.
 			if (tags && name) {
 				// Set default object.
-				this.INTERNAL_DATA[this.FORM_ID] = {
-					...this.INTERNAL_DATA[this.FORM_ID],
-					defaults: {
-						...this.INTERNAL_DATA[this.FORM_ID].defaults,
-						[name]: this.HIDE,
-					},
-					fields: {
-						...this.INTERNAL_DATA[this.FORM_ID].fields,
-						[name]: [],
-					},
-					reference: {
-						...this.INTERNAL_DATA[this.FORM_ID].reference,
-						[name]: [],
-					},
-				}
+				this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.DEFAULTS, name], this.HIDE, this.FORM_ID);
+				this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.FIELDS, name], [], this.FORM_ID);
+				this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.REFERENCE, name], [], this.FORM_ID);
 
 				// Decode json data.
 				const tag = JSON.parse(tags);
@@ -216,8 +195,8 @@ export class ConditionalTags {
 
 				// Bailout if there is no logic.
 				if (dataItem.length > 0) {
-					this.INTERNAL_DATA[this.FORM_ID].defaults[name] = dataItem[0];
-					this.INTERNAL_DATA[this.FORM_ID].fields[name] = dataItem[1];
+					this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.DEFAULTS, name], dataItem[0], this.FORM_ID);
+					this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.FIELDS, name], dataItem[1], this.FORM_ID);
 
 					// Set init data for one field.
 					const output = [];
@@ -225,18 +204,13 @@ export class ConditionalTags {
 					// Loop fields.
 					dataItem[1].forEach((item, parent) => {
 						// Create initial state for logic for or/and.
-						output[parent] = Array(item.length).fill(false);
+						this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.REFERENCE, name], Array(item.length).fill(false), this.FORM_ID);
 
 						// Loop inner fields.
 						item.forEach((inner) => {
-							this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] = [
-								...this.INTERNAL_DATA[this.FORM_ID].events[inner[0]] ?? [],
-								name,
-							];
+							this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.EVENTS, inner[0]], name, this.FORM_ID);
 						});
 					});
-
-					this.INTERNAL_DATA[this.FORM_ID].reference[name] = output;
 				}
 			}
 		});
@@ -263,48 +237,53 @@ export class ConditionalTags {
 			const itemName = item.name;
 			const itemType = item.type;
 
+			if (itemName === 'search_terms') {
+				continue;
+			}
+
 			// Make changes depending on the field type.
 			switch (itemType) {
 				case 'radio':
-				case 'checkbox':
-					// Set values based on the input value not the name depeneding on the check state.
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemValue]: item.checked ? itemValue : '',
+					if (item.checked) {
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.VALUES, itemName], itemValue, this.FORM_ID);
 					}
 
-					// Do this only on init once.
 					if (isInit) {
-						// Add types data.
-						this.INTERNAL_DATA[this.FORM_ID].types = {
-							...this.INTERNAL_DATA[this.FORM_ID].types,
-							[itemValue]: itemType,
-						}
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.VALUES, itemName], '', this.FORM_ID);
 
-						// Add custom types data.
-						this.INTERNAL_DATA[this.FORM_ID].customTypes = {
-							...this.INTERNAL_DATA[this.FORM_ID].customTypes,
-							[itemName]: [
-								...this.INTERNAL_DATA[this.FORM_ID].customTypes[itemName] ?? [],
-								itemValue,
-							],
-						}
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, `${itemName}---${itemValue}`], item.parentNode.parentNode, this.FORM_ID);
+					}
+					break;
+				case 'checkbox':
+					this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.VALUES, `${itemName}---${itemValue}`], item.checked ? itemValue : '', this.FORM_ID);
+
+					if (isInit) {
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, `${itemName}---${itemValue}`], item.parentNode.parentNode, this.FORM_ID);
+						this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.CUSTOMTYPES, itemName], `${itemName}---${itemValue}`, this.FORM_ID);
+					}
+					break;
+				case 'select-one':
+					// Set values based on the input name depeneding on the value.
+					this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.VALUES, itemName], itemValue, this.FORM_ID);
+
+					if (isInit) {
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
+
+						item.parentNode.parentNode.querySelectorAll('.choices__list--dropdown .choices__item').forEach((option) => {
+							const optionValue = option.getAttribute('data-value');
+							if (optionValue) {
+								this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, `${itemName}---${option.getAttribute('data-value')}`], 'select', this.FORM_ID);
+							}
+						})
 					}
 					break;
 				default:
 					// Set values based on the input name depeneding on the value.
-					this.INTERNAL_DATA[this.FORM_ID].values = {
-						...this.INTERNAL_DATA[this.FORM_ID].values,
-						[itemName]: itemValue,
-					}
+					this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.VALUES, itemName], itemValue, this.FORM_ID);
 
-					// Do this only on init once.
 					if (isInit) {
-						// Add types data.
-						this.INTERNAL_DATA[this.FORM_ID].types = {
-							...this.INTERNAL_DATA[this.FORM_ID].types,
-							[itemName]: itemType,
-						}
+						this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
 					}
 					break;
 			}
@@ -320,58 +299,53 @@ export class ConditionalTags {
 	 */
 	setListeners(element) {
 		// Find all fields that need listeners.
-		for (const [name] of Object.entries(this.INTERNAL_DATA[this.FORM_ID].events)) {
-			const input = element.querySelector(`${this.utils.formSelector} [${this.utils.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+		const items = element.querySelectorAll(`input, textarea, select`);
 
-			// Bailout if non existing.
-			if (!input) {
-				return;
-			}
-
-			// Change logic for select.
-			if (input.localName === 'select') {
-				input.addEventListener('change', this.onChangeEvent);
-			} else {
-				input.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
-			}
+		if (items) {
+			items.forEach((item) => {
+				if (item.localName === 'select') {
+					item.addEventListener('change', this.onChangeEvent);
+				} else {
+					item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
+				}
+			});
 		}
 	}
 
 	/**
 	 * Init fields logic to hide fields that are hidden by default.
 	 *
-	 * @param {object} element Form element.
 	 * @param {string} name Field name.
 	 *
 	 * @returns void
 	 */
-	setInitFields(element, name) {
+	setInitFields(name, element) {
 		// Find if field is hidden by default and add class.
-		if (
-			this.INTERNAL_DATA[this.FORM_ID].defaults[name] === this.HIDE &&
-			this.INTERNAL_DATA[this.FORM_ID].reference[name].length > 0
-		) {
-			const fieldElement = this.getItemByName(element, name);
+		const fieldElement = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.ELEMENTS, name], this.FORM_ID);
 
+		if (
+			this.utils.getFormStateByKeys([this.utils.STATE_NAMES.DEFAULTS, name], this.FORM_ID) === this.HIDE &&
+			this.utils.getFormStateByKeys([this.utils.STATE_NAMES.REFERENCE, name], this.FORM_ID).length > 0
+		) {
 			if (fieldElement) {
 				fieldElement.classList.add(this.utils.SELECTORS.CLASS_HIDDEN);
 			}
 		}
 
 		// Check initial state of fields and set conditional logic. This applies if you set values to fields.
-		this.setFields(element, name);
+		// this.setFields(name, element);
 	}
 
 	/**
 	 * Do the actual logic of checking conditions for rule.
 	 *
-	 * @param {string} item Field name.
+	 * @param {string} name Field name.
 	 *
 	 * @returns void
 	 */
-	setFieldsRules(item) {
+	setFieldsRules(field) {
 		// Loop all fields.
-		this.INTERNAL_DATA[this.FORM_ID].fields[item].forEach((items, parent) => {
+		this.utils.getFormStateByKeys([this.utils.STATE_NAMES.FIELDS, field], this.FORM_ID).forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
 				const ruleName = inner[0];
@@ -382,41 +356,42 @@ export class ConditionalTags {
 				let inputValue = '';
 
 				// Find field type from the state.
-				let type = this.INTERNAL_DATA[this.FORM_ID].types[ruleValue];
+				// let type = this.INTERNAL_DATA[this.FORM_ID].types[ruleValue];
 
-				// If type is undefined this can be a custom field type like radios, checkboxes.
-				if (!type) {
-					type = this.INTERNAL_DATA[this.FORM_ID].types[this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName]?.[0]];
-				}
+				// // If type is undefined this can be a custom field type like radios, checkboxes.
+				// if (!type) {
+				// 	type = this.INTERNAL_DATA[this.FORM_ID].types[this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName]?.[0]];
+				// }
 
-				switch (type) {
-					case 'radio':
-					case 'checkbox':
-						// This can be a empty rule value this is a checkboxes or radios empty value selection.
-						if (ruleValue === '') {
-							// We need to check all checkboxes or radios in this field to see if all are empty.
-							const checkIfAllEmpty = this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName].every((key) => this.INTERNAL_DATA[this.FORM_ID].values[key] === '');
+				// switch (type) {
+				// 	// case 'radio':
+				// 	// case 'checkbox':
+				// 	// case 'select-one':
+				// 	// 	// This can be a empty rule value this is a checkboxes or radios empty value selection.
+				// 	// 	if (ruleValue === '') {
+				// 	// 		// We need to check all checkboxes or radios in this field to see if all are empty.
+				// 	// 		const checkIfAllEmpty = this.INTERNAL_DATA[this.FORM_ID].customTypes[ruleName].every((key) => this.INTERNAL_DATA[this.FORM_ID].values[key] === '');
 
-							// If all are empty just provide empty and this will be true.
-							if (checkIfAllEmpty) {
-								inputValue = '';
-							} else {
-								// If not all are empty output normal.
-								inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
-							}
-						} else {
-							// Find value of the item in the values object based on the value item.
-							inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
-						}
-						break;
-					default:
-						// Find value of the item in the values object based on the value name.
-						inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleName];
-						break;
-				}
+				// 	// 		// If all are empty just provide empty and this will be true.
+				// 	// 		if (checkIfAllEmpty) {
+				// 	// 			inputValue = '';
+				// 	// 		} else {
+				// 	// 			// If not all are empty output normal.
+				// 	// 			inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
+				// 	// 		}
+				// 	// 	} else {
+				// 	// 		// Find value of the item in the values object based on the value item.
+				// 	// 		inputValue = this.INTERNAL_DATA[this.FORM_ID].values[ruleValue];
+				// 	// 	}
+				// 	// 	break;
+				// 	default:
+				// 		// Find value of the item in the values object based on the value name.
+				// 		break;
+				// 	}
+					inputValue = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.VALUES, ruleName], this.FORM_ID);
 
 				// Do the check based on the operator and set reference data with the correct state.
-				this.INTERNAL_DATA[this.FORM_ID].reference[item][parent][index] = this.CONDITIONAL_TAGS_OPERATORS[ruleOperator](inputValue, ruleValue);
+				this.utils.setFormStateObjectByKeys([this.utils.STATE_NAMES.REFERENCE, field, parent, index], this.CONDITIONAL_TAGS_OPERATORS[ruleOperator](inputValue, ruleValue), this.FORM_ID);
 			});
 		});
 	}
@@ -424,31 +399,56 @@ export class ConditionalTags {
 	/**
 	 * Set master logic for conditional tags.
 	 *
-	 * @param {object} element Form element.
 	 * @param {string} name Field name.
 	 *
 	 * @returns void
 	 */
-	setFields(element, name) {
-		// Set reference data based on the condtions.
-		this.setFieldsRules(name);
+	setFields(name, element) {
 
-		// Find defaults to know what direction to use.
-		const defaults = this.INTERNAL_DATA[this.FORM_ID].defaults[name];
+		const fields = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.EVENTS, name], this.FORM_ID);
 
-		// Check if conditions are valid or not. This is where the magic happens.
-		const isValid = this.INTERNAL_DATA[this.FORM_ID].reference[name].map((validItem) => validItem.every(Boolean)).some(Boolean);
-
-		// Find field or inner item to toggle.
-		const fieldElement = this.getItemByName(element, name);
-
-		// Reset to original state.
-		this.resetFieldConditions(defaults, fieldElement);
-
-		if (isValid) {
-			// Change state.
-			this.setFieldConditions(defaults, fieldElement);
+		if (!fields) {
+			return;
 		}
+
+		fields.forEach((field) => {
+			// Set reference data based on the condtions.
+			this.setFieldsRules(field);
+
+			// Find defaults to know what direction to use.
+			const defaults = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.DEFAULTS, field], this.FORM_ID);
+
+			// Check if conditions are valid or not. This is where the magic happens.
+			const isValid = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.REFERENCE, field], this.FORM_ID).map((validItem) => validItem.every(Boolean)).some(Boolean);
+
+			// Find field or inner item to toggle.
+			const fieldDetails = field.split('---');
+			let fieldElement = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.ELEMENTS, field], this.FORM_ID);
+
+			console.log(fieldElement, isValid);
+			// if (fieldDetails.length > 1 && typeof fieldElement === 'string' && fieldElement === 'select') {
+			// 	fieldElement = this.utils.getFieldByName(element, fieldDetails[0]).querySelector(`.choices__list--dropdown .choices__item[data-value=${fieldDetails[1]}]`);
+			// }
+
+			if (!fieldElement) {
+				// return;
+			}
+
+			// console.log(this.INTERNAL_DATA[this.FORM_ID]);
+			// console.log(field);
+			// console.log(fieldElement);
+			// console.log(isValid);
+			// console.log(isSelect);
+			console.log('---------------');
+
+			// Reset to original state.
+			this.resetFieldConditions(defaults, fieldElement);
+
+			if (isValid) {
+				// Change state.
+				this.setFieldConditions(defaults, fieldElement);
+			}
+		});
 	}
 
 	/**
@@ -521,11 +521,8 @@ export class ConditionalTags {
 		const inputElement = event.target;
 		const formElement = inputElement.closest(this.utils.formSelector);
 
-		this.setValues(formElement);
-
-		this.INTERNAL_DATA[this.FORM_ID].events[inputElement.name].forEach((item) => {
-			this.setFields(formElement, item);
-		});
+		this.setValues(inputElement.closest(this.utils.formSelector));
+		this.setFields(inputElement.name, formElement);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -541,7 +538,6 @@ export class ConditionalTags {
 		if (typeof window?.[this.utils.getPrefix()]?.conditionalTags === 'undefined') {
 			window[this.utils.getPrefix()].conditionalTags = {
 				FORM_ID: this.FORM_ID,
-				INTERNAL_DATA: this.INTERNAL_DATA,
 				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
 				init: () => {
 					this.init();

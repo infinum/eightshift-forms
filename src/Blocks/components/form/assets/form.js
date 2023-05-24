@@ -440,7 +440,7 @@ export class Form {
 					break;
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.utils.getFormStateByName('files', name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
+					const fileList = this.utils.getFormStateByName([this.utils.STATE_NAMES.FILES], name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
 
 					// Loop files and append.
 					if (fileList.length) {
@@ -668,7 +668,7 @@ export class Form {
 				altInput: true,
 			});
 
-			this.utils.setFormStateByKey('dates', datePicker, formId);
+			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.DATES], datePicker, formId);
 		});
 	}
 
@@ -686,6 +686,8 @@ export class Form {
 			const selectPlaceholder = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectPlaceholder);
 			const selectAllowSearch = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch);
 
+			const utils = this.utils;
+
 			const choices = new Choices.default(select, {
 				searchEnabled: Boolean(selectAllowSearch),
 				shouldSort: false,
@@ -697,18 +699,35 @@ export class Form {
 				classNames: {
 					containerOuter: `choices ${this.utils.selectClassName}`,
 				},
-				callbackOnCreateTemplates: function() {
+				callbackOnCreateTemplates: function(template) {
 					return {
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
+							const properties = args?.[1]?.customProperties;
 
-							// Implement changes for phone/country picker.
-							if (selectShowCountryIcons) {
-								const findItem = args?.[1]?.customProperties;
+							console.log(args, this, this.choiceList.element.childNodes);
 
-								if (findItem) {
-									element.dataset.customProperties = findItem?.country;
-									return element;
+							if (properties) {
+								// Implement changes for phone/country picker.
+								const country = properties?.[utils.DATA_ATTRIBUTES.selectCountry];
+								if (country) {
+									element.setAttribute(utils.DATA_ATTRIBUTES.selectCountry, country);
+								}
+
+								// Conditional tags
+								const conditionalTags = properties?.[utils.DATA_ATTRIBUTES.conditionalTags];
+								if (conditionalTags) {
+									element.setAttribute(utils.DATA_ATTRIBUTES.conditionalTags, conditionalTags);
+								}
+
+								const fieldName = properties?.[utils.DATA_ATTRIBUTES.fieldName];
+								if (fieldName) {
+									element.setAttribute(utils.DATA_ATTRIBUTES.fieldName, fieldName);
+								}
+
+								const fieldType = properties?.[utils.DATA_ATTRIBUTES.fieldType];
+								if (fieldType) {
+									element.setAttribute(utils.DATA_ATTRIBUTES.fieldType, fieldType);
 								}
 							}
 
@@ -716,14 +735,15 @@ export class Form {
 						},
 						item: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
+							const properties = args?.[1]?.customProperties;
 
-							// Implement changes for phone/country picker.
-							if (selectShowCountryIcons) {
-								const findItem = args?.[1]?.customProperties;
+							console.log(args);
 
-								if (findItem) {
-									element.dataset.customProperties = findItem?.country;
-									return element;
+							if (properties) {
+								// Implement changes for phone/country picker.
+								const country = properties?.[utils.DATA_ATTRIBUTES.selectCountry];
+								if (country) {
+									element.setAttribute(utils.DATA_ATTRIBUTES.selectCountry, country);
 								}
 							}
 
@@ -741,8 +761,7 @@ export class Form {
 			});
 
 			this.utils.preFillOnInit(choices, 'select');
-
-			this.utils.setFormStateByKey('selects', choices, formId);
+			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.SELECTS], choices, formId);
 
 			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
 			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
@@ -770,7 +789,7 @@ export class Form {
 
 			autosize.default(textarea);
 
-			this.utils.setFormStateByKey('textareas', autosize.default, formId);
+			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.TEXTAREAS], autosize.default, formId);
 		});
 	}
 
@@ -806,7 +825,7 @@ export class Form {
 			});
 
 			// Set data to internal state.
-			this.utils.setFormStateByKey('files', myDropzone, formId);
+			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.FILES], myDropzone, formId);
 
 			// On add one file add selectors for UX.
 			myDropzone.on("addedfile", (file, a) => {
@@ -906,10 +925,10 @@ export class Form {
 
 		// Set interval because of dynamic import of choices.
 		const interval = setInterval(() => {
-			if (this.utils.getFormStateByKey('selects', formId)) {
+			if (this.utils.getFormStateByKeys([this.utils.STATE_NAMES.SELECTS], formId)) {
 				clearInterval(interval);
 
-				const selects = this.utils.getFormStateByKey('selects', formId);
+				const selects = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.SELECTS], formId);
 
 				if (selects.length !== 0) {
 					// Find all countries.
@@ -975,7 +994,7 @@ export class Form {
 				switch (input.type) {
 					case 'date':
 					case 'datetime-local':
-						this.utils.deleteFormStateByKey('dates', formId);
+						this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.DATES, formId);
 						break;
 				}
 
@@ -985,7 +1004,7 @@ export class Form {
 			});
 
 			[...selects].forEach(() => {
-				this.utils.deleteFormStateByKey('selects', formId);
+				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.SELECTS, formId);
 			});
 
 			// Setup textarea inputs.
@@ -994,12 +1013,12 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				this.utils.deleteFormStateByKey('textareas', formId);
+				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.TEXTAREAS, formId);
 			});
 
 			// Setup file single inputs.
 			[...files].forEach((file) => {
-				this.utils.deleteFormStateByKey('files', formId);
+				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.FILES, formId);
 
 				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
 
@@ -1105,7 +1124,7 @@ export class Form {
 		const index = event.currentTarget.getAttribute('dropzone-index');
 		const formId = event.currentTarget.getAttribute('dropzone-form-id');
 
-		this.utils.getFormStateByIndex('files', index, formId).hiddenFileInput.click();
+		this.utils.getFormStateByKeys([this.utils.STATE_NAMES.FILES, index], formId).hiddenFileInput.click();
 	};
 
 	/**

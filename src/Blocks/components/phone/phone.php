@@ -86,10 +86,14 @@ if (has_filter($filterName)) {
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
 
+		$customProperties = [
+			'country' => $code,
+		];
+
 		$options[] = '
 			<option
 				value="' . $value . '"
-				data-custom-properties="' . $code . '"
+				data-custom-properties=\'' . wp_json_encode($customProperties) . '\'
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
 			>+' . $value . '</option>';
 	}

@@ -135,7 +135,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$type = $blockName['name'];
 
-			if ($type === 'submit') {
+			if ($type === 'submit' || $type === 'file') {
 				continue;
 			}
 
@@ -152,44 +152,19 @@ class FormFieldsRoute extends AbstractBaseRoute
 				if (!$label) {
 					$label = $name;
 				}
-	
-				$outputItem = [
-					'label' => $label,
-					'value' => $name,
-					'type' => $type,
-					'subItems' => [],
-				];
-	
-				if ($value['innerBlocks']) {
-					$outputItem['subItems'][] = [
-						'label' => \__('Empty', 'eightshift-forms'),
-						'value' => '',
-					];
 
-					foreach ($value['innerBlocks'] as $valueInner) {
-						$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
-						$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
-	
-						$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"] ?? '';
-	
-						if (!$innerKeyValue) {
-							continue;
-						}
-	
-						$innerLabel = $valueInner['attrs']["{$prefixInner}Label"] ?? '';
-	
-						if (!$innerLabel) {
-							$innerLabel = $innerKeyValue;
-						}
-	
-						$outputItem['subItems'][] = [
-							'label' => $innerLabel,
-							'value' => $innerKeyValue,
-						];
+				if ($type === 'checkboxes') {
+					foreach ($this->getInnerItems($value['innerBlocks'], $type, false) as $value) {
+						$outputFields[] = $value;
 					}
+				} else {
+					$outputFields[] = [
+						'label' => $label,
+						'value' => $name,
+						'type' => $type,
+						'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
+					];
 				}
-
-				$outputFields[] = $outputItem;
 			}
 		}
 
@@ -202,5 +177,64 @@ class FormFieldsRoute extends AbstractBaseRoute
 				]
 			)
 		);
+	}
+
+	private function getInnerItems(array $items, string $parentType, bool $useEmpty = true): array
+	{
+		$output = [];
+
+		if (!$items) {
+			return $output;
+		}
+
+		if ($useEmpty) {
+			$output[] = [
+				'label' => $parentType === 'radios' ? \__('Unchecked', 'eightshift-forms') : \__('Unselected', 'eightshift-forms'),
+				'value' => '',
+			];
+		}
+
+		foreach ($items as $item) {
+			$blockName = Helper::getBlockNameDetails($item['blockName']);
+			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
+
+			$innerKeyValue =  $item['attrs']["{$prefix}Value"] ?? '';
+
+			if (!$innerKeyValue) {
+				continue;
+			}
+
+			$innerLabel = $item['attrs']["{$prefix}Label"] ?? '';
+
+			if (!$innerLabel) {
+				$innerLabel = $innerKeyValue;
+			}
+
+			$delimiter = AbstractBaseRoute::DELIMITER;
+
+			$outputItem = [
+				'label' => $innerLabel,
+				'value' => "{$parentType}{$delimiter}{$innerKeyValue}",
+			];
+
+			if ($blockName['name'] === 'checkbox') {
+				// $outputItem['value'] = $innerKeyValue;
+				$outputItem['type'] = $blockName['name'];
+				$outputItem['subItems'] = [
+					[
+						'label' => __('Unchecked' , 'eightshift-forms'),
+						'value' => '',
+					],
+					[
+						'label' => __('Checked' , 'eightshift-forms'),
+						'value' => "{$parentType}{$delimiter}{$innerKeyValue}",
+					],
+				];
+			}
+
+			$output[] = $outputItem;
+		}
+
+		return $output;
 	}
 }

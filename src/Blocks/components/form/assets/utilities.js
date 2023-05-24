@@ -155,6 +155,23 @@ export class Utils {
 		// Internal State.
 		this.FORMS_STATE = {}
 
+		// State names.
+		this.STATE_NAMES = {
+			SELECTS: 'selects',
+			TEXTAREAS: 'textareas',
+			DATES: 'dates',
+			FILES: 'files',
+			ISLOADED: 'isloaded',
+			FIELDS: 'cfFields',
+			VALUES: 'cfValues',
+			DEFAULTS: 'cfDefaults',
+			EVENTS: 'cfEvents',
+			REFERENCE: 'cfReference',
+			CUSTOMTYPES: 'cfCustomTypes',
+			ELEMENTS: 'cfElements',
+		}
+
+
 		// Set all public methods.
 		this.publicMethods();
 	}
@@ -169,48 +186,102 @@ export class Utils {
 	}
 
 	// Set state initial.
-	setFormStateInitial(formId = 0) {
+	setFormStateInitial(formId) {
 		if (!window[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`]) {
 			window[this.getPrefix()].utils.FORMS_STATE = {
 				...window[this.getPrefix()].utils.FORMS_STATE,
 				[`form_${formId}`]: {
-					selects: [],
-					textareas: [],
-					dates: [],
-					files: [],
-					isLoaded: false,
+					[this.STATE_NAMES.SELECTS]: [],
+					[this.STATE_NAMES.TEXTAREAS]: [],
+					[this.STATE_NAMES.DATES]: [],
+					[this.STATE_NAMES.FILES]: [],
+					[this.STATE_NAMES.ISLOADED]: false,
+
+					[this.STATE_NAMES.FIELDS]: {},
+					[this.STATE_NAMES.VALUES]: {},
+					[this.STATE_NAMES.DEFAULTS]: {},
+					[this.STATE_NAMES.EVENTS]: {},
+					[this.STATE_NAMES.REFERENCE]: {},
+					[this.STATE_NAMES.CUSTOMTYPES]: {},
+					[this.STATE_NAMES.ELEMENTS]: {},
 				}
 			}
 		}
 	}
 
-	// Get state by key.
-	getFormStateByKey(key, formId = 0) {
-		return window?.[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`]?.[key];
+	setFormStateObjectByKeys(keyArray, value, formId) {
+		const formKey = `form_${formId}`;
+		let stateObject = window[this.getPrefix()].utils.FORMS_STATE[formKey];
+
+		keyArray.forEach((key, index) => {
+			if (index === keyArray.length - 1) {
+				stateObject[key] = value;
+			} else {
+				stateObject[key] = stateObject[key] || {};
+				stateObject = stateObject[key];
+			}
+		});
+
+		window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
+			...window[this.getPrefix()].utils.FORMS_STATE[formKey],
+			...stateObject[keyArray[0]]
+		};
 	}
 
-	// Set state by key.
-	setFormStateByKey(key, value, formId = 0) {
-		if (typeof value === 'boolean') {
-			window[this.getPrefix()].utils.FORMS_STATE[`form_${formId}`][key] = value;
+	// Set state array by key.
+	setFormStateArrayByKeys(keyArray, value, formId) {
+		const formKey = `form_${formId}`;
+		let stateObject = window[this.getPrefix()].utils.FORMS_STATE[formKey];
+	
+		keyArray.forEach((key, index) => {
+			if (index === keyArray.length - 1) {
+				stateObject[key] = stateObject[key] || [];
+				stateObject[key].push(value);
+			} else {
+				stateObject[key] = stateObject[key] || {};
+				stateObject = stateObject[key];
+			}
+		});
+	
+		if (keyArray.length === 1) {
+			window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
+				...window[this.getPrefix()].utils.FORMS_STATE[formKey],
+				...stateObject,
+			};
 		} else {
-			window[this.getPrefix()].utils.FORMS_STATE[`form_${formId}`][key].push(value);
+			window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
+				...window[this.getPrefix()].utils.FORMS_STATE[formKey],
+				[keyArray[0]]: stateObject,
+			};
 		}
 	}
 
 	// Delete state item by key
-	deleteFormStateByKey(key, formId = 0) {
-		this.setFormStateByKey(key, [], formId);
+	deleteFormStateByKey(key, formId) {
+		// this.setFormStateByKey(key, [], formId);
 	}
 
-	// Get state by index.
-	getFormStateByIndex(key, index, formId = 0) {
-		return window?.[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`]?.[key]?.[index];
+	// Get state by keys.
+	getFormStateByKeys(keys, formId) {
+		let stateObject = window?.[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`];
+	
+		if (!stateObject) {
+			return undefined;
+		}
+	
+		keys.forEach((key) => {
+			stateObject = stateObject[key];
+			if (!stateObject) {
+				return undefined;
+			}
+		});
+	
+		return stateObject;
 	}
 
 	// Get state by field name.
-	getFormStateByName(key, name, formId = 0) {
-		return this.getFormStateByKey(key, formId).find((item) => item.esFormsName === name);
+	getFormStateByName(key, name, formId) {
+		return this.getFormStateByKeys(key, formId).find((item) => item.esFormsName === name);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -527,8 +598,8 @@ export class Utils {
 			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
-			if (this.getFormStateByKey('selects', formId)) {
-				this.getFormStateByKey('selects', formId).forEach((item) => {
+			if (this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId)) {
+				this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId).forEach((item) => {
 					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.DATA_ATTRIBUTES.selectInitial));
 					item.clearInput();
 					item.unhighlightAll();
@@ -536,8 +607,8 @@ export class Utils {
 			}
 
 			// Unset the files in the submitted form.
-			if (this.getFormStateByKey('files', formId)) {
-				this.getFormStateByKey('files', formId).forEach((item, index) => {
+			if (this.getFormStateByKeys([this.STATE_NAMES.FILES], formId)) {
+				this.getFormStateByKeys([this.STATE_NAMES.FILES], formId).forEach((item, index) => {
 					item.removeAllFiles();
 				});
 			}
@@ -630,9 +701,9 @@ export class Utils {
 	// Check if form is fully loaded.
 	isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength) {
 		const interval = setInterval(() => {
-			const selects = this.getFormStateByKey('selects', formId);
-			const textareas = this.getFormStateByKey('textareas', formId);
-			const files = this.getFormStateByKey('files', formId);
+			const selects = this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId);
+			const textareas = this.getFormStateByKeys([this.STATE_NAMES.TEXTAREAS], formId);
+			const files = this.getFormStateByKeys([this.STATE_NAMES.FILES], formId);
 
 			if (
 				selects.length >= selectsLength &&
@@ -641,7 +712,7 @@ export class Utils {
 			) {
 				clearInterval(interval);
 
-				this.setFormStateByKey('isLoaded', true, formId);
+				this.setFormStateObjectByKeys([this.STATE_NAMES.ISLOADED], true, formId);
 
 				// Triger event that form is fully loaded.
 				this.dispatchFormEvent(element, this.EVENTS.FORM_JS_LOADED);
@@ -679,6 +750,11 @@ export class Utils {
 	// Return field element by name.
 	getFieldByName(element, name) {
 		return element.querySelector(`${this.fieldSelector}[${this.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+	}
+
+	// Return field element by value.
+	getCheckboxByValue(element, value) {
+		return element.querySelector(`${this.fieldSelector} input[type="checkbox"][value="${value}"]`);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -787,22 +863,19 @@ export class Utils {
 				getPrefix: () => {
 					return this.getPrefix();
 				},
-				setFormStateInitial: (formId = 0) => {
+				setFormStateInitial: (formId) => {
 					return this.setFormStateInitial(formId);
 				},
-				getFormStateByKey: (key, formId = 0) => {
-					return this.getFormStateByKey(key, formId);
+				getFormStateByKeys: (key, formId) => {
+					return this.getFormStateByKeys(key, formId);
 				},
-				setFormStateByKey: (key, value, formId = 0) => {
-					return this.setFormStateByKey(key, value, formId);
+				setFormStateObjectByKeys: (key, value, formId) => {
+					return this.setFormStateObjectByKeys(key, value, formId);
 				},
-				deleteFormStateByKey: (key, formId = 0) => {
+				deleteFormStateByKey: (key, formId) => {
 					return this.deleteFormStateByKey(key, formId);
 				},
-				getFormStateByIndex: (key, name, formId = 0) => {
-					return this.getFormStateByIndex(key, name, formId);
-				},
-				getFormStateByName: (key, name, formId = 0) => {
+				getFormStateByName: (key, name, formId) => {
 					return this.getFormStateByName(key, name, formId);
 				},
 				unsetGlobalMsg: (element) => {
