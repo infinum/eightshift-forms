@@ -1,176 +1,15 @@
 /* global esFormsLocalization */
 
-import manifest from './../manifest.json';
-import selectManifest from './../../select/manifest.json';
-
-const {
-	componentJsClass,
-} = manifest;
-
-/**
- * Conditional tags operators constants.
- *
- * show - show item it conditions is set, hidden by default.
- * hide - hide item it conditions is set, visible by default.
- *
- * all - activate condition if all conditions in rules array are met.
- * any - activate condition if at least one condition in rules array is met.
- *
- * is  - is                  - if value is exact match.
- * isn - is not              - if value is not exact match.
- * gt  - greater than        - if value is greater than.
- * gte  - greater/equal than - if value is greater/equal than.
- * lt  - less than           - if value is less than.
- * lte  - less/equal than    - if value is less/equal than.
- * c   - contains            - if value contains value.
- * sw  - starts with         - if value starts with value.
- * ew  - ends with           - if value starts with value.
- */
-export const CONDITIONAL_TAGS_OPERATORS = {
-	IS: 'is',
-	ISN: 'isn',
-	GT: 'gt',
-	GTE: 'gte',
-	LT: 'lt',
-	LTE: 'lte',
-	C: 'c',
-	SW: 'sw',
-	EW: 'ew',
-};
-
-/**
- * Conditional tags actions constants.
- *
- * show - show item it conditions is set, hidden by default.
- * hide - hide item it conditions is set, visible by default.
- */
-export const CONDITIONAL_TAGS_ACTIONS = {
-	SHOW: 'show',
-	HIDE: 'hide',
-};
-
-/**
- * Conditional tags logic constants.
- *
- * or - activate condition if at least one condition in rules array is met.
- * and - activate condition if all conditions in rules array are met.
- */
-export const CONDITIONAL_TAGS_LOGIC = {
-	OR: 'or',
-	AND: 'and',
-};
+import { State } from './state';
+import { Data } from './data';
 
 /**
  * Main Utilities class.
  */
 export class Utils {
 	constructor(options = {}) {
-		// Prefix.
-		this.prefix = 'esForms';
-
-		// Detect if form is used in admin for settings or on the frontend.
-		this.formIsAdmin = options.formIsAdmin ?? false;
-
-		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}`;
-
-		// Selectors.
-		this.formSelectorPrefix = options.formSelectorPrefix ?? `.${componentJsClass}`;
-
-		// Specific selectors.
-		this.formSelector =  this.formSelectorPrefix;
-		this.submitSingleSelector =  `${this.formSelectorPrefix}-single-submit`;
-		this.stepSelector =  `${this.formSelectorPrefix}-step`;
-		this.stepSubmitSelector =  `${this.formSelectorPrefix}-step-trigger`;
-		this.errorSelector =  `${this.formSelectorPrefix}-error`;
-		this.loaderSelector =  `${this.formSelectorPrefix}-loader`;
-		this.globalMsgSelector =  `${this.formSelectorPrefix}-global-msg`;
-		this.groupSelector =  `${this.formSelectorPrefix}-group`;
-		this.fieldSelector =  `${this.formSelectorPrefix}-field`;
-		this.dateFieldSelector =  `${this.formSelectorPrefix}-date`;
-		this.countryFieldSelector =  `${this.formSelectorPrefix}-county`;
-		this.inputSelector =  `${this.fieldSelector} input`;
-		this.textareaSelector =  `${this.fieldSelector} textarea`;
-		this.selectSelector =  `${this.fieldSelector} select`;
-		this.fileSelector =  `${this.fieldSelector} input[type='file']`;
-
-		// Class names.
-		this.selectClassName = selectManifest.componentClass;
-
-		// Custom fields params.
-		this.FORM_PARAMS = options.customFormParams ?? esFormsLocalization.customFormParams ?? {};
-
-		// Custom data attributes.
-		this.DATA_ATTRIBUTES = options.customFormDataAttributes ?? esFormsLocalization.customFormDataAttributes ?? {};
-
-		// Settings options from the backend.
-		this.SETTINGS = {
-			FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR: Boolean(options.formDisableScrollToFieldOnError ?? esFormsLocalization.formDisableScrollToFieldOnError),
-			FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS: Boolean(options.formDisableScrollToGlobalMessageOnSuccess ?? esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess),
-			FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS: Boolean(options.formDisableNativeRedirectOnSuccess ?? esFormsLocalization.formDisableNativeRedirectOnSuccess),
-			FORM_RESET_ON_SUCCESS: Boolean(options.formResetOnSuccess ?? esFormsLocalization.formResetOnSuccess),
-			REDIRECTION_TIMEOUT: options.redirectionTimeout ?? esFormsLocalization.redirectionTimeout ?? 600,
-			HIDE_GLOBAL_MESSAGE_TIMEOUT: options.hideGlobalMessageTimeout ?? esFormsLocalization.hideGlobalMessageTimeout ?? 6000,
-			HIDE_LOADING_STATE_TIMEOUT: options.hideLoadingStateTimeout ?? esFormsLocalization.hideLoadingStateTimeout ?? 600,
-			FILE_CUSTOM_REMOVE_LABEL: options.fileCustomRemoveLabel ?? esFormsLocalization.fileCustomRemoveLabel ?? '',
-			FORM_SERVER_ERROR_MSG: options.formServerErrorMsg ?? esFormsLocalization.formServerErrorMsg ?? '',
-			CAPTCHA: options.captcha ?? esFormsLocalization.captcha ?? [],
-			ENRICHMENT_CONFIG: options.enrichmentConfig ?? esFormsLocalization.enrichmentConfig ?? '[]',
-		};
-
-		// All custom events.
-		this.EVENTS = {
-			BEFORE_FORM_SUBMIT: `${this.prefix}BeforeFormSubmit`,
-			AFTER_FORM_SUBMIT: `${this.prefix}AfterFormSubmit`,
-			AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT: `${this.prefix}AfterFormSubmitSuccessBeforeRedirect`,
-			AFTER_FORM_SUBMIT_SUCCESS: `${this.prefix}AfterFormSubmitSuccess`,
-			AFTER_FORM_SUBMIT_RESET: `${this.prefix}AfterFormSubmitReset`,
-			AFTER_FORM_SUBMIT_ERROR: `${this.prefix}AfterFormSubmitError`,
-			AFTER_FORM_SUBMIT_ERROR_VALIDATION: `${this.prefix}AfterFormSubmitErrorValidation`,
-			AFTER_FORM_SUBMIT_END: `${this.prefix}AfterFormSubmitEnd`,
-			AFTER_FORM_EVENTS_CLEAR: `${this.prefix}AfterFormEventsClear`,
-			BEFORE_GTM_DATA_PUSH: `${this.prefix}BeforeGtmDataPush`,
-			FORMS_JS_LOADED: `${this.prefix}JsLoaded`,
-			FORM_JS_LOADED: `${this.prefix}JsFormLoaded`,
-			AFTER_CAPTCHA_INIT: `${this.prefix}AfterCaptchaInit`,
-		};
-
-		// All form custom state selectors.
-		this.SELECTORS = {
-			CLASS_ACTIVE: 'is-active',
-			CLASS_FILLED: 'is-filled',
-			CLASS_LOADING: 'is-loading',
-			CLASS_HIDDEN: 'is-hidden',
-			CLASS_VISIBLE: 'is-visible',
-			CLASS_HAS_ERROR: 'has-error',
-		};
-
-		this.DELIMITER = esFormsLocalization.delimiter;
-
-		// Conditional tags
-		this.CONDITIONAL_TAGS_OPERATORS = CONDITIONAL_TAGS_OPERATORS;
-		this.CONDITIONAL_TAGS_ACTIONS = CONDITIONAL_TAGS_ACTIONS;
-		this.CONDITIONAL_TAGS_LOGIC = CONDITIONAL_TAGS_LOGIC;
-
-		// Internal State.
-		this.FORMS_STATE = {}
-
-		// State names.
-		this.STATE_NAMES = {
-			SELECTS: 'selects',
-			TEXTAREAS: 'textareas',
-			DATES: 'dates',
-			FILES: 'files',
-			ISLOADED: 'isloaded',
-			FIELDS: 'cfFields',
-			VALUES: 'cfValues',
-			DEFAULTS: 'cfDefaults',
-			EVENTS: 'cfEvents',
-			REFERENCE: 'cfReference',
-			CUSTOMTYPES: 'cfCustomTypes',
-			ELEMENTS: 'cfElements',
-		}
-
+		this.data = new Data(options.data);
+		this.state = new State();
 
 		// Set all public methods.
 		this.publicMethods();
@@ -180,109 +19,7 @@ export class Utils {
 	// State callback
 	////////////////////////////////////////////////////////////////
 
-	// Get project js prefix.
-	getPrefix() {
-		return this.prefix;
-	}
 
-	// Set state initial.
-	setFormStateInitial(formId) {
-		if (!window[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`]) {
-			window[this.getPrefix()].utils.FORMS_STATE = {
-				...window[this.getPrefix()].utils.FORMS_STATE,
-				[`form_${formId}`]: {
-					[this.STATE_NAMES.SELECTS]: [],
-					[this.STATE_NAMES.TEXTAREAS]: [],
-					[this.STATE_NAMES.DATES]: [],
-					[this.STATE_NAMES.FILES]: [],
-					[this.STATE_NAMES.ISLOADED]: false,
-
-					[this.STATE_NAMES.FIELDS]: {},
-					[this.STATE_NAMES.VALUES]: {},
-					[this.STATE_NAMES.DEFAULTS]: {},
-					[this.STATE_NAMES.EVENTS]: {},
-					[this.STATE_NAMES.REFERENCE]: {},
-					[this.STATE_NAMES.CUSTOMTYPES]: {},
-					[this.STATE_NAMES.ELEMENTS]: {},
-				}
-			}
-		}
-	}
-
-	setFormStateObjectByKeys(keyArray, value, formId) {
-		const formKey = `form_${formId}`;
-		let stateObject = window[this.getPrefix()].utils.FORMS_STATE[formKey];
-
-		keyArray.forEach((key, index) => {
-			if (index === keyArray.length - 1) {
-				stateObject[key] = value;
-			} else {
-				stateObject[key] = stateObject[key] || {};
-				stateObject = stateObject[key];
-			}
-		});
-
-		window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
-			...window[this.getPrefix()].utils.FORMS_STATE[formKey],
-			...stateObject[keyArray[0]]
-		};
-	}
-
-	// Set state array by key.
-	setFormStateArrayByKeys(keyArray, value, formId) {
-		const formKey = `form_${formId}`;
-		let stateObject = window[this.getPrefix()].utils.FORMS_STATE[formKey];
-	
-		keyArray.forEach((key, index) => {
-			if (index === keyArray.length - 1) {
-				stateObject[key] = stateObject[key] || [];
-				stateObject[key].push(value);
-			} else {
-				stateObject[key] = stateObject[key] || {};
-				stateObject = stateObject[key];
-			}
-		});
-	
-		if (keyArray.length === 1) {
-			window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
-				...window[this.getPrefix()].utils.FORMS_STATE[formKey],
-				...stateObject,
-			};
-		} else {
-			window[this.getPrefix()].utils.FORMS_STATE[formKey] = {
-				...window[this.getPrefix()].utils.FORMS_STATE[formKey],
-				[keyArray[0]]: stateObject,
-			};
-		}
-	}
-
-	// Delete state item by key
-	deleteFormStateByKey(key, formId) {
-		// this.setFormStateByKey(key, [], formId);
-	}
-
-	// Get state by keys.
-	getFormStateByKeys(keys, formId) {
-		let stateObject = window?.[this.getPrefix()]?.utils?.FORMS_STATE?.[`form_${formId}`];
-	
-		if (!stateObject) {
-			return undefined;
-		}
-	
-		keys.forEach((key) => {
-			stateObject = stateObject[key];
-			if (!stateObject) {
-				return undefined;
-			}
-		});
-	
-		return stateObject;
-	}
-
-	// Get state by field name.
-	getFormStateByName(key, name, formId) {
-		return this.getFormStateByKeys(key, formId).find((item) => item.esFormsName === name);
-	}
 
 	////////////////////////////////////////////////////////////////
 	// Public methods
@@ -290,13 +27,13 @@ export class Utils {
 
 	// Unset global message.
 	unsetGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.globalMsgSelector);
+		const messageContainer = element.querySelector(this.data.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
 		}
 
-		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
+		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -304,10 +41,10 @@ export class Utils {
 	// Reset form in general.
 	reset(element) {
 		// Reset all error classes on fields.
-		element.querySelectorAll(`${this.fieldSelector}.${this.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
-			item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+		element.querySelectorAll(`${this.data.fieldSelector}.${this.data.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
+			item.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
 
-			const value = item.querySelector(this.errorSelector);
+			const value = item.querySelector(this.data.errorSelector);
 
 			if (value) {
 				value.innerHTML = ''
@@ -318,13 +55,17 @@ export class Utils {
 	}
 
 	// Remove one field error by name.
-	removeFieldErrorByName(element, name) {
-		const item = element.querySelector(`${this.fieldSelector}.${this.SELECTORS.CLASS_HAS_ERROR}[${this.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+	removeFieldErrorByName(name, formId) {
+		const data = this.state.getStateElement(name, formId);
 
-		if (item) {
-			item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+		const {
+			field,
+		} = data;
 
-			const value = item.querySelector(this.errorSelector);
+		if (field.classList.contains(this.data.SELECTORS.CLASS_HAS_ERROR)) {
+			field.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
+
+			const value = field.querySelector(this.data.errorSelector);
 
 			if (value) {
 				value.innerHTML = ''
@@ -356,15 +97,15 @@ export class Utils {
 
 	// Show loader.
 	showLoader(element) {
-		const loader = element.querySelector(this.loaderSelector);
+		const loader = element.querySelector(this.data.loaderSelector);
 
-		element?.classList?.add(this.SELECTORS.CLASS_LOADING);
+		element?.classList?.add(this.data.SELECTORS.CLASS_LOADING);
 
 		if (!loader) {
 			return;
 		}
 
-		loader.classList.add(this.SELECTORS.CLASS_ACTIVE);
+		loader.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 	}
 
 	// Output all error for fields.
@@ -375,9 +116,9 @@ export class Utils {
 
 		// Set error classes and error text on fields which have validation errors.
 		for (const [key] of Object.entries(fields)) {
-			const item = element.querySelector(`${this.errorSelector}[data-id="${key}"]`);
+			const item = element.querySelector(`${this.data.errorSelector}[data-id="${key}"]`);
 
-			item?.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_HAS_ERROR);
+			item?.closest(this.data.fieldSelector).classList.add(this.data.SELECTORS.CLASS_HAS_ERROR);
 
 			if (item !== null) {
 				item.innerHTML = fields[key];
@@ -385,45 +126,45 @@ export class Utils {
 		}
 
 		// Scroll to element if the condition is right.
-		if (Object.entries(fields).length > 0 && !this.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR) {
+		if (Object.entries(fields).length > 0 && !this.data.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR) {
 			const firstItem = Object.keys(fields)[0];
 
-			this.scrollToElement(element.querySelector(`${this.errorSelector}[data-id="${firstItem}"]`).parentElement);
+			this.scrollToElement(element.querySelector(`${this.data.errorSelector}[data-id="${firstItem}"]`).parentElement);
 		}
 	}
 
 	// Hide loader.
 	hideLoader(element) {
-		const loader = element.querySelector(this.loaderSelector);
+		const loader = element.querySelector(this.data.loaderSelector);
 
 		setTimeout(() => {
-			element?.classList?.remove(this.SELECTORS.CLASS_LOADING);
+			element?.classList?.remove(this.data.SELECTORS.CLASS_LOADING);
 
 			if (!loader) {
 				return;
 			}
 
-			loader.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-		}, parseInt(this.SETTINGS.HIDE_LOADING_STATE_TIMEOUT, 10));
+			loader.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+		}, parseInt(this.data.SETTINGS.HIDE_LOADING_STATE_TIMEOUT, 10));
 	}
 
 	// Set global message.
 	setGlobalMsg(element, msg, status) {
-		const messageContainer = element.querySelector(this.globalMsgSelector);
+		const messageContainer = element.querySelector(this.data.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
 		}
 
-		const headingSuccess = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingSuccess);
-		const headingError = messageContainer?.getAttribute(this.DATA_ATTRIBUTES.globalMsgHeadingError);
+		const headingSuccess = messageContainer?.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess);
+		const headingError = messageContainer?.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError);
 
-		messageContainer.classList.add(this.SELECTORS.CLASS_ACTIVE);
+		messageContainer.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
 
 		// Scroll to msg if the condition is right.
 		if (status === 'success') {
-			if (!this.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS) {
+			if (!this.data.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS) {
 				this.scrollToElement(messageContainer);
 			}
 
@@ -443,13 +184,13 @@ export class Utils {
 
 	// Hide global message.
 	hideGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.globalMsgSelector);
+		const messageContainer = element.querySelector(this.data.globalMsgSelector);
 
 		if (!messageContainer) {
 			return;
 		}
 
-		messageContainer.classList.remove(this.SELECTORS.CLASS_ACTIVE);
+		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 	}
 
 	// Build GTM data for the data layer.
@@ -463,8 +204,8 @@ export class Utils {
 			}
 
 			const itemValue = JSON.parse(value);
-			const item = element.querySelector(`${this.fieldSelector} [name="${itemValue.name}"]`);
-			const trackingValue = item?.getAttribute(this.DATA_ATTRIBUTES.tracking);
+			const item = element.querySelector(`${this.data.fieldSelector} [name="${itemValue.name}"]`);
+			const trackingValue = item?.getAttribute(this.data.DATA_ATTRIBUTES.tracking);
 			if (!trackingValue) {
 				continue;
 			}
@@ -516,12 +257,12 @@ export class Utils {
 
 	// Submit GTM event.
 	gtmSubmit(element, formData, status, errors) {
-		const eventName = element.getAttribute(this.DATA_ATTRIBUTES.trackingEventName);
+		const eventName = element.getAttribute(this.data.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
 			const gtmData = this.getGtmData(element, eventName, formData);
 
-			const additionalData = JSON.parse(element.getAttribute(this.DATA_ATTRIBUTES.trackingAdditionalData));
+			const additionalData = JSON.parse(element.getAttribute(this.data.DATA_ATTRIBUTES.trackingAdditionalData));
 			let additionalDataItems = additionalData?.general;
 
 			if (status === 'success') {
@@ -551,77 +292,92 @@ export class Utils {
 			}
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
+				this.dispatchFormEvent(element, this.data.EVENTS.BEFORE_GTM_DATA_PUSH);
 				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
 	}
 
 	// Prefill inputs active/filled on init.
-	preFillOnInit(input, type) {
+	setFieldVisualState(data) {
+		const {
+			type,
+			value,
+			field,
+		} = data;
+
+		let condition = false;
+
 		switch (type) {
 			case 'checkbox':
-			case 'radio':
-				if (input.checked) {
-					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
-				}
-				break;
-			case 'select': {
-				if (input.esFormsFieldType === 'phone') {
-					break;
-				}
+				condition = Object.values(value).filter((item) => item !== '').length > 0;
+				break
+			// 	if (checked) {
+			// 		field.classList.add(this.data.SELECTORS.CLASS_FILLED);
+			// 	}
+			// 	break;
+			// case 'select': 
+			
+				// if (input.esFormsFieldType === 'phone') {
+				// 	break;
+				// }
 
-				const customSelect = input.config.choices;
+			// 	const customSelect = input.config.choices;
 
-				if (customSelect.some((item) => item.selected === true && item.value !== '')) {
-					input.passedElement.element.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
-				}
-				break;
-			}
-			case 'tel': {
-				if (input.value && input.value.length) {
-					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
-				}
-				break;
-			}
+			// 	if (customSelect.some((item) => item.selected === true && item.value !== '')) {
+			// 		input.passedElement.element.closest(this.data.fieldSelector).classList.add(this.data.SELECTORS.CLASS_FILLED);
+			// 	}
+				// break;
+			// }
+			// case 'tel': {
+			// 	if (input.value && input.value.length) {
+			// 		input.field.classList.add(this.data.SELECTORS.CLASS_FILLED);
+			// 	}
+			// 	break;
+			// }
 			default:
-				if (input.value && input.value.length) {
-					input.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_FILLED);
-				}
+				condition = value && value.length;
 				break;
+		}
+
+		if (condition) {
+			field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+			field.classList.add(this.data.SELECTORS.CLASS_FILLED);
+		} else {
+			field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE, this.data.SELECTORS.CLASS_FILLED);
 		}
 	}
 
 	// Reset form values if the condition is right.
 	resetForm(element) {
-		if (this.SETTINGS.FORM_RESET_ON_SUCCESS) {
-			const formId = element.getAttribute(this.DATA_ATTRIBUTES.formPostId);
+		if (this.data.SETTINGS.FORM_RESET_ON_SUCCESS) {
+			const formId = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
 
 			// Unset the choices in the submitted form.
-			if (this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId)) {
-				this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId).forEach((item) => {
-					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.DATA_ATTRIBUTES.selectInitial));
+			if (this.getState([this.state.SELECTS], formId)) {
+				this.getState([this.state.SELECTS], formId).forEach((item) => {
+					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.data.DATA_ATTRIBUTES.selectInitial));
 					item.clearInput();
 					item.unhighlightAll();
 				});
 			}
 
 			// Unset the files in the submitted form.
-			if (this.getFormStateByKeys([this.STATE_NAMES.FILES], formId)) {
-				this.getFormStateByKeys([this.STATE_NAMES.FILES], formId).forEach((item, index) => {
+			if (this.getState([this.state.FILES], formId)) {
+				this.getState([this.state.FILES], formId).forEach((item, index) => {
 					item.removeAllFiles();
 				});
 			}
 
-			const fields = element.querySelectorAll(this.fieldSelector);
+			const fields = element.querySelectorAll(this.data.fieldSelector);
 
 			[...fields].forEach((item) => {
-				item.classList.remove(this.SELECTORS.CLASS_FILLED);
-				item.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-				item.classList.remove(this.SELECTORS.CLASS_HAS_ERROR);
+				item.classList.remove(this.data.SELECTORS.CLASS_FILLED);
+				item.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+				item.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
 			});
 
-			const inputs = element.querySelectorAll(`${this.inputSelector}, ${this.textareaSelector}`);
+			const inputs = element.querySelectorAll(`${this.data.inputSelector}, ${this.data.textareaSelector}`);
 			[...inputs].forEach((item) => {
 				item.value = '';
 				item.checked = false;
@@ -631,15 +387,15 @@ export class Utils {
 			document.activeElement.blur();
 
 			// Dispatch event.
-			this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_RESET);
+			this.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_RESET);
 		}
 	}
 
 	// Redirect to url and update url params from from data.
 	redirectToUrl(element, formData) {
-		let redirectUrl = element.getAttribute(this.DATA_ATTRIBUTES.successRedirect) ?? '';
-		const downloads = element.getAttribute(this.DATA_ATTRIBUTES.downloads) ?? '';
-		const variation = element.getAttribute(this.DATA_ATTRIBUTES.successRedirectVariation) ?? '';
+		let redirectUrl = element.getAttribute(this.data.DATA_ATTRIBUTES.successRedirect) ?? '';
+		const downloads = element.getAttribute(this.data.DATA_ATTRIBUTES.downloads) ?? '';
+		const variation = element.getAttribute(this.data.DATA_ATTRIBUTES.successRedirectVariation) ?? '';
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -664,9 +420,9 @@ export class Utils {
 
 	// Redirect to url by provided path.
 	redirectToUrlByRefference(redirectUrl, element, reload = false) {
-		this.dispatchFormEvent(element, this.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
+		this.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
 
-		if (!this.SETTINGS.FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS) {
+		if (!this.data.SETTINGS.FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS) {
 			// Do the actual redirect after some time.
 			setTimeout(() => {
 				window.location = redirectUrl;
@@ -674,72 +430,64 @@ export class Utils {
 				if (reload) {
 					window.location.reload();
 				}
-			}, parseInt(this.SETTINGS.REDIRECTION_TIMEOUT, 10));
+			}, parseInt(this.data.SETTINGS.REDIRECTION_TIMEOUT, 10));
 		}
 	}
 
 	// Check if captcha is used.
 	isCaptchaUsed() {
-		return Boolean(this.SETTINGS.CAPTCHA?.['siteKey']);
+		return Boolean(this.data.SETTINGS.CAPTCHA?.['siteKey']);
 	}
 
 	// Check if captcha init is used.
 	isCaptchaInitUsed() {
-		return Boolean(this.SETTINGS.CAPTCHA?.['loadOnInit']);
+		return Boolean(this.data.SETTINGS.CAPTCHA?.['loadOnInit']);
 	}
 
 	// Check if captcha badge is hidden.
 	isCaptchaHideBadgeUsed() {
-		return Boolean(this.SETTINGS.CAPTCHA?.['hideBadge']);
+		return Boolean(this.data.SETTINGS.CAPTCHA?.['hideBadge']);
 	}
 
 	// Check if captcha enterprise is used.
 	isCaptchaEnterprise() {
-		return Boolean(this.SETTINGS.CAPTCHA?.['isEnterprise']);
+		return Boolean(this.data.SETTINGS.CAPTCHA?.['isEnterprise']);
 	}
 
 	// Check if form is fully loaded.
-	isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength) {
+	isFormLoaded(formId) {
 		const interval = setInterval(() => {
-			const selects = this.getFormStateByKeys([this.STATE_NAMES.SELECTS], formId);
-			const textareas = this.getFormStateByKeys([this.STATE_NAMES.TEXTAREAS], formId);
-			const files = this.getFormStateByKeys([this.STATE_NAMES.FILES], formId);
-
-			if (
-				selects.length >= selectsLength &&
-				textareas.length >= textareaLenght &&
-				files.length >= filesLength
-			) {
+			if (this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.LOADED, false, formId).length === 0) {
 				clearInterval(interval);
 
-				this.setFormStateObjectByKeys([this.STATE_NAMES.ISLOADED], true, formId);
+				this.state.setState([this.state.ISLOADED], true, formId);
 
 				// Triger event that form is fully loaded.
-				this.dispatchFormEvent(element, this.EVENTS.FORM_JS_LOADED);
+				this.dispatchFormEvent(this.state.getStateFormElement(formId), this.data.EVENTS.FORM_JS_LOADED);
 			}
 		}, 100);
 	}
 
 	// Check if form is loaded in admin.
 	isFormAdmin() {
-		return this.formIsAdmin;
+		return this.data.formIsAdmin;
 	}
 
 	// Append common form data items.
 	getCommonFormDataItems(params) {
 		return [
 			{
-				key: this.FORM_PARAMS.postId,
+				key: this.data.FORM_PARAMS.postId,
 				value: JSON.stringify({
-					name: this.FORM_PARAMS.postId,
+					name: this.data.FORM_PARAMS.postId,
 					value: params?.formId,
 					type: 'hidden',
 				}),
 			},
 			{
-				key: this.FORM_PARAMS.type,
+				key: this.data.FORM_PARAMS.type,
 				value: JSON.stringify({
-					name: this.FORM_PARAMS.type,
+					name: this.data.FORM_PARAMS.type,
 					value: params?.formType,
 					type: 'hidden',
 				}),
@@ -749,12 +497,12 @@ export class Utils {
 
 	// Return field element by name.
 	getFieldByName(element, name) {
-		return element.querySelector(`${this.fieldSelector}[${this.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+		return element.querySelector(`${this.data.fieldSelector}[${this.data.DATA_ATTRIBUTES.fieldName}="${name}"]`);
 	}
 
 	// Return field element by value.
 	getCheckboxByValue(element, value) {
-		return element.querySelector(`${this.fieldSelector} input[type="checkbox"][value="${value}"]`);
+		return element.querySelector(`${this.data.fieldSelector} input[type="checkbox"][value="${value}"]`);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -763,50 +511,50 @@ export class Utils {
 
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
-		event.target.closest(this.fieldSelector).classList.add(this.SELECTORS.CLASS_ACTIVE);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
+
+		this.state.getStateElementField(name, this.state.getFormIdByElement(event.target)).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 	};
+
+	onChangeEvent = (event) => {
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const formId = this.state.getFormIdByElement(event.target);
+		const type = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
+		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
+
+		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
+
+		if (!this.state.getStateFormPhoneDisablePicker(formId) || this.state.getStateFormPhoneUseSync(formId)) {
+			if (type === 'country') {
+				console.log(this.state.getStateFormPhoneDisablePicker(formId));
+				const country = this.state.getStateElementValueCountry(name, formId);
+	
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'tel', formId)].forEach((tel) => {
+					tel[this.state.ITEMS].setChoiceByValue(country.number);
+				});
+			}
+
+			if (type === 'phone') {
+				const phone = this.state.getStateElementValueCountry(name, formId);
+
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'country', formId)].forEach((country) => {
+					country[this.state.ITEMS].setChoiceByValue(phone.label);
+				});
+			}
+		}
+	}
+
+	onInputEvent = (event) => {
+		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
+	}
 
 	// On Blur generic method. Check for length of value.
 	onBlurEvent = (event) => {
-		const element = event.target;
-		const field = element.closest(this.fieldSelector);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
 
-		let toCheck = element;
-		let condition = false;
-		let type = element.type;
-
-		if (element.classList.contains('choices')) {
-			type = 'choices';
-		}
-
-		switch (type) {
-			case 'radio':
-				condition = element.checked;
-				break;
-			case 'checkbox':
-				condition = field.querySelectorAll('input:checked').length;
-				break;
-			case 'select':
-				toCheck = element.options[element.options.selectedIndex];
-
-				condition = toCheck?.value && toCheck?.value.length;
-				break;
-			case 'choices':
-				toCheck = element.querySelector('option');
-
-				condition = toCheck?.value && toCheck?.value.length;
-				break;
-			default:
-				condition = element?.value && element?.value.length;
-				break;
-		}
-
-		if (condition) {
-			field.classList.remove(this.SELECTORS.CLASS_ACTIVE);
-			field.classList.add(this.SELECTORS.CLASS_FILLED);
-		} else {
-			field.classList.remove(this.SELECTORS.CLASS_ACTIVE, this.SELECTORS.CLASS_FILLED);
-		}
+		this.setFieldVisualState(this.state.getStateElement(name, this.state.getFormIdByElement(event.target)))
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -819,13 +567,12 @@ export class Utils {
 	 * @private
 	 */
 	 publicMethods() {
-		if (typeof window?.[this.getPrefix()] === 'undefined') {
-			window[this.getPrefix()] = {};
+		if (typeof window?.[this.data.prefix] === 'undefined') {
+			window[this.data.prefix] = {};
 		}
 
-		if (typeof window?.[this.getPrefix()]?.utils === 'undefined') {
-			window[this.getPrefix()].utils = {
-				prefix: this.prefix,
+		if (typeof window?.[this.data.prefix]?.utils === 'undefined') {
+			window[this.data.prefix].utils = {
 				formIsAdmin: this.formIsAdmin,
 				formSubmitRestApiUrl: this.formSubmitRestApiUrl,
 
@@ -834,24 +581,24 @@ export class Utils {
 				formSelector: this.formSelector,
 				submitSingleSelector: this.submitSingleSelector,
 				stepSelector: this.stepSelector,
-				errorSelector: this.errorSelector,
-				loaderSelector: this.loaderSelector,
-				globalMsgSelector: this.globalMsgSelector,
+				errorSelector: this.data.errorSelector,
+				loaderSelector: this.data.loaderSelector,
+				globalMsgSelector: this.data.globalMsgSelector,
 				groupSelector: this.groupSelector,
-				fieldSelector: this.fieldSelector,
+				fieldSelector: this.data.fieldSelector,
 				dateFieldSelector: this.dateFieldSelector,
 				countryFieldSelector: this.countryFieldSelector,
-				inputSelector: this.inputSelector,
-				textareaSelector: this.textareaSelector,
+				inputSelector: this.data.inputSelector,
+				textareaSelector: this.data.textareaSelector,
 				selectSelector: this.selectSelector,
 				fileSelector: this.fileSelector,
 
 				selectClassName: this.selectClassName,
 
-				FORM_PARAMS: this.FORM_PARAMS,
-				DATA_ATTRIBUTES: this.DATA_ATTRIBUTES,
-				SETTINGS: this.SETTINGS,
-				EVENTS: this.EVENTS,
+				FORM_PARAMS: this.data.FORM_PARAMS,
+				DATA_ATTRIBUTES: this.data.DATA_ATTRIBUTES,
+				SETTINGS: this.data.SETTINGS,
+				EVENTS: this.data.EVENTS,
 				SELECTORS: this.SELECTORS,
 				DELIMITER: this.DELIMITER,
 				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
@@ -860,20 +607,8 @@ export class Utils {
 
 				FORMS_STATE: this.FORMS_STATE,
 
-				getPrefix: () => {
-					return this.getPrefix();
-				},
 				setFormStateInitial: (formId) => {
 					return this.setFormStateInitial(formId);
-				},
-				getFormStateByKeys: (key, formId) => {
-					return this.getFormStateByKeys(key, formId);
-				},
-				setFormStateObjectByKeys: (key, value, formId) => {
-					return this.setFormStateObjectByKeys(key, value, formId);
-				},
-				deleteFormStateByKey: (key, formId) => {
-					return this.deleteFormStateByKey(key, formId);
 				},
 				getFormStateByName: (key, name, formId) => {
 					return this.getFormStateByName(key, name, formId);
@@ -914,8 +649,8 @@ export class Utils {
 				gtmSubmit: (element, formData, status, errors) => {
 					this.gtmSubmit(element, formData, status, errors);
 				},
-				preFillOnInit: (input, type) => {
-					this.preFillOnInit(input, type);
+				setFieldVisualState: (input, type) => {
+					this.setFieldVisualState(input, type);
 				},
 				resetForm: (element) => {
 					this.resetForm(element);

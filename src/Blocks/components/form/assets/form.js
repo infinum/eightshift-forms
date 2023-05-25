@@ -1,27 +1,24 @@
 /* global grecaptcha, esFormsLocalization */
 
-import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets';
 import { Steps } from './../../step/assets';
 import { Enrichment } from './enrichment';
 import { Utils } from './utilities';
+import { State } from './state';
+import { Data } from './data';
 
 /**
  * Main Forms class.
  */
 export class Form {
-	constructor(options = {}) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
-
-		/** @type Enrichment */
-		this.enrichment = new Enrichment(this.utils);
-
-		/** @type ConditionalTags */
-		this.conditionalTags = new ConditionalTags(this.utils);
-
-		/** @type Steps */
-		this.steps = new Steps(this.utils);
+	constructor() {
+		this.data = new Data();
+		this.state = new State();
+		this.utils = new Utils();
+		this.enrichment = new Enrichment();
+		this.conditionalTags = new ConditionalTags();
+		this.steps = new Steps();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -38,19 +35,16 @@ export class Form {
 		this.publicMethods();
 
 		// Init step.
-		this.steps.init();
+		// this.steps.init();
 
 		// Init all forms.
 		this.initOnlyForms();
 
 		// Init conditional tags.
-		this.conditionalTags.init();
+		// this.conditionalTags.init();
 
 		// Init enrichment.
-		this.enrichment.init();
-
-		// Triger event that forms are fully loaded.
-		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
+		// this.enrichment.init();
 	}
 
 	/**
@@ -59,11 +53,13 @@ export class Form {
 	 * @public
 	 */
 	initOnlyForms() {
-		const elements = document.querySelectorAll(this.utils.formSelector);
-
 		// Loop all forms on the page.
-		[...elements].forEach((element) => {
-			this.initOne(element);
+		[...document.querySelectorAll(this.data.formSelector)].forEach((element) => {
+			const formId = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId) || 0;
+
+			this.state.setFormStateInitial(formId);
+
+			this.initOne(formId);
 		});
 	}
 
@@ -74,13 +70,15 @@ export class Form {
 	 *
 	 * @public
 	 */
-	initOne(element) {
+	initOne(formId) {
+		const form = this.state.getStateFormElement(formId);
+
 		// Regular submit.
-		element.addEventListener('submit', this.onFormSubmitEvent);
+		form.addEventListener('submit', this.onFormSubmitEvent);
 
 		// Single submit for admin settings.
 		if (this.utils.isFormAdmin()) {
-			const items = element.querySelectorAll(this.utils.submitSingleSelector);
+			const items = form.querySelectorAll(this.data.submitSingleSelector);
 
 			// Look all internal items for single submit option.
 			[...items].forEach((item) => {
@@ -92,56 +90,51 @@ export class Form {
 			});
 		}
 
-		// Get form ID.
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId) || 0;
-
-		// Form loading started.
-		this.utils.setFormStateInitial(formId);
-
-		// All fields selectors.
-		const inputs = element.querySelectorAll(this.utils.inputSelector);
-		const textareas = element.querySelectorAll(this.utils.textareaSelector);
-		const selects = element.querySelectorAll(this.utils.selectSelector);
-		const files = element.querySelectorAll(this.utils.fileSelector);
-
-		// Setup regular inputs.
-		[...inputs].forEach((input) => {
-			switch (input.type) {
-				case 'date':
-				case 'datetime-local':
-					this.setupDateField(input, formId);
-					break;
-			}
-
-			this.setupInputField(input);
-		});
-
 		// Setup select inputs.
-		[...selects].forEach((select) => {
-			this.setupSelectField(select, formId);
-		});
-
-		// Setup textarea inputs.
-		[...textareas].forEach((textarea) => {
-			this.setupTextareaField(textarea, formId);
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'select', formId)].forEach((select) => {
+			this.setupSelectField(select.name, formId);
 		});
 
 		// Setup file single inputs.
-		[...files].forEach((file, index) => {
-			this.setupFileField(file, formId, index, element);
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'file', formId)].forEach((file) => {
+			this.setupFileField(file.name, formId);
+		});
+
+		// Setup regular inputs.
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'text', formId)].forEach((input) => {
+			// switch (input.type) {
+			// 	case 'date':
+			// 	case 'datetime-local':
+			// 		// this.setupDateField(input, this.utils.FORM_ID);
+			// 		break;
+			// }
+
+			this.setupInputField(input.name, formId);
+		});
+
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'tel', formId)].forEach((tel) => {
+			this.setupTelField(tel.name, formId);
+		});
+
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'checkbox', formId)].forEach((checkbox) => {
+			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
+				this.setupRadioCheckboxField(checkboxItem.value, checkboxItem.name, formId);
+			});
+		});
+
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'radio', formId)].forEach((radio) => {
+			[...Object.values(radio.items)].forEach((radioItem) => {
+				this.setupRadioCheckboxField(radioItem.value, radioItem.name, formId);
+			});
+		});
+
+		// Setup textarea inputs.
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'textarea', formId)].forEach((textarea) => {
+			this.setupTextareaField(textarea.name, formId);
 		});
 
 		// Form loaded.
-		this.utils.isFormLoaded(
-			formId,
-			element,
-			selects.length,
-			textareas.length,
-			files.length
-		);
-
-		// Setup phone sync.
-		this.setupPhoneSync(element, formId);
+		this.utils.isFormLoaded(formId);
 	}
 
 	/**
@@ -170,7 +163,7 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
+		fetch(`${this.data.formSubmitRestApiUrl}-captcha`, body)
 		.then((response) => {
 			return response.json();
 		})
@@ -191,7 +184,7 @@ export class Form {
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
+				}, parseInt(this.data.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 			}
 		});
 	}
@@ -208,11 +201,11 @@ export class Form {
 	 */
 	formSubmit(element, singleSubmit = false, isStepSubmit = false) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
+		this.utils.dispatchFormEvent(element, this.data.EVENTS.BEFORE_FORM_SUBMIT);
 
 		const formData = this.getFormData(element, singleSubmit, isStepSubmit);
 
-		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+		const formType = element.getAttribute(this.data.DATA_ATTRIBUTES.formType);
 
 		// Populate body data.
 		const body = {
@@ -228,11 +221,11 @@ export class Form {
 		};
 
 		// Url for frontend forms.
-		let url = `${this.utils.formSubmitRestApiUrl}-${formType}`;
+		let url = `${this.data.formSubmitRestApiUrl}-${formType}`;
 
 		// For admin settings use different url and add nonce.
 		if (this.utils.isFormAdmin()) {
-			url = this.utils.formSubmitRestApiUrl;
+			url = this.data.formSubmitRestApiUrl;
 			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
 		}
 
@@ -242,7 +235,7 @@ export class Form {
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT, response);
+				this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT, response);
 
 				// Clear all errors.
 				this.utils.reset(element);
@@ -260,9 +253,9 @@ export class Form {
 						this.utils.gtmSubmit(element, formData, response.status);
 
 						// Dispatch event.
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
+						this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
 
-						if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
+						if (element.hasAttribute(this.data.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 							// Set global msg.
 							this.utils.setGlobalMsg(element, response.message, 'success');
 
@@ -278,7 +271,7 @@ export class Form {
 							if (response?.data?.processExternaly) {
 								setTimeout(() => {
 									element.submit();
-								}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
+								}, parseInt(this.data.SETTINGS.REDIRECTION_TIMEOUT, 10));
 							}
 
 							// Set global msg.
@@ -299,12 +292,12 @@ export class Form {
 
 						// Dispatch event.
 						if (isValidationError) {
-							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
+							this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION, response);
 
 							this.steps.goBackToFirstValidationErrorStep(element, response?.data?.validation);
 							this.utils.outputErrors(element, response?.data?.validation);
 						} else {
-							this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
+							this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_ERROR, response);
 						}
 
 						this.utils.setGlobalMsg(element, response.message, 'error');
@@ -314,10 +307,10 @@ export class Form {
 				// Hide global msg in any case after some time.
 				setTimeout(() => {
 					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
+				}, parseInt(this.data.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
 
 				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END, response);
+				this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_END, response);
 			});
 	}
 
@@ -333,9 +326,9 @@ export class Form {
 		const formData = new FormData();
 		const selectors = 'input, select, textarea';
 
-		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+		const groups = element.querySelectorAll(`${this.data.groupSelector}`);
+		const formId = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
+		const formType = element.getAttribute(this.data.DATA_ATTRIBUTES.formType);
 		let items = element.querySelectorAll(selectors);
 
 		// If single submit override items and pass only one item to submit.
@@ -347,7 +340,7 @@ export class Form {
 			// Check if we are saving group items in one key.
 			if (groups.length) {
 				for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-					const groupSaveAsOneField = Boolean(group.getAttribute(this.utils.DATA_ATTRIBUTES.groupSaveAsOneField));
+					const groupSaveAsOneField = Boolean(group.getAttribute(this.data.DATA_ATTRIBUTES.groupSaveAsOneField));
 
 					if (!groupSaveAsOneField) {
 						continue;
@@ -372,7 +365,7 @@ export class Form {
 							groupInnerItems[id] = value;
 						}
 
-						const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
+						const groupId = group.getAttribute(this.data.DATA_ATTRIBUTES.fieldId);
 
 						if (groupId) {
 							formData.append(groupId, JSON.stringify({
@@ -416,7 +409,7 @@ export class Form {
 			};
 
 			// Adde internal type for additional logic in some integrations.
-			data.internalType = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldTypeInternal);
+			data.internalType = item.getAttribute(this.data.DATA_ATTRIBUTES.fieldTypeInternal);
 
 			if (formType === 'hubspot') {
 				data.objectTypeId = objectTypeId ?? '';
@@ -432,7 +425,7 @@ export class Form {
 					// If checkbox/radio on empty change to empty value.
 					if (!checked) {
 						// If unchecked value attribute is added use that if not send an empty value.
-						data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+						data.value = item.getAttribute(this.data.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
 					}
 
 					formData.append(id, JSON.stringify(data));
@@ -440,7 +433,7 @@ export class Form {
 					break;
 				case 'file':
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.utils.getFormStateByName([this.utils.STATE_NAMES.FILES], name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
+					const fileList = this.state.getState([this.state.FILES, name], formId)?.files ?? []; // eslint-disable-line no-case-declarations
 
 					// Loop files and append.
 					if (fileList.length) {
@@ -459,7 +452,7 @@ export class Form {
 					break;
 				case 'select-one':
 					// Bailout if select is part of the phone.
-					if (item.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType) === 'phone') {
+					if (item.closest(this.data.fieldSelector).getAttribute(this.data.DATA_ATTRIBUTES.fieldType) === 'phone') {
 						break;
 					}
 
@@ -474,7 +467,7 @@ export class Form {
 					formData.append(id, JSON.stringify(data));
 					break;
 				case 'tel':
-					const phoneDisablePicker = Boolean(element.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker)); // eslint-disable-line no-case-declarations
+					const phoneDisablePicker = Boolean(element.getAttribute(this.data.DATA_ATTRIBUTES.phoneDisablePicker)); // eslint-disable-line no-case-declarations
 					if (phoneDisablePicker) {
 						formData.append(id, JSON.stringify(data));
 						break;
@@ -491,7 +484,7 @@ export class Form {
 
 					break;
 				case 'textarea':
-					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarations
+					const saveAsJson = Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarations
 
 					// Convert textarea to json format with : as delimiter.
 					if (saveAsJson) {
@@ -539,50 +532,50 @@ export class Form {
 		}
 
 		// Add form action field.
-		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
-			name: this.utils.FORM_PARAMS.action,
+		formData.append(this.data.FORM_PARAMS.action, JSON.stringify({
+			name: this.data.FORM_PARAMS.action,
 			value: element.getAttribute('action'),
 			type: 'hidden',
 		}));
 
 		// Add action external field.
-		formData.append(this.utils.FORM_PARAMS.actionExternal, JSON.stringify({
-			name: this.utils.FORM_PARAMS.actionExternal,
-			value: element.getAttribute(this.utils.DATA_ATTRIBUTES.actionExternal),
+		formData.append(this.data.FORM_PARAMS.actionExternal, JSON.stringify({
+			name: this.data.FORM_PARAMS.actionExternal,
+			value: element.getAttribute(this.data.DATA_ATTRIBUTES.actionExternal),
 			type: 'hidden',
 		}));
 
 		// Add additional options for HubSpot only.
 		if (formType === 'hubspot' && !this.utils.isFormAdmin()) {
-			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotCookie,
+			formData.append(this.data.FORM_PARAMS.hubspotCookie, JSON.stringify({
+				name: this.data.FORM_PARAMS.hubspotCookie,
 				value: cookies.getCookie('hubspotutk'),
 				type: 'hidden',
 			}));
 
-			formData.append(this.utils.FORM_PARAMS.hubspotPageName, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotPageName,
+			formData.append(this.data.FORM_PARAMS.hubspotPageName, JSON.stringify({
+				name: this.data.FORM_PARAMS.hubspotPageName,
 				value: document.title,
 				type: 'hidden',
 			}));
 
-			formData.append(this.utils.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotPageUrl,
+			formData.append(this.data.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
+				name: this.data.FORM_PARAMS.hubspotPageUrl,
 				value: window.location.href,
 				type: 'hidden',
 			}));
 		}
 
 		if (this.utils.isFormAdmin()) {
-			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
-				name: this.utils.FORM_PARAMS.settingsType,
-				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
+			formData.append(this.data.FORM_PARAMS.settingsType, JSON.stringify({
+				name: this.data.FORM_PARAMS.settingsType,
+				value: element.getAttribute(this.data.DATA_ATTRIBUTES.settingsType),
 				type: 'hidden',
 			}));
 
 			if (singleSubmit) {
-				formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
-					name: this.utils.FORM_PARAMS.singleSubmit,
+				formData.append(this.data.FORM_PARAMS.singleSubmit, JSON.stringify({
+					name: this.data.FORM_PARAMS.singleSubmit,
 					value: 'true',
 					type: 'hidden',
 				}));
@@ -595,8 +588,8 @@ export class Form {
 			const storage = this.enrichment.getLocalStorage();
 
 			if (storage) {
-				formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
-					name: this.utils.FORM_PARAMS.storage,
+				formData.append(this.data.FORM_PARAMS.storage, JSON.stringify({
+					name: this.data.FORM_PARAMS.storage,
 					value: storage,
 					type: 'hidden',
 				}));
@@ -604,25 +597,25 @@ export class Form {
 		}
 
 		// Output fields to validate if we are validating steps only.
-		const stepId = this.steps.getCurrentStep(element);
-		if (stepId && isStepSubmit) {
-			// Find all fields by name in the step.
-			const fieldsInStep = this.steps.getAllFieldsInStep(element, stepId);
+		// const stepId = this.steps.getCurrentStep(element);
+		// if (stepId && isStepSubmit) {
+		// 	// Find all fields by name in the step.
+		// 	const fieldsInStep = this.steps.getAllFieldsInStep(element, stepId);
 
-			if (fieldsInStep) {
-				// Find all field names and remove null ones (submit).
-				const outputStepFields = Array.from(fieldsInStep, (stepField) => stepField.getAttribute(this.utils.DATA_ATTRIBUTES.fieldName)).filter(n => n);
+		// 	if (fieldsInStep) {
+		// 		// Find all field names and remove null ones (submit).
+		// 		const outputStepFields = Array.from(fieldsInStep, (stepField) => stepField.getAttribute(this.data.DATA_ATTRIBUTES.fieldName)).filter(n => n);
 
-				// Append the data as a custom field.
-				if (outputStepFields) {
-					formData.append(this.utils.FORM_PARAMS.stepFields, JSON.stringify({
-						name: this.utils.FORM_PARAMS.stepFields,
-						value: outputStepFields,
-						type: 'hidden',
-					}));
-				}
-			}
-		}
+		// 		// Append the data as a custom field.
+		// 		if (outputStepFields) {
+		// 			formData.append(this.data.FORM_PARAMS.stepFields, JSON.stringify({
+		// 				name: this.data.FORM_PARAMS.stepFields,
+		// 				value: outputStepFields,
+		// 				type: 'hidden',
+		// 			}));
+		// 		}
+		// 	}
+		// }
 
 		this.utils.getCommonFormDataItems({formId, formType}).forEach((item) => {
 			formData.append(item.key, item.value);
@@ -632,18 +625,65 @@ export class Form {
 	}
 
 	/**
-	 * Setup Regular field.
+	 * Setup text field.
 	 *
 	 * @param {object} input Input element.
+	 * @param {string} formId Form Id specific to one form.
 	 *
 	 * @public
 	 */
-	setupInputField(input) {
-		this.utils.preFillOnInit(input, input.type);
+	setupInputField(name, formId) {
+		const data = this.state.getStateElement(name, formId);
+
+		const {
+			input,
+		} = data;
+
+		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+
+		this.utils.setFieldVisualState(data);
 
 		input.addEventListener('keydown', this.utils.onFocusEvent);
 		input.addEventListener('focus', this.utils.onFocusEvent);
 		input.addEventListener('blur', this.utils.onBlurEvent);
+		input.addEventListener('input', debounce(this.utils.onInputEvent, 250));
+	}
+
+	/**
+	 * Setup text field.
+	 *
+	 * @param {object} input Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupTelField(name, formId) {
+		this.setupInputField(name, formId);
+	}
+
+	/**
+	 * Setup radio field.
+	 *
+	 * @param {object} input Input element.
+	 * @param {string} formId Form Id specific to one form.
+	 *
+	 * @public
+	 */
+	setupRadioCheckboxField(value, name, formId) {
+		const data = this.state.getStateElementItem(name, value, formId);
+
+		const {
+			input,
+		} = data;
+
+		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+
+		this.utils.setFieldVisualState(data);
+
+		input.addEventListener('keydown', this.utils.onFocusEvent);
+		input.addEventListener('focus', this.utils.onFocusEvent);
+		input.addEventListener('blur', this.utils.onBlurEvent);
+		input.addEventListener('input', this.utils.onInputEvent);
 	}
 
 	/**
@@ -658,8 +698,8 @@ export class Form {
 		import('flatpickr').then((flatpickr) => {
 			const {type} = date;
 
-			const previewFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.datePreviewFormat);
-			const outputFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.dateOutputFormat);
+			const previewFormat = date.getAttribute(this.data.DATA_ATTRIBUTES.datePreviewFormat);
+			const outputFormat = date.getAttribute(this.data.DATA_ATTRIBUTES.dateOutputFormat);
 
 			const datePicker = flatpickr.default(date, {
 				enableTime: type === 'datetime-local',
@@ -668,7 +708,7 @@ export class Form {
 				altInput: true,
 			});
 
-			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.DATES], datePicker, formId);
+			this.state.setStateArray([this.state.DATES], datePicker, formId);
 		});
 	}
 
@@ -676,59 +716,86 @@ export class Form {
 	 * Setup Select field.
 	 * 
 	 * @param {object} select Input element.
-	 * @param {string} formId Form Id specific to one form.
 	 *
 	 * @public
 	 */
-	setupSelectField(select, formId) {
+	setupSelectField(name, formId) {
+		const data = this.state.getStateElement(name, formId);
+
+		const {
+			input,
+			field,
+		} = data;
+
 		import('choices.js').then((Choices) => {
-			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
-			const selectPlaceholder = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectPlaceholder);
-			const selectAllowSearch = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch);
+			const dataObject = this.data;
 
-			const utils = this.utils;
-
-			const choices = new Choices.default(select, {
-				searchEnabled: Boolean(selectAllowSearch),
+			const choices = new Choices.default(input, {
+				searchEnabled: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				placeholder: Boolean(selectPlaceholder),
+				placeholder: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_PLACEHOLDER, formId),
 				searchFields: ['label', 'value', 'customProperties'],
 				itemSelectText: '',
 				classNames: {
-					containerOuter: `choices ${this.utils.selectClassName}`,
+					containerOuter: `choices ${this.data.selectClassName}`,
 				},
-				callbackOnCreateTemplates: function(template) {
+				callbackOnCreateTemplates: function() {
 					return {
+						option: (...args) => {
+							const element = Choices.default.defaults.templates.option.call(this, ...args);
+							const properties = args?.[0]?.customProperties;
+
+							if (properties) {
+								element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCustomProperties, JSON.stringify(properties));
+							}
+
+							return element;
+						},
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 							const properties = args?.[1]?.customProperties;
 
-							console.log(args, this, this.choiceList.element.childNodes);
-
 							if (properties) {
 								// Implement changes for phone/country picker.
-								const country = properties?.[utils.DATA_ATTRIBUTES.selectCountry];
-								if (country) {
-									element.setAttribute(utils.DATA_ATTRIBUTES.selectCountry, country);
+								const selectCountryCode = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryCode];
+								if (selectCountryCode) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryCode, selectCountryCode);
+								}
+								const selectCountryLabel = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryLabel];
+								if (selectCountryLabel) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryLabel, selectCountryLabel);
+								}
+								const selectCountryNumber = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryNumber];
+								if (selectCountryNumber) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryNumber, selectCountryNumber);
 								}
 
 								// Conditional tags
-								const conditionalTags = properties?.[utils.DATA_ATTRIBUTES.conditionalTags];
-								if (conditionalTags) {
-									element.setAttribute(utils.DATA_ATTRIBUTES.conditionalTags, conditionalTags);
-								}
+								// const conditionalTags = properties?.[dataObject.DATA_ATTRIBUTES.conditionalTags];
 
-								const fieldName = properties?.[utils.DATA_ATTRIBUTES.fieldName];
-								if (fieldName) {
-									element.setAttribute(utils.DATA_ATTRIBUTES.fieldName, fieldName);
-								}
+								// if (conditionalTags) {
+								// 	element.setAttribute(dataObject.DATA_ATTRIBUTES.conditionalTags, conditionalTags);
+								// }
 
-								const fieldType = properties?.[utils.DATA_ATTRIBUTES.fieldType];
-								if (fieldType) {
-									element.setAttribute(utils.DATA_ATTRIBUTES.fieldType, fieldType);
-								}
+							// 	const fieldName = properties?.[dataObject.DATA_ATTRIBUTES.fieldName];
+							// 	if (fieldName) {
+							// 		element.setAttribute(dataObject.DATA_ATTRIBUTES.fieldName, fieldName);
+							// 	}
+
+							// 	const fieldType = properties?.[dataObject.DATA_ATTRIBUTES.fieldType];
+							// 	if (fieldType) {
+							// 		element.setAttribute(dataObject.DATA_ATTRIBUTES.fieldType, fieldType);
+							// 	}
+							// }
+
+							// Set state for choices conditional tags.
+							// const state = dataObject.getState([state.SELECTS, this.passedElement.element.name], formId);
+							// if (state) {
+							// 	if (state.config.choices.find((item) => item.value === args?.[1]?.value).esFormsIsHidden) {
+							// 		element.classList.add(dataObject.SELECTORS.CLASS_HIDDEN);
+							// 	}
 							}
 
 							return element;
@@ -737,13 +804,19 @@ export class Form {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 							const properties = args?.[1]?.customProperties;
 
-							console.log(args);
-
 							if (properties) {
 								// Implement changes for phone/country picker.
-								const country = properties?.[utils.DATA_ATTRIBUTES.selectCountry];
-								if (country) {
-									element.setAttribute(utils.DATA_ATTRIBUTES.selectCountry, country);
+								const selectCountryCode = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryCode];
+								if (selectCountryCode) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryCode, selectCountryCode);
+								}
+								const selectCountryLabel = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryLabel];
+								if (selectCountryLabel) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryLabel, selectCountryLabel);
+								}
+								const selectCountryNumber = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryNumber];
+								if (selectCountryNumber) {
+									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryNumber, selectCountryNumber);
 								}
 							}
 
@@ -753,18 +826,20 @@ export class Form {
 				},
 			});
 
-			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true)?.value);
+			let customName = name;
+			const customField = this.state.getFormFieldElementByChild(input);
 
-			Object.assign(choices, {
-				esFormsFieldType: select?.closest(this.utils.fieldSelector)?.getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
-				esFormsName: select?.name,
-			});
+			if (customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType) === 'phone') {
+				customName = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
+			}
 
-			this.utils.preFillOnInit(choices, 'select');
-			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.SELECTS], choices, formId);
+			this.state.setState([this.state.ELEMENTS, customName, this.state.LOADED], true, formId);
+			this.state.setState([this.state.ELEMENTS, customName, this.state.ITEMS], choices, formId);
+			this.state.setState([this.state.ELEMENTS, customName, this.state.CHOICE], choices.containerOuter.element, formId);
 
-			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
-			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+			this.state.getStateElementChoice(customName, formId).addEventListener('focus', this.utils.onFocusEvent);
+			this.state.getStateElementChoice(customName, formId).addEventListener('blur', this.utils.onBlurEvent);
+			this.state.getStateElementChoice(customName, formId).addEventListener('change', this.utils.onChangeEvent);
 		});
 	}
 
@@ -776,20 +851,27 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupTextareaField(textarea, formId) {
-		this.utils.preFillOnInit(textarea, 'textarea');
+	setupTextareaField(name, formId) {
+		const data = this.state.getStateElement(name, formId);
 
-		textarea.addEventListener('keydown', this.utils.onFocusEvent);
-		textarea.addEventListener('focus', this.utils.onFocusEvent);
-		textarea.addEventListener('blur', this.utils.onBlurEvent);
+		const {
+			input,
+		} = data;
+
+		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+
+		this.utils.setFieldVisualState(data);
+
+		input.addEventListener('keydown', this.utils.onFocusEvent);
+		input.addEventListener('focus', this.utils.onFocusEvent);
+		input.addEventListener('blur', this.utils.onBlurEvent);
+		input.addEventListener('input', debounce(this.utils.onInputEvent, 250));
 
 		import('autosize').then((autosize) => {
-			textarea.setAttribute('rows', '1');
-			textarea.setAttribute('cols', '');
+			input.setAttribute('rows', '1');
+			input.setAttribute('cols', '');
 
-			autosize.default(textarea);
-
-			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.TEXTAREAS], autosize.default, formId);
+			autosize.default(input);
 		});
 	}
 
@@ -802,69 +884,85 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupFileField(fileField, formId, index, element) {
-		const fileName = fileField?.name;
+	setupFileField(name, formId) {
+		const data = this.state.getStateElement(name, formId);
+
+		const {
+			input,
+			field,
+		} = data;
 
 		import('dropzone').then((Dropzone) => {
 			// Init dropzone.
-			const myDropzone = new Dropzone.default(
-				fileField.closest(this.utils.fieldSelector),
+			const dropzone = new Dropzone.default(
+				field,
 				{
-					url: `${this.utils.formSubmitRestApiUrl}-files`,
+					url: `${this.data.formSubmitRestApiUrl}-files`,
 					addRemoveLinks: true,
 					autoDiscover: false,
 					parallelUploads: 1,
-					maxFiles: !fileField.multiple ? 1 : null,
-					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
+					maxFiles: !input.multiple ? 1 : null,
+					dictRemoveFile: this.data.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
 				}
 			);
 
-			// Add file input name to the dropzone object.
-			Object.assign(myDropzone, {
-				esFormsName: fileName,
-			});
-
 			// Set data to internal state.
-			this.utils.setFormStateArrayByKeys([this.utils.STATE_NAMES.FILES], myDropzone, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS], dropzone, formId);
 
 			// On add one file add selectors for UX.
-			myDropzone.on("addedfile", (file, a) => {
+			dropzone.on("addedfile", (file) => {
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+					file.previewTemplate.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 				}, 200);
 
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
+					file.previewTemplate.classList.add(this.data.SELECTORS.CLASS_FILLED);
 				}, 1200);
 
+				field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+
+				this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], 'true', formId);
+
 				// Remove main filed validation error.
-				this.utils.removeFieldErrorByName(element, fileName);
+				this.utils.removeFieldErrorByName(name, formId);
 			});
 
+			dropzone.on('removedfile', () => {
+				const {items} = this.state.getStateElement(name, formId);
+
+				if (items.files.length === 0) {
+					field.classList.remove(this.data.SELECTORS.CLASS_FILLED);
+				}
+
+				field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+				this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+			})
+
 			// Add data formData to the api call for the file upload.
-			myDropzone.on("sending", (file, xhr, formData) => {
+			dropzone.on("sending", (file, xhr, formData) => {
 				// Add common items like formID and type.
-				this.utils.getCommonFormDataItems({formId, formType: 'fileUpload'}).forEach((item) => {
+				this.utils.getCommonFormDataItems({formId: this.data.FORM_ID, formType: 'fileUpload'}).forEach((item) => {
 					formData.append(item.key, item.value);
 				});
 
 				// Add field name to know where whas this file upload to.
-				formData.append(this.utils.FORM_PARAMS.name, JSON.stringify({
-					name: this.utils.FORM_PARAMS.name,
-					value: fileName,
+				formData.append(this.data.FORM_PARAMS.name, JSON.stringify({
+					name: this.data.FORM_PARAMS.name,
+					value: name,
 					type: 'hidden',
 				}));
 
 				// Add file ID to know the file.
-				formData.append(this.utils.FORM_PARAMS.fileId, JSON.stringify({
-					name: this.utils.FORM_PARAMS.fileId,
+				formData.append(this.data.FORM_PARAMS.fileId, JSON.stringify({
+					name: this.data.FORM_PARAMS.fileId,
 					value: file?.upload?.uuid,
 					type: 'hidden',
 				}));
 			});
 
 			// Once data is outputed from uplaod.
-			myDropzone.on("success", (file) => {
+			dropzone.on("success", (file) => {
 				const response = JSON.parse(file.xhr.response);
 
 				// Output errors if ther is any.
@@ -874,101 +972,27 @@ export class Form {
 
 					// Remove faulty files.
 					setTimeout(() => {
-						myDropzone.removeFile(file);
+						dropzone.removeFile(file);
 					}, 2500);
 				}
+
+				field.classList.add(this.data.SELECTORS.CLASS_FILLED);
 			});
 
 			// On max file size reached output error and remove files.
-			myDropzone.on('maxfilesreached', (files) => {
+			dropzone.on('maxfilesreached', (files) => {
 				files.forEach((file) => {
 					if (file.status === 'error') {
 						setTimeout(() => {
-							myDropzone.removeFile(file);
+							dropzone.removeFile(file);
 						}, 2500);
 					}
 				});
 			});
 
-			// Trigger on wrap click.
-			fileField.nextElementSibling.setAttribute('dropzone-index', index);
-			fileField.nextElementSibling.setAttribute('dropzone-form-id', formId);
-			fileField.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
-
-			// Button inside wrap element.
-			const button = fileField.parentNode.querySelector('a');
-
-			button.addEventListener('focus', this.utils.onFocusEvent);
-			button.addEventListener('blur', this.utils.onBlurEvent);
+		// 	// Trigger on wrap click.
+			field.addEventListener('click', this.onCustomFileWrapClickEvent);
 		});
-	}
-
-	/**
-	 * Sync phone and country fields on change.
-	 *
-	 * @param {object} form Form element
-	 * @param {string} formId Form Id.
-	 *
-	 * @returns void
-	 */
-	setupPhoneSync(form, formId) {
-		const phoneDisablePicker = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker));
-		if (phoneDisablePicker) {
-			return;
-		}
-
-		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
-
-		if (!phoneSync) {
-			return;
-		}
-
-		// Set interval because of dynamic import of choices.
-		const interval = setInterval(() => {
-			if (this.utils.getFormStateByKeys([this.utils.STATE_NAMES.SELECTS], formId)) {
-				clearInterval(interval);
-
-				const selects = this.utils.getFormStateByKeys([this.utils.STATE_NAMES.SELECTS], formId);
-
-				if (selects.length !== 0) {
-					// Find all countries.
-					const country = selects.find((element) => element.esFormsFieldType === 'country');
-
-					// Find all phones.
-					const phones = selects.filter((element) => element.esFormsFieldType === 'phone');
-
-					if (country) {
-						// Loop all phones.
-						phones.map((element) => {
-							// Set phone init value by checking the contry.
-							element.setChoiceByValue(country.getValue()?.customProperties);
-
-							// Set contry value on any phone change.
-							// TODO: Remove events.
-							element.passedElement.element.addEventListener(
-								'change',
-								function(event) {
-									country.setChoiceByValue(country.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
-								},
-								false,
-							);
-						});
-
-						// Set phones value on country change.
-						// TODO: Remove events.
-						country.passedElement.element.addEventListener(
-							'change',
-							function(event) {
-								phones.map((element) => {
-									element.setChoiceByValue(element.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
-								});
-							},
-							false,
-						);
-					}
-				}
-			}
-		}, 100);
 	}
 
 	/**
@@ -977,24 +1001,24 @@ export class Form {
 	 * @public
 	 */
 	removeEvents() {
-		const elements = document.querySelectorAll(this.utils.formSelector);
+		const elements = document.querySelectorAll(this.data.formSelector);
 
 		[...elements].forEach((element) => {
 			// Regular submit.
 			element.removeEventListener('submit', this.onFormSubmitEvent);
 
-			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+			const formId = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
 
-			const inputs = element.querySelectorAll(this.utils.inputSelector);
-			const textareas = element.querySelectorAll(this.utils.textareaSelector);
-			const selects = element.querySelectorAll(this.utils.selectSelector);
-			const files = element.querySelectorAll(this.utils.fileSelector);
+			const inputs = element.querySelectorAll(this.data.inputSelector);
+			const textareas = element.querySelectorAll(this.data.textareaSelector);
+			const selects = element.querySelectorAll(this.data.selectSelector);
+			const files = element.querySelectorAll(this.data.fileSelector);
 
 			[...inputs].forEach((input) => {
 				switch (input.type) {
 					case 'date':
 					case 'datetime-local':
-						this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.DATES, formId);
+						this.state.deleteState(this.state.DATES, formId);
 						break;
 				}
 
@@ -1004,7 +1028,7 @@ export class Form {
 			});
 
 			[...selects].forEach(() => {
-				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.SELECTS, formId);
+				this.state.deleteState(this.state.SELECTS, formId);
 			});
 
 			// Setup textarea inputs.
@@ -1013,12 +1037,12 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.TEXTAREAS, formId);
+				this.state.deleteState(this.state.TEXTAREAS, formId);
 			});
 
 			// Setup file single inputs.
 			[...files].forEach((file) => {
-				this.utils.deleteFormStateByKey(this.utils.STATE_NAMES.FILES, formId);
+				this.state.deleteState(this.state.FILES, formId);
 
 				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
 
@@ -1028,7 +1052,7 @@ export class Form {
 				button.removeEventListener('blur', this.utils.onBlurEvent);
 			});
 
-			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_EVENTS_CLEAR);
+			this.state.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_EVENTS_CLEAR);
 		});
 	}
 
@@ -1037,8 +1061,8 @@ export class Form {
 			return;
 		}
 
-		const actionName = this.utils.SETTINGS.CAPTCHA['submitAction'];
-		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
+		const actionName = this.data.SETTINGS.CAPTCHA['submitAction'];
+		const siteKey = this.data.SETTINGS.CAPTCHA['siteKey'];
 
 		if (this.utils.isCaptchaEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
@@ -1072,7 +1096,8 @@ export class Form {
 		const element = event.target;
 		const stepButton = event.submitter;
 
-		if (!this.steps.isMultiStepForm(element)) {
+		// if (!this.steps.isMultiStepForm(element)) {
+		if (false) {
 			// Loader show.
 			this.utils.showLoader(element);
 
@@ -1084,8 +1109,9 @@ export class Form {
 				this.formSubmit(element);
 			}
 		} else {
-			if (this.steps.isStepTrigger(stepButton)) {
-				if (stepButton.getAttribute(this.utils.DATA_ATTRIBUTES.submitdStepDirection) === this.steps.STEP_DIRECTION_PREV) {
+			// if (this.steps.isStepTrigger(stepButton)) {
+			if (true) {
+				if (stepButton.getAttribute(this.data.DATA_ATTRIBUTES.submitdStepDirection) === this.steps.STEP_DIRECTION_PREV) {
 					// Just go back a step.
 					this.steps.goBackAStep(element);
 				} else {
@@ -1121,10 +1147,11 @@ export class Form {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const index = event.currentTarget.getAttribute('dropzone-index');
-		const formId = event.currentTarget.getAttribute('dropzone-form-id');
+		const field = event.target.closest(this.data.fieldSelector);
 
-		this.utils.getFormStateByKeys([this.utils.STATE_NAMES.FILES, index], formId).hiddenFileInput.click();
+		this.state.getStateElementItems(field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName), this.state.getFormIdByElement(event.target)).hiddenFileInput.click()
+
+		field.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 	};
 
 	/**
@@ -1138,7 +1165,7 @@ export class Form {
 		event.preventDefault();
 		const {target} = event;
 
-		this.formSubmit(target.closest(this.utils.formSelector), target);
+		this.formSubmit(target.closest(this.data.formSelector), target);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -1151,8 +1178,8 @@ export class Form {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.utils.getPrefix()]?.form === 'undefined') {
-			window[this.utils.getPrefix()].form = {
+		if (typeof window?.[this.data.prefix]?.form === 'undefined') {
+			window[this.data.prefix].form = {
 				init: () => {
 					this.init();
 				},
@@ -1171,8 +1198,8 @@ export class Form {
 				getFormData: (element, singleSubmit = false) => {
 					this.getFormData(element, singleSubmit);
 				},
-				setupInputField: (input) => {
-					this.setupInputField(input);
+				setupInputField: (input, formId) => {
+					this.setupInputField(input, formId);
 				},
 				setupDateField: (date, formId) => {
 					this.setupDateField(date, formId);

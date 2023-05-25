@@ -1,12 +1,15 @@
+import { Data } from '../../form/assets/data';
+import { State } from '../../form/assets/state';
 import { Utils } from './../../form/assets/utilities';
 
 /**
  * Main step class.
  */
 export class Steps {
-	constructor(options) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor() {
+		this.data = new Data();
+		this.state = new State();
+		this.utils = new Utils();
 
 		this.STEP_DIRECTION_PREV = 'prev';
 		this.STEP_DIRECTION_NEXT = 'next';
@@ -145,8 +148,8 @@ export class Steps {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.utils.getPrefix()]?.step === 'undefined') {
-			window[this.utils.getPrefix()].step = {
+		if (typeof window?.[this.data.prefix]?.step === 'undefined') {
+			window[this.data.prefix].step = {
 			}
 		}
 	}

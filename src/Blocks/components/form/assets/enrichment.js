@@ -1,3 +1,5 @@
+import { Data } from "./data";
+import { State } from "./state";
 import { Utils } from "./utilities";
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
@@ -5,12 +7,13 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
  * Enrichment class.
  */
 export class Enrichment {
-	constructor(options = {}) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor() {
+		this.data = new Data();
+		this.state = new State();
+		this.utils = new Utils();
 
 		// LocalStorage name.
-		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
+		this.STORAGE_NAME = 'es-storage';
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -36,7 +39,7 @@ export class Enrichment {
 	 * @public
 	 */
 	isEnrichmentUsed() {
-		if (this.utils.SETTINGS.ENRICHMENT_CONFIG !== '[]') {
+		if (this.data.SETTINGS.ENRICHMENT_CONFIG !== '[]') {
 			return true;
 		}
 
@@ -109,7 +112,7 @@ export class Enrichment {
 		}
 
 		// Get config data.
-		const config = JSON.parse(this.utils.SETTINGS.ENRICHMENT_CONFIG);
+		const config = JSON.parse(this.data.SETTINGS.ENRICHMENT_CONFIG);
 
 		const allowedTags = config?.allowed;
 		const expiration = config?.expiration ?? '30';
@@ -205,8 +208,8 @@ export class Enrichment {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.utils.getPrefix()]?.enrichment === 'undefined') {
-			window[this.utils.getPrefix()].enrichment = {
+		if (typeof window?.[this.data.prefix]?.enrichment === 'undefined') {
+			window[this.data.prefix].enrichment = {
 				STORAGE_NAME: this.STORAGE_NAME,
 				init: () => {
 					this.init();

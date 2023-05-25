@@ -96,7 +96,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
@@ -154,7 +154,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 				}
 
 				if ($type === 'checkboxes') {
-					foreach ($this->getInnerItems($value['innerBlocks'], $type, false) as $value) {
+					foreach ($this->getInnerItems($value['innerBlocks'], $type, $name, false) as $value) {
 						$outputFields[] = $value;
 					}
 				} else {
@@ -162,7 +162,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 						'label' => $label,
 						'value' => $name,
 						'type' => $type,
-						'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
+						'subItems' => $this->getInnerItems($value['innerBlocks'], $type, $name),
 					];
 				}
 			}
@@ -179,7 +179,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 		);
 	}
 
-	private function getInnerItems(array $items, string $parentType, bool $useEmpty = true): array
+	private function getInnerItems(array $items, string $parentType, string $parentName, bool $useEmpty = true): array
 	{
 		$output = [];
 
@@ -214,11 +214,10 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$outputItem = [
 				'label' => $innerLabel,
-				'value' => "{$parentType}{$delimiter}{$innerKeyValue}",
+				'value' => "{$innerKeyValue}",
 			];
 
 			if ($blockName['name'] === 'checkbox') {
-				// $outputItem['value'] = $innerKeyValue;
 				$outputItem['type'] = $blockName['name'];
 				$outputItem['subItems'] = [
 					[
@@ -227,7 +226,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 					],
 					[
 						'label' => __('Checked' , 'eightshift-forms'),
-						'value' => "{$parentType}{$delimiter}{$innerKeyValue}",
+						'value' => "{$parentName}{$delimiter}{$innerKeyValue}",
 					],
 				];
 			}

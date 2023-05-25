@@ -72,19 +72,21 @@ if (has_filter($filterName)) {
 	}
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
-
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
+		
 
 		$customProperties = [
-			'country' => $code,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryCode'] => $code,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryLabel'] => $label,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryNumber'] => $value,
 		];
 
 		$options[] = '
 			<option
 				value="' . $label . '"
-				data-custom-properties=\'' . \wp_json_encode($customProperties) . '\'
+				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=\'' . wp_json_encode($customProperties) . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
 	}

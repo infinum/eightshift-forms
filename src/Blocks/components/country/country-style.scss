@@ -280,7 +280,7 @@
 		$i: 0;
 
 		@each $country in $countries {
-			&[data-custom-properties="#{$country}"]::before {
+			&[data-country-code="#{$country}"]::before {
 				background-position: -#{$i * $width} 0;
 			}
 

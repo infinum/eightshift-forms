@@ -1,5 +1,7 @@
 /* global grecaptcha */
 
+import { Data } from "./data";
+import { State } from "./state";
 import { Utils } from "./utilities";
 
 /**
@@ -7,8 +9,11 @@ import { Utils } from "./utilities";
  */
 export class Captcha {
 	constructor(options = {}) {
+		this.data = new Data();
+		this.state = new State();
+
 		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+		this.utils = new Utils();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -120,8 +125,8 @@ export class Captcha {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.utils.getPrefix()]?.captcha === 'undefined') {
-			window[this.utils.getPrefix()].captcha = {
+		if (typeof window?.[this.data.prefix]?.captcha === 'undefined') {
+			window[this.data.prefix].captcha = {
 				init: () => {
 					this.init();
 				},
